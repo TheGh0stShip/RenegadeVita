@@ -44,6 +44,9 @@ namespace RenegadeVitaRenderer {
 namespace {
 
 Statistics g_statistics = {};
+uint32_t g_dx8_ambient_color = 0U;
+bool g_dx8_color_vertex = true;
+bool g_dx8_normalize_normals = false;
 #if defined(RENEGADE_HOST_ABI_TEST)
 void (*g_host_indexed_observer)(const IndexedTriangleSubmission &) = NULL;
 #endif
@@ -169,7 +172,6 @@ bool Is_Loading_Screen_Diagnostic_Name(const char *name)
 }
 
 FogStateContract g_fog_state = Default_Fog_State();
-uint32_t g_dx8_ambient_color = 0U;
 GLenum g_dx8_alpha_function = GL_ALWAYS;
 float g_dx8_alpha_reference = 0.0f;
 GLenum g_dx8_source_blend = GL_ONE;
@@ -1239,6 +1241,8 @@ void Apply_Original_Texture_Coordinate_State(VertexMaterialClass *material)
 	}
 }
 
+#endif // __vita__: color evaluation below is shared with the host probe.
+
 float Clamp01(float value)
 {
 	return value < 0.0f ? 0.0f : (value > 1.0f ? 1.0f : value);
@@ -1305,6 +1309,7 @@ SourceColor Select_Material_Color_Source(
 	return result;
 }
 
+#if defined(__vita__)
 struct MaterialVertexColor {
 	Vector3 diffuse;
 	Vector3 ambient;
@@ -2647,6 +2652,17 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 
 bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 {
+	// These values feed CPU fixed-function color evaluation on both targets.
+	// Keep the host and native paths identical before native cache/GL handling.
+	if (state == D3DRS_AMBIENT) g_dx8_ambient_color = value;
+	if (state == D3DRS_COLORVERTEX) {
+		g_dx8_color_vertex = value != 0U;
+		return true;
+	}
+	if (state == D3DRS_NORMALIZENORMALS) {
+		g_dx8_normalize_normals = value != 0U;
+		return true;
+	}
 #if defined(__vita__)
 	if (Render_State_Cache_Matches(state, value)) {
 		++g_statistics.render_state_skips;
@@ -3215,6 +3231,83 @@ void Set_Host_Indexed_Submission_Observer(void (*observer)(const IndexedTriangle
 }
 #endif
 
+bool Evaluate_Indexed_Primary_Color(const IndexedTriangleSubmission &submission,
+	uint32_t vertex_index, float rgba[4])
+{
+	CategoryFVFLayout layout = {};
+	if (rgba == NULL || submission.vertex_data == NULL ||
+		!Decode_Category_FVF(submission.vertex_format, layout) ||
+		layout.stride != submission.vertex_stride ||
+		vertex_index >= submission.vertex_capacity ||
+		submission.vertex_capacity > submission.vertex_data_size / layout.stride)
+		return false;
+	const unsigned char *vertex = submission.vertex_data + vertex_index * layout.stride;
+	unsigned color1 = 0xffffffffU, color2 = 0U;
+	if (layout.has_diffuse) memcpy(&color1, vertex + layout.diffuse_offset, sizeof(color1));
+	if (layout.has_specular) memcpy(&color2, vertex + layout.specular_offset, sizeof(color2));
+	VertexMaterialClass *material = submission.draw_state != NULL ?
+		submission.draw_state->material : NULL;
+	Vector3 color = Decode_DX8_ARGB_Color(color1);
+	float alpha = Decode_DX8_ARGB_Alpha(color1);
+	if (material != NULL && material->Get_Lighting()) {
+		if (submission.world_transform == NULL) return false;
+		const unsigned *diffuse_vertex = g_dx8_color_vertex && layout.has_diffuse ? &color1 : NULL;
+		const unsigned *specular_vertex = g_dx8_color_vertex && layout.has_specular ? &color2 : NULL;
+		Vector3 diffuse_color, ambient_color, emissive_color;
+		material->Get_Diffuse(&diffuse_color);
+		material->Get_Ambient(&ambient_color);
+		material->Get_Emissive(&emissive_color);
+		const SourceColor diffuse = Select_Material_Color_Source(
+			material->Get_Diffuse_Color_Source(), diffuse_color, material->Get_Opacity(),
+			diffuse_vertex, specular_vertex, 0U);
+		const SourceColor ambient = Select_Material_Color_Source(
+			material->Get_Ambient_Color_Source(), ambient_color, material->Get_Opacity(),
+			diffuse_vertex, specular_vertex, 0U);
+		const SourceColor emissive = Select_Material_Color_Source(
+			material->Get_Emissive_Color_Source(), emissive_color, material->Get_Opacity(),
+			diffuse_vertex, specular_vertex, 0U);
+		alpha = diffuse.alpha;
+		color = Multiply_Color(ambient.color, Decode_DX8_ARGB_Color(g_dx8_ambient_color)) + emissive.color;
+		Vector3 normal(0.0f, 0.0f, 0.0f);
+		if (layout.has_normal) {
+			float n[3];
+			memcpy(n, vertex + layout.normal_offset, sizeof(n));
+			// Row-vector normals use the inverse transpose of the world 3x3.
+			const float *m = submission.world_transform;
+			const float c[9] = {
+				m[5]*m[10]-m[6]*m[9], m[6]*m[8]-m[4]*m[10], m[4]*m[9]-m[5]*m[8],
+				m[2]*m[9]-m[1]*m[10], m[0]*m[10]-m[2]*m[8], m[1]*m[8]-m[0]*m[9],
+				m[1]*m[6]-m[2]*m[5], m[2]*m[4]-m[0]*m[6], m[0]*m[5]-m[1]*m[4]
+			};
+			const float determinant = m[0]*c[0] + m[1]*c[1] + m[2]*c[2];
+			if (determinant != 0.0f) {
+				normal = Vector3((n[0]*c[0]+n[1]*c[3]+n[2]*c[6])/determinant,
+					(n[0]*c[1]+n[1]*c[4]+n[2]*c[7])/determinant,
+					(n[0]*c[2]+n[1]*c[5]+n[2]*c[8])/determinant);
+				if (g_dx8_normalize_normals) {
+					const float length = normal.Length();
+					if (length > 0.0f) normal *= 1.0f / length;
+				}
+			}
+		}
+		for (unsigned slot = 0U; slot < 4U; ++slot) {
+			if (!submission.draw_state->LightEnable[slot]) continue;
+			const D3DLIGHT8 &light = submission.draw_state->Lights[slot];
+			if (light.Type != D3DLIGHT_DIRECTIONAL) return false;
+			color += Multiply_Color(ambient.color, Vector3(light.Ambient.r, light.Ambient.g, light.Ambient.b));
+			Vector3 direction(-light.Direction.x, -light.Direction.y, -light.Direction.z);
+			const float length = direction.Length();
+			if (length > 0.0f) direction *= 1.0f / length;
+			const float intensity = Vector3::Dot_Product(normal, direction);
+			if (intensity > 0.0f) color += Scale_Color(Multiply_Color(diffuse.color,
+				Vector3(light.Diffuse.r, light.Diffuse.g, light.Diffuse.b)), intensity);
+		}
+	}
+	color = Clamp_Color(color);
+	rgba[0] = color.X; rgba[1] = color.Y; rgba[2] = color.Z; rgba[3] = alpha;
+	return true;
+}
+
 IndexedSubmissionResult Submit_Indexed_Triangles(
 	const IndexedTriangleSubmission &submission)
 {
@@ -3353,6 +3446,16 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 
 #if defined(__vita__)
 	// Let vitaGL's fixed-function vertex shader retain homogeneous W through
+	if (submission.draw_state != NULL && submission.draw_state->material != NULL &&
+		submission.draw_state->material->Get_Lighting()) {
+		float primary[4];
+		if (!Evaluate_Indexed_Primary_Color(submission, submission.base_vertex_index, primary)) {
+			++g_statistics.unsupported_submissions;
+			++g_statistics.rejected_indexed_submissions;
+			Log_Indexed_Rejection("unsupported indexed lighting state", submission.vertex_format);
+			return INDEXED_SUBMISSION_INVALID_ARGUMENT;
+		}
+	}
 	// clipping and interpolation.  CPU-dividing to NDC here would turn W into
 	// one, incorrectly draw behind-camera geometry and make UVs affine.
 	glMatrixMode(GL_PROJECTION);
@@ -3387,7 +3490,12 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 		memcpy(normal, vertex + category_layout.normal_offset, 3U * sizeof(float));
 		memcpy(uv0, vertex + uv0_offset, 2U * sizeof(float));
 		memcpy(uv1, vertex + uv1_offset, 2U * sizeof(float));
-		glColor4ub(static_cast<GLubyte>((diffuse >> 16U) & 0xffU),
+		float primary[4];
+		if (submission.draw_state != NULL && submission.draw_state->material != NULL &&
+			submission.draw_state->material->Get_Lighting() &&
+			Evaluate_Indexed_Primary_Color(submission, actual_index, primary)) {
+			glColor4f(primary[0], primary[1], primary[2], primary[3]);
+		} else glColor4ub(static_cast<GLubyte>((diffuse >> 16U) & 0xffU),
 			static_cast<GLubyte>((diffuse >> 8U) & 0xffU),
 			static_cast<GLubyte>(diffuse & 0xffU),
 			static_cast<GLubyte>((diffuse >> 24U) & 0xffU));

@@ -1,5 +1,45 @@
 # S2 renderer features — inventory in progress
 
+## Indexed primary lighting batch — 2026-10-03
+
+Indexed draws now consume the original material and deferred light state through
+a synchronous borrowed pointer. Primary ambient, diffuse and emissive colors use
+original material sources and opacity. Unlit draws retain vertex diffuse. Normal
+transformation uses the inverse transpose, with normalization controlled by the
+original render state. Enabled unsupported light types reject the draw before
+native emission. Secondary specular composition and point/spot lights remain open.
+
+The original-engine material probe passes material/color2 selection, color-vertex
+disable, scaled normals with normalization on/off, unlit colors, alpha and invalid
+input/light rejection. Eleven renderer cases pass ASan/LSan/UBSan; 43 focused
+tests pass, including 30 indexed-preparation scenarios within one test. Dev220
+passes 138 ARM actions, link and artifact identity; both the evaluator and original
+light-environment method remain in its symbol list. ARMv7/Thumb-2 and VFP-register
+arguments are present. No package, launch or physical pixel acceptance is claimed.
+
+ELF SHA-256: `c291fdd9ea6ac02fd95e2eaec4a065bc79e57ab031806b1e663ba57f95121821`.
+Map SHA-256: `9fcbe0311e5cd8fdad420ad1e52968bd3db1e467c97854419b009ef1617de6a1`.
+
+S1 reconciles 3,576 rows: 51 stubs, one original-patched method, two boundaries,
+six disabled guards and 3,516 unknown. S2 reconciles 3,167 rows: 90 missing,
+44 boundaries and 3,033 unknown. Reviewed unchanged bodies/conditions retain
+their verdicts; color-vertex and normal-normalization entries now describe the
+CPU indexed path. Both inventories have zero review-identity mismatches.
+
+The explicit-value comparison tool covers 182 native header assignments against
+a supplied D3D variant header: 180 equal, one different and one unresolved.
+`D3DRS_AMBIENT` is 26 here and 139 in that header. `D3DERR_INVALIDCALL` is absent
+from the supplied types header. This is a source comparison, not an SDK-complete
+ABI audit or a demonstrated visual defect. Reference bytes are hash-pinned in
+[the comparison receipt](generated/sweeps/d3d8_enum_values.json); the tool requires
+the caller to supply that header. No external source is copied.
+
+The adjacent D3D variant draws through original WW3D/DX8Wrapper, while this batch
+repairs the existing vitaGL indexed boundary. Its workspace was left untouched.
+Original category activation, the other 70 structural layouts, all UV selectors,
+secondary colors and native pixels remain prerequisites. These source records
+overlap; they are not counts of distinct gameplay failures.
+
 ## Original light-state installation and coverage — 2026-10-03
 
 The native empty light-environment setter now uses the original method shared

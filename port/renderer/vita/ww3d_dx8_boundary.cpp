@@ -1431,6 +1431,7 @@ void Submit_Bound_Triangles(const RenderStateStruct &state,
 	submission.world_transform = &state.world[0].X;
 	submission.view_transform = &state.view[0].X;
 	submission.projection_transform = &g_boundary_transforms[D3DTS_PROJECTION].m[0][0];
+	submission.draw_state = &state;
 	for (unsigned stage = 0; stage < 2U && stage < MAX_TEXTURE_STAGES; ++stage) {
 		submission.texture_names[stage] = state.Textures[stage] != NULL ?
 			state.Textures[stage]->Get_Texture_Name().Peek_Buffer() : NULL;

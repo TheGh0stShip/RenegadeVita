@@ -12,8 +12,8 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 
 | Sweep | Root rows | Retained records | Complete |
 | --- | ---: | ---: | --- |
-| port_guards | 3574 | 3574 | False |
-| renderer | 3161 | 3161 | False |
+| port_guards | 3576 | 3576 | False |
+| renderer | 3167 | 3167 | False |
 | link | 837 | 4448 | False |
 | retail | 27 | 1533 | False |
 | scripts | 202 | 247 | False |
@@ -82,14 +82,14 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/2616 | port/renderer/vita/ww3d_dx8_boundary.cpp | stubbed_or_noop | missing_behavior | Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed. |
 | port_guards /rows/2617 | port/renderer/vita/ww3d_dx8_boundary.cpp | stubbed_or_noop | missing_behavior | Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed. |
 | port_guards /rows/2712 | port/renderer/vita/ww3d_dx8_boundary.cpp | stubbed_or_noop | missing_behavior | All modes reaching original projector render-target allocation; per-map instances remain unverified |
-| port_guards /rows/2932 | port/renderer/vita/ww3d_vita_renderer.cpp | stubbed_or_noop | missing_behavior | Modes reaching additional mesh passes or enabled box display masks; per-map instances and display-mask settings remain unverified |
-| port_guards /rows/2933 | port/renderer/vita/ww3d_vita_renderer.cpp | stubbed_or_noop | missing_behavior | Host port profiles taking the non-__vita__ decal guard; native decal restoration and depth-bias results remain separate open gates |
-| port_guards /rows/3315 | staging/ww3d2/dazzle.cpp | disabled_by_port_guard | missing_behavior | Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified. |
-| port_guards /rows/3317 | staging/ww3d2/decalmsh.cpp | disabled_by_port_guard | missing_behavior | Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified. |
-| port_guards /rows/3318 | staging/ww3d2/decalmsh.cpp | disabled_by_port_guard | missing_behavior | Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified. |
-| port_guards /rows/3339 | staging/ww3d2/mesh.cpp | disabled_by_port_guard | missing_behavior | All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified. |
-| port_guards /rows/3513 | staging/wwphys/transitioneffect.cpp | disabled_by_port_guard | missing_behavior | All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified. |
-| port_guards /rows/3514 | staging/wwphys/transitioneffect.cpp | disabled_by_port_guard | missing_behavior | All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified. |
+| port_guards /rows/2934 | port/renderer/vita/ww3d_vita_renderer.cpp | stubbed_or_noop | missing_behavior | Modes reaching additional mesh passes or enabled box display masks; per-map instances and display-mask settings remain unverified |
+| port_guards /rows/2935 | port/renderer/vita/ww3d_vita_renderer.cpp | stubbed_or_noop | missing_behavior | Host port profiles taking the non-__vita__ decal guard; native decal restoration and depth-bias results remain separate open gates |
+| port_guards /rows/3317 | staging/ww3d2/dazzle.cpp | disabled_by_port_guard | missing_behavior | Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified. |
+| port_guards /rows/3319 | staging/ww3d2/decalmsh.cpp | disabled_by_port_guard | missing_behavior | Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified. |
+| port_guards /rows/3320 | staging/ww3d2/decalmsh.cpp | disabled_by_port_guard | missing_behavior | Headless host port profiles skip presentation. Vita/PSTV native path is retained; pixels and queue execution remain unverified. |
+| port_guards /rows/3341 | staging/ww3d2/mesh.cpp | disabled_by_port_guard | missing_behavior | All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified. |
+| port_guards /rows/3515 | staging/wwphys/transitioneffect.cpp | disabled_by_port_guard | missing_behavior | All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified. |
+| port_guards /rows/3516 | staging/wwphys/transitioneffect.cpp | disabled_by_port_guard | missing_behavior | All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified. |
 | port_guards /rows/598 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
 | port_guards /rows/600 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
 | port_guards /rows/621 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
@@ -169,98 +169,96 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | procedural_fvf_layouts /rows/71 | Original category FVF 000008d2 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
 | procedural_fvf_layouts /rows/8 | Original category FVF 00000102 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
 | procedural_fvf_layouts /rows/9 | Original category FVF 00000182 | missing | visual | Original category mesh draws across native modes; actual retail/layout incidence remains unknown |
-| renderer /rows/2881 | D3DFMT_A8L8 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
-| renderer /rows/2882 | D3DFMT_A8P8 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
-| renderer /rows/2883 | D3DFMT_A8R3G3B2 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
-| renderer /rows/2893 | D3DFMT_DXT2 | missing | visual | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
-| renderer /rows/2894 | D3DFMT_DXT3 | missing | visual | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
-| renderer /rows/2895 | D3DFMT_DXT4 | missing | visual | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
-| renderer /rows/2910 | D3DFMT_X1R5G5B5 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
-| renderer /rows/2911 | D3DFMT_X4R4G4B4 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
-| renderer /rows/2960 | D3DRS_AMBIENTMATERIALSOURCE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2961 | D3DRS_BLENDOP | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2962 | D3DRS_CLIPPING | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/2963 | D3DRS_CLIPPLANEENABLE | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/2964 | D3DRS_COLORVERTEX | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2965 | D3DRS_COLORWRITEENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2967 | D3DRS_DEBUGMONITORTOKEN | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2969 | D3DRS_DIFFUSEMATERIALSOURCE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2970 | D3DRS_DITHERENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2971 | D3DRS_EDGEANTIALIAS | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2972 | D3DRS_EMISSIVEMATERIALSOURCE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2975 | D3DRS_FOGDENSITY | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/2979 | D3DRS_FOGTABLEMODE | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/2980 | D3DRS_FOGVERTEXMODE | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/2981 | D3DRS_INDEXEDVERTEXBLENDENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2982 | D3DRS_LASTPIXEL | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2983 | D3DRS_LIGHTING | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2984 | D3DRS_LINEPATTERN | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2985 | D3DRS_LOCALVIEWER | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2986 | D3DRS_MULTISAMPLEANTIALIAS | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2987 | D3DRS_MULTISAMPLEMASK | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2988 | D3DRS_NORMALIZENORMALS | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2989 | D3DRS_PATCHEDGESTYLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2990 | D3DRS_PATCHSEGMENTS | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2991 | D3DRS_POINTSCALEENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2992 | D3DRS_POINTSCALE_A | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2993 | D3DRS_POINTSCALE_B | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2994 | D3DRS_POINTSCALE_C | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2995 | D3DRS_POINTSIZE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2996 | D3DRS_POINTSIZE_MAX | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2997 | D3DRS_POINTSIZE_MIN | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2998 | D3DRS_POINTSPRITEENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/2999 | D3DRS_RANGEFOGENABLE | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/3000 | D3DRS_SHADEMODE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3001 | D3DRS_SOFTWAREVERTEXPROCESSING | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3002 | D3DRS_SPECULARENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3003 | D3DRS_SPECULARMATERIALSOURCE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3005 | D3DRS_STENCILENABLE | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/3006 | D3DRS_STENCILFAIL | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/3007 | D3DRS_STENCILFUNC | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/3008 | D3DRS_STENCILMASK | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/3009 | D3DRS_STENCILPASS | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/3010 | D3DRS_STENCILREF | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/3011 | D3DRS_STENCILWRITEMASK | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/3012 | D3DRS_STENCILZFAIL | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
-| renderer /rows/3013 | D3DRS_TEXTUREFACTOR | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3014 | D3DRS_TWEENFACTOR | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3015 | D3DRS_VERTEXBLEND | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3016 | D3DRS_WRAP0 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3017 | D3DRS_WRAP1 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3018 | D3DRS_WRAP2 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3019 | D3DRS_WRAP3 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3020 | D3DRS_WRAP4 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3021 | D3DRS_WRAP5 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3022 | D3DRS_WRAP6 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3023 | D3DRS_WRAP7 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3024 | D3DRS_ZBIAS | missing | visual | Native rigid/skinned decal rendering across all maps/modes reaching decal flush; actual per-map decals and physical appearance require S4 and runtime verification. |
-| renderer /rows/3025 | D3DRS_ZENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3027 | D3DRS_ZVISIBLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
-| renderer /rows/3085 | D3DTSS_ADDRESSW | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
-| renderer /rows/3086 | D3DTSS_ALPHAARG0 | missing | visual | Native callers issuing this direct request; actual retail usage remains open. |
-| renderer /rows/3090 | D3DTSS_BORDERCOLOR | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
-| renderer /rows/3091 | D3DTSS_BUMPENVLOFFSET | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
-| renderer /rows/3092 | D3DTSS_BUMPENVLSCALE | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
-| renderer /rows/3093 | D3DTSS_BUMPENVMAT00 | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
-| renderer /rows/3094 | D3DTSS_BUMPENVMAT01 | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
-| renderer /rows/3095 | D3DTSS_BUMPENVMAT10 | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
-| renderer /rows/3096 | D3DTSS_BUMPENVMAT11 | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
-| renderer /rows/3097 | D3DTSS_COLORARG0 | missing | visual | Native callers issuing this direct request; actual retail usage remains open. |
-| renderer /rows/3102 | D3DTSS_MAXANISOTROPY | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
-| renderer /rows/3103 | D3DTSS_MAXMIPLEVEL | missing | visual | Native callers issuing this direct request; actual retail usage remains open. |
-| renderer /rows/3106 | D3DTSS_MIPMAPLODBIAS | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
-| renderer /rows/3107 | D3DTSS_RESULTARG | missing | visual | Native callers issuing this direct request; actual retail usage remains open. |
-| renderer /rows/3125 | DX8_FVF_XYZ | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
-| renderer /rows/3126 | DX8_FVF_XYZDUV1 | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
-| renderer /rows/3127 | DX8_FVF_XYZDUV2 | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
-| renderer /rows/3128 | DX8_FVF_XYZN | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
-| renderer /rows/3131 | DX8_FVF_XYZNUV1 | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
-| renderer /rows/3132 | DX8_FVF_XYZNUV2 | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
-| renderer /rows/3133 | DX8_FVF_XYZUV1 | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
-| renderer /rows/3134 | DX8_FVF_XYZUV2 | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
-| renderer /rows/3145 | WW3D_FORMAT_DXT2 | missing | visual | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
-| renderer /rows/3146 | WW3D_FORMAT_DXT3 | missing | visual | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
-| renderer /rows/3147 | WW3D_FORMAT_DXT4 | missing | visual | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
+| renderer /rows/2887 | D3DFMT_A8L8 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
+| renderer /rows/2888 | D3DFMT_A8P8 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
+| renderer /rows/2889 | D3DFMT_A8R3G3B2 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
+| renderer /rows/2899 | D3DFMT_DXT2 | missing | visual | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
+| renderer /rows/2900 | D3DFMT_DXT3 | missing | visual | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
+| renderer /rows/2901 | D3DFMT_DXT4 | missing | visual | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
+| renderer /rows/2916 | D3DFMT_X1R5G5B5 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
+| renderer /rows/2917 | D3DFMT_X4R4G4B4 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
+| renderer /rows/2966 | D3DRS_AMBIENTMATERIALSOURCE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2967 | D3DRS_BLENDOP | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2968 | D3DRS_CLIPPING | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/2969 | D3DRS_CLIPPLANEENABLE | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/2971 | D3DRS_COLORWRITEENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2973 | D3DRS_DEBUGMONITORTOKEN | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2975 | D3DRS_DIFFUSEMATERIALSOURCE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2976 | D3DRS_DITHERENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2977 | D3DRS_EDGEANTIALIAS | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2978 | D3DRS_EMISSIVEMATERIALSOURCE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2981 | D3DRS_FOGDENSITY | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/2985 | D3DRS_FOGTABLEMODE | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/2986 | D3DRS_FOGVERTEXMODE | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/2987 | D3DRS_INDEXEDVERTEXBLENDENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2988 | D3DRS_LASTPIXEL | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2989 | D3DRS_LIGHTING | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2990 | D3DRS_LINEPATTERN | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2991 | D3DRS_LOCALVIEWER | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2992 | D3DRS_MULTISAMPLEANTIALIAS | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2993 | D3DRS_MULTISAMPLEMASK | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2995 | D3DRS_PATCHEDGESTYLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2996 | D3DRS_PATCHSEGMENTS | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2997 | D3DRS_POINTSCALEENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2998 | D3DRS_POINTSCALE_A | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2999 | D3DRS_POINTSCALE_B | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3000 | D3DRS_POINTSCALE_C | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3001 | D3DRS_POINTSIZE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3002 | D3DRS_POINTSIZE_MAX | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3003 | D3DRS_POINTSIZE_MIN | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3004 | D3DRS_POINTSPRITEENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3005 | D3DRS_RANGEFOGENABLE | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/3006 | D3DRS_SHADEMODE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3007 | D3DRS_SOFTWAREVERTEXPROCESSING | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3008 | D3DRS_SPECULARENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3009 | D3DRS_SPECULARMATERIALSOURCE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3011 | D3DRS_STENCILENABLE | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/3012 | D3DRS_STENCILFAIL | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/3013 | D3DRS_STENCILFUNC | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/3014 | D3DRS_STENCILMASK | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/3015 | D3DRS_STENCILPASS | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/3016 | D3DRS_STENCILREF | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/3017 | D3DRS_STENCILWRITEMASK | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/3018 | D3DRS_STENCILZFAIL | missing | visual | Native modes that issue this state request. References alone do not establish runtime requests, per-map use or physical symptoms. |
+| renderer /rows/3019 | D3DRS_TEXTUREFACTOR | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3020 | D3DRS_TWEENFACTOR | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3021 | D3DRS_VERTEXBLEND | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3022 | D3DRS_WRAP0 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3023 | D3DRS_WRAP1 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3024 | D3DRS_WRAP2 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3025 | D3DRS_WRAP3 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3026 | D3DRS_WRAP4 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3027 | D3DRS_WRAP5 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3028 | D3DRS_WRAP6 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3029 | D3DRS_WRAP7 | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3030 | D3DRS_ZBIAS | missing | visual | Native rigid/skinned decal rendering across all maps/modes reaching decal flush; actual per-map decals and physical appearance require S4 and runtime verification. |
+| renderer /rows/3031 | D3DRS_ZENABLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3033 | D3DRS_ZVISIBLE | missing | visual | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/3091 | D3DTSS_ADDRESSW | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
+| renderer /rows/3092 | D3DTSS_ALPHAARG0 | missing | visual | Native callers issuing this direct request; actual retail usage remains open. |
+| renderer /rows/3096 | D3DTSS_BORDERCOLOR | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
+| renderer /rows/3097 | D3DTSS_BUMPENVLOFFSET | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
+| renderer /rows/3098 | D3DTSS_BUMPENVLSCALE | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
+| renderer /rows/3099 | D3DTSS_BUMPENVMAT00 | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
+| renderer /rows/3100 | D3DTSS_BUMPENVMAT01 | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
+| renderer /rows/3101 | D3DTSS_BUMPENVMAT10 | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
+| renderer /rows/3102 | D3DTSS_BUMPENVMAT11 | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
+| renderer /rows/3103 | D3DTSS_COLORARG0 | missing | visual | Native callers issuing this direct request; actual retail usage remains open. |
+| renderer /rows/3108 | D3DTSS_MAXANISOTROPY | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
+| renderer /rows/3109 | D3DTSS_MAXMIPLEVEL | missing | visual | Native callers issuing this direct request; actual retail usage remains open. |
+| renderer /rows/3112 | D3DTSS_MIPMAPLODBIAS | missing | visual | Native modes issuing this request; per-map effects remain unverified. |
+| renderer /rows/3113 | D3DTSS_RESULTARG | missing | visual | Native callers issuing this direct request; actual retail usage remains open. |
+| renderer /rows/3131 | DX8_FVF_XYZ | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
+| renderer /rows/3132 | DX8_FVF_XYZDUV1 | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
+| renderer /rows/3133 | DX8_FVF_XYZDUV2 | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
+| renderer /rows/3134 | DX8_FVF_XYZN | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
+| renderer /rows/3137 | DX8_FVF_XYZNUV1 | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
+| renderer /rows/3138 | DX8_FVF_XYZNUV2 | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
+| renderer /rows/3139 | DX8_FVF_XYZUV1 | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
+| renderer /rows/3140 | DX8_FVF_XYZUV2 | missing | visual | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
+| renderer /rows/3151 | WW3D_FORMAT_DXT2 | missing | visual | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
+| renderer /rows/3152 | WW3D_FORMAT_DXT3 | missing | visual | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
+| renderer /rows/3153 | WW3D_FORMAT_DXT4 | missing | visual | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
 | dds_formats /rows/0 | mp_walls+\20.dds | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | dds_formats /rows/1 | mp_walls+\35.dds | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | dds_formats /rows/10 | mp_city+\10.dds | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27005,45 +27003,45 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/2926 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2927 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2928 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2929 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2929 | port/renderer/vita/ww3d_vita_renderer.cpp | boundary_replaced | unclassified | Indexed lit material draws across modes; retail incidence and original category activation remain unverified. |
 | port_guards /rows/293 | port/patches/ww3d-a35-original-decal-submission.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2930 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2931 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2934 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2935 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2932 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2933 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2936 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2937 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2938 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2939 | port/renderer/vita/ww3d_vita_renderer.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2939 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/294 | port/patches/ww3d-a35-original-decal-submission.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2940 | port/renderer/vita/ww3d_vita_renderer.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2941 | port/renderer/vita/ww3d_vita_texture_transform.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2942 | port/validation/a21_filesystem_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2943 | port/validation/a21_filesystem_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2940 | port/renderer/vita/ww3d_vita_renderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2941 | port/renderer/vita/ww3d_vita_renderer.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2942 | port/renderer/vita/ww3d_vita_renderer.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2943 | port/renderer/vita/ww3d_vita_texture_transform.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2944 | port/validation/a21_filesystem_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2945 | port/validation/a22_w3d_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2946 | port/validation/a22_w3d_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2945 | port/validation/a21_filesystem_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2946 | port/validation/a21_filesystem_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2947 | port/validation/a22_w3d_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2948 | port/validation/a30_camera_boundary_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2949 | port/validation/a30_camera_boundary_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2948 | port/validation/a22_w3d_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2949 | port/validation/a22_w3d_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/295 | port/patches/ww3d-a35-original-decal-submission.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2950 | port/validation/a30_camera_boundary_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2951 | port/validation/a30_camera_boundary_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2952 | port/validation/a30_camera_boundary_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2953 | port/validation/a30_camera_boundary_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2954 | port/validation/a30_dx8wrapper_indexed_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2955 | port/validation/a30_dx8wrapper_indexed_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2956 | port/validation/a30_indexed_backend_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2957 | port/validation/a30_indexed_backend_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2954 | port/validation/a30_camera_boundary_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2955 | port/validation/a30_camera_boundary_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2956 | port/validation/a30_dx8wrapper_indexed_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2957 | port/validation/a30_dx8wrapper_indexed_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2958 | port/validation/a30_indexed_backend_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2959 | port/validation/a30_indexed_backend_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/296 | port/patches/ww3d-a35-original-sorting-lifecycle.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2960 | port/validation/a30_indexed_backend_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2961 | port/validation/a30_indexed_backend_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2962 | port/validation/a30_renderer_lifecycle_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2963 | port/validation/a30_renderer_lifecycle_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2964 | port/validation/a30_world_runtime.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2965 | port/validation/a30_world_runtime.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2962 | port/validation/a30_indexed_backend_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2963 | port/validation/a30_indexed_backend_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2964 | port/validation/a30_renderer_lifecycle_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2965 | port/validation/a30_renderer_lifecycle_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2966 | port/validation/a30_world_runtime.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2967 | port/validation/a30_world_runtime.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2968 | port/validation/a30_world_runtime.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27063,15 +27061,15 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/2980 | port/validation/a30_world_runtime.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2981 | port/validation/a30_world_runtime.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2982 | port/validation/a30_world_runtime.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2983 | port/validation/a30_world_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2984 | port/validation/a30_world_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2983 | port/validation/a30_world_runtime.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2984 | port/validation/a30_world_runtime.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2985 | port/validation/a30_world_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2986 | port/validation/a30_world_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2987 | port/validation/a30_world_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2988 | port/validation/host_selftest_main.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2989 | port/validation/persistent_observer_loader_contract.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2988 | port/validation/a30_world_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2989 | port/validation/a30_world_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/299 | port/patches/ww3d-a35-original-sorting-port.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2990 | port/validation/persistent_observer_loader_contract.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/2990 | port/validation/host_selftest_main.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2991 | port/validation/persistent_observer_loader_contract.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2992 | port/validation/persistent_observer_loader_contract.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2993 | port/validation/persistent_observer_loader_contract.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27091,15 +27089,15 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3004 | port/validation/persistent_observer_loader_contract.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3005 | port/validation/persistent_observer_loader_contract.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3006 | port/validation/persistent_observer_loader_contract.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3007 | port/validation/wwbitpack_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3008 | port/validation/wwbitpack_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3007 | port/validation/persistent_observer_loader_contract.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3008 | port/validation/persistent_observer_loader_contract.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3009 | port/validation/wwbitpack_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/301 | port/patches/ww3d-a35-original-statistics-lifecycle.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3010 | port/validation/wwbitpack_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3011 | port/validation/wwbitpack_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3012 | port/validation/wwbitpack_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3013 | staging/combat/action.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3014 | staging/combat/action.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3013 | port/validation/wwbitpack_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3014 | port/validation/wwbitpack_selftest.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3015 | staging/combat/action.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3016 | staging/combat/action.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3017 | staging/combat/action.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27108,39 +27106,39 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/302 | port/patches/ww3d2-a22-gcc15.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3020 | staging/combat/action.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3021 | staging/combat/action.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3022 | staging/combat/activeconversation.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3023 | staging/combat/activeconversation.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3022 | staging/combat/action.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3023 | staging/combat/action.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3024 | staging/combat/activeconversation.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3025 | staging/combat/activeconversation.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3026 | staging/combat/activeconversation.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3027 | staging/combat/activeconversation.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3028 | staging/combat/activeconversation.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3029 | staging/combat/activeconversation.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3028 | staging/combat/activeconversation.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3029 | staging/combat/activeconversation.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/303 | port/patches/ww3d2-a22-gcc15.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3030 | staging/combat/activeconversation.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3031 | staging/combat/armedgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3032 | staging/combat/armedgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3033 | staging/combat/buildingaggregate.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3034 | staging/combat/buildingaggregate.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3031 | staging/combat/activeconversation.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3032 | staging/combat/activeconversation.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3033 | staging/combat/armedgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3034 | staging/combat/armedgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3035 | staging/combat/buildingaggregate.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3036 | staging/combat/buildingaggregate.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3037 | staging/combat/buildingaggregate.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3038 | staging/combat/buildingaggregate.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3039 | staging/combat/c4.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3039 | staging/combat/buildingaggregate.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/304 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3040 | staging/combat/c4.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3041 | staging/combat/ccamera.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3042 | staging/combat/combat.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3043 | staging/combat/combat.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3040 | staging/combat/buildingaggregate.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3041 | staging/combat/c4.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3042 | staging/combat/c4.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3043 | staging/combat/ccamera.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3044 | staging/combat/combat.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3045 | staging/combat/combat.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3046 | staging/combat/combat.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3047 | staging/combat/conversationmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3048 | staging/combat/conversationmgr.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3049 | staging/combat/damage.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3047 | staging/combat/combat.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3048 | staging/combat/combat.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3049 | staging/combat/conversationmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/305 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3050 | staging/combat/gameobjmanager.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3051 | staging/combat/gameobjmanager.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3050 | staging/combat/conversationmgr.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3051 | staging/combat/damage.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3052 | staging/combat/gameobjmanager.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3053 | staging/combat/gameobjmanager.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3054 | staging/combat/gameobjmanager.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27148,37 +27146,37 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3056 | staging/combat/gameobjmanager.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3057 | staging/combat/gameobjmanager.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3058 | staging/combat/gameobjmanager.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3059 | staging/combat/hud.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3059 | staging/combat/gameobjmanager.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/306 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3060 | staging/combat/hud.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3060 | staging/combat/gameobjmanager.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3061 | staging/combat/hud.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3062 | staging/combat/hud.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3063 | staging/combat/hud.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3064 | staging/combat/hud.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3065 | staging/combat/hud.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3066 | staging/combat/mapmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3067 | staging/combat/matrix3D.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3068 | staging/combat/matrix3D.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3069 | staging/combat/messagewindow.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3066 | staging/combat/hud.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3067 | staging/combat/hud.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3068 | staging/combat/mapmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3069 | staging/combat/matrix3D.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/307 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3070 | staging/combat/messagewindow.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3070 | staging/combat/matrix3D.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3071 | staging/combat/messagewindow.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3072 | staging/combat/messagewindow.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3073 | staging/combat/objlibrary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3074 | staging/combat/objlibrary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3073 | staging/combat/messagewindow.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3074 | staging/combat/messagewindow.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3075 | staging/combat/objlibrary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3076 | staging/combat/objlibrary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3077 | staging/combat/objlibrary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3078 | staging/combat/physicalgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3079 | staging/combat/physicalgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3078 | staging/combat/objlibrary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3079 | staging/combat/objlibrary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/308 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3080 | staging/combat/physicalgameobj.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3081 | staging/combat/purchasesettings.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3082 | staging/combat/purchasesettings.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3083 | staging/combat/purchasesettings.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3080 | staging/combat/physicalgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3081 | staging/combat/physicalgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3082 | staging/combat/physicalgameobj.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3083 | staging/combat/purchasesettings.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3084 | staging/combat/purchasesettings.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3085 | staging/combat/savegame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3086 | staging/combat/savegame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3085 | staging/combat/purchasesettings.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3086 | staging/combat/purchasesettings.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3087 | staging/combat/savegame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3088 | staging/combat/savegame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3089 | staging/combat/savegame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27187,16 +27185,16 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3091 | staging/combat/savegame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3092 | staging/combat/savegame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3093 | staging/combat/savegame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3094 | staging/combat/scriptablegameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3095 | staging/combat/scriptablegameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3094 | staging/combat/savegame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3095 | staging/combat/savegame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3096 | staging/combat/scriptablegameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3097 | staging/combat/scriptablegameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3098 | staging/combat/scriptablegameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3099 | staging/combat/scriptablegameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/31 | port/patches/combat-a35-conversation-transition-telemetry.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/310 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3100 | staging/combat/scriptcommands.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3101 | staging/combat/scriptcommands.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3100 | staging/combat/scriptablegameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3101 | staging/combat/scriptablegameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3102 | staging/combat/scriptcommands.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3103 | staging/combat/scriptcommands.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3104 | staging/combat/scriptcommands.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27208,18 +27206,18 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/311 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3110 | staging/combat/scriptcommands.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3111 | staging/combat/scriptcommands.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3112 | staging/combat/scripts.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3113 | staging/combat/scripts.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3112 | staging/combat/scriptcommands.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3113 | staging/combat/scriptcommands.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3114 | staging/combat/scripts.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3115 | staging/combat/scripts.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3116 | staging/combat/smartgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3117 | staging/combat/smartgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3116 | staging/combat/scripts.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3117 | staging/combat/scripts.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3118 | staging/combat/smartgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3119 | staging/combat/smartgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/312 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3120 | staging/combat/sniper.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3121 | staging/combat/soldier.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3122 | staging/combat/soldier.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3120 | staging/combat/smartgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3121 | staging/combat/smartgameobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3122 | staging/combat/sniper.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3123 | staging/combat/soldier.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3124 | staging/combat/soldier.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3125 | staging/combat/soldier.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27228,18 +27226,18 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3128 | staging/combat/soldier.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3129 | staging/combat/soldier.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/313 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3130 | staging/combat/soldier.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3131 | staging/combat/teampurchasesettings.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3132 | staging/combat/teampurchasesettings.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3133 | staging/combat/teampurchasesettings.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3130 | staging/combat/soldier.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3131 | staging/combat/soldier.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3132 | staging/combat/soldier.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3133 | staging/combat/teampurchasesettings.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3134 | staging/combat/teampurchasesettings.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3135 | staging/combat/transition.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3136 | staging/combat/transition.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3135 | staging/combat/teampurchasesettings.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3136 | staging/combat/teampurchasesettings.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3137 | staging/combat/transition.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3138 | staging/combat/transition.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3139 | staging/combat/vehicle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3139 | staging/combat/transition.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/314 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3140 | staging/combat/vehicle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3140 | staging/combat/transition.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3141 | staging/combat/vehicle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3142 | staging/combat/vehicle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3143 | staging/combat/vehicle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27247,32 +27245,32 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3145 | staging/combat/vehicle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3146 | staging/combat/vehicle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3147 | staging/combat/vehicle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3148 | staging/combat/weaponbag.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3149 | staging/combat/weapons.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3148 | staging/combat/vehicle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3149 | staging/combat/vehicle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/315 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3150 | staging/combat/weapons.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3151 | staging/combat/weaponview.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3152 | staging/combat/weaponview.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3150 | staging/combat/weaponbag.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3151 | staging/combat/weapons.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3152 | staging/combat/weapons.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3153 | staging/combat/weaponview.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3154 | staging/combat/weaponview.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3155 | staging/combat/weaponview.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3156 | staging/combat/weaponview.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3157 | staging/combat/weaponview.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3158 | staging/commando/cnetwork.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3159 | staging/commando/cnetwork.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3158 | staging/combat/weaponview.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3159 | staging/combat/weaponview.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/316 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3160 | staging/commando/combatgmode.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3161 | staging/commando/combatgmode.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3160 | staging/commando/cnetwork.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3161 | staging/commando/cnetwork.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3162 | staging/commando/combatgmode.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3163 | staging/commando/combatgmode.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3164 | staging/commando/combatgmode.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3165 | staging/commando/combatgmode.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3166 | staging/commando/combatgmode.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3167 | staging/commando/datasafe.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3168 | staging/commando/datasafe.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3169 | staging/commando/dialogtests.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3166 | staging/commando/combatgmode.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3167 | staging/commando/combatgmode.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3168 | staging/commando/combatgmode.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3169 | staging/commando/datasafe.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/317 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3170 | staging/commando/dialogtests.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3170 | staging/commando/datasafe.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3171 | staging/commando/dialogtests.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3172 | staging/commando/dialogtests.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3173 | staging/commando/dialogtests.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27280,73 +27278,73 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3175 | staging/commando/dialogtests.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3176 | staging/commando/dialogtests.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3177 | staging/commando/dialogtests.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3178 | staging/commando/dlgconfigaudiotab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3179 | staging/commando/dlgconfigaudiotab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3178 | staging/commando/dialogtests.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3179 | staging/commando/dialogtests.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/318 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3180 | staging/commando/dlgconfigaudiotab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3181 | staging/commando/dlgconfigperformancetab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3182 | staging/commando/dlgconfigperformancetab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3181 | staging/commando/dlgconfigaudiotab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3182 | staging/commando/dlgconfigaudiotab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3183 | staging/commando/dlgconfigperformancetab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3184 | staging/commando/dlgconfigperformancetab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3185 | staging/commando/dlgconfigperformancetab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3186 | staging/commando/dlgconfigperformancetab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3187 | staging/commando/dlgconfigvideotab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3188 | staging/commando/dlgconfigvideotab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3187 | staging/commando/dlgconfigperformancetab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3188 | staging/commando/dlgconfigperformancetab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3189 | staging/commando/dlgconfigvideotab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/319 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3190 | staging/commando/dlgconfigvideotab.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3191 | staging/commando/dlgconfigvideotab.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3192 | staging/commando/dlgevaencyclopedia.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3193 | staging/commando/dlgevaencyclopedia.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3190 | staging/commando/dlgconfigvideotab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3191 | staging/commando/dlgconfigvideotab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3192 | staging/commando/dlgconfigvideotab.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3193 | staging/commando/dlgconfigvideotab.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3194 | staging/commando/dlgevaencyclopedia.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3195 | staging/commando/dlgevaencyclopedia.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3196 | staging/commando/dlgevaencyclopedia.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3197 | staging/commando/dlgevaencyclopedia.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3198 | staging/commando/dlgevaencyclopedia.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3199 | staging/commando/dlgevamaptab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3199 | staging/commando/dlgevaencyclopedia.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/32 | port/patches/combat-a35-conversation-transition-telemetry.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/320 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3200 | staging/commando/dlgevaviewertab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3201 | staging/commando/dlghelpscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3202 | staging/commando/dlghelpscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3200 | staging/commando/dlgevaencyclopedia.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3201 | staging/commando/dlgevamaptab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3202 | staging/commando/dlgevaviewertab.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3203 | staging/commando/dlghelpscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3204 | staging/commando/dlgloadspgame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3205 | staging/commando/dlgmainmenu.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3206 | staging/commando/dlgmainmenu.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3204 | staging/commando/dlghelpscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3205 | staging/commando/dlghelpscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3206 | staging/commando/dlgloadspgame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3207 | staging/commando/dlgmainmenu.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3208 | staging/commando/dlgmainmenu.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3209 | staging/commando/dlgmainmenu.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/321 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3210 | staging/commando/dlgmainmenu.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3211 | staging/commando/dlgmpingamechat.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3212 | staging/commando/dlgmpingamechat.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3213 | staging/commando/dlgsavegame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3214 | staging/commando/gamedata.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3215 | staging/commando/gamedata.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3211 | staging/commando/dlgmainmenu.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3212 | staging/commando/dlgmainmenu.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3213 | staging/commando/dlgmpingamechat.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3214 | staging/commando/dlgmpingamechat.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3215 | staging/commando/dlgsavegame.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3216 | staging/commando/gamedata.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3217 | staging/commando/gameinitmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3218 | staging/commando/gameinitmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3217 | staging/commando/gamedata.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3218 | staging/commando/gamedata.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3219 | staging/commando/gameinitmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/322 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3220 | staging/commando/gameinitmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3221 | staging/commando/gameinitmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3222 | staging/commando/gameinitmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3223 | staging/commando/gameinitmgr.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3224 | staging/commando/gamemenu.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3225 | staging/commando/gamemode.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3226 | staging/commando/gameoptionsevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3227 | staging/commando/gameoptionsevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3223 | staging/commando/gameinitmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3224 | staging/commando/gameinitmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3225 | staging/commando/gameinitmgr.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3226 | staging/commando/gamemenu.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3227 | staging/commando/gamemode.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3228 | staging/commando/gameoptionsevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3229 | staging/commando/gameoptionsevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/323 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3230 | staging/commando/gameoptionsevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3231 | staging/commando/gameoptionsevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3232 | staging/commando/gamespycschallengeresponseevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3233 | staging/commando/gamespycschallengeresponseevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3232 | staging/commando/gameoptionsevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3233 | staging/commando/gameoptionsevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3234 | staging/commando/gamespycschallengeresponseevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3235 | staging/commando/gamespycschallengeresponseevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3236 | staging/commando/loadingscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3237 | staging/commando/loadingscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3236 | staging/commando/gamespycschallengeresponseevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3237 | staging/commando/gamespycschallengeresponseevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3238 | staging/commando/loadingscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3239 | staging/commando/loadingscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/324 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27354,19 +27352,19 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3241 | staging/commando/loadingscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3242 | staging/commando/loadingscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3243 | staging/commando/loadingscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3244 | staging/commando/movie.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3245 | staging/commando/movie.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3246 | staging/commando/mpsettingsmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3247 | staging/commando/mpsettingsmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3248 | staging/commando/pkthandlers.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3249 | staging/commando/pkthandlers.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3244 | staging/commando/loadingscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3245 | staging/commando/loadingscreen.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3246 | staging/commando/movie.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3247 | staging/commando/movie.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3248 | staging/commando/mpsettingsmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3249 | staging/commando/mpsettingsmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/325 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3250 | staging/commando/pkthandlers.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3251 | staging/commando/pkthandlers.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3252 | staging/commando/pkthandlers.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3253 | staging/commando/purchaserequestevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3254 | staging/commando/renegadedialogmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3255 | staging/commando/renegadedialogmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3253 | staging/commando/pkthandlers.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3254 | staging/commando/pkthandlers.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3255 | staging/commando/purchaserequestevent.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3256 | staging/commando/renegadedialogmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3257 | staging/commando/renegadedialogmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3258 | staging/commando/renegadedialogmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27377,10 +27375,10 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3262 | staging/commando/renegadedialogmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3263 | staging/commando/renegadedialogmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3264 | staging/commando/renegadedialogmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3265 | staging/commando/sctextobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3266 | staging/commando/sctextobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3267 | staging/scripts/Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3268 | staging/scripts/Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3265 | staging/commando/renegadedialogmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3266 | staging/commando/renegadedialogmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3267 | staging/commando/sctextobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3268 | staging/commando/sctextobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3269 | staging/scripts/Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/327 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3270 | staging/scripts/Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27395,11 +27393,11 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3279 | staging/scripts/Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/328 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3280 | staging/scripts/Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3281 | staging/scripts/bool.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3282 | staging/scripts/vector3.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3283 | staging/ww3d2/Dx8Wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3284 | staging/ww3d2/agg_def.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3285 | staging/ww3d2/agg_def.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3281 | staging/scripts/Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3282 | staging/scripts/Test_Cinematic.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3283 | staging/scripts/bool.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3284 | staging/scripts/vector3.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3285 | staging/ww3d2/Dx8Wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3286 | staging/ww3d2/agg_def.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3287 | staging/ww3d2/agg_def.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3288 | staging/ww3d2/agg_def.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27407,13 +27405,13 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/329 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3290 | staging/ww3d2/agg_def.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3291 | staging/ww3d2/agg_def.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3292 | staging/ww3d2/agg_def.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3293 | staging/ww3d2/animobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3294 | staging/ww3d2/animobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3292 | staging/ww3d2/agg_def.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3293 | staging/ww3d2/agg_def.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3294 | staging/ww3d2/agg_def.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3295 | staging/ww3d2/animobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3296 | staging/ww3d2/animobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3297 | staging/ww3d2/assetmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3298 | staging/ww3d2/assetmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3297 | staging/ww3d2/animobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3298 | staging/ww3d2/animobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3299 | staging/ww3d2/assetmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/33 | port/patches/combat-a35-host-script-file-handles.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/330 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27430,61 +27428,61 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/331 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3310 | staging/ww3d2/assetmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3311 | staging/ww3d2/assetmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3312 | staging/ww3d2/boxrobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3313 | staging/ww3d2/boxrobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3312 | staging/ww3d2/assetmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3313 | staging/ww3d2/assetmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3314 | staging/ww3d2/boxrobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3316 | staging/ww3d2/decalmsh.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3319 | staging/ww3d2/dx8indexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3315 | staging/ww3d2/boxrobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3316 | staging/ww3d2/boxrobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3318 | staging/ww3d2/decalmsh.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/332 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3320 | staging/ww3d2/dx8indexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3321 | staging/ww3d2/dx8indexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3322 | staging/ww3d2/dx8indexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3323 | staging/ww3d2/dx8indexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3324 | staging/ww3d2/dx8vertexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3325 | staging/ww3d2/dx8vertexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3324 | staging/ww3d2/dx8indexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3325 | staging/ww3d2/dx8indexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3326 | staging/ww3d2/dx8vertexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3327 | staging/ww3d2/dx8vertexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3328 | staging/ww3d2/dx8vertexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3329 | staging/ww3d2/dx8wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3329 | staging/ww3d2/dx8vertexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/333 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3330 | staging/ww3d2/hanimmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3331 | staging/ww3d2/hlod.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3332 | staging/ww3d2/hlod.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3330 | staging/ww3d2/dx8vertexbuffer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3331 | staging/ww3d2/dx8wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3332 | staging/ww3d2/hanimmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3333 | staging/ww3d2/hlod.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3334 | staging/ww3d2/hlod.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3335 | staging/ww3d2/matinfo.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3336 | staging/ww3d2/mesh.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3337 | staging/ww3d2/mesh.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3335 | staging/ww3d2/hlod.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3336 | staging/ww3d2/hlod.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3337 | staging/ww3d2/matinfo.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3338 | staging/ww3d2/mesh.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3339 | staging/ww3d2/mesh.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/334 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3340 | staging/ww3d2/meshmdl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3341 | staging/ww3d2/meshmdl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3342 | staging/ww3d2/meshmdlio.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3343 | staging/ww3d2/part_buf.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3344 | staging/ww3d2/render2d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3345 | staging/ww3d2/render2dsentence.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3346 | staging/ww3d2/render2dsentence.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3340 | staging/ww3d2/mesh.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3342 | staging/ww3d2/meshmdl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3343 | staging/ww3d2/meshmdl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3344 | staging/ww3d2/meshmdlio.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3345 | staging/ww3d2/part_buf.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3346 | staging/ww3d2/render2d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3347 | staging/ww3d2/render2dsentence.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3348 | staging/ww3d2/render2dsentence.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3349 | staging/ww3d2/render2dsentence.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/335 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3350 | staging/ww3d2/render2dsentence.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3351 | staging/ww3d2/render2dsentence.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3352 | staging/ww3d2/rendobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3353 | staging/ww3d2/rendobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3352 | staging/ww3d2/render2dsentence.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3353 | staging/ww3d2/render2dsentence.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3354 | staging/ww3d2/rendobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3355 | staging/ww3d2/rendobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3356 | staging/ww3d2/rendobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3357 | staging/ww3d2/rendobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3358 | staging/ww3d2/rendobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3359 | staging/ww3d2/scene.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3359 | staging/ww3d2/rendobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/336 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3360 | staging/ww3d2/scene.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3361 | staging/ww3d2/sortingrenderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3362 | staging/ww3d2/statistics.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3363 | staging/ww3d2/texfcach.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3364 | staging/ww3d2/texture.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3365 | staging/ww3d2/texture.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3360 | staging/ww3d2/rendobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3361 | staging/ww3d2/scene.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3362 | staging/ww3d2/scene.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3363 | staging/ww3d2/sortingrenderer.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3364 | staging/ww3d2/statistics.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3365 | staging/ww3d2/texfcach.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3366 | staging/ww3d2/texture.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3367 | staging/ww3d2/texture.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3368 | staging/ww3d2/texture.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27492,8 +27490,8 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/337 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3370 | staging/ww3d2/texture.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3371 | staging/ww3d2/texture.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3372 | staging/ww3d2/ww3d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3373 | staging/ww3d2/ww3d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3372 | staging/ww3d2/texture.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3373 | staging/ww3d2/texture.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3374 | staging/ww3d2/ww3d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3375 | staging/ww3d2/ww3d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3376 | staging/ww3d2/ww3d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27513,44 +27511,44 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3389 | staging/ww3d2/ww3d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/339 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3390 | staging/ww3d2/ww3d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3391 | staging/wwaudio/Matrix3D.H | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3392 | staging/wwaudio/Matrix3D.H | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3393 | staging/wwaudio/Threads.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3394 | staging/wwaudio/Threads.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3391 | staging/ww3d2/ww3d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3392 | staging/ww3d2/ww3d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3393 | staging/wwaudio/Matrix3D.H | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3394 | staging/wwaudio/Matrix3D.H | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3395 | staging/wwaudio/Threads.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3396 | staging/wwaudio/Threads.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3397 | staging/wwaudio/Threads.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3398 | staging/wwaudio/Threads.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3399 | staging/wwaudio/Vector3.H | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3399 | staging/wwaudio/Threads.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/34 | port/patches/combat-a35-host-script-file-handles.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/340 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3400 | staging/wwaudio/WWAudio.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3401 | staging/wwaudio/WWAudio.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3400 | staging/wwaudio/Threads.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3401 | staging/wwaudio/Vector3.H | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3402 | staging/wwaudio/WWAudio.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3403 | staging/wwaudio/WWAudio.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3404 | staging/wwdebug/wwdebug.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3405 | staging/wwdebug/wwprofile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3406 | staging/wwdebug/wwprofile.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3407 | staging/wwlib/argv.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3408 | staging/wwlib/bool.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3409 | staging/wwlib/chunkio.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3404 | staging/wwaudio/WWAudio.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3405 | staging/wwaudio/WWAudio.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3406 | staging/wwdebug/wwdebug.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3407 | staging/wwdebug/wwprofile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3408 | staging/wwdebug/wwprofile.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3409 | staging/wwlib/argv.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/341 | port/patches/ww3d2-a22-vita-boundaries.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3410 | staging/wwlib/crc.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3411 | staging/wwlib/critsection.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3412 | staging/wwlib/critsection.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3410 | staging/wwlib/bool.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3411 | staging/wwlib/chunkio.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3412 | staging/wwlib/crc.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3413 | staging/wwlib/critsection.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3414 | staging/wwlib/critsection.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3415 | staging/wwlib/data.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3416 | staging/wwlib/data.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3417 | staging/wwlib/hash.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3418 | staging/wwlib/ini.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3419 | staging/wwlib/ini.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3415 | staging/wwlib/critsection.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3416 | staging/wwlib/critsection.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3417 | staging/wwlib/data.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3418 | staging/wwlib/data.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3419 | staging/wwlib/hash.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/342 | port/patches/ww3d2-a30-vita-buffers.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3420 | staging/wwlib/int.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3421 | staging/wwlib/lcw.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3422 | staging/wwlib/mixfile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3423 | staging/wwlib/mutex.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3424 | staging/wwlib/mutex.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3420 | staging/wwlib/ini.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3421 | staging/wwlib/ini.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3422 | staging/wwlib/int.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3423 | staging/wwlib/lcw.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3424 | staging/wwlib/mixfile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3425 | staging/wwlib/mutex.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3426 | staging/wwlib/mutex.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3427 | staging/wwlib/mutex.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27558,8 +27556,8 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3429 | staging/wwlib/mutex.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/343 | port/patches/ww3d2-a30-vita-buffers.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3430 | staging/wwlib/mutex.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3431 | staging/wwlib/rawfile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3432 | staging/wwlib/rawfile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3431 | staging/wwlib/mutex.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3432 | staging/wwlib/mutex.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3433 | staging/wwlib/rawfile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3434 | staging/wwlib/rawfile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3435 | staging/wwlib/rawfile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27575,15 +27573,15 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3444 | staging/wwlib/rawfile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3445 | staging/wwlib/rawfile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3446 | staging/wwlib/rawfile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3447 | staging/wwlib/rawfile.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3448 | staging/wwlib/rawfile.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3449 | staging/wwlib/srandom.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3447 | staging/wwlib/rawfile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3448 | staging/wwlib/rawfile.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3449 | staging/wwlib/rawfile.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/345 | port/patches/ww3d2-a30-vita-buffers.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3450 | staging/wwlib/srandom.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3451 | staging/wwlib/strtok_r.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3452 | staging/wwlib/strtok_r.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3453 | staging/wwlib/thread.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3454 | staging/wwlib/thread.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3450 | staging/wwlib/rawfile.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3451 | staging/wwlib/srandom.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3452 | staging/wwlib/srandom.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3453 | staging/wwlib/strtok_r.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3454 | staging/wwlib/strtok_r.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3455 | staging/wwlib/thread.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3456 | staging/wwlib/thread.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3457 | staging/wwlib/thread.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27593,20 +27591,20 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3460 | staging/wwlib/thread.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3461 | staging/wwlib/thread.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3462 | staging/wwlib/thread.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3463 | staging/wwlib/thread.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3464 | staging/wwlib/thread.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3465 | staging/wwlib/trim.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3466 | staging/wwlib/widestring.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3467 | staging/wwlib/wwfile.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3468 | staging/wwlib/wwstring.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3469 | staging/wwmath/matrix3.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3463 | staging/wwlib/thread.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3464 | staging/wwlib/thread.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3465 | staging/wwlib/thread.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3466 | staging/wwlib/thread.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3467 | staging/wwlib/trim.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3468 | staging/wwlib/widestring.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3469 | staging/wwlib/wwfile.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/347 | port/patches/ww3d2-a30-vita-buffers.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3470 | staging/wwmath/matrix3d.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3471 | staging/wwmath/matrix3d.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3472 | staging/wwmath/vector3.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3473 | staging/wwnet/packetmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3474 | staging/wwphys/phys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3475 | staging/wwphys/phys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3470 | staging/wwlib/wwstring.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3471 | staging/wwmath/matrix3.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3472 | staging/wwmath/matrix3d.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3473 | staging/wwmath/matrix3d.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3474 | staging/wwmath/vector3.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3475 | staging/wwnet/packetmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3476 | staging/wwphys/phys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3477 | staging/wwphys/phys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3478 | staging/wwphys/phys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27621,99 +27619,101 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3486 | staging/wwphys/phys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3487 | staging/wwphys/phys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3488 | staging/wwphys/phys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3489 | staging/wwphys/pscene.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3489 | staging/wwphys/phys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/349 | port/patches/ww3d2-a31-dx8-mesh-cache-boundary.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3490 | staging/wwphys/pscene.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3491 | staging/wwphys/pscene_saveload.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3492 | staging/wwphys/pscene_saveload.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3490 | staging/wwphys/phys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3491 | staging/wwphys/pscene.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3492 | staging/wwphys/pscene.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3493 | staging/wwphys/pscene_saveload.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3494 | staging/wwphys/pscene_saveload.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3495 | staging/wwphys/pscene_saveload.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3496 | staging/wwphys/pscene_saveload.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3497 | staging/wwphys/pscene_saveload.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3498 | staging/wwphys/pscene_saveload.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3499 | staging/wwphys/staticanimphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3499 | staging/wwphys/pscene_saveload.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/35 | port/patches/combat-a35-host-script-file-handles.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/350 | port/patches/ww3d2-a35-aggregate-duplicate-load.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3500 | staging/wwphys/staticanimphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3500 | staging/wwphys/pscene_saveload.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3501 | staging/wwphys/staticanimphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3502 | staging/wwphys/staticanimphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3503 | staging/wwphys/staticanimphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3504 | staging/wwphys/staticanimphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3505 | staging/wwphys/staticanimphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3506 | staging/wwphys/staticanimphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3507 | staging/wwphys/staticphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3508 | staging/wwphys/staticphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3507 | staging/wwphys/staticanimphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3508 | staging/wwphys/staticanimphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3509 | staging/wwphys/staticphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/351 | port/patches/ww3d2-a35-create-depth-timing.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3510 | staging/wwphys/staticphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3511 | staging/wwphys/staticphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3512 | staging/wwphys/staticphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3515 | staging/wwsaveload/definitionfactorymgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3516 | staging/wwsaveload/pointerremap.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3517 | staging/wwsaveload/saveloadstatus.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3518 | staging/wwsaveload/saveloadstatus.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3513 | staging/wwphys/staticphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3514 | staging/wwphys/staticphys.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3517 | staging/wwsaveload/definitionfactorymgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3518 | staging/wwsaveload/pointerremap.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3519 | staging/wwsaveload/saveloadstatus.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/352 | port/patches/ww3d2-a35-create-depth-timing.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3520 | staging/wwsaveload/twiddler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3521 | staging/wwtranslatedb/translatedb.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3522 | staging/wwtranslatedb/translatedb.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3520 | staging/wwsaveload/saveloadstatus.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3521 | staging/wwsaveload/saveloadstatus.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3522 | staging/wwsaveload/twiddler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3523 | staging/wwtranslatedb/translatedb.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3524 | staging/wwtranslatedb/translatedb.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3525 | staging/wwui/dialogbase.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3526 | staging/wwui/dialogbase.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3525 | staging/wwtranslatedb/translatedb.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3526 | staging/wwtranslatedb/translatedb.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3527 | staging/wwui/dialogbase.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3528 | staging/wwui/dialogbase.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3529 | staging/wwui/dialogmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3529 | staging/wwui/dialogbase.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/353 | port/patches/ww3d2-a35-create-depth-timing.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3530 | staging/wwui/dialogparser.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3531 | staging/wwui/dialogparser.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3530 | staging/wwui/dialogbase.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3531 | staging/wwui/dialogmgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3532 | staging/wwui/dialogparser.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3533 | staging/wwui/dialogparser.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3534 | staging/wwui/dialogparser.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3535 | staging/wwui/dialogparser.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3536 | staging/wwui/dialogparser.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3537 | staging/wwui/dialogparser.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3538 | staging/wwui/editctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3539 | staging/wwui/editctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3538 | staging/wwui/dialogparser.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3539 | staging/wwui/dialogparser.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/354 | port/patches/ww3d2-a35-create-depth-timing.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3540 | staging/wwui/editctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3541 | staging/wwui/editctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3542 | staging/wwui/editctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3543 | staging/wwui/editctrl.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3544 | staging/wwui/mapctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3545 | staging/wwui/mapctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3546 | staging/wwui/menubackdrop.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3547 | staging/wwui/menubackdrop.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3543 | staging/wwui/editctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3544 | staging/wwui/editctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3545 | staging/wwui/editctrl.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3546 | staging/wwui/mapctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3547 | staging/wwui/mapctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3548 | staging/wwui/menubackdrop.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3549 | staging/wwui/menudialog.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3549 | staging/wwui/menubackdrop.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/355 | port/patches/ww3d2-a35-create-depth-timing.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3550 | staging/wwui/menuentryctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3551 | staging/wwui/menuentryctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3550 | staging/wwui/menubackdrop.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3551 | staging/wwui/menudialog.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3552 | staging/wwui/menuentryctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3553 | staging/wwui/menuentryctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3554 | staging/wwui/menuentryctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3555 | staging/wwui/menuentryctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3556 | staging/wwui/menuentryctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3557 | staging/wwui/screencursor.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3558 | staging/wwui/stylemgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3559 | staging/wwui/stylemgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3557 | staging/wwui/menuentryctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3558 | staging/wwui/menuentryctrl.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3559 | staging/wwui/screencursor.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/356 | port/patches/ww3d2-a35-dynamic-buffer-growth.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3560 | staging/wwui/wwuiinput.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3561 | staging/wwui/wwuiinput.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3560 | staging/wwui/stylemgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3561 | staging/wwui/stylemgr.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3562 | staging/wwui/wwuiinput.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3563 | staging/wwui/wwuiinput.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3564 | staging/wwui/wwuiinput.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3565 | staging/wwui/wwuiinput.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3566 | staging/wwui/wwuiinput.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3567 | staging/wwui/wwuiinput.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3566 | staging/wwui/wwuiinput.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3567 | staging/wwui/wwuiinput.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3568 | staging/wwui/wwuiinput.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/3569 | staging/wwui/wwuiinput.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/357 | port/patches/ww3d2-a35-dynamic-buffer-growth.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3570 | shark_init | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3571 | pthread_create | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3572 | _ZN4WW3D28Get_Movie_Capture_Frame_RateEv | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/3573 | shark_init | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3570 | staging/wwui/wwuiinput.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3571 | staging/wwui/wwuiinput.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3572 | shark_init | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3573 | pthread_create | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3574 | _ZN4WW3D28Get_Movie_Capture_Frame_RateEv | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| port_guards /rows/3575 | shark_init | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/358 | port/patches/ww3d2-a35-dynamic-buffer-growth.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/359 | port/patches/ww3d2-a35-dynamic-buffer-growth.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/36 | port/patches/combat-a35-host-script-file-handles.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -29900,558 +29900,558 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | renderer /rows/2328 | D3DRS_SPECULARENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2329 | D3DRS_LIGHTING | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/233 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2330 | D3DRS_DIFFUSEMATERIALSOURCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2331 | D3DRS_AMBIENTMATERIALSOURCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2332 | D3DRS_EMISSIVEMATERIALSOURCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2333 | D3DRS_PATCHSEGMENTS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2334 | D3DTSS_COLOROP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2335 | D3DTSS_COLORARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2336 | D3DTSS_COLORARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2337 | D3DTSS_ALPHAOP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2338 | D3DTSS_ALPHAARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2339 | D3DTSS_ALPHAARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2330 | D3DRS_COLORVERTEX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2331 | D3DRS_NORMALIZENORMALS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2332 | D3DRS_DIFFUSEMATERIALSOURCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2333 | D3DRS_AMBIENTMATERIALSOURCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2334 | D3DRS_EMISSIVEMATERIALSOURCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2335 | D3DRS_PATCHSEGMENTS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2336 | D3DTSS_COLOROP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2337 | D3DTSS_COLORARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2338 | D3DTSS_COLORARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2339 | D3DTSS_ALPHAOP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/234 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2340 | D3DTSS_BUMPENVMAT00 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2341 | D3DTSS_BUMPENVMAT01 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2342 | D3DTSS_BUMPENVMAT10 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2343 | D3DTSS_BUMPENVMAT11 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2344 | D3DTSS_TEXCOORDINDEX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2345 | D3DTSS_ADDRESSU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2346 | D3DTSS_ADDRESSV | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2347 | D3DTSS_MAGFILTER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2348 | D3DTSS_MINFILTER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2349 | D3DTSS_MIPFILTER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2340 | D3DTSS_ALPHAARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2341 | D3DTSS_ALPHAARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2342 | D3DTSS_BUMPENVMAT00 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2343 | D3DTSS_BUMPENVMAT01 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2344 | D3DTSS_BUMPENVMAT10 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2345 | D3DTSS_BUMPENVMAT11 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2346 | D3DTSS_TEXCOORDINDEX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2347 | D3DTSS_ADDRESSU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2348 | D3DTSS_ADDRESSV | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2349 | D3DTSS_MAGFILTER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/235 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2350 | D3DTSS_MAXANISOTROPY | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2351 | D3DTSS_TEXTURETRANSFORMFLAGS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2352 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2353 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2354 | D3DTOP_SELECTARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2355 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2356 | D3DTOP_ADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2357 | D3DTOP_SUBTRACT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2358 | D3DTOP_ADDSMOOTH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2359 | D3DTOP_BLENDTEXTUREALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2350 | D3DTSS_MINFILTER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2351 | D3DTSS_MIPFILTER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2352 | D3DTSS_MAXANISOTROPY | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2353 | D3DTSS_TEXTURETRANSFORMFLAGS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2354 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2355 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2356 | D3DTOP_SELECTARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2357 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2358 | D3DTOP_ADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2359 | D3DTOP_SUBTRACT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/236 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2360 | D3DTOP_BLENDCURRENTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2361 | D3DTOP_BUMPENVMAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2362 | D3DTOP_BUMPENVMAPLUMINANCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2363 | D3DTOP_DOTPRODUCT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2364 | D3DBLEND_ZERO | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2365 | D3DBLEND_ONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2366 | D3DBLEND_SRCCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2367 | D3DBLEND_INVSRCCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2368 | D3DBLEND_SRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2369 | D3DBLEND_INVSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2360 | D3DTOP_ADDSMOOTH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2361 | D3DTOP_BLENDTEXTUREALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2362 | D3DTOP_BLENDCURRENTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2363 | D3DTOP_BUMPENVMAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2364 | D3DTOP_BUMPENVMAPLUMINANCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2365 | D3DTOP_DOTPRODUCT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2366 | D3DBLEND_ZERO | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2367 | D3DBLEND_ONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2368 | D3DBLEND_SRCCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2369 | D3DBLEND_INVSRCCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/237 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2370 | D3DCMP_LESSEQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2371 | D3DCMP_GREATEREQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2372 | D3DMCS_MATERIAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2373 | D3DMCS_COLOR1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2374 | D3DMCS_COLOR2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2375 | D3DFILL_WIREFRAME | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2376 | D3DFILL_POINT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2377 | D3DFILL_SOLID | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2378 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2379 | D3DTTFF_COUNT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2370 | D3DBLEND_SRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2371 | D3DBLEND_INVSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2372 | D3DCMP_LESSEQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2373 | D3DCMP_GREATEREQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2374 | D3DMCS_MATERIAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2375 | D3DMCS_COLOR1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2376 | D3DMCS_COLOR2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2377 | D3DFILL_WIREFRAME | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2378 | D3DFILL_POINT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2379 | D3DFILL_SOLID | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/238 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2380 | D3DTTFF_COUNT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2381 | D3DTTFF_COUNT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2382 | D3DTTFF_COUNT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2383 | D3DTTFF_PROJECTED | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2384 | D3DBLEND_DESTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2385 | D3DBLEND_INVDESTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2386 | D3DBLEND_DESTCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2387 | D3DBLEND_INVDESTCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2388 | D3DBLEND_SRCALPHASAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2389 | D3DBLEND_BOTHSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2380 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2381 | D3DTTFF_COUNT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2382 | D3DTTFF_COUNT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2383 | D3DTTFF_COUNT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2384 | D3DTTFF_COUNT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2385 | D3DTTFF_PROJECTED | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2386 | D3DBLEND_DESTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2387 | D3DBLEND_INVDESTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2388 | D3DBLEND_DESTCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2389 | D3DBLEND_INVDESTCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/239 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2390 | D3DBLEND_BOTHINVSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2391 | D3DCMP_NEVER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2392 | D3DCMP_LESS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2393 | D3DCMP_EQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2394 | D3DCMP_GREATER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2395 | D3DCMP_NOTEQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2396 | D3DCMP_ALWAYS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2397 | D3DFOG_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2398 | D3DFOG_EXP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2399 | D3DFOG_EXP2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2390 | D3DBLEND_SRCALPHASAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2391 | D3DBLEND_BOTHSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2392 | D3DBLEND_BOTHINVSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2393 | D3DCMP_NEVER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2394 | D3DCMP_LESS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2395 | D3DCMP_EQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2396 | D3DCMP_GREATER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2397 | D3DCMP_NOTEQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2398 | D3DCMP_ALWAYS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2399 | D3DFOG_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/24 | staging/ww3d2/Dx8Wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/240 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2400 | D3DFOG_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2401 | D3DSTENCILOP_KEEP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2402 | D3DSTENCILOP_ZERO | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2403 | D3DSTENCILOP_REPLACE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2404 | D3DSTENCILOP_INCRSAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2405 | D3DSTENCILOP_DECRSAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2406 | D3DSTENCILOP_INVERT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2407 | D3DSTENCILOP_INCR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2408 | D3DSTENCILOP_DECR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2409 | D3DTADDRESS_WRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2400 | D3DFOG_EXP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2401 | D3DFOG_EXP2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2402 | D3DFOG_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2403 | D3DSTENCILOP_KEEP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2404 | D3DSTENCILOP_ZERO | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2405 | D3DSTENCILOP_REPLACE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2406 | D3DSTENCILOP_INCRSAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2407 | D3DSTENCILOP_DECRSAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2408 | D3DSTENCILOP_INVERT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2409 | D3DSTENCILOP_INCR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/241 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2410 | D3DTADDRESS_CLAMP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2411 | D3DTEXF_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2412 | D3DTEXF_POINT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2413 | D3DTEXF_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2414 | D3DTEXF_ANISOTROPIC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2415 | D3DCULL_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2416 | D3DCULL_CW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2417 | D3DCULL_CCW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2418 | D3DFMT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2419 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2410 | D3DSTENCILOP_DECR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2411 | D3DTADDRESS_WRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2412 | D3DTADDRESS_CLAMP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2413 | D3DTEXF_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2414 | D3DTEXF_POINT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2415 | D3DTEXF_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2416 | D3DTEXF_ANISOTROPIC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2417 | D3DCULL_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2418 | D3DCULL_CW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2419 | D3DCULL_CCW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/242 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2420 | D3DFMT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2421 | D3DFMT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2422 | D3DFMT_X1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2423 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2424 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2425 | D3DFMT_R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2426 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2427 | D3DFMT_A8R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2428 | D3DFMT_X4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2429 | D3DFMT_A8P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2420 | D3DFMT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2421 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2422 | D3DFMT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2423 | D3DFMT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2424 | D3DFMT_X1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2425 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2426 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2427 | D3DFMT_R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2428 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2429 | D3DFMT_A8R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/243 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2430 | D3DFMT_P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2431 | D3DFMT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2432 | D3DFMT_A8L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2433 | D3DFMT_A4L4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2434 | D3DFMT_V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2435 | D3DFMT_L6V5U5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2436 | D3DFMT_X8L8V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2437 | D3DFMT_Q8W8V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2438 | D3DFMT_V16U16 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2439 | D3DFMT_W11V11U10 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2430 | D3DFMT_X4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2431 | D3DFMT_A8P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2432 | D3DFMT_P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2433 | D3DFMT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2434 | D3DFMT_A8L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2435 | D3DFMT_A4L4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2436 | D3DFMT_V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2437 | D3DFMT_L6V5U5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2438 | D3DFMT_X8L8V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2439 | D3DFMT_Q8W8V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/244 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2440 | D3DFMT_UYVY | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2441 | D3DFMT_YUY2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2442 | D3DFMT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2443 | D3DFMT_DXT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2444 | D3DFMT_DXT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2445 | D3DFMT_DXT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2446 | D3DFMT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2447 | D3DFMT_D16_LOCKABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2448 | D3DFMT_D32 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2449 | D3DFMT_D15S1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2440 | D3DFMT_V16U16 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2441 | D3DFMT_W11V11U10 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2442 | D3DFMT_UYVY | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2443 | D3DFMT_YUY2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2444 | D3DFMT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2445 | D3DFMT_DXT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2446 | D3DFMT_DXT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2447 | D3DFMT_DXT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2448 | D3DFMT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2449 | D3DFMT_D16_LOCKABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/245 | staging/ww3d2/bitmaphandler.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2450 | D3DFMT_D24S8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2451 | D3DFMT_D16 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2452 | D3DFMT_D24X8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2453 | D3DFMT_D24X4S4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2454 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2455 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2456 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2457 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2458 | D3DTSS_TCI_CAMERASPACENORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2459 | D3DTSS_TCI_CAMERASPACEPOSITION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2450 | D3DFMT_D32 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2451 | D3DFMT_D15S1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2452 | D3DFMT_D24S8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2453 | D3DFMT_D16 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2454 | D3DFMT_D24X8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2455 | D3DFMT_D24X4S4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2456 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2457 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2458 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2459 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/246 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2460 | D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2461 | D3DFVF_XYZ | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2462 | D3DFVF_XYZRHW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2463 | D3DFVF_XYZB1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2464 | D3DFVF_XYZB2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2465 | D3DFVF_XYZB3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2466 | D3DFVF_XYZB4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2467 | D3DFVF_XYZB5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2468 | D3DFVF_NORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2469 | D3DFVF_PSIZE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2460 | D3DTSS_TCI_CAMERASPACENORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2461 | D3DTSS_TCI_CAMERASPACEPOSITION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2462 | D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2463 | D3DFVF_XYZ | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2464 | D3DFVF_XYZRHW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2465 | D3DFVF_XYZB1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2466 | D3DFVF_XYZB2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2467 | D3DFVF_XYZB3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2468 | D3DFVF_XYZB4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2469 | D3DFVF_XYZB5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/247 | WW3D_FORMAT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2470 | D3DFVF_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2471 | D3DFVF_SPECULAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2472 | D3DFVF_TEX0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2473 | D3DFVF_TEX1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2474 | D3DFVF_TEX2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2475 | D3DFVF_TEX3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2476 | D3DFVF_TEX4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2477 | D3DFVF_TEX5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2478 | D3DFVF_TEX6 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2479 | D3DFVF_TEX7 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2470 | D3DFVF_NORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2471 | D3DFVF_PSIZE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2472 | D3DFVF_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2473 | D3DFVF_SPECULAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2474 | D3DFVF_TEX0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2475 | D3DFVF_TEX1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2476 | D3DFVF_TEX2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2477 | D3DFVF_TEX3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2478 | D3DFVF_TEX4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2479 | D3DFVF_TEX5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/248 | WW3D_FORMAT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2480 | D3DFVF_TEX8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2481 | D3DFVF_LASTBETA_UBYTE4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2482 | D3DFVF_TEXTUREFORMAT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2483 | D3DFVF_TEXTUREFORMAT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2484 | D3DFVF_TEXTUREFORMAT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2485 | D3DFVF_TEXTUREFORMAT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2486 | D3DFVF_TEXCOORDSIZE1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2487 | D3DFVF_TEXTUREFORMAT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2488 | D3DFVF_TEXCOORDSIZE2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2489 | D3DFVF_TEXTUREFORMAT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2480 | D3DFVF_TEX6 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2481 | D3DFVF_TEX7 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2482 | D3DFVF_TEX8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2483 | D3DFVF_LASTBETA_UBYTE4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2484 | D3DFVF_TEXTUREFORMAT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2485 | D3DFVF_TEXTUREFORMAT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2486 | D3DFVF_TEXTUREFORMAT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2487 | D3DFVF_TEXTUREFORMAT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2488 | D3DFVF_TEXCOORDSIZE1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2489 | D3DFVF_TEXTUREFORMAT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/249 | WW3D_FORMAT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2490 | D3DFVF_TEXCOORDSIZE3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2491 | D3DFVF_TEXTUREFORMAT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2492 | D3DFVF_TEXCOORDSIZE4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2493 | D3DFVF_TEXTUREFORMAT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2494 | D3DRS_AMBIENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2495 | D3DLIGHT_DIRECTIONAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2496 | FontFace | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2497 | FontCandidateList | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2498 | SurfaceStore | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2499 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2490 | D3DFVF_TEXCOORDSIZE2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2491 | D3DFVF_TEXTUREFORMAT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2492 | D3DFVF_TEXCOORDSIZE3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2493 | D3DFVF_TEXTUREFORMAT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2494 | D3DFVF_TEXCOORDSIZE4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2495 | D3DFVF_TEXTUREFORMAT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2496 | D3DRS_AMBIENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2497 | D3DLIGHT_DIRECTIONAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2498 | FontFace | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2499 | FontCandidateList | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/25 | staging/ww3d2/Dx8Wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/250 | WW3D_FORMAT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2500 | WW3D_FORMAT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2501 | WW3D_FORMAT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2502 | WW3D_FORMAT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2503 | WW3D_FORMAT_X1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2504 | WW3D_FORMAT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2505 | WW3D_FORMAT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2506 | WW3D_FORMAT_A8R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2507 | WW3D_FORMAT_X4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2508 | WW3D_FORMAT_A8P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2509 | WW3D_FORMAT_A8L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2500 | SurfaceStore | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2501 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2502 | WW3D_FORMAT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2503 | WW3D_FORMAT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2504 | WW3D_FORMAT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2505 | WW3D_FORMAT_X1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2506 | WW3D_FORMAT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2507 | WW3D_FORMAT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2508 | WW3D_FORMAT_A8R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2509 | WW3D_FORMAT_X4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/251 | WW3D_FORMAT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2510 | WW3D_FORMAT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2511 | WW3D_FORMAT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2512 | WW3D_FORMAT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2513 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2514 | WW3D_FORMAT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2515 | WW3D_FORMAT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2516 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2517 | WW3D_FORMAT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2518 | WW3D_FORMAT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2519 | WW3D_FORMAT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2510 | WW3D_FORMAT_A8P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2511 | WW3D_FORMAT_A8L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2512 | WW3D_FORMAT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2513 | WW3D_FORMAT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2514 | WW3D_FORMAT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2515 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2516 | WW3D_FORMAT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2517 | WW3D_FORMAT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2518 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2519 | WW3D_FORMAT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/252 | WW3D_FORMAT_R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2520 | TextureStageSamplerState | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2521 | TextureStageCombinerState | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2522 | port/renderer/vita/ww3d_dx8_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2523 | D3DRS_ZBIAS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2524 | D3DRS_ZBIAS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2525 | D3DTADDRESS_WRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2526 | D3DTADDRESS_WRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2527 | D3DTEXF_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2528 | D3DTEXF_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2529 | D3DTEXF_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2520 | WW3D_FORMAT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2521 | WW3D_FORMAT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2522 | TextureStageSamplerState | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2523 | TextureStageCombinerState | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2524 | port/renderer/vita/ww3d_dx8_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2525 | D3DRS_ZBIAS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2526 | D3DRS_ZBIAS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2527 | D3DTADDRESS_WRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2528 | D3DTADDRESS_WRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2529 | D3DTEXF_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/253 | WW3D_FORMAT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2530 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2531 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2532 | D3DTADDRESS_WRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2533 | D3DTADDRESS_WRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2534 | D3DTEXF_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2535 | D3DTEXF_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2536 | D3DTEXF_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2537 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2538 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2539 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2530 | D3DTEXF_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2531 | D3DTEXF_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2532 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2533 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2534 | D3DTADDRESS_WRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2535 | D3DTADDRESS_WRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2536 | D3DTEXF_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2537 | D3DTEXF_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2538 | D3DTEXF_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2539 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/254 | WW3D_FORMAT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2540 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2541 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2542 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2543 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2544 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2545 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2546 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2547 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2548 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2549 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2540 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2541 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2542 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2543 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2544 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2545 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2546 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2547 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2548 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2549 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/255 | WW3D_FORMAT_P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2550 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2551 | D3DTS_TEXTURE0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2552 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2553 | WW3D_FORMAT_DXT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2554 | WW3D_FORMAT_DXT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2555 | WW3D_FORMAT_DXT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2556 | WW3D_FORMAT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2557 | WW3D_FORMAT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2558 | WW3D_FORMAT_DXT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2559 | WW3D_FORMAT_DXT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2550 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2551 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2552 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2553 | D3DTS_TEXTURE0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2554 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2555 | WW3D_FORMAT_DXT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2556 | WW3D_FORMAT_DXT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2557 | WW3D_FORMAT_DXT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2558 | WW3D_FORMAT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2559 | WW3D_FORMAT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/256 | WW3D_FORMAT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2560 | WW3D_FORMAT_DXT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2561 | WW3D_FORMAT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2562 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2563 | D3DFMT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2564 | D3DFMT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2565 | D3DFMT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2566 | D3DFMT_X1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2567 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2568 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2569 | D3DFMT_A8R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2560 | WW3D_FORMAT_DXT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2561 | WW3D_FORMAT_DXT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2562 | WW3D_FORMAT_DXT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2563 | WW3D_FORMAT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2564 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2565 | D3DFMT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2566 | D3DFMT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2567 | D3DFMT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2568 | D3DFMT_X1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2569 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/257 | WW3D_FORMAT_DXT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2570 | D3DFMT_X4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2571 | D3DFMT_A8P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2572 | D3DFMT_A8L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2573 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2574 | D3DFMT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2575 | D3DFMT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2576 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2577 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2578 | D3DFMT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2579 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2570 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2571 | D3DFMT_A8R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2572 | D3DFMT_X4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2573 | D3DFMT_A8P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2574 | D3DFMT_A8L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2575 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2576 | D3DFMT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2577 | D3DFMT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2578 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2579 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/258 | WW3D_FORMAT_DXT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2580 | D3DFMT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2581 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2582 | D3DFMT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2583 | D3DFMT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2584 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2585 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2586 | D3DFMT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2587 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2588 | D3DFMT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2589 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2580 | D3DFMT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2581 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2582 | D3DFMT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2583 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2584 | D3DFMT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2585 | D3DFMT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2586 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2587 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2588 | D3DFMT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2589 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/259 | WW3D_FORMAT_DXT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2590 | D3DFMT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2591 | D3DFMT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2592 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2593 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2594 | D3DFMT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2595 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2596 | D3DFMT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2597 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2598 | D3DFMT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2599 | D3DFMT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2590 | D3DFMT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2591 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2592 | D3DFMT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2593 | D3DFMT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2594 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2595 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2596 | D3DFMT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2597 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2598 | D3DFMT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2599 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/26 | staging/ww3d2/Dx8Wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/260 | WW3D_FORMAT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2600 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2601 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2602 | D3DFMT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2603 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2604 | D3DFMT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2605 | D3DFMT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2606 | D3DFMT_DXT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2607 | D3DFMT_DXT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2608 | D3DFMT_DXT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2609 | D3DFMT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2600 | D3DFMT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2601 | D3DFMT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2602 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2603 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2604 | D3DFMT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2605 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2606 | D3DFMT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2607 | D3DFMT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2608 | D3DFMT_DXT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2609 | D3DFMT_DXT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/261 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2610 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2611 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2612 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2613 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2614 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2615 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2616 | WW3D_FORMAT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2617 | WW3D_FORMAT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2618 | WW3D_FORMAT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2610 | D3DFMT_DXT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2611 | D3DFMT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2612 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2613 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2614 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2615 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2616 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2617 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2618 | WW3D_FORMAT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2619 | WW3D_FORMAT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/262 | WW3D_FORMAT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2620 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2621 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2620 | WW3D_FORMAT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2621 | WW3D_FORMAT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2622 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2623 | WW3D_FORMAT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2624 | WW3D_FORMAT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2625 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2626 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2627 | D3DTSS_TEXCOORDINDEX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2628 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2629 | D3DTSS_TEXTURETRANSFORMFLAGS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2623 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2624 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2625 | WW3D_FORMAT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2626 | WW3D_FORMAT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2627 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2628 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2629 | D3DTSS_TEXCOORDINDEX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/263 | WW3D_FORMAT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2630 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2631 | D3DTS_PROJECTION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2632 | WW3D_FORMAT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2633 | WW3D_FORMAT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2630 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2631 | D3DTSS_TEXTURETRANSFORMFLAGS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2632 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2633 | D3DTS_PROJECTION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2634 | WW3D_FORMAT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2635 | D3DFMT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2636 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2637 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2638 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2639 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2635 | WW3D_FORMAT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2636 | WW3D_FORMAT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2637 | D3DFMT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2638 | D3DFMT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2639 | D3DFMT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/264 | WW3D_FORMAT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2640 | D3DTS_TEXTURE0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2641 | D3DTS_TEXTURE0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2640 | D3DFMT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2641 | D3DFMT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2642 | D3DTS_TEXTURE0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2643 | D3DTS_TEXTURE0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2644 | D3DTSS_COLOROP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2645 | D3DTSS_COLORARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2646 | D3DTSS_COLORARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2647 | D3DTSS_ALPHAOP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2648 | D3DTSS_ALPHAARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2649 | D3DTSS_ALPHAARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2644 | D3DTS_TEXTURE0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2645 | D3DTS_TEXTURE0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2646 | D3DTSS_COLOROP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2647 | D3DTSS_COLORARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2648 | D3DTSS_COLORARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2649 | D3DTSS_ALPHAOP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/265 | WW3D_FORMAT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2650 | D3DTSS_ADDRESSU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2651 | D3DTSS_ADDRESSV | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2652 | D3DTSS_MINFILTER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2653 | D3DTSS_MAGFILTER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2654 | D3DTSS_MIPFILTER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2655 | D3DTSS_TEXCOORDINDEX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2656 | D3DTSS_TEXTURETRANSFORMFLAGS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2657 | D3DTSS_COLOROP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2658 | D3DTSS_COLORARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2659 | D3DTSS_COLORARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2650 | D3DTSS_ALPHAARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2651 | D3DTSS_ALPHAARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2652 | D3DTSS_ADDRESSU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2653 | D3DTSS_ADDRESSV | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2654 | D3DTSS_MINFILTER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2655 | D3DTSS_MAGFILTER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2656 | D3DTSS_MIPFILTER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2657 | D3DTSS_TEXCOORDINDEX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2658 | D3DTSS_TEXTURETRANSFORMFLAGS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2659 | D3DTSS_COLOROP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/266 | WW3D_FORMAT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2660 | D3DTSS_ALPHAOP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2661 | D3DTSS_ALPHAARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2662 | D3DTSS_ALPHAARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2663 | D3DTSS_TEXCOORDINDEX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2664 | D3DTSS_TEXTURETRANSFORMFLAGS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2665 | D3DTS_WORLD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2666 | D3DTS_VIEW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2667 | VitaIndexedMeshBatch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2668 | Entry | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2669 | ShaderStateContract | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2660 | D3DTSS_COLORARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2661 | D3DTSS_COLORARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2662 | D3DTSS_ALPHAOP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2663 | D3DTSS_ALPHAARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2664 | D3DTSS_ALPHAARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2665 | D3DTSS_TEXCOORDINDEX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2666 | D3DTSS_TEXTURETRANSFORMFLAGS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2667 | D3DTS_WORLD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2668 | D3DTS_VIEW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2669 | VitaIndexedMeshBatch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/267 | WW3D_FORMAT_R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2670 | FogStateContract | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2671 | D3DRS_FOGENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2672 | D3DRS_FOGCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2673 | D3DRS_FOGSTART | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2674 | D3DRS_FOGEND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2675 | D3DRS_AMBIENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2676 | NativePresentationRect | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2677 | OriginalTextureCoordinateState | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2678 | NativeTextureStageCache | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2679 | NativeRenderStateCache | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2670 | Entry | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2671 | ShaderStateContract | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2672 | FogStateContract | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2673 | D3DRS_FOGENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2674 | D3DRS_FOGCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2675 | D3DRS_FOGSTART | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2676 | D3DRS_FOGEND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2677 | D3DRS_AMBIENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2678 | NativePresentationRect | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2679 | OriginalTextureCoordinateState | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/268 | WW3D_FORMAT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2680 | MeshBoundaryTiming | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2681 | NativeTextureObjectSampler | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2682 | SourceColor | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2683 | MaterialVertexColor | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2684 | MaterialLightDirections | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2685 | CachedMaterialVertexColor | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2686 | CachedConstantMaterialColor | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2687 | D3DCMP_NEVER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2688 | D3DCMP_LESS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2689 | D3DCMP_EQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2680 | NativeTextureStageCache | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2681 | NativeRenderStateCache | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2682 | MeshBoundaryTiming | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2683 | NativeTextureObjectSampler | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2684 | SourceColor | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2685 | MaterialVertexColor | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2686 | MaterialLightDirections | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2687 | CachedMaterialVertexColor | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2688 | CachedConstantMaterialColor | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2689 | D3DCMP_NEVER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/269 | WW3D_FORMAT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2690 | D3DCMP_LESSEQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2691 | D3DCMP_GREATER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2692 | D3DCMP_NOTEQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2693 | D3DCMP_GREATEREQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2694 | D3DCMP_ALWAYS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2695 | D3DBLEND_ZERO | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2696 | D3DBLEND_ONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2697 | D3DBLEND_SRCCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2698 | D3DBLEND_INVSRCCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2699 | D3DBLEND_SRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2690 | D3DCMP_LESS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2691 | D3DCMP_EQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2692 | D3DCMP_LESSEQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2693 | D3DCMP_GREATER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2694 | D3DCMP_NOTEQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2695 | D3DCMP_GREATEREQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2696 | D3DCMP_ALWAYS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2697 | D3DBLEND_ZERO | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2698 | D3DBLEND_ONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2699 | D3DBLEND_SRCCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/27 | staging/ww3d2/Dx8Wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/270 | WW3D_FORMAT_DXT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2700 | D3DBLEND_INVSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2701 | D3DBLEND_DESTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2702 | D3DBLEND_INVDESTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2703 | D3DBLEND_DESTCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2704 | D3DBLEND_INVDESTCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2705 | D3DBLEND_SRCALPHASAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2706 | D3DFILL_POINT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2707 | D3DFILL_WIREFRAME | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2708 | D3DFILL_SOLID | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2709 | D3DRS_FOGENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2700 | D3DBLEND_INVSRCCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2701 | D3DBLEND_SRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2702 | D3DBLEND_INVSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2703 | D3DBLEND_DESTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2704 | D3DBLEND_INVDESTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2705 | D3DBLEND_DESTCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2706 | D3DBLEND_INVDESTCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2707 | D3DBLEND_SRCALPHASAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2708 | D3DFILL_POINT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2709 | D3DFILL_WIREFRAME | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/271 | WW3D_FORMAT_DXT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2710 | D3DRS_FOGCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2711 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2712 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2713 | D3DTSS_TCI_CAMERASPACENORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2714 | D3DTSS_TCI_CAMERASPACEPOSITION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2715 | D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2716 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2717 | D3DTTFF_COUNT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2718 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2719 | D3DTTFF_PROJECTED | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2710 | D3DFILL_SOLID | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2711 | D3DRS_FOGENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2712 | D3DRS_FOGCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2713 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2714 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2715 | D3DTSS_TCI_CAMERASPACENORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2716 | D3DTSS_TCI_CAMERASPACEPOSITION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2717 | D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2718 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2719 | D3DTTFF_COUNT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/272 | WW3D_FORMAT_DXT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2720 | D3DTTFF_COUNT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2721 | D3DTTFF_COUNT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2722 | D3DTTFF_COUNT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2723 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2724 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2720 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2721 | D3DTTFF_PROJECTED | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2722 | D3DTTFF_COUNT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2723 | D3DTTFF_COUNT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2724 | D3DTTFF_COUNT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2725 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2726 | D3DTSS_TCI_CAMERASPACENORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2727 | D3DTSS_TCI_CAMERASPACEPOSITION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2728 | D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2729 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2726 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2727 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2728 | D3DTSS_TCI_CAMERASPACENORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2729 | D3DTSS_TCI_CAMERASPACEPOSITION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/273 | WW3D_FORMAT_DXT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2730 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2731 | D3DTSS_TCI_CAMERASPACENORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2732 | D3DTSS_TCI_CAMERASPACEPOSITION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2733 | D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2734 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2735 | D3DRS_ALPHATESTENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2736 | D3DRS_ALPHAREF | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2737 | D3DRS_ALPHAFUNC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2738 | D3DRS_ALPHABLENDENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2739 | D3DRS_SRCBLEND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2730 | D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2731 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2732 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2733 | D3DTSS_TCI_CAMERASPACENORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2734 | D3DTSS_TCI_CAMERASPACEPOSITION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2735 | D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2736 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2737 | D3DRS_ALPHATESTENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2738 | D3DRS_ALPHAREF | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2739 | D3DRS_ALPHAFUNC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/274 | WW3D_FORMAT_DXT5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2740 | D3DRS_DESTBLEND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2741 | D3DRS_ZFUNC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2742 | D3DRS_ZWRITEENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2743 | D3DRS_CULLMODE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2744 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2745 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2746 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2747 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2748 | D3DTOP_SELECTARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2740 | D3DRS_ALPHABLENDENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2741 | D3DRS_SRCBLEND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2742 | D3DRS_DESTBLEND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2743 | D3DRS_ZFUNC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2744 | D3DRS_ZWRITEENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2745 | D3DRS_CULLMODE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2746 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2747 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2748 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2749 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/275 | WW3D_FORMAT_P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2750 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2751 | D3DTOP_ADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2752 | D3DTOP_ADDSMOOTH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2753 | D3DTOP_SUBTRACT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2754 | D3DTOP_BLENDTEXTUREALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2755 | D3DTOP_BLENDCURRENTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2750 | D3DTOP_SELECTARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2751 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2752 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2753 | D3DTOP_ADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2754 | D3DTOP_ADDSMOOTH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2755 | D3DTOP_SUBTRACT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2756 | D3DTOP_BLENDTEXTUREALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2757 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2758 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2759 | D3DTOP_SELECTARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2757 | D3DTOP_BLENDCURRENTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2758 | D3DTOP_BLENDTEXTUREALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2759 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/276 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2760 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2761 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2762 | D3DTOP_ADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2763 | D3DTOP_ADDSMOOTH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2764 | D3DTOP_SUBTRACT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2765 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2766 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2767 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2768 | D3DTOP_ADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2769 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2761 | D3DTOP_SELECTARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2762 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2763 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2764 | D3DTOP_ADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2765 | D3DTOP_ADDSMOOTH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2766 | D3DTOP_SUBTRACT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2767 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2768 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2769 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/277 | WW3D_FORMAT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2770 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2771 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2772 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2773 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2774 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2775 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2776 | D3DTOP_ADDSMOOTH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2777 | D3DTOP_ADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2778 | D3DTOP_SUBTRACT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2779 | D3DTOP_SUBTRACT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2770 | D3DTOP_ADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2771 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2772 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2773 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2774 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2775 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2776 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2777 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2778 | D3DTOP_ADDSMOOTH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2779 | D3DTOP_ADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/278 | WW3D_FORMAT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2780 | D3DTOP_BLENDTEXTUREALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2781 | D3DTOP_BLENDCURRENTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2782 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2783 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2784 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2785 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2786 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2787 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2788 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2789 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2780 | D3DTOP_SUBTRACT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2781 | D3DTOP_SUBTRACT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2782 | D3DTOP_BLENDTEXTUREALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2783 | D3DTOP_BLENDCURRENTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2784 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2785 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2786 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2787 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2788 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2789 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/279 | WW3D_FORMAT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2790 | D3DTOP_ADDSMOOTH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2791 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2792 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2793 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2790 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2791 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2792 | D3DTOP_ADDSMOOTH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2793 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2794 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2795 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2796 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2797 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2798 | D3DTSS_TEXCOORDINDEX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2799 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2797 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2798 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2799 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/28 | staging/ww3d2/Dx8Wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/280 | WW3D_FORMAT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2800 | D3DTSS_TEXTURETRANSFORMFLAGS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2801 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2802 | D3DRS_ALPHABLENDENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2803 | D3DRS_SRCBLEND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2804 | D3DRS_DESTBLEND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2805 | D3DRS_ALPHATESTENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2806 | D3DRS_ALPHAREF | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2807 | D3DRS_ALPHAFUNC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2808 | D3DRS_ZFUNC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2809 | D3DRS_ZWRITEENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2800 | D3DTSS_TEXCOORDINDEX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2801 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2802 | D3DTSS_TEXTURETRANSFORMFLAGS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2803 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2804 | D3DRS_AMBIENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2805 | D3DRS_COLORVERTEX | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2806 | D3DRS_NORMALIZENORMALS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2807 | D3DRS_ALPHABLENDENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2808 | D3DRS_SRCBLEND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2809 | D3DRS_DESTBLEND | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/281 | WW3D_FORMAT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2810 | D3DRS_CULLMODE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2811 | D3DCULL_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2812 | D3DCULL_CCW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2813 | D3DRS_FILLMODE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2814 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2815 | Statistics | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2816 | BackendMemoryStatistics | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2817 | BackendLifecycleStatistics | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2818 | IndexedTriangleSubmission | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2819 | IndexedTransformMatrices | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2810 | D3DRS_ALPHATESTENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2811 | D3DRS_ALPHAREF | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2812 | D3DRS_ALPHAFUNC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2813 | D3DRS_ZFUNC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2814 | D3DRS_ZWRITEENABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2815 | D3DRS_CULLMODE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2816 | D3DCULL_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2817 | D3DCULL_CCW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2818 | D3DRS_FILLMODE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2819 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/282 | WW3D_FORMAT_R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2820 | NativeViewport | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2821 | port/renderer/vita/ww3d_vita_renderer.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2822 | /rows/2822 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2823 | /rows/2823 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2824 | /rows/2824 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2825 | /rows/2825 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2826 | /rows/2826 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2827 | /rows/2827 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2820 | D3DLIGHT_DIRECTIONAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2821 | Statistics | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2822 | BackendMemoryStatistics | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2823 | BackendLifecycleStatistics | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2824 | IndexedTriangleSubmission | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2825 | IndexedTransformMatrices | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2826 | NativeViewport | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2827 | port/renderer/vita/ww3d_vita_renderer.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2828 | /rows/2828 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2829 | /rows/2829 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/283 | WW3D_FORMAT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -30477,260 +30477,268 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | renderer /rows/2848 | /rows/2848 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/2849 | /rows/2849 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/285 | WW3D_FORMAT_P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2850 | D3DBLEND_BOTHINVSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2851 | D3DBLEND_BOTHSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2852 | D3DBLEND_DESTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2853 | D3DBLEND_DESTCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2854 | D3DBLEND_INVDESTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2855 | D3DBLEND_INVDESTCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2856 | D3DBLEND_INVSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2857 | D3DBLEND_INVSRCCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2858 | D3DBLEND_ONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2859 | D3DBLEND_SRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2850 | /rows/2850 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2851 | /rows/2851 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2852 | /rows/2852 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2853 | /rows/2853 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2854 | /rows/2854 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2855 | /rows/2855 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2856 | D3DBLEND_BOTHINVSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2857 | D3DBLEND_BOTHSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2858 | D3DBLEND_DESTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2859 | D3DBLEND_DESTCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/286 | staging/ww3d2/bmp2d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2860 | D3DBLEND_SRCALPHASAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2861 | D3DBLEND_SRCCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2862 | D3DBLEND_ZERO | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2863 | D3DCMP_ALWAYS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2864 | D3DCMP_EQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2865 | D3DCMP_GREATER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2866 | D3DCMP_GREATEREQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2867 | D3DCMP_LESS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2868 | D3DCMP_LESSEQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2869 | D3DCMP_NEVER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2860 | D3DBLEND_INVDESTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2861 | D3DBLEND_INVDESTCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2862 | D3DBLEND_INVSRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2863 | D3DBLEND_INVSRCCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2864 | D3DBLEND_ONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2865 | D3DBLEND_SRCALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2866 | D3DBLEND_SRCALPHASAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2867 | D3DBLEND_SRCCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2868 | D3DBLEND_ZERO | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2869 | D3DCMP_ALWAYS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/287 | staging/ww3d2/bmp2d.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2870 | D3DCMP_NOTEQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2871 | D3DCULL_CCW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2872 | D3DCULL_CW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2873 | D3DCULL_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2874 | D3DFILL_POINT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2875 | D3DFILL_SOLID | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2876 | D3DFILL_WIREFRAME | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2877 | D3DFMT_A1R5G5B5 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
-| renderer /rows/2878 | D3DFMT_A4L4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2879 | D3DFMT_A4R4G4B4 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
+| renderer /rows/2870 | D3DCMP_EQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2871 | D3DCMP_GREATER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2872 | D3DCMP_GREATEREQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2873 | D3DCMP_LESS | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2874 | D3DCMP_LESSEQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2875 | D3DCMP_NEVER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2876 | D3DCMP_NOTEQUAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2877 | D3DCULL_CCW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2878 | D3DCULL_CW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2879 | D3DCULL_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/288 | Bitmap2DObjClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2880 | D3DFMT_A8 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
-| renderer /rows/2884 | D3DFMT_A8R8G8B8 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
-| renderer /rows/2885 | D3DFMT_D15S1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2886 | D3DFMT_D16 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2887 | D3DFMT_D16_LOCKABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2888 | D3DFMT_D24S8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2889 | D3DFMT_D24X4S4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2880 | D3DFILL_POINT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2881 | D3DFILL_SOLID | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2882 | D3DFILL_WIREFRAME | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2883 | D3DFMT_A1R5G5B5 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
+| renderer /rows/2884 | D3DFMT_A4L4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2885 | D3DFMT_A4R4G4B4 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
+| renderer /rows/2886 | D3DFMT_A8 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
 | renderer /rows/289 | staging/ww3d2/boxrobj.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2890 | D3DFMT_D24X8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2891 | D3DFMT_D32 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2892 | D3DFMT_DXT1 | boundary_replaced | unclassified | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
-| renderer /rows/2896 | D3DFMT_DXT5 | boundary_replaced | unclassified | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
-| renderer /rows/2897 | D3DFMT_INDEX16 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2898 | D3DFMT_L6V5U5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2899 | D3DFMT_L8 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
+| renderer /rows/2890 | D3DFMT_A8R8G8B8 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
+| renderer /rows/2891 | D3DFMT_D15S1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2892 | D3DFMT_D16 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2893 | D3DFMT_D16_LOCKABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2894 | D3DFMT_D24S8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2895 | D3DFMT_D24X4S4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2896 | D3DFMT_D24X8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2897 | D3DFMT_D32 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2898 | D3DFMT_DXT1 | boundary_replaced | unclassified | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
 | renderer /rows/29 | staging/ww3d2/Dx8Wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/290 | D3DTS_WORLD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2900 | D3DFMT_P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2901 | D3DFMT_Q8W8V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2902 | D3DFMT_R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2903 | D3DFMT_R5G6B5 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
-| renderer /rows/2904 | D3DFMT_R8G8B8 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
-| renderer /rows/2905 | D3DFMT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2906 | D3DFMT_UYVY | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2907 | D3DFMT_V16U16 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2908 | D3DFMT_V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2909 | D3DFMT_W11V11U10 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2902 | D3DFMT_DXT5 | boundary_replaced | unclassified | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
+| renderer /rows/2903 | D3DFMT_INDEX16 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2904 | D3DFMT_L6V5U5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2905 | D3DFMT_L8 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
+| renderer /rows/2906 | D3DFMT_P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2907 | D3DFMT_Q8W8V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2908 | D3DFMT_R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2909 | D3DFMT_R5G6B5 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
 | renderer /rows/291 | D3DTS_WORLD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2912 | D3DFMT_X8L8V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2913 | D3DFMT_X8R8G8B8 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
-| renderer /rows/2914 | D3DFMT_YUY2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2915 | D3DFOG_EXP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2916 | D3DFOG_EXP2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2917 | D3DFOG_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2918 | D3DFOG_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2919 | D3DFVF_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2910 | D3DFMT_R8G8B8 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
+| renderer /rows/2911 | D3DFMT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2912 | D3DFMT_UYVY | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2913 | D3DFMT_V16U16 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2914 | D3DFMT_V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2915 | D3DFMT_W11V11U10 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2918 | D3DFMT_X8L8V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2919 | D3DFMT_X8R8G8B8 | boundary_replaced | unclassified | Native surface-copy and upload callers using these CPU conversion helpers; actual map assets remain unverified. |
 | renderer /rows/292 | BoxRenderObjClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2920 | D3DFVF_LASTBETA_UBYTE4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2921 | D3DFVF_NORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2922 | D3DFVF_PSIZE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2923 | D3DFVF_SPECULAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2924 | D3DFVF_TEX0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2925 | D3DFVF_TEX1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2926 | D3DFVF_TEX2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2927 | D3DFVF_TEX3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2928 | D3DFVF_TEX4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2929 | D3DFVF_TEX5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2920 | D3DFMT_YUY2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2921 | D3DFOG_EXP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2922 | D3DFOG_EXP2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2923 | D3DFOG_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2924 | D3DFOG_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2925 | D3DFVF_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2926 | D3DFVF_LASTBETA_UBYTE4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2927 | D3DFVF_NORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2928 | D3DFVF_PSIZE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2929 | D3DFVF_SPECULAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/293 | AABoxRenderObjClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2930 | D3DFVF_TEX6 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2931 | D3DFVF_TEX7 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2932 | D3DFVF_TEX8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2933 | D3DFVF_TEXCOORDSIZE1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2934 | D3DFVF_TEXCOORDSIZE2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2935 | D3DFVF_TEXCOORDSIZE3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2936 | D3DFVF_TEXCOORDSIZE4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2937 | D3DFVF_TEXTUREFORMAT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2938 | D3DFVF_TEXTUREFORMAT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2939 | D3DFVF_TEXTUREFORMAT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2930 | D3DFVF_TEX0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2931 | D3DFVF_TEX1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2932 | D3DFVF_TEX2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2933 | D3DFVF_TEX3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2934 | D3DFVF_TEX4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2935 | D3DFVF_TEX5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2936 | D3DFVF_TEX6 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2937 | D3DFVF_TEX7 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2938 | D3DFVF_TEX8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2939 | D3DFVF_TEXCOORDSIZE1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/294 | OBBoxRenderObjClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2940 | D3DFVF_TEXTUREFORMAT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2941 | D3DFVF_XYZ | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2942 | D3DFVF_XYZB1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2943 | D3DFVF_XYZB2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2944 | D3DFVF_XYZB3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2945 | D3DFVF_XYZB4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2946 | D3DFVF_XYZB5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2947 | D3DFVF_XYZRHW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2948 | D3DLIGHT_DIRECTIONAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2949 | D3DLIGHT_FORCE_DWORD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2940 | D3DFVF_TEXCOORDSIZE2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2941 | D3DFVF_TEXCOORDSIZE3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2942 | D3DFVF_TEXCOORDSIZE4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2943 | D3DFVF_TEXTUREFORMAT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2944 | D3DFVF_TEXTUREFORMAT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2945 | D3DFVF_TEXTUREFORMAT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2946 | D3DFVF_TEXTUREFORMAT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2947 | D3DFVF_XYZ | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2948 | D3DFVF_XYZB1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2949 | D3DFVF_XYZB2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/295 | BoxLoaderClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2950 | D3DLIGHT_POINT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2951 | D3DLIGHT_SPOT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2952 | D3DMCS_COLOR1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2953 | D3DMCS_COLOR2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2954 | D3DMCS_MATERIAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2955 | D3DRS_ALPHABLENDENABLE | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
-| renderer /rows/2956 | D3DRS_ALPHAFUNC | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
-| renderer /rows/2957 | D3DRS_ALPHAREF | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
-| renderer /rows/2958 | D3DRS_ALPHATESTENABLE | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
-| renderer /rows/2959 | D3DRS_AMBIENT | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/2950 | D3DFVF_XYZB3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2951 | D3DFVF_XYZB4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2952 | D3DFVF_XYZB5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2953 | D3DFVF_XYZRHW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2954 | D3DLIGHT_DIRECTIONAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2955 | D3DLIGHT_FORCE_DWORD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2956 | D3DLIGHT_POINT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2957 | D3DLIGHT_SPOT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2958 | D3DMCS_COLOR1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2959 | D3DMCS_COLOR2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/296 | BoxPrototypeClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2966 | D3DRS_CULLMODE | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
-| renderer /rows/2968 | D3DRS_DESTBLEND | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/2960 | D3DMCS_MATERIAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2961 | D3DRS_ALPHABLENDENABLE | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/2962 | D3DRS_ALPHAFUNC | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/2963 | D3DRS_ALPHAREF | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/2964 | D3DRS_ALPHATESTENABLE | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/2965 | D3DRS_AMBIENT | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
 | renderer /rows/297 | BWRenderClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/2973 | D3DRS_FILLMODE | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
-| renderer /rows/2974 | D3DRS_FOGCOLOR | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
-| renderer /rows/2976 | D3DRS_FOGENABLE | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
-| renderer /rows/2977 | D3DRS_FOGEND | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
-| renderer /rows/2978 | D3DRS_FOGSTART | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/2970 | D3DRS_COLORVERTEX | boundary_replaced | unclassified | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
+| renderer /rows/2972 | D3DRS_CULLMODE | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/2974 | D3DRS_DESTBLEND | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/2979 | D3DRS_FILLMODE | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
 | renderer /rows/298 | Buffer | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2980 | D3DRS_FOGCOLOR | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/2982 | D3DRS_FOGENABLE | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/2983 | D3DRS_FOGEND | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/2984 | D3DRS_FOGSTART | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
 | renderer /rows/299 | D3DTS_VIEW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/2994 | D3DRS_NORMALIZENORMALS | boundary_replaced | unclassified | Native modes issuing this direct state; token references may be declarations/debug names rather than active setters. Actual retail reachability remains open. |
 | renderer /rows/3 | staging/ww3d2/Dx8Wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/30 | staging/ww3d2/Dx8Wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/300 | ViewportClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3004 | D3DRS_SRCBLEND | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
 | renderer /rows/301 | CameraClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3010 | D3DRS_SRCBLEND | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
 | renderer /rows/302 | CollectionDefClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3026 | D3DRS_ZFUNC | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
-| renderer /rows/3028 | D3DRS_ZWRITEENABLE | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
-| renderer /rows/3029 | D3DSTENCILOP_DECR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/303 | CollectionPrototypeClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3030 | D3DSTENCILOP_DECRSAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3031 | D3DSTENCILOP_INCR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3032 | D3DSTENCILOP_INCRSAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3033 | D3DSTENCILOP_INVERT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3034 | D3DSTENCILOP_KEEP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3035 | D3DSTENCILOP_REPLACE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3036 | D3DSTENCILOP_ZERO | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3037 | D3DTADDRESS_BORDER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3038 | D3DTADDRESS_CLAMP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3039 | D3DTADDRESS_MIRROR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3032 | D3DRS_ZFUNC | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/3034 | D3DRS_ZWRITEENABLE | boundary_replaced | unclassified | All native modes using this direct render-state entry; actual retail value combinations and per-map effects require S4 closure. |
+| renderer /rows/3035 | D3DSTENCILOP_DECR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3036 | D3DSTENCILOP_DECRSAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3037 | D3DSTENCILOP_INCR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3038 | D3DSTENCILOP_INCRSAT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3039 | D3DSTENCILOP_INVERT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/304 | staging/ww3d2/collect.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3040 | D3DTADDRESS_MIRRORONCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3041 | D3DTADDRESS_WRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3042 | D3DTA_ALPHAREPLICATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3043 | D3DTA_COMPLEMENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3044 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3045 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3046 | D3DTA_SELECTMASK | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3047 | D3DTA_SPECULAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3048 | D3DTA_TEMP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3049 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3040 | D3DSTENCILOP_KEEP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3041 | D3DSTENCILOP_REPLACE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3042 | D3DSTENCILOP_ZERO | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3043 | D3DTADDRESS_BORDER | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3044 | D3DTADDRESS_CLAMP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3045 | D3DTADDRESS_MIRROR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3046 | D3DTADDRESS_MIRRORONCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3047 | D3DTADDRESS_WRAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3048 | D3DTA_ALPHAREPLICATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3049 | D3DTA_COMPLEMENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/305 | CollectionClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3050 | D3DTA_TFACTOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3051 | D3DTEXF_ANISOTROPIC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3052 | D3DTEXF_FLATCUBIC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3053 | D3DTEXF_GAUSSIANCUBIC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3054 | D3DTEXF_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3055 | D3DTEXF_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3056 | D3DTEXF_POINT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3057 | D3DTOP_ADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3058 | D3DTOP_ADDSIGNED | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3059 | D3DTOP_ADDSIGNED2X | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3050 | D3DTA_CURRENT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3051 | D3DTA_DIFFUSE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3052 | D3DTA_SELECTMASK | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3053 | D3DTA_SPECULAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3054 | D3DTA_TEMP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3055 | D3DTA_TEXTURE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3056 | D3DTA_TFACTOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3057 | D3DTEXF_ANISOTROPIC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3058 | D3DTEXF_FLATCUBIC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3059 | D3DTEXF_GAUSSIANCUBIC | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/306 | CollectionLoaderClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3060 | D3DTOP_ADDSMOOTH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3061 | D3DTOP_BLENDCURRENTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3062 | D3DTOP_BLENDDIFFUSEALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3063 | D3DTOP_BLENDFACTORALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3064 | D3DTOP_BLENDTEXTUREALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3065 | D3DTOP_BLENDTEXTUREALPHAPM | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3066 | D3DTOP_BUMPENVMAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3067 | D3DTOP_BUMPENVMAPLUMINANCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3068 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3069 | D3DTOP_DOTPRODUCT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3060 | D3DTEXF_LINEAR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3061 | D3DTEXF_NONE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3062 | D3DTEXF_POINT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3063 | D3DTOP_ADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3064 | D3DTOP_ADDSIGNED | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3065 | D3DTOP_ADDSIGNED2X | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3066 | D3DTOP_ADDSMOOTH | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3067 | D3DTOP_BLENDCURRENTALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3068 | D3DTOP_BLENDDIFFUSEALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3069 | D3DTOP_BLENDFACTORALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/307 | CollisionTestClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3070 | D3DTOP_LERP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3071 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3072 | D3DTOP_MODULATE2X | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3073 | D3DTOP_MODULATE4X | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3074 | D3DTOP_MODULATEALPHA_ADDCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3075 | D3DTOP_MODULATECOLOR_ADDALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3076 | D3DTOP_MODULATEINVALPHA_ADDCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3077 | D3DTOP_MODULATEINVCOLOR_ADDALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3078 | D3DTOP_MULTIPLYADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3079 | D3DTOP_PREMODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3070 | D3DTOP_BLENDTEXTUREALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3071 | D3DTOP_BLENDTEXTUREALPHAPM | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3072 | D3DTOP_BUMPENVMAP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3073 | D3DTOP_BUMPENVMAPLUMINANCE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3074 | D3DTOP_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3075 | D3DTOP_DOTPRODUCT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3076 | D3DTOP_LERP | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3077 | D3DTOP_MODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3078 | D3DTOP_MODULATE2X | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3079 | D3DTOP_MODULATE4X | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/308 | RayCollisionTestClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3080 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3081 | D3DTOP_SELECTARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3082 | D3DTOP_SUBTRACT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3083 | D3DTSS_ADDRESSU | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
-| renderer /rows/3084 | D3DTSS_ADDRESSV | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
-| renderer /rows/3087 | D3DTSS_ALPHAARG1 | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
-| renderer /rows/3088 | D3DTSS_ALPHAARG2 | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
-| renderer /rows/3089 | D3DTSS_ALPHAOP | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
+| renderer /rows/3080 | D3DTOP_MODULATEALPHA_ADDCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3081 | D3DTOP_MODULATECOLOR_ADDALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3082 | D3DTOP_MODULATEINVALPHA_ADDCOLOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3083 | D3DTOP_MODULATEINVCOLOR_ADDALPHA | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3084 | D3DTOP_MULTIPLYADD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3085 | D3DTOP_PREMODULATE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3086 | D3DTOP_SELECTARG1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3087 | D3DTOP_SELECTARG2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3088 | D3DTOP_SUBTRACT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3089 | D3DTSS_ADDRESSU | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
 | renderer /rows/309 | AABoxCollisionTestClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3098 | D3DTSS_COLORARG1 | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
-| renderer /rows/3099 | D3DTSS_COLORARG2 | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
+| renderer /rows/3090 | D3DTSS_ADDRESSV | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
+| renderer /rows/3093 | D3DTSS_ALPHAARG1 | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
+| renderer /rows/3094 | D3DTSS_ALPHAARG2 | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
+| renderer /rows/3095 | D3DTSS_ALPHAOP | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
 | renderer /rows/31 | staging/ww3d2/Dx8Wrapper.h | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/310 | OBBoxCollisionTestClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3100 | D3DTSS_COLOROP | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
-| renderer /rows/3101 | D3DTSS_MAGFILTER | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
-| renderer /rows/3104 | D3DTSS_MINFILTER | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
-| renderer /rows/3105 | D3DTSS_MIPFILTER | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
-| renderer /rows/3108 | D3DTSS_TCI_CAMERASPACENORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3109 | D3DTSS_TCI_CAMERASPACEPOSITION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3104 | D3DTSS_COLORARG1 | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
+| renderer /rows/3105 | D3DTSS_COLORARG2 | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
+| renderer /rows/3106 | D3DTSS_COLOROP | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
+| renderer /rows/3107 | D3DTSS_MAGFILTER | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
 | renderer /rows/311 | CompositeRenderObjClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3110 | D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3111 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3112 | D3DTSS_TEXCOORDINDEX | boundary_replaced | unclassified | Native meshes and indexed submissions using original material mapper states; exact per-map materials and other draw routes remain open. |
-| renderer /rows/3113 | D3DTSS_TEXTURETRANSFORMFLAGS | boundary_replaced | unclassified | Native meshes and indexed submissions using original material mapper states; exact per-map materials and other draw routes remain open. |
-| renderer /rows/3114 | D3DTS_PROJECTION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3115 | D3DTS_TEXTURE0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3116 | D3DTS_VIEW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3117 | D3DTS_WORLD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3118 | D3DTTFF_COUNT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3119 | D3DTTFF_COUNT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3110 | D3DTSS_MINFILTER | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
+| renderer /rows/3111 | D3DTSS_MIPFILTER | boundary_replaced | unclassified | Native materials issuing these states; per-map requests and visual consequences remain unverified. |
+| renderer /rows/3114 | D3DTSS_TCI_CAMERASPACENORMAL | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3115 | D3DTSS_TCI_CAMERASPACEPOSITION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3116 | D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3117 | D3DTSS_TCI_PASSTHRU | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3118 | D3DTSS_TEXCOORDINDEX | boundary_replaced | unclassified | Native meshes and indexed submissions using original material mapper states; exact per-map materials and other draw routes remain open. |
+| renderer /rows/3119 | D3DTSS_TEXTURETRANSFORMFLAGS | boundary_replaced | unclassified | Native meshes and indexed submissions using original material mapper states; exact per-map materials and other draw routes remain open. |
 | renderer /rows/312 | DazzleINIClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3120 | D3DTTFF_COUNT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3121 | D3DTTFF_COUNT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3122 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3123 | D3DTTFF_PROJECTED | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3124 | DX8_FVF_H | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3129 | DX8_FVF_XYZNDUV1 | boundary_replaced | unclassified | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
+| renderer /rows/3120 | D3DTS_PROJECTION | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3121 | D3DTS_TEXTURE0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3122 | D3DTS_VIEW | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3123 | D3DTS_WORLD | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3124 | D3DTTFF_COUNT1 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3125 | D3DTTFF_COUNT2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3126 | D3DTTFF_COUNT3 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3127 | D3DTTFF_COUNT4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3128 | D3DTTFF_DISABLE | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3129 | D3DTTFF_PROJECTED | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/313 | DazzlePersistFactoryClass | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3130 | DX8_FVF_XYZNDUV2 | boundary_replaced | unclassified | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
-| renderer /rows/3135 | WW3D_FORMAT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3136 | WW3D_FORMAT_A4L4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3137 | WW3D_FORMAT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3138 | WW3D_FORMAT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3139 | WW3D_FORMAT_A8L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3130 | DX8_FVF_H | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3135 | DX8_FVF_XYZNDUV1 | boundary_replaced | unclassified | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
+| renderer /rows/3136 | DX8_FVF_XYZNDUV2 | boundary_replaced | unclassified | Original callers reaching native indexed triangle submission with this FVF; retail reachability and alternative routes unverified. |
 | renderer /rows/314 | staging/ww3d2/dazzle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3140 | WW3D_FORMAT_A8P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3141 | WW3D_FORMAT_A8R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3142 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3143 | WW3D_FORMAT_COUNT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3144 | WW3D_FORMAT_DXT1 | boundary_replaced | unclassified | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
-| renderer /rows/3148 | WW3D_FORMAT_DXT5 | boundary_replaced | unclassified | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
-| renderer /rows/3149 | WW3D_FORMAT_L6V5U5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3141 | WW3D_FORMAT_A1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3142 | WW3D_FORMAT_A4L4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3143 | WW3D_FORMAT_A4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3144 | WW3D_FORMAT_A8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3145 | WW3D_FORMAT_A8L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3146 | WW3D_FORMAT_A8P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3147 | WW3D_FORMAT_A8R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3148 | WW3D_FORMAT_A8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3149 | WW3D_FORMAT_COUNT | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/315 | staging/ww3d2/dazzle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3150 | WW3D_FORMAT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3151 | WW3D_FORMAT_P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3152 | WW3D_FORMAT_R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3153 | WW3D_FORMAT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3154 | WW3D_FORMAT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3155 | WW3D_FORMAT_U8V8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3156 | WW3D_FORMAT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3157 | WW3D_FORMAT_X1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3158 | WW3D_FORMAT_X4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3159 | WW3D_FORMAT_X8L8V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3150 | WW3D_FORMAT_DXT1 | boundary_replaced | unclassified | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
+| renderer /rows/3154 | WW3D_FORMAT_DXT5 | boundary_replaced | unclassified | Native DDS assets requesting this format; all-map retail format inventory remains open. Two enum namespaces describe the same route and are not independent defects. |
+| renderer /rows/3155 | WW3D_FORMAT_L6V5U5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3156 | WW3D_FORMAT_L8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3157 | WW3D_FORMAT_P8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3158 | WW3D_FORMAT_R3G3B2 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3159 | WW3D_FORMAT_R5G6B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/316 | staging/ww3d2/dazzle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| renderer /rows/3160 | WW3D_FORMAT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3160 | WW3D_FORMAT_R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3161 | WW3D_FORMAT_U8V8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3162 | WW3D_FORMAT_UNKNOWN | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3163 | WW3D_FORMAT_X1R5G5B5 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3164 | WW3D_FORMAT_X4R4G4B4 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3165 | WW3D_FORMAT_X8L8V8U8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| renderer /rows/3166 | WW3D_FORMAT_X8R8G8B8 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/317 | staging/ww3d2/dazzle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/318 | staging/ww3d2/dazzle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | renderer /rows/319 | staging/ww3d2/dazzle.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |

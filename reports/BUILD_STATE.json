@@ -1,4 +1,17 @@
 {
+  "indexed_primary_lighting_20261003": {
+    "state": "HOST_SANITIZERS_ARM_LINK_PASS_SECONDARY_AND_NATIVE_PIXELS_OPEN",
+    "candidate": "A3.5-dev220",
+    "host_compile_link_actions": 129,
+    "arm_compile_link_actions": 138,
+    "host_renderer_sanitizer_cases_passed": 11,
+    "focused_tests_passed": 43,
+    "elf_sha256": "c291fdd9ea6ac02fd95e2eaec4a065bc79e57ab031806b1e663ba57f95121821",
+    "map_sha256": "9fcbe0311e5cd8fdad420ad1e52968bd3db1e467c97854419b009ef1617de6a1",
+    "native_acceptance_gates_closed": 0,
+    "canonical_package_passed": false,
+    "native_pixels_verified": false
+  },
   "original_light_environment_20261003": {
     "state": "HOST_ORIGINAL_STATE_SANITIZERS_ARM_LINK_PASS_DRAW_CONSUMPTION_OPEN",
     "candidate": "A3.5-dev219",

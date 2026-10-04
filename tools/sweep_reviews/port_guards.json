@@ -26,11 +26,11 @@
     "staging/commando/console.cpp": "91eb5ecf60bb9f5ef1f6a542652a59a9f179b221107cce342761c2c6991b5bad",
     "staging/commando/consolefunction.cpp": "a686829dc324e66de19f3f86ca7689e19ef6f9af9ee0cf329c3ab1f9126e7cc0",
     "staging/commando/gamemode.cpp": "011f8e5cd9941f8a901467a3ca49065ec166734ba7e12dec9525b8ebc6db582f",
-    "port/renderer/vita/ww3d_dx8_boundary.cpp": "2483ebe1352f05f24dcff1fa08f508e55ba151095ae454cd12ca39530f0f75f0",
+    "port/renderer/vita/ww3d_dx8_boundary.cpp": "c7001010572421b81e29bc9a65d6da5907527499de957a6412153bf125d68d48",
     "port/platform/vita/a30_static_world_boundary.cpp": "3a79d8885bab27b5402af04c5aaf5a39d03bcca2fe81c469fd357e3436e0a858",
     "staging/ww3d2/texproject.cpp": "1463d624ded9b407bff438336126a936543be52e7c0729910520c8ef259b0d34",
     "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc",
-    "port/renderer/vita/ww3d_vita_renderer.cpp": "99c84aa08032ddb7f90cad2dbab0ab8811b6642b253f7112fcf7b8f3a11175e4",
+    "port/renderer/vita/ww3d_vita_renderer.cpp": "b6873e3a932bd9fd09711180f5c202e8eda6747720db58cb27d4495541c91dcc",
     "staging/wwaudio/WWAudio.cpp": "b5746b324dce77935005ab183af15822dd94854740a57623558f4fbd57f7fa57",
     "staging/wwaudio/Listener.cpp": "727f087780c8fe53e961de35a417e4b444e048e2de4e75b93de5b9b076717249",
     "staging/wwaudio/Sound3D.cpp": "3793fdefe102981a3ce98aa5c41b50cf2e189494421f44a17ddfa9f826cec04d",
@@ -1303,6 +1303,23 @@
         "All modes reaching original mesh material-pass lighting; original category activation, material state and native pixels remain separately unverified."
       ],
       "acceptance_open": "Complete original material/light consumption at indexed draw, then verify native rendering and representative content on Vita/PSTV. This source verdict does not close whole lighting support."
+    },
+    {
+      "file": "port/renderer/vita/ww3d_vita_renderer.cpp",
+      "declarator": "Evaluate_Indexed_Primary_Color(const IndexedTriangleSubmission &submission,\n\tuint32_t vertex_index, float rgba[4])",
+      "body_sha256": "6eba85d18e4f458771b579228cea3c8603d981cc16abcc9aa889fdb7c5fe062d",
+      "definition_sha256": "a76009956dc40800d993d64ba54431027c28a6595fc731c1d6bb48d1f5cccbf9",
+      "entry_preprocessor_context": [],
+      "status": "boundary_replaced",
+      "original_owner": "Original DX8 fixed-function material sources and light state through DX8Wrapper",
+      "behavior": "CPU primary ambient/diffuse/emissive evaluation consumes the borrowed original indexed draw state. Unlit draws retain vertex diffuse. Lit draws select original material/FVF color sources and opacity, transform normals by inverse transpose, optionally normalize, and accumulate enabled directional lights. Early returns reject invalid buffers or unsupported enabled light types without writing output; they are not constant success stubs. Secondary specular remains outside this primary evaluator.",
+      "callers": [
+        "Submit_Indexed_Triangles preflight and native vertex emission; original-engine host light probe."
+      ],
+      "affected_scope": [
+        "Indexed lit material draws across modes; retail incidence and original category activation remain unverified."
+      ],
+      "acceptance_open": "Complete host sanitizer and ARM validation, forwarded-state probes, all material/normal/light cases, secondary composition and native Vita/PSTV pixel verification. No primary-only result accepts complete lighting."
     }
   ]
 }

@@ -1,5 +1,20 @@
 # Live engineering progress
 
+## Indexed primary lighting batch — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: indexed primary colors consume original material/light state; original
+color-source, opacity and normal-normalization controls are preserved. Unsupported
+light types reject before drawing; secondary specular remains open.
+Evidence: host build129 actions and eleven ASan/LSan/UBSan cases pass; 43 focused
+tests pass. Dev220 passes138 ARM actions, link and artifact identity. S1/S2 source
+reviews reconcile. See [renderer ledger](RENDERER_FEATURE_SWEEP.md).
+Next: coordinate renderer coverage with the adjacent D3D variant, preserve all
+remaining layout/UV/specular prerequisites, then broaden original-owner closure.
+Blocker: none for source work; runtime session and native acceptance remain open.
+
 ## Original light-state boundary batch — 2026-10-03
 
 Renegade Vita — v3.5 active

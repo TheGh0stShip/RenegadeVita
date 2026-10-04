@@ -8,6 +8,7 @@ class RenderInfoClass;
 class RenderObjClass;
 class ShaderClass;
 class TextureClass;
+struct RenderStateStruct;
 
 namespace RenegadeVitaRenderer {
 
@@ -116,6 +117,8 @@ struct IndexedTriangleSubmission {
 	const float *view_transform;
 	const float *projection_transform;
 	const char *texture_names[2];
+	// Borrowed original draw state; consumed synchronously, never retained.
+	const RenderStateStruct *draw_state;
 };
 
 // Matrix payload passed to vitaGL's fixed-function transform path.  WW3D's
@@ -171,6 +174,10 @@ void Apply_Indexed_Shader_State(const ShaderClass &shader,
 	bool stage0_texture, bool stage1_texture);
 IndexedSubmissionResult Submit_Indexed_Triangles(
 	const IndexedTriangleSubmission &submission);
+// Primary (ambient/diffuse/emissive) color before the texture cascade.
+// Secondary specular composition is a separate, still-open device boundary.
+bool Evaluate_Indexed_Primary_Color(const IndexedTriangleSubmission &submission,
+	uint32_t vertex_index, float rgba[4]);
 #if defined(RENEGADE_HOST_ABI_TEST)
 // Synchronous observation of validated submissions; absent from native builds.
 void Set_Host_Indexed_Submission_Observer(void (*observer)(const IndexedTriangleSubmission &));

@@ -1,0 +1,3284 @@
+{
+  "evidence_class": "supplied_header_literal_comparison",
+  "native_sha256": "e24419c643576b4620078be0563ede6bd36093a20838373e57894253eaff2b95",
+  "reference_sha256": "5d138bc5adc616be1ed29f883a50d432c6f5f3f8af5c5d6057e98c76a990cabb",
+  "rows": [
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 372,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 217,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DBLENDOP_ADD"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "5",
+          "line": 376,
+          "value": 5
+        }
+      ],
+      "reference": [
+        {
+          "expression": "5",
+          "line": 217,
+          "value": 5
+        }
+      ],
+      "symbol": "D3DBLENDOP_MAX"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "4",
+          "line": 375,
+          "value": 4
+        }
+      ],
+      "reference": [
+        {
+          "expression": "4",
+          "line": 217,
+          "value": 4
+        }
+      ],
+      "symbol": "D3DBLENDOP_MIN"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 374,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 217,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DBLENDOP_REVSUBTRACT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 373,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 217,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DBLENDOP_SUBTRACT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "13",
+          "line": 343,
+          "value": 13
+        }
+      ],
+      "reference": [
+        {
+          "expression": "13",
+          "line": 203,
+          "value": 13
+        }
+      ],
+      "symbol": "D3DBLEND_BOTHINVSRCALPHA"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "12",
+          "line": 342,
+          "value": 12
+        }
+      ],
+      "reference": [
+        {
+          "expression": "12",
+          "line": 203,
+          "value": 12
+        }
+      ],
+      "symbol": "D3DBLEND_BOTHSRCALPHA"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "7",
+          "line": 337,
+          "value": 7
+        }
+      ],
+      "reference": [
+        {
+          "expression": "7",
+          "line": 201,
+          "value": 7
+        }
+      ],
+      "symbol": "D3DBLEND_DESTALPHA"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "9",
+          "line": 339,
+          "value": 9
+        }
+      ],
+      "reference": [
+        {
+          "expression": "9",
+          "line": 202,
+          "value": 9
+        }
+      ],
+      "symbol": "D3DBLEND_DESTCOLOR"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "8",
+          "line": 338,
+          "value": 8
+        }
+      ],
+      "reference": [
+        {
+          "expression": "8",
+          "line": 202,
+          "value": 8
+        }
+      ],
+      "symbol": "D3DBLEND_INVDESTALPHA"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "10",
+          "line": 340,
+          "value": 10
+        }
+      ],
+      "reference": [
+        {
+          "expression": "10",
+          "line": 202,
+          "value": 10
+        }
+      ],
+      "symbol": "D3DBLEND_INVDESTCOLOR"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "6",
+          "line": 316,
+          "value": 6
+        }
+      ],
+      "reference": [
+        {
+          "expression": "6",
+          "line": 201,
+          "value": 6
+        }
+      ],
+      "symbol": "D3DBLEND_INVSRCALPHA"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "4",
+          "line": 314,
+          "value": 4
+        }
+      ],
+      "reference": [
+        {
+          "expression": "4",
+          "line": 200,
+          "value": 4
+        }
+      ],
+      "symbol": "D3DBLEND_INVSRCCOLOR"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 312,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 200,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DBLEND_ONE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "5",
+          "line": 315,
+          "value": 5
+        }
+      ],
+      "reference": [
+        {
+          "expression": "5",
+          "line": 201,
+          "value": 5
+        }
+      ],
+      "symbol": "D3DBLEND_SRCALPHA"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "11",
+          "line": 341,
+          "value": 11
+        }
+      ],
+      "reference": [
+        {
+          "expression": "11",
+          "line": 203,
+          "value": 11
+        }
+      ],
+      "symbol": "D3DBLEND_SRCALPHASAT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 313,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 200,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DBLEND_SRCCOLOR"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 311,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 200,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DBLEND_ZERO"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "8",
+          "line": 349,
+          "value": 8
+        }
+      ],
+      "reference": [
+        {
+          "expression": "8",
+          "line": 209,
+          "value": 8
+        }
+      ],
+      "symbol": "D3DCMP_ALWAYS"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 346,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 208,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DCMP_EQUAL"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "5",
+          "line": 347,
+          "value": 5
+        }
+      ],
+      "reference": [
+        {
+          "expression": "5",
+          "line": 209,
+          "value": 5
+        }
+      ],
+      "symbol": "D3DCMP_GREATER"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "7",
+          "line": 318,
+          "value": 7
+        }
+      ],
+      "reference": [
+        {
+          "expression": "7",
+          "line": 209,
+          "value": 7
+        }
+      ],
+      "symbol": "D3DCMP_GREATEREQUAL"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 345,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 208,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DCMP_LESS"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "4",
+          "line": 317,
+          "value": 4
+        }
+      ],
+      "reference": [
+        {
+          "expression": "4",
+          "line": 208,
+          "value": 4
+        }
+      ],
+      "symbol": "D3DCMP_LESSEQUAL"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 344,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 208,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DCMP_NEVER"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "6",
+          "line": 348,
+          "value": 6
+        }
+      ],
+      "reference": [
+        {
+          "expression": "6",
+          "line": 209,
+          "value": 6
+        }
+      ],
+      "symbol": "D3DCMP_NOTEQUAL"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 385,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 206,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DCULL_CCW"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 384,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 206,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DCULL_CW"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 383,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 206,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DCULL_NONE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 371,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 306,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DDMT_DISABLE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0",
+          "line": 370,
+          "value": 0
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0",
+          "line": 306,
+          "value": 0
+        }
+      ],
+      "symbol": "D3DDMT_ENABLE"
+    },
+    {
+      "comparison": "unresolved",
+      "native": [
+        {
+          "expression": "0x8876086cU",
+          "line": 249,
+          "value": 2289436780
+        }
+      ],
+      "reference": [],
+      "symbol": "D3DERR_INVALIDCALL"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 323,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 198,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DFILL_POINT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 324,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 198,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DFILL_SOLID"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 322,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 198,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DFILL_WIREFRAME"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "25",
+          "line": 391,
+          "value": 25
+        }
+      ],
+      "reference": [
+        {
+          "expression": "25",
+          "line": 333,
+          "value": 25
+        }
+      ],
+      "symbol": "D3DFMT_A1R5G5B5"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "52",
+          "line": 401,
+          "value": 52
+        }
+      ],
+      "reference": [
+        {
+          "expression": "52",
+          "line": 345,
+          "value": 52
+        }
+      ],
+      "symbol": "D3DFMT_A4L4"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "26",
+          "line": 392,
+          "value": 26
+        }
+      ],
+      "reference": [
+        {
+          "expression": "26",
+          "line": 334,
+          "value": 26
+        }
+      ],
+      "symbol": "D3DFMT_A4R4G4B4"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "28",
+          "line": 394,
+          "value": 28
+        }
+      ],
+      "reference": [
+        {
+          "expression": "28",
+          "line": 336,
+          "value": 28
+        }
+      ],
+      "symbol": "D3DFMT_A8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "51",
+          "line": 400,
+          "value": 51
+        }
+      ],
+      "reference": [
+        {
+          "expression": "51",
+          "line": 344,
+          "value": 51
+        }
+      ],
+      "symbol": "D3DFMT_A8L8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "40",
+          "line": 397,
+          "value": 40
+        }
+      ],
+      "reference": [
+        {
+          "expression": "40",
+          "line": 341,
+          "value": 40
+        }
+      ],
+      "symbol": "D3DFMT_A8P8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "29",
+          "line": 395,
+          "value": 29
+        }
+      ],
+      "reference": [
+        {
+          "expression": "29",
+          "line": 337,
+          "value": 29
+        }
+      ],
+      "symbol": "D3DFMT_A8R3G3B2"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "21",
+          "line": 387,
+          "value": 21
+        }
+      ],
+      "reference": [
+        {
+          "expression": "21",
+          "line": 329,
+          "value": 21
+        }
+      ],
+      "symbol": "D3DFMT_A8R8G8B8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "73",
+          "line": 417,
+          "value": 73
+        }
+      ],
+      "reference": [
+        {
+          "expression": "73",
+          "line": 355,
+          "value": 73
+        }
+      ],
+      "symbol": "D3DFMT_D15S1"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "80",
+          "line": 419,
+          "value": 80
+        }
+      ],
+      "reference": [
+        {
+          "expression": "80",
+          "line": 359,
+          "value": 80
+        }
+      ],
+      "symbol": "D3DFMT_D16"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "70",
+          "line": 415,
+          "value": 70
+        }
+      ],
+      "reference": [
+        {
+          "expression": "70",
+          "line": 353,
+          "value": 70
+        }
+      ],
+      "symbol": "D3DFMT_D16_LOCKABLE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "75",
+          "line": 418,
+          "value": 75
+        }
+      ],
+      "reference": [
+        {
+          "expression": "75",
+          "line": 356,
+          "value": 75
+        }
+      ],
+      "symbol": "D3DFMT_D24S8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "79",
+          "line": 421,
+          "value": 79
+        }
+      ],
+      "reference": [
+        {
+          "expression": "79",
+          "line": 358,
+          "value": 79
+        }
+      ],
+      "symbol": "D3DFMT_D24X4S4"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "77",
+          "line": 420,
+          "value": 77
+        }
+      ],
+      "reference": [
+        {
+          "expression": "77",
+          "line": 357,
+          "value": 77
+        }
+      ],
+      "symbol": "D3DFMT_D24X8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "71",
+          "line": 416,
+          "value": 71
+        }
+      ],
+      "reference": [
+        {
+          "expression": "71",
+          "line": 354,
+          "value": 71
+        }
+      ],
+      "symbol": "D3DFMT_D32"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0x31545844U",
+          "line": 410,
+          "value": 827611204
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0x31545844",
+          "line": 366,
+          "value": 827611204
+        }
+      ],
+      "symbol": "D3DFMT_DXT1"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0x32545844U",
+          "line": 411,
+          "value": 844388420
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0x32545844",
+          "line": 367,
+          "value": 844388420
+        }
+      ],
+      "symbol": "D3DFMT_DXT2"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0x33545844U",
+          "line": 412,
+          "value": 861165636
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0x33545844",
+          "line": 368,
+          "value": 861165636
+        }
+      ],
+      "symbol": "D3DFMT_DXT3"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0x34545844U",
+          "line": 413,
+          "value": 877942852
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0x34545844",
+          "line": 369,
+          "value": 877942852
+        }
+      ],
+      "symbol": "D3DFMT_DXT4"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0x35545844U",
+          "line": 414,
+          "value": 894720068
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0x35545844",
+          "line": 370,
+          "value": 894720068
+        }
+      ],
+      "symbol": "D3DFMT_DXT5"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "61",
+          "line": 403,
+          "value": 61
+        }
+      ],
+      "reference": [
+        {
+          "expression": "61",
+          "line": 347,
+          "value": 61
+        }
+      ],
+      "symbol": "D3DFMT_L6V5U5"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "50",
+          "line": 399,
+          "value": 50
+        }
+      ],
+      "reference": [
+        {
+          "expression": "50",
+          "line": 343,
+          "value": 50
+        }
+      ],
+      "symbol": "D3DFMT_L8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "41",
+          "line": 398,
+          "value": 41
+        }
+      ],
+      "reference": [
+        {
+          "expression": "41",
+          "line": 342,
+          "value": 41
+        }
+      ],
+      "symbol": "D3DFMT_P8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "63",
+          "line": 405,
+          "value": 63
+        }
+      ],
+      "reference": [
+        {
+          "expression": "63",
+          "line": 349,
+          "value": 63
+        }
+      ],
+      "symbol": "D3DFMT_Q8W8V8U8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "27",
+          "line": 393,
+          "value": 27
+        }
+      ],
+      "reference": [
+        {
+          "expression": "27",
+          "line": 335,
+          "value": 27
+        }
+      ],
+      "symbol": "D3DFMT_R3G3B2"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "23",
+          "line": 389,
+          "value": 23
+        }
+      ],
+      "reference": [
+        {
+          "expression": "23",
+          "line": 331,
+          "value": 23
+        }
+      ],
+      "symbol": "D3DFMT_R5G6B5"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "20",
+          "line": 386,
+          "value": 20
+        }
+      ],
+      "reference": [
+        {
+          "expression": "20",
+          "line": 328,
+          "value": 20
+        }
+      ],
+      "symbol": "D3DFMT_R8G8B8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0",
+          "line": 22,
+          "value": 0
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0",
+          "line": 327,
+          "value": 0
+        }
+      ],
+      "symbol": "D3DFMT_UNKNOWN"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0x59565955U",
+          "line": 408,
+          "value": 1498831189
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0x59565955",
+          "line": 364,
+          "value": 1498831189
+        }
+      ],
+      "symbol": "D3DFMT_UYVY"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "64",
+          "line": 406,
+          "value": 64
+        }
+      ],
+      "reference": [
+        {
+          "expression": "64",
+          "line": 350,
+          "value": 64
+        }
+      ],
+      "symbol": "D3DFMT_V16U16"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "60",
+          "line": 402,
+          "value": 60
+        }
+      ],
+      "reference": [
+        {
+          "expression": "60",
+          "line": 346,
+          "value": 60
+        }
+      ],
+      "symbol": "D3DFMT_V8U8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "65",
+          "line": 407,
+          "value": 65
+        }
+      ],
+      "reference": [
+        {
+          "expression": "65",
+          "line": 351,
+          "value": 65
+        }
+      ],
+      "symbol": "D3DFMT_W11V11U10"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "24",
+          "line": 390,
+          "value": 24
+        }
+      ],
+      "reference": [
+        {
+          "expression": "24",
+          "line": 332,
+          "value": 24
+        }
+      ],
+      "symbol": "D3DFMT_X1R5G5B5"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "30",
+          "line": 396,
+          "value": 30
+        }
+      ],
+      "reference": [
+        {
+          "expression": "30",
+          "line": 338,
+          "value": 30
+        }
+      ],
+      "symbol": "D3DFMT_X4R4G4B4"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "62",
+          "line": 404,
+          "value": 62
+        }
+      ],
+      "reference": [
+        {
+          "expression": "62",
+          "line": 348,
+          "value": 62
+        }
+      ],
+      "symbol": "D3DFMT_X8L8V8U8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "22",
+          "line": 388,
+          "value": 22
+        }
+      ],
+      "reference": [
+        {
+          "expression": "22",
+          "line": 330,
+          "value": 22
+        }
+      ],
+      "symbol": "D3DFMT_X8R8G8B8"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0x32595559U",
+          "line": 409,
+          "value": 844715353
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0x32595559",
+          "line": 365,
+          "value": 844715353
+        }
+      ],
+      "symbol": "D3DFMT_YUY2"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 351,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 219,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DFOG_EXP"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 352,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 219,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DFOG_EXP2"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 353,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 219,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DFOG_LINEAR"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0",
+          "line": 350,
+          "value": 0
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0",
+          "line": 219,
+          "value": 0
+        }
+      ],
+      "symbol": "D3DFOG_NONE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 41,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 218,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DLIGHT_DIRECTIONAL"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0x7fffffff",
+          "line": 42,
+          "value": 2147483647
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0x7fffffff",
+          "line": 218,
+          "value": 2147483647
+        }
+      ],
+      "symbol": "D3DLIGHT_FORCE_DWORD"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 39,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 218,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DLIGHT_POINT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 40,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 218,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DLIGHT_SPOT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0x2000",
+          "line": 425,
+          "value": 8192
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0x2000u",
+          "line": 25,
+          "value": 8192
+        }
+      ],
+      "symbol": "D3DLOCK_DISCARD"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0x1000",
+          "line": 424,
+          "value": 4096
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0x1000u",
+          "line": 24,
+          "value": 4096
+        }
+      ],
+      "symbol": "D3DLOCK_NOOVERWRITE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0x0800",
+          "line": 423,
+          "value": 2048
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0x0800u",
+          "line": 23,
+          "value": 2048
+        }
+      ],
+      "symbol": "D3DLOCK_NOSYSLOCK"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0x0010",
+          "line": 422,
+          "value": 16
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0x0010u",
+          "line": 22,
+          "value": 16
+        }
+      ],
+      "symbol": "D3DLOCK_READONLY"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 320,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 220,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DMCS_COLOR1"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 321,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 220,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DMCS_COLOR2"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0",
+          "line": 319,
+          "value": 0
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0",
+          "line": 220,
+          "value": 0
+        }
+      ],
+      "symbol": "D3DMCS_MATERIAL"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 369,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 305,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DPATCHEDGE_CONTINUOUS"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0",
+          "line": 368,
+          "value": 0
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0",
+          "line": 305,
+          "value": 0
+        }
+      ],
+      "symbol": "D3DPATCHEDGE_DISCRETE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0",
+          "line": 250,
+          "value": 0
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0",
+          "line": 319,
+          "value": 0
+        }
+      ],
+      "symbol": "D3DPOOL_DEFAULT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 251,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 319,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DPOOL_MANAGED"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 252,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 319,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DPOOL_SYSTEMMEM"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "27",
+          "line": 272,
+          "value": 27
+        }
+      ],
+      "reference": [
+        {
+          "expression": "27",
+          "line": 236,
+          "value": 27
+        }
+      ],
+      "symbol": "D3DRS_ALPHABLENDENABLE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "25",
+          "line": 271,
+          "value": 25
+        }
+      ],
+      "reference": [
+        {
+          "expression": "25",
+          "line": 234,
+          "value": 25
+        }
+      ],
+      "symbol": "D3DRS_ALPHAFUNC"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "24",
+          "line": 270,
+          "value": 24
+        }
+      ],
+      "reference": [
+        {
+          "expression": "24",
+          "line": 233,
+          "value": 24
+        }
+      ],
+      "symbol": "D3DRS_ALPHAREF"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "15",
+          "line": 265,
+          "value": 15
+        }
+      ],
+      "reference": [
+        {
+          "expression": "15",
+          "line": 227,
+          "value": 15
+        }
+      ],
+      "symbol": "D3DRS_ALPHATESTENABLE"
+    },
+    {
+      "comparison": "different",
+      "native": [
+        {
+          "expression": "26",
+          "line": 258,
+          "value": 26
+        }
+      ],
+      "reference": [
+        {
+          "expression": "139",
+          "line": 267,
+          "value": 139
+        }
+      ],
+      "symbol": "D3DRS_AMBIENT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "147",
+          "line": 278,
+          "value": 147
+        }
+      ],
+      "reference": [
+        {
+          "expression": "147",
+          "line": 274,
+          "value": 147
+        }
+      ],
+      "symbol": "D3DRS_AMBIENTMATERIALSOURCE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "141",
+          "line": 275,
+          "value": 141
+        }
+      ],
+      "reference": [
+        {
+          "expression": "141",
+          "line": 269,
+          "value": 141
+        }
+      ],
+      "symbol": "D3DRS_COLORVERTEX"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "22",
+          "line": 268,
+          "value": 22
+        }
+      ],
+      "reference": [
+        {
+          "expression": "22",
+          "line": 231,
+          "value": 22
+        }
+      ],
+      "symbol": "D3DRS_CULLMODE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "20",
+          "line": 267,
+          "value": 20
+        }
+      ],
+      "reference": [
+        {
+          "expression": "20",
+          "line": 230,
+          "value": 20
+        }
+      ],
+      "symbol": "D3DRS_DESTBLEND"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "145",
+          "line": 277,
+          "value": 145
+        }
+      ],
+      "reference": [
+        {
+          "expression": "145",
+          "line": 272,
+          "value": 145
+        }
+      ],
+      "symbol": "D3DRS_DIFFUSEMATERIALSOURCE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "148",
+          "line": 279,
+          "value": 148
+        }
+      ],
+      "reference": [
+        {
+          "expression": "148",
+          "line": 275,
+          "value": 148
+        }
+      ],
+      "symbol": "D3DRS_EMISSIVEMATERIALSOURCE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "8",
+          "line": 263,
+          "value": 8
+        }
+      ],
+      "reference": [
+        {
+          "expression": "8",
+          "line": 223,
+          "value": 8
+        }
+      ],
+      "symbol": "D3DRS_FILLMODE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "34",
+          "line": 260,
+          "value": 34
+        }
+      ],
+      "reference": [
+        {
+          "expression": "34",
+          "line": 240,
+          "value": 34
+        }
+      ],
+      "symbol": "D3DRS_FOGCOLOR"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "28",
+          "line": 259,
+          "value": 28
+        }
+      ],
+      "reference": [
+        {
+          "expression": "28",
+          "line": 237,
+          "value": 28
+        }
+      ],
+      "symbol": "D3DRS_FOGENABLE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "37",
+          "line": 262,
+          "value": 37
+        }
+      ],
+      "reference": [
+        {
+          "expression": "37",
+          "line": 243,
+          "value": 37
+        }
+      ],
+      "symbol": "D3DRS_FOGEND"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "36",
+          "line": 261,
+          "value": 36
+        }
+      ],
+      "reference": [
+        {
+          "expression": "36",
+          "line": 242,
+          "value": 36
+        }
+      ],
+      "symbol": "D3DRS_FOGSTART"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "137",
+          "line": 274,
+          "value": 137
+        }
+      ],
+      "reference": [
+        {
+          "expression": "137",
+          "line": 266,
+          "value": 137
+        }
+      ],
+      "symbol": "D3DRS_LIGHTING"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "143",
+          "line": 276,
+          "value": 143
+        }
+      ],
+      "reference": [
+        {
+          "expression": "143",
+          "line": 271,
+          "value": 143
+        }
+      ],
+      "symbol": "D3DRS_NORMALIZENORMALS"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "164",
+          "line": 280,
+          "value": 164
+        }
+      ],
+      "reference": [
+        {
+          "expression": "164",
+          "line": 289,
+          "value": 164
+        }
+      ],
+      "symbol": "D3DRS_PATCHSEGMENTS"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "29",
+          "line": 273,
+          "value": 29
+        }
+      ],
+      "reference": [
+        {
+          "expression": "29",
+          "line": 238,
+          "value": 29
+        }
+      ],
+      "symbol": "D3DRS_SPECULARENABLE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "19",
+          "line": 266,
+          "value": 19
+        }
+      ],
+      "reference": [
+        {
+          "expression": "19",
+          "line": 229,
+          "value": 19
+        }
+      ],
+      "symbol": "D3DRS_SRCBLEND"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "47",
+          "line": 257,
+          "value": 47
+        }
+      ],
+      "reference": [
+        {
+          "expression": "47",
+          "line": 246,
+          "value": 47
+        }
+      ],
+      "symbol": "D3DRS_ZBIAS"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "23",
+          "line": 269,
+          "value": 23
+        }
+      ],
+      "reference": [
+        {
+          "expression": "23",
+          "line": 232,
+          "value": 23
+        }
+      ],
+      "symbol": "D3DRS_ZFUNC"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "14",
+          "line": 264,
+          "value": 14
+        }
+      ],
+      "reference": [
+        {
+          "expression": "14",
+          "line": 226,
+          "value": 14
+        }
+      ],
+      "symbol": "D3DRS_ZWRITEENABLE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 334,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 300,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DSHADE_FLAT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 335,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 300,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DSHADE_GOURAUD"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 336,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 300,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DSHADE_PHONG"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "8",
+          "line": 361,
+          "value": 8
+        }
+      ],
+      "reference": [
+        {
+          "expression": "8",
+          "line": 214,
+          "value": 8
+        }
+      ],
+      "symbol": "D3DSTENCILOP_DECR"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "5",
+          "line": 358,
+          "value": 5
+        }
+      ],
+      "reference": [
+        {
+          "expression": "5",
+          "line": 214,
+          "value": 5
+        }
+      ],
+      "symbol": "D3DSTENCILOP_DECRSAT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "7",
+          "line": 360,
+          "value": 7
+        }
+      ],
+      "reference": [
+        {
+          "expression": "7",
+          "line": 214,
+          "value": 7
+        }
+      ],
+      "symbol": "D3DSTENCILOP_INCR"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "4",
+          "line": 357,
+          "value": 4
+        }
+      ],
+      "reference": [
+        {
+          "expression": "4",
+          "line": 213,
+          "value": 4
+        }
+      ],
+      "symbol": "D3DSTENCILOP_INCRSAT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "6",
+          "line": 359,
+          "value": 6
+        }
+      ],
+      "reference": [
+        {
+          "expression": "6",
+          "line": 214,
+          "value": 6
+        }
+      ],
+      "symbol": "D3DSTENCILOP_INVERT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 354,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 213,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DSTENCILOP_KEEP"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 356,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 213,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DSTENCILOP_REPLACE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 355,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 213,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DSTENCILOP_ZERO"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 378,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 138,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DTADDRESS_CLAMP"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 377,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 138,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DTADDRESS_WRAP"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 382,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 144,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DTEXF_ANISOTROPIC"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 381,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 144,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DTEXF_LINEAR"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0",
+          "line": 379,
+          "value": 0
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0",
+          "line": 144,
+          "value": 0
+        }
+      ],
+      "symbol": "D3DTEXF_NONE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 380,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 144,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DTEXF_POINT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "7",
+          "line": 303,
+          "value": 7
+        }
+      ],
+      "reference": [
+        {
+          "expression": "7",
+          "line": 164,
+          "value": 7
+        }
+      ],
+      "symbol": "D3DTOP_ADD"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "11",
+          "line": 305,
+          "value": 11
+        }
+      ],
+      "reference": [
+        {
+          "expression": "11",
+          "line": 165,
+          "value": 11
+        }
+      ],
+      "symbol": "D3DTOP_ADDSMOOTH"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "16",
+          "line": 307,
+          "value": 16
+        }
+      ],
+      "reference": [
+        {
+          "expression": "16",
+          "line": 168,
+          "value": 16
+        }
+      ],
+      "symbol": "D3DTOP_BLENDCURRENTALPHA"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "13",
+          "line": 306,
+          "value": 13
+        }
+      ],
+      "reference": [
+        {
+          "expression": "13",
+          "line": 166,
+          "value": 13
+        }
+      ],
+      "symbol": "D3DTOP_BLENDTEXTUREALPHA"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "22",
+          "line": 308,
+          "value": 22
+        }
+      ],
+      "reference": [
+        {
+          "expression": "22",
+          "line": 171,
+          "value": 22
+        }
+      ],
+      "symbol": "D3DTOP_BUMPENVMAP"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "23",
+          "line": 309,
+          "value": 23
+        }
+      ],
+      "reference": [
+        {
+          "expression": "23",
+          "line": 171,
+          "value": 23
+        }
+      ],
+      "symbol": "D3DTOP_BUMPENVMAPLUMINANCE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 299,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 163,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DTOP_DISABLE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "24",
+          "line": 310,
+          "value": 24
+        }
+      ],
+      "reference": [
+        {
+          "expression": "24",
+          "line": 171,
+          "value": 24
+        }
+      ],
+      "symbol": "D3DTOP_DOTPRODUCT3"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "4",
+          "line": 302,
+          "value": 4
+        }
+      ],
+      "reference": [
+        {
+          "expression": "4",
+          "line": 163,
+          "value": 4
+        }
+      ],
+      "symbol": "D3DTOP_MODULATE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 300,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 163,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DTOP_SELECTARG1"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 301,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 163,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DTOP_SELECTARG2"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "10",
+          "line": 304,
+          "value": 10
+        }
+      ],
+      "reference": [
+        {
+          "expression": "10",
+          "line": 165,
+          "value": 10
+        }
+      ],
+      "symbol": "D3DTOP_SUBTRACT"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "13",
+          "line": 292,
+          "value": 13
+        }
+      ],
+      "reference": [
+        {
+          "expression": "13",
+          "line": 154,
+          "value": 13
+        }
+      ],
+      "symbol": "D3DTSS_ADDRESSU"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "14",
+          "line": 293,
+          "value": 14
+        }
+      ],
+      "reference": [
+        {
+          "expression": "14",
+          "line": 154,
+          "value": 14
+        }
+      ],
+      "symbol": "D3DTSS_ADDRESSV"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "5",
+          "line": 285,
+          "value": 5
+        }
+      ],
+      "reference": [
+        {
+          "expression": "5",
+          "line": 151,
+          "value": 5
+        }
+      ],
+      "symbol": "D3DTSS_ALPHAARG1"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "6",
+          "line": 286,
+          "value": 6
+        }
+      ],
+      "reference": [
+        {
+          "expression": "6",
+          "line": 151,
+          "value": 6
+        }
+      ],
+      "symbol": "D3DTSS_ALPHAARG2"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "4",
+          "line": 284,
+          "value": 4
+        }
+      ],
+      "reference": [
+        {
+          "expression": "4",
+          "line": 151,
+          "value": 4
+        }
+      ],
+      "symbol": "D3DTSS_ALPHAOP"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "7",
+          "line": 287,
+          "value": 7
+        }
+      ],
+      "reference": [
+        {
+          "expression": "7",
+          "line": 152,
+          "value": 7
+        }
+      ],
+      "symbol": "D3DTSS_BUMPENVMAT00"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "8",
+          "line": 288,
+          "value": 8
+        }
+      ],
+      "reference": [
+        {
+          "expression": "8",
+          "line": 152,
+          "value": 8
+        }
+      ],
+      "symbol": "D3DTSS_BUMPENVMAT01"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "9",
+          "line": 289,
+          "value": 9
+        }
+      ],
+      "reference": [
+        {
+          "expression": "9",
+          "line": 152,
+          "value": 9
+        }
+      ],
+      "symbol": "D3DTSS_BUMPENVMAT10"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "10",
+          "line": 290,
+          "value": 10
+        }
+      ],
+      "reference": [
+        {
+          "expression": "10",
+          "line": 153,
+          "value": 10
+        }
+      ],
+      "symbol": "D3DTSS_BUMPENVMAT11"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 282,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 150,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DTSS_COLORARG1"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 283,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 150,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DTSS_COLORARG2"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 281,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 150,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DTSS_COLOROP"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "16",
+          "line": 294,
+          "value": 16
+        }
+      ],
+      "reference": [
+        {
+          "expression": "16",
+          "line": 155,
+          "value": 16
+        }
+      ],
+      "symbol": "D3DTSS_MAGFILTER"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "21",
+          "line": 297,
+          "value": 21
+        }
+      ],
+      "reference": [
+        {
+          "expression": "21",
+          "line": 156,
+          "value": 21
+        }
+      ],
+      "symbol": "D3DTSS_MAXANISOTROPY"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "17",
+          "line": 295,
+          "value": 17
+        }
+      ],
+      "reference": [
+        {
+          "expression": "17",
+          "line": 155,
+          "value": 17
+        }
+      ],
+      "symbol": "D3DTSS_MINFILTER"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "18",
+          "line": 296,
+          "value": 18
+        }
+      ],
+      "reference": [
+        {
+          "expression": "18",
+          "line": 155,
+          "value": 18
+        }
+      ],
+      "symbol": "D3DTSS_MIPFILTER"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "11",
+          "line": 291,
+          "value": 11
+        }
+      ],
+      "reference": [
+        {
+          "expression": "11",
+          "line": 153,
+          "value": 11
+        }
+      ],
+      "symbol": "D3DTSS_TEXCOORDINDEX"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "24",
+          "line": 298,
+          "value": 24
+        }
+      ],
+      "reference": [
+        {
+          "expression": "24",
+          "line": 158,
+          "value": 24
+        }
+      ],
+      "symbol": "D3DTSS_TEXTURETRANSFORMFLAGS"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 254,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 188,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DTS_PROJECTION"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "16",
+          "line": 256,
+          "value": 16
+        }
+      ],
+      "reference": [
+        {
+          "expression": "16",
+          "line": 189,
+          "value": 16
+        }
+      ],
+      "symbol": "D3DTS_TEXTURE0"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 253,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 188,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DTS_VIEW"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "256",
+          "line": 255,
+          "value": 256
+        }
+      ],
+      "reference": [
+        {
+          "expression": "256",
+          "line": 191,
+          "value": 256
+        }
+      ],
+      "symbol": "D3DTS_WORLD"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 326,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 183,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DTTFF_COUNT1"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 327,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 183,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DTTFF_COUNT2"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 328,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 183,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DTTFF_COUNT3"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "4",
+          "line": 329,
+          "value": 4
+        }
+      ],
+      "reference": [
+        {
+          "expression": "4",
+          "line": 184,
+          "value": 4
+        }
+      ],
+      "symbol": "D3DTTFF_COUNT4"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0",
+          "line": 325,
+          "value": 0
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0",
+          "line": 183,
+          "value": 0
+        }
+      ],
+      "symbol": "D3DTTFF_DISABLE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "256",
+          "line": 330,
+          "value": 256
+        }
+      ],
+      "reference": [
+        {
+          "expression": "256",
+          "line": 184,
+          "value": 256
+        }
+      ],
+      "symbol": "D3DTTFF_PROJECTED"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "256",
+          "line": 367,
+          "value": 256
+        }
+      ],
+      "reference": [
+        {
+          "expression": "256",
+          "line": 303,
+          "value": 256
+        }
+      ],
+      "symbol": "D3DVBF_0WEIGHTS"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 363,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 302,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DVBF_1WEIGHTS"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 364,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 302,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DVBF_2WEIGHTS"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "3",
+          "line": 365,
+          "value": 3
+        }
+      ],
+      "reference": [
+        {
+          "expression": "3",
+          "line": 302,
+          "value": 3
+        }
+      ],
+      "symbol": "D3DVBF_3WEIGHTS"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0",
+          "line": 362,
+          "value": 0
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0",
+          "line": 302,
+          "value": 0
+        }
+      ],
+      "symbol": "D3DVBF_DISABLE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "255",
+          "line": 366,
+          "value": 255
+        }
+      ],
+      "reference": [
+        {
+          "expression": "255",
+          "line": 303,
+          "value": 255
+        }
+      ],
+      "symbol": "D3DVBF_TWEENING"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "0",
+          "line": 331,
+          "value": 0
+        }
+      ],
+      "reference": [
+        {
+          "expression": "0",
+          "line": 197,
+          "value": 0
+        }
+      ],
+      "symbol": "D3DZB_FALSE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "1",
+          "line": 332,
+          "value": 1
+        }
+      ],
+      "reference": [
+        {
+          "expression": "1",
+          "line": 197,
+          "value": 1
+        }
+      ],
+      "symbol": "D3DZB_TRUE"
+    },
+    {
+      "comparison": "equal",
+      "native": [
+        {
+          "expression": "2",
+          "line": 333,
+          "value": 2
+        }
+      ],
+      "reference": [
+        {
+          "expression": "2",
+          "line": 197,
+          "value": 2
+        }
+      ],
+      "symbol": "D3DZB_USEW"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Explicit assignments in native header; not a complete SDK enum or ABI inventory.",
+  "totals": {
+    "different": 1,
+    "equal": 180,
+    "unresolved": 1
+  }
+}

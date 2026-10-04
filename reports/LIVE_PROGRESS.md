@@ -9561,3 +9561,18 @@ two exclusions.
 Next: review the 18 no-match edits and classify current guards by selected build
 profile, skipped original behavior and caller scope.
 Blocker: none for local discovery; physical runtime evidence remains open.
+# S1 font guard history — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: classified the six-row Font3D/FontChars guard chain. Three early
+all-port NULL returns are superseded; selected patches restore original Font3D
+construction/cache ownership and replace only the Windows GDI glyph provider
+with the Vita FreeType boundary.
+Evidence: exact patch hashes and current staged bodies reconcile with no stale
+review identity. S1 now has 3,454 unknowns, four patched-original rows, six
+boundary replacements, seven disabled guards and five exclusions.
+Next: close the six unmatched asset-create timing rows, then classify current
+guards by selected profile and skipped original behavior.
+Blocker: none for source work; native text pixels remain unverified.

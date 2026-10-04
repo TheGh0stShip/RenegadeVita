@@ -40,8 +40,76 @@
     "port/renderer/vita/original_dx8_light_environment.inc": "66a3761498a9bc4c7e68f49847ce45eb696c64f4aaaf1145feb4954b8c5a16a1"
     ,"port/patches/ww3d-a35-original-dazzle-lifecycle.patch": "d3732d603f9118a9e0994b8d295b20baa628ba7fd502b728306bd0256e8826f1"
     ,"port/patches/ww3d2-a22-vita-boundaries.patch": "524a088677405ca879efdac19738e7ab5a1c1cabca054f6287fab9f133dc4bf5"
+    ,"port/patches/ww3d2-a4-font3d-vita.patch": "a134848c2eea616de8704479070084479dbb61b3abbf35359f600a03acf9e2de"
+    ,"port/patches/ww3d2-a4-freetype-fonts.patch": "7111549a10b6778ed1d85cbd435fb38ed60b5f889e972bb7f28669844db67180"
   },
   "reviews": [
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/ww3d2-a22-vita-boundaries.patch",
+      "row_id": "96fa8f8fa8471a27d7b038bdcdf33ac913ff4535048ebb5a70d59ce6a4aefac1",
+      "status": "excluded_with_proof",
+      "original_owner": "WW3DAssetManager::Get_Font3DInstance",
+      "behavior": "The early port guard returned NULL instead of constructing the original Font3DInstance. The later selected font3d patch removes this exact broad guard, and the current staged method constructs Font3DInstanceClass.",
+      "callers": ["Original WW3D Font3D asset consumers, including frontend and HUD text paths"],
+      "affected_scope": ["Superseded historical omission; no current build selects this NULL return"],
+      "acceptance_open": "Native font texture creation, rendering and physical frontend/HUD pixels remain open."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/ww3d2-a22-vita-boundaries.patch",
+      "row_id": "10661c8fbce172acc6a434c9e37636893c67b5d8293aff882d4a661f9dae494e",
+      "status": "excluded_with_proof",
+      "original_owner": "WW3DAssetManager::Get_Font3DData",
+      "behavior": "The early port guard returned NULL and skipped the original Font3DData cache and constructor. A later selected patch removes the guard; current staged source retains lookup, creation and asset-manager insertion.",
+      "callers": ["Original Font3DInstance and WW3D font-data consumers"],
+      "affected_scope": ["Superseded historical omission across menus, HUD and other Font3D users"],
+      "acceptance_open": "Compile selection does not prove native font resources or rendered output."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/ww3d2-a22-vita-boundaries.patch",
+      "row_id": "df76a4ef2ba561ffd912d846783999f99d41aafbf72d40518e17f702ef39ac98",
+      "status": "excluded_with_proof",
+      "original_owner": "WW3DAssetManager::Get_FontChars",
+      "behavior": "The early port guard returned NULL before the original FontChars cache and construction. The selected FreeType patch removes that guard and supplies Vita glyph measurement/rasterization below the original FontChars owner.",
+      "callers": ["Original Render2DSentence and sentence/font consumers"],
+      "affected_scope": ["Superseded historical omission across localized frontend, subtitles and HUD text"],
+      "acceptance_open": "Unicode coverage, font metrics, atlas upload and physical text rendering remain open."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/ww3d2-a4-font3d-vita.patch",
+      "row_id": "b318d385882707b90b32c2f1f0fd5f781306fe6ff4b23ecb8f384907a3544582",
+      "status": "original_patched",
+      "original_owner": "WW3DAssetManager::Get_Font3DInstance",
+      "behavior": "This selected patch removes the all-port NULL return. Current staged source executes the original Font3DInstanceClass construction without a Vita guard.",
+      "callers": ["Original WW3D Font3D asset consumers"],
+      "affected_scope": ["All modes using Font3D instances, including frontend and HUD paths"],
+      "acceptance_open": "ARM selection and source restoration require native resource and pixel validation."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/ww3d2-a4-font3d-vita.patch",
+      "row_id": "f694bd1a9f64e89298a7040b63942eab961fb90e35fda5cae5f11e23f0b8af48",
+      "status": "original_patched",
+      "original_owner": "WW3DAssetManager::Get_Font3DData",
+      "behavior": "This selected patch removes the all-port NULL return and restores the original Font3DData lookup, construction and cache insertion in current staged source.",
+      "callers": ["Original Font3DInstance and asset-manager consumers"],
+      "affected_scope": ["All modes using cached Font3D data"],
+      "acceptance_open": "Native allocation, texture creation, lifetime and pixels remain open."
+    },
+    {
+      "kind": "patch_guard",
+      "file": "port/patches/ww3d2-a4-freetype-fonts.patch",
+      "row_id": "f7a00ac6c9b37c1c2bc1ac6e17fdee0af5e757be1b70acd4149eb23a8b7a779f",
+      "status": "boundary_replaced",
+      "original_owner": "WW3DAssetManager::Get_FontChars and FontCharsClass GDI glyph provider",
+      "behavior": "The selected patch removes the all-port NULL return from Get_FontChars. Original cache/lifetime ownership remains, while the Windows GDI glyph boundary is replaced by the Vita FreeType provider in Render2DSentence.",
+      "callers": ["Original Render2DSentence, subtitles, frontend labels and HUD sentence paths"],
+      "affected_scope": ["All Vita modes using dynamic glyph rasterization"],
+      "acceptance_open": "Compare metrics, Unicode glyphs, bold styles, atlas lifetime and physical text output with retail."
+    },
     {
       "kind": "patch_guard",
       "file": "port/patches/ww3d2-a22-vita-boundaries.patch",

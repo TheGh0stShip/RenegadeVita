@@ -3737,7 +3737,7 @@
     "tools/stage_sources.sh": "7fe78a596982b60c6c5b3a27b4c63cfe1ebd9209e51dfe0490af2c8d1cff3839",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "9c465726d4fde7ce36a7d75df8a30c75e64338106d96129d6b873f7b0cccde8c",
-    "tools/sweep_reviews/port_guards.json": "c6d27f5588cb49f586c97b632798440f3b58df4dd6af96b1bfdba1677e33b8be",
+    "tools/sweep_reviews/port_guards.json": "9c2f0b145748763497a7e33c0a0e0e7a105edd48b7a1296cf9f0f3f6de206ff6",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
     "tools/upload_vpk_ftp.sh": "dde89737d6200a0ca1a5b89486ac945421eecc2b068d4d7a59991a15bc3fa9f7",
@@ -14230,6 +14230,7 @@
     },
     {
       "change": "added",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/assetmgr.cpp",
       "current_target_exists": true,
       "directive": "#if defined(RENEGADE_VITA_PORT)",
@@ -14244,14 +14245,26 @@
       "patch_lines": [
         63
       ],
+      "review": {
+        "acceptance_open": "Native font texture creation, rendering and physical frontend/HUD pixels remain open.",
+        "affected_scope": [
+          "Superseded historical omission; no current build selects this NULL return"
+        ],
+        "behavior": "The early port guard returned NULL instead of constructing the original Font3DInstance. The later selected font3d patch removes this exact broad guard, and the current staged method constructs Font3DInstanceClass.",
+        "callers": [
+          "Original WW3D Font3D asset consumers, including frontend and HUD text paths"
+        ],
+        "original_owner": "WW3DAssetManager::Get_Font3DInstance"
+      },
       "row_id": "96fa8f8fa8471a27d7b038bdcdf33ac913ff4535048ebb5a70d59ce6a4aefac1",
       "selected_by_stage_script": true,
       "stage_destination": "staging/ww3d2",
-      "status": "unknown",
+      "status": "excluded_with_proof",
       "target": "b/assetmgr.cpp"
     },
     {
       "change": "added",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/assetmgr.cpp",
       "current_target_exists": true,
       "directive": "#if defined(RENEGADE_VITA_PORT)",
@@ -14266,14 +14279,26 @@
       "patch_lines": [
         76
       ],
+      "review": {
+        "acceptance_open": "Compile selection does not prove native font resources or rendered output.",
+        "affected_scope": [
+          "Superseded historical omission across menus, HUD and other Font3D users"
+        ],
+        "behavior": "The early port guard returned NULL and skipped the original Font3DData cache and constructor. A later selected patch removes the guard; current staged source retains lookup, creation and asset-manager insertion.",
+        "callers": [
+          "Original Font3DInstance and WW3D font-data consumers"
+        ],
+        "original_owner": "WW3DAssetManager::Get_Font3DData"
+      },
       "row_id": "10661c8fbce172acc6a434c9e37636893c67b5d8293aff882d4a661f9dae494e",
       "selected_by_stage_script": true,
       "stage_destination": "staging/ww3d2",
-      "status": "unknown",
+      "status": "excluded_with_proof",
       "target": "b/assetmgr.cpp"
     },
     {
       "change": "added",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/assetmgr.cpp",
       "current_target_exists": true,
       "directive": "#if defined(RENEGADE_VITA_PORT)",
@@ -14288,10 +14313,21 @@
       "patch_lines": [
         95
       ],
+      "review": {
+        "acceptance_open": "Unicode coverage, font metrics, atlas upload and physical text rendering remain open.",
+        "affected_scope": [
+          "Superseded historical omission across localized frontend, subtitles and HUD text"
+        ],
+        "behavior": "The early port guard returned NULL before the original FontChars cache and construction. The selected FreeType patch removes that guard and supplies Vita glyph measurement/rasterization below the original FontChars owner.",
+        "callers": [
+          "Original Render2DSentence and sentence/font consumers"
+        ],
+        "original_owner": "WW3DAssetManager::Get_FontChars"
+      },
       "row_id": "df76a4ef2ba561ffd912d846783999f99d41aafbf72d40518e17f702ef39ac98",
       "selected_by_stage_script": true,
       "stage_destination": "staging/ww3d2",
-      "status": "unknown",
+      "status": "excluded_with_proof",
       "target": "b/assetmgr.cpp"
     },
     {
@@ -16815,6 +16851,7 @@
     },
     {
       "change": "removed",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/assetmgr.cpp",
       "current_target_exists": true,
       "directive": "#if defined(RENEGADE_VITA_PORT)",
@@ -16829,14 +16866,26 @@
       "patch_lines": [
         5
       ],
+      "review": {
+        "acceptance_open": "ARM selection and source restoration require native resource and pixel validation.",
+        "affected_scope": [
+          "All modes using Font3D instances, including frontend and HUD paths"
+        ],
+        "behavior": "This selected patch removes the all-port NULL return. Current staged source executes the original Font3DInstanceClass construction without a Vita guard.",
+        "callers": [
+          "Original WW3D Font3D asset consumers"
+        ],
+        "original_owner": "WW3DAssetManager::Get_Font3DInstance"
+      },
       "row_id": "b318d385882707b90b32c2f1f0fd5f781306fe6ff4b23ecb8f384907a3544582",
       "selected_by_stage_script": true,
       "stage_destination": "staging/ww3d2",
-      "status": "unknown",
+      "status": "original_patched",
       "target": "b/assetmgr.cpp"
     },
     {
       "change": "removed",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/assetmgr.cpp",
       "current_target_exists": true,
       "directive": "#if defined(RENEGADE_VITA_PORT)",
@@ -16851,14 +16900,26 @@
       "patch_lines": [
         14
       ],
+      "review": {
+        "acceptance_open": "Native allocation, texture creation, lifetime and pixels remain open.",
+        "affected_scope": [
+          "All modes using cached Font3D data"
+        ],
+        "behavior": "This selected patch removes the all-port NULL return and restores the original Font3DData lookup, construction and cache insertion in current staged source.",
+        "callers": [
+          "Original Font3DInstance and asset-manager consumers"
+        ],
+        "original_owner": "WW3DAssetManager::Get_Font3DData"
+      },
       "row_id": "f694bd1a9f64e89298a7040b63942eab961fb90e35fda5cae5f11e23f0b8af48",
       "selected_by_stage_script": true,
       "stage_destination": "staging/ww3d2",
-      "status": "unknown",
+      "status": "original_patched",
       "target": "b/assetmgr.cpp"
     },
     {
       "change": "removed",
+      "classification_evidence_class": "source_review",
       "current_target": "staging/ww3d2/assetmgr.cpp",
       "current_target_exists": true,
       "directive": "#if defined(RENEGADE_VITA_PORT)",
@@ -16873,10 +16934,21 @@
       "patch_lines": [
         7
       ],
+      "review": {
+        "acceptance_open": "Compare metrics, Unicode glyphs, bold styles, atlas lifetime and physical text output with retail.",
+        "affected_scope": [
+          "All Vita modes using dynamic glyph rasterization"
+        ],
+        "behavior": "The selected patch removes the all-port NULL return from Get_FontChars. Original cache/lifetime ownership remains, while the Windows GDI glyph boundary is replaced by the Vita FreeType provider in Render2DSentence.",
+        "callers": [
+          "Original Render2DSentence, subtitles, frontend labels and HUD sentence paths"
+        ],
+        "original_owner": "WW3DAssetManager::Get_FontChars and FontCharsClass GDI glyph provider"
+      },
       "row_id": "f7a00ac6c9b37c1c2bc1ac6e17fdee0af5e757be1b70acd4149eb23a8b7a779f",
       "selected_by_stage_script": true,
       "stage_destination": "staging/ww3d2",
-      "status": "unknown",
+      "status": "boundary_replaced",
       "target": "b/assetmgr.cpp"
     },
     {
@@ -133067,12 +133139,12 @@
       "port_macro_definition": 486
     },
     "by_status": {
-      "boundary_replaced": 5,
+      "boundary_replaced": 6,
       "disabled_by_port_guard": 7,
-      "excluded_with_proof": 2,
-      "original_patched": 2,
+      "excluded_with_proof": 5,
+      "original_patched": 4,
       "stubbed_or_noop": 51,
-      "unknown": 3460
+      "unknown": 3454
     },
     "patch_files": 318,
     "rows": 3527,

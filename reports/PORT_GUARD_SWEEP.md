@@ -1,8 +1,8 @@
 # S1 port guards and stubs — inventory in progress
 
 2026-10-04 linker-wrapper/parser refresh: 3,527 source records contain
-51 stubs, two patched-original rows, five replaced boundaries, seven disabled
-guards, two exclusions and 3,460 unknowns. All four `--wrap` rows now
+51 stubs, four patched-original rows, six replaced boundaries, seven disabled
+guards, five exclusions and 3,454 unknowns. All four `--wrap` rows now
 have exact location identities and whole build-file hash pins. The production
 and ARM-closure `shark_init` wrappers preserve the real call and result while
 recording shader-compiler diagnostics. The movie-capture clock wrapper is a
@@ -20,9 +20,9 @@ evidence and does not close S1 or native acceptance.
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
 source contains 3,527 records with 51 fallback/diagnostic functions reviewed as
-`stubbed_or_noop`, two rows as `original_patched`, five boundaries as
-`boundary_replaced`, seven guards as `disabled_by_port_guard`, two rows as
-`excluded_with_proof`, and 3,460 records still `unknown`.
+`stubbed_or_noop`, four rows as `original_patched`, six boundaries as
+`boundary_replaced`, seven guards as `disabled_by_port_guard`, five rows as
+`excluded_with_proof`, and 3,454 records still `unknown`.
 All statuses reconcile to the total.
 
 | Inventory kind | Records |
@@ -123,6 +123,12 @@ classifications do not close the sweep.
   `RENEGADE_VITA_PORT && !__vita__` host-only guard. Thus the current native
   source reaches the original Dazzle body; delayed-layer execution and physical
   pixels remain open rather than being inferred from selection.
+- The same early A2.2 patch returned NULL from Font3D instances, Font3D data and
+  FontChars in every port profile. All three omissions are proven superseded.
+  Current staged source retains original Font3D construction and cache ownership;
+  FontChars keeps original cache/lifetime ownership while replacing Windows GDI
+  rasterization with the Vita FreeType provider. Unicode, metrics, texture upload,
+  lifetime and physical frontend/HUD/subtitle pixels remain open acceptance gates.
 - Native-profile preprocessing and configured graph evidence select original
   audio and seven nonempty movie-provider methods. Header parse uncertainties
   prevent treating syntax absence alone as complete exclusion or playback proof.

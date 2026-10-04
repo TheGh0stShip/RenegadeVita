@@ -23,8 +23,20 @@ endif()
 string(TOLOWER "${RENEGADE_CANDIDATE_LABEL}" RENEGADE_CANDIDATE_STEM)
 string(REPLACE "." "" RENEGADE_CANDIDATE_STEM "${RENEGADE_CANDIDATE_STEM}")
 option(RENEGADE_VITA_M00_DEMO "Interim M00 community showcase; not the full-port completion target" OFF)
-option(RENEGADE_VITA_CAMPAIGN_MSAA_4X
-  "Use the established 4x MSAA framebuffer in the full-port renderer" ON)
+# Full-port framebuffer multisampling (0, 2 or 4 samples). 2x halves the 4x
+# sample cost and frees about 4 MiB of depth storage for textures and cached
+# geometry. ux0:data/renegade/user/config/msaa-v1.flag ("RVMSAA1 0|2|4")
+# overrides it at launch without a rebuild.
+set(RENEGADE_VITA_CAMPAIGN_MSAA_SAMPLES "2" CACHE STRING
+  "Full-port framebuffer MSAA samples: 0, 2 or 4")
+if(NOT RENEGADE_VITA_CAMPAIGN_MSAA_SAMPLES MATCHES "^(0|2|4)$")
+  message(FATAL_ERROR "RENEGADE_VITA_CAMPAIGN_MSAA_SAMPLES must be 0, 2 or 4")
+endif()
+# Performance: the hot per-frame code (port renderer, WW3D, WWMath, WWPhys)
+# builds at -O3; everything else keeps RelWithDebInfo's -O2. OFF restores
+# -O2 everywhere for an A/B comparison or a suspected optimizer regression.
+option(RENEGADE_VITA_HOT_PATH_O3
+  "Compile the renderer, WW3D, WWMath and WWPhys translation units at -O3" ON)
 option(RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
   "Enable one-shot diagnostic save/mission launch requests; keep OFF for public packages" OFF)
 # Only the native launch boundary consumes this option. A directory-wide
@@ -34,7 +46,7 @@ set_property(SOURCE port/platform/vita/a31_vita_runtime.cpp APPEND PROPERTY
   RENEGADE_VITA_DEVELOPMENT_CHECKPOINT=$<BOOL:${RENEGADE_VITA_DEVELOPMENT_CHECKPOINT}>)
 set_property(SOURCE port/renderer/vita/ww3d_vita_renderer.cpp APPEND PROPERTY
   COMPILE_DEFINITIONS
-  RENEGADE_VITA_CAMPAIGN_MSAA_4X=$<BOOL:${RENEGADE_VITA_CAMPAIGN_MSAA_4X}>)
+  RENEGADE_VITA_CAMPAIGN_MSAA_SAMPLES=${RENEGADE_VITA_CAMPAIGN_MSAA_SAMPLES})
 if(RENEGADE_VITA_M00_DEMO)
   set(RENEGADE_BUILD_PROFILE "M00-DEMO")
 else()
@@ -564,6 +576,10 @@ target_compile_options(${PROJECT_NAME} PRIVATE
   -fdata-sections
   -Wno-unknown-pragmas
   -Wformat
+  # Value-preserving: libm never sets errno and FP exceptions are never
+  # trapped, so every sqrt/normalize no longer waits on an FPSCR check.
+  -fno-math-errno
+  -fno-trapping-math
   $<$<COMPILE_LANGUAGE:CXX>:-include${RENEGADE_COMPAT}/msvc_compat.h>
 )
 # The STL-backed platform decoder contains allocation failures locally. Enable
@@ -613,6 +629,17 @@ foreach(rv_campaign_default_unit IN ITEMS
     APPEND PROPERTY COMPILE_OPTIONS
     "-include${RENEGADE_COMPAT}/renegade_campaign_script_defaults.h")
 endforeach()
+# Source COMPILE_OPTIONS follow the configuration flags, so this -O3 wins.
+# Keep this after every set_source_files_properties(... COMPILE_OPTIONS),
+# which would otherwise overwrite the appended option.
+if(RENEGADE_VITA_HOT_PATH_O3)
+  get_target_property(rv_hot_path_sources ${PROJECT_NAME} SOURCES)
+  list(FILTER rv_hot_path_sources INCLUDE REGEX
+    "/staging/(ww3d2|wwmath|wwphys)/|/port/renderer/vita/")
+  set_property(SOURCE ${rv_hot_path_sources} APPEND PROPERTY COMPILE_OPTIONS -O3)
+  list(LENGTH rv_hot_path_sources rv_hot_path_source_count)
+  message(STATUS "Hot-path -O3 translation units: ${rv_hot_path_source_count}")
+endif()
 target_link_options(${PROJECT_NAME} PRIVATE
   -fshort-wchar
   -Wl,--gc-sections

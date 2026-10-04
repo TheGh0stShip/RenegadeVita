@@ -1,0 +1,70 @@
+--- a/mesh.cpp
++++ b/mesh.cpp
+@@ -228,6 +228,11 @@
+ 
+ #if !defined(RENEGADE_VITA_PORT)
+ 		TheDX8MeshRenderer.Unregister_Mesh_Type(this);
++#else
++		// Key by the outgoing model before the shared model is replaced.
++		if (UserLighting != NULL) {
++			RenegadeVitaRenderer::Forget_Static_Mesh_User_Lighting(Model, UserLighting);
++		}
+ #endif
+ 
+ 		RenderObjClass::operator = (that);
+@@ -305,6 +310,11 @@
+  *=============================================================================================*/
+ void MeshClass::Free(void)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	if (UserLighting != NULL) {
++		RenegadeVitaRenderer::Forget_Static_Mesh_User_Lighting(Model, UserLighting);
++	}
++#endif
+ 	REF_PTR_RELEASE(Model);
+ 	REF_PTR_RELEASE(DecalMesh);
+ 	if (UserLighting != NULL) {
+@@ -1555,6 +1565,10 @@
+ void MeshClass::Install_User_Lighting_Array(Vector4 * lighting)
+ {
+ 	Get_User_Lighting_Array(true);
++#if defined(RENEGADE_VITA_PORT)
++	// The original renderer had copied these colors at registration.
++	RenegadeVitaRenderer::Forget_Static_Mesh_User_Lighting(Model, UserLighting);
++#endif
+ 	
+ 	for (int vi=0; vi<Model->Get_Vertex_Count(); vi++) {
+ 		UserLighting[vi] = DX8Wrapper::Convert_Color(lighting[vi]);
+--- a/meshmdl.cpp
++++ b/meshmdl.cpp
+@@ -44,6 +44,9 @@
+ #include "bwrender.h"
+ #include "camera.h"
+ #include "dx8renderer.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "ww3d_vita_renderer.h"
++#endif
+ #include "hashtemplate.h"
+ 
+ 
+@@ -120,6 +123,9 @@
+ MeshModelClass & MeshModelClass::operator = (const MeshModelClass & that)
+ {
+ 	if (this != &that) {
++#if defined(RENEGADE_VITA_PORT)
++		RenegadeVitaRenderer::Forget_Static_Mesh_Model(this);
++#endif
+ 
+ 		MeshGeometryClass::operator = (that);
+ 
+@@ -148,6 +154,10 @@
+ 
+ void MeshModelClass::Reset(int polycount,int vertcount,int passcount)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	// Destruction and reloads end every cached native stream of this model.
++	RenegadeVitaRenderer::Forget_Static_Mesh_Model(this);
++#endif
+ 	Reset_Geometry(polycount,vertcount);
+ 
+ 	// Release everything we have and reset to initial state

@@ -228,6 +228,11 @@ MeshClass & MeshClass::operator = (const MeshClass & that)
 
 #if !defined(RENEGADE_VITA_PORT)
 		TheDX8MeshRenderer.Unregister_Mesh_Type(this);
+#else
+		// Key by the outgoing model before the shared model is replaced.
+		if (UserLighting != NULL) {
+			RenegadeVitaRenderer::Forget_Static_Mesh_User_Lighting(Model, UserLighting);
+		}
 #endif
 
 		RenderObjClass::operator = (that);
@@ -305,6 +310,11 @@ bool MeshClass::Contains(const Vector3 &point)
  *=============================================================================================*/
 void MeshClass::Free(void)
 {
+#if defined(RENEGADE_VITA_PORT)
+	if (UserLighting != NULL) {
+		RenegadeVitaRenderer::Forget_Static_Mesh_User_Lighting(Model, UserLighting);
+	}
+#endif
 	REF_PTR_RELEASE(Model);
 	REF_PTR_RELEASE(DecalMesh);
 	if (UserLighting != NULL) {
@@ -1555,6 +1565,10 @@ DX8FVFCategoryContainer* MeshClass::Peek_FVF_Category_Container()
 void MeshClass::Install_User_Lighting_Array(Vector4 * lighting)
 {
 	Get_User_Lighting_Array(true);
+#if defined(RENEGADE_VITA_PORT)
+	// The original renderer had copied these colors at registration.
+	RenegadeVitaRenderer::Forget_Static_Mesh_User_Lighting(Model, UserLighting);
+#endif
 	
 	for (int vi=0; vi<Model->Get_Vertex_Count(); vi++) {
 		UserLighting[vi] = DX8Wrapper::Convert_Color(lighting[vi]);

@@ -166,6 +166,12 @@ void Shutdown();
 void Begin_Frame(float red, float green, float blue);
 void End_Frame(bool present);
 void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info);
+// GPU-resident static mesh streams follow the original DX8 mesh renderer's
+// registration lifetime: DX8MeshRendererClass::Invalidate() drops all of
+// them, and model or user-lighting destruction drops the matching entries.
+void Invalidate_Static_Mesh_Cache();
+void Forget_Static_Mesh_Model(const void *model);
+void Forget_Static_Mesh_User_Lighting(const void *model, const void *user_lighting);
 // Dynamic DX8 submissions (including original Render2D glyph quads) retain
 // ShaderClass as the owner of both blend/depth state and the per-stage texture
 // combiner contract.  The texture-presence arguments make that complete state

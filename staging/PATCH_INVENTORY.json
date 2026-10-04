@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "c965d0a33027e0bdf7bc0c9b5dc02770cc801783974b9b4c35e1490b364cc179",
-  "patch_count": 319,
+  "stage_script_sha256": "41b5af5c5ec90378f162d635296810cf0a1ed188c732b3c89a90d00cbe38d8be",
+  "patch_count": 321,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1598,7 +1598,17 @@
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
       "stage_directory": "combat",
       "sha256": "0698dde47d7dcf9d381f46134f90fdf878d997026d668ce3c574d32d613b1f2e"
+    },
+    {
+      "path": "port/patches/ww3d2-a36-static-mesh-cache-lifetime.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "a84b5a5fec62711391fe416b81aa2cc519b73e0322cca8e188d39ea8076e1f0f"
+    },
+    {
+      "path": "port/patches/wwmath-a36-fabs-vabs.patch",
+      "stage_directory": "wwmath",
+      "sha256": "88b2e61f05ad7b39a641f273e0db818834462af3dd1bf305898ff10a32dc571f"
     }
   ],
-  "registry_sha256": "d3ac33f64b287269bd662190ce6aff4ed403896b212d7f4a487e0bb7faa85660"
+  "registry_sha256": "92c86cda0e9b85c2e29f3e5a4c21444b641a8c2a5b513f76f5937a207fd20bd4"
 }

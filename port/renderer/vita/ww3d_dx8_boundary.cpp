@@ -47,7 +47,13 @@ DX8MeshRendererClass::DX8MeshRendererClass()
 	: enable_lighting(true), camera(NULL),
 	  texture_category_container_list_skin(NULL), visible_decal_meshes(NULL) {}
 DX8MeshRendererClass::~DX8MeshRendererClass() {}
-void DX8MeshRendererClass::Invalidate() {}
+// The original renderer dropped every registered mesh's static buffers here
+// (level load, lighting solve, sorting changes). Do the same for the native
+// cached mesh streams that replace those buffers.
+void DX8MeshRendererClass::Invalidate()
+{
+	RenegadeVitaRenderer::Invalidate_Static_Mesh_Cache();
+}
 
 // Retain the original decal list owner while native base meshes submit directly.
 void DX8MeshRendererClass::Add_To_Render_List(DecalMeshClass *decalmesh)

@@ -80,7 +80,8 @@ int main() {
 }
 ''')
             subprocess.run(['g++', '-std=c++17', '-O1', '-g', '-Wall', '-Wextra', '-Werror',
-                '-D__vita__=1', '-fsanitize=address,undefined', '-fno-omit-frame-pointer',
+                '-D__vita__=1', '-DRENEGADE_VITA_INDEXED_CHECKSUM=1',
+                '-fsanitize=address,undefined', '-fno-omit-frame-pointer',
                 '-I'+folder, '-I'+str(ROOT / 'port/renderer/vita'), str(directory / 'test.cpp'),
                 '-o', str(directory / 'test')], check=True)
             subprocess.run([str(directory / 'test')], check=True)

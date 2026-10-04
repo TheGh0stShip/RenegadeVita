@@ -19,6 +19,17 @@
 #include "vertmaterial.h"
 #include "ww3d_vita_render_state_contract.h"
 
+// The per-index geometry checksum hashes every referenced vertex of every
+// indexed draw (HUD, text, particles, sorted geometry). It is a host/test
+// diagnostic; native builds keep the bounds validation without the hashing.
+#if !defined(RENEGADE_VITA_INDEXED_CHECKSUM)
+#if defined(__vita__)
+#define RENEGADE_VITA_INDEXED_CHECKSUM 0
+#else
+#define RENEGADE_VITA_INDEXED_CHECKSUM 1
+#endif
+#endif
+
 #include <stddef.h>
 #include <new>
 #include <stdio.h>
@@ -38,9 +49,11 @@ void RenegadeVita_Release_DX8_Bound_Textures() __attribute__((weak));
 #include <psp2/kernel/sysmem.h>
 #include <vitaGL.h>
 #include "ww3d_vita_indexed_mesh_batch.h"
+#include "ww3d_vita_static_mesh_cache.h"
 extern "C" void vglRenegadeEndIndexed(GLsizei count, const GLushort *indices);
 extern "C" void vglRenegadeBeginProjective(GLenum mode);
 extern "C" void vglRenegadeTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat q);
+extern "C" void vglRenegadeInvalidateVertexAttributes(void);
 #endif
 
 namespace RenegadeVitaRenderer {
@@ -1792,6 +1805,547 @@ void Log_Indexed_Rejection(const char *reason, uint32_t vertex_format)
 	g_logged_first_indexed_rejection = true;
 }
 
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+
+enum : uint32_t {
+	// Upper bound for resident cached streams; least-recently drawn entries
+	// are evicted first. Builds also leave this much vitaGL memory free so
+	// texture residency keeps priority over cached geometry.
+	STATIC_MESH_CACHE_BUDGET_BYTES = 24U * 1024U * 1024U,
+	STATIC_MESH_CACHE_FREE_RESERVE_BYTES = 16U * 1024U * 1024U,
+	STATIC_MESH_CACHE_RETRY_FRAMES = 300U,
+	STATIC_MESH_CACHE_STALE_FRAMES = 1800U,
+};
+
+StaticMeshCacheTable g_static_mesh_cache;
+StaticMeshStreamBuilder g_static_mesh_builder;
+StaticMeshCacheStatistics g_static_mesh_statistics = {};
+bool g_static_mesh_cache_enabled = true;
+bool g_logged_first_static_mesh_build = false;
+
+void Release_Static_Mesh_Builder()
+{
+	g_static_mesh_builder.Release();
+}
+
+void Release_Static_Mesh_Buffers(uint32_t vertex_buffer, uint32_t index_buffer)
+{
+	// vitaGL defers the storage release while recent frames may still read it.
+	GLuint buffers[2] = { vertex_buffer, index_buffer };
+	glDeleteBuffers(2, buffers);
+}
+
+void Read_Static_Mesh_Cache_Mode()
+{
+	// "RVSM1 0\n" restores the per-frame immediate path for A/B comparison.
+	g_static_mesh_cache_enabled = true;
+	FILE *file = fopen("ux0:data/renegade/user/config/static-mesh-cache-v1.flag", "rb");
+	if (file != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok && size == 8U && memcmp(value, "RVSM1 ", 6U) == 0 &&
+			value[7] == '\n' && value[6] == '0') {
+			g_static_mesh_cache_enabled = false;
+		}
+	}
+	g_static_mesh_cache.Set_Release_Callback(Release_Static_Mesh_Buffers);
+	Vita_Append_A22_Runtime_Breadcrumb("static-mesh-cache",
+		"version=1 enabled=%d budget=%u reserve=%u stride=%u acceptance=unassessed",
+		g_static_mesh_cache_enabled ? 1 : 0,
+		static_cast<unsigned>(STATIC_MESH_CACHE_BUDGET_BYTES),
+		static_cast<unsigned>(STATIC_MESH_CACHE_FREE_RESERVE_BYTES),
+		static_cast<unsigned>(STATIC_MESH_VERTEX_STRIDE));
+}
+
+void Log_Static_Mesh_Cache_Statistics()
+{
+	Vita_Append_A22_Runtime_Breadcrumb("static-mesh-cache",
+		"frame=%u enabled=%d entries=%u bytes=%u hits=%llu builds=%llu rebuilds=%llu ineligible=%llu volatile=%llu evictions=%llu invalidations=%llu allocation_failures=%llu batches=%llu triangles=%llu",
+		g_statistics.frames, g_static_mesh_cache_enabled ? 1 : 0,
+		g_static_mesh_cache.Live(), g_static_mesh_cache.Bytes(),
+		static_cast<unsigned long long>(g_static_mesh_statistics.hits),
+		static_cast<unsigned long long>(g_static_mesh_statistics.builds),
+		static_cast<unsigned long long>(g_static_mesh_statistics.rebuilds),
+		static_cast<unsigned long long>(g_static_mesh_statistics.ineligible),
+		static_cast<unsigned long long>(g_static_mesh_statistics.volatile_entries),
+		static_cast<unsigned long long>(g_static_mesh_statistics.evictions),
+		static_cast<unsigned long long>(g_static_mesh_statistics.invalidations),
+		static_cast<unsigned long long>(g_static_mesh_statistics.allocation_failures),
+		static_cast<unsigned long long>(g_static_mesh_statistics.cached_batches),
+		static_cast<unsigned long long>(g_static_mesh_statistics.cached_triangles));
+}
+
+// Build default from CMake; a user config file containing exactly
+// "RVMSAA1 0\n", "RVMSAA1 2\n" or "RVMSAA1 4\n" selects another framebuffer
+// sample count at launch.
+unsigned Read_Campaign_MSAA_Samples()
+{
+	unsigned samples = RENEGADE_VITA_CAMPAIGN_MSAA_SAMPLES;
+	FILE *file = fopen("ux0:data/renegade/user/config/msaa-v1.flag", "rb");
+	if (file != NULL) {
+		char value[11] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok && size == 10U && memcmp(value, "RVMSAA1 ", 8U) == 0 &&
+			value[9] == '\n' &&
+			(value[8] == '0' || value[8] == '2' || value[8] == '4')) {
+			samples = static_cast<unsigned>(value[8] - '0');
+		}
+	}
+	return samples;
+}
+
+StaticMeshMaterialSnapshot Snapshot_Static_Mesh_Material(VertexMaterialClass *material)
+{
+	StaticMeshMaterialSnapshot snapshot;
+	memset(&snapshot, 0, sizeof(snapshot));
+	snapshot.material = material;
+	// Defaults match Evaluate_Original_Material_Vertex_Color for no material.
+	Vector3 diffuse(1.0f, 1.0f, 1.0f);
+	Vector3 ambient(1.0f, 1.0f, 1.0f);
+	Vector3 emissive(0.0f, 0.0f, 0.0f);
+	snapshot.opacity = 1.0f;
+	for (unsigned stage = 0U; stage < 2U; ++stage) {
+		snapshot.uv_source[stage] = Get_Original_UV_Source(material, stage);
+	}
+	if (material != NULL) {
+		material->Get_Diffuse(&diffuse);
+		material->Get_Ambient(&ambient);
+		material->Get_Emissive(&emissive);
+		snapshot.opacity = material->Get_Opacity();
+		snapshot.lighting = material->Get_Lighting() ? 1U : 0U;
+		snapshot.diffuse_source = static_cast<uint8_t>(material->Get_Diffuse_Color_Source());
+		snapshot.ambient_source = static_cast<uint8_t>(material->Get_Ambient_Color_Source());
+		snapshot.emissive_source = static_cast<uint8_t>(material->Get_Emissive_Color_Source());
+		snapshot.mapper[0] = material->Peek_Mapper(0);
+		snapshot.mapper[1] = material->Peek_Mapper(1);
+	}
+	snapshot.diffuse[0] = diffuse.X; snapshot.diffuse[1] = diffuse.Y; snapshot.diffuse[2] = diffuse.Z;
+	snapshot.ambient[0] = ambient.X; snapshot.ambient[1] = ambient.Y; snapshot.ambient[2] = ambient.Z;
+	snapshot.emissive[0] = emissive.X; snapshot.emissive[1] = emissive.Y;
+	snapshot.emissive[2] = emissive.Z;
+	return snapshot;
+}
+
+bool Static_Mesh_Passthrough_Stage(const OriginalTextureCoordinateState &state)
+{
+	return Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU &&
+		state.texture_transform_flags == D3DTTFF_DISABLE;
+}
+
+// Mirrors Submit_Mesh's original pass/triangle traversal and its state-run
+// boundaries, but records each run's first-use vertex attributes once.
+// Returns false when any run depends on per-frame lighting, generated or
+// transformed UVs, or when storage cannot be reserved.
+bool Build_Static_Mesh_Streams(MeshClass &mesh, MeshModelClass *model,
+	const RenderInfoClass &render_info, const Vector3 *vertices,
+	const Vector3 *normals, const TriIndex *triangles, int vertex_count,
+	int triangle_count, int base_pass_count, const Matrix3D &world_transform)
+{
+	StaticMeshStreamBuilder &builder = g_static_mesh_builder;
+	if (!builder.Begin(static_cast<uint32_t>(vertex_count))) return false;
+	const unsigned *user_lighting = mesh.Get_User_Lighting_Array(false);
+	for (int pass = 0; pass < base_pass_count; ++pass) {
+		const Vector2 *uvs[MeshMatDescClass::MAX_TEX_STAGES] = {
+			model->Get_UV_Array(pass, 0),
+			model->Get_UV_Array(pass, 1)
+		};
+		const unsigned *diffuse_colors = model->Get_DCG_Array(pass);
+		const unsigned *color1 =
+			user_lighting != NULL ? user_lighting : model->Get_Color_Array(0, false);
+		const unsigned *color2 = model->Get_Color_Array(1, false);
+		if (color1 == NULL && model->Get_DCG_Source(pass) == VertexMaterialClass::COLOR1) {
+			color1 = diffuse_colors;
+		}
+		if (color2 == NULL && model->Get_DCG_Source(pass) == VertexMaterialClass::COLOR2) {
+			color2 = diffuse_colors;
+		}
+		TextureClass *bound_textures[MeshMatDescClass::MAX_TEX_STAGES] = {};
+		unsigned current_shader_bits = 0xffffffffU;
+		VertexMaterialClass *current_material = NULL;
+		bool current_detail_stage = false;
+		bool primitive_open = false;
+		const Vector2 *stage0_uvs = NULL;
+		const Vector2 *stage1_uvs = NULL;
+		VertexMaterialClass *last_vertex_material = NULL;
+		bool last_vertex_material_known = false;
+		for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
+			TextureClass *triangle_textures[MeshMatDescClass::MAX_TEX_STAGES] = {
+				model->Peek_Texture(triangle_index, pass, 0),
+				model->Peek_Texture(triangle_index, pass, 1)
+			};
+			const TriIndex &triangle = triangles[triangle_index];
+			VertexMaterialClass *triangle_material =
+				triangle[0] < vertex_count ?
+					model->Peek_Material(static_cast<int>(triangle[0]), pass) : NULL;
+			const ShaderClass triangle_shader = model->Get_Shader(triangle_index, pass);
+			const unsigned triangle_shader_bits = triangle_shader.Get_Bits();
+			const bool detail_stage = triangle_shader.Uses_Post_Detail_Texture() &&
+				triangle_textures[1] != NULL;
+			if (triangle_textures[0] != bound_textures[0] ||
+				triangle_textures[1] != bound_textures[1] ||
+				triangle_material != current_material ||
+				detail_stage != current_detail_stage ||
+				triangle_shader_bits != current_shader_bits || !primitive_open) {
+				bound_textures[0] = triangle_textures[0];
+				bound_textures[1] = triangle_textures[1];
+				current_material = triangle_material;
+				current_detail_stage = detail_stage;
+				current_shader_bits = triangle_shader_bits;
+				// A detail stage over an untextured base selects a different
+				// vitaGL stage mapping for arrays; keep it on immediate mode.
+				if (current_detail_stage && bound_textures[0] == NULL) return false;
+				const StaticMeshMaterialSnapshot snapshot =
+					Snapshot_Static_Mesh_Material(current_material);
+				if (!builder.Add_Material(snapshot)) return false;
+				if ((bound_textures[0] != NULL && snapshot.mapper[0] != NULL) ||
+					(current_detail_stage && snapshot.mapper[1] != NULL)) return false;
+				Apply_Original_Texture_Coordinate_State(current_material);
+				OriginalTextureCoordinateState coordinates[MeshMatDescClass::MAX_TEX_STAGES];
+				const Vector2 *current_uvs[MeshMatDescClass::MAX_TEX_STAGES] = {};
+				for (unsigned stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+					Capture_Original_Texture_Coordinate_State(stage, &coordinates[stage]);
+					current_uvs[stage] = Resolve_UV_Array_For_Texture_State(model,
+						coordinates[stage], uvs[stage]);
+				}
+				stage0_uvs = current_uvs[0];
+				stage1_uvs = current_uvs[1] != NULL ? current_uvs[1] : current_uvs[0];
+				if (bound_textures[0] != NULL &&
+					(!Static_Mesh_Passthrough_Stage(coordinates[0]) || stage0_uvs == NULL))
+					return false;
+				if (current_detail_stage &&
+					(!Static_Mesh_Passthrough_Stage(coordinates[1]) || stage1_uvs == NULL))
+					return false;
+				StaticMeshBatch state;
+				memset(&state, 0, sizeof(state));
+				state.texture0 = bound_textures[0];
+				state.texture1 = current_detail_stage ? bound_textures[1] : NULL;
+				state.material = current_material;
+				state.shader_bits = current_shader_bits;
+				state.detail_stage = current_detail_stage;
+				if (!builder.Begin_Batch(state)) return false;
+				primitive_open = true;
+			}
+			if (triangle[0] >= static_cast<unsigned>(vertex_count) ||
+				triangle[1] >= static_cast<unsigned>(vertex_count) ||
+				triangle[2] >= static_cast<unsigned>(vertex_count)) {
+				continue;
+			}
+			if (!builder.Reserve_Triangle()) return false;
+			for (int corner = 0; corner < 3; ++corner) {
+				const unsigned vertex_index = triangle[corner];
+				StaticMeshVertex *vertex = builder.Append(vertex_index);
+				if (builder.Failed()) return false;
+				if (vertex == NULL) continue;
+				VertexMaterialClass *vertex_material =
+					model->Peek_Material(static_cast<int>(vertex_index), pass);
+				if (!last_vertex_material_known || vertex_material != last_vertex_material) {
+					if (!builder.Has_Material(vertex_material) &&
+						!builder.Add_Material(Snapshot_Static_Mesh_Material(vertex_material)))
+						return false;
+					last_vertex_material = vertex_material;
+					last_vertex_material_known = true;
+				}
+				const MaterialVertexColor color = Evaluate_Original_Material_Vertex_Color(
+					vertex_material, color1, color2, vertex_index, normals,
+					world_transform, render_info, NULL);
+				if (color.lighting) return false;
+				vertex->position[0] = vertices[vertex_index].X;
+				vertex->position[1] = vertices[vertex_index].Y;
+				vertex->position[2] = vertices[vertex_index].Z;
+				vertex->color[0] = Static_Mesh_Color_Byte(color.final_color.X);
+				vertex->color[1] = Static_Mesh_Color_Byte(color.final_color.Y);
+				vertex->color[2] = Static_Mesh_Color_Byte(color.final_color.Z);
+				vertex->color[3] = Static_Mesh_Color_Byte(color.alpha);
+				vertex->uv0[0] = vertex->uv0[1] = 0.0f;
+				vertex->uv1[0] = vertex->uv1[1] = 0.0f;
+				if (bound_textures[0] != NULL) {
+					vertex->uv0[0] = stage0_uvs[vertex_index].X;
+					vertex->uv0[1] = stage0_uvs[vertex_index].Y;
+				}
+				if (current_detail_stage) {
+					vertex->uv1[0] = stage1_uvs[vertex_index].X;
+					vertex->uv1[1] = stage1_uvs[vertex_index].Y;
+				}
+			}
+		}
+		builder.End_Batch();
+	}
+	if (builder.Failed() || builder.Batches().Count() == 0U) return false;
+	builder.Assign_Windows();
+	return true;
+}
+
+bool Static_Mesh_Entry_Current(const StaticMeshEntry &entry, MeshModelClass *model,
+	int vertex_count, int triangle_count, int base_pass_count)
+{
+	if (entry.vertex_count != static_cast<uint32_t>(vertex_count) ||
+		entry.triangle_count != static_cast<uint32_t>(triangle_count) ||
+		entry.pass_count != static_cast<uint32_t>(base_pass_count) ||
+		entry.alternate_materials != model->Is_Alternate_Material_Description_Enabled())
+		return false;
+	for (uint32_t index = 0U; index < entry.material_count; ++index) {
+		const StaticMeshMaterialSnapshot &cached = entry.materials[index];
+		if (!Static_Mesh_Snapshot_Equal(cached, Snapshot_Static_Mesh_Material(
+			static_cast<VertexMaterialClass *>(cached.material)))) return false;
+	}
+	return true;
+}
+
+bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
+{
+	const StaticMeshStreamBuilder &builder = g_static_mesh_builder;
+	const uint32_t vertex_bytes = builder.Vertices().Count() * STATIC_MESH_VERTEX_STRIDE;
+	const uint32_t index_bytes = builder.Indices().Count() * sizeof(uint16_t);
+	const uint32_t total_bytes = vertex_bytes + index_bytes;
+	if (vertex_bytes == 0U || index_bytes == 0U ||
+		total_bytes > STATIC_MESH_CACHE_BUDGET_BYTES / 4U) return false;
+	if (g_static_mesh_cache.Bytes() + total_bytes > STATIC_MESH_CACHE_BUDGET_BYTES) {
+		g_static_mesh_statistics.evictions += g_static_mesh_cache.Enforce_Budget(
+			STATIC_MESH_CACHE_BUDGET_BYTES - total_bytes, frame);
+	}
+	if (g_static_mesh_cache.Bytes() + total_bytes > STATIC_MESH_CACHE_BUDGET_BYTES ||
+		vglMemFree(VGL_MEM_ALL) < STATIC_MESH_CACHE_FREE_RESERVE_BYTES + total_bytes) {
+		++g_static_mesh_statistics.allocation_failures;
+		return false;
+	}
+	const uint32_t batch_bytes = builder.Batches().Count() * sizeof(StaticMeshBatch);
+	const uint32_t material_bytes =
+		builder.Materials().Count() * sizeof(StaticMeshMaterialSnapshot);
+	StaticMeshBatch *batches = static_cast<StaticMeshBatch *>(malloc(batch_bytes));
+	StaticMeshMaterialSnapshot *materials = static_cast<StaticMeshMaterialSnapshot *>(
+		malloc(material_bytes != 0U ? material_bytes : 1U));
+	if (batches == NULL || materials == NULL) {
+		free(batches);
+		free(materials);
+		++g_static_mesh_statistics.allocation_failures;
+		return false;
+	}
+	memcpy(batches, builder.Batches().Data(), batch_bytes);
+	if (material_bytes != 0U) memcpy(materials, builder.Materials().Data(), material_bytes);
+
+	GLuint buffers[2] = {};
+	glGenBuffers(2, buffers);
+	// Allocate without data first: vitaGL copies unconditionally into the
+	// new storage, so mapping is the only failure-safe way to fill it.
+	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+	glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizei>(vertex_bytes), NULL, GL_STATIC_DRAW);
+	void *vertex_storage = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	if (vertex_storage != NULL) {
+		memcpy(vertex_storage, builder.Vertices().Data(), vertex_bytes);
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+	}
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizei>(index_bytes), NULL,
+		GL_STATIC_DRAW);
+	void *index_storage = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
+	if (index_storage != NULL) {
+		memcpy(index_storage, builder.Indices().Data(), index_bytes);
+		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	if (vertex_storage == NULL || index_storage == NULL) {
+		Release_Static_Mesh_Buffers(buffers[0], buffers[1]);
+		free(batches);
+		free(materials);
+		++g_static_mesh_statistics.allocation_failures;
+		return false;
+	}
+	entry.vertex_buffer = buffers[0];
+	entry.index_buffer = buffers[1];
+	entry.batches = batches;
+	entry.batch_count = builder.Batches().Count();
+	entry.materials = materials;
+	entry.material_count = builder.Materials().Count();
+	g_static_mesh_cache.Account(entry, total_bytes);
+	return true;
+}
+
+// Replays the recorded runs with the same state sequence as the immediate
+// path. Positions stay in model space under the loaded modelview matrix.
+void Replay_Static_Mesh_Entry(const StaticMeshEntry &entry)
+{
+	// The same FFP program may last have been patched for the immediate
+	// layout; force register rebinding for these client arrays.
+	vglRenegadeInvalidateVertexAttributes();
+	glBindBuffer(GL_ARRAY_BUFFER, entry.vertex_buffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, entry.index_buffer);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
+	const StaticMeshBatch *previous = NULL;
+	uint32_t window = 0xffffffffU;
+	for (uint32_t index = 0U; index < entry.batch_count; ++index) {
+		const StaticMeshBatch &batch = entry.batches[index];
+		TextureClass *texture0 = static_cast<TextureClass *>(batch.texture0);
+		TextureClass *texture1 = static_cast<TextureClass *>(batch.texture1);
+		const bool same_state = previous != NULL &&
+			previous->texture0 == batch.texture0 && previous->texture1 == batch.texture1 &&
+			previous->material == batch.material &&
+			previous->shader_bits == batch.shader_bits &&
+			previous->detail_stage == batch.detail_stage;
+		if (!same_state) {
+			const ShaderClass shader(batch.shader_bits);
+			Apply_Original_Shader_State(shader);
+			if (texture0 != NULL) texture0->Apply_For_Platform_Boundary(0U);
+			else Bind_Texture(0U, false);
+			if (batch.detail_stage) texture1->Apply_For_Platform_Boundary(1U);
+			else Disable_Texture_Stage(1U);
+			Apply_Original_Texture_Coordinate_State(
+				static_cast<VertexMaterialClass *>(batch.material));
+			// Capturing also restores identity texture matrices; cached UVs are
+			// already the original pass-through coordinates.
+			OriginalTextureCoordinateState coordinates;
+			for (unsigned stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+				Capture_Original_Texture_Coordinate_State(stage, &coordinates);
+			}
+			Apply_Original_Texture_Stage_State(shader, texture0 != NULL, batch.detail_stage);
+		}
+		previous = &batch;
+		if (batch.window_base != window) {
+			// Every pointer change re-patches the vertex program; set all four
+			// once per window and only toggle the texture arrays per batch.
+			window = batch.window_base;
+			const uintptr_t base = static_cast<uintptr_t>(window) *
+				STATIC_MESH_VERTEX_STRIDE;
+			glVertexPointer(3, GL_FLOAT, STATIC_MESH_VERTEX_STRIDE,
+				reinterpret_cast<const GLvoid *>(base + STATIC_MESH_POSITION_OFFSET));
+			glColorPointer(4, GL_UNSIGNED_BYTE, STATIC_MESH_VERTEX_STRIDE,
+				reinterpret_cast<const GLvoid *>(base + STATIC_MESH_COLOR_OFFSET));
+			glClientActiveTexture(GL_TEXTURE0);
+			glTexCoordPointer(2, GL_FLOAT, STATIC_MESH_VERTEX_STRIDE,
+				reinterpret_cast<const GLvoid *>(base + STATIC_MESH_UV0_OFFSET));
+			glClientActiveTexture(GL_TEXTURE1);
+			glTexCoordPointer(2, GL_FLOAT, STATIC_MESH_VERTEX_STRIDE,
+				reinterpret_cast<const GLvoid *>(base + STATIC_MESH_UV1_OFFSET));
+		}
+		glClientActiveTexture(GL_TEXTURE0);
+		if (texture0 != NULL) glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		else glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE1);
+		if (batch.detail_stage) glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		else glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE0);
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(batch.index_count),
+			GL_UNSIGNED_SHORT, reinterpret_cast<const GLvoid *>(
+				static_cast<uintptr_t>(batch.first_index) * sizeof(uint16_t)));
+	}
+	glClientActiveTexture(GL_TEXTURE1);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glClientActiveTexture(GL_TEXTURE0);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	// Later immediate draws must re-patch for their own layout.
+	vglRenegadeInvalidateVertexAttributes();
+	++g_statistics.state_changes;
+}
+
+// Draws every pass of a rigid mesh from its cached streams when it is
+// eligible. Returns false when the immediate path must draw it instead.
+bool Submit_Static_Mesh_Cache(MeshClass &mesh, MeshModelClass *model,
+	const RenderInfoClass &render_info, const Vector3 *vertices,
+	const Vector3 *normals, const TriIndex *triangles, int vertex_count,
+	int triangle_count, int base_pass_count, const Matrix3D &world_transform)
+{
+	if (!g_static_mesh_cache_enabled) return false;
+	const uint32_t frame = g_statistics.frames;
+	const void *user_lighting = mesh.Get_User_Lighting_Array(false);
+	StaticMeshEntry *entry = g_static_mesh_cache.Find(model, user_lighting);
+	if (entry != NULL) {
+		entry->last_used_frame = frame;
+		if (entry->state == STATIC_MESH_ENTRY_VOLATILE) return false;
+		const bool current = Static_Mesh_Entry_Current(*entry, model, vertex_count,
+			triangle_count, base_pass_count);
+		if (entry->state == STATIC_MESH_ENTRY_READY && current) {
+			Replay_Static_Mesh_Entry(*entry);
+			++g_static_mesh_statistics.hits;
+			return true;
+		}
+		// Unchanged ineligible geometry stays on immediate mode. Only an
+		// allocation failure (nonzero retry frame) is attempted again later.
+		if (entry->state == STATIC_MESH_ENTRY_INELIGIBLE && current &&
+			(entry->retry_frame == 0U ||
+			 static_cast<int32_t>(frame - entry->retry_frame) < 0)) return false;
+		if (entry->state == STATIC_MESH_ENTRY_READY || !current) {
+			g_static_mesh_cache.Release_Storage(*entry);
+			if (++entry->rebuilds > StaticMeshCacheTable::MaxRebuilds) {
+				entry->state = STATIC_MESH_ENTRY_VOLATILE;
+				++g_static_mesh_statistics.volatile_entries;
+				return false;
+			}
+			++g_static_mesh_statistics.rebuilds;
+		}
+	} else {
+		entry = g_static_mesh_cache.Insert(model, user_lighting);
+		if (entry == NULL) {
+			g_static_mesh_statistics.evictions +=
+				g_static_mesh_cache.Evict_Stale(frame, STATIC_MESH_CACHE_STALE_FRAMES);
+			entry = g_static_mesh_cache.Insert(model, user_lighting);
+			if (entry == NULL) return false;
+		}
+		entry->last_used_frame = frame;
+	}
+
+	entry->vertex_count = static_cast<uint32_t>(vertex_count);
+	entry->triangle_count = static_cast<uint32_t>(triangle_count);
+	entry->pass_count = static_cast<uint32_t>(base_pass_count);
+	entry->alternate_materials = model->Is_Alternate_Material_Description_Enabled();
+	entry->state = STATIC_MESH_ENTRY_INELIGIBLE;
+	entry->retry_frame = 0U;
+	const bool built = Build_Static_Mesh_Streams(mesh, model, render_info, vertices,
+		normals, triangles, vertex_count, triangle_count, base_pass_count,
+		world_transform);
+	if (!built && g_static_mesh_builder.Failed()) {
+		// Host allocation failure, not an eligibility verdict.
+		++g_static_mesh_statistics.allocation_failures;
+		entry->retry_frame = frame + STATIC_MESH_CACHE_RETRY_FRAMES;
+		if (entry->retry_frame == 0U) entry->retry_frame = 1U;
+		return false;
+	}
+	if (!built) {
+		++g_static_mesh_statistics.ineligible;
+		// Retain the materials that produced the verdict so a changed material
+		// description or material state reconsiders this entry.
+		const uint32_t material_bytes = g_static_mesh_builder.Materials().Count() *
+			sizeof(StaticMeshMaterialSnapshot);
+		if (material_bytes != 0U) {
+			entry->materials = static_cast<StaticMeshMaterialSnapshot *>(malloc(material_bytes));
+			if (entry->materials != NULL) {
+				memcpy(entry->materials, g_static_mesh_builder.Materials().Data(), material_bytes);
+				entry->material_count = g_static_mesh_builder.Materials().Count();
+			}
+		}
+		if (entry->materials == NULL) entry->state = STATIC_MESH_ENTRY_VOLATILE;
+		return false;
+	}
+	if (!Upload_Static_Mesh_Entry(*entry, frame)) {
+		entry->retry_frame = frame + STATIC_MESH_CACHE_RETRY_FRAMES;
+		if (entry->retry_frame == 0U) entry->retry_frame = 1U;
+		return false;
+	}
+	entry->state = STATIC_MESH_ENTRY_READY;
+	++g_static_mesh_statistics.builds;
+	g_static_mesh_statistics.cached_batches += entry->batch_count;
+	g_static_mesh_statistics.cached_triangles += g_static_mesh_builder.Indices().Count() / 3U;
+	if (!g_logged_first_static_mesh_build) {
+		Vita_Append_A22_Runtime_Breadcrumb("static-mesh-cache",
+			"first cached mesh: mesh=%s vertices=%u indices=%u batches=%u materials=%u bytes=%u",
+			mesh.Get_Name(), g_static_mesh_builder.Vertices().Count(),
+			g_static_mesh_builder.Indices().Count(), entry->batch_count,
+			entry->material_count, entry->bytes);
+		g_logged_first_static_mesh_build = true;
+	}
+	Replay_Static_Mesh_Entry(*entry);
+	return true;
+}
+#endif
+
 } // namespace
 
 bool Use_Direct_Text_Atlas_Upload()
@@ -2124,8 +2678,15 @@ bool Initialize()
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 		"entry: backend=vitaGL commit=6e7fe40 API=vglInit native_call=%u",
 		g_lifecycle.native_initialization_calls);
+#if RENEGADE_VITA_M00_DEMO
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 		"display request: 960x544 buffers=3 color=SCE_GXM_COLOR_FORMAT_A8B8G8R8 depth=SCE_GXM_DEPTH_STENCIL_FORMAT_DF32M_S8 msaa=SCE_GXM_MULTISAMPLE_4X");
+#else
+	const unsigned campaign_msaa_samples = Read_Campaign_MSAA_Samples();
+	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
+		"display request: 960x544 buffers=3 color=SCE_GXM_COLOR_FORMAT_A8B8G8R8 depth=SCE_GXM_DEPTH_STENCIL_FORMAT_DF32M_S8 msaa_samples=%u",
+		campaign_msaa_samples);
+#endif
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 		"memory policy: legacy_pool=4194304 circular_pool=33554432 ram_reserve=16777216 cdram_reserve=0 phycont_reserve=0 cdlg_pool=0");
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
@@ -2148,16 +2709,20 @@ bool Initialize()
 	g_shader_init_calls = 0;
 	g_shader_init_last_result = -1;
 	Read_Render_Work_Cache_Mode();
+#if !RENEGADE_VITA_M00_DEMO
+	Read_Static_Mesh_Cache_Mode();
+#endif
 	Invalidate_Native_State_Cache();
 
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "vglInit entry");
 #if RENEGADE_VITA_M00_DEMO
 	const GLboolean resolution_fallback = vglInit(4 * 1024 * 1024);
 #else
-	const SceGxmMultisampleMode campaign_msaa = RENEGADE_VITA_CAMPAIGN_MSAA_4X
-		? SCE_GXM_MULTISAMPLE_4X : SCE_GXM_MULTISAMPLE_NONE;
-	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "campaign framebuffer msaa=%dx",
-		RENEGADE_VITA_CAMPAIGN_MSAA_4X ? 4 : 0);
+	const SceGxmMultisampleMode campaign_msaa =
+		campaign_msaa_samples == 4U ? SCE_GXM_MULTISAMPLE_4X :
+		campaign_msaa_samples == 2U ? SCE_GXM_MULTISAMPLE_2X : SCE_GXM_MULTISAMPLE_NONE;
+	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "campaign framebuffer msaa=%ux",
+		campaign_msaa_samples);
 	const GLboolean resolution_fallback = vglInitExtended(
 		4 * 1024 * 1024, 960, 544, 0x1000000, campaign_msaa);
 #endif
@@ -2278,6 +2843,10 @@ void Shutdown()
 	g_material_color_capacity = 0;
 	g_material_color_generation = 0U;
 	g_statistics.material_color_cache_bytes = 0U;
+#if !RENEGADE_VITA_M00_DEMO
+	Invalidate_Static_Mesh_Cache();
+	Release_Static_Mesh_Builder();
+#endif
 	Invalidate_Native_State_Cache();
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-lifecycle",
 		"logical shutdown: shutdowns=%u sessions=%u native_calls=%u native_ready=%d",
@@ -2356,6 +2925,7 @@ void End_Frame(bool present)
 				static_cast<unsigned>(sizeof(g_indexed_mesh_batch)),
 				static_cast<unsigned long long>(g_material_skin_rgb_skips));
 #if !RENEGADE_VITA_M00_DEMO
+			Log_Static_Mesh_Cache_Statistics();
 			Vita_Append_A22_Runtime_Breadcrumb("mesh-boundary-time",
 				"frame=%u meshes=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu max_name=%s draw_ends=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu",
 				g_statistics.frames, g_mesh_boundary_timing.mesh_count,
@@ -2983,6 +3553,14 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 				model->Get_DCG_Array(0) != NULL ? 1 : 0);
 		g_logged_first_skin = true;
 	}
+#if !RENEGADE_VITA_M00_DEMO
+	// Rigid unlit meshes replay GPU-resident streams, as the original DX8
+	// mesh renderer did; everything else keeps the per-frame path below.
+	if (!is_skin && Submit_Static_Mesh_Cache(mesh, model, render_info, vertices,
+		normals, triangles, vertex_count, triangle_count, base_pass_count,
+		original_world_transform)) {
+	} else
+#endif
 	for (int pass = 0; pass < base_pass_count; ++pass) {
 		const Vector2 *uvs[MeshMatDescClass::MAX_TEX_STAGES] = {
 			model->Get_UV_Array(pass, 0),
@@ -3419,6 +3997,7 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 
 	const uint32_t declared_end = submission.min_vertex_index + submission.vertex_count;
 	uint32_t checksum = g_statistics.indexed_geometry_checksum;
+#if RENEGADE_VITA_INDEXED_CHECKSUM
 	checksum = Mix_Checksum(checksum, submission.vertex_format);
 	checksum = Mix_Checksum(checksum, submission.vertex_stride);
 	checksum = Mix_Checksum(checksum, submission.first_index);
@@ -3426,6 +4005,7 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 	checksum = Mix_Checksum(checksum, submission.base_vertex_index);
 	checksum = Mix_Checksum(checksum, submission.min_vertex_index);
 	checksum = Mix_Checksum(checksum, submission.vertex_count);
+#endif
 #if defined(__vita__)
 	const bool fused_index_preparation = (g_render_work_cache_mode & 8U) != 0U;
 #else
@@ -3441,6 +4021,7 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 			Log_Indexed_Rejection("referenced vertex range", submission.vertex_format);
 			return INDEXED_SUBMISSION_VERTEX_RANGE_ERROR;
 		}
+#if RENEGADE_VITA_INDEXED_CHECKSUM
 		if (fused_index_preparation) {
 			// Preserve bounds checks and checksum order, including repeated indices.
 			// Commit this local checksum only after the entire draw is valid.
@@ -3458,6 +4039,7 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 			checksum = Mix_Checksum(checksum, Float_Bits(position[2]));
 			checksum = Mix_Checksum(checksum, diffuse);
 		}
+#endif
 	}
 	IndexedTransformMatrices transform_matrices = {};
 	if (!Build_Indexed_Transform_Matrices(submission.world_transform,
@@ -3473,6 +4055,7 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 #if defined(RENEGADE_HOST_ABI_TEST)
 	if (g_host_indexed_observer != NULL) g_host_indexed_observer(submission);
 #endif
+#if RENEGADE_VITA_INDEXED_CHECKSUM
 	for (uint32_t offset = 0; !fused_index_preparation && offset < requested_indices; ++offset) {
 		const uint32_t relative_index =
 			submission.index_data[submission.first_index + offset];
@@ -3492,6 +4075,7 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 		checksum = Mix_Checksum(checksum, Float_Bits(position[2]));
 		checksum = Mix_Checksum(checksum, diffuse);
 	}
+#endif
 
 #if defined(__vita__)
 	// Let vitaGL's fixed-function vertex shader retain homogeneous W through
@@ -3746,6 +4330,33 @@ const Statistics &Get_Statistics()
 const BackendLifecycleStatistics &Get_Backend_Lifecycle_Statistics()
 {
 	return g_lifecycle;
+}
+
+void Invalidate_Static_Mesh_Cache()
+{
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	g_static_mesh_cache.Clear();
+	++g_static_mesh_statistics.invalidations;
+#endif
+}
+
+void Forget_Static_Mesh_Model(const void *model)
+{
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	g_static_mesh_cache.Forget_Model(model);
+#else
+	(void)model;
+#endif
+}
+
+void Forget_Static_Mesh_User_Lighting(const void *model, const void *user_lighting)
+{
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	g_static_mesh_cache.Forget_User_Lighting(model, user_lighting);
+#else
+	(void)model;
+	(void)user_lighting;
+#endif
 }
 
 } // namespace RenegadeVitaRenderer

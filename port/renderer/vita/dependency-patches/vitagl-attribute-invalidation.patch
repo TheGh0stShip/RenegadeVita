@@ -1,0 +1,14 @@
+--- a/source/ffp.c
++++ b/source/ffp.c
+@@ -3945,3 +3945,11 @@
+ 	glVertex2i(x1, y2);
+ 	glEnd();
+ }
++
++// Renegade platform extension: GPU-resident client arrays and immediate
++// draws may share one fixed-function program while using different vertex
++// layouts. Mark every attribute dirty so the next draw rebinds register
++// indices and re-patches the program for its own layout.
++void vglRenegadeInvalidateVertexAttributes(void) {
++	ffp_dirty_vert_attr = 0xFFFF;
++}

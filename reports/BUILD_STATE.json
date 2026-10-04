@@ -17,7 +17,9 @@
     "vpk_sha256": "48ae69571849a3fcf0829b0650a383159f5fbebe8e95bfe5ec8bf96aeeb6f871",
     "vita3k_installed_hash_verified": true,
     "vita3k_launched": false,
-    "state": "HOST_ARM_PACKAGE_EMULATOR_INSTALL_PASS_PHYSICAL_REPEAT_PENDING",
+    "physical_repeat_checkpoint": "Logan conversation started; user observation and MTU_LOGAN_START log agree",
+    "automated_input_repeat": "RPC acknowledged; no effective menu activation observed; manual input used",
+    "state": "HOST_ARM_PACKAGE_PASS_PHYSICAL_PREVIOUS_CRASH_CHECKPOINT_PASSED",
     "physical_gameplay_accepted": false
   },
   "projective_texture_coordinates_20261004": {

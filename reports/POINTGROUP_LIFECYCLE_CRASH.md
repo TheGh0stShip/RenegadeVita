@@ -58,7 +58,11 @@ stopped after host validation because its script was edited while running;
 the unchanged-source restart completed six ARM compile/link actions and seven
 SELF/VPK actions. Package identity and retail exclusion pass. All seven
 Vita3K installed title hashes match; emulator launch was not requested.
-The physical repeat remains pending. Existing mixed wchar_t
+The physical repeat reached Logan's conversation: the user confirmed it
+started, and the matching log records `MTU_LOGAN_START` active at frames31–33.
+The prior first-frame table-read crash did not recur before this checkpoint.
+Further dialogue/audio, controls, progression and soak remain pending.
+Existing mixed wchar_t
 link warnings remain open. Host checks do not establish physical correctness.
 
 Dev230 ELF SHA-256:
@@ -73,3 +77,21 @@ original projector render target remains open; its log message does not
 establish this crash's cause. Projected shader compilation/pixels, Logan's
 conversation, controls, mission progression, repeat transitions, performance
 and soak stability remain pending. No PSTV result is claimed.
+
+## Physical repeat limits
+
+Dev230's installed SELF hash was independently read back before launch.
+The matching VPK was retained in the Renegade user directory. Movies completed
+and the original menu activated. Authenticated automation acknowledged two
+100 ms Cross taps and a250 ms Cross tap, but the user observed no activation.
+Manual Cross opened Single Player, then Tutorial. Successful RPC acceptance
+therefore does not establish effective input on this launch. Do not attribute
+the manual route to automated input or claim automated-route acceptance.
+
+The runtime log at `build/device-evidence/A3.5-dev230-20261004/`
+`runtime-tutorial-repeat.log` has SHA-256
+`a99975af1eac550348452121e76a384d0a04f3f64ab34ed8a9c5da14eebeb7a2`.
+It records original tutorial rendering and subsequent conversation startup.
+The first simulation/render frame still took approximately983 ms; this is
+an unresolved startup cost, not a frame-rate or visual correctness claim.
+The projected shader path was not proven to execute by this test.

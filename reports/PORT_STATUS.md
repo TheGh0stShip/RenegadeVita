@@ -1,11 +1,18 @@
 # Renegade Vita port status
 
+2026-10-04 Dev230 physical repeat reached Logan's conversation, confirmed by
+the user and original `MTU_LOGAN_START` runtime events. The prior first-frame
+particle-table crash did not recur before that checkpoint. Manual menu input
+was used because acknowledged automated Cross taps had no observed effect.
+Dialogue/audio, controls, progression, performance and soak remain open.
+This is a checkpoint result, not complete mission acceptance.
+
 2026-10-04 Dev229 failed physical Tutorial testing before Logan's conversation.
 The process-matched dump supports missing original PointGroup table
 initialization at native startup. Dev230 restores the original lifecycle;
 494 full host checks, three lifecycle checks and ARM/package identity pass.
 Vita3K title installation is hash verified without launch; physical repeat
-is pending. Movie/menu observations
+is recorded above. Movie/menu observations
 do not establish gameplay acceptance. See
 [particle lifecycle evidence](POINTGROUP_LIFECYCLE_CRASH.md).
 

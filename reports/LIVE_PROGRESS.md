@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Dev230 passes prior crash checkpoint — 2026-10-04
+
+Installed SELF hash matches dev230. The original movies/menu route completed;
+manual Cross entered Tutorial after acknowledged automated taps failed to
+activate the menu. The user confirms Logan's conversation started, matching
+`MTU_LOGAN_START` at frames31–33 in the candidate log. The dev229 particle-table
+crash did not recur before that checkpoint. Dialogue/audio, movement/camera,
+progression, repeat transitions and soak remain pending; no overall native
+mission/runtime gate is closed. See [physical repeat](POINTGROUP_LIFECYCLE_CRASH.md).
+
 ## Dev229 tutorial crash; Dev230 correction — 2026-10-04
 
 The user reported a crash before Logan's conversation. The matching runtime
@@ -9,7 +19,7 @@ original PointGroup rendering. Native startup omitted the original PointGroup
 initialization after the material pool. Dev230 restores initialization and
 paired shutdown; 494 full contracts, three lifecycle source tests and ARM/
 package identity pass. Vita3K title installation is hash verified without
-launch; physical repeat is pending.
+launch; the physical repeat result is recorded above.
 Movie/menu success remains separate; mission/runtime
 acceptance remains 0/10. See [crash evidence](POINTGROUP_LIFECYCLE_CRASH.md).
 

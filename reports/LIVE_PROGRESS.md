@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Dev236 physical quicksave freeze — 2026-10-04
+
+User confirms opening combat overlap is gone, then reports quicksave freeze
+and absent finale/repeating beacon. Matching log proves original save entry;
+private checkpoint grew then stalled at 212383 bytes with unfinished outer
+and conversation chunks. It is not a verified save. Process remains present;
+bounded bridge capture lacks required registers/stack/stop capabilities.
+Dev237 adds bounded original save-phase diagnostics; 502 host checks and ARM/
+package identity pass. Vita3K installed hashes match without launch. No physical
+deployment or corrected save/reload result. Original
+finale timers cannot advance during synchronous saving. Whether the finale
+failed independently before saving remains unknown. See
+[quicksave evidence](M13_QUICKSAVE_HANG.md).
+
 ## Dev234 pause-route allocation lead — 2026-10-04
 
 The user confirms crash-dump screen after Select+Start. The process-matched

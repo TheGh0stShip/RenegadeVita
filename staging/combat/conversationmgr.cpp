@@ -36,6 +36,9 @@
 
 
 #include "conversationmgr.h"
+#if defined(__vita__)
+#include "vita_runtime_log.h"
+#endif
 #include "combatchunkid.h"
 #include "chunkio.h"
 #include "vector3.h"
@@ -281,7 +284,17 @@ ConversationMgrClass::Save (ChunkSaveClass &csave)
 			ConversationClass *conversation = ConversationList[SaveCategoryID][index];
 			if (conversation != NULL) {
 				csave.Begin_Chunk (CHUNKID_CONVERSATION);
+#if defined(__vita__)
+                if (index % 16 == 0 || index == count - 1) {
+                    Vita_Append_A22_Runtime_Breadcrumb("save", "conversation begin index=%d count=%d", index, count);
+                }
+#endif
 					conversation->Save (csave);
+#if defined(__vita__)
+                if (index % 16 == 0 || index == count - 1) {
+                    Vita_Append_A22_Runtime_Breadcrumb("save", "conversation end index=%d count=%d", index, count);
+                }
+#endif
 				csave.End_Chunk ();
 			}
 		}

@@ -1,5 +1,14 @@
 # Renegade Vita port status
 
+2026-10-04 On dev236 physical Vita the user confirms opening combat overlap
+is gone, but original quicksave stalls with an unfinished conversation save
+chunk. The partial file is privately preserved and cannot establish reload
+success. Dev237 save-phase diagnostics pass 502 host checks, ARM/link and
+package checks; Vita3K installed hashes match without launch. No physical
+deployment or correction acceptance. Repeating beacon and
+absent finale may be affected by stalled simulation; independent failure is
+not yet established. See [quicksave evidence](M13_QUICKSAVE_HANG.md).
+
 2026-10-04 Dev234 Select+Start failure has a matching incomplete temporary
 dump; intact notes/heuristic stack/disassembly support uncaught encoded audio
 stream image allocation. Dev236 checks that allocation and closes the source

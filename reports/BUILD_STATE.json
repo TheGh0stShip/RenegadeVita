@@ -1,4 +1,25 @@
 {
+  "quicksave_hang_20261004": {
+    "physical_candidate": "A3.5-dev236",
+    "user_confirmed_intro_combat_overlap_gone": true,
+    "process_present": true,
+    "log_sha256": "20dbb1446f16dbac8d8758da21d0b77055753543362571e5930731d8862fd429",
+    "partial_save_sha256": "59ae9693834bf7ac2adce79d94f4cf9915cfd8a32a26e089e70c5bd2858e49e9",
+    "partial_save_bytes": 212383,
+    "save_complete_verified": false,
+    "reload_verified": false,
+    "debug_capture": "unavailable: stop, continue, registers and stack capabilities missing",
+    "diagnostic_candidate": "A3.5-dev237",
+    "state": "DIAGNOSTIC_HOST_ARM_PACKAGE_PASS_PHYSICAL_PENDING",
+    "host_tests_passed": 502,
+    "arm_package_build_actions": 658,
+    "vita3k_installed_hash_verified": true,
+    "diagnostic_physical_deployed": false,
+    "diagnostic_self_sha256": "b040da0b36ae52249bcef071addf0f9ce5e5ab7c9fc7d2614b2f34c0e1be93e8",
+    "diagnostic_elf_sha256": "36ccf5960164598519a7fa1bd82d9fd00b07e4acf36f00b91cf4b46cebc9b52c",
+    "diagnostic_vpk_sha256": "85bdbd7021f9c1de0049f19700758210c75e6a12e491c899d06cffd31fb630c6",
+    "independent_finale_failure_proven": false
+  },
   "pause_stream_allocation_20261004": {
     "failed_physical_candidate": "A3.5-dev234",
     "dump_sha256": "a099d448272dcfc68895d21e259c8d0c092a14e5f31e24d3885c510c19789ee6",

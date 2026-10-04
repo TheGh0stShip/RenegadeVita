@@ -13,6 +13,16 @@ class RequiredLevelLoadTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             for name in ('savegame.cpp', 'savegame.h'):
                 (Path(directory) / name).write_bytes((ROOT / 'staging/combat' / name).read_bytes())
+            # Restore the historical anchor before replaying the earlier
+            # required-load patch. Current save diagnostics add source lines
+            # but must not weaken the immutable source hashes or offset gate.
+            if 'RV_SAVE_PHASE' in (Path(directory) / 'savegame.cpp').read_text():
+                diagnostics = (ROOT / 'port/patches/combat-a35-save-phase-diagnostics.patch').read_bytes()
+                save_only = diagnostics.split(b'--- a/conversationmgr.cpp', 1)[0]
+                undo = subprocess.run(['patch', '--batch', '--reverse', '--fuzz=0',
+                                       '--no-backup-if-mismatch', '-p1', '-d', directory],
+                                      input=save_only, capture_output=True, check=True)
+                self.assertNotIn(b'offset', undo.stdout)
             patch = (ROOT / 'port/patches/combat-a35-required-level-load-failure.patch').read_bytes()
             # Future build entrypoints run after staging. Reverse only this
             # patch in the private copy before replaying the anchored contract.

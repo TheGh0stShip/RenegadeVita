@@ -1,0 +1,88 @@
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -35,6 +35,12 @@
+  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ 
+ #include "savegame.h"
++#if defined(__vita__)
++#include "vita_runtime_log.h"
++#define RV_SAVE_PHASE(phase) Vita_Append_A22_Runtime_Breadcrumb("save", "phase=%s", phase)
++#else
++#define RV_SAVE_PHASE(phase) ((void)0)
++#endif
+ #include "definitionmgr.h"
+ #include "debug.h"
+ #include "chunkio.h"
+@@ -103,6 +109,7 @@
+ {
+ 	Debug_Say(( "Save Game %s\n", filename ));
+ 	CurrentGameFilename = filename;
++	RV_SAVE_PHASE("open");
+ 
+ 	FileClass * file = _TheWritingFileFactory->Get_File( filename );
+ 	WWASSERT(file);
+@@ -120,12 +127,24 @@
+ 
+ 		_ConversationMgrSaveLoad.Set_Category_To_Save (ConversationMgrClass::CATEGORY_LEVEL);
+ 
++		RV_SAVE_PHASE("combat-begin");
+ 		SaveLoadSystemClass::Save( csave, _CombatSaveLoad );
++		RV_SAVE_PHASE("combat-end");
++		RV_SAVE_PHASE("conversations-begin");
+ 		SaveLoadSystemClass::Save( csave, _ConversationMgrSaveLoad );
++		RV_SAVE_PHASE("conversations-end");
++		RV_SAVE_PHASE("physics-begin");
+ 		SaveLoadSystemClass::Save( csave, _PhysDynamicSaveSystem );
++		RV_SAVE_PHASE("physics-end");
++		RV_SAVE_PHASE("encyclopedia-begin");
+ 		SaveLoadSystemClass::Save( csave, _TheEncyclopediaMgrSaveLoadSubsystem );
++		RV_SAVE_PHASE("encyclopedia-end");
++		RV_SAVE_PHASE("audio-begin");
+ 		SaveLoadSystemClass::Save( csave, _DynamicAudioSaveLoadSubsystem );
++		RV_SAVE_PHASE("audio-end");
++		RV_SAVE_PHASE("map-begin");
+ 		SaveLoadSystemClass::Save( csave, _TheMapMgrSaveLoadSubsystem );
++		RV_SAVE_PHASE("map-end");
+ 
+ 		va_list arg_list;
+ 		va_start( arg_list, filename );
+@@ -143,7 +162,9 @@
+ 
+ 	csave.End_Chunk();
+ 
++	RV_SAVE_PHASE("close-begin");
+ 	file->Close();
++	RV_SAVE_PHASE("close-end");
+ 
+ 	_TheWritingFileFactory->Return_File(file);
+ 
+--- a/conversationmgr.cpp
++++ b/conversationmgr.cpp
+@@ -36,6 +36,9 @@
+ 
+ 
+ #include "conversationmgr.h"
++#if defined(__vita__)
++#include "vita_runtime_log.h"
++#endif
+ #include "combatchunkid.h"
+ #include "chunkio.h"
+ #include "vector3.h"
+@@ -281,7 +284,17 @@
+ 			ConversationClass *conversation = ConversationList[SaveCategoryID][index];
+ 			if (conversation != NULL) {
+ 				csave.Begin_Chunk (CHUNKID_CONVERSATION);
++#if defined(__vita__)
++                if (index % 16 == 0 || index == count - 1) {
++                    Vita_Append_A22_Runtime_Breadcrumb("save", "conversation begin index=%d count=%d", index, count);
++                }
++#endif
+ 					conversation->Save (csave);
++#if defined(__vita__)
++                if (index % 16 == 0 || index == count - 1) {
++                    Vita_Append_A22_Runtime_Breadcrumb("save", "conversation end index=%d count=%d", index, count);
++                }
++#endif
+ 				csave.End_Chunk ();
+ 			}
+ 		}

@@ -1098,6 +1098,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a35-suspend-viewer-lifecycle.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-cinematic-original-dispatch.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-save-phase-diagnostics.patch"
 if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_sync_args=()
 	for rv_dir in "${rv_managed_stage_dirs[@]}"; do

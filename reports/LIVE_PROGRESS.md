@@ -1,5 +1,18 @@
 # Live engineering progress
 
+## S1 renderer/audio boundary review batch — 2026-10-03
+
+Fifteen unchanged boundary bodies are classified with original caller and
+definition hashes: four render-target binding overloads, two light-environment
+methods and nine Miles provider methods. S1 reconciles 3,531 rows: 54 stubs,
+one replaced boundary, six disabled guards and 3,470 unknown. Review identities
+match; 27 pinned-parser/inventory tests pass. Dev212 already compiles and links
+these unchanged bodies. Original material queues, filtering dependencies and
+caller gates are retained; no source-only exclusion or native behavior claim.
+Next: complete the original procedural-renderer dependency cluster and remaining
+boundary classifications. Native acceptance remains 0/10. See
+[S1 ledger](PORT_GUARD_SWEEP.md).
+
 ## Empty PCM compatibility batch and Dev211 receipt — 2026-10-03
 
 Valid empty PCM is admitted without activating native mixer voices. Five

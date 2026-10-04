@@ -61,6 +61,9 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/1786 | port/platform/a31_gameplay_boundary.cpp | stubbed_or_noop | missing_behavior | No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead. |
 | port_guards /rows/1787 | port/platform/a31_gameplay_boundary.cpp | stubbed_or_noop | missing_behavior | No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead. |
 | port_guards /rows/1788 | port/platform/a31_gameplay_boundary.cpp | stubbed_or_noop | missing_behavior | No-output profiles without RENEGADE_A35_ORIGINAL_WWAUDIO, affecting campaign, practice, multiplayer and frontend audio/scene lifecycle. Current native profile selects original WWAudio instead. |
+| port_guards /rows/1790 | port/platform/a31_gameplay_boundary.cpp | stubbed_or_noop | missing_behavior | Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution. |
+| port_guards /rows/1791 | port/platform/a31_gameplay_boundary.cpp | stubbed_or_noop | missing_behavior | Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution. |
+| port_guards /rows/1792 | port/platform/a31_gameplay_boundary.cpp | stubbed_or_noop | missing_behavior | Original procedural material pass path; native material passes already have a separate omission. Ordinary mesh CPU lighting is a distinct route requiring its own equivalence tests. |
 | port_guards /rows/1870 | port/platform/a4_binkmovie_boundary.cpp | stubbed_or_noop | missing_behavior | Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified. |
 | port_guards /rows/1871 | port/platform/a4_binkmovie_boundary.cpp | stubbed_or_noop | missing_behavior | Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified. |
 | port_guards /rows/1872 | port/platform/a4_binkmovie_boundary.cpp | stubbed_or_noop | missing_behavior | Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified. |
@@ -69,6 +72,9 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/1875 | port/platform/a4_binkmovie_boundary.cpp | stubbed_or_noop | missing_behavior | Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified. |
 | port_guards /rows/1876 | port/platform/a4_binkmovie_boundary.cpp | stubbed_or_noop | missing_behavior | Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified. |
 | port_guards /rows/1877 | port/platform/a4_binkmovie_boundary.cpp | stubbed_or_noop | missing_behavior | Configurations where either __vita__ or RENEGADE_A4_BINK_FFMPEG is absent; frontend and campaign movies. Current full native FFmpeg profile excludes the fallback; hardware playback remains unverified. |
+| port_guards /rows/2189 | port/platform/vita/a30_static_world_boundary.cpp | stubbed_or_noop | missing_behavior | Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution. |
+| port_guards /rows/2190 | port/platform/vita/a30_static_world_boundary.cpp | stubbed_or_noop | missing_behavior | Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution. |
+| port_guards /rows/2191 | port/platform/vita/a30_static_world_boundary.cpp | stubbed_or_noop | missing_behavior | Original procedural material pass path; native material passes already have a separate omission. Ordinary mesh CPU lighting is a distinct route requiring its own equivalence tests. |
 | port_guards /rows/2576 | port/renderer/vita/ww3d_dx8_boundary.cpp | stubbed_or_noop | missing_behavior | Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed. |
 | port_guards /rows/2577 | port/renderer/vita/ww3d_dx8_boundary.cpp | stubbed_or_noop | missing_behavior | Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed. |
 | port_guards /rows/2578 | port/renderer/vita/ww3d_dx8_boundary.cpp | stubbed_or_noop | missing_behavior | Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed. |
@@ -86,6 +92,15 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/3302 | staging/ww3d2/mesh.cpp | disabled_by_port_guard | missing_behavior | All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified. |
 | port_guards /rows/3470 | staging/wwphys/transitioneffect.cpp | disabled_by_port_guard | missing_behavior | All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified. |
 | port_guards /rows/3471 | staging/wwphys/transitioneffect.cpp | disabled_by_port_guard | missing_behavior | All Vita/PSTV port modes reaching these effects: campaign, practice and multiplayer. Stealth additional-only meshes may suppress base geometry without submitting their effect. Instance counts and observed pixels remain unverified. |
+| port_guards /rows/588 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
+| port_guards /rows/590 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
+| port_guards /rows/611 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
+| port_guards /rows/612 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
+| port_guards /rows/614 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
+| port_guards /rows/624 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
+| port_guards /rows/634 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
+| port_guards /rows/637 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
+| port_guards /rows/638 | port/audio/vita/renegade_miles_provider.cpp | stubbed_or_noop | missing_behavior | All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate. |
 | renderer /rows/2846 | D3DFMT_A8L8 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
 | renderer /rows/2847 | D3DFMT_A8P8 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
 | renderer /rows/2848 | D3DFMT_A8R3G3B2 | missing | visual | Native surface conversion or dimension-based texture creation requesting this format; retail requests and file-loading alternatives remain open. |
@@ -25677,9 +25692,6 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/1781 | port/platform/a31_gameplay_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/1789 | port/platform/a31_gameplay_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/179 | port/patches/commando-a35-demo-singleplayer-options.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/1790 | port/platform/a31_gameplay_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/1791 | port/platform/a31_gameplay_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/1792 | port/platform/a31_gameplay_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/1793 | port/platform/a31_gameplay_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/1794 | port/platform/a31_gameplay_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/1795 | port/platform/a31_miscutil_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -26112,10 +26124,7 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/2186 | port/platform/vita/a30_static_world_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2187 | port/platform/vita/a30_static_world_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2188 | port/platform/vita/a30_static_world_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2189 | port/platform/vita/a30_static_world_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/219 | port/patches/commando-a35-pause-options-persistence.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2190 | port/platform/vita/a30_static_world_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/2191 | port/platform/vita/a30_static_world_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2192 | port/platform/vita/a30_static_world_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2193 | port/platform/vita/a30_static_world_boundary.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/2194 | port/platform/vita/a30_vita_runtime.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27846,10 +27855,8 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/585 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/586 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/587 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/588 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/589 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/59 | port/patches/combat-a35-required-level-load-failure.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/590 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/591 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/592 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/593 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27873,10 +27880,7 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/609 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/61 | port/patches/combat-a35-required-level-load-failure.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/610 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/611 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/612 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/613 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/614 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/615 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/616 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/617 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27887,7 +27891,6 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/621 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/622 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/623 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/624 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/625 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/626 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/627 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -27898,11 +27901,8 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | port_guards /rows/631 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/632 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/633 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/634 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/635 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/636 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/637 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| port_guards /rows/638 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/639 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/64 | port/patches/combat-a35-required-level-load-failure.patch | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | port_guards /rows/640 | port/audio/vita/renegade_miles_provider.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |

@@ -26,7 +26,17 @@
     "staging/commando/console.cpp": "91eb5ecf60bb9f5ef1f6a542652a59a9f179b221107cce342761c2c6991b5bad",
     "staging/commando/consolefunction.cpp": "a686829dc324e66de19f3f86ca7689e19ef6f9af9ee0cf329c3ab1f9126e7cc0",
     "staging/commando/gamemode.cpp": "011f8e5cd9941f8a901467a3ca49065ec166734ba7e12dec9525b8ebc6db582f",
-    "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50"
+    "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+    "port/platform/vita/a30_static_world_boundary.cpp": "3a79d8885bab27b5402af04c5aaf5a39d03bcca2fe81c469fd357e3436e0a858",
+    "staging/ww3d2/texproject.cpp": "1463d624ded9b407bff438336126a936543be52e7c0729910520c8ef259b0d34",
+    "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc",
+    "port/renderer/vita/ww3d_vita_renderer.cpp": "b55a1772b96ecc268532401f8608cc6cf9715ca4c48ee1ebbdba9e4ad2f56f9d",
+    "staging/wwaudio/WWAudio.cpp": "b5746b324dce77935005ab183af15822dd94854740a57623558f4fbd57f7fa57",
+    "staging/wwaudio/Listener.cpp": "727f087780c8fe53e961de35a417e4b444e048e2de4e75b93de5b9b076717249",
+    "staging/wwaudio/Sound3D.cpp": "3793fdefe102981a3ce98aa5c41b50cf2e189494421f44a17ddfa9f826cec04d",
+    "staging/wwaudio/soundstreamhandle.cpp": "517d919fcd12bccb53d2a1548cef4023f14b015fbe70ef2588dc9ee0323775f0",
+    "staging/wwaudio/FilteredSound.cpp": "a66d37b7ce1bd3505310d04fee57b6f99d5afabf74dcee0fe98654a3280291a0",
+    "port/audio/vita/renegade_miles_provider.cpp": "17ea96994e3a7bc37160f4c50a9533b7d75e09c191719bac2237a46e684461d4"
   },
   "reviews": [
     {
@@ -1043,6 +1053,298 @@
         "Native port diagnostics and console workflows across campaign, practice, multiplayer and frontend. Retail gameplay dependence is not established; no exclusion is claimed."
       ],
       "acceptance_open": "Resolve active callers and debug build selection; provide equivalent inspection and resource counts where required by the diagnostic/performance objective. Empty diagnostic methods are not proof of a gameplay omission."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "DX8Wrapper::Set_Render_Target(TextureClass *texture)",
+      "body_sha256": "1d05af3a27504419e028e79b016a4b56065f209acae400802761479e0d16d8e5",
+      "definition_sha256": "62144930ee0d035adf1018103ab2efd576ebf5e38b934840d636ba1eb081ca87",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_HOST_ABI_TEST)",
+          "branch_line": 1450,
+          "condition": "#if !defined(RENEGADE_HOST_ABI_TEST)",
+          "opening_line": 1450
+        }
+      ],
+      "status": "stubbed_or_noop",
+      "original_owner": "DX8Wrapper render-target binding and default-target restoration",
+      "behavior": "Reports a rejected indexed submission for nonnull targets; performs no offscreen framebuffer or viewport/depth transition. Null restore is also a no-op.",
+      "callers": [
+        "staging/ww3d2/texproject.cpp:1123",
+        "staging/ww3d2/texproject.cpp:1142",
+        "staging/wwphys/pscene_projectors.cpp:913",
+        "staging/wwphys/pscene_projectors.cpp:1008"
+      ],
+      "affected_scope": [
+        "Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution."
+      ],
+      "acceptance_open": "Restore original allocation/binding/render/restore ownership as one cluster; verify failure paths, native projected-shadow pixels and matching physical artifacts."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *surface, bool)",
+      "body_sha256": "0fd957345c9891b2939592cb9460af8a9a57dcde2abccfd6ecc9fa47b7cdf615",
+      "definition_sha256": "7ddd10510e75b64da7f3d6e089315eec930399e8811c717297a29b573a01cc7d",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_HOST_ABI_TEST)",
+          "branch_line": 1450,
+          "condition": "#if !defined(RENEGADE_HOST_ABI_TEST)",
+          "opening_line": 1450
+        }
+      ],
+      "status": "stubbed_or_noop",
+      "original_owner": "DX8Wrapper render-target binding and default-target restoration",
+      "behavior": "Reports a rejected indexed submission for nonnull targets; performs no offscreen framebuffer or viewport/depth transition. Null restore is also a no-op.",
+      "callers": [
+        "staging/ww3d2/texproject.cpp:1123",
+        "staging/ww3d2/texproject.cpp:1142",
+        "staging/wwphys/pscene_projectors.cpp:913",
+        "staging/wwphys/pscene_projectors.cpp:1008"
+      ],
+      "affected_scope": [
+        "Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution."
+      ],
+      "acceptance_open": "Restore original allocation/binding/render/restore ownership as one cluster; verify failure paths, native projected-shadow pixels and matching physical artifacts."
+    },
+    {
+      "file": "port/platform/vita/a30_static_world_boundary.cpp",
+      "declarator": "DX8Wrapper::Set_Render_Target(TextureClass *texture)",
+      "body_sha256": "1d05af3a27504419e028e79b016a4b56065f209acae400802761479e0d16d8e5",
+      "definition_sha256": "62144930ee0d035adf1018103ab2efd576ebf5e38b934840d636ba1eb081ca87",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "DX8Wrapper render-target binding and default-target restoration",
+      "behavior": "Reports a rejected indexed submission for nonnull targets; performs no offscreen framebuffer or viewport/depth transition. Null restore is also a no-op.",
+      "callers": [
+        "staging/ww3d2/texproject.cpp:1123",
+        "staging/ww3d2/texproject.cpp:1142",
+        "staging/wwphys/pscene_projectors.cpp:913",
+        "staging/wwphys/pscene_projectors.cpp:1008"
+      ],
+      "affected_scope": [
+        "Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution."
+      ],
+      "acceptance_open": "Restore original allocation/binding/render/restore ownership as one cluster; verify failure paths, native projected-shadow pixels and matching physical artifacts."
+    },
+    {
+      "file": "port/platform/vita/a30_static_world_boundary.cpp",
+      "declarator": "DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *surface, bool)",
+      "body_sha256": "0fd957345c9891b2939592cb9460af8a9a57dcde2abccfd6ecc9fa47b7cdf615",
+      "definition_sha256": "7ddd10510e75b64da7f3d6e089315eec930399e8811c717297a29b573a01cc7d",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "DX8Wrapper render-target binding and default-target restoration",
+      "behavior": "Reports a rejected indexed submission for nonnull targets; performs no offscreen framebuffer or viewport/depth transition. Null restore is also a no-op.",
+      "callers": [
+        "staging/ww3d2/texproject.cpp:1123",
+        "staging/ww3d2/texproject.cpp:1142",
+        "staging/wwphys/pscene_projectors.cpp:913",
+        "staging/wwphys/pscene_projectors.cpp:1008"
+      ],
+      "affected_scope": [
+        "Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution."
+      ],
+      "acceptance_open": "Restore original allocation/binding/render/restore ownership as one cluster; verify failure paths, native projected-shadow pixels and matching physical artifacts."
+    },
+    {
+      "file": "port/platform/a31_gameplay_boundary.cpp",
+      "declarator": "DX8Wrapper::Set_Light_Environment(LightEnvironmentClass *)",
+      "body_sha256": "7699aeac7d126e52cfd493001b7b17e4dacfe300dc34b37425f432a15ed57fb5",
+      "definition_sha256": "92a407e6820d2b829b590cd8791434b8d05360473758908a264dd40a0fd16174",
+      "entry_preprocessor_context": [
+        {
+          "branch": "#if !defined(RENEGADE_HOST_ABI_TEST)",
+          "branch_line": 1450,
+          "condition": "#if !defined(RENEGADE_HOST_ABI_TEST)",
+          "opening_line": 1450
+        }
+      ],
+      "status": "stubbed_or_noop",
+      "original_owner": "DX8Wrapper light-environment device-state installation",
+      "behavior": "Empty boundary body: original equivalent-ambient and directional-light state are not installed here. Native base mesh submission separately reads RenderInfoClass light_environment for CPU material colors; this stub alone does not establish all lighting is missing.",
+      "callers": [
+        "staging/ww3d2/mesh.cpp:875"
+      ],
+      "affected_scope": [
+        "Original procedural material pass path; native material passes already have a separate omission. Ordinary mesh CPU lighting is a distinct route requiring its own equivalence tests."
+      ],
+      "acceptance_open": "Reconcile procedural material pass restoration with light state. Verify original ambient/directional results, normals, color sources and native pixels; no broad lighting-loss claim from this empty method."
+    },
+    {
+      "file": "port/platform/vita/a30_static_world_boundary.cpp",
+      "declarator": "DX8Wrapper::Set_Light_Environment(LightEnvironmentClass *)",
+      "body_sha256": "3f242511664c8120e9ce551c6382e6dd40d8ea833c632850da678d10d127fdc8",
+      "definition_sha256": "c1ca5d416fa6b90dc1f0cfa72c580367b3394fd914a9bc53aaf2f722d29c60c5",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "DX8Wrapper light-environment device-state installation",
+      "behavior": "Empty boundary body: original equivalent-ambient and directional-light state are not installed here. Native base mesh submission separately reads RenderInfoClass light_environment for CPU material colors; this stub alone does not establish all lighting is missing.",
+      "callers": [
+        "staging/ww3d2/mesh.cpp:875"
+      ],
+      "affected_scope": [
+        "Original procedural material pass path; native material passes already have a separate omission. Ordinary mesh CPU lighting is a distinct route requiring its own equivalence tests."
+      ],
+      "acceptance_open": "Reconcile procedural material pass restoration with light state. Verify original ambient/directional results, normals, color sources and native pixels; no broad lighting-loss claim from this empty method."
+    },
+    {
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "declarator": "AIL_close_3D_provider(HPROVIDER)",
+      "body_sha256": "8eb95bcbc154530931e15fc418c8b1fe991095671409552099ea1aa596999ede",
+      "definition_sha256": "71d0d541489803eb9ae88526bf3a17716de197fb377729ed3a508ba6383bee70",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudio Miles provider boundary: AIL_close_3D_provider",
+      "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution.",
+      "callers": [
+        "staging/wwaudio/WWAudio.cpp:459",
+        "staging/wwaudio/WWAudio.cpp:1819",
+        "staging/wwaudio/WWAudio.cpp:1882"
+      ],
+      "affected_scope": [
+        "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+      ],
+      "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence."
+    },
+    {
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "declarator": "AIL_set_3D_speaker_type(HPROVIDER, S32)",
+      "body_sha256": "8eb95bcbc154530931e15fc418c8b1fe991095671409552099ea1aa596999ede",
+      "definition_sha256": "815ce7306504205997db0baf65d1e07f20b7826c1ffa29b10659c822f9abd724",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudio Miles provider boundary: AIL_set_3D_speaker_type",
+      "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution.",
+      "callers": [
+        "staging/wwaudio/WWAudio.cpp:1945",
+        "staging/wwaudio/WWAudio.cpp:3720"
+      ],
+      "affected_scope": [
+        "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+      ],
+      "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence."
+    },
+    {
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "declarator": "AIL_set_3D_orientation(H3DSAMPLE, F32, F32, F32, F32, F32, F32)",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "b3b8c621744510d45119ef6591f22b54ed612b2eb10bf598808b4543c83fc4dd",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudio Miles provider boundary: AIL_set_3D_orientation",
+      "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution. Sound3D transforms world positions into listener space before passing coordinates, so ignored orientation does not by itself establish broken listener-relative panning.",
+      "callers": [
+        "staging/wwaudio/Listener.cpp:81",
+        "staging/wwaudio/Sound3D.cpp:370"
+      ],
+      "affected_scope": [
+        "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+      ],
+      "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence."
+    },
+    {
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "declarator": "AIL_set_3D_velocity_vector(H3DSAMPLE, F32, F32, F32)",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "ff2efbffd99a81819bc2d2390a4c316ade0883fc0785907546ef4b747a981e91",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudio Miles provider boundary: AIL_set_3D_velocity_vector",
+      "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution. Original Sound3D auto-velocity generation is disabled by its shipped #if 0 block; the explicit setter remains. No source-only claim of audible missing auto-Doppler.",
+      "callers": [
+        "staging/wwaudio/Sound3D.cpp:451"
+      ],
+      "affected_scope": [
+        "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+      ],
+      "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence."
+    },
+    {
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "declarator": "AIL_set_3D_sample_effects_level(H3DSAMPLE, F32)",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "3a5ee1c3a6576278d3a9723d0187d11907d57ba3ff4518c76ecad464a7190fe8",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudio Miles provider boundary: AIL_set_3D_sample_effects_level",
+      "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution.",
+      "callers": [
+        "staging/wwaudio/Sound3D.cpp:556"
+      ],
+      "affected_scope": [
+        "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+      ],
+      "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence."
+    },
+    {
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "declarator": "AIL_set_stream_loop_block(HSTREAM, S32, S32)",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "3e4ad4cfdb77176795cc4a660ca99c4635e3a86a2faeecafd934997752aa6096",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudio Miles provider boundary: AIL_set_stream_loop_block",
+      "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution. The single inspected staged call supplies (0,-1), a whole-stream interval. Native stream loop count still delegates to the whole-sample loop owner; arbitrary subrange loops remain unsupported and runtime equivalence is unverified.",
+      "callers": [
+        "staging/wwaudio/soundstreamhandle.cpp:232"
+      ],
+      "affected_scope": [
+        "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+      ],
+      "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence."
+    },
+    {
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "declarator": "AIL_set_sample_processor(HSAMPLE, S32, HPROVIDER)",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "590570ad046fc1384cca0e2b124398540413cdd4922af8b3ff07aca2ab4da188",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudio Miles provider boundary: AIL_set_sample_processor",
+      "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution. FilteredSound requires a non-invalid reverb filter. Native AIL_enumerate_filters always returns zero, so original WWAudio records INVALID_MILES_HANDLE and this processor call is gated off. The missing filter-enumeration/processing cluster must be repaired together.",
+      "callers": [
+        "staging/wwaudio/FilteredSound.cpp:121"
+      ],
+      "affected_scope": [
+        "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+      ],
+      "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence."
+    },
+    {
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "declarator": "AIL_stop_timer(HTIMER)",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "31e385263d47929565a04932f53c3414c90fb69859dda314e2cc1dcbfb80846b",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudio Miles provider boundary: AIL_stop_timer",
+      "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution. Original WWAudio initializes m_UpdateTimer to -1; inspected occurrences only test/reset it, with no timer registration/start assignment. Shutdown is gated by != -1. Additional sources, alternate builds and runtime evidence remain open.",
+      "callers": [
+        "staging/wwaudio/WWAudio.cpp:2517"
+      ],
+      "affected_scope": [
+        "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+      ],
+      "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence."
+    },
+    {
+      "file": "port/audio/vita/renegade_miles_provider.cpp",
+      "declarator": "AIL_release_timer_handle(HTIMER)",
+      "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "definition_sha256": "d644d12a706040349f56679a4ba0760f930d1fa8c22f6e9ee47a8fb0ff957fbf",
+      "entry_preprocessor_context": [],
+      "status": "stubbed_or_noop",
+      "original_owner": "Original WWAudio Miles provider boundary: AIL_release_timer_handle",
+      "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution. Original WWAudio initializes m_UpdateTimer to -1; inspected occurrences only test/reset it, with no timer registration/start assignment. Shutdown is gated by != -1. Additional sources, alternate builds and runtime evidence remain open.",
+      "callers": [
+        "staging/wwaudio/WWAudio.cpp:2518"
+      ],
+      "affected_scope": [
+        "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+      ],
+      "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence."
     }
   ]
 }

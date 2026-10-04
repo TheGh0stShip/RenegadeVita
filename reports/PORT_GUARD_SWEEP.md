@@ -2,9 +2,9 @@
 
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
-source contains 3,531 records with 39 fallback/diagnostic functions reviewed as
+source contains 3,531 records with 54 fallback/diagnostic functions reviewed as
 `stubbed_or_noop`, 1 capability constructor as `boundary_replaced`, 6
-guards as `disabled_by_port_guard`, and 3,485
+guards as `disabled_by_port_guard`, and 3,470
 records still `unknown`. All statuses reconcile to the total.
 
 | Inventory kind | Records |
@@ -29,6 +29,46 @@ signals, not automatic stub verdicts or a resolved call graph. Macros are retain
 because unexpanded syntax cannot enumerate every generated definition.
 
 Reviewed entries and risks:
+
+- Four render-target binding overloads only diagnose nonnull targets; restoring
+  the default target is also a no-op. These join allocation, projector draw and
+  restoration in one dependency cluster. The two light-environment methods are
+  empty. Ordinary native mesh submission separately uses engine light state
+  for CPU colors; these stubs do not establish that all lighting is missing.
+- Nine Miles provider methods are empty: provider close, speaker type,
+  orientation, velocity, effects level, stream loop block, sample processor,
+  timer stop and timer release. Reviews retain their original callers and
+  activation conditions. Sound3D supplies listener-space positions; automatic
+  velocity generation is originally disabled. The inspected stream loop-block
+  call requests the full stream, while native whole-sample looping exists.
+  Reverb processing is gated off by missing filter enumeration, so enumeration
+  and processing must be restored together. The inspected update timer is
+  initialized to -1 with no start assignment; timer stubs alone do not establish
+  an active timer failure. None of these is classified as a proven exclusion.
+
+The 15 additional reviews bind current definitions, preprocessor context and
+original caller hashes. The generator reports zero review identity issues;
+18 inventory/review and nine parser tests pass. Dev212's 634-action ARM link
+already compiles these unchanged boundary bodies. This is source and compile
+evidence, with no new native execution or pixel acceptance.
+
+The renderer dependency review retains original material-task reference
+ownership, rigid/skin ordering, deformation and delayed-pass flushing. Native
+Flush currently retains decal work without the original procedural queues.
+Restoring only transition push/pop could suppress base geometry while still
+omitting procedural effects. The complete queue/material/draw-state cluster
+must be restored before those guards can be removed safely. The unselected
+original dx8renderer.cpp also fails isolated ARM compilation at six GCC syntax
+sites: two MSVC for-scope dependencies and four multiword functional casts.
+A private minimal syntax-only copy compiles as an ARM object; it is not selected,
+linked or a renderer fix. Integration and host behavior checks remain open.
+
+All four linker wrapper references remain in the denominator. Source inspection
+distinguishes shader diagnostics around original shark_init from host-only thread
+failure injection and fixed-clock movie capture. Their row classifications remain
+unknown until wrapper identity/build-profile reviews are integrated. Empty bodies,
+macros, hidden generated implementations and runtime call reachability still need
+separate review; the 15 classifications do not close this sweep.
 
 - Render-target creation always returns NULL. Original projector allocation
   callers are recorded; render-to-texture restoration remains open.

@@ -1219,11 +1219,11 @@
     "port/audio/miles/Mss.H": "301d8081626cb7fab059f143f4d77ad0bc83c7f92d3fb983eb860ecb23fd0a67",
     "port/audio/miles/mss.h": "920f1b298aeb003fac5b5edce2fa6e216e6f416bd2e467759bf65c2672ebe6a8",
     "port/audio/vita/renegade_audio_output_buffers.h": "ef038ab44799d8799594c41949da838fb266d24295ffb9bfe2b9701770f1250e",
-    "port/audio/vita/renegade_miles_provider.cpp": "6a483584f7b8d55bfa4f62d6ee5c84549fe09683b21037a76fdac7ff2dbbabb5",
+    "port/audio/vita/renegade_miles_provider.cpp": "17ea96994e3a7bc37160f4c50a9533b7d75e09c191719bac2237a46e684461d4",
     "port/audio/vita/renegade_miles_runtime_stats.h": "a665d8ad89717e38140ba6b9c1a2ad5620e8245dcba76a05926c689ba005d7ff",
     "port/audio/vita/renegade_miles_test.h": "211237857b1a711d5df7ba7734f3aa47e07d6126044aa0aa31db786c3d30e0fc",
-    "port/audio/vita/renegade_wave_decoder.cpp": "909a860cabf2e605c985f41c2243dcc2356bc8add68882bfa8d8f4a11431e31c",
-    "port/audio/vita/renegade_wave_decoder.h": "06b42d41d3f0b7c55e4e100e290983ac6942ee922435e9eb52692950e4aba612",
+    "port/audio/vita/renegade_wave_decoder.cpp": "da793fbd75f7bddba2a83ee0f44c505a668871ae2d51178e42d0e0ce7c1e6f60",
+    "port/audio/vita/renegade_wave_decoder.h": "c74ca017c0d33fccf6a947efe5f50267633f717d214047bd7471c490766577b4",
     "port/compatibility/include/DialogControl.h": "9ba8f9a35a13a375171d4973b439cc72b3388ad322c0c6f43fbe3c8c67333614",
     "port/compatibility/include/FFactory.H": "0ce23925bfe6814ec724d7c42b17ec36859e141e2ca91ae3e696d81d3b7dae69",
     "port/compatibility/include/GameMode.h": "095a9d5aa25e34803924cacbf745265c4d4a1642634203f647166708f4f28e3c",
@@ -3694,7 +3694,7 @@
     "tools/stage_sources.sh": "54fd1a9a00645c71da6198b69e994aae18ac35b4fbf0b1b44d8fcb867a8eee22",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
-    "tools/sweep_reviews/port_guards.json": "1647cad45980eb865d23007b5e033d5565a9b771b35709a596ca2d4dc4fcb824",
+    "tools/sweep_reviews/port_guards.json": "6d52b0a48da467fdea309b63f4abfd66e69549c33e6cbe0f403aa63b6dfdf1f1",
     "tools/symbolicate_vita_dump.sh": "712c60c713d6de67255f0d99f62f81728d3d6fca60ea097e8684bf20ddfc84b5",
     "tools/upload_dev82_current_vpk.sh": "98eae0c9827d73caa7096a0825c472ea1679cad9489b79ee8b3010ab303beb01",
     "tools/upload_vpk_ftp.sh": "dde89737d6200a0ca1a5b89486ac945421eecc2b068d4d7a59991a15bc3fa9f7",
@@ -17097,6 +17097,7 @@
       "body_kind": "compound_statement",
       "body_sha256": "8eb95bcbc154530931e15fc418c8b1fe991095671409552099ea1aa596999ede",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "AIL_close_3D_provider(HPROVIDER)",
       "definition_sha256": "71d0d541489803eb9ae88526bf3a17716de197fb377729ed3a508ba6383bee70",
       "end_byte": 24203,
@@ -17111,13 +17112,26 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence.",
+        "affected_scope": [
+          "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+        ],
+        "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution.",
+        "callers": [
+          "staging/wwaudio/WWAudio.cpp:459",
+          "staging/wwaudio/WWAudio.cpp:1819",
+          "staging/wwaudio/WWAudio.cpp:1882"
+        ],
+        "original_owner": "Original WWAudio Miles provider boundary: AIL_close_3D_provider"
+      },
       "row_id": "144566120b9a7ff723977629454e27787968e2bd836b3014fbe7fd307ef9c5fe",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 24162,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -17147,6 +17161,7 @@
       "body_kind": "compound_statement",
       "body_sha256": "8eb95bcbc154530931e15fc418c8b1fe991095671409552099ea1aa596999ede",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "AIL_set_3D_speaker_type(HPROVIDER, S32)",
       "definition_sha256": "815ce7306504205997db0baf65d1e07f20b7826c1ffa29b10659c822f9abd724",
       "end_byte": 24322,
@@ -17161,13 +17176,25 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence.",
+        "affected_scope": [
+          "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+        ],
+        "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution.",
+        "callers": [
+          "staging/wwaudio/WWAudio.cpp:1945",
+          "staging/wwaudio/WWAudio.cpp:3720"
+        ],
+        "original_owner": "Original WWAudio Miles provider boundary: AIL_set_3D_speaker_type"
+      },
       "row_id": "5e28bb6bebd2addfb5d9b20b579e9202caedd893ccd424efecbe60b30ea4fe98",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 24274,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -17878,6 +17905,7 @@
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "AIL_set_3D_orientation(H3DSAMPLE, F32, F32, F32, F32, F32, F32)",
       "definition_sha256": "b3b8c621744510d45119ef6591f22b54ed612b2eb10bf598808b4543c83fc4dd",
       "end_byte": 27555,
@@ -17892,18 +17920,31 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence.",
+        "affected_scope": [
+          "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+        ],
+        "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution. Sound3D transforms world positions into listener space before passing coordinates, so ignored orientation does not by itself establish broken listener-relative panning.",
+        "callers": [
+          "staging/wwaudio/Listener.cpp:81",
+          "staging/wwaudio/Sound3D.cpp:370"
+        ],
+        "original_owner": "Original WWAudio Miles provider boundary: AIL_set_3D_orientation"
+      },
       "row_id": "a116790c7cbd22e32646854ce3d8b97d13c02b6444b2be028d8b2c49e713d069",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 27484,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "AIL_set_3D_velocity_vector(H3DSAMPLE, F32, F32, F32)",
       "definition_sha256": "ff2efbffd99a81819bc2d2390a4c316ade0883fc0785907546ef4b747a981e91",
       "end_byte": 27616,
@@ -17918,13 +17959,24 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence.",
+        "affected_scope": [
+          "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+        ],
+        "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution. Original Sound3D auto-velocity generation is disabled by its shipped #if 0 block; the explicit setter remains. No source-only claim of audible missing auto-Doppler.",
+        "callers": [
+          "staging/wwaudio/Sound3D.cpp:451"
+        ],
+        "original_owner": "Original WWAudio Miles provider boundary: AIL_set_3D_velocity_vector"
+      },
       "row_id": "f6ec2d2ae1f169826e2f1ee3875f9d1c9b8b794c8b37e9e07ca46c13b22d18a1",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 27556,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -17980,6 +18032,7 @@
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "AIL_set_3D_sample_effects_level(H3DSAMPLE, F32)",
       "definition_sha256": "3a5ee1c3a6576278d3a9723d0187d11907d57ba3ff4518c76ecad464a7190fe8",
       "end_byte": 27959,
@@ -17994,13 +18047,24 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence.",
+        "affected_scope": [
+          "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+        ],
+        "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution.",
+        "callers": [
+          "staging/wwaudio/Sound3D.cpp:556"
+        ],
+        "original_owner": "Original WWAudio Miles provider boundary: AIL_set_3D_sample_effects_level"
+      },
       "row_id": "cd11714e997453de615feee293f857af94bc23d90da8fad9c704705a054f4f0b",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 27904,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -18405,6 +18469,7 @@
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "AIL_set_stream_loop_block(HSTREAM, S32, S32)",
       "definition_sha256": "3e4ad4cfdb77176795cc4a660ca99c4635e3a86a2faeecafd934997752aa6096",
       "end_byte": 30449,
@@ -18419,13 +18484,24 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence.",
+        "affected_scope": [
+          "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+        ],
+        "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution. The single inspected staged call supplies (0,-1), a whole-stream interval. Native stream loop count still delegates to the whole-sample loop owner; arbitrary subrange loops remain unsupported and runtime equivalence is unverified.",
+        "callers": [
+          "staging/wwaudio/soundstreamhandle.cpp:232"
+        ],
+        "original_owner": "Original WWAudio Miles provider boundary: AIL_set_stream_loop_block"
+      },
       "row_id": "ebc8e8be523b8f9aa5bd7d980cbb13ac07dc5b7d35bd994c10a4dca8f25840a9",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 30397,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -18639,7 +18715,7 @@
     },
     {
       "body_kind": "compound_statement",
-      "body_sha256": "5fcc45b1f5f3fa6191643b0052a8627c10493093908978441dbe58143baa8ac7",
+      "body_sha256": "426ce3b65e9a2a65ee82b60e74dd42929ee1198e71064975f613c1463db1ec8b",
       "calls": [
         {
           "callee": "RenegadeVitaAudio::Inspect_Wave",
@@ -18673,8 +18749,8 @@
         }
       ],
       "declarator": "AIL_WAV_info_bounded(const void *data, size_t bytes, AILSOUNDINFO *info)",
-      "definition_sha256": "a14bb64e6eead622973d778375d8ba43b32bcdc1e6234d201ccefb7804eb07f1",
-      "end_byte": 31948,
+      "definition_sha256": "0afddb003f9ca42e472dfb2da71a54867dbf9e8e581e65c4da4e83bba3959bef",
+      "end_byte": 31954,
       "end_line": 1061,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -18702,7 +18778,7 @@
         1048
       ],
       "parse_has_error": false,
-      "row_id": "532f35e2c64ec34379fb22a55afa0defbaa0e2fbd0f93c4a2f7b19b3f6a25058",
+      "row_id": "5d2abd4f8fb4f0c78ef98ac69e7eea00a1d7fd061653199073f85af7064fa93b",
       "scope": "",
       "signals": [
         "literal_return",
@@ -18728,7 +18804,7 @@
       ],
       "declarator": "AIL_WAV_info(const void *data, AILSOUNDINFO *info)",
       "definition_sha256": "a1cb5eece145a0d1bc9b0249bfb92f3dc6f086fb104a88f851cc3674a057a8ba",
-      "end_byte": 32123,
+      "end_byte": 32129,
       "end_line": 1067,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -18740,10 +18816,10 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "bfd3767520ced5c839532c569a56c6dd6c0d76d7681acd4d5d46f7c41de25087",
+      "row_id": "f8df2e39529c29787dbcc3ccb75827b9c16d043a780628b0ea96eea2ea20e57b",
       "scope": "",
       "signals": [],
-      "start_byte": 31950,
+      "start_byte": 31956,
       "status": "unknown"
     },
     {
@@ -18752,7 +18828,7 @@
       "calls": [],
       "declarator": "AIL_enumerate_filters(HPROENUM *, HPROVIDER *, char **)",
       "definition_sha256": "4ff301ea130d1bf05e759c2556ca1ab1f80090379bb08a3453a3c4d5dc916109",
-      "end_byte": 32198,
+      "end_byte": 32204,
       "end_line": 1069,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -18769,21 +18845,22 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "5d987d5d27a0099f2fa793848c551f04ccfa9142854735327343ae655c2a34a4",
+      "row_id": "dc68b10121a53a98c8aadc41b7f6497185679327030538a9b42ca4b9cf11d838",
       "scope": "",
       "signals": [
         "literal_return"
       ],
-      "start_byte": 32125,
+      "start_byte": 32131,
       "status": "unknown"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "AIL_set_sample_processor(HSAMPLE, S32, HPROVIDER)",
       "definition_sha256": "590570ad046fc1384cca0e2b124398540413cdd4922af8b3ff07aca2ab4da188",
-      "end_byte": 32256,
+      "end_byte": 32262,
       "end_line": 1070,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -18795,13 +18872,24 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "d1cb01a0fc4c60c8707c1037c36c083b8d64d494bfaeb9734980ed6f632a6058",
+      "review": {
+        "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence.",
+        "affected_scope": [
+          "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+        ],
+        "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution. FilteredSound requires a non-invalid reverb filter. Native AIL_enumerate_filters always returns zero, so original WWAudio records INVALID_MILES_HANDLE and this processor call is gated off. The missing filter-enumeration/processing cluster must be repaired together.",
+        "callers": [
+          "staging/wwaudio/FilteredSound.cpp:121"
+        ],
+        "original_owner": "Original WWAudio Miles provider boundary: AIL_set_sample_processor"
+      },
+      "row_id": "0df1dc233f6f5477ef929363bcaaf89d64e7ad929d916b218eae1ce128696c2b",
       "scope": "",
       "signals": [
         "empty_body"
       ],
-      "start_byte": 32199,
-      "status": "unknown"
+      "start_byte": 32205,
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -18809,7 +18897,7 @@
       "calls": [],
       "declarator": "AIL_set_filter_sample_preference(HSAMPLE, const char *, const void *)",
       "definition_sha256": "568692ce24b5410789d8b7811bee949ebabee3e426903264c9850392b0702f61",
-      "end_byte": 32344,
+      "end_byte": 32350,
       "end_line": 1071,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -18826,12 +18914,12 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "993478df2d13ed43b3bc6c3445101442c9875390571eb5880871015456ec8d1c",
+      "row_id": "dd98b524b6b1357592b1c4fb5987fe2ab4bd169d453313c99804f4529fd23d52",
       "scope": "",
       "signals": [
         "literal_return"
       ],
-      "start_byte": 32257,
+      "start_byte": 32263,
       "status": "unknown"
     },
     {
@@ -18851,7 +18939,7 @@
       ],
       "declarator": "AIL_set_file_callbacks(AIL_FILE_OPEN_CALLBACK open_callback,\n\tAIL_FILE_CLOSE_CALLBACK close_callback, AIL_FILE_SEEK_CALLBACK seek_callback,\n\tAIL_FILE_READ_CALLBACK read_callback)",
       "definition_sha256": "bdec43bacede6a6d6f33b50018468295c22ecc861ef393ee046b17be48fe0269",
-      "end_byte": 32683,
+      "end_byte": 32689,
       "end_line": 1083,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -18863,19 +18951,20 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "eb0a26a407465d9ae6640d1fac1f40fb434ee17b5ca2c717e98c11a5f295be48",
+      "row_id": "16e3acd2d7f6aaed8dd7249e45136c05ba335053f8bb9e8f35a200ae9df672b5",
       "scope": "",
       "signals": [],
-      "start_byte": 32346,
+      "start_byte": 32352,
       "status": "unknown"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "AIL_stop_timer(HTIMER)",
       "definition_sha256": "31e385263d47929565a04932f53c3414c90fb69859dda314e2cc1dcbfb80846b",
-      "end_byte": 32715,
+      "end_byte": 32721,
       "end_line": 1085,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -18887,21 +18976,33 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "414999fc02410b53182dd1b6b9537e86d91f4dcfdcefe6436cd00fa85e3ce821",
+      "review": {
+        "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence.",
+        "affected_scope": [
+          "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+        ],
+        "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution. Original WWAudio initializes m_UpdateTimer to -1; inspected occurrences only test/reset it, with no timer registration/start assignment. Shutdown is gated by != -1. Additional sources, alternate builds and runtime evidence remain open.",
+        "callers": [
+          "staging/wwaudio/WWAudio.cpp:2517"
+        ],
+        "original_owner": "Original WWAudio Miles provider boundary: AIL_stop_timer"
+      },
+      "row_id": "e11b8b778a2d296104919853101125cbed21b2ff44280e8ffac52da72a2bbacc",
       "scope": "",
       "signals": [
         "empty_body"
       ],
-      "start_byte": 32685,
-      "status": "unknown"
+      "start_byte": 32691,
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "AIL_release_timer_handle(HTIMER)",
       "definition_sha256": "d644d12a706040349f56679a4ba0760f930d1fa8c22f6e9ee47a8fb0ff957fbf",
-      "end_byte": 32756,
+      "end_byte": 32762,
       "end_line": 1086,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -18913,13 +19014,24 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "2679777995e17000f1406e0c759098e1033d4c4295a4762160d991d73c43b139",
+      "review": {
+        "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence.",
+        "affected_scope": [
+          "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
+        ],
+        "behavior": "Empty implementation ignores all input and changes no provider state. Source call sites are retained separately from actual execution. Original WWAudio initializes m_UpdateTimer to -1; inspected occurrences only test/reset it, with no timer registration/start assignment. Shutdown is gated by != -1. Additional sources, alternate builds and runtime evidence remain open.",
+        "callers": [
+          "staging/wwaudio/WWAudio.cpp:2518"
+        ],
+        "original_owner": "Original WWAudio Miles provider boundary: AIL_release_timer_handle"
+      },
+      "row_id": "6e89fcf681dace76cd2449c9a369694a81794afaf8830c5ffc26f0c68397a305",
       "scope": "",
       "signals": [
         "empty_body"
       ],
-      "start_byte": 32716,
-      "status": "unknown"
+      "start_byte": 32722,
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -18943,7 +19055,7 @@
       ],
       "declarator": "Renegade_Miles_Mix_For_Test(int16_t *stereo_output, size_t frames)",
       "definition_sha256": "17054d4bcc39bdf1bcefaad081020cecfd19bbe7e5e298632c04f082f856ec9c",
-      "end_byte": 32997,
+      "end_byte": 33003,
       "end_line": 1095,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -18966,13 +19078,13 @@
         1090
       ],
       "parse_has_error": false,
-      "row_id": "6dedf692cfe85dce5bf769c06267a3e9510e1fead564ae051276a9d3106e6ccf",
+      "row_id": "1ff65b6ca28c3a317bb3b7fe0d0f78a650b3fa9a84e202f2a0aed9bb6c8dfe8c",
       "scope": "",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 32758,
+      "start_byte": 32764,
       "status": "unknown"
     },
     {
@@ -18997,7 +19109,7 @@
       ],
       "declarator": "Renegade_Miles_Reset_Runtime_Stats()",
       "definition_sha256": "e00b19bea56ea0a5de2594e1b40b37e28eefded98c9de71cb9494dcfae99436e",
-      "end_byte": 33173,
+      "end_byte": 33179,
       "end_line": 1104,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -19009,10 +19121,10 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "557bdd18b802c0abe5217856e52030fbeac35a6e09d05f4b080a427cf5d0d04b",
+      "row_id": "3f2840f16e20d59fc50e15b985ae5a2c1252c2f52b6a06023d340364d63ccc8c",
       "scope": "",
       "signals": [],
-      "start_byte": 32999,
+      "start_byte": 33005,
       "status": "unknown"
     },
     {
@@ -19052,7 +19164,7 @@
       ],
       "declarator": "Renegade_Miles_Get_Runtime_Stats(RenegadeMilesRuntimeStats *stats)",
       "definition_sha256": "3d5a0e601c0f781907b23bc2aa3e3dad4039d25f6dca83ba2d1e245f974b8f31",
-      "end_byte": 34181,
+      "end_byte": 34187,
       "end_line": 1137,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
@@ -19066,12 +19178,12 @@
         1108
       ],
       "parse_has_error": false,
-      "row_id": "544426ef12c54ac8787bc7fe3cca36ff975635a1b02d126d91b198f6b096fc53",
+      "row_id": "9d9d1ce06112613f1a118e154ad3ba5bd3b56d94104d516c5aec898d8cb28c58",
       "scope": "",
       "signals": [
         "nonfinal_return_candidate"
       ],
-      "start_byte": 33175,
+      "start_byte": 33181,
       "status": "unknown"
     },
     {
@@ -19086,52 +19198,52 @@
     },
     {
       "directive": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-      "end_line": 352,
+      "end_line": 368,
       "evidence_class": "current_source",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "current_source_guard",
-      "line": 352,
-      "row_id": "c2cebdb0fe68db713dc9e4718c1dd06454b865e1042e9ff2b2952bb101bffe10",
+      "line": 368,
+      "row_id": "22372c68f51474a10b7e4c922978d7b737c35b92075716cc2281520081267f9e",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-      "end_line": 436,
+      "end_line": 452,
       "evidence_class": "current_source",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "current_source_guard",
-      "line": 436,
-      "row_id": "984a452d337fefefd2f9865fe2a01898307ddd6b54bb26d0d637e60ac533ec15",
+      "line": 452,
+      "row_id": "a80a151918aa43d13d42d4e457d1e9a0390934acacfdc105e1621cb5b02daa7c",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-      "end_line": 561,
+      "end_line": 582,
       "evidence_class": "current_source",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "current_source_guard",
-      "line": 561,
-      "row_id": "99e61567dc00982768dbf347c9400c5c7724bb51a1599431690eadc8d4a76cf3",
+      "line": 582,
+      "row_id": "6cbebe3b7fdfb96b8642a82615f7eccc6e9ddc099f0822335587b14de7455a56",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-      "end_line": 621,
+      "end_line": 654,
       "evidence_class": "current_source",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "current_source_guard",
-      "line": 621,
-      "row_id": "a7ed7be3b7c9a3a4ce87ea334c9fab0261930c09ff58c9a4da785c5cfd596139",
+      "line": 654,
+      "row_id": "3c998c2ec32490807ee9177199ce4cc28333f0f22f56a31436a8fcf242db0210",
       "status": "unknown"
     },
     {
       "directive": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-      "end_line": 734,
+      "end_line": 767,
       "evidence_class": "current_source",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "current_source_guard",
-      "line": 734,
-      "row_id": "e68b5cdeb0c8199cf44603f826ec1af3c1348277fffbb85ce8d889bcee880fcc",
+      "line": 767,
+      "row_id": "56538ae97511e08476ebc8abbc70143872d3bd5a009ac6ed1fed388078235696",
       "status": "unknown"
     },
     {
@@ -19694,7 +19806,7 @@
     },
     {
       "body_kind": "compound_statement",
-      "body_sha256": "24aebe8c6cf7b8eb444d6546b6cb72ba7cc5f42f77d847bf5dd93f94099c28a8",
+      "body_sha256": "c98cdb242c6e42bac34ceb789fc815a0466dd255dfd9be2b3ea60403e04dfd41",
       "calls": [
         {
           "callee": "std::min<size_t>",
@@ -19702,15 +19814,35 @@
           "line": 213
         },
         {
+          "callee": "Fail",
+          "callee_node_type": "identifier",
+          "line": 222
+        },
+        {
+          "callee": "Read_S16",
+          "callee_node_type": "identifier",
+          "line": 224
+        },
+        {
+          "callee": "Append_Frame",
+          "callee_node_type": "identifier",
+          "line": 225
+        },
+        {
+          "callee": "Fail",
+          "callee_node_type": "identifier",
+          "line": 226
+        },
+        {
           "callee": "Decode_Ima_Block",
           "callee_node_type": "identifier",
-          "line": 215
+          "line": 231
         }
       ],
-      "declarator": "Decode_Ima(const uint8_t *data, const WaveInfo &info,\n\tDecodedWave *decoded, const char **error)",
-      "definition_sha256": "9b3bd25328708f250bc17806a75b45996b7af0e7a8b334dd59d24313ffe6749d",
-      "end_byte": 7530,
-      "end_line": 221,
+      "declarator": "Decode_Ima(const uint8_t *data, size_t source_bytes, const WaveInfo &info,\n\tDecodedWave *decoded, const char **error)",
+      "definition_sha256": "39e0f93a2f2b9e7bad94b599cf18f0a12d466eee2a145621dac5f90dba53502c",
+      "end_byte": 8275,
+      "end_line": 237,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
@@ -19719,20 +19851,22 @@
       "literal_returns": [
         {
           "expression": "false",
-          "line": 216
+          "line": 232
         },
         {
           "expression": "true",
-          "line": 220
+          "line": 236
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        216
+        222,
+        226,
+        232
       ],
       "parse_has_error": false,
-      "row_id": "4efb05427fd627264f33e084203bc6dde5ca6e6cb959b19e6a72dcb1b68b0d4a",
+      "row_id": "bf28dbc890e5e55cf5fc8ed557af66d0d3bca8bab2d994c776a9984d5e242624",
       "scope": "RenegadeVitaAudio",
       "signals": [
         "literal_return",
@@ -19748,52 +19882,52 @@
         {
           "callee": "static_cast<int>",
           "callee_node_type": "template_function",
-          "line": 232
+          "line": 248
         },
         {
           "callee": "static_cast<int64_t>",
           "callee_node_type": "template_function",
-          "line": 233
+          "line": 249
         },
         {
           "callee": "static_cast<int64_t>",
           "callee_node_type": "template_function",
-          "line": 234
+          "line": 250
         },
         {
           "callee": "static_cast<int64_t>",
           "callee_node_type": "template_function",
-          "line": 235
+          "line": 251
         },
         {
           "callee": "Clamp_Sample",
           "callee_node_type": "identifier",
-          "line": 236
+          "line": 252
         },
         {
           "callee": "std::max",
           "callee_node_type": "qualified_identifier",
-          "line": 239
+          "line": 255
         }
       ],
       "declarator": "Decode_Ms_Nibble(uint8_t nibble, int coefficient1, int coefficient2,\n\tint *delta, int *sample1, int *sample2)",
       "definition_sha256": "75424e134fddca16615d53ec15babd126f3985e4467f3ccc60a2f94259eabe1c",
-      "end_byte": 8233,
-      "end_line": 241,
+      "end_byte": 8978,
+      "end_line": 257,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 228,
+      "line": 244,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "1a3012c0ae14d75ef2ff10f59add3c8c72a521a93d509ed09593d426b5e9d2d9",
+      "row_id": "191194581dae22f0f2c0804ee22f10d24798bb290fbeab2e1ef464f2a61c9f99",
       "scope": "RenegadeVitaAudio",
       "signals": [],
-      "start_byte": 7653,
+      "start_byte": 8398,
       "status": "unknown"
     },
     {
@@ -19803,157 +19937,157 @@
         {
           "callee": "static_cast<size_t>",
           "callee_node_type": "template_function",
-          "line": 246
-        },
-        {
-          "callee": "Fail",
-          "callee_node_type": "identifier",
-          "line": 247
-        },
-        {
-          "callee": "static_cast<size_t>",
-          "callee_node_type": "template_function",
-          "line": 256
-        },
-        {
-          "callee": "info.coefficients.size",
-          "callee_node_type": "field_expression",
-          "line": 257
-        },
-        {
-          "callee": "Fail",
-          "callee_node_type": "identifier",
-          "line": 258
-        },
-        {
-          "callee": "std::max<int>",
-          "callee_node_type": "qualified_identifier",
           "line": 262
         },
         {
-          "callee": "Read_U16",
+          "callee": "Fail",
           "callee_node_type": "identifier",
           "line": 263
         },
         {
-          "callee": "Read_S16",
-          "callee_node_type": "identifier",
-          "line": 264
-        },
-        {
-          "callee": "Read_S16",
-          "callee_node_type": "identifier",
-          "line": 265
-        },
-        {
-          "callee": "static_cast<int16_t>",
+          "callee": "static_cast<size_t>",
           "callee_node_type": "template_function",
-          "line": 266
+          "line": 272
         },
         {
-          "callee": "Append_Frame",
-          "callee_node_type": "identifier",
-          "line": 268
+          "callee": "info.coefficients.size",
+          "callee_node_type": "field_expression",
+          "line": 273
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 268
-        },
-        {
-          "callee": "static_cast<int16_t>",
-          "callee_node_type": "template_function",
-          "line": 270
-        },
-        {
-          "callee": "Append_Frame",
-          "callee_node_type": "identifier",
-          "line": 272
-        },
-        {
-          "callee": "Fail",
-          "callee_node_type": "identifier",
-          "line": 272
-        },
-        {
-          "callee": "std::numeric_limits<size_t>::max",
-          "callee_node_type": "qualified_identifier",
           "line": 274
         },
         {
-          "callee": "Decode_Ms_Nibble",
+          "callee": "std::max<int>",
+          "callee_node_type": "qualified_identifier",
+          "line": 278
+        },
+        {
+          "callee": "Read_U16",
+          "callee_node_type": "identifier",
+          "line": 279
+        },
+        {
+          "callee": "Read_S16",
+          "callee_node_type": "identifier",
+          "line": 280
+        },
+        {
+          "callee": "Read_S16",
           "callee_node_type": "identifier",
           "line": 281
         },
         {
+          "callee": "static_cast<int16_t>",
+          "callee_node_type": "template_function",
+          "line": 282
+        },
+        {
           "callee": "Append_Frame",
           "callee_node_type": "identifier",
-          "line": 283
+          "line": 284
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 283
+          "line": 284
         },
         {
-          "callee": "Decode_Ms_Nibble",
-          "callee_node_type": "identifier",
+          "callee": "static_cast<int16_t>",
+          "callee_node_type": "template_function",
           "line": 286
         },
         {
-          "callee": "Decode_Ms_Nibble",
-          "callee_node_type": "identifier",
-          "line": 289
-        },
-        {
-          "callee": "Decode_Ms_Nibble",
-          "callee_node_type": "identifier",
-          "line": 291
-        },
-        {
           "callee": "Append_Frame",
           "callee_node_type": "identifier",
-          "line": 294
+          "line": 288
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 294
+          "line": 288
+        },
+        {
+          "callee": "std::numeric_limits<size_t>::max",
+          "callee_node_type": "qualified_identifier",
+          "line": 290
+        },
+        {
+          "callee": "Decode_Ms_Nibble",
+          "callee_node_type": "identifier",
+          "line": 297
+        },
+        {
+          "callee": "Append_Frame",
+          "callee_node_type": "identifier",
+          "line": 299
+        },
+        {
+          "callee": "Fail",
+          "callee_node_type": "identifier",
+          "line": 299
+        },
+        {
+          "callee": "Decode_Ms_Nibble",
+          "callee_node_type": "identifier",
+          "line": 302
+        },
+        {
+          "callee": "Decode_Ms_Nibble",
+          "callee_node_type": "identifier",
+          "line": 305
+        },
+        {
+          "callee": "Decode_Ms_Nibble",
+          "callee_node_type": "identifier",
+          "line": 307
+        },
+        {
+          "callee": "Append_Frame",
+          "callee_node_type": "identifier",
+          "line": 310
+        },
+        {
+          "callee": "Fail",
+          "callee_node_type": "identifier",
+          "line": 310
         }
       ],
       "declarator": "Decode_Ms_Block(const uint8_t *block, size_t bytes,\n\tconst WaveInfo &info, DecodedWave *decoded, const char **error)",
       "definition_sha256": "9a409650bc104db9e473012f2c6ba7118de58243e5fc86f866529dfa51211883",
-      "end_byte": 10811,
-      "end_line": 298,
+      "end_byte": 11556,
+      "end_line": 314,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 243,
+      "line": 259,
       "literal_returns": [
         {
           "expression": "true",
-          "line": 297
+          "line": 313
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        247,
-        258,
-        268,
-        272,
-        283,
-        294
+        263,
+        274,
+        284,
+        288,
+        299,
+        310
       ],
       "parse_has_error": false,
-      "row_id": "87c73c9e6266c3315db4c421aa32e343e467c068fcd637e25d782ca5aa5b3d9e",
+      "row_id": "d58acbb6be27fcba42b726e7d5a2f61ae38139287a0bbba2aa152c7de0b00afa",
       "scope": "RenegadeVitaAudio",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 8235,
+      "start_byte": 8980,
       "status": "unknown"
     },
     {
@@ -19963,46 +20097,46 @@
         {
           "callee": "std::min<size_t>",
           "callee_node_type": "qualified_identifier",
-          "line": 305
+          "line": 321
         },
         {
           "callee": "Decode_Ms_Block",
           "callee_node_type": "identifier",
-          "line": 307
+          "line": 323
         }
       ],
       "declarator": "Decode_Microsoft_Adpcm(const uint8_t *data, const WaveInfo &info,\n\tDecodedWave *decoded, const char **error)",
       "definition_sha256": "63742f03f283814468f471cbba5868b400648d5dc00934d1525aefaa48dbc46c",
-      "end_byte": 11270,
-      "end_line": 313,
+      "end_byte": 12015,
+      "end_line": 329,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 300,
+      "line": 316,
       "literal_returns": [
         {
           "expression": "false",
-          "line": 308
+          "line": 324
         },
         {
           "expression": "true",
-          "line": 312
+          "line": 328
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        308
+        324
       ],
       "parse_has_error": false,
-      "row_id": "52253dcc3edf42144683240b9928c94cb7ec47a8be932aa060faee0542337296",
+      "row_id": "f2ea60748e2a011673afed0cb77065bfedc62df0cdcc4d5d5ebe2cdfdf796057",
       "scope": "RenegadeVitaAudio",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 10813,
+      "start_byte": 11558,
       "status": "unknown"
     },
     {
@@ -20012,37 +20146,37 @@
         {
           "callee": "std::numeric_limits<uint32_t>::max",
           "callee_node_type": "qualified_identifier",
-          "line": 317
+          "line": 333
         },
         {
           "callee": "std::numeric_limits<uint32_t>::max",
           "callee_node_type": "qualified_identifier",
-          "line": 318
+          "line": 334
         },
         {
           "callee": "static_cast<uint32_t>",
           "callee_node_type": "template_function",
-          "line": 319
+          "line": 335
         }
       ],
       "declarator": "Saturating_U64_To_U32(uint64_t value)",
       "definition_sha256": "46f7e170d7bdda96965a32f03e3642f8865900e8860498aa44e317288cf9f662",
-      "end_byte": 11450,
-      "end_line": 320,
+      "end_byte": 12195,
+      "end_line": 336,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 315,
+      "line": 331,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "ccc6e2f4538509bdfb1402b277ab6f3d9c700b64498708f850024f6da207295b",
+      "row_id": "9772a172eed446b6acfa510e58ad0133f158ca3b160a06278f9b4a690aab78a1",
       "scope": "RenegadeVitaAudio",
       "signals": [],
-      "start_byte": 11272,
+      "start_byte": 12017,
       "status": "unknown"
     },
     {
@@ -20052,47 +20186,47 @@
         {
           "callee": "static_cast<uint32_t>",
           "callee_node_type": "template_function",
-          "line": 325
+          "line": 341
         },
         {
           "callee": "static_cast<uint32_t>",
           "callee_node_type": "template_function",
-          "line": 326
+          "line": 342
         },
         {
           "callee": "std::min<uint32_t>",
           "callee_node_type": "qualified_identifier",
-          "line": 335
+          "line": 351
         }
       ],
       "declarator": "Estimate_Partial_Adpcm_Frames(const WaveInfo &info, uint32_t bytes)",
       "definition_sha256": "cc116a263987c2350c40add4170af7a016a388b55d8a20f1c143feac3d8b18fe",
-      "end_byte": 12105,
-      "end_line": 336,
+      "end_byte": 12850,
+      "end_line": 352,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 322,
+      "line": 338,
       "literal_returns": [
         {
           "expression": "0U",
-          "line": 327
+          "line": 343
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        327
+        343
       ],
       "parse_has_error": false,
-      "row_id": "3f3fd4cf43e7645f39e0a026fe1a48ce1a530aae39a1061684f525efcbfe47e0",
+      "row_id": "743cb3c69cc1187f6d1a566d869fe66c2970093ce73e8595a9a0a4a1a8f897de",
       "scope": "RenegadeVitaAudio",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 11452,
+      "start_byte": 12197,
       "status": "unknown"
     },
     {
@@ -20102,53 +20236,53 @@
         {
           "callee": "static_cast<uint64_t>",
           "callee_node_type": "template_function",
-          "line": 347
+          "line": 363
         },
         {
           "callee": "Estimate_Partial_Adpcm_Frames",
           "callee_node_type": "identifier",
-          "line": 348
+          "line": 364
         },
         {
           "callee": "Saturating_U64_To_U32",
           "callee_node_type": "identifier",
-          "line": 349
+          "line": 365
         }
       ],
       "declarator": "Estimate_Frame_Count(const WaveInfo &info)",
       "definition_sha256": "9632e73782f3f31b1e7a0b0762ce882a2d487fa24644ce4fe0b0b974ffc8a028",
-      "end_byte": 12645,
-      "end_line": 350,
+      "end_byte": 13390,
+      "end_line": 366,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 338,
+      "line": 354,
       "literal_returns": [
         {
           "expression": "0U",
-          "line": 340
+          "line": 356
         },
         {
           "expression": "0U",
-          "line": 344
+          "line": 360
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        340,
-        342,
-        344
+        356,
+        358,
+        360
       ],
       "parse_has_error": false,
-      "row_id": "93ff319ec63e070eb5436699f4147075e0c3867da7e995072048d3927237d29d",
+      "row_id": "8a5abc107790e62c8944ccac2d12f01d0d8571d5c00a4ce6bd0ded937be067bb",
       "scope": "RenegadeVitaAudio",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 12107,
+      "start_byte": 12852,
       "status": "unknown"
     },
     {
@@ -20157,29 +20291,29 @@
       "calls": [],
       "declarator": "Is_Mpeg_Image(const uint8_t *data, size_t bytes)",
       "definition_sha256": "dd502822a0941d24ac41f721bc27a3ce817d76185a0bf0f579af6291174ea306",
-      "end_byte": 12913,
-      "end_line": 358,
+      "end_byte": 13658,
+      "end_line": 374,
       "entry_preprocessor_context": [
         {
           "branch": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "branch_line": 352,
+          "branch_line": 368,
           "condition": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "opening_line": 352
+          "opening_line": 368
         }
       ],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 353,
+      "line": 369,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "ee065d33ec9a2711fc9f730eeb8ea50e8c594854099c9fb7e3ec1a10da35e5d4",
+      "row_id": "9e4b62b4d0ab02a845825dc14024330b1391ad9570fd71a175aca5af6872ed71",
       "scope": "RenegadeVitaAudio",
       "signals": [],
-      "start_byte": 12703,
+      "start_byte": 13448,
       "status": "unknown"
     },
     {
@@ -20189,303 +20323,243 @@
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 365
+          "line": 381
         },
         {
           "callee": "mpg123_init",
           "callee_node_type": "identifier",
-          "line": 366
+          "line": 382
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 367
+          "line": 383
         },
         {
           "callee": "mpg123_new",
           "callee_node_type": "identifier",
-          "line": 370
+          "line": 386
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 371
+          "line": 387
         },
         {
           "callee": "mpg123_param",
           "callee_node_type": "identifier",
-          "line": 372
+          "line": 388
         },
         {
           "callee": "handle.get",
           "callee_node_type": "field_expression",
-          "line": 372
+          "line": 388
         },
         {
           "callee": "mpg123_format_none",
           "callee_node_type": "identifier",
-          "line": 373
+          "line": 389
         },
         {
           "callee": "handle.get",
           "callee_node_type": "field_expression",
-          "line": 373
+          "line": 389
         },
         {
           "callee": "mpg123_rates",
           "callee_node_type": "identifier",
-          "line": 376
+          "line": 392
         },
         {
           "callee": "mpg123_format",
           "callee_node_type": "identifier",
-          "line": 378
+          "line": 394
         },
         {
           "callee": "handle.get",
           "callee_node_type": "field_expression",
-          "line": 378
+          "line": 394
         },
         {
           "callee": "mpg123_open_feed",
           "callee_node_type": "identifier",
-          "line": 379
+          "line": 395
         },
         {
           "callee": "handle.get",
           "callee_node_type": "field_expression",
-          "line": 379
+          "line": 395
         },
         {
           "callee": "mpg123_feed",
           "callee_node_type": "identifier",
-          "line": 380
+          "line": 396
         },
         {
           "callee": "handle.get",
           "callee_node_type": "field_expression",
-          "line": 380
+          "line": 396
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 381
+          "line": 397
         },
         {
           "callee": "mpg123_read",
           "callee_node_type": "identifier",
-          "line": 387
+          "line": 403
         },
         {
           "callee": "handle.get",
           "callee_node_type": "field_expression",
-          "line": 387
+          "line": 403
         },
         {
           "callee": "mpg123_getformat",
           "callee_node_type": "identifier",
-          "line": 391
+          "line": 407
         },
         {
           "callee": "handle.get",
           "callee_node_type": "field_expression",
-          "line": 391
+          "line": 407
         },
         {
           "callee": "unsigned",
           "callee_node_type": "identifier",
-          "line": 394
+          "line": 410
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 395
+          "line": 411
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 400
+          "line": 416
         },
         {
           "callee": "output.samples.insert",
           "callee_node_type": "field_expression",
-          "line": 402
+          "line": 418
         },
         {
           "callee": "output.samples.end",
           "callee_node_type": "field_expression",
-          "line": 402
+          "line": 418
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 405
+          "line": 421
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 406
+          "line": 422
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 409
+          "line": 425
         },
         {
           "callee": "std::move",
           "callee_node_type": "qualified_identifier",
-          "line": 421
+          "line": 437
         }
       ],
       "declarator": "Decode_Mpeg(const uint8_t *data, size_t bytes, DecodedWave *decoded,\n\tWaveInfo *info, const char **error)",
       "definition_sha256": "75cf3682ee9e8edbad95a739b1f10a8b1901a8b913ff8bac20a96e472a29034a",
-      "end_byte": 16065,
-      "end_line": 424,
+      "end_byte": 16810,
+      "end_line": 440,
       "entry_preprocessor_context": [
         {
           "branch": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "branch_line": 352,
+          "branch_line": 368,
           "condition": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "opening_line": 352
+          "opening_line": 368
         }
       ],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 362,
+      "line": 378,
       "literal_returns": [
         {
           "expression": "true",
-          "line": 423
+          "line": 439
         }
       ],
       "markers": [
         {
-          "line": 395,
+          "line": 411,
           "text": "unsupported"
         }
       ],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        365,
-        367,
-        371,
         381,
-        395,
-        400,
-        405,
-        406,
-        409
+        383,
+        387,
+        397,
+        411,
+        416,
+        421,
+        422,
+        425
       ],
       "parse_has_error": false,
-      "row_id": "f5d6c38dcf732d0b93b072040abacf684869b5f205b7bd88ed06c08fab6d1043",
+      "row_id": "278e240c324b72685ce81efd86e15285fbc690b7dc8629d3e4b8cf6fd1bd9ae2",
       "scope": "RenegadeVitaAudio",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate",
         "unsupported_or_todo_marker"
       ],
-      "start_byte": 13067,
+      "start_byte": 13812,
       "status": "unknown"
     },
     {
       "body_kind": "compound_statement",
-      "body_sha256": "e1b2730c1ab39000800218b0cc0c57eddd832db8fd3dc5e9d81f1734fb841523",
+      "body_sha256": "b3c65308124aaf2a8e6b5fec62948b514f71bf4908505a3afceb9913882091d6",
       "calls": [
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 434
+          "line": 450
         },
         {
           "callee": "Is_Mpeg_Image",
           "callee_node_type": "identifier",
-          "line": 437
+          "line": 453
         },
         {
           "callee": "Open_Mpeg_Playback",
           "callee_node_type": "identifier",
-          "line": 441
+          "line": 457
         },
         {
           "callee": "playback->Channels",
           "callee_node_type": "field_expression",
-          "line": 445
+          "line": 461
         },
         {
           "callee": "playback->Sample_Rate",
           "callee_node_type": "field_expression",
-          "line": 448
+          "line": 464
         },
         {
           "callee": "Saturating_U64_To_U32",
           "callee_node_type": "identifier",
-          "line": 450
+          "line": 466
         },
         {
           "callee": "playback->Frame_Count",
           "callee_node_type": "field_expression",
-          "line": 450
-        },
-        {
-          "callee": "Read_U32",
-          "callee_node_type": "identifier",
-          "line": 455
-        },
-        {
-          "callee": "UINT32_C",
-          "callee_node_type": "identifier",
-          "line": 455
-        },
-        {
-          "callee": "Read_U32",
-          "callee_node_type": "identifier",
-          "line": 456
-        },
-        {
-          "callee": "UINT32_C",
-          "callee_node_type": "identifier",
-          "line": 456
-        },
-        {
-          "callee": "Fail",
-          "callee_node_type": "identifier",
-          "line": 457
-        },
-        {
-          "callee": "static_cast<uint64_t>",
-          "callee_node_type": "template_function",
-          "line": 459
-        },
-        {
-          "callee": "Read_U32",
-          "callee_node_type": "identifier",
-          "line": 459
-        },
-        {
-          "callee": "Fail",
-          "callee_node_type": "identifier",
-          "line": 460
-        },
-        {
-          "callee": "Fail",
-          "callee_node_type": "identifier",
-          "line": 462
-        },
-        {
-          "callee": "static_cast<size_t>",
-          "callee_node_type": "template_function",
-          "line": 464
-        },
-        {
-          "callee": "std::min<uint64_t>",
-          "callee_node_type": "qualified_identifier",
-          "line": 465
-        },
-        {
-          "callee": "Read_U32",
-          "callee_node_type": "identifier",
-          "line": 470
+          "line": 466
         },
         {
           "callee": "Read_U32",
@@ -20495,87 +20569,87 @@
         {
           "callee": "UINT32_C",
           "callee_node_type": "identifier",
-          "line": 474
-        },
-        {
-          "callee": "Fail",
-          "callee_node_type": "identifier",
-          "line": 480
-        },
-        {
-          "callee": "UINT32_C",
-          "callee_node_type": "identifier",
-          "line": 482
-        },
-        {
-          "callee": "Fail",
-          "callee_node_type": "identifier",
-          "line": 483
-        },
-        {
-          "callee": "Fail",
-          "callee_node_type": "identifier",
-          "line": 484
-        },
-        {
-          "callee": "Read_U16",
-          "callee_node_type": "identifier",
-          "line": 485
-        },
-        {
-          "callee": "static_cast<uint16_t>",
-          "callee_node_type": "template_function",
-          "line": 486
-        },
-        {
-          "callee": "static_cast<uint16_t>",
-          "callee_node_type": "template_function",
-          "line": 487
-        },
-        {
-          "callee": "static_cast<uint16_t>",
-          "callee_node_type": "template_function",
-          "line": 488
-        },
-        {
-          "callee": "Fail",
-          "callee_node_type": "identifier",
-          "line": 489
-        },
-        {
-          "callee": "static_cast<WaveEncoding>",
-          "callee_node_type": "template_function",
-          "line": 491
-        },
-        {
-          "callee": "Read_U16",
-          "callee_node_type": "identifier",
-          "line": 492
+          "line": 471
         },
         {
           "callee": "Read_U32",
           "callee_node_type": "identifier",
-          "line": 493
+          "line": 472
         },
         {
-          "callee": "Read_U16",
+          "callee": "UINT32_C",
           "callee_node_type": "identifier",
-          "line": 494
-        },
-        {
-          "callee": "Read_U16",
-          "callee_node_type": "identifier",
-          "line": 495
+          "line": 472
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 499
+          "line": 473
         },
         {
-          "callee": "static_cast<uint16_t>",
+          "callee": "static_cast<uint64_t>",
           "callee_node_type": "template_function",
+          "line": 475
+        },
+        {
+          "callee": "Read_U32",
+          "callee_node_type": "identifier",
+          "line": 475
+        },
+        {
+          "callee": "Fail",
+          "callee_node_type": "identifier",
+          "line": 476
+        },
+        {
+          "callee": "Fail",
+          "callee_node_type": "identifier",
+          "line": 478
+        },
+        {
+          "callee": "static_cast<size_t>",
+          "callee_node_type": "template_function",
+          "line": 480
+        },
+        {
+          "callee": "std::min<uint64_t>",
+          "callee_node_type": "qualified_identifier",
+          "line": 481
+        },
+        {
+          "callee": "Read_U32",
+          "callee_node_type": "identifier",
+          "line": 486
+        },
+        {
+          "callee": "Read_U32",
+          "callee_node_type": "identifier",
+          "line": 487
+        },
+        {
+          "callee": "UINT32_C",
+          "callee_node_type": "identifier",
+          "line": 490
+        },
+        {
+          "callee": "UINT32_C",
+          "callee_node_type": "identifier",
+          "line": 500
+        },
+        {
+          "callee": "UINT32_C",
+          "callee_node_type": "identifier",
+          "line": 500
+        },
+        {
+          "callee": "Fail",
+          "callee_node_type": "identifier",
           "line": 501
+        },
+        {
+          "callee": "UINT32_C",
+          "callee_node_type": "identifier",
+          "line": 503
         },
         {
           "callee": "Fail",
@@ -20585,7 +20659,22 @@
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
+          "line": 505
+        },
+        {
+          "callee": "Read_U16",
+          "callee_node_type": "identifier",
+          "line": 506
+        },
+        {
+          "callee": "static_cast<uint16_t>",
+          "callee_node_type": "template_function",
           "line": 507
+        },
+        {
+          "callee": "static_cast<uint16_t>",
+          "callee_node_type": "template_function",
+          "line": 508
         },
         {
           "callee": "static_cast<uint16_t>",
@@ -20598,17 +20687,17 @@
           "line": 510
         },
         {
-          "callee": "Read_U16",
-          "callee_node_type": "identifier",
-          "line": 511
+          "callee": "static_cast<WaveEncoding>",
+          "callee_node_type": "template_function",
+          "line": 512
         },
         {
-          "callee": "static_cast<uint16_t>",
-          "callee_node_type": "template_function",
+          "callee": "Read_U16",
+          "callee_node_type": "identifier",
           "line": 513
         },
         {
-          "callee": "Fail",
+          "callee": "Read_U32",
           "callee_node_type": "identifier",
           "line": 514
         },
@@ -20618,155 +20707,210 @@
           "line": 515
         },
         {
-          "callee": "static_cast<size_t>",
-          "callee_node_type": "template_function",
-          "line": 517
+          "callee": "Read_U16",
+          "callee_node_type": "identifier",
+          "line": 516
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 518
-        },
-        {
-          "callee": "parsed.coefficients.reserve",
-          "callee_node_type": "field_expression",
           "line": 520
         },
         {
-          "callee": "static_cast<size_t>",
+          "callee": "static_cast<uint16_t>",
           "callee_node_type": "template_function",
-          "line": 520
-        },
-        {
-          "callee": "parsed.coefficients.push_back",
-          "callee_node_type": "field_expression",
           "line": 522
         },
         {
-          "callee": "Read_S16",
+          "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 522
-        },
-        {
-          "callee": "static_cast<size_t>",
-          "callee_node_type": "template_function",
-          "line": 523
-        },
-        {
-          "callee": "parsed.coefficients.push_back",
-          "callee_node_type": "field_expression",
-          "line": 524
-        },
-        {
-          "callee": "Read_S16",
-          "callee_node_type": "identifier",
-          "line": 524
-        },
-        {
-          "callee": "static_cast<size_t>",
-          "callee_node_type": "template_function",
           "line": 525
         },
         {
-          "callee": "UINT32_C",
+          "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 529
+          "line": 528
+        },
+        {
+          "callee": "static_cast<uint16_t>",
+          "callee_node_type": "template_function",
+          "line": 530
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 530
+          "line": 531
         },
         {
-          "callee": "UINT32_C",
+          "callee": "Read_U16",
           "callee_node_type": "identifier",
+          "line": 532
+        },
+        {
+          "callee": "static_cast<uint16_t>",
+          "callee_node_type": "template_function",
           "line": 534
         },
         {
-          "callee": "Read_U32",
+          "callee": "Fail",
+          "callee_node_type": "identifier",
+          "line": 535
+        },
+        {
+          "callee": "Read_U16",
           "callee_node_type": "identifier",
           "line": 536
         },
         {
           "callee": "static_cast<size_t>",
           "callee_node_type": "template_function",
-          "line": 539
+          "line": 538
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
+          "line": 539
+        },
+        {
+          "callee": "parsed.coefficients.reserve",
+          "callee_node_type": "field_expression",
+          "line": 541
+        },
+        {
+          "callee": "static_cast<size_t>",
+          "callee_node_type": "template_function",
+          "line": 541
+        },
+        {
+          "callee": "parsed.coefficients.push_back",
+          "callee_node_type": "field_expression",
           "line": 543
+        },
+        {
+          "callee": "Read_S16",
+          "callee_node_type": "identifier",
+          "line": 543
+        },
+        {
+          "callee": "static_cast<size_t>",
+          "callee_node_type": "template_function",
+          "line": 544
+        },
+        {
+          "callee": "parsed.coefficients.push_back",
+          "callee_node_type": "field_expression",
+          "line": 545
+        },
+        {
+          "callee": "Read_S16",
+          "callee_node_type": "identifier",
+          "line": 545
+        },
+        {
+          "callee": "static_cast<size_t>",
+          "callee_node_type": "template_function",
+          "line": 546
+        },
+        {
+          "callee": "UINT32_C",
+          "callee_node_type": "identifier",
+          "line": 550
+        },
+        {
+          "callee": "Fail",
+          "callee_node_type": "identifier",
+          "line": 551
+        },
+        {
+          "callee": "UINT32_C",
+          "callee_node_type": "identifier",
+          "line": 555
+        },
+        {
+          "callee": "Read_U32",
+          "callee_node_type": "identifier",
+          "line": 557
+        },
+        {
+          "callee": "static_cast<size_t>",
+          "callee_node_type": "template_function",
+          "line": 560
+        },
+        {
+          "callee": "Fail",
+          "callee_node_type": "identifier",
+          "line": 564
         },
         {
           "callee": "Estimate_Frame_Count",
           "callee_node_type": "identifier",
-          "line": 544
+          "line": 565
         },
         {
           "callee": "std::move",
           "callee_node_type": "qualified_identifier",
-          "line": 547
+          "line": 568
         }
       ],
-      "declarator": "Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,\n\tconst char **error, bool allow_truncated_data)",
-      "definition_sha256": "8f3535d2222bef37a1017ff0a2dac1014560fef8aae79166e81558ee868c3ed5",
-      "end_byte": 21420,
-      "end_line": 549,
+      "declarator": "Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,\n\tconst char **error, bool allow_truncated_data, bool allow_retail_trailing_content)",
+      "definition_sha256": "fec33ff903ab947d78aa13e17a405daebc4271f65be6368c2be8b17cc3c54cb9",
+      "end_byte": 22601,
+      "end_line": 570,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 429,
+      "line": 445,
       "literal_returns": [
         {
           "expression": "false",
-          "line": 442
+          "line": 458
         },
         {
           "expression": "true",
-          "line": 452
+          "line": 468
         },
         {
           "expression": "true",
-          "line": 548
+          "line": 569
         }
       ],
       "markers": [
         {
-          "line": 489,
+          "line": 510,
           "text": "unsupported"
         }
       ],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        434,
-        442,
-        452,
-        457,
-        460,
-        462,
-        480,
-        483,
-        484,
-        489,
-        499,
+        450,
+        458,
+        468,
+        473,
+        476,
+        478,
+        501,
         504,
-        507,
+        505,
         510,
-        514,
-        518,
-        530,
-        543
+        520,
+        525,
+        528,
+        531,
+        535,
+        539,
+        551,
+        564
       ],
       "parse_has_error": false,
-      "row_id": "10946916c3bebf81e724414ec583b565b363901a39f2e410719ae7c2a29fcb52",
+      "row_id": "f314529cba8df6cde33a1a9f2d966be11af01cbff018d6a8c3ae1dac64fcf2e1",
       "scope": "RenegadeVitaAudio",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate",
         "unsupported_or_todo_marker"
       ],
-      "start_byte": 16090,
+      "start_byte": 16835,
       "status": "unknown"
     },
     {
@@ -20776,200 +20920,216 @@
         {
           "callee": "Decode_Wave_With_Info",
           "callee_node_type": "identifier",
-          "line": 554
+          "line": 575
         }
       ],
       "declarator": "Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,\n\tconst char **error)",
       "definition_sha256": "4f8482f6c3100ab9ee762b6b21b166d6e54aac434b7baac85c79d768f8959018",
-      "end_byte": 21589,
-      "end_line": 555,
+      "end_byte": 22770,
+      "end_line": 576,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 551,
+      "line": 572,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "09cc2d6a812ff05ef0380b7fc3997fb73bbc11853b6ce2bb67c8f67a3a3637ec",
+      "row_id": "f7b0d302eb1d5f01085d001e2c87c1e52645409db08f736c1a9490eb6b9bafce",
       "scope": "RenegadeVitaAudio",
       "signals": [],
-      "start_byte": 21422,
+      "start_byte": 22603,
       "status": "unknown"
     },
     {
       "body_kind": "compound_statement",
-      "body_sha256": "62228eb5cf0ac94b98403e67a21c0f7ff54f157f0fa1a72152c9a5cea4f3c92e",
+      "body_sha256": "6cb964d344d96a8aee4111ab2292195d9f1080922fd45a664ec4589523edae71",
       "calls": [
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 560
+          "line": 581
         },
         {
           "callee": "Is_Mpeg_Image",
           "callee_node_type": "identifier",
-          "line": 562
+          "line": 583
         },
         {
           "callee": "Decode_Mpeg",
           "callee_node_type": "identifier",
-          "line": 562
+          "line": 583
         },
         {
           "callee": "Inspect_Wave",
           "callee_node_type": "identifier",
-          "line": 565
+          "line": 586
+        },
+        {
+          "callee": "Fail",
+          "callee_node_type": "identifier",
+          "line": 594
         },
         {
           "callee": "static_cast<uint64_t>",
           "callee_node_type": "template_function",
-          "line": 577
+          "line": 602
         },
         {
           "callee": "static_cast<uint64_t>",
           "callee_node_type": "template_function",
-          "line": 579
+          "line": 604
         },
         {
           "callee": "static_cast<size_t>",
           "callee_node_type": "template_function",
-          "line": 580
+          "line": 605
         },
         {
           "callee": "std::min<uint64_t>",
           "callee_node_type": "qualified_identifier",
-          "line": 580
+          "line": 605
         },
         {
           "callee": "std::min",
           "callee_node_type": "qualified_identifier",
-          "line": 581
+          "line": 606
         },
         {
           "callee": "output.samples.reserve",
           "callee_node_type": "field_expression",
-          "line": 582
+          "line": 607
         },
         {
           "callee": "Decode_Pcm",
           "callee_node_type": "identifier",
-          "line": 587
+          "line": 612
         },
         {
           "callee": "Decode_Ima",
           "callee_node_type": "identifier",
-          "line": 590
+          "line": 615
         },
         {
           "callee": "Decode_Microsoft_Adpcm",
           "callee_node_type": "identifier",
-          "line": 593
+          "line": 618
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 596
+          "line": 621
         },
         {
           "callee": "output.samples.empty",
           "callee_node_type": "field_expression",
-          "line": 598
+          "line": 623
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 599
+          "line": 625
         },
         {
           "callee": "output.Frame_Count",
           "callee_node_type": "field_expression",
-          "line": 601
+          "line": 627
         },
         {
           "callee": "Saturating_U64_To_U32",
           "callee_node_type": "identifier",
-          "line": 602
+          "line": 628
         },
         {
           "callee": "output.Frame_Count",
           "callee_node_type": "field_expression",
-          "line": 603
-        },
-        {
-          "callee": "Saturating_U64_To_U32",
-          "callee_node_type": "identifier",
-          "line": 604
-        },
-        {
-          "callee": "output.Frame_Count",
-          "callee_node_type": "field_expression",
-          "line": 605
+          "line": 633
         },
         {
           "callee": "output.samples.resize",
           "callee_node_type": "field_expression",
-          "line": 606
+          "line": 634
+        },
+        {
+          "callee": "output.Frame_Count",
+          "callee_node_type": "field_expression",
+          "line": 636
+        },
+        {
+          "callee": "Saturating_U64_To_U32",
+          "callee_node_type": "identifier",
+          "line": 637
+        },
+        {
+          "callee": "output.Frame_Count",
+          "callee_node_type": "field_expression",
+          "line": 638
+        },
+        {
+          "callee": "output.samples.resize",
+          "callee_node_type": "field_expression",
+          "line": 639
         },
         {
           "callee": "static_cast<size_t>",
           "callee_node_type": "template_function",
-          "line": 606
+          "line": 639
         },
         {
           "callee": "static_cast<size_t>",
           "callee_node_type": "template_function",
-          "line": 607
+          "line": 640
         },
         {
           "callee": "std::move",
           "callee_node_type": "qualified_identifier",
-          "line": 609
+          "line": 642
         },
         {
           "callee": "std::move",
           "callee_node_type": "qualified_identifier",
-          "line": 610
+          "line": 643
         }
       ],
       "declarator": "Decode_Wave_With_Info(const uint8_t *data, size_t bytes,\n\tDecodedWave *decoded, WaveInfo *parsed_info, const char **error)",
-      "definition_sha256": "59bd9864151c89a2a53c2937914f7b7db42aae950f0af8277effc042fac38cf3",
-      "end_byte": 24052,
-      "end_line": 612,
+      "definition_sha256": "a744b9edc47621ac2d20c47532161a307f6fe1ffd7769508113f288388740830",
+      "end_byte": 25915,
+      "end_line": 645,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 557,
+      "line": 578,
       "literal_returns": [
         {
           "expression": "false",
-          "line": 565
+          "line": 586
         },
         {
           "expression": "true",
-          "line": 611
+          "line": 644
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        560,
-        562,
-        565,
-        596,
-        599
+        581,
+        583,
+        586,
+        594,
+        621,
+        625
       ],
       "parse_has_error": false,
-      "row_id": "5489e9b444db08a0664a945b166e69268691df680a306007a7272add798a2bac",
+      "row_id": "55e6fe72e8a1846bf3999d7bee2a74432a2983f7c60bbf8d2094dd44ae058513",
       "scope": "RenegadeVitaAudio",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 21591,
+      "start_byte": 22772,
       "status": "unknown"
     },
     {
@@ -20978,22 +21138,22 @@
       "calls": [],
       "declarator": "Is_Mpeg_Media(const uint8_t *data, size_t bytes)",
       "definition_sha256": "2e10e25dfbcaa62d2c8d1caa520a5925e94478debc67b120e7a5020612778ddf",
-      "end_byte": 24263,
-      "end_line": 619,
+      "end_byte": 26126,
+      "end_line": 652,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 614,
+      "line": 647,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "5ad05cce1c1f9d233a36496bccc8231a12ae69e72bfdcfbf090084785cf680d9",
+      "row_id": "45ee8a6578fe5cc76276286c8ef77664e7639bcbd4872b5eb224f4817fb415ea",
       "scope": "RenegadeVitaAudio",
       "signals": [],
-      "start_byte": 24054,
+      "start_byte": 25917,
       "status": "unknown"
     },
     {
@@ -21003,54 +21163,54 @@
         {
           "callee": "static_cast<MemoryMpegPlayback *>",
           "callee_node_type": "template_function",
-          "line": 636
+          "line": 669
         },
         {
           "callee": "std::min",
           "callee_node_type": "qualified_identifier",
-          "line": 637
+          "line": 670
         },
         {
           "callee": "std::memcpy",
           "callee_node_type": "qualified_identifier",
-          "line": 638
+          "line": 671
         },
         {
           "callee": "self.encoded.get",
           "callee_node_type": "field_expression",
-          "line": 638
+          "line": 671
         },
         {
           "callee": "static_cast<mpg123_ssize_t>",
           "callee_node_type": "template_function",
-          "line": 640
+          "line": 673
         }
       ],
       "declarator": "Read(void *opaque, void *destination, size_t count)",
       "definition_sha256": "3c4399aedddb7fbbc230cd5da790b9843ef68debf2abf6c0ab2c089022101ce3",
-      "end_byte": 25104,
-      "end_line": 641,
+      "end_byte": 26967,
+      "end_line": 674,
       "entry_preprocessor_context": [
         {
           "branch": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "branch_line": 621,
+          "branch_line": 654,
           "condition": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "opening_line": 621
+          "opening_line": 654
         }
       ],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 634,
+      "line": 667,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "4568fd53b294a25b0bcee4a10a665a53941751bb9f82c08aed5428116e952572",
+      "row_id": "9e6b0f9d232bdcbab061e0f64569d2ec5e0d8b38f421fea3c8c6ede3182005b2",
       "scope": "RenegadeVitaAudio::MemoryMpegPlayback",
       "signals": [],
-      "start_byte": 24749,
+      "start_byte": 26612,
       "status": "unknown"
     },
     {
@@ -21060,69 +21220,69 @@
         {
           "callee": "static_cast<MemoryMpegPlayback *>",
           "callee_node_type": "template_function",
-          "line": 644
+          "line": 677
         },
         {
           "callee": "static_cast<int64_t>",
           "callee_node_type": "template_function",
-          "line": 646
+          "line": 679
         },
         {
           "callee": "static_cast<int64_t>",
           "callee_node_type": "template_function",
-          "line": 647
+          "line": 680
         },
         {
           "callee": "static_cast<int64_t>",
           "callee_node_type": "template_function",
-          "line": 649
+          "line": 682
         },
         {
           "callee": "static_cast<size_t>",
           "callee_node_type": "template_function",
-          "line": 650
+          "line": 683
         },
         {
           "callee": "static_cast<off_t>",
           "callee_node_type": "template_function",
-          "line": 651
+          "line": 684
         }
       ],
       "declarator": "Seek(void *opaque, off_t offset, int origin)",
       "definition_sha256": "543da07550a4345672743cbf5f05f22cbe34567423ed55b6d8463ae7ec1d4ff3",
-      "end_byte": 25627,
-      "end_line": 652,
+      "end_byte": 27490,
+      "end_line": 685,
       "entry_preprocessor_context": [
         {
           "branch": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "branch_line": 621,
+          "branch_line": 654,
           "condition": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "opening_line": 621
+          "opening_line": 654
         }
       ],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 642,
+      "line": 675,
       "literal_returns": [
         {
           "expression": "-1",
-          "line": 649
+          "line": 682
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        649
+        682
       ],
       "parse_has_error": false,
-      "row_id": "747f19c55bdffd5b599248b6f04b660014bdb678595f507aa0ad073451f7e925",
+      "row_id": "694d349b29b7ac3131ce2b4949e3c8ff383fb5d9fc20a8d3019f69945b9dcf57",
       "scope": "RenegadeVitaAudio::MemoryMpegPlayback",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 25106,
+      "start_byte": 26969,
       "status": "unknown"
     },
     {
@@ -21132,228 +21292,228 @@
         {
           "callee": "mpg123_init",
           "callee_node_type": "identifier",
-          "line": 656
+          "line": 689
         },
         {
           "callee": "encoded.reset",
           "callee_node_type": "field_expression",
-          "line": 658
+          "line": 691
         },
         {
           "callee": "std::memcpy",
           "callee_node_type": "qualified_identifier",
-          "line": 660
+          "line": 693
         },
         {
           "callee": "encoded.get",
           "callee_node_type": "field_expression",
-          "line": 660
+          "line": 693
         },
         {
           "callee": "decoder.reset",
           "callee_node_type": "field_expression",
-          "line": 663
+          "line": 696
         },
         {
           "callee": "mpg123_new",
           "callee_node_type": "identifier",
-          "line": 663
+          "line": 696
         },
         {
           "callee": "mpg123_param",
           "callee_node_type": "identifier",
-          "line": 665
+          "line": 698
         },
         {
           "callee": "decoder.get",
           "callee_node_type": "field_expression",
-          "line": 665
+          "line": 698
         },
         {
           "callee": "mpg123_param",
           "callee_node_type": "identifier",
-          "line": 669
+          "line": 702
         },
         {
           "callee": "decoder.get",
           "callee_node_type": "field_expression",
-          "line": 669
+          "line": 702
         },
         {
           "callee": "mpg123_format_none",
           "callee_node_type": "identifier",
-          "line": 671
+          "line": 704
         },
         {
           "callee": "decoder.get",
           "callee_node_type": "field_expression",
-          "line": 671
+          "line": 704
         },
         {
           "callee": "mpg123_rates",
           "callee_node_type": "identifier",
-          "line": 674
+          "line": 707
         },
         {
           "callee": "mpg123_format",
           "callee_node_type": "identifier",
-          "line": 676
+          "line": 709
         },
         {
           "callee": "decoder.get",
           "callee_node_type": "field_expression",
-          "line": 676
+          "line": 709
         },
         {
           "callee": "mpg123_replace_reader_handle",
           "callee_node_type": "identifier",
-          "line": 677
+          "line": 710
         },
         {
           "callee": "decoder.get",
           "callee_node_type": "field_expression",
-          "line": 677
+          "line": 710
         },
         {
           "callee": "mpg123_open_handle",
           "callee_node_type": "identifier",
-          "line": 678
+          "line": 711
         },
         {
           "callee": "decoder.get",
           "callee_node_type": "field_expression",
-          "line": 678
+          "line": 711
         },
         {
           "callee": "mpg123_getformat",
           "callee_node_type": "identifier",
-          "line": 681
+          "line": 714
         },
         {
           "callee": "decoder.get",
           "callee_node_type": "field_expression",
-          "line": 681
+          "line": 714
         },
         {
           "callee": "mpg123_scan",
           "callee_node_type": "identifier",
-          "line": 687
+          "line": 720
         },
         {
           "callee": "decoder.get",
           "callee_node_type": "field_expression",
-          "line": 687
+          "line": 720
         },
         {
           "callee": "mpg123_length",
           "callee_node_type": "identifier",
-          "line": 688
+          "line": 721
         },
         {
           "callee": "decoder.get",
           "callee_node_type": "field_expression",
-          "line": 688
+          "line": 721
         },
         {
           "callee": "mpg123_seek",
           "callee_node_type": "identifier",
-          "line": 689
+          "line": 722
         },
         {
           "callee": "decoder.get",
           "callee_node_type": "field_expression",
-          "line": 689
+          "line": 722
         },
         {
           "callee": "static_cast<uint32_t>",
           "callee_node_type": "template_function",
-          "line": 690
+          "line": 723
         },
         {
           "callee": "static_cast<uint16_t>",
           "callee_node_type": "template_function",
-          "line": 691
+          "line": 724
         },
         {
           "callee": "static_cast<size_t>",
           "callee_node_type": "template_function",
-          "line": 692
+          "line": 725
         }
       ],
       "declarator": "Open(const uint8_t *data, size_t bytes)",
       "definition_sha256": "56df5d57673718cbc32d0d551681c5a683ef445a5ea5e79b2fe28bb4bdea8330",
-      "end_byte": 27621,
-      "end_line": 694,
+      "end_byte": 29484,
+      "end_line": 727,
       "entry_preprocessor_context": [
         {
           "branch": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "branch_line": 621,
+          "branch_line": 654,
           "condition": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "opening_line": 621
+          "opening_line": 654
         }
       ],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 654,
+      "line": 687,
       "literal_returns": [
         {
           "expression": "false",
-          "line": 657
+          "line": 690
         },
         {
           "expression": "false",
-          "line": 659
+          "line": 692
         },
         {
           "expression": "false",
-          "line": 664
+          "line": 697
         },
         {
           "expression": "false",
-          "line": 670
+          "line": 703
         },
         {
           "expression": "false",
-          "line": 678
+          "line": 711
         },
         {
           "expression": "false",
-          "line": 684
+          "line": 717
         },
         {
           "expression": "false",
-          "line": 687
+          "line": 720
         },
         {
           "expression": "false",
-          "line": 689
+          "line": 722
         },
         {
           "expression": "true",
-          "line": 693
+          "line": 726
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        657,
-        659,
-        664,
-        670,
-        678,
-        684,
-        687,
-        689
+        690,
+        692,
+        697,
+        703,
+        711,
+        717,
+        720,
+        722
       ],
       "parse_has_error": false,
-      "row_id": "43591c0903f95331af5ca1757af26fe16d7f51df546fa93cfc19041af686d2e2",
+      "row_id": "716ea93c75320358ed7d487352273dd5efaa2f9d19df675157ed3f7110b9551b",
       "scope": "RenegadeVitaAudio::MemoryMpegPlayback",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 25637,
+      "start_byte": 27500,
       "status": "unknown"
     },
     {
@@ -21362,29 +21522,29 @@
       "calls": [],
       "declarator": "Frame_Count() const override",
       "definition_sha256": "d67e45373e2fbe254d78cacf0b8b2155bdb48b54d9db9a2c04d3ab6a687e665f",
-      "end_byte": 27682,
-      "end_line": 695,
+      "end_byte": 29545,
+      "end_line": 728,
       "entry_preprocessor_context": [
         {
           "branch": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "branch_line": 621,
+          "branch_line": 654,
           "condition": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "opening_line": 621
+          "opening_line": 654
         }
       ],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 695,
+      "line": 728,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "b615163d454607830b5633d89baa8d62a5e4f79172e7de87dcc529f369a10142",
+      "row_id": "e91aa830d57b77863affcf13e3004512c81f890020d81b66b050a34024cdfcf4",
       "scope": "RenegadeVitaAudio::MemoryMpegPlayback",
       "signals": [],
-      "start_byte": 27623,
+      "start_byte": 29486,
       "status": "unknown"
     },
     {
@@ -21393,29 +21553,29 @@
       "calls": [],
       "declarator": "Sample_Rate() const override",
       "definition_sha256": "939e84ea379b01312098fb53139f477c2323091e126997705f28b773e2c0c5ae",
-      "end_byte": 27738,
-      "end_line": 696,
+      "end_byte": 29601,
+      "end_line": 729,
       "entry_preprocessor_context": [
         {
           "branch": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "branch_line": 621,
+          "branch_line": 654,
           "condition": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "opening_line": 621
+          "opening_line": 654
         }
       ],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 696,
+      "line": 729,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "0f47fbbb70165f6ffe4fa95e3e7767a6726ba73276da75af6789f2a1efb479c7",
+      "row_id": "58677931cbc270caf08f5b59014833bc7896fa8f56b2fe64d0b68117ca816c54",
       "scope": "RenegadeVitaAudio::MemoryMpegPlayback",
       "signals": [],
-      "start_byte": 27684,
+      "start_byte": 29547,
       "status": "unknown"
     },
     {
@@ -21424,29 +21584,29 @@
       "calls": [],
       "declarator": "Channels() const override",
       "definition_sha256": "51e84b7a63ae0a77c3439123815ab8d55fafcea3bf5af81944a24e8503936564",
-      "end_byte": 27795,
-      "end_line": 697,
+      "end_byte": 29658,
+      "end_line": 730,
       "entry_preprocessor_context": [
         {
           "branch": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "branch_line": 621,
+          "branch_line": 654,
           "condition": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "opening_line": 621
+          "opening_line": 654
         }
       ],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 697,
+      "line": 730,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "93ecc06f19617accb70e75cedaf859dfea7356e8da204948b2829d7c7f8eca44",
+      "row_id": "8c652c56ae79bd7b3d273f3740017d40030f3e5aa47ca8d99ae5d6129540e047",
       "scope": "RenegadeVitaAudio::MemoryMpegPlayback",
       "signals": [],
-      "start_byte": 27740,
+      "start_byte": 29603,
       "status": "unknown"
     },
     {
@@ -21455,29 +21615,29 @@
       "calls": [],
       "declarator": "PCM_Storage_Bytes() const override",
       "definition_sha256": "f4f009aeb11a51e5f1f1959f3aa1fe192d6ab9334cc64ccd52597193099a6f20",
-      "end_byte": 27881,
-      "end_line": 698,
+      "end_byte": 29744,
+      "end_line": 731,
       "entry_preprocessor_context": [
         {
           "branch": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "branch_line": 621,
+          "branch_line": 654,
           "condition": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "opening_line": 621
+          "opening_line": 654
         }
       ],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 698,
+      "line": 731,
       "literal_returns": [],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
-      "row_id": "d30e842aa69c49346752cef96a62527f043e186958d11b995325c9ad4c60734f",
+      "row_id": "1bb2bf5f147cc45c7b7562669d97919388fc4b0e46ff4260745ab78115566e1d",
       "scope": "RenegadeVitaAudio::MemoryMpegPlayback",
       "signals": [],
-      "start_byte": 27797,
+      "start_byte": 29660,
       "status": "unknown"
     },
     {
@@ -21487,85 +21647,85 @@
         {
           "callee": "mpg123_seek",
           "callee_node_type": "identifier",
-          "line": 710
+          "line": 743
         },
         {
           "callee": "decoder.get",
           "callee_node_type": "field_expression",
-          "line": 710
+          "line": 743
         },
         {
           "callee": "static_cast<off_t>",
           "callee_node_type": "template_function",
-          "line": 710
+          "line": 743
         },
         {
           "callee": "static_cast<off_t>",
           "callee_node_type": "template_function",
-          "line": 711
+          "line": 744
         },
         {
           "callee": "mpg123_read",
           "callee_node_type": "identifier",
-          "line": 715
+          "line": 748
         },
         {
           "callee": "decoder.get",
           "callee_node_type": "field_expression",
-          "line": 715
+          "line": 748
         }
       ],
       "declarator": "Sample(size_t frame, uint16_t channel) override",
       "definition_sha256": "5a480e312f6a55a977d877acdb4d50b0d40b962245c11087895eda849047bb86",
-      "end_byte": 28952,
-      "end_line": 722,
+      "end_byte": 30815,
+      "end_line": 755,
       "entry_preprocessor_context": [
         {
           "branch": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "branch_line": 621,
+          "branch_line": 654,
           "condition": "#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)",
-          "opening_line": 621
+          "opening_line": 654
         }
       ],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 699,
+      "line": 732,
       "literal_returns": [
         {
           "expression": "0",
-          "line": 701
+          "line": 734
         },
         {
           "expression": "0",
-          "line": 711
+          "line": 744
         },
         {
           "expression": "0",
-          "line": 717
+          "line": 750
         },
         {
           "expression": "0",
-          "line": 719
+          "line": 752
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        701,
-        703,
-        711,
-        717,
-        719
+        734,
+        736,
+        744,
+        750,
+        752
       ],
       "parse_has_error": false,
-      "row_id": "fbe200a58d694969260271187b22ee167843c2dc10051df3f39a75eb9668957b",
+      "row_id": "4daaf2aee68c2b3c13b872055dd4c1a494c22c4a12cc5722546bebdc35c1bf4f",
       "scope": "RenegadeVitaAudio::MemoryMpegPlayback",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 27883,
+      "start_byte": 29746,
       "status": "unknown"
     },
     {
@@ -21575,57 +21735,57 @@
         {
           "callee": "Is_Mpeg_Media",
           "callee_node_type": "identifier",
-          "line": 730
+          "line": 763
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 731
+          "line": 764
         },
         {
           "callee": "playback->Open",
           "callee_node_type": "field_expression",
-          "line": 737
+          "line": 770
         },
         {
           "callee": "Fail",
           "callee_node_type": "identifier",
-          "line": 743
+          "line": 776
         }
       ],
       "declarator": "Open_Mpeg_Playback(const uint8_t *data,\n\tsize_t bytes, const char **error)",
       "definition_sha256": "2328d696ee2811c6df8cc809be7161c5a2724985db02b3043728d7a852b136de",
-      "end_byte": 29554,
-      "end_line": 745,
+      "end_byte": 31417,
+      "end_line": 778,
       "entry_preprocessor_context": [],
       "evidence_class": "source_syntax",
       "file": "port/audio/vita/renegade_wave_decoder.cpp",
       "kind": "port_function",
-      "line": 727,
+      "line": 760,
       "literal_returns": [
         {
           "expression": "nullptr",
-          "line": 732
+          "line": 765
         },
         {
           "expression": "nullptr",
-          "line": 744
+          "line": 777
         }
       ],
       "markers": [],
       "node_type": "function_definition",
       "nonfinal_return_lines": [
-        732,
-        739
+        765,
+        772
       ],
       "parse_has_error": false,
-      "row_id": "82f67f806e91e0a61ce2b9ef1de1571a3d699ee6dd6434582044af9bb9c3b544",
+      "row_id": "1737605a4d093dc7830c42c54ed1271930a759991e8d9a1be966f71d7c8de7bb",
       "scope": "RenegadeVitaAudio",
       "signals": [
         "literal_return",
         "nonfinal_return_candidate"
       ],
-      "start_byte": 28966,
+      "start_byte": 30829,
       "status": "unknown"
     },
     {
@@ -57079,6 +57239,7 @@
           "line": 1468
         }
       ],
+      "classification_evidence_class": "source_review",
       "declarator": "DX8Wrapper::Set_Render_Target(TextureClass *texture)",
       "definition_sha256": "62144930ee0d035adf1018103ab2efd576ebf5e38b934840d636ba1eb081ca87",
       "end_byte": 51804,
@@ -57100,11 +57261,25 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Restore original allocation/binding/render/restore ownership as one cluster; verify failure paths, native projected-shadow pixels and matching physical artifacts.",
+        "affected_scope": [
+          "Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution."
+        ],
+        "behavior": "Reports a rejected indexed submission for nonnull targets; performs no offscreen framebuffer or viewport/depth transition. Null restore is also a no-op.",
+        "callers": [
+          "staging/ww3d2/texproject.cpp:1123",
+          "staging/ww3d2/texproject.cpp:1142",
+          "staging/wwphys/pscene_projectors.cpp:913",
+          "staging/wwphys/pscene_projectors.cpp:1008"
+        ],
+        "original_owner": "DX8Wrapper render-target binding and default-target restoration"
+      },
       "row_id": "5f7fe47c351fbbce223ae64c72330b4937ea7f11fbfa3e9dfdcf315f04a5f695",
       "scope": "",
       "signals": [],
       "start_byte": 51603,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -57116,6 +57291,7 @@
           "line": 1476
         }
       ],
+      "classification_evidence_class": "source_review",
       "declarator": "DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *surface, bool)",
       "definition_sha256": "7ddd10510e75b64da7f3d6e089315eec930399e8811c717297a29b573a01cc7d",
       "end_byte": 52013,
@@ -57137,16 +57313,31 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Restore original allocation/binding/render/restore ownership as one cluster; verify failure paths, native projected-shadow pixels and matching physical artifacts.",
+        "affected_scope": [
+          "Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution."
+        ],
+        "behavior": "Reports a rejected indexed submission for nonnull targets; performs no offscreen framebuffer or viewport/depth transition. Null restore is also a no-op.",
+        "callers": [
+          "staging/ww3d2/texproject.cpp:1123",
+          "staging/ww3d2/texproject.cpp:1142",
+          "staging/wwphys/pscene_projectors.cpp:913",
+          "staging/wwphys/pscene_projectors.cpp:1008"
+        ],
+        "original_owner": "DX8Wrapper render-target binding and default-target restoration"
+      },
       "row_id": "c2a4b67141ae1e19ac7944fcba650e5d748d3dd3f9a19de205081b4352df0c96",
       "scope": "",
       "signals": [],
       "start_byte": 51806,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "7699aeac7d126e52cfd493001b7b17e4dacfe300dc34b37425f432a15ed57fb5",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "DX8Wrapper::Set_Light_Environment(LightEnvironmentClass *)",
       "definition_sha256": "92a407e6820d2b829b590cd8791434b8d05360473758908a264dd40a0fd16174",
       "end_byte": 52221,
@@ -57168,13 +57359,24 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Reconcile procedural material pass restoration with light state. Verify original ambient/directional results, normals, color sources and native pixels; no broad lighting-loss claim from this empty method.",
+        "affected_scope": [
+          "Original procedural material pass path; native material passes already have a separate omission. Ordinary mesh CPU lighting is a distinct route requiring its own equivalence tests."
+        ],
+        "behavior": "Empty boundary body: original equivalent-ambient and directional-light state are not installed here. Native base mesh submission separately reads RenderInfoClass light_environment for CPU material colors; this stub alone does not establish all lighting is missing.",
+        "callers": [
+          "staging/ww3d2/mesh.cpp:875"
+        ],
+        "original_owner": "DX8Wrapper light-environment device-state installation"
+      },
       "row_id": "04f07b87b897afa20ba0946f3ea63a6221756fbda580bba8a3fbe01f6cc59840",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 52015,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -76446,6 +76648,7 @@
           "line": 125
         }
       ],
+      "classification_evidence_class": "source_review",
       "declarator": "DX8Wrapper::Set_Render_Target(TextureClass *texture)",
       "definition_sha256": "62144930ee0d035adf1018103ab2efd576ebf5e38b934840d636ba1eb081ca87",
       "end_byte": 3914,
@@ -76460,11 +76663,25 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Restore original allocation/binding/render/restore ownership as one cluster; verify failure paths, native projected-shadow pixels and matching physical artifacts.",
+        "affected_scope": [
+          "Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution."
+        ],
+        "behavior": "Reports a rejected indexed submission for nonnull targets; performs no offscreen framebuffer or viewport/depth transition. Null restore is also a no-op.",
+        "callers": [
+          "staging/ww3d2/texproject.cpp:1123",
+          "staging/ww3d2/texproject.cpp:1142",
+          "staging/wwphys/pscene_projectors.cpp:913",
+          "staging/wwphys/pscene_projectors.cpp:1008"
+        ],
+        "original_owner": "DX8Wrapper render-target binding and default-target restoration"
+      },
       "row_id": "c224905cd9f95da9c2ebd16432a3af9253cda5a1e8787668f0294ddb344636a4",
       "scope": "",
       "signals": [],
       "start_byte": 3713,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -76476,6 +76693,7 @@
           "line": 133
         }
       ],
+      "classification_evidence_class": "source_review",
       "declarator": "DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *surface, bool)",
       "definition_sha256": "7ddd10510e75b64da7f3d6e089315eec930399e8811c717297a29b573a01cc7d",
       "end_byte": 4123,
@@ -76490,16 +76708,31 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Restore original allocation/binding/render/restore ownership as one cluster; verify failure paths, native projected-shadow pixels and matching physical artifacts.",
+        "affected_scope": [
+          "Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution."
+        ],
+        "behavior": "Reports a rejected indexed submission for nonnull targets; performs no offscreen framebuffer or viewport/depth transition. Null restore is also a no-op.",
+        "callers": [
+          "staging/ww3d2/texproject.cpp:1123",
+          "staging/ww3d2/texproject.cpp:1142",
+          "staging/wwphys/pscene_projectors.cpp:913",
+          "staging/wwphys/pscene_projectors.cpp:1008"
+        ],
+        "original_owner": "DX8Wrapper render-target binding and default-target restoration"
+      },
       "row_id": "832846a6edb1b57cc49fc15d9bb0adba9aa758c42731bc84496e11aa22732545",
       "scope": "",
       "signals": [],
       "start_byte": 3916,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
       "body_sha256": "3f242511664c8120e9ce551c6382e6dd40d8ea833c632850da678d10d127fdc8",
       "calls": [],
+      "classification_evidence_class": "source_review",
       "declarator": "DX8Wrapper::Set_Light_Environment(LightEnvironmentClass *)",
       "definition_sha256": "c1ca5d416fa6b90dc1f0cfa72c580367b3394fd914a9bc53aaf2f722d29c60c5",
       "end_byte": 4394,
@@ -76514,13 +76747,24 @@
       "node_type": "function_definition",
       "nonfinal_return_lines": [],
       "parse_has_error": false,
+      "review": {
+        "acceptance_open": "Reconcile procedural material pass restoration with light state. Verify original ambient/directional results, normals, color sources and native pixels; no broad lighting-loss claim from this empty method.",
+        "affected_scope": [
+          "Original procedural material pass path; native material passes already have a separate omission. Ordinary mesh CPU lighting is a distinct route requiring its own equivalence tests."
+        ],
+        "behavior": "Empty boundary body: original equivalent-ambient and directional-light state are not installed here. Native base mesh submission separately reads RenderInfoClass light_environment for CPU material colors; this stub alone does not establish all lighting is missing.",
+        "callers": [
+          "staging/ww3d2/mesh.cpp:875"
+        ],
+        "original_owner": "DX8Wrapper light-environment device-state installation"
+      },
       "row_id": "f97a16d51da934d80afe85ec11dbe24c1ce9b4585640a6df8b5596fb71d1901d",
       "scope": "",
       "signals": [
         "empty_body"
       ],
       "start_byte": 4125,
-      "status": "unknown"
+      "status": "stubbed_or_noop"
     },
     {
       "body_kind": "compound_statement",
@@ -127300,8 +127544,8 @@
     "by_status": {
       "boundary_replaced": 1,
       "disabled_by_port_guard": 6,
-      "stubbed_or_noop": 39,
-      "unknown": 3485
+      "stubbed_or_noop": 54,
+      "unknown": 3470
     },
     "patch_files": 310,
     "rows": 3531,

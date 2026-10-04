@@ -1,5 +1,34 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Parameter syntax beyond live bodies — 2026-10-04
+
+All 45 Scripts.dsp translation units and all 45 supplied Scripts headers now
+have a separate lexical parameter-method denominator. It contains 1,285 syntax
+candidates: 1,201 reconcile with the prior live-body inventory and 84 fall
+outside it. Fourteen are definition candidates; the remaining 1,271 include
+calls and declarations and must not all be claimed as executable calls.
+
+The 84 additional candidates include 51 in Test_Cinematic.cpp: 29 next-parameter,
+19 first-parameter and three command-parameter expressions, including parser
+definitions. The other 33 are shared scripts.cpp/parser or header syntax.
+Get_Command_Parameter and its first/next wrappers consume cinematic commands,
+not ScriptImpClass's named descriptor arguments. Their runtime bounds and
+semantics remain a separate requirement even when script descriptors match.
+
+`python3 -m tools.audit_script_parameter_surface` reproduces this denominator
+from pristine source and the pinned read inventory. Public receipt:
+`reports/generated/sweeps/script_parameter_surface.json`. It retains file,
+line, column, method, syntax category, source/header kind and body attribution;
+parent/source/project hashes bind the evidence. Twenty-one focused tests pass.
+The consolidated register contains 45,919 overlapping records, with 45,655
+unknowns. Overlapping body rows are evidence records, not new distinct defects.
+
+Headers are scanned independently; actual include selection, macro expansion,
+nonconstant conditional branches and overloads remain open. Source-line/method
+attribution is lexical, not AST proof. No parser runtime, retail cinematic,
+callback, native or visual acceptance is claimed. Runtime source and retained
+compiled artifacts are unchanged; no emulator/device/adjacent D3D action.
+
 ## Original parameter API execution — 2026-10-04
 
 Fourteen synthetic cases pass through the retained original host APIs after

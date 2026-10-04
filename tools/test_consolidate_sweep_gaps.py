@@ -5,6 +5,16 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_parameter_surface_separates_definitions(self):
+        value={'total':1,'counts':{'unknown':1},'categories':{'outside_live_body_read_inventory':1},
+               'syntax_kinds':{'definition_candidate':1},
+               'rows':[{'status':'unknown','coverage':'outside_live_body_read_inventory','syntax_kind':'definition_candidate'}]}
+        result=consolidate([('script_parameter_surface',json.dumps(value).encode())])
+        self.assertEqual(result['rows'][0]['cluster'],'scripts')
+        value['syntax_kinds']={}
+        with self.assertRaisesRegex(ValueError,'partition'):
+            consolidate([('script_parameter_surface',json.dumps(value).encode())])
+
     def test_host_parameter_execution_receipt_partition(self):
         value={'total':1,'matched':1,'rows':[{'status':'unknown','matches':True}]}
         result=consolidate([('host_script_parameters',json.dumps(value).encode())])

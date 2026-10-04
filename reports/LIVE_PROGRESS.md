@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Parameter-method surface breadth — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:45 shipped units and45 headers yield1,285 parameter syntax candidates;
+1,201 match prior live-body reads and84 are additional helper/parser/header syntax.
+Evidence:21 focused tests pass; source/project/parent hashes retained. Definitions
+and declarations are distinguished from call candidates; no runtime proof added.
+Next: cinematic parser bounds/command semantics and startup game modes.
+Blocker:none for engineering; native acceptance remains open.
+No runtime source change, device action or emulator launch.
+See [script ledger](SCRIPT_LAYER_SWEEP.md).
+
 ## Original script parameter execution — 2026-10-04
 
 Renegade Vita — v3.5 active

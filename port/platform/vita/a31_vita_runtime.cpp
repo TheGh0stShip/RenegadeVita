@@ -2627,7 +2627,7 @@ bool Is_Start_Pressed()
 
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 bool Run_Original_Gameplay_Pause_Menu(MenuGameModeClass2 &menu_mode,
-	WWAudioClass *audio, uint64_t sync_origin, bool &pause_observed,
+	WWAudioClass *audio, bool &pause_observed,
 	bool &resume_observed, bool death_dialog = false)
 {
 	GameModeClass *combat_mode = GameModeManager::Find("Combat");
@@ -2648,8 +2648,7 @@ bool Run_Original_Gameplay_Pause_Menu(MenuGameModeClass2 &menu_mode,
 		!A4_Frontend_Get_Trace().reload_requested &&
 		!Renegade_Vita_Input_Route_Replay_Exit_Requested() &&
 		(!death_dialog || DialogMgrClass::Get_Dialog_Count() > 0)) {
-		WW3D::Sync(static_cast<uint32_t>(
-			sceKernelGetProcessTimeWide() / 1000ULL - sync_origin));
+		// Original TimeManager owns WW3D animation time, including paused ticks.
 		TimeManager::Update();
 		Input::Update();
 		A4_Frontend_Pump_WWUI_Key_Transitions();
@@ -4424,7 +4423,6 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				if (capture_pixels == NULL) {
 					capture_pixels = static_cast<uint8_t *>(malloc(kCaptureBytes));
 				}
-				const uint64_t sync_origin = sceKernelGetProcessTimeWide() / 1000ULL;
 				A35_Campaign_Flight_Record_Event("lifecycle",
 					"interactive_session_ready", result.frames, sceKernelGetProcessTimeWide(),
 					"original player/session ready; entering campaign frame loop");
@@ -4490,7 +4488,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					if (!demo_ending.Timeline.Active())
 #endif
 					{
-						if (!Run_Original_Gameplay_Pause_Menu(frontend_menu_mode, audio, sync_origin,
+						if (!Run_Original_Gameplay_Pause_Menu(frontend_menu_mode, audio,
 							result.pause_observed, result.resume_observed)) {
 							const A4FrontendTrace request = A4_Frontend_Get_Trace();
 							if (request.reload_requested) {
@@ -4512,8 +4510,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					break;
 				}
 				const uint64_t frame_begin = sceKernelGetProcessTimeWide();
-				WW3D::Sync(static_cast<uint32_t>(
-					sceKernelGetProcessTimeWide() / 1000ULL - sync_origin));
+				// The original simulation frame advances WW3D through TimeManager.
+				// A second wall-clock writer can move animation time backward.
 #if RENEGADE_VITA_M00_DEMO
 				if (demo_ending.Timeline.Active()) {
 					demo_ending.Timeline.Update(frame_begin);
@@ -4661,7 +4659,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						A30_Vita_Log("A4 death: original popup active dialogs=%d; entering WWUI pump\n",
 							DialogMgrClass::Get_Dialog_Count());
 						if (!Run_Original_Gameplay_Pause_Menu(frontend_menu_mode, audio,
-							sync_origin, result.pause_observed, result.resume_observed, true)) {
+							result.pause_observed, result.resume_observed, true)) {
 							A30_Vita_Log("A4 death: original popup requested exit/reload\n");
 							result.start_exit_requested = true;
 							break;

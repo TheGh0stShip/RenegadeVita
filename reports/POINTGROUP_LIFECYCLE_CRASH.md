@@ -95,3 +95,12 @@ It records original tutorial rendering and subsequent conversation startup.
 The first simulation/render frame still took approximately983 ms; this is
 an unresolved startup cost, not a frame-rate or visual correctness claim.
 The projected shader path was not proven to execute by this test.
+
+Continued manual play is retained in `runtime-weapons.log`, SHA-256
+`4b142fd1b5814a35761e5c8f501a9444cd9f8b8d3bf1a4e406c6601d1f02bdf8`.
+The user reported that it was playing well and progressed toward pistol
+acquisition. Subsequent original-engine logs show the first two objectives
+at status1 (`STATUS_ACCOMPLISHED`, verified in `combat/objectives.h`), active
+Sydney dialogue, pistol shots reaching fired_total9, and Gunner's sniper-rifle
+lesson with that weapon selected. This is partial manual tutorial progression,
+not mission completion, a visual accuracy audit or proof of every weapon path.

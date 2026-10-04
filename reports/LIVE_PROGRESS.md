@@ -1,6 +1,51 @@
 # Live engineering progress
 
+## Sniper scope binding — 2026-10-04
+
+Dev232 removes the Vita override that moved original UseWeapon from L to
+Triangle after the original secondary-fire setter bound both actions to L.
+Triangle remains Action for interactions; D-pad Up/Down remains scope zoom.
+A compiled regression uses the actual original setter and Vita assignments
+and verifies those bindings. All 500 host tests pass, followed by six ARM
+compile/link and seven package actions. Vita3K installed hashes match without
+launch. The physical dev230 run remains untouched. Scope behavior
+on corrected Vita/PSTV hardware remains unverified.
+
+Evidence: `staging/combat/input.cpp` couples secondary fire to UseWeapon and
+keeps secondary fire held while UseWeapon uses BUTTON_HIT. Original
+`staging/combat/soldier.cpp` toggles SNIPING_FLAG when the selected weapon can
+snipe; the same weapon-use action detonates C4. These original semantics are
+preserved. `tools/test_vita_camera_input_contract.py` compiles the actual
+original setter with production Vita assignments; the earlier override fails
+its L-binding assertion. Hardware checks still require one toggle per L edge,
+no repeated toggles while held, release/repress toggling, zoom while scoped,
+Triangle interactions, and C4 detonation. First full dev232 validation failed
+under tracer because LeakSanitizer cannot run under ptrace, plus the stale
+Triangle expectation; that expectation is corrected and sanitized validation
+passed outside the tracer with sanitizers enabled.
+
+## Animation clock regression — 2026-10-04
+
+The user observed occasional smoke-stack light-cycle restarts during dev230
+play. Source inspection found a second native WW3D clock writer before the
+original TimeManager advancement, including pause. The actual original
+animation method reproduces1,536 backward events/resets over4,096 irregular
+frames; original-only ownership passes pause/rollover checks. Dev231 removes
+the duplicate writes and passes two focused tests. Full host/ARM/package
+checks pass (499 host tests, five ARM actions, seven package actions), with
+Vita3K installed hashes verified without launch. The physical dev230 run remains untouched; the specific
+light's corrected behavior is unverified. See [clock evidence](ANIMATION_CLOCK_OWNERSHIP.md).
+
 ## Dev230 passes prior crash checkpoint — 2026-10-04
+
+Continued manual testing: the user reports gameplay is working well. The
+user subsequently reports reaching Mobius while continuing the tutorial;
+this is user-observed progression, not a completed tutorial acceptance gate.
+The
+retained log shows movement/ladder use, streamed Logan/Sydney dialogue, the
+first two original objectives accomplished, nine pistol shots and Gunner's
+sniper-rifle lesson. These are partial progression checkpoints; mission
+completion and broader correctness/soak remain open. Dev230 remains installed.
 
 Installed SELF hash matches dev230. The original movies/menu route completed;
 manual Cross entered Tutorial after acknowledged automated taps failed to

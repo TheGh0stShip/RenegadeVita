@@ -1,5 +1,20 @@
 # Renegade Vita port status
 
+2026-10-04 Dev232 restores L for original edge-triggered weapon use/sniper
+scope, preserving Triangle Action and D-pad zoom. Compiled original-setter
+regression and all 500 host tests pass; ARM/package checks and Vita3K installed
+hash verification pass without launch. Dev230 remains running
+on Vita, with corrected scope behavior not yet physically tested.
+
+2026-10-04 Dev231 corrects duplicate WW3D clock writes in native gameplay and
+pause, preserving original TimeManager ownership. The original animation
+method reproduces the old reset defect under irregular frames; two focused
+checks pass after correction. The user-reported smoke-stack light restart
+remains physically unverified. Dev230 continues its manual tutorial test;
+dev231 passes 499 host tests and ARM/package checks; Vita3K installed hashes
+match without launch. See
+[animation clock evidence](ANIMATION_CLOCK_OWNERSHIP.md).
+
 2026-10-04 Dev230 physical repeat reached Logan's conversation, confirmed by
 the user and original `MTU_LOGAN_START` runtime events. The prior first-frame
 particle-table crash did not recur before that checkpoint. Manual menu input

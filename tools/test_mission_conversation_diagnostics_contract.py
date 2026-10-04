@@ -148,7 +148,8 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_NEXT_WEAPON, DIK_RIGHT);", controls)
         self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ZOOM_IN, DIK_UP);", controls)
         self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_ZOOM_OUT, DIK_DOWN);", controls)
-        self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, DIK_E);", controls)
+        self.assertNotIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, DIK_E);", controls)
+        self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRE_WEAPON_SECONDARY,\n\t\tDirectInput::BUTTON_JOYSTICK_A);", controls)
         self.assertIn(
             "INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE, 0",
             controls,

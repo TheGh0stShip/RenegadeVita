@@ -565,7 +565,7 @@ void A31_Interactive_Configure_Vita_Controls()
 		DirectInput::BUTTON_JOYSTICK_B);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_FIRE_WEAPON_SECONDARY,
 		DirectInput::BUTTON_JOYSTICK_A);
-	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, DIK_E);
+	// Original secondary-fire setter also binds edge-triggered UseWeapon (scope).
 	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, 0);
 }
 

@@ -1,4 +1,34 @@
 {
+  "sniper_scope_20261004": {
+    "candidate": "A3.5-dev232",
+    "state": "HOST_ARM_PACKAGE_PASS_PHYSICAL_PENDING",
+    "host_tests_passed": 500,
+    "arm_compile_link_actions": 6,
+    "package_actions": 7,
+    "vita3k_installed_hash_verified": true,
+    "vita3k_launched": false,
+    "elf_sha256": "bcd6e1d3ad1b2a0298791f6fedda15298c58ce203e5a847434c5c8f188b37e6a",
+    "self_sha256": "24f7fcc15749d7f5df32fde1afe2d50b341912c211e3ebe30eaf4af0e119fc91",
+    "vpk_sha256": "18587a91d63ee8b304feba9144d5cca35b504ab572f9be7388ad2183c7a5dfc5",
+    "camera_input_tests_passed": 3,
+    "physical_verified": false,
+    "physical_running_candidate": "A3.5-dev230"
+  },
+  "animation_clock_20261004": {
+    "candidate": "A3.5-dev231",
+    "physical_observation_candidate": "A3.5-dev230",
+    "physical_observation": "occasional power-plant smoke-stack light animation restarts; gameplay usable",
+    "host_original_animation_frames": 4096,
+    "superseded_schedule_backward_events": 1536,
+    "superseded_schedule_resets": 1536,
+    "focused_tests_passed": 2,
+    "state": "HOST_ARM_PACKAGE_PASS_PHYSICAL_PENDING",
+    "host_tests_passed": 499,
+    "arm_compile_link_actions": 5,
+    "package_actions": 7,
+    "vita3k_installed_hash_verified": true,
+    "specific_light_fix_physically_verified": false
+  },
   "pointgroup_lifecycle_20261004": {
     "candidate_failed_physical": "A3.5-dev229",
     "failure": "tutorial crash before Logan conversation",
@@ -18,6 +48,7 @@
     "vita3k_installed_hash_verified": true,
     "vita3k_launched": false,
     "physical_repeat_checkpoint": "Logan conversation started; user observation and MTU_LOGAN_START log agree",
+    "physical_manual_progression": "first two original objectives accomplished; pistol fired_total9; Gunner sniper-rifle lesson started",
     "automated_input_repeat": "RPC acknowledged; no effective menu activation observed; manual input used",
     "state": "HOST_ARM_PACKAGE_PASS_PHYSICAL_PREVIOUS_CRASH_CHECKPOINT_PASSED",
     "physical_gameplay_accepted": false

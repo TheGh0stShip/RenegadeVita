@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Shared retail MIX text transport — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: original host FileFactory/MIX plus text commands match all 283 unique
+shared text members against archive line hashes/counts. Public metadata only.
+Evidence: bounded debugger run and four reference/boundary tests pass.
+Next: per-map controls, original cinematic dispatch and startup integration.
+Blocker: none for source work. No native/playback acceptance or device action.
+
 ## Original text-file command boundary — 2026-10-04
 
 Renegade Vita — v3.5 active

@@ -1,0 +1,2284 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_original_mix_text_command_execution",
+  "binary_sha256": "03d9be8e712794b8ef968a6d93dc4657f54b071cb7a5a43d665025c3e1494f34",
+  "probe_sha256": "f7ee12e23ed326f8cdc3879be6ff39882d0e1649fcfa0916dc31da1feb557bd7",
+  "archive_sha256": {
+    "always2.dat": "6cec7388c51b5b8591d8aa0cce974243621701990576574eda28dcd03c5e1611",
+    "always.dbs": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+    "always.dat": "f1fa13ed10d0b09fea999660cff71dc784a01a22cdc3e4f0041720ca67dfa29a"
+  },
+  "total": 283,
+  "matched": 283,
+  "rows": [
+    {
+      "member": "a-10_1.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "061101a98e9d272d7c170ff0d34bd35a428bbb40a7e13ded07ce808f785991c6",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "a-10_2.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "02d4b7f642d6a16d08902c7acaba3a76d0c4b4e54bf8bcdf234f0be86241f8c2",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "a-10_3.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "9408b603a0dee040a1b61248e5755b7cfda2713cb96c2827381512898bff2616",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "a-10_4.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "2504f619c6248c94f754e281884ed0157b5002ce1dd69be0e0cf61ca215c46dc",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "a-10_5.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "31d51218718ff9fa98f064b4647fadd43e3625321c0c89c617025bb4cb9f5b97",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "a-10_6.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "9746fc37d25ff036e70166965e5ac28ac0ff5e3d689aa50337e179d55783192c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "c130_1.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "9aaddd2883a9dd3a2efcc2eb4b6fd81803815130a9a410a4c10aec81dbd9d067",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "c130_2.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "b71a1b7055d7e842e2bbfd6fa7a6e38655750fb94a7a7407d4cb665b63588218",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "chinook_1.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "bdf9fae919da06db4c91b75e22f930da8be614daaa2c6d37da744f5dda91cbc9",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "chinook_2.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "f73a454d8c08dbd67a49e75f62b38b827beff990a95044e3deb3de02a3487425",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "chinooktest.txt",
+      "opened": true,
+      "lines": 111,
+      "sha256": "0c5a7389e9d9eb7276ff3a3d9ab9bc8ae9c44128a7169927c241aac10caff139",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "cnc_c130drop.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "670c5cc5644aa9d9690a53bb82c6b1327ddd9d78a5e3ff19097ea9248f9ef4b0",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "comanche_1.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "75946fa01bc53ec8e371be4a2846614a9d96b70d620feafdf4fda9c24eb412ac",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "comanche_2.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "aea1736248baa7eb976c8ec857248e15b48f69d54d171722b453b1f1102631e1",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "comanche_3.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "bf76a66e7590a0b059bebfc789b8058b6fe76d654aac17543c820b185438c594",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "comanche_4.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "e881c0b9b65d1a0d69f3c435fe28855cb65ce2674ecf06bbc7de7be768f71e13",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "comanche_5.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "5848839178c1f1fa111fcc071e055b56bbd9a166bd9fdbad2974936645909435",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "credits.txt",
+      "opened": true,
+      "lines": 568,
+      "sha256": "c75f8cb1fddfdd2795c3daa88c5902015aadcd78c6dc2121efebd3650ae6dd0b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "flyover.txt",
+      "opened": true,
+      "lines": 58,
+      "sha256": "e08d51e7962fdafd9dead3215242224a4353e25dc04c15473dbd4301d60c5a0c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "gamemodes.txt",
+      "opened": true,
+      "lines": 134,
+      "sha256": "061d857a9cdafe6115ef10a3c7de1033617f685a2e56f8652b1ae37f3ee8be95",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m05_xg_vehicledrop2.txt",
+      "opened": true,
+      "lines": 86,
+      "sha256": "bd90e4dcde8dbbf7f2d8edf90917b1f92629819fdd321694f11ed6e24a5166b0",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m05_xg_vehicledrop3.txt",
+      "opened": true,
+      "lines": 88,
+      "sha256": "b81aca40915a377196b24b6756c00f311c5900844dd23d5ec676caf3961d6130",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m05_xg_vehicledrop4.txt",
+      "opened": true,
+      "lines": 87,
+      "sha256": "68f5ad8ccedfec8ecce21e8b84e89f2310682a1c065ce71f9ac0b990aca7b441",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m05_xg_vehicledrop5.txt",
+      "opened": true,
+      "lines": 87,
+      "sha256": "7eec385d6ac85f9b4958943ddfde910aa91f67a1b7c876f73de58fb5992ff774",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m05_xg_vehicledrop6.txt",
+      "opened": true,
+      "lines": 87,
+      "sha256": "d52b09243eccd736fe0e7b4252976b2b2f2933fd7b40facb2f52f60f85ff58d8",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m06_xg_ev2_1.txt",
+      "opened": true,
+      "lines": 55,
+      "sha256": "d971055b04f351a0282a005865ec1c44b2ab855e56e61023aca0fd8c5a011f16",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m06_xg_ev4.txt",
+      "opened": true,
+      "lines": 56,
+      "sha256": "915d2bdac0e3ff40a243181685be312aafeb89ba988f2ceb610a31dd9b4537dd",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m06_xg_ev4_1.txt",
+      "opened": true,
+      "lines": 56,
+      "sha256": "915d2bdac0e3ff40a243181685be312aafeb89ba988f2ceb610a31dd9b4537dd",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m07_xg_ev3_1.txt",
+      "opened": true,
+      "lines": 55,
+      "sha256": "379c75d955bda466b45c30efbe6379a38e1df2e34a7f3ff638f31efde610a97f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m07_xg_vehicledrop1.txt",
+      "opened": true,
+      "lines": 87,
+      "sha256": "efa51c55d09df98d512c5970f539523e25e0937baaf48fe74b35af18d8a1fb49",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m07_xg_vehicledrop2.txt",
+      "opened": true,
+      "lines": 86,
+      "sha256": "478434a806463ced83b63d43a1f1e84bc315d3ea5972634e61a0281ccc37520d",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m07_xg_vehicledrop3.txt",
+      "opened": true,
+      "lines": 87,
+      "sha256": "ae93ef293fa3768a9cdf3e869c08e221ca8b185ffeb7dcda8d5133787b48b9f7",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m07_xg_vehicledrop4.txt",
+      "opened": true,
+      "lines": 87,
+      "sha256": "9a487676383003f6890f0eb2bc4d4ed8bfcf81e5fc45c303951cec6d83a41f9e",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m08_xg_vehicledrop1.txt",
+      "opened": true,
+      "lines": 86,
+      "sha256": "4321eb713ed3e7b8ae6475adc7d95e439779bd5c3b6bfc98822643175f387016",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m10_gdi_drop_hummvee.txt",
+      "opened": true,
+      "lines": 55,
+      "sha256": "9b3148f46dea2ea77827bc949f4b0caff54adbeac47f2e3a79716db1b0abbfb4",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m10_x3i_gdi_troopdrop1.txt",
+      "opened": true,
+      "lines": 168,
+      "sha256": "3bf2ce110a15801919d306c66b65f067e049f9986f36ef0884a4d1b9fff88873",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m10_xg_vehicledrop1.txt",
+      "opened": true,
+      "lines": 89,
+      "sha256": "9d4fe774868ed2acdc8b4612b123971e237d76e6d03f47a3d1e0f4d3289b2570",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "m10_xg_vehicledrop2.txt",
+      "opened": true,
+      "lines": 90,
+      "sha256": "8a0f2477c210773bb2507e745dfb72f84c1733d98d20e5a42a5ca1ea89d8f5c7",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "mx0_gdi_reinforce_area4.txt",
+      "opened": true,
+      "lines": 148,
+      "sha256": "c682701865d7e71ad61a71e2a22225abf231cc80412ba4d1dcb5fa7711e5ca4e",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "mx0_gdi_troopdrop_area4.txt",
+      "opened": true,
+      "lines": 149,
+      "sha256": "6de46e78775dbd8b7683c226fdced30bc2d0f3592c99d395d828b714834cd849",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "orca_1.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "a8f429f1ecb46a1fda92a15634239e41fa4be85954f570d6c04d9db89866ffb8",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "orca_2.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "09515465e18890551f211802bef7e611bcca8aa6a52804e900badc6925bf80fb",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "orca_3.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "052371ceafda958d3fc82db0569ede1adf24a8a646bc7344ef1e5347fa42fc35",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "orca_4.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "93c26972c55413ff52a85575162754896fe08d035164f50da67d255e33d62d87",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "orca_5.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "afe014b7340919cdba95c5e97cde6720a61c8469fae02e05a4c9cd7cf1af9a37",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "orca_6.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "6ace483e8bc4cc5bcee95132cf6d240c1aa77363e1d9deaf089869bf30987089",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x01d_c130troopdrop.txt",
+      "opened": true,
+      "lines": 103,
+      "sha256": "bf512da76061e39b1592edeae856b866cdb7d236ef3d7ef9afef7df0075399da",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x0i_drop02.txt",
+      "opened": true,
+      "lines": 90,
+      "sha256": "e47d38865ecef13442051b717234bad1e93298e96ca00c2576f42c704bb9559d",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x10d_chtroopdrop1.txt",
+      "opened": true,
+      "lines": 117,
+      "sha256": "4022394d6b9cfeee549b8c60afb971ed7e869908dd091a2352a772635f1b5e92",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x10i_gdi_drop_powerup.txt",
+      "opened": true,
+      "lines": 67,
+      "sha256": "f642c84d4568c18c3217c4599db92c0e5f2e0cc1aa0d3fa7b0d139f0e233f3ea",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x10i_troopdrop.txt",
+      "opened": true,
+      "lines": 163,
+      "sha256": "aefcc6774e82f52cc5b6d1dc4b2de50b0e2632101acf7b40e926aff2291ea21a",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x11a_flyover_01.txt",
+      "opened": true,
+      "lines": 74,
+      "sha256": "67135ec4cd4c74f5e455e95accc238c2735a3ac819883514cf00f49a454604e7",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x11a_flyover_02.txt",
+      "opened": true,
+      "lines": 77,
+      "sha256": "cd53a72d906dbeb8fdcc511487383ac0c5ec8b0d4714cd791757e3b40707afac",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x11a_flyover_03.txt",
+      "opened": true,
+      "lines": 70,
+      "sha256": "92afb4fb87947db38c7bf965648a2ef99533ed3cb013761e5306abd20485fe0b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x11a_flyover_04.txt",
+      "opened": true,
+      "lines": 70,
+      "sha256": "fbbc4232ad23c5b6109dd7af68f83768e35f80d905f96841012fdb86fd5cb56f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x11a_flyover_05.txt",
+      "opened": true,
+      "lines": 52,
+      "sha256": "52002b22c16ccb1877c55a2a79bef8ac8c3ef82b81412d41b26027715a038bd6",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x11a_flyover_06.txt",
+      "opened": true,
+      "lines": 51,
+      "sha256": "e9472aaa0f9f80b618b60beaa979b3df11a8f4a5c3163f837a3719e403577623",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x11a_flyover_07.txt",
+      "opened": true,
+      "lines": 50,
+      "sha256": "69d630c1dc5ae9e48c8e252e90806388b46aa42237cf53831fb96536731bfc59",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x11d_c130troopdrop.txt",
+      "opened": true,
+      "lines": 106,
+      "sha256": "9eea9f7877bd4c623e2d25348f546971b2b3ee935a45e8ba1699401833f58727",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_apache_orca_chase_01.txt",
+      "opened": true,
+      "lines": 63,
+      "sha256": "35d58c0bdc2357c56952d11bd1f7ae70b1e9544ca84685c483a5ec43055d6cba",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_apache_orca_chase_02.txt",
+      "opened": true,
+      "lines": 63,
+      "sha256": "333529771dcb6786d5a9fd2cd339c49d2d4f6862f9ae61228d60a5617f5fe5b5",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_apache_orca_chase_03.txt",
+      "opened": true,
+      "lines": 63,
+      "sha256": "cbacf03efbe40ddde16dde3b373585f3ef642c7feb6f3354cf780f0561d8bf25",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_apache_orca_chase_04.txt",
+      "opened": true,
+      "lines": 62,
+      "sha256": "4cf0ff46141228fa60a75085f186fb963340cc56d4abad30fc0ff30f7e913c84",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_03.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "d8d7b32f4b5f52d1993033d192a1c51257104bed68499b274c7dda3eaa6446e6",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_04.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "a524732606cdca7e8c1076690c7a4d8addd8ad8e636b1e5021b91927fe6cc819",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_05.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "299e4ddabf05714a91474c5e4b45c3d56d46147578dd62225c1cc90f437b779a",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_06.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "badc8a3dcd4640ce26e1bbdbfd74ab07abcdb1a0c0fb272142849d0914e018c0",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_07.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "6db0ce4d584161b8db1305ae73d70118db4e33990e5795710e41aa1ccc6c002c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_08.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "2e06b91f6edbf539cb95830dd8cfce9453aea2193c487e51819d91abbb34dc29",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_09.txt",
+      "opened": true,
+      "lines": 51,
+      "sha256": "8c9d02a27d60729af56e5950718877d2ff8ed077b085a9753118581be1e9b96e",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_10.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "05aa7ef1bcbc9234ac4e0a8cd43a92ebec8dbd031eb09bfb23962a260f0de919",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_11.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "e983863c5d865a115fa47f9c53e2946a4d3c6323fb7bca1dfeea975116a86b6b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_12.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "2aecc92e71ea0f95fc43368ef3631799f0ea0f577b00615c52aa2af5df6633ba",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_13.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "269e5d505d8610b230cef75e4d76438aef3ab2849c6e268a286afa5faed6d381",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_14.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "c0cf16a60f623df8711723f14b695398d2dbd705921a919aeefff175f1e1a6ae",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_15.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "b8cf608c8d6240f59db773178f481842b52bc268eebfa5baefc2559e54951d0d",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_16.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "f6b8a2380a7fb5e63efde689216981fcce5a39a7855aeb8e2a84284ff04edd0f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_17.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "61264f4a79a6fc67b9a33496c1a18b2634d2225451fb3a9214b7fe28b819edcc",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_18.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "0d7a44e3d89725078b573f925875e1de040bb9d324f795a1bc9ffe3b0f43c533",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_19.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "dad9ea4093d4feeb108e77f8cc91df8c12d22d0af9ec1c3c8a3dabf45a5f476e",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_20.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "64894c91981b9c8dbe2f70a207b5ffa5d169491d6dba10365c7b14b15c0c15aa",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_a10_21.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "ddc15fd1083292ac912475a7fefe6b2e8f8b95b61ad21ed599acb52381a23322",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_01.txt",
+      "opened": true,
+      "lines": 50,
+      "sha256": "72d055f2ee0156115a12ea31905555acedfbcada90ed2573b8fa6f944da88d36",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_02.txt",
+      "opened": true,
+      "lines": 50,
+      "sha256": "0ea572d58b9e84d45a7de00269b516990321817979cf5806dedb67f17893fdbb",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_03.txt",
+      "opened": true,
+      "lines": 50,
+      "sha256": "a4e9557865acbf9313fd3f069268765d05bc8633b073f442332a5af8a427d51b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_04.txt",
+      "opened": true,
+      "lines": 50,
+      "sha256": "8c1cffc252a6343af6364861523ac01061256eb7382ff3157cf53f537014fbb8",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_05.txt",
+      "opened": true,
+      "lines": 50,
+      "sha256": "a90ec71e3f951aaa281157d604ebcefc20bab036bc0f48f7202e55917f048fec",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_06.txt",
+      "opened": true,
+      "lines": 50,
+      "sha256": "de0a5394e10c8ab6b6e69118fc16662bc10d2b587848da447c4631c670acc7f4",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_07.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "e51fe72f04127feaad20c6e5181aa51acd2441039096e3945fa733380911d298",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_08.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "55259d915cfd57eea4968228d3d9410fbdb3a8be34ddce5a16b0f5508d7b215c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_09.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "144b1548021a46c823f66b52e0ea53f3322b1181149ae3c7d393597446ccf151",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_10.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "890515ca8ab2083eea3d016fdfbeb92812f8e31770f817be54da588098b374ed",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_11.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "2f3d902fdd25ad0a6d78e0fa854700607953f3f9a199fd9b5075b4feb65d5ef2",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_12.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "917b2540791b1dfa879d0e024b3eeea8583c5172fc333fac2abccd7b58920cb8",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_13.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "09e99044cd8dca380815393b9e9bb841910cdf5ef56f59572bd1d69902049968",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_14.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "0c9c57b1117ad525ba1ddcdbfc422a74dc71abe959c014ad8a07ad472652ae68",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_15.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "9dbfe3de7a56456ad09d9a8993887d156b5b502a05c394ccc51087b189ad74b3",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_16.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "c3cf374b68f68bcd5dc09323245a92ed2bfafbbcc5fdfa005cede67ec4c0b0bb",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_17.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "9efcfb1ab80255ee2bc83ab4941b0b48d76bac4c4f0d896947c5a470a9e831e8",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_18.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "fdc9e8e9f4d39f7b751274b669b6d6f59fdc37f0eeade28a3491b888b7209737",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_19.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "98d413d83655ae284b8023028e0d76c669505f1b1445cc7b39ab7f0cac65fc3a",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_20.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "97dace732863952d52d5e773f7acd6ce82159265b75ff04952b94ca564512772",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_apache_21.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "7556c6a9b8459dd52c327d77f1730ab4f3782cb3e731e646ee2f2938edfbd0b4",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_01.txt",
+      "opened": true,
+      "lines": 51,
+      "sha256": "16e638d6cc81012c2209c3f8d8ae63b3c86bf10fda555b7b072704bdbec3d256",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_02.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "33a1dd2710a51875bd09bee92b81d83f3040e984f2a4b54044e18129e65140ed",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_03.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "82b9e886673e92c7e9c4def7da3a5e2347e96c502243d36fa3c589d5528f19a7",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_04.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "aead934a11969256dec238fbe332725dd04568e3541c8746ae4c5dce6eba8330",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_05.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "0d26cfde3c72f7890001e6c9322198ad00de7ef98e4e7efa0f3ec205c1776122",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_06.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "0b228bd8806eec152ca36f4dfd0d052ab1cf9a09d04d2592becbf0bc14cd3c3b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_07.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "82812c9c31527357654f56489f3b1decbaebe1641df6cdc13f2005ac76816373",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_08.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "5c781e36d348c6124e6617c56d7cab887ef62201bee87d9c18ae3d62e469db56",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_09.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "3534e2d0867916a9f128cb0ba0068548ec4c4249229e6f59de7b0612d54426e2",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_10.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "3474d38690c8a9c14de44c831f6536ad4d7ae1315cf0cabaa13e78edeebd0615",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_11.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "0b816ed5a440c80d4f54b0a84b987b685575a2cddccb4271695ec5a24a49c993",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_12.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "04519077fda8ed6f356d5fe32dd728b6cbc79435b9169e6a7434e8e73f62ff91",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_13.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "2f770aa93bf2c589e2cf96d7141dff9702f73b8f5950fd49a7b8999fee411fe3",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_14.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "22586c83eeabf715dce2e2c4e903e11583c4ca67b211f4ad50e68653e7e5061d",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_15.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "5c1af7d6c04e2b728f6e9cf793b912c730e5cd12ab71ed9a81f75c7c0340983b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_16.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "11b9906cfc41c1bef910c41f5468680bbe18207c3608e63cff814afe384cae24",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_17.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "f72478d56e731f40c6d8619161de4f0ff87a9db9379c473b5227ffc891bb02ed",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_18.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "9b713da6408b39c51828e8282dabbd076e01acde7344a217c37d6b50a7c98e69",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_19.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "6d6d6f313d463a438e9b303446ed99540280299281eac1c1c8704c0a541c91fe",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_20.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "1f6d36777a123efc4c71c8b9bfc494f7aea0860c2483c56f62cf77e1f46f0478",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_gdi_chinook_21.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "0ff306cfa66ae76c8ee1d28739cc813a74b1c72ed59ea69b34e3bc567946a94f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_01.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "8225f14b93e84cbc025cc4de5204a21195489141584c973927571d773aa1d79b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_02.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "0268b051ae86fff988d0c1a100a749823da743668cf2a6336684d0deee598385",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_03.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "dedf4acd368f661a2edc84d67702b7b83db828566e9dd56d68d2e3873b2cd1d8",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_04.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "f3019b12f3e44bd93c4900d219538d51d2e21f027efd5cb4cc7ebeb8e642b361",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_05.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "19b0cc061a47a81d8f6075259bd3a765c7d2d0e9d45fcf3fb26de45f423d780b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_06.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "1a15bea793df819d1fe07e5847c3f0dbfc6982cad8cd7137f7dd93c22c874102",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_07.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "cb5207358778dba6d5204c3755ac9997c1ad7cd656e55b5c8e7b14a8e690c35c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_08.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "cfb7be7085486aa789893373915581e8ac6e40ecf046d25fa931c4f049506097",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_09.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "cad5d7a8a77c870048060453fb406c47876f4a9ab3807659426df7c2aa19cafc",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_10.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "8a4d58f1f9648319d171b625c7a6dd9c82b234cd6422006014fdb8d63d3e4822",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_11.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "c6e4ff09ac0d37a94c8269195013277170a67be562f2a770add9f779952bf9a4",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_12.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "632381347eef6339c4ae521e8dfe105e6328f2003121d4d7aa7265db45bad802",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_13.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "3237bf1903dc656d692472aa4d86cd6e44ad7e666dca70567bad07e82182ea30",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_14.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "7b924009ce2680396ff7de44674481e7e9780de283693a464361eda86dd3ade9",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_15.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "328e68447f0be5ed98b6089605a413f3567abcd6e86650befb22816080d9ac7a",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_16.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "4ae94cbf81df7ee4785c0369e70d190713b1bcaf814d56d4a6af06ed7ab2159f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_17.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "d10231d21e238110e55e32dc9a0394b8e219fdd3e9bec4b6144648d4da0b52cf",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_18.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "7706d4284e40e4bb6d1c9d6671160f58b7729cdbd482a0c3747395892ad78a37",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_19.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "4b520221379e2e4982de2e036593b8d4c9cddeed179b396d98ee387b9180eaf6",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_20.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "1c1c95a1fc72cab23a0765b0ffff4e9d24ca4cc81f651d299253c409d12badff",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nod_chinook_21.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "befb8bff8afc18f0f716c5593c924cdeaec4c715f8e30d3a32b09adb00bf0d3b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_03.txt",
+      "opened": true,
+      "lines": 50,
+      "sha256": "c49c974616f122aeac7af850ea0fca0223fc9d27f8b3072bafe337b2e2904aba",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_04.txt",
+      "opened": true,
+      "lines": 50,
+      "sha256": "24f21c7bd4c21debb73f017728a35dab30cdcbb05030b297927b4574716cbec1",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_05.txt",
+      "opened": true,
+      "lines": 50,
+      "sha256": "4575a8b95d647f175298339a83d65812a57b6418053ff442c9cb1ce53e10ac35",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_06.txt",
+      "opened": true,
+      "lines": 50,
+      "sha256": "5d4a6eeae7c2da7e063ddec2d10c682c0739d9a0989ad81f1e873ef07e30f31f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_07.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "4f9e85b1a64030a1c306a0362c8f2087d3576e2ce3f66f6831cd31913fc4651d",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_08.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "b95ad3609f9fe73202d36f01a380fff31e04b53fb183554d1ee151d3cdcbc754",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_09.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "9266c8747a0bf4654b79b9a10060e36395f3cb24a3fbb678b6c9920d3f65431c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_10.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "574bf8e35565bc2765f75f1591f63da2140ea2d72aa01dd2b5138e20ff081fe9",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_11.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "e17ee5840807ad1411f29e8809fbca7738a894f340632fa7992fa01dd7a1ae4a",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_12.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "ad77f0c04b3c2e75fcbfe292179deb0ac8beebb834074261f4c902472b3436da",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_13.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "77b624671defbf611c07a241605d6625a449531b775d082bfed9f26cffd3618f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_14.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "485cab39289a7c5ccab128f3ab70e173af74f3536f072e7e286dddab50ef643e",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_15.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "3bdeeab91149165870f615c64004b8b3e731e7d32d8ccb491c2743c9f79e8fbc",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_16.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "53548b967dbc96de7920933eb2e578de57d9d6d22fc89b54381ce73de9255579",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_17.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "8693087ecb30b6056eff8e2b358c23928dd5b5c075f26f6ac58ff560c706f092",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_18.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "577c37a5318492d5f1aaf575a8378198b982494341e2015ac848d80ad907445e",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_19.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "8832351d7f56d3d65c7a9201b843cdec8dc1803ef33b77600a0f445bc0e9746f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_20.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "6281024d5d6ecccb62c9b6c9e1b5fd0c4bf0e869c9d8ddfca1401fb6bfe2e0f9",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_nodcargo_21.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "9ab67e89a9e60ee9ad1ee9bcc0902403ce379adf2162c5bf728fd0c3d2136fd1",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_01.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "d2b653a4bc8c9bba0641a7e9c21797672159678d13b956e477ebad00d7fc1ecb",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_02.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "30ce357a2e42363524277e08e43730a30b2794da46992f201412cb029a64259d",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_03.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "c14aaecb95c817397f5b87c9d186a1aa0511f25935f38bd4d1138a42578fde94",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_04.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "9d79cb5342f6eca47341a03534561fccd7a5b67a2ab53012feea70ece04d6b02",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_05.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "4013c404b46f53993d6ef3176284af63da06ab9f0828feda34dafd4495a8c524",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_06.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "2e87d866e0b3582be0c70b76c6a0a56c616706dc80a3df07d221f20d6b15bd6c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_07.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "9b6bc9c653a01ac408426e011b7489358bad97a21bcf29dd7401348c56ed6267",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_08.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "fef19e3ce1c8dcd0789834f1e1d378e003b06ce6439f426d24ef4791a00eb9fb",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_09.txt",
+      "opened": true,
+      "lines": 51,
+      "sha256": "de2020fe124a0b85169ccef0c2deb98b31c3375443057f42554767706d897d4f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_10.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "48325d0e39ed6c47f728b82a0295572b71b3ecc26fb68943d205eebcf227ad19",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_11.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "1c693d7a158d2396f136ad0ef5dec6f01cf58e3ceb6c2528e53e1ccb037b0660",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_12.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "086caae1deb02c17aa0af4de6241258726f4a84ee4cbad25874b7bfef3b321ac",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_13.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "1b5d30b7ee2ce5600f70cf8ae9cd13c429b87a8b7e0b524b6c3ecfa10e3e941e",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_14.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "c4ed9563d880acefa6daec63b28092c758f24c10c72066c8129a044264b1f980",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_15.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "0b4e0a208868a10ae3f8ee9666ae33bd5a857f06ad9aafe9ae7d3e3efe3ca4a3",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_16.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "29dbc130753ca5663620cb417cd8b41727ea263e0403f32039d187e3d535f18c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_17.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "3fa3982b66009d7da6be8fce9f74c49230488666022bfda027cae6e634d71d2e",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_18.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "dccabb5c7997e06f69d684da024e0995435f22d4193e87fd0e3f10a073053c48",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_19.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "b232fcf1006786420ae74e785e3de955bb45f8e8e31c9ad7572654869c77eb33",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_20.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "98307f5e3e5506e44ddcfb12579b49b13002ca6f0170c7e9662dedff2be50609",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_solo_orca_21.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "b3eba8e857866f6f786dc86eac814ebb426ddcc30f2135f1404fad47b595d21b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_tailgun_apache_01.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "0a6485fafc131b4d3d0470af28e8f7790a0c7cfa6b7cf80f295e82ec84b9b813",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1a_tailgun_apache_02.txt",
+      "opened": true,
+      "lines": 49,
+      "sha256": "c746f3928678f4e5beade68c2ae40a2876ffdf4a68d49996d8d1e6df9d57245b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1e_hover_troop.txt",
+      "opened": true,
+      "lines": 90,
+      "sha256": "a2a0c6ca886284018ac565c3f4d15a0292e4ecfe61f85be0e9c41a845bd1e43c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1h_hover_troop.txt",
+      "opened": true,
+      "lines": 91,
+      "sha256": "4ff14e2aa3110ba1d0eb3546d9b42f0a01fc2edb667376af4a8050729c6c4d3d",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1i_easynodchinook.txt",
+      "opened": true,
+      "lines": 147,
+      "sha256": "0b914a71f5b8826e492a187cdbfb1461dd9c3156e14857fedca1f1e2bc58a7e0",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1i_easynodchinook01.txt",
+      "opened": true,
+      "lines": 147,
+      "sha256": "b1d82aa8910688e992b4248ba2c19a65f43e26a73f872a6fa1db1ed2fa7624eb",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1i_gdi_church_troopdrop.txt",
+      "opened": true,
+      "lines": 133,
+      "sha256": "79256ca63d792867bdb65ed74ad342e24240c90b84786f2f33b2557178cf7db2",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1i_gdi_commcenter_troopdrop.txt",
+      "opened": true,
+      "lines": 134,
+      "sha256": "4e0be309a2247823eeb183da129036c8a365665d65de762be54b07119ab2b474",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1i_gdi_hon_troopdrop01a.txt",
+      "opened": true,
+      "lines": 134,
+      "sha256": "6ed2025d4984d548baa597cde1a474a7be11b413c461083b2a23cf0f64d39d73",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1i_gdi_hon_troopdrop01b.txt",
+      "opened": true,
+      "lines": 134,
+      "sha256": "c535bffbf98c0ff696cc09029ac12cc347579b488aa3159e6fbecffef89a8983",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1i_gdibaseprimarynodchinook.txt",
+      "opened": true,
+      "lines": 121,
+      "sha256": "91f4c9f65529fe505e68fba0a620f1724b6a14b2e9534a9c5c5058d4335c3a1d",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1i_hon_medlab_chinook.txt",
+      "opened": true,
+      "lines": 145,
+      "sha256": "4f4786485153b0839ce198d2205cabb490f25b6a84eb8645412d09fb73b1aadd",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x1i_nod_turretbeach_troopdrop.txt",
+      "opened": true,
+      "lines": 121,
+      "sha256": "cc741daaa9f63be5c610df52b2510bb211a98578d549e8d52969fa65280831b1",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x2i_gdi_drop_hummvee.txt",
+      "opened": true,
+      "lines": 55,
+      "sha256": "c068fb28355cf277481e026d650c6fb1830b808a9a4b06fb2958a554b20b4dce",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x3d_sakuracrash.txt",
+      "opened": true,
+      "lines": 86,
+      "sha256": "736c5ae3630fa983c6c0932ab21dbbdf87ad75613ffa417197a0de26a27a97c5",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x3d_volcano.txt",
+      "opened": true,
+      "lines": 42,
+      "sha256": "d4f1486875ceb5fa96099e1ae8c1b7b1e370de208ad491added21223394dda99",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x3i_gdi_drop_powerup.txt",
+      "opened": true,
+      "lines": 66,
+      "sha256": "3dd8897953a8c6632abe7160278870c87cb51b3c8f185d300e3846b393d8c0ee",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x3i_troopdrop1.txt",
+      "opened": true,
+      "lines": 165,
+      "sha256": "834e0d9df5bd42d024bea6e4df495a98e46d572ee700c93f7fb7a6b640ce5f32",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x3i_troopdrop2.txt",
+      "opened": true,
+      "lines": 165,
+      "sha256": "5ccc04c66b83e52dc7473f6d87ee324806fe31283905bdff9061b4ee59bdb546",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x3i_troopdrop3.txt",
+      "opened": true,
+      "lines": 165,
+      "sha256": "d68ecfde1e716972570e5e72feb23a4f5f963492243c89d469a8aad1fe4f403f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5c_wintroops01.txt",
+      "opened": true,
+      "lines": 81,
+      "sha256": "994f51c1baff29f0de9ac4287f916dc2cf96bd4042e2b8bbf25f8ae4cbff6a7c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5c_wintroops02.txt",
+      "opened": true,
+      "lines": 81,
+      "sha256": "3e9eaf30878e73de378c9a4f312884bbe3255386cb0f151b1420608156f2af0c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5c_wintroops03.txt",
+      "opened": true,
+      "lines": 81,
+      "sha256": "2e543b4d9549587cadfc62977f59870f7e48915f03beefca1c1c87bcb4583467",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5c_wintroops04.txt",
+      "opened": true,
+      "lines": 81,
+      "sha256": "e27d9d4fbb0b49517307e009b795dff3d17dd101d12c97d636b41a2c40a61880",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5c_wintroops05.txt",
+      "opened": true,
+      "lines": 82,
+      "sha256": "da362a79073382114d2505ecfa796e0637442609ce6888aa0376379150c3414c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5c_wintroops06.txt",
+      "opened": true,
+      "lines": 80,
+      "sha256": "6ee6182c4f1345944bdff18fb4787c61782c39aec794894aac4c35b94eb94c9b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5c_wintroops07.txt",
+      "opened": true,
+      "lines": 80,
+      "sha256": "47525813ff88352d0d34680ca7e5e56c595e832eb74b1c4381af07671e609b6c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5c_wintroops08.txt",
+      "opened": true,
+      "lines": 81,
+      "sha256": "d4719c44adf4feb3ced2fb10b88e929e25005f924bb558857ea8dd0a86be3d7a",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5c_wintroops11.txt",
+      "opened": true,
+      "lines": 82,
+      "sha256": "604a666a7ef8607014d9525d42cc0d406c8cbf2c86daba7d9f1f16d17ed067a4",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5c_wintroops18.txt",
+      "opened": true,
+      "lines": 82,
+      "sha256": "9b4d0558800c69086cce88b492a862f23b0426272b9eb93e3eb07ced91bc824b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5c_wintroops21.txt",
+      "opened": true,
+      "lines": 83,
+      "sha256": "aee8120d58fc3388d37ec863b3af5b45d5eceb75f9f720281859092441497f70",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_c130troopdrop1.txt",
+      "opened": true,
+      "lines": 84,
+      "sha256": "8a863bde66efb33b9e36f45211122707be0eefd3b44e020e1d41e9eac9119d7a",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_c130troopdrop2.txt",
+      "opened": true,
+      "lines": 98,
+      "sha256": "e27d652a26a91c918c817da72d1a582252059efc2da239a01a5b2eea4e3c1b91",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_c130troopdrop3.txt",
+      "opened": true,
+      "lines": 68,
+      "sha256": "79d45c4d421e1de4634b0cf6e831ede86761331897e90bc43d63578122c82cc1",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_c130troopdrop4.txt",
+      "opened": true,
+      "lines": 69,
+      "sha256": "f5b91652e96fe07de2d91b939aff05ac3424c6245ead2be8b72cd645f2a4f410",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_c130troopdrop5.txt",
+      "opened": true,
+      "lines": 69,
+      "sha256": "f2fb4fa59c1af4c562156a92ff40dd20eca5c01d1b7cc9d348893fd4794bb4aa",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_c130troopdrop7.txt",
+      "opened": true,
+      "lines": 84,
+      "sha256": "15c40eaef27e2322c3a70b603244f61c1de02c307ba2dc825dac95248116b6df",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_c130troopdrop8.txt",
+      "opened": true,
+      "lines": 98,
+      "sha256": "a0fc50e364f8193a0e41c6fd003ff6390e1abb736462e530ee97dc619dbaec85",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_chtroopdrop1.txt",
+      "opened": true,
+      "lines": 85,
+      "sha256": "bc8020516c581d54f3c06b53bff1d7efff87e9407c5c995dbaaba0f1e4d0cb76",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_chtroopdrop10.txt",
+      "opened": true,
+      "lines": 71,
+      "sha256": "56a59951e521d90091e9aa264f276c7c6929624a0105acab313bff63faa5335f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_chtroopdrop2.txt",
+      "opened": true,
+      "lines": 85,
+      "sha256": "cb3b56cdd7052ac4ff491f2830c384a79c86c207f4cff8aaced3cdfa4d1603ac",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_chtroopdrop3.txt",
+      "opened": true,
+      "lines": 101,
+      "sha256": "1763d4affbce9a9242a8679f9ff95c53eecc004f7b28114bc82858fbc540faa4",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_chtroopdrop4.txt",
+      "opened": true,
+      "lines": 86,
+      "sha256": "b191ceb5c2f0dac8f13542844b381a34c4ee3825c0d5f9d00b7827dc4142456b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_chtroopdrop5.txt",
+      "opened": true,
+      "lines": 87,
+      "sha256": "4d259ec2d274346fc7185de4ab1f058ac2b3551b98aeff4718d91200a5f6dfec",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_chtroopdrop6.txt",
+      "opened": true,
+      "lines": 85,
+      "sha256": "8430c22980b8116d695f61a49c3b6b70a647e4ed5abb47212bd811bfc19da012",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_chtroopdrop7.txt",
+      "opened": true,
+      "lines": 71,
+      "sha256": "5cc0d54dc0ab37f8b1d124392e74127c454c43bc576261324ccff780d81ef6c3",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_chtroopdrop8.txt",
+      "opened": true,
+      "lines": 72,
+      "sha256": "911640736d8fe9fd6153cf33a9ee55b3e95da59d6c66652254ae3c3e5873d81c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5d_chtroopdrop9.txt",
+      "opened": true,
+      "lines": 86,
+      "sha256": "c148670f10bcc20d3a21abd3a4a655e0b373fcb31c6502308393ee8ca613c9f5",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5h_apache_1.txt",
+      "opened": true,
+      "lines": 47,
+      "sha256": "af014e689a492a3982b5dc45fcabe6e2ad0c0f9d2e9e3addc40ca16f545d1387",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5h_apache_2.txt",
+      "opened": true,
+      "lines": 47,
+      "sha256": "eae7ae148dfb893b14637877f40c0efc6351ad79ed51b3a0734552f0062da5c2",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5h_apache_3.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "efbcf902e833654789e466760e692be6017a85b63a6183b8fdbf03a81229b6e1",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5h_chinook_1.txt",
+      "opened": true,
+      "lines": 48,
+      "sha256": "21e0f8add321574c06353abc72d115ae7a7cda633343c3afd7b1c49b2491ce68",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5h_chinook_2.txt",
+      "opened": true,
+      "lines": 46,
+      "sha256": "e48a07821315bb6f4bc0dc52be79a871f0ead26c9fddd72fb5e393158efdb89f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5h_chinook_3.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "4adcf4d460975bd89728e169ce053cb85c8b82a907632a7498a15bbe299000fe",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5h_chinook_4.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "1cf3841f20a0e4fee4a2471fdf5482dd04b21286dd7ecdba773c32d11d85bb94",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5i_troopdrop1.txt",
+      "opened": true,
+      "lines": 145,
+      "sha256": "ca2106e9083efa72d4ce69b16b146184776377521a91ce19241b9f44335e396a",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5i_troopdrop2.txt",
+      "opened": true,
+      "lines": 122,
+      "sha256": "4b056091401bd402931b6e5dcc8ea32f2a95e70d812ef1e48dfbd3e481e82132",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5i_troopdrop3.txt",
+      "opened": true,
+      "lines": 145,
+      "sha256": "3debed9e2c930114b56aa9a3d2c90a4833682021da66425143df2ed1873f5862",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x5i_troopdrop7.txt",
+      "opened": true,
+      "lines": 121,
+      "sha256": "9900f95062219e8d608ffbc82ca5633eab6e277753200bf85cf7f7bdcabec835",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x6a_apache_01.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "273263dec0cdfce1d34b1f9360ec7e5c688a2e47ed7d33bcc7718ff92cea6665",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x6a_apache_02.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "2e219a08c16d66b40998722192f55f86b9a6d2de0fd2d0e09ac8d22d81df187b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x6a_apache_03.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "b33838d33f8ea30de37527cae60fad3056f9f34527b36b7777d6f79aa1d2f45f",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x6a_apache_04.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "32b04097d25fec2ae3e168079812e976ef3ce6d5712215fb080380d940e45487",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x6a_apache_05.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "31c1be0fb2854121b985d20ff33535ad60ba32bfc24c7f2f39553d2d21adc0d9",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x6a_apache_06.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "ab4af81c768bf6f758946ab8218f2b1ed4a548a1a103d95af9df435a9577f56e",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x6a_apache_07.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "141d3f022d256a2f9422b4dc62f65a5b17c392e8e5a2303ddc01ba1a24334e5a",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x6a_apache_08.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "2ec928d0e2df8de5f85ba4b8b90cb181de51ad43d0869dd34aa4d03298db7a7b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x6a_apache_09.txt",
+      "opened": true,
+      "lines": 45,
+      "sha256": "f2a3b18c2b705b688e4ec6b07dbf7e21fcc42dc2e3a4ae3e8ee20eb830a56b2d",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x6i_troopdrop1.txt",
+      "opened": true,
+      "lines": 147,
+      "sha256": "b40e94b7130153d78d6129fb74d1a687a8fda9d5cbe598687e193add2fcb4d6d",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x7c_wintroops01.txt",
+      "opened": true,
+      "lines": 83,
+      "sha256": "85d9ac3405662f7e65029a23e64c54ccbb480910d239cd1d0129c308d1bb57f9",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x7d_chtroopdrop2.txt",
+      "opened": true,
+      "lines": 85,
+      "sha256": "5133fa34ce79262a2f38a761f048316927dd834b099dd5d97478427de5b4cbaa",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x7d_chtroopdrop3.txt",
+      "opened": true,
+      "lines": 98,
+      "sha256": "9678307bd59eb06695dbbc62f269e2a0cc34d8f6c0f48fe93408bbfce5341a12",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x7d_chtroopdrop4.txt",
+      "opened": true,
+      "lines": 98,
+      "sha256": "f0e0307823e4cfcaf3df13da754899c4fca7f4aeb18aedcff91848a88fcb384c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x7d_chtroopdrop5.txt",
+      "opened": true,
+      "lines": 68,
+      "sha256": "c3336a279f694e253594d98f97b35139948b3662d06e5e828de2ce50eb718e26",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x7d_chtroopdrop6.txt",
+      "opened": true,
+      "lines": 69,
+      "sha256": "0c54694b35f7905656b4faa798c916e50994696154eb69b5d94f21f42ab5fda2",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x7d_chtroopdrop7.txt",
+      "opened": true,
+      "lines": 67,
+      "sha256": "677cac221fd89283c3c48588206dfd8dba0a7f989ad233b458e3e8b88d2d5a88",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x7i_troopdrop1.txt",
+      "opened": true,
+      "lines": 145,
+      "sha256": "13df5a86c6090c936aa6776342eef627ad7b15773ebef47dd4aeabb2750dde6e",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x8d_chtroopdrop1.txt",
+      "opened": true,
+      "lines": 83,
+      "sha256": "2ce4bc9c95a1ca4467898414433d8c381ef116d9b60b1df3c7eda280c60d7548",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x8d_chtroopdrop2.txt",
+      "opened": true,
+      "lines": 83,
+      "sha256": "9ff7349b6d3c23743bbf5e6d600b1fdaf74dafc3e88091b491c69d8e6969ab89",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x8i_troopdropa1.txt",
+      "opened": true,
+      "lines": 146,
+      "sha256": "c0416afa75d54097f92ef831170275fd6c19dc65291a591fdd4fba54d3ed334c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x8i_troopdropa2.txt",
+      "opened": true,
+      "lines": 146,
+      "sha256": "a2c7a0735174b91a41f18a38d9d82ac925b21df03de311f479ba56411f58ba72",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x8i_troopdropa3.txt",
+      "opened": true,
+      "lines": 146,
+      "sha256": "1576a6b51d766b8a4bfb7ba85ca7030dec93bad3b8a76605096e897006d2d95d",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x8i_troopdropb1.txt",
+      "opened": true,
+      "lines": 146,
+      "sha256": "96caa55d7a56520a399045a5d56042744f46fd870144355f9c96b84180462db2",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x8i_troopdropb2.txt",
+      "opened": true,
+      "lines": 146,
+      "sha256": "df6e16b21eaf688fcbd366db9ac60f8650465586d7fee46528511fe04fc4619e",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x8i_troopdropb3.txt",
+      "opened": true,
+      "lines": 146,
+      "sha256": "83d6539cfde9487c58a97dcbaff5da9a4dac3cc22059d8ff7fc421f3f5197454",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x8i_troopdropc1.txt",
+      "opened": true,
+      "lines": 146,
+      "sha256": "cfcb4c75bf63d3cb9e1dbcdb69fdc4d8c2fcbe4e63e6e4adb0f97b510e8011ed",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x8i_troopdropc2.txt",
+      "opened": true,
+      "lines": 146,
+      "sha256": "f5828e677ade105de58235d8ed73a9b55b79c3a8f0b34395b00998a0d1bf32ab",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "x8i_troopdropc3.txt",
+      "opened": true,
+      "lines": 146,
+      "sha256": "9baaf9d77dc8bd73da12299a48651118c26c28a6513ff9aa3f40207532257e36",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "xg_ev1.txt",
+      "opened": true,
+      "lines": 54,
+      "sha256": "41299c6b719919b430b39b87714c0203b435982e94461ae38591ae76b7e724ea",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "xg_ev2.txt",
+      "opened": true,
+      "lines": 54,
+      "sha256": "73026ac0fd973a3cfeb9a865d17243ac4af7d98519e3c1c0e5c61e665e0a474c",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "xg_ev3.txt",
+      "opened": true,
+      "lines": 54,
+      "sha256": "4e3d0a38888f62cc4ff7dfd752222ef6912686590cc269110c68c63a81631957",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "xg_ev4.txt",
+      "opened": true,
+      "lines": 54,
+      "sha256": "bb1d6eb36b9341f325029d9e95c57911d158d8f7178e903f9d4ba7c94885d274",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "xg_humveedrop.txt",
+      "opened": true,
+      "lines": 84,
+      "sha256": "99a135cf6191769e862b1dd1414801ea43e5e8931f506fd71dd63edca33793d6",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "xg_nukestrike.txt",
+      "opened": true,
+      "lines": 68,
+      "sha256": "b7d54120b7f5b6d43a14df688edfddc2ddbbca55d081a5a2d121672acf62995b",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "xg_ropetroops.txt",
+      "opened": true,
+      "lines": 121,
+      "sha256": "31e754133e66f9a8f890747deace5ab851f8af56d9c99d74b428b3eb67bcb200",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "xg_ropetroops2x.txt",
+      "opened": true,
+      "lines": 145,
+      "sha256": "7b92a6cc6be97aab9298c6f66469e73bfc6c96ff8b7d6a6f4ce1375d3a8d2a70",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "xg_ropetroops3x.txt",
+      "opened": true,
+      "lines": 165,
+      "sha256": "101a6d1e6293e77c5fb59c894555fd76c8a82cadfa2c34b476cf686151123388",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    },
+    {
+      "member": "xg_ropetroops_gdi.txt",
+      "opened": true,
+      "lines": 143,
+      "sha256": "ddd437be905fde26e2bf029ec082e45f8f612f5cc1060641d94d7b4278bda5c6",
+      "status": "unknown",
+      "matches_archive_candidate": true
+    }
+  ],
+  "limits": [
+    "Shared archives only; per-map controls and always3.dat remain outside this denominator.",
+    "Debugger stops after original factory setup; no world, script dispatch or playback.",
+    "Leak checking disabled for debugger; host I/O does not prove physical I/O."
+  ]
+}

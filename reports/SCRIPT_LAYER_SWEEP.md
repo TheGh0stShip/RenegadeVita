@@ -337,3 +337,22 @@ native handle behavior is not established by this host test.
 This closes a focused boundary contract, not MIX/file-factory integration,
 cinematic playback or physical I/O. Runtime source and Dev221 artifacts are
 unchanged; the test compiles the actual three staged method bodies.
+
+## Shared retail MIX text transport — 2026-10-04
+
+The retained host runtime stops after its original rooted factory and MIX
+factory-list setup. Original Text_File_Open/Get_String/Close read all 283 unique
+.txt member names across always.dat, Always2.dat and always.dbs. There are 284
+archive occurrences; the shared duplicate is retained as an expected-payload
+alternative. Every returned line-sequence hash/count matches an archive candidate.
+No payload text is printed or published. The public
+[receipt](generated/sweeps/host_mix_text_commands.json) pins binary, probe and
+archive identities and retains only names, hashes and counts.
+
+Four reference/boundary tests pass. The initial debugger attempt failed solely
+at a missing return-type cast for free; its private log is retained, and the
+corrected bounded run succeeds. This executes the real host FileFactory/MIX
+transport, beyond the synthetic seam, without cinematic command dispatch.
+Per-map members, always3.dat, ordinary startup sequencing, world/playback and
+physical I/O remain outside this evidence. Leak checking is disabled for GDB.
+Runtime sources and Dev221 compiled artifacts remain unchanged.

@@ -1,0 +1,499 @@
+{
+  "schema_version": 1,
+  "total": 18,
+  "counts": {
+    "unknown": 18
+  },
+  "rows": [
+    {
+      "title": "Create_Object",
+      "method": "Command_Create_Object",
+      "dispatch_line": 988,
+      "method_line": 472,
+      "body_sha256": "46a150581a649c106dd13331e1937e7d605c624e5ab9adac49d0c1b5a057c1cd",
+      "command_calls": [
+        {
+          "name": "Create_Object",
+          "line": 492
+        },
+        {
+          "name": "Get_Position",
+          "line": 492
+        },
+        {
+          "name": "Enable_Hibernation",
+          "line": 505
+        },
+        {
+          "name": "Add_To_Dirty_Cull_List",
+          "line": 508
+        },
+        {
+          "name": "Set_Model",
+          "line": 512
+        },
+        {
+          "name": "Set_Facing",
+          "line": 519
+        },
+        {
+          "name": "Get_Facing",
+          "line": 519
+        },
+        {
+          "name": "Get_ID",
+          "line": 521
+        },
+        {
+          "name": "Enable_Cinematic_Freeze",
+          "line": 525
+        },
+        {
+          "name": "Enable_Hibernation",
+          "line": 526
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Create_Real_Object",
+      "method": "Command_Create_Real_Object",
+      "dispatch_line": 989,
+      "method_line": 538,
+      "body_sha256": "9e262021b8a73a045585607ae4e8e3349b2487980c9d6d1bc2e218f17d7f9460",
+      "command_calls": [
+        {
+          "name": "Find_Object",
+          "line": 564
+        },
+        {
+          "name": "Create_Object_At_Bone",
+          "line": 565
+        },
+        {
+          "name": "Create_Object",
+          "line": 567
+        },
+        {
+          "name": "Get_Position",
+          "line": 567
+        },
+        {
+          "name": "Set_Facing",
+          "line": 568
+        },
+        {
+          "name": "Get_Facing",
+          "line": 568
+        },
+        {
+          "name": "Get_ID",
+          "line": 578
+        },
+        {
+          "name": "Enable_Engine",
+          "line": 584
+        },
+        {
+          "name": "Add_To_Dirty_Cull_List",
+          "line": 585
+        },
+        {
+          "name": "Get_ID",
+          "line": 588
+        },
+        {
+          "name": "Enable_Cinematic_Freeze",
+          "line": 592
+        },
+        {
+          "name": "Enable_Hibernation",
+          "line": 593
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Create_Explosion",
+      "method": "Command_Create_Explosion",
+      "dispatch_line": 990,
+      "method_line": 605,
+      "body_sha256": "88d09795aece198d4f0c617979d2d09aa1c09d7ee3c882797edf733bcfc4655d",
+      "command_calls": [
+        {
+          "name": "Find_Object",
+          "line": 611
+        },
+        {
+          "name": "Create_Explosion_At_Bone",
+          "line": 612
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Destroy_Object",
+      "method": "Command_Destroy_Object",
+      "dispatch_line": 991,
+      "method_line": 616,
+      "body_sha256": "a1ad05ddbd0dd2ba301ec75c719906619d4783d97fa3df461722f17dd39e1851",
+      "command_calls": [
+        {
+          "name": "Find_Object",
+          "line": 630
+        },
+        {
+          "name": "Destroy_Object",
+          "line": 632
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Play_Animation",
+      "method": "Command_Play_Animation",
+      "dispatch_line": 992,
+      "method_line": 639,
+      "body_sha256": "fbb40806dbd5c352ae28d1746065c052e188988302c130827e6e22b8d7ef9286",
+      "command_calls": [
+        {
+          "name": "Find_Object",
+          "line": 654
+        },
+        {
+          "name": "Set_Animation",
+          "line": 656
+        },
+        {
+          "name": "Innate_Disable",
+          "line": 660
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Play_Audio",
+      "method": "Command_Play_Audio",
+      "dispatch_line": 993,
+      "method_line": 672,
+      "body_sha256": "09978e43a55976776ebfb644c03aed7a4287d3abe59e5b68f21a44b5b35f615c",
+      "command_calls": [
+        {
+          "name": "Find_Object",
+          "line": 690
+        },
+        {
+          "name": "Create_3D_Sound_At_Bone",
+          "line": 692
+        },
+        {
+          "name": "Create_2D_Sound",
+          "line": 697
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Control_Camera",
+      "method": "Command_Control_Camera",
+      "dispatch_line": 994,
+      "method_line": 702,
+      "body_sha256": "5f022af0443c9daa2f40ba290440c530651deb81451cc500c0b62f520de1788b",
+      "command_calls": [
+        {
+          "name": "Find_Object",
+          "line": 713
+        },
+        {
+          "name": "Set_Camera_Host",
+          "line": 721
+        },
+        {
+          "name": "Control_Enable",
+          "line": 722
+        },
+        {
+          "name": "Get_The_Star",
+          "line": 722
+        },
+        {
+          "name": "Enable_HUD",
+          "line": 723
+        },
+        {
+          "name": "Enable_Cinematic_Freeze",
+          "line": 725
+        },
+        {
+          "name": "Enable_Hibernation",
+          "line": 726
+        },
+        {
+          "name": "Set_Camera_Host",
+          "line": 731
+        },
+        {
+          "name": "Control_Enable",
+          "line": 732
+        },
+        {
+          "name": "Get_The_Star",
+          "line": 732
+        },
+        {
+          "name": "Enable_HUD",
+          "line": 733
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Send_Custom",
+      "method": "Command_Send_Custom",
+      "dispatch_line": 995,
+      "method_line": 738,
+      "body_sha256": "9bf8430b3be693a051043c7a15aed01680b611a0c6186ae5913166a41e75aa0a",
+      "command_calls": [
+        {
+          "name": "Find_Object",
+          "line": 769
+        },
+        {
+          "name": "Send_Custom_Event",
+          "line": 771
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Attach_To_Bone",
+      "method": "Command_Attach_To_Bone",
+      "dispatch_line": 996,
+      "method_line": 778,
+      "body_sha256": "f207f41237c49883e1305e07bd717919a4a43d1f9afc317a8484f6804b67fa79",
+      "command_calls": [
+        {
+          "name": "Find_Object",
+          "line": 796
+        },
+        {
+          "name": "Find_Object",
+          "line": 801
+        },
+        {
+          "name": "Attach_To_Object_Bone",
+          "line": 803
+        },
+        {
+          "name": "Attach_To_Object_Bone",
+          "line": 808
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Attach_Script",
+      "method": "Command_Attach_Script",
+      "dispatch_line": 997,
+      "method_line": 817,
+      "body_sha256": "87792fa63dbc377c7f76d9c66470c6c0a1944a2a994882ebb74348c632558631",
+      "command_calls": [
+        {
+          "name": "Find_Object",
+          "line": 830
+        },
+        {
+          "name": "Attach_Script",
+          "line": 833
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Set_Primary",
+      "method": "Command_Set_Primary",
+      "dispatch_line": 998,
+      "method_line": 841,
+      "body_sha256": "b0945408d4146d0bfec86715a4164d600a694880b179483cbac8aac7653fdb54",
+      "command_calls": [
+        {
+          "name": "Find_Object",
+          "line": 852
+        },
+        {
+          "name": "Enable_Hibernation",
+          "line": 854
+        },
+        {
+          "name": "Attach_Script",
+          "line": 857
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Move_Slot",
+      "method": "Command_Move_Slot",
+      "dispatch_line": 999,
+      "method_line": 865,
+      "body_sha256": "760c89f1f0202f0d6f60fe6539374a74120d20dfcada4333653036d80afc0df6",
+      "command_calls": [],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Sniper_Control",
+      "method": "Command_Sniper_Control",
+      "dispatch_line": 1000,
+      "method_line": 884,
+      "body_sha256": "078de1a13ded4c166795d78c35597c861143df22b420d7e1c26739226c0f527d",
+      "command_calls": [
+        {
+          "name": "Cinematic_Sniper_Control",
+          "line": 888
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Shake_Camera",
+      "method": "Command_Shake_Camera",
+      "dispatch_line": 1001,
+      "method_line": 892,
+      "body_sha256": "8f62a5ee08c2d57f6b17c547d21e3fe88bc4d484daa777597b2cdb87f8c8cf0c",
+      "command_calls": [
+        {
+          "name": "Find_Object",
+          "line": 904
+        },
+        {
+          "name": "Get_Bone_Position",
+          "line": 906
+        },
+        {
+          "name": "Shake_Camera",
+          "line": 907
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Enable_Shadow",
+      "method": "Command_Enable_Shadow",
+      "dispatch_line": 1002,
+      "method_line": 915,
+      "body_sha256": "73b3729adc2ee66a9a1538e951e09ea21b8e623ec4dabe53c0f6efdc5fe40fa1",
+      "command_calls": [
+        {
+          "name": "Find_Object",
+          "line": 926
+        },
+        {
+          "name": "Enable_Shadow",
+          "line": 928
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Enable_Letterbox",
+      "method": "Command_Enable_Letterbox",
+      "dispatch_line": 1003,
+      "method_line": 936,
+      "body_sha256": "bb274af6b63e71d66cb61ccca88bce061fe4ac21c11bbcdd8ed4bf190a3fabfd",
+      "command_calls": [
+        {
+          "name": "Enable_Letterbox",
+          "line": 940
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Set_Screen_Fade_Color",
+      "method": "Command_Set_Screen_Fade_Color",
+      "dispatch_line": 1004,
+      "method_line": 944,
+      "body_sha256": "26444f2af471b0797d98b594a8c97f17a6329b7bbd283c42bc026d93009e2b84",
+      "command_calls": [
+        {
+          "name": "Set_Screen_Fade_Color",
+          "line": 950
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    },
+    {
+      "title": "Set_Screen_Fade_Opacity",
+      "method": "Command_Set_Screen_Fade_Opacity",
+      "dispatch_line": 1005,
+      "method_line": 954,
+      "body_sha256": "3e88295c014a29c8cade59347b0e4860d524be66928a5bda57b8837fafb100a3",
+      "command_calls": [
+        {
+          "name": "Set_Screen_Fade_Opacity",
+          "line": 958
+        }
+      ],
+      "status": "unknown",
+      "evidence_class": "original_dispatch_source_metadata"
+    }
+  ],
+  "unique_engine_commands": [
+    "Add_To_Dirty_Cull_List",
+    "Attach_Script",
+    "Attach_To_Object_Bone",
+    "Cinematic_Sniper_Control",
+    "Control_Enable",
+    "Create_2D_Sound",
+    "Create_3D_Sound_At_Bone",
+    "Create_Explosion_At_Bone",
+    "Create_Object",
+    "Create_Object_At_Bone",
+    "Destroy_Object",
+    "Enable_Cinematic_Freeze",
+    "Enable_Engine",
+    "Enable_HUD",
+    "Enable_Hibernation",
+    "Enable_Letterbox",
+    "Enable_Shadow",
+    "Find_Object",
+    "Get_Bone_Position",
+    "Get_Facing",
+    "Get_ID",
+    "Get_Position",
+    "Get_The_Star",
+    "Innate_Disable",
+    "Send_Custom_Event",
+    "Set_Animation",
+    "Set_Camera_Host",
+    "Set_Facing",
+    "Set_Model",
+    "Set_Screen_Fade_Color",
+    "Set_Screen_Fade_Opacity",
+    "Shake_Camera"
+  ],
+  "complete": false,
+  "limits": [
+    "Branches and calls are lexical; platform conditions are not evaluated.",
+    "No dispatch, slot validity, object lifetime or downstream effects are proven.",
+    "Title_Match accepts case-insensitive title prefixes; full dispatch semantics need execution."
+  ],
+  "source_sha256": "de1ba39ba0b572009bcf2676e61e774c0bc86fb48822f77e715e71c23912e4f6"
+}

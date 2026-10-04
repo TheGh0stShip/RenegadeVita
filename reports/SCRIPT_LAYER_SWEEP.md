@@ -399,3 +399,18 @@ command payloads. Native char/compiler behavior and real playback remain open.
 The new fixture compiles original script/framework code using the existing
 isolated MSVC-default compatibility flags. Production runtime source and Dev221
 ARM artifacts remain unchanged; no device or emulator action occurred.
+
+## Cinematic dispatch dependency denominator — 2026-10-04
+
+All 18 original Parse_Command title branches are enumerated with their handler
+body hashes, source lines and direct ScriptCommands calls. They depend on 32
+distinct engine commands. The title sequence agrees with the existing retail
+control vocabulary; missing or duplicate dispatch extraction fails explicitly.
+Commented branches/calls are excluded. Every behavior row remains unknown.
+
+Thirty-three focused inventory/control tests pass and regeneration is
+byte-identical. This connects the parsed schedule to a complete direct dispatch
+dependency set before executing branches. Prefix/case matching, parameter and
+slot validity, object lifetime, platform selection and effects remain separate
+execution requirements. Runtime source and Dev221 artifacts are unchanged.
+See [dispatch dependencies](generated/sweeps/cinematic_dispatch_dependencies.json).

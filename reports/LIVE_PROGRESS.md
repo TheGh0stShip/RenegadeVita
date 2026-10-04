@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Cinematic dispatch dependency denominator — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:18 original dispatch branches retain handler hashes/lines and32 engine
+command dependencies. Existing control vocabulary reconciles exactly.
+Evidence:33 focused tests pass;independent regeneration matches.
+Next:bounded branch execution and slot/object/callback dependencies.
+Blocker:none for source work;runtime/Dev221 unchanged,native effects unverified.
+
 ## All-archive original cinematic scheduling — 2026-10-04
 
 Renegade Vita — v3.5 active

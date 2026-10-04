@@ -1,0 +1,28 @@
+{
+  "schema": "renegade.retail_adpcm_contract.v1",
+  "evidence_class": "windows_x86_authored_reference_decode",
+  "dll_sha256": "b4adfadcd8b873cd8f1117c4f6f160e3a925688096d4d2969ff83e5dbd502360",
+  "probe": "tools/diagnostics/retail_miles_adpcm_probe.ps1",
+  "probe_sha256": "88a515c011717575a2bad768d09c550388fa214a6659640e4177b5c5f9349949",
+  "private_backend_analysis_sha256": "8fd9ac64fb2496e6e76cd885d459f5f91cf98582452b5f3e0f84e2d72ebdccb1",
+  "preferred_image_base": "0x21100000",
+  "decode_export_va": "0x2110d0c0",
+  "decode_backend_va": "0x21125880",
+  "fixture_count": 16,
+  "inspection_accepted": 16,
+  "decode_accepted": 16,
+  "fixture_format": "authored zero-valued mono IMA; block alignment 8; one full block plus tail",
+  "tail_bytes": [0, 1, 2, 3],
+  "declared_frame_modes": ["9", "9 + 2 * tail_bytes"],
+  "guard_byte_modes": [0, 85],
+  "output_wave_bytes_by_tail_fixed_frames": [62, 62, 62, 62],
+  "output_wave_bytes_by_tail_extended_frames": [62, 66, 70, 74],
+  "nonzero_output_payload_bytes": 0,
+  "proprietary_implementation_copied": false,
+  "retail_media_exported": false,
+  "limitations": [
+    "Original API has no source-length argument; guard storage is not proof of memory safety.",
+    "Only authored zero-valued fixtures were decoded; retail waveform behavior remains unverified.",
+    "Windows x86 reference evidence does not establish ARM or physical Vita acceptance."
+  ]
+}

@@ -181,3 +181,51 @@ Next: preserve bounded format/data validation while reproducing this proven
 inspection behavior, with separate regression cases for truncated payloads,
 duplicate chunks and fact ordering. Validate both metadata and decode paths
 before a new ARM candidate. Physical audio acceptance remains open.
+
+## Bounded provider compatibility correction
+
+The provider now accepts an oversized outer RIFF declaration and malformed
+opaque trailing content after a bounded format and complete data payload.
+Strict inspection remains the default; playback explicitly selects retail
+compatibility. Truncated format/data chunks, duplicate chunks and malformed
+content before the validated payload still fail. Valid fact chunks after data
+retain their sample-count trimming. Duration-only inspection retains its
+separate metadata contract and is not permission to decode truncated audio.
+
+The updated all-archive C++ sanitizer run decodes 10,230 of 10,241 entries,
+recovering 255 of the previous 266 rejections. Ten files now reach IMA decoding
+and fail on short final blocks; wind4r.wav still produces empty output. These
+eleven remain open compatibility leads. No retail file was changed. The strict
+metadata inventory still reports 265 header anomalies; tolerating those
+declarations does not repair their on-disk metadata.
+
+Independent payload inspection shows that all ten short-block failures are
+mono IMA with 512-byte alignment and final tails of one to three bytes, shorter
+than the four-byte predictor header. The empty WAV has a zero-byte PCM data
+chunk. These explain the current rejection paths; original decode behavior
+must be established before discarding tails or accepting empty samples.
+
+All eight authored original-provider inspection vectors now decode through the
+host provider. Forty-five focused tests pass, including truncated-payload,
+duplicate-chunk, pre-data-malformation and post-data-fact counterexamples.
+ASan/LSan/UBSan report no findings in the all-archive run. Fast ARM compile/link
+passes all 635 actions; the canonical Dev210 build remains pending. Native
+playback, waveform agreement and audio timing remain unverified.
+
+The regenerated receipts supersede the pre-correction decode totals above;
+the original-provider comparison receipt remains frozen baseline evidence.
+The consolidated register reconciles 40,025 overlapping evidence records:
+39,845 unknown, 92 missing, 43 replaced boundaries, 39 stubs and six disabled
+guards. These are not unique defects or completed native acceptance gates.
+
+The original ADPCM export at preferred VA 0x2110d0c0 delegates to 0x21125880.
+A separate authored 32-bit probe now exercises one full eight-byte mono block
+with zero to three trailing bytes, fixed or extended fact counts, and two
+guard-byte patterns. All sixteen inspect and decode successfully. Output WAV
+size follows the fact count (62 bytes at nine frames; 66/70/74 at 11/13/15).
+All returned payload bytes are zero for these zero-valued fixtures, independent
+of guard pattern. Receipt: `generated/retail_adpcm_contract.json`.
+
+This proves another compatibility difference, not the correct retail waveform
+or safety of the original unbounded API. The ten 512-byte retail block cases
+remain unresolved. The native decoder is unchanged by this reference probe.

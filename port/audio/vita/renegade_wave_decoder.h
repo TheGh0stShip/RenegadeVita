@@ -59,8 +59,12 @@ struct DecodedWave {
 	}
 };
 
+// Strict by default. Retail compatibility tolerates an oversized outer length
+// or malformed post-data content only after bounded format/data validation.
+// Truncated-data admission remains metadata-only and is never used to decode.
 bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
-	const char **error = nullptr, bool allow_truncated_data = false);
+	const char **error = nullptr, bool allow_truncated_data = false,
+	bool allow_retail_trailing_content = false);
 bool Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 	const char **error = nullptr);
 // Return metadata from the same validated parse used for decoding. Callers

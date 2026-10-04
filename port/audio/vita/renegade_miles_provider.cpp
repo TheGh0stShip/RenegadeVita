@@ -1043,7 +1043,7 @@ S32 AIL_WAV_info_bounded(const void *data, size_t bytes, AILSOUNDINFO *info)
 	WaveInfo wave;
 	const char *error = nullptr;
 	if (!RenegadeVitaAudio::Inspect_Wave(
-		static_cast<const uint8_t *>(data), bytes, &wave, &error, true)) {
+		static_cast<const uint8_t *>(data), bytes, &wave, &error, true, true)) {
 		Set_Error(error);
 		return 0;
 	}

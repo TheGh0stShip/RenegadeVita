@@ -38,12 +38,12 @@ class WaveArchiveProbeTest(unittest.TestCase):
         self.assertEqual(result.stdout, b'1\t2\tnone\n' * 2)
         self.assertEqual(result.stderr, b'')
 
-    def test_oversized_riff_is_decode_rejection_not_process_failure(self):
+    def test_oversized_riff_preserves_bounded_audio_payload(self):
         good = wave(fmt(), wave_chunk(b'data', b'\0' * 4))
         bad = good[:4] + struct.pack('<I', len(good) + 100) + good[8:]
         result = self.invoke(struct.pack('<I', len(bad)) + bad)
         self.assertEqual(result.returncode, 0)
-        self.assertEqual(result.stdout, b'0\t0\tRIFF image exceeds source buffer\n')
+        self.assertEqual(result.stdout, b'1\t2\tnone\n')
         self.assertEqual(result.stderr, b'')
 
     def test_truncated_protocol_and_allocation_ceiling_fail(self):
@@ -53,3 +53,22 @@ class WaveArchiveProbeTest(unittest.TestCase):
             self.assertEqual(result.returncode, code)
             self.assertEqual(result.stdout, b'')
             self.assertEqual(result.stderr, b'')
+
+    def test_trailing_content_keeps_fact_and_payload_checks(self):
+        from tools.test_mission_wave_headers import wave_chunk
+        good = wave(fmt(), wave_chunk(b'data', b'\0' * 4))
+        trailing = wave(fmt(), wave_chunk(b'data', b'\0' * 4), b'junk' + struct.pack('<I', 0xffffffff))
+        bad_before = wave(b'junk' + struct.pack('<I', 0xffffffff), fmt(), wave_chunk(b'data', b'\0' * 4))
+        duplicate = wave(fmt(), wave_chunk(b'data', b'\0' * 4), wave_chunk(b'data', b'\0' * 4))
+        truncated = good[:-1]
+        fact_after = wave(fmt(tag=17, align=8, bits=4), wave_chunk(b'data', b'\0' * 8),
+                          wave_chunk(b'fact', struct.pack('<I', 5)))
+        packets = b''.join(struct.pack('<I', len(data)) + data
+                           for data in (trailing, bad_before, duplicate, truncated, fact_after))
+        result = self.invoke(packets)
+        self.assertEqual(result.returncode, 0)
+        lines = result.stdout.splitlines()
+        self.assertEqual(lines[0], b'1\t2\tnone')
+        self.assertTrue(all(line.startswith(b'0\t0\t') for line in lines[1:4]))
+        self.assertEqual(lines[4], b'1\t5\tnone')
+        self.assertEqual(result.stderr, b'')

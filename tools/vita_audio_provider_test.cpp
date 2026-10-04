@@ -261,6 +261,15 @@ int main()
 	passed &= Require(!RenegadeVitaAudio::Decode_Wave(
 		large_pcm.data(), 64, &decoded),
 		"strict WAVE decode accepted a truncated payload");
+	std::vector<uint8_t> trailing_pcm = pcm;
+	const uint8_t invalid_trailer[] = {'j', 'u', 'n', 'k', 255, 255, 255, 255};
+	trailing_pcm.insert(trailing_pcm.end(), invalid_trailer, invalid_trailer + sizeof(invalid_trailer));
+	const uint32_t trailing_riff_bytes = static_cast<uint32_t>(trailing_pcm.size() - 8U);
+	for (size_t index = 0; index < 4; ++index) trailing_pcm[4U + index] =
+		static_cast<uint8_t>(trailing_riff_bytes >> (index * 8U));
+	passed &= Require(AIL_WAV_info_bounded(trailing_pcm.data(), trailing_pcm.size(), &bounded_info) != 0 &&
+		bounded_info.data_len == pcm_samples.size(),
+		"bounded duration inspection rejected intact audio before malformed trailing content");
 
 	AIL_startup();
 	Renegade_Miles_Reset_Runtime_Stats();
@@ -479,8 +488,11 @@ int main()
 	std::vector<uint8_t> oversized_riff = pcm;
 	for (size_t index = 4; index < 8; ++index) oversized_riff[index] = 0xff;
 	passed &= Require(AIL_set_3D_sample_file_bounded(sample3d,
-		oversized_riff.data(), oversized_riff.size()) == 0,
-		"bounded 3D accepted an oversized declared RIFF");
+		oversized_riff.data(), oversized_riff.size()) != 0,
+		"bounded 3D rejected intact audio with an oversized declared RIFF");
+	passed &= Require(AIL_set_3D_sample_file_bounded(sample3d,
+		oversized_riff.data(), oversized_riff.size() - 1U) == 0,
+		"bounded 3D accepted a truncated audio payload");
 	const uint8_t short_header[4] = {'R', 'I', 'F', 'F'};
 	passed &= Require(AIL_set_3D_sample_file_bounded(sample3d,
 		short_header, sizeof(short_header)) == 0,

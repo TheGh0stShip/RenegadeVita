@@ -427,7 +427,7 @@ bool Decode_Mpeg(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 } // namespace
 
 bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
-	const char **error, bool allow_truncated_data)
+	const char **error, bool allow_truncated_data, bool allow_retail_trailing_content)
 {
 	if (error != nullptr) *error = nullptr;
 	if (data == nullptr || info == nullptr || bytes < 12U) {
@@ -458,7 +458,7 @@ bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
 	}
 	const uint64_t declared_bytes = static_cast<uint64_t>(Read_U32(data + 4U)) + 8U;
 	if (declared_bytes < 12U) return Fail("invalid RIFF length", error);
-	if (!allow_truncated_data && declared_bytes > bytes) {
+	if (!allow_truncated_data && !allow_retail_trailing_content && declared_bytes > bytes) {
 		return Fail("RIFF image exceeds source buffer", error);
 	}
 	const size_t scan_bytes = static_cast<size_t>(
@@ -477,6 +477,11 @@ bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
 				data_found = true;
 				break;
 			}
+			// Original Miles inspection accepts post-data content independently
+			// of a complete audio payload. Never admit a truncated format/data
+			// chunk: only a previously validated payload permits this exit.
+			if (allow_retail_trailing_content && format_found && data_found &&
+				identifier != UINT32_C(0x20746d66) && identifier != UINT32_C(0x61746164)) break;
 			return Fail("RIFF chunk exceeds source image", error);
 		}
 		if (identifier == UINT32_C(0x20746d66)) {
@@ -562,7 +567,7 @@ bool Decode_Wave_With_Info(const uint8_t *data, size_t bytes,
 	if (Is_Mpeg_Image(data, bytes)) return Decode_Mpeg(data, bytes, decoded, parsed_info, error);
 #endif
 	WaveInfo info;
-	if (!Inspect_Wave(data, bytes, &info, error)) return false;
+	if (!Inspect_Wave(data, bytes, &info, error, false, true)) return false;
 	DecodedWave output;
 	output.channels = info.channels;
 	output.sample_rate = info.sample_rate;

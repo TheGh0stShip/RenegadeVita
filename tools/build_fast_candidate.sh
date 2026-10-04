@@ -185,6 +185,7 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_mission_conversation_diagnostics_contract \
 		tools.test_vita_texture_provenance_contract \
 		tools.test_vita_texture_surface_contract \
+		tools.test_vita_surface_lock \
 		tools.test_a4_original_frontend_contract \
 		tools.test_vita_camera_input_contract \
 		tools.test_vita_touch_presentation \

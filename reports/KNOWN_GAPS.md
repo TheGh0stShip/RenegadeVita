@@ -1,5 +1,11 @@
 # Known gaps
 
+2026-10-04 invalid-pitch raster lock leaks are corrected at the SurfaceClass
+boundary.19 production-method sanitizer cases,492 focused contracts and651
+Dev226 ARM compile/link actions pass. Actual native provider allocation,
+texture upload and text/effect pixels remain unverified. Existing mixed wchar_t
+ABI warnings are unchanged. See [surface cleanup](SURFACE_RASTER_PITCH_CLEANUP.md).
+
 2026-10-04 the optimized selected-script review denominator is classified.
 The two live M03 RMV pointer warnings are removed without changing payload,
 animation or save-slot behavior. The remaining PDS pointer receiver and its

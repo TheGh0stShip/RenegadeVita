@@ -300,6 +300,7 @@ python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_
 	tools.test_vita_loading_screen_contract \
 	tools.test_a4_original_frontend_contract \
 	tools.test_vita_texture_surface_contract \
+	tools.test_vita_surface_lock \
 	tools.test_audit_tt_reference tools.test_vita_audio_provider \
 	tools.test_query_renegade_server \
 	tools.test_ttfs \

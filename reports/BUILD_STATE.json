@@ -1,4 +1,17 @@
 {
+  "surface_raster_pitch_cleanup_20261004": {
+    "state": "PRODUCTION_LOCK_FAILURE_REPRODUCED_HOST_SANITIZERS_ARM_LINK_PASS",
+    "candidate": "A3.5-dev226",
+    "production_raster_cases_passed": 19,
+    "host_fast_contract_tests_passed": 492,
+    "arm_compile_link_actions": 651,
+    "elf_sha256": "23bbb3f7cf03f15a5f9319527430784410e50df25a085346b61063239225eb8b",
+    "map_sha256": "7e5585091029ae88c1793e70ab7d36eebd35d359646e75beae9bce8014d91ed2",
+    "report": "reports/SURFACE_RASTER_PITCH_CLEANUP.md",
+    "mixed_wchar_t_abi_warning_open": true,
+    "native_acceptance_gates_closed": 0,
+    "canonical_package_passed": false
+  },
   "selected_script_warning_closure_20261004": {
     "state": "LIVE_RMV_DEAD_POINTER_ROUNDTRIP_REMOVED_PDS_TEST_EXCLUDED_WITH_PROOF_ARM_LINK_PASS",
     "candidate": "A3.5-dev225",

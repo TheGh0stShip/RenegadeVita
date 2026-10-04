@@ -38,6 +38,12 @@ unsigned Bytes_Per_Pixel(WW3DFormat format)
 	}
 }
 
+bool Valid_Row_Pitch(const SurfaceClass::SurfaceDescription &description, int pitch)
+{
+	return pitch > 0 && static_cast<size_t>(description.Width) <=
+		static_cast<size_t>(pitch) / Bytes_Per_Pixel(description.Format);
+}
+
 SurfaceStore *Find_Store(const SurfaceClass *owner)
 {
 	for (unsigned index = 0; index < sizeof(g_surface_stores) / sizeof(g_surface_stores[0]); ++index) {
@@ -155,7 +161,11 @@ void SurfaceClass::Clear()
 	Get_Description(description);
 	int pitch = 0;
 	unsigned char *pixels = static_cast<unsigned char *>(Lock(&pitch));
-	if (pixels == NULL || pitch <= 0) return;
+	if (pixels == NULL) return;
+	if (!Valid_Row_Pitch(description, pitch)) {
+		Unlock();
+		return;
+	}
 	for (unsigned y = 0U; y < description.Height; ++y) {
 		memset(pixels + static_cast<size_t>(y) * pitch, 0,
 			static_cast<size_t>(description.Width) * Bytes_Per_Pixel(description.Format));
@@ -172,7 +182,11 @@ void SurfaceClass::Copy(const unsigned char *other)
 		Bytes_Per_Pixel(description.Format);
 	int pitch = 0;
 	unsigned char *pixels = static_cast<unsigned char *>(Lock(&pitch));
-	if (pixels == NULL || pitch < static_cast<int>(row_bytes)) return;
+	if (pixels == NULL) return;
+	if (!Valid_Row_Pitch(description, pitch)) {
+		Unlock();
+		return;
+	}
 	for (unsigned y = 0U; y < description.Height; ++y) {
 		memcpy(pixels + static_cast<size_t>(y) * pitch,
 			other + static_cast<size_t>(y) * row_bytes, row_bytes);
@@ -204,7 +218,9 @@ void SurfaceClass::Copy(unsigned int dstx, unsigned int dsty, unsigned int srcx,
 	unsigned char *destination_pixels = static_cast<unsigned char *>(Lock(&destination_pitch));
 	unsigned char *source_pixels = static_cast<unsigned char *>(
 		const_cast<SurfaceClass *>(other)->Lock(&source_pitch));
-	if (destination_pixels == NULL || source_pixels == NULL) {
+	if (destination_pixels == NULL || source_pixels == NULL ||
+		!Valid_Row_Pitch(destination, destination_pitch) ||
+		!Valid_Row_Pitch(source, source_pitch)) {
 		if (destination_pixels != NULL) Unlock();
 		if (source_pixels != NULL) const_cast<SurfaceClass *>(other)->Unlock();
 		return;
@@ -249,7 +265,11 @@ void SurfaceClass::FindBB(Vector2i *min, Vector2i *max)
 	const unsigned bytes_per_pixel = Bytes_Per_Pixel(description.Format);
 	int pitch = 0;
 	const unsigned char *pixels = static_cast<const unsigned char *>(Lock(&pitch));
-	if (pixels == NULL || pitch <= 0) return;
+	if (pixels == NULL) return;
+	if (!Valid_Row_Pitch(description, pitch)) {
+		Unlock();
+		return;
+	}
 	for (int y = top; y < bottom; ++y) {
 		for (int x = left; x < right; ++x) {
 			const unsigned char *pixel = pixels + static_cast<size_t>(y) * pitch +

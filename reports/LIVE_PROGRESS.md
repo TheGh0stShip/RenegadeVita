@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Surface raster lock cleanup — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: invalid raster pitches release acquired provider locks; rectangle
+copy validates both pitches without changing valid padded rows or conversion.
+Evidence: pre-fix production-method assertion reproduced;19 cases pass
+ASan/LSan/UBSan outside tracing;492 focused contracts and651 Dev226 ARM
+compile/link actions pass, with artifact hashes retained. Next: original
+material/UV/specular and retained native surface/pixel acceptance.
+Blocker:none for source work;physical behavior remains unverified.
+See [surface cleanup](SURFACE_RASTER_PITCH_CLEANUP.md).
+
 ## Selected script warning closure — 2026-10-04
 
 Renegade Vita — v3.5 active

@@ -1,5 +1,11 @@
 # Renegade Vita port status
 
+2026-10-04 Dev226 surface raster pitch cleanup passes19 production-method
+ASan/LSan/UBSan cases,492 focused contracts and651 ARM compile/link actions.
+Source and ELF/map hashes are retained. Native surface uploads, pixels,
+canonical packaging and mixed wchar_t ABI remain open; no runtime gate closes.
+See [surface cleanup](SURFACE_RASTER_PITCH_CLEANUP.md).
+
 2026-10-04 Dev225 closes the selected script compiler review denominator. Two
 live M03 `RMV_Engineer_Wander` bindings no longer perform a dead int-pointer-int
 round trip before using a fixed animation literal; their saved field and slot

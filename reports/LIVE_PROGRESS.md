@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Whole-script compiler assumptions — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:45 DSP units and45 headers inventoried on original/staged sides;
+nine syntax categories retained with unknown status and explicit coverage limits.
+Evidence:source inspection links three M03 address-to-int events to pointer
+receivers;installed toolchains confirm distinct ILP32/LP64 widths.
+Thirty-four tests and exact inventory regeneration pass;53,066 records retained.
+Next:original callback timing and host compatibility ownership, then dataflow
+and remaining all-map/mode behavior closure.
+Blocker:none for source work;native mission/performance acceptance remains open.
+
 ## Cinematic alternative/failure execution — 2026-10-04
 
 Renegade Vita — v3.5 active

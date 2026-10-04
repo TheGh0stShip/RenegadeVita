@@ -27,7 +27,7 @@ ISSUES['host_script_parameters'] = 9
 ISSUES['script_parameter_surface'] = 9
 ISSUES['script_load_destinations'] = 9
 SCRIPT_SUPPLEMENTS = ('script_command_bodies', 'script_command_port_dependencies',
-                     'host_script_command_table', 'cinematic_dispatch_dependencies')
+                     'host_script_command_table', 'cinematic_dispatch_dependencies', 'script_portability')
 SUPPLEMENTS += SCRIPT_SUPPLEMENTS
 ISSUES.update({name: 9 for name in SCRIPT_SUPPLEMENTS})
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
@@ -86,6 +86,13 @@ def root_records(name, value):
             calls = sorted({call['name'] for row in rows for call in row['command_calls']})
             if value['unique_engine_commands'] != calls:
                 raise ValueError(f'{name}: command partition mismatch')
+        if name == 'script_portability':
+            if value['dsp_units'] + value['directory_headers'] != len(rows) or value['dsp_units'] != sum(r['surface']=='dsp_unit' for r in rows) or value['directory_headers'] != sum(r['surface']=='directory_header' for r in rows) or value['staged_present'] != sum(r['staged_present'] for r in rows):
+                raise ValueError(f'{name}: source partition mismatch')
+            for key in ('original', 'staged'):
+                categories = dict(Counter(f['category'] for r in rows for f in r[key+'_findings']))
+                if categories != value[key+'_categories']:
+                    raise ValueError(f'{name}: category partition mismatch')
     elif name=='script_load_destinations':
         if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)) or value['parse_complete']!=sum(r['parse_complete'] for r in rows):
             raise ValueError('Script load destination partition mismatch')

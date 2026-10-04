@@ -1,5 +1,52 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Whole script compiler-assumption surface — 2026-10-04
+
+`python3 -m tools.audit_script_portability` inventories every original DSP unit
+and directory header:45 units plus45 headers, all90 with staged counterparts.
+Original/staged hashes and lexical candidates retain lines, offsets and preceding
+script declaration candidates. The source and category partitions reconcile in
+the full gap register. Candidates remain unknown; they are not defect verdicts.
+Thirty-four focused tests pass; both inventories regenerate identically. The
+consolidated register retains53,066 overlapping records, including52,785 unknown.
+
+| Syntax category | Original | Staged |
+| --- | ---: | ---: |
+| Address to integer cast | 3 | 3 |
+| Bare scalar declaration | 2,231 | 2,224 |
+| Case-insensitive lookup | 89 | 99 |
+| Dereference order comparison | 4 | 4 |
+| Integer cast | 24 | 22 |
+| Loop-local declaration | 38 | 38 |
+| Plain-char declaration | 691 | 696 |
+| Scalar-pointer cast | 16 | 15 |
+| Size expression | 41 | 43 |
+
+Source inspection links all three address casts to Mission03 custom events:
+`M03_Chinook_Spawned_Soldier_GDI::Poked` sends `&has_escort` as type3000;
+`M03_Commando_Script::Custom` casts its integer parameter back to `int*`.
+`M03_Area_Troop_Counter::Custom` sends `&area` and `&target_count` as types5000
+and6300; `M03_Reinforce_Area::Custom` casts them back to pointers. The staged
+casts are unchanged. This is a host LP64 width risk, not evidence of an ARM
+mission defect. Callback timing, runtime reachability and a host compatibility
+boundary still need verification before a change; no pointer truncation fix
+or raw pointer token is being introduced here.
+
+Installed compiler macros confirm ARMv7-A, little endian, int/long/pointer4
+and VFP calling convention; host int4/long8/pointer8. Default plain char is
+signed in both queried compilers; actual per-unit flags and execution remain
+separate requirements. Existing aliases in `msvc_compat.h` cover stricmp and
+strnicmp names, without proving locale-equivalent results. The four separated
+dereference comparisons occur in the cinematic parser; its signed-char edge
+fixture is separate host evidence.
+
+Bare declarations can be members or assigned before use; loop declarations do
+not prove post-loop use. Templates, compact comparisons, indirect macros,
+transitive headers, type flow and stack initialization require additional
+compiler/dataflow evidence. Directory-header presence does not establish DSP
+include reachability. The JSON records these limits explicitly. Production
+runtime and Dev221 artifacts are unchanged; native acceptance remains open.
+
 ## Cinematic alternative and failure execution — 2026-10-04
 
 The original dispatch sanitizer fixture now also passes 25 cases: five

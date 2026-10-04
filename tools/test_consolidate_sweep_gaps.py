@@ -5,6 +5,19 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_portability_surface_and_nested_candidates(self):
+        value = {'total':1,'counts':{'unknown':1},'dsp_units':1,'directory_headers':0,
+                 'staged_present':1,'original_categories':{'integer_cast':1},'staged_categories':{},
+                 'rows':[{'status':'unknown','surface':'dsp_unit','staged_present':True,
+                          'original_findings':[{'category':'integer_cast','status':'unknown'}],
+                          'staged_findings':[]}]}
+        result = consolidate([('script_portability',json.dumps(value).encode())])
+        self.assertEqual(result['counts'],{'unknown':2})
+        self.assertTrue(all(r['cluster']=='scripts' for r in result['rows']))
+        value['original_categories']={}
+        with self.assertRaisesRegex(ValueError,'category partition'):
+            consolidate([('script_portability',json.dumps(value).encode())])
+
     def test_dispatch_dependency_partition_retains_unknown(self):
         value = {'total': 1, 'counts': {'unknown': 1}, 'unique_engine_commands': ['Find_Object'],
                  'rows': [{'title': 'Destroy_Object', 'status': 'unknown',

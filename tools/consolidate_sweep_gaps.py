@@ -10,9 +10,13 @@ SWEEPS = ('port_guards', 'renderer', 'link', 'retail', 'scripts', 'systems',
           'performance', 'external')
 ISSUES = dict(zip(SWEEPS, range(5, 13)))
 SUPPLEMENTS = ('level_chunks', 'spatial_presence', 'visibility_bounds',
-               'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers', 'wave_decode', 'procedural_fvf_layouts')
+               'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers', 'wave_decode', 'procedural_fvf_layouts',
+               'database_chunks', 'level_persist_closure', 'database_persist_closure',
+               'host_definition_registry', 'database_definition_closure')
 ISSUES.update({name: 8 for name in SUPPLEMENTS})
 ISSUES['procedural_fvf_layouts'] = 6
+ISSUES.update({name: 7 for name in ('level_persist_closure', 'database_persist_closure',
+                                  'host_definition_registry', 'database_definition_closure')})
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof',
             'missing', 'unknown'}
@@ -51,7 +55,21 @@ def root_records(name, value):
         return rows
     rows=value['archives'] if name=='w3d_chunks' else value['rows']
     totals=value.get('totals',{})
-    if name=='procedural_fvf_layouts':
+    if name=='database_chunks':
+        if totals['archives']!=len(rows) or totals['members']!=sum(len(r['members']) for r in rows):
+            raise ValueError('Database member denominator mismatch')
+    elif name in {'level_persist_closure', 'database_persist_closure'}:
+        if totals['factory_ids']!=len(rows) or totals['candidate_instances']!=sum(r['candidate_instances'] for r in rows):
+            raise ValueError('Persistence denominator mismatch')
+        if totals['without_arm_symbol']!=sum(not r['arm_load_symbol_present'] for r in rows) or totals['without_host_lookup']!=sum(not r['host_lookup_matches'] for r in rows):
+            raise ValueError('Persistence evidence partition mismatch')
+    elif name=='host_definition_registry':
+        if value['total']!=len(rows) or value['matched']!=sum(r['matches'] for r in rows):
+            raise ValueError('Definition lookup denominator mismatch')
+    elif name=='database_definition_closure':
+        if totals['persistence_ids']!=len(rows) or totals['mapped']!=sum(bool(r['definition_class_ids']) for r in rows) or totals['unmapped']!=len(rows)-totals['mapped'] or totals['ambiguous']!=sum(r['class_id_mapping_ambiguous'] for r in rows):
+            raise ValueError('Definition closure partition mismatch')
+    elif name=='procedural_fvf_layouts':
         if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)):
             raise ValueError('Procedural FVF denominator/status mismatch')
         admitted=sum(r['native_layout_admitted'] for r in rows)
@@ -121,6 +139,11 @@ def consolidate(inputs):
     receipts = []
     for name, data in inputs:
         value = json.loads(data)
+        if name in {'level_persist_closure', 'database_persist_closure', 'database_definition_closure'}:
+            for parent in value.get('inputs', []):
+                parent_name=Path(parent['source']).stem
+                if parent_name in identities and parent['sha256']!=identities[parent_name]:
+                    raise ValueError(f'{name}: stale registry parent inventory identity')
         if name in dependencies:
             field,parent=dependencies[name]
             if parent in identities and value.get(field)!=identities[parent]:
@@ -150,6 +173,7 @@ def consolidate(inputs):
                          'evidence_class': record.get('evidence_class', 'parent_inventory_metadata'),
                          'evidence_source': f'reports/generated/sweeps/{name}.json',
                          'cluster': ('renderer' if name=='procedural_fvf_layouts' else
+                                     'link' if name in {'host_definition_registry', 'level_persist_closure', 'database_persist_closure', 'database_definition_closure'} else
                                      'retail' if name in SUPPLEMENTS else name)})
             count += 1
         receipts.append({'sweep': name, 'sha256': hashlib.sha256(data).hexdigest(),

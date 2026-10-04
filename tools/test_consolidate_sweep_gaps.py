@@ -5,6 +5,23 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_definition_closure_partition_and_registry_parent(self):
+        host={'total':1,'matched':1,'rows':[{'status':'unknown','matches':True}]}
+        data=json.dumps(host).encode()
+        child={'rows':[{'status':'unknown','definition_class_ids':[99],
+                        'class_id_mapping_ambiguous':False}],
+               'totals':{'persistence_ids':1,'mapped':1,'unmapped':0,'ambiguous':0},
+               'inputs':[{'source':'reports/generated/sweeps/host_definition_registry.json',
+                          'sha256':hashlib.sha256(data).hexdigest()}]}
+        result=consolidate([('host_definition_registry',data),
+                            ('database_definition_closure',json.dumps(child).encode())])
+        self.assertEqual(result['total'],2)
+        self.assertTrue(all(r['cluster']=='link' for r in result['rows']))
+        child['inputs'][0]['sha256']='stale'
+        with self.assertRaisesRegex(ValueError,'stale registry'):
+            consolidate([('host_definition_registry',data),
+                         ('database_definition_closure',json.dumps(child).encode())])
+
     def test_fvf_renderer_cluster_and_partition(self):
         value={'total':2,'counts':{'missing':1,'unknown':1},'admitted_layouts':1,
                'unsupported_layouts':1,'rows':[

@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Definition registry and consolidation — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: 57/57 original host definition class lookups match; ARM exposes the
+same IDs. Fifty-five database persistence IDs map to those definition classes;
+ten editor IDs remain open. Metadata/registry receipts now join the gap register.
+Evidence: 14 focused tests pass; stale parent identities reject. The register
+retains 41,526 overlapping records, including 41,262 unknowns. No runtime change.
+Next: definition instance references and skipped-editor runtime relevance.
+Blocker: none for discovery; native registration and actual loading remain open.
+See [registration ledger](LINK_REGISTRATION_SWEEP.md).
+
 ## Database persistence denominator — 2026-10-03
 
 Renegade Vita — v3.5 active

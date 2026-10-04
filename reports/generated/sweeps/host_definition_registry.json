@@ -1,0 +1,819 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_original_definition_lookup_and_arm_symbols",
+  "binary_sha256": "bb685247f73b1e85377e9f209c55586d06a159d55c9021254873f5145c47b5a2",
+  "symbol_listing_sha256": "e07a3e13a332c2f5285ff574e6e90d8c57fdab97bc5c428f78ada0eedc12490e",
+  "arm_symbols_sha256": "ac884987047dc2bc2316eadb3f9aa50f6f48b54e18e5695196041b674815df75",
+  "parser_sha256": "2f31c15418ef712f9c13ca96a4be4abba8c22ad9ff463c845ac9165352789d90",
+  "total": 57,
+  "matched": 57,
+  "arm_template_ids": 57,
+  "arm_only_ids": [],
+  "rows": [
+    {
+      "class_id": 12289,
+      "classes": [
+        "SoldierGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12289,
+      "matches": true,
+      "arm_classes": [
+        "SoldierGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12291,
+      "classes": [
+        "PowerUpGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12291,
+      "matches": true,
+      "arm_classes": [
+        "PowerUpGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12292,
+      "classes": [
+        "SimpleGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12292,
+      "matches": true,
+      "arm_classes": [
+        "SimpleGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12294,
+      "classes": [
+        "C4GameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12294,
+      "matches": true,
+      "arm_classes": [
+        "C4GameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12295,
+      "classes": [
+        "SAMSiteGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12295,
+      "matches": true,
+      "arm_classes": [
+        "SAMSiteGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12301,
+      "classes": [
+        "SpawnerDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 12301,
+      "matches": true,
+      "arm_classes": [
+        "SpawnerDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12302,
+      "classes": [
+        "ScriptZoneGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12302,
+      "matches": true,
+      "arm_classes": [
+        "ScriptZoneGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12303,
+      "classes": [
+        "TransitionGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12303,
+      "matches": true,
+      "arm_classes": [
+        "TransitionGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12304,
+      "classes": [
+        "VehicleGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12304,
+      "matches": true,
+      "arm_classes": [
+        "VehicleGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12305,
+      "classes": [
+        "CinematicGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12305,
+      "matches": true,
+      "arm_classes": [
+        "CinematicGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12306,
+      "classes": [
+        "DamageZoneGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12306,
+      "matches": true,
+      "arm_classes": [
+        "DamageZoneGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12307,
+      "classes": [
+        "SpecialEffectsGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12307,
+      "matches": true,
+      "arm_classes": [
+        "SpecialEffectsGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12308,
+      "classes": [
+        "SakuraBossGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12308,
+      "matches": true,
+      "arm_classes": [
+        "SakuraBossGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12310,
+      "classes": [
+        "BeaconGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 12310,
+      "matches": true,
+      "arm_classes": [
+        "BeaconGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12311,
+      "classes": [
+        "MendozaBossGameObjDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 12311,
+      "matches": true,
+      "arm_classes": [
+        "MendozaBossGameObjDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 12312,
+      "classes": [
+        "RaveshawBossGameObjDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 12312,
+      "matches": true,
+      "arm_classes": [
+        "RaveshawBossGameObjDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 20480,
+      "classes": [
+        "AudibleSoundDefinitionClass"
+      ],
+      "found": true,
+      "returned_class_id": 20480,
+      "matches": true,
+      "arm_classes": [
+        "AudibleSoundDefinitionClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36864,
+      "classes": [
+        "DecorationPhysDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36864,
+      "matches": true,
+      "arm_classes": [
+        "DecorationPhysDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36865,
+      "classes": [
+        "HumanPhysDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36865,
+      "matches": true,
+      "arm_classes": [
+        "HumanPhysDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36866,
+      "classes": [
+        "MotorcycleDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36866,
+      "matches": true,
+      "arm_classes": [
+        "MotorcycleDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36868,
+      "classes": [
+        "Phys3DefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36868,
+      "matches": true,
+      "arm_classes": [
+        "Phys3DefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36869,
+      "classes": [
+        "RigidBodyDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36869,
+      "matches": true,
+      "arm_classes": [
+        "RigidBodyDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36870,
+      "classes": [
+        "WheeledVehicleDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36870,
+      "matches": true,
+      "arm_classes": [
+        "WheeledVehicleDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36871,
+      "classes": [
+        "StaticPhysDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36871,
+      "matches": true,
+      "arm_classes": [
+        "StaticPhysDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36872,
+      "classes": [
+        "StaticAnimPhysDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36872,
+      "matches": true,
+      "arm_classes": [
+        "StaticAnimPhysDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36873,
+      "classes": [
+        "ProjectileDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36873,
+      "matches": true,
+      "arm_classes": [
+        "ProjectileDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36874,
+      "classes": [
+        "TimedDecorationPhysDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36874,
+      "matches": true,
+      "arm_classes": [
+        "TimedDecorationPhysDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36876,
+      "classes": [
+        "TrackedVehicleDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36876,
+      "matches": true,
+      "arm_classes": [
+        "TrackedVehicleDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36877,
+      "classes": [
+        "VTOLVehicleDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36877,
+      "matches": true,
+      "arm_classes": [
+        "VTOLVehicleDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36878,
+      "classes": [
+        "DynamicAnimPhysDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36878,
+      "matches": true,
+      "arm_classes": [
+        "DynamicAnimPhysDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36880,
+      "classes": [
+        "AccessiblePhysDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36880,
+      "matches": true,
+      "arm_classes": [
+        "AccessiblePhysDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36992,
+      "classes": [
+        "DoorPhysDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36992,
+      "matches": true,
+      "arm_classes": [
+        "DoorPhysDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36993,
+      "classes": [
+        "ElevatorPhysDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36993,
+      "matches": true,
+      "arm_classes": [
+        "ElevatorPhysDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36994,
+      "classes": [
+        "DamageableStaticPhysDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36994,
+      "matches": true,
+      "arm_classes": [
+        "DamageableStaticPhysDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 36995,
+      "classes": [
+        "BuildingAggregateDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 36995,
+      "matches": true,
+      "arm_classes": [
+        "BuildingAggregateDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 45057,
+      "classes": [
+        "WeaponDefinitionClass"
+      ],
+      "found": true,
+      "returned_class_id": 45057,
+      "matches": true,
+      "arm_classes": [
+        "WeaponDefinitionClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 45058,
+      "classes": [
+        "AmmoDefinitionClass"
+      ],
+      "found": true,
+      "returned_class_id": 45058,
+      "matches": true,
+      "arm_classes": [
+        "AmmoDefinitionClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 45059,
+      "classes": [
+        "ExplosionDefinitionClass"
+      ],
+      "found": true,
+      "returned_class_id": 45059,
+      "matches": true,
+      "arm_classes": [
+        "ExplosionDefinitionClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 53249,
+      "classes": [
+        "BuildingGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 53249,
+      "matches": true,
+      "arm_classes": [
+        "BuildingGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 53250,
+      "classes": [
+        "RefineryGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 53250,
+      "matches": true,
+      "arm_classes": [
+        "RefineryGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 53251,
+      "classes": [
+        "PowerPlantGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 53251,
+      "matches": true,
+      "arm_classes": [
+        "PowerPlantGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 53252,
+      "classes": [
+        "SoldierFactoryGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 53252,
+      "matches": true,
+      "arm_classes": [
+        "SoldierFactoryGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 53253,
+      "classes": [
+        "VehicleFactoryGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 53253,
+      "matches": true,
+      "arm_classes": [
+        "VehicleFactoryGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 53254,
+      "classes": [
+        "AirStripGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 53254,
+      "matches": true,
+      "arm_classes": [
+        "AirStripGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 53255,
+      "classes": [
+        "WarFactoryGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 53255,
+      "matches": true,
+      "arm_classes": [
+        "WarFactoryGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 53256,
+      "classes": [
+        "ComCenterGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 53256,
+      "matches": true,
+      "arm_classes": [
+        "ComCenterGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 53257,
+      "classes": [
+        "RepairBayGameObjDef"
+      ],
+      "found": true,
+      "returned_class_id": 53257,
+      "matches": true,
+      "arm_classes": [
+        "RepairBayGameObjDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 57344,
+      "classes": [
+        "TwiddlerClass"
+      ],
+      "found": true,
+      "returned_class_id": 57344,
+      "matches": true,
+      "arm_classes": [
+        "TwiddlerClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 61442,
+      "classes": [
+        "HumanLoiterGlobalSettingsDef"
+      ],
+      "found": true,
+      "returned_class_id": 61442,
+      "matches": true,
+      "arm_classes": [
+        "HumanLoiterGlobalSettingsDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 61443,
+      "classes": [
+        "GlobalSettingsDef"
+      ],
+      "found": true,
+      "returned_class_id": 61443,
+      "matches": true,
+      "arm_classes": [
+        "GlobalSettingsDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 61444,
+      "classes": [
+        "HUDGlobalSettingsDef"
+      ],
+      "found": true,
+      "returned_class_id": 61444,
+      "matches": true,
+      "arm_classes": [
+        "HUDGlobalSettingsDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 61445,
+      "classes": [
+        "EvaSettingsDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 61445,
+      "matches": true,
+      "arm_classes": [
+        "EvaSettingsDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 61446,
+      "classes": [
+        "CharacterClassSettingsDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 61446,
+      "matches": true,
+      "arm_classes": [
+        "CharacterClassSettingsDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 61447,
+      "classes": [
+        "HumanAnimOverrideDef"
+      ],
+      "found": true,
+      "returned_class_id": 61447,
+      "matches": true,
+      "arm_classes": [
+        "HumanAnimOverrideDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 61448,
+      "classes": [
+        "PurchaseSettingsDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 61448,
+      "matches": true,
+      "arm_classes": [
+        "PurchaseSettingsDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 61449,
+      "classes": [
+        "TeamPurchaseSettingsDefClass"
+      ],
+      "found": true,
+      "returned_class_id": 61449,
+      "matches": true,
+      "arm_classes": [
+        "TeamPurchaseSettingsDefClass"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    },
+    {
+      "class_id": 61450,
+      "classes": [
+        "CNCModeSettingsDef"
+      ],
+      "found": true,
+      "returned_class_id": 61450,
+      "matches": true,
+      "arm_classes": [
+        "CNCModeSettingsDef"
+      ],
+      "arm_symbol_present": true,
+      "status": "unknown"
+    }
+  ],
+  "negative_control": "An absent class ID returned null.",
+  "limits": [
+    "Template Get_Class_ID symbol denominator only; manual forms remain open.",
+    "Host lookup does not prove ARM initialization or physical correctness.",
+    "Create, Load/Save, retail references and name lookup remain untested.",
+    "Debugger leak checking disabled; prior sanitizer evidence is separate."
+  ]
+}

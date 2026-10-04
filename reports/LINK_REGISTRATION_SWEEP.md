@@ -1,5 +1,36 @@
 # S3 link and registration closure — inventory in progress
 
+## Original definition registry and consolidated coverage — 2026-10-03
+
+All 57 template definition class IDs in the retained host binary resolve through
+original `DefinitionFactoryMgrClass::Find_Factory`, and each returned factory
+reports the requested virtual `Get_Class_ID()`. An absent-ID control returns
+null. The Dev220 ARM symbol file exposes the same 57 IDs, with no host-only or
+ARM-only IDs. This is host lookup plus ARM symbol evidence, not native execution.
+
+The 55 database persistence IDs with retained load methods join to definition
+class IDs through the original template class names. All have matching host
+definition lookups and retained ARM definition symbols. Ten editor-owned
+persistence IDs remain unmapped; no class-ID mapping is ambiguous. These are
+distinct numeric namespaces: persistence chunks select Load, class IDs select
+definition constructors, and instance IDs select authored presets. Definition
+Create, loading, name lookup and instance-reference validity remain open.
+
+The new drivers are `tools/probe_host_definition_registry.py` and
+`tools/audit_database_definition_closure.py`. Public receipts are
+`host_definition_registry.json` and `database_definition_closure.json` under
+`reports/generated/sweeps/`. They retain binary, symbol and parser hashes;
+debugger logs remain private. No runtime code or compiled artifact changed.
+The same host ELF hash as the persistence probe applies.
+
+Fourteen focused symbol/mapping/consolidation tests pass. The consolidated gap
+register now includes the database metadata and four registration supplements,
+with parent-hash checks that reject stale dependencies. It retains 41,526
+overlapping evidence records: 41,262 unknown, 160 missing, 51 stubs, 46 replaced
+boundaries, six disabled guards and one original-patched record. Lookup success
+does not promote any behavioral status. Next: reconcile authored definition
+instance references and determine the runtime relevance of skipped editor data.
+
 ## Database envelope denominator — 2026-10-03
 
 The database scanner covers all 31 supplied MIX/DAT/DBS archives, preserving

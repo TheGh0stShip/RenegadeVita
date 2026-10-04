@@ -1,0 +1,1029 @@
+{
+  "schema_version": 1,
+  "complete": false,
+  "rows": [
+    {
+      "persistence_chunk_id": 258,
+      "persistence_chunk_id_hex": "0x00000102",
+      "candidate_instances": 260,
+      "arm_persistence_classes": [
+        "TwiddlerClass"
+      ],
+      "definition_class_ids": [
+        57344
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132352,
+      "persistence_chunk_id_hex": "0x00020500",
+      "candidate_instances": 406,
+      "arm_persistence_classes": [
+        "DecorationPhysDefClass"
+      ],
+      "definition_class_ids": [
+        36864
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132353,
+      "persistence_chunk_id_hex": "0x00020501",
+      "candidate_instances": 219,
+      "arm_persistence_classes": [
+        "HumanPhysDefClass"
+      ],
+      "definition_class_ids": [
+        36865
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132355,
+      "persistence_chunk_id_hex": "0x00020503",
+      "candidate_instances": 8,
+      "arm_persistence_classes": [
+        "MotorcycleDefClass"
+      ],
+      "definition_class_ids": [
+        36866
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132357,
+      "persistence_chunk_id_hex": "0x00020505",
+      "candidate_instances": 97,
+      "arm_persistence_classes": [
+        "Phys3DefClass"
+      ],
+      "definition_class_ids": [
+        36868
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132358,
+      "persistence_chunk_id_hex": "0x00020506",
+      "candidate_instances": 5,
+      "arm_persistence_classes": [
+        "ProjectileDefClass"
+      ],
+      "definition_class_ids": [
+        36873
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132360,
+      "persistence_chunk_id_hex": "0x00020508",
+      "candidate_instances": 44,
+      "arm_persistence_classes": [
+        "StaticPhysDefClass"
+      ],
+      "definition_class_ids": [
+        36871
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132361,
+      "persistence_chunk_id_hex": "0x00020509",
+      "candidate_instances": 23,
+      "arm_persistence_classes": [
+        "WheeledVehicleDefClass"
+      ],
+      "definition_class_ids": [
+        36870
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132362,
+      "persistence_chunk_id_hex": "0x0002050A",
+      "candidate_instances": 101,
+      "arm_persistence_classes": [
+        "StaticAnimPhysDefClass"
+      ],
+      "definition_class_ids": [
+        36872
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132363,
+      "persistence_chunk_id_hex": "0x0002050B",
+      "candidate_instances": 102,
+      "arm_persistence_classes": [
+        "TimedDecorationPhysDefClass"
+      ],
+      "definition_class_ids": [
+        36874
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132365,
+      "persistence_chunk_id_hex": "0x0002050D",
+      "candidate_instances": 47,
+      "arm_persistence_classes": [
+        "TrackedVehicleDefClass"
+      ],
+      "definition_class_ids": [
+        36876
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132366,
+      "persistence_chunk_id_hex": "0x0002050E",
+      "candidate_instances": 26,
+      "arm_persistence_classes": [
+        "VTOLVehicleDefClass"
+      ],
+      "definition_class_ids": [
+        36877
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132367,
+      "persistence_chunk_id_hex": "0x0002050F",
+      "candidate_instances": 49,
+      "arm_persistence_classes": [
+        "DynamicAnimPhysDefClass"
+      ],
+      "definition_class_ids": [
+        36878
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 132369,
+      "persistence_chunk_id_hex": "0x00020511",
+      "candidate_instances": 25,
+      "arm_persistence_classes": [
+        "AccessiblePhysDefClass"
+      ],
+      "definition_class_ids": [
+        36880
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 134144,
+      "persistence_chunk_id_hex": "0x00020C00",
+      "candidate_instances": 102,
+      "arm_persistence_classes": [
+        "DoorPhysDefClass"
+      ],
+      "definition_class_ids": [
+        36992
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 134145,
+      "persistence_chunk_id_hex": "0x00020C01",
+      "candidate_instances": 64,
+      "arm_persistence_classes": [
+        "ElevatorPhysDefClass"
+      ],
+      "definition_class_ids": [
+        36993
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 134146,
+      "persistence_chunk_id_hex": "0x00020C02",
+      "candidate_instances": 331,
+      "arm_persistence_classes": [
+        "DamageableStaticPhysDefClass"
+      ],
+      "definition_class_ids": [
+        36994
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 134147,
+      "persistence_chunk_id_hex": "0x00020C03",
+      "candidate_instances": 249,
+      "arm_persistence_classes": [
+        "BuildingAggregateDefClass"
+      ],
+      "definition_class_ids": [
+        36995
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 196608,
+      "persistence_chunk_id_hex": "0x00030000",
+      "candidate_instances": 10004,
+      "arm_persistence_classes": [
+        "AudibleSoundDefinitionClass"
+      ],
+      "definition_class_ids": [
+        20480
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262403,
+      "persistence_chunk_id_hex": "0x00040103",
+      "candidate_instances": 2,
+      "arm_persistence_classes": [
+        "C4GameObjDef"
+      ],
+      "definition_class_ids": [
+        12294
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262407,
+      "persistence_chunk_id_hex": "0x00040107",
+      "candidate_instances": 105,
+      "arm_persistence_classes": [
+        "PowerUpGameObjDef"
+      ],
+      "definition_class_ids": [
+        12291
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262409,
+      "persistence_chunk_id_hex": "0x00040109",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [
+        "SAMSiteGameObjDef"
+      ],
+      "definition_class_ids": [
+        12295
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262411,
+      "persistence_chunk_id_hex": "0x0004010B",
+      "candidate_instances": 289,
+      "arm_persistence_classes": [
+        "SimpleGameObjDef"
+      ],
+      "definition_class_ids": [
+        12292
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262415,
+      "persistence_chunk_id_hex": "0x0004010F",
+      "candidate_instances": 217,
+      "arm_persistence_classes": [
+        "SoldierGameObjDef"
+      ],
+      "definition_class_ids": [
+        12289
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262433,
+      "persistence_chunk_id_hex": "0x00040121",
+      "candidate_instances": 273,
+      "arm_persistence_classes": [
+        "SpawnerDefClass"
+      ],
+      "definition_class_ids": [
+        12301
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262435,
+      "persistence_chunk_id_hex": "0x00040123",
+      "candidate_instances": 15,
+      "arm_persistence_classes": [
+        "ScriptZoneGameObjDef"
+      ],
+      "definition_class_ids": [
+        12302
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262437,
+      "persistence_chunk_id_hex": "0x00040125",
+      "candidate_instances": 2,
+      "arm_persistence_classes": [
+        "TransitionGameObjDef"
+      ],
+      "definition_class_ids": [
+        12303
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262439,
+      "persistence_chunk_id_hex": "0x00040127",
+      "candidate_instances": 145,
+      "arm_persistence_classes": [
+        "WeaponDefinitionClass"
+      ],
+      "definition_class_ids": [
+        45057
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262440,
+      "persistence_chunk_id_hex": "0x00040128",
+      "candidate_instances": 140,
+      "arm_persistence_classes": [
+        "AmmoDefinitionClass"
+      ],
+      "definition_class_ids": [
+        45058
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262441,
+      "persistence_chunk_id_hex": "0x00040129",
+      "candidate_instances": 160,
+      "arm_persistence_classes": [
+        "VehicleGameObjDef"
+      ],
+      "definition_class_ids": [
+        12304
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262442,
+      "persistence_chunk_id_hex": "0x0004012A",
+      "candidate_instances": 96,
+      "arm_persistence_classes": [
+        "ExplosionDefinitionClass"
+      ],
+      "definition_class_ids": [
+        45059
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262444,
+      "persistence_chunk_id_hex": "0x0004012C",
+      "candidate_instances": 110,
+      "arm_persistence_classes": [
+        "CinematicGameObjDef"
+      ],
+      "definition_class_ids": [
+        12305
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262446,
+      "persistence_chunk_id_hex": "0x0004012E",
+      "candidate_instances": 3,
+      "arm_persistence_classes": [
+        "DamageZoneGameObjDef"
+      ],
+      "definition_class_ids": [
+        12306
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262448,
+      "persistence_chunk_id_hex": "0x00040130",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [
+        "SpecialEffectsGameObjDef"
+      ],
+      "definition_class_ids": [
+        12307
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262450,
+      "persistence_chunk_id_hex": "0x00040132",
+      "candidate_instances": 2,
+      "arm_persistence_classes": [
+        "SakuraBossGameObjDef"
+      ],
+      "definition_class_ids": [
+        12308
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262452,
+      "persistence_chunk_id_hex": "0x00040134",
+      "candidate_instances": 30,
+      "arm_persistence_classes": [
+        "BuildingGameObjDef"
+      ],
+      "definition_class_ids": [
+        53249
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262454,
+      "persistence_chunk_id_hex": "0x00040136",
+      "candidate_instances": 4,
+      "arm_persistence_classes": [
+        "BeaconGameObjDef"
+      ],
+      "definition_class_ids": [
+        12310
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262456,
+      "persistence_chunk_id_hex": "0x00040138",
+      "candidate_instances": 2,
+      "arm_persistence_classes": [
+        "RefineryGameObjDef"
+      ],
+      "definition_class_ids": [
+        53250
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262458,
+      "persistence_chunk_id_hex": "0x0004013A",
+      "candidate_instances": 2,
+      "arm_persistence_classes": [
+        "PowerPlantGameObjDef"
+      ],
+      "definition_class_ids": [
+        53251
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262460,
+      "persistence_chunk_id_hex": "0x0004013C",
+      "candidate_instances": 2,
+      "arm_persistence_classes": [
+        "SoldierFactoryGameObjDef"
+      ],
+      "definition_class_ids": [
+        53252
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262464,
+      "persistence_chunk_id_hex": "0x00040140",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [
+        "AirStripGameObjDef"
+      ],
+      "definition_class_ids": [
+        53254
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262466,
+      "persistence_chunk_id_hex": "0x00040142",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [
+        "WarFactoryGameObjDef"
+      ],
+      "definition_class_ids": [
+        53255
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262468,
+      "persistence_chunk_id_hex": "0x00040144",
+      "candidate_instances": 2,
+      "arm_persistence_classes": [
+        "ComCenterGameObjDef"
+      ],
+      "definition_class_ids": [
+        53256
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262470,
+      "persistence_chunk_id_hex": "0x00040146",
+      "candidate_instances": 4,
+      "arm_persistence_classes": [
+        "RepairBayGameObjDef"
+      ],
+      "definition_class_ids": [
+        53257
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262474,
+      "persistence_chunk_id_hex": "0x0004014A",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [
+        "MendozaBossGameObjDefClass"
+      ],
+      "definition_class_ids": [
+        12311
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 262476,
+      "persistence_chunk_id_hex": "0x0004014C",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [
+        "RaveshawBossGameObjDefClass"
+      ],
+      "definition_class_ids": [
+        12312
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 263681,
+      "persistence_chunk_id_hex": "0x00040601",
+      "candidate_instances": 3,
+      "arm_persistence_classes": [
+        "HumanLoiterGlobalSettingsDef"
+      ],
+      "definition_class_ids": [
+        61442
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 263682,
+      "persistence_chunk_id_hex": "0x00040602",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [
+        "GlobalSettingsDef"
+      ],
+      "definition_class_ids": [
+        61443
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 263683,
+      "persistence_chunk_id_hex": "0x00040603",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [
+        "HUDGlobalSettingsDef"
+      ],
+      "definition_class_ids": [
+        61444
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 263684,
+      "persistence_chunk_id_hex": "0x00040604",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [
+        "EvaSettingsDefClass"
+      ],
+      "definition_class_ids": [
+        61445
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 263685,
+      "persistence_chunk_id_hex": "0x00040605",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [
+        "CharacterClassSettingsDefClass"
+      ],
+      "definition_class_ids": [
+        61446
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 263686,
+      "persistence_chunk_id_hex": "0x00040606",
+      "candidate_instances": 10,
+      "arm_persistence_classes": [
+        "HumanAnimOverrideDef"
+      ],
+      "definition_class_ids": [
+        61447
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 263687,
+      "persistence_chunk_id_hex": "0x00040607",
+      "candidate_instances": 13,
+      "arm_persistence_classes": [
+        "PurchaseSettingsDefClass"
+      ],
+      "definition_class_ids": [
+        61448
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 263688,
+      "persistence_chunk_id_hex": "0x00040608",
+      "candidate_instances": 2,
+      "arm_persistence_classes": [
+        "TeamPurchaseSettingsDefClass"
+      ],
+      "definition_class_ids": [
+        61449
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 263689,
+      "persistence_chunk_id_hex": "0x00040609",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [
+        "CNCModeSettingsDef"
+      ],
+      "definition_class_ids": [
+        61450
+      ],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": true,
+      "all_arm_definition_symbols_present": true,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 327680,
+      "persistence_chunk_id_hex": "0x00050000",
+      "candidate_instances": 400,
+      "arm_persistence_classes": [],
+      "definition_class_ids": [],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": false,
+      "all_arm_definition_symbols_present": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 327681,
+      "persistence_chunk_id_hex": "0x00050001",
+      "candidate_instances": 904,
+      "arm_persistence_classes": [],
+      "definition_class_ids": [],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": false,
+      "all_arm_definition_symbols_present": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 327682,
+      "persistence_chunk_id_hex": "0x00050002",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [],
+      "definition_class_ids": [],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": false,
+      "all_arm_definition_symbols_present": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 327683,
+      "persistence_chunk_id_hex": "0x00050003",
+      "candidate_instances": 4,
+      "arm_persistence_classes": [],
+      "definition_class_ids": [],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": false,
+      "all_arm_definition_symbols_present": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 327687,
+      "persistence_chunk_id_hex": "0x00050007",
+      "candidate_instances": 13261,
+      "arm_persistence_classes": [],
+      "definition_class_ids": [],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": false,
+      "all_arm_definition_symbols_present": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 327702,
+      "persistence_chunk_id_hex": "0x00050016",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [],
+      "definition_class_ids": [],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": false,
+      "all_arm_definition_symbols_present": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 327704,
+      "persistence_chunk_id_hex": "0x00050018",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [],
+      "definition_class_ids": [],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": false,
+      "all_arm_definition_symbols_present": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 327705,
+      "persistence_chunk_id_hex": "0x00050019",
+      "candidate_instances": 24,
+      "arm_persistence_classes": [],
+      "definition_class_ids": [],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": false,
+      "all_arm_definition_symbols_present": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 327708,
+      "persistence_chunk_id_hex": "0x0005001C",
+      "candidate_instances": 1,
+      "arm_persistence_classes": [],
+      "definition_class_ids": [],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": false,
+      "all_arm_definition_symbols_present": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    },
+    {
+      "persistence_chunk_id": 327718,
+      "persistence_chunk_id_hex": "0x00050026",
+      "candidate_instances": 11,
+      "arm_persistence_classes": [],
+      "definition_class_ids": [],
+      "class_id_mapping_ambiguous": false,
+      "all_host_definition_lookups_match": false,
+      "all_arm_definition_symbols_present": false,
+      "status": "unknown",
+      "evidence_class": "retail_metadata_symbols_and_host_lookup"
+    }
+  ],
+  "totals": {
+    "persistence_ids": 65,
+    "mapped": 55,
+    "unmapped": 10,
+    "ambiguous": 0
+  },
+  "limits": [
+    "Class names join demangled template symbols; no actual Create/Load is executed.",
+    "Unmapped editor persistence IDs are open leads, not proven gameplay omissions.",
+    "Definition instance IDs and reference validity require separate reconciliation.",
+    "Host ID lookup and ARM symbols do not prove physical registration or gameplay."
+  ],
+  "inputs": [
+    {
+      "source": "reports/generated/sweeps/database_persist_closure.json",
+      "sha256": "0aa9af12f7c6520e8fac18aeecfcd6d873a5864d2b5657216f1e7f237de68b83"
+    },
+    {
+      "source": "reports/generated/sweeps/host_definition_registry.json",
+      "sha256": "a588a3e0d06042f7dd6b4ec6a15d45efb23e9c3c4132737838308bf5dcf09eb9"
+    }
+  ],
+  "parser_sha256": "d93a7ee3263f4fe9d4d66e4c0fe062fdef35c8b64fcac84b76dbe3c7391ab485"
+}

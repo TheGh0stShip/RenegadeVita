@@ -1,5 +1,17 @@
 # Live engineering progress
 
+## Original host persistence lookup — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: all 140 template factory IDs exposed by the retained host binary
+resolve through the original live registry with matching virtual chunk IDs;
+an absent-ID control returns null. Two parser tests pass. No runtime code changed.
+Evidence: host registry receipt in the registration ledger, separate from ARM.
+Next: all-map chunk-ID reconciliation and other original registry execution.
+Blocker: none for discovery; physical acceptance remains unverified.
+
 ## Registration discovery expansion — 2026-10-03
 
 Renegade Vita — v3.5 active

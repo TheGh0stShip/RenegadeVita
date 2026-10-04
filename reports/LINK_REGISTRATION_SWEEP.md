@@ -1,5 +1,25 @@
 # S3 link and registration closure — inventory in progress
 
+## Original host persistence lookup — 2026-10-03
+
+The retained ASan/UBSan host runtime resolves all 140 template persistence
+factory IDs through original `SaveLoadSystemClass::Find_Persist_Factory` after
+static initialization. Each returned factory's virtual `Chunk_ID()` matches
+the requested ID. An absent-ID control returns null. Two symbol-parser tests
+pass. The reproducible driver and public count/class/ID receipt are
+`tools/probe_host_persist_registry.py` and
+`reports/generated/sweeps/host_persist_registry.json`.
+
+The host ELF SHA-256 is
+`bb685247f73b1e85377e9f209c55586d06a159d55c9021254873f5145c47b5a2`.
+No runtime source changed; the existing compiled host and Dev220 ARM artifacts
+remain unchanged. Debugger logs stay under the private build tree. Leak checking
+is disabled for the debugger run; prior sanitizer tests are separate evidence.
+This proves host ID lookup, not class identity, Load/Save behavior, other
+registration forms, retail closure, or ARM/Vita execution. S3's ARM behavior
+statuses remain unknown. Next: reconcile all-map retail chunk IDs and extend
+execution evidence to other original registries.
+
 ## Header and installation discovery — 2026-10-03
 
 Registration discovery now scans 2,150 source files: 1,947 staged files and

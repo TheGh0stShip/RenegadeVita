@@ -1,0 +1,1278 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_original_factory_runtime_lookup",
+  "binary_sha256": "bb685247f73b1e85377e9f209c55586d06a159d55c9021254873f5145c47b5a2",
+  "symbol_listing_sha256": "e07a3e13a332c2f5285ff574e6e90d8c57fdab97bc5c428f78ada0eedc12490e",
+  "total": 140,
+  "matched": 140,
+  "rows": [
+    {
+      "chunk_id": 258,
+      "classes": [
+        "TwiddlerClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 258,
+      "matches": true
+    },
+    {
+      "chunk_id": 65537,
+      "classes": [
+        "LightClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 65537,
+      "matches": true
+    },
+    {
+      "chunk_id": 65539,
+      "classes": [
+        "RenegadeTerrainPatchClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 65539,
+      "matches": true
+    },
+    {
+      "chunk_id": 131328,
+      "classes": [
+        "DecorationPhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131328,
+      "matches": true
+    },
+    {
+      "chunk_id": 131329,
+      "classes": [
+        "HumanPhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131329,
+      "matches": true
+    },
+    {
+      "chunk_id": 131330,
+      "classes": [
+        "LightPhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131330,
+      "matches": true
+    },
+    {
+      "chunk_id": 131331,
+      "classes": [
+        "MotorcycleClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131331,
+      "matches": true
+    },
+    {
+      "chunk_id": 131333,
+      "classes": [
+        "Phys3Class"
+      ],
+      "found": true,
+      "returned_chunk_id": 131333,
+      "matches": true
+    },
+    {
+      "chunk_id": 131334,
+      "classes": [
+        "ProjectileClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131334,
+      "matches": true
+    },
+    {
+      "chunk_id": 131335,
+      "classes": [
+        "RenderObjPhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131335,
+      "matches": true
+    },
+    {
+      "chunk_id": 131336,
+      "classes": [
+        "RigidBodyClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131336,
+      "matches": true
+    },
+    {
+      "chunk_id": 131337,
+      "classes": [
+        "StaticPhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131337,
+      "matches": true
+    },
+    {
+      "chunk_id": 131338,
+      "classes": [
+        "WheeledVehicleClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131338,
+      "matches": true
+    },
+    {
+      "chunk_id": 131339,
+      "classes": [
+        "StaticAnimPhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131339,
+      "matches": true
+    },
+    {
+      "chunk_id": 131340,
+      "classes": [
+        "TimedDecorationPhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131340,
+      "matches": true
+    },
+    {
+      "chunk_id": 131342,
+      "classes": [
+        "TrackedVehicleClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131342,
+      "matches": true
+    },
+    {
+      "chunk_id": 131343,
+      "classes": [
+        "VTOLVehicleClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131343,
+      "matches": true
+    },
+    {
+      "chunk_id": 131344,
+      "classes": [
+        "WaypathClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131344,
+      "matches": true
+    },
+    {
+      "chunk_id": 131345,
+      "classes": [
+        "WaypointClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131345,
+      "matches": true
+    },
+    {
+      "chunk_id": 131346,
+      "classes": [
+        "DynamicAnimPhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131346,
+      "matches": true
+    },
+    {
+      "chunk_id": 131347,
+      "classes": [
+        "ShakeableStaticPhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131347,
+      "matches": true
+    },
+    {
+      "chunk_id": 131348,
+      "classes": [
+        "AccessiblePhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 131348,
+      "matches": true
+    },
+    {
+      "chunk_id": 132352,
+      "classes": [
+        "DecorationPhysDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132352,
+      "matches": true
+    },
+    {
+      "chunk_id": 132353,
+      "classes": [
+        "HumanPhysDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132353,
+      "matches": true
+    },
+    {
+      "chunk_id": 132355,
+      "classes": [
+        "MotorcycleDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132355,
+      "matches": true
+    },
+    {
+      "chunk_id": 132356,
+      "classes": [
+        "MotorVehicleDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132356,
+      "matches": true
+    },
+    {
+      "chunk_id": 132357,
+      "classes": [
+        "Phys3DefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132357,
+      "matches": true
+    },
+    {
+      "chunk_id": 132358,
+      "classes": [
+        "ProjectileDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132358,
+      "matches": true
+    },
+    {
+      "chunk_id": 132359,
+      "classes": [
+        "RigidBodyDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132359,
+      "matches": true
+    },
+    {
+      "chunk_id": 132360,
+      "classes": [
+        "StaticPhysDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132360,
+      "matches": true
+    },
+    {
+      "chunk_id": 132361,
+      "classes": [
+        "WheeledVehicleDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132361,
+      "matches": true
+    },
+    {
+      "chunk_id": 132362,
+      "classes": [
+        "StaticAnimPhysDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132362,
+      "matches": true
+    },
+    {
+      "chunk_id": 132363,
+      "classes": [
+        "TimedDecorationPhysDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132363,
+      "matches": true
+    },
+    {
+      "chunk_id": 132364,
+      "classes": [
+        "VehiclePhysDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132364,
+      "matches": true
+    },
+    {
+      "chunk_id": 132365,
+      "classes": [
+        "TrackedVehicleDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132365,
+      "matches": true
+    },
+    {
+      "chunk_id": 132366,
+      "classes": [
+        "VTOLVehicleDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132366,
+      "matches": true
+    },
+    {
+      "chunk_id": 132367,
+      "classes": [
+        "DynamicAnimPhysDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132367,
+      "matches": true
+    },
+    {
+      "chunk_id": 132368,
+      "classes": [
+        "ShakeableStaticPhysDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132368,
+      "matches": true
+    },
+    {
+      "chunk_id": 132369,
+      "classes": [
+        "AccessiblePhysDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 132369,
+      "matches": true
+    },
+    {
+      "chunk_id": 133632,
+      "classes": [
+        "DoorPhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 133632,
+      "matches": true
+    },
+    {
+      "chunk_id": 133633,
+      "classes": [
+        "ElevatorPhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 133633,
+      "matches": true
+    },
+    {
+      "chunk_id": 133634,
+      "classes": [
+        "DamageableStaticPhysClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 133634,
+      "matches": true
+    },
+    {
+      "chunk_id": 133635,
+      "classes": [
+        "BuildingAggregateClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 133635,
+      "matches": true
+    },
+    {
+      "chunk_id": 134144,
+      "classes": [
+        "DoorPhysDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 134144,
+      "matches": true
+    },
+    {
+      "chunk_id": 134145,
+      "classes": [
+        "ElevatorPhysDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 134145,
+      "matches": true
+    },
+    {
+      "chunk_id": 134146,
+      "classes": [
+        "DamageableStaticPhysDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 134146,
+      "matches": true
+    },
+    {
+      "chunk_id": 134147,
+      "classes": [
+        "BuildingAggregateDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 134147,
+      "matches": true
+    },
+    {
+      "chunk_id": 196608,
+      "classes": [
+        "AudibleSoundDefinitionClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 196608,
+      "matches": true
+    },
+    {
+      "chunk_id": 196609,
+      "classes": [
+        "AudibleSoundClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 196609,
+      "matches": true
+    },
+    {
+      "chunk_id": 196610,
+      "classes": [
+        "FilteredSoundClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 196610,
+      "matches": true
+    },
+    {
+      "chunk_id": 196611,
+      "classes": [
+        "Sound3DClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 196611,
+      "matches": true
+    },
+    {
+      "chunk_id": 196612,
+      "classes": [
+        "SoundPseudo3DClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 196612,
+      "matches": true
+    },
+    {
+      "chunk_id": 196615,
+      "classes": [
+        "LogicalSoundClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 196615,
+      "matches": true
+    },
+    {
+      "chunk_id": 196616,
+      "classes": [
+        "LogicalListenerClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 196616,
+      "matches": true
+    },
+    {
+      "chunk_id": 262402,
+      "classes": [
+        "C4GameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262402,
+      "matches": true
+    },
+    {
+      "chunk_id": 262403,
+      "classes": [
+        "C4GameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262403,
+      "matches": true
+    },
+    {
+      "chunk_id": 262406,
+      "classes": [
+        "PowerUpGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262406,
+      "matches": true
+    },
+    {
+      "chunk_id": 262407,
+      "classes": [
+        "PowerUpGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262407,
+      "matches": true
+    },
+    {
+      "chunk_id": 262408,
+      "classes": [
+        "SAMSiteGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262408,
+      "matches": true
+    },
+    {
+      "chunk_id": 262409,
+      "classes": [
+        "SAMSiteGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262409,
+      "matches": true
+    },
+    {
+      "chunk_id": 262410,
+      "classes": [
+        "SimpleGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262410,
+      "matches": true
+    },
+    {
+      "chunk_id": 262411,
+      "classes": [
+        "SimpleGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262411,
+      "matches": true
+    },
+    {
+      "chunk_id": 262414,
+      "classes": [
+        "SoldierGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262414,
+      "matches": true
+    },
+    {
+      "chunk_id": 262415,
+      "classes": [
+        "SoldierGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262415,
+      "matches": true
+    },
+    {
+      "chunk_id": 262416,
+      "classes": [
+        "VehicleGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262416,
+      "matches": true
+    },
+    {
+      "chunk_id": 262432,
+      "classes": [
+        "SpawnerClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 262432,
+      "matches": true
+    },
+    {
+      "chunk_id": 262433,
+      "classes": [
+        "SpawnerDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 262433,
+      "matches": true
+    },
+    {
+      "chunk_id": 262434,
+      "classes": [
+        "ScriptZoneGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262434,
+      "matches": true
+    },
+    {
+      "chunk_id": 262435,
+      "classes": [
+        "ScriptZoneGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262435,
+      "matches": true
+    },
+    {
+      "chunk_id": 262436,
+      "classes": [
+        "TransitionGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262436,
+      "matches": true
+    },
+    {
+      "chunk_id": 262437,
+      "classes": [
+        "TransitionGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262437,
+      "matches": true
+    },
+    {
+      "chunk_id": 262439,
+      "classes": [
+        "WeaponDefinitionClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 262439,
+      "matches": true
+    },
+    {
+      "chunk_id": 262440,
+      "classes": [
+        "AmmoDefinitionClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 262440,
+      "matches": true
+    },
+    {
+      "chunk_id": 262441,
+      "classes": [
+        "VehicleGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262441,
+      "matches": true
+    },
+    {
+      "chunk_id": 262442,
+      "classes": [
+        "ExplosionDefinitionClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 262442,
+      "matches": true
+    },
+    {
+      "chunk_id": 262443,
+      "classes": [
+        "CinematicGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262443,
+      "matches": true
+    },
+    {
+      "chunk_id": 262444,
+      "classes": [
+        "CinematicGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262444,
+      "matches": true
+    },
+    {
+      "chunk_id": 262445,
+      "classes": [
+        "DamageZoneGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262445,
+      "matches": true
+    },
+    {
+      "chunk_id": 262446,
+      "classes": [
+        "DamageZoneGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262446,
+      "matches": true
+    },
+    {
+      "chunk_id": 262447,
+      "classes": [
+        "SpecialEffectsGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262447,
+      "matches": true
+    },
+    {
+      "chunk_id": 262448,
+      "classes": [
+        "SpecialEffectsGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262448,
+      "matches": true
+    },
+    {
+      "chunk_id": 262449,
+      "classes": [
+        "SakuraBossGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262449,
+      "matches": true
+    },
+    {
+      "chunk_id": 262450,
+      "classes": [
+        "SakuraBossGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262450,
+      "matches": true
+    },
+    {
+      "chunk_id": 262451,
+      "classes": [
+        "BuildingGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262451,
+      "matches": true
+    },
+    {
+      "chunk_id": 262452,
+      "classes": [
+        "BuildingGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262452,
+      "matches": true
+    },
+    {
+      "chunk_id": 262453,
+      "classes": [
+        "BeaconGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262453,
+      "matches": true
+    },
+    {
+      "chunk_id": 262454,
+      "classes": [
+        "BeaconGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262454,
+      "matches": true
+    },
+    {
+      "chunk_id": 262455,
+      "classes": [
+        "RefineryGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262455,
+      "matches": true
+    },
+    {
+      "chunk_id": 262456,
+      "classes": [
+        "RefineryGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262456,
+      "matches": true
+    },
+    {
+      "chunk_id": 262457,
+      "classes": [
+        "PowerPlantGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262457,
+      "matches": true
+    },
+    {
+      "chunk_id": 262458,
+      "classes": [
+        "PowerPlantGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262458,
+      "matches": true
+    },
+    {
+      "chunk_id": 262459,
+      "classes": [
+        "SoldierFactoryGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262459,
+      "matches": true
+    },
+    {
+      "chunk_id": 262460,
+      "classes": [
+        "SoldierFactoryGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262460,
+      "matches": true
+    },
+    {
+      "chunk_id": 262461,
+      "classes": [
+        "VehicleFactoryGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262461,
+      "matches": true
+    },
+    {
+      "chunk_id": 262462,
+      "classes": [
+        "VehicleFactoryGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262462,
+      "matches": true
+    },
+    {
+      "chunk_id": 262463,
+      "classes": [
+        "AirStripGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262463,
+      "matches": true
+    },
+    {
+      "chunk_id": 262464,
+      "classes": [
+        "AirStripGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262464,
+      "matches": true
+    },
+    {
+      "chunk_id": 262465,
+      "classes": [
+        "WarFactoryGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262465,
+      "matches": true
+    },
+    {
+      "chunk_id": 262466,
+      "classes": [
+        "WarFactoryGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262466,
+      "matches": true
+    },
+    {
+      "chunk_id": 262467,
+      "classes": [
+        "ComCenterGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262467,
+      "matches": true
+    },
+    {
+      "chunk_id": 262468,
+      "classes": [
+        "ComCenterGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262468,
+      "matches": true
+    },
+    {
+      "chunk_id": 262469,
+      "classes": [
+        "RepairBayGameObj"
+      ],
+      "found": true,
+      "returned_chunk_id": 262469,
+      "matches": true
+    },
+    {
+      "chunk_id": 262470,
+      "classes": [
+        "RepairBayGameObjDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 262470,
+      "matches": true
+    },
+    {
+      "chunk_id": 262473,
+      "classes": [
+        "MendozaBossGameObjClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 262473,
+      "matches": true
+    },
+    {
+      "chunk_id": 262474,
+      "classes": [
+        "MendozaBossGameObjDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 262474,
+      "matches": true
+    },
+    {
+      "chunk_id": 262475,
+      "classes": [
+        "RaveshawBossGameObjClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 262475,
+      "matches": true
+    },
+    {
+      "chunk_id": 262476,
+      "classes": [
+        "RaveshawBossGameObjDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 262476,
+      "matches": true
+    },
+    {
+      "chunk_id": 262657,
+      "classes": [
+        "SoldierObserverClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 262657,
+      "matches": true
+    },
+    {
+      "chunk_id": 263425,
+      "classes": [
+        "FollowInputActionCodeClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263425,
+      "matches": true
+    },
+    {
+      "chunk_id": 263426,
+      "classes": [
+        "StandActionCodeClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263426,
+      "matches": true
+    },
+    {
+      "chunk_id": 263427,
+      "classes": [
+        "GotoActionCodeClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263427,
+      "matches": true
+    },
+    {
+      "chunk_id": 263428,
+      "classes": [
+        "EnterExitActionCodeClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263428,
+      "matches": true
+    },
+    {
+      "chunk_id": 263429,
+      "classes": [
+        "AttackActionCodeClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263429,
+      "matches": true
+    },
+    {
+      "chunk_id": 263430,
+      "classes": [
+        "PlayAnimationActionCodeClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263430,
+      "matches": true
+    },
+    {
+      "chunk_id": 263431,
+      "classes": [
+        "FaceLocationActionCodeClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263431,
+      "matches": true
+    },
+    {
+      "chunk_id": 263432,
+      "classes": [
+        "DiveActionCodeClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263432,
+      "matches": true
+    },
+    {
+      "chunk_id": 263433,
+      "classes": [
+        "ConversationActionCodeClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263433,
+      "matches": true
+    },
+    {
+      "chunk_id": 263434,
+      "classes": [
+        "DockActionCodeClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263434,
+      "matches": true
+    },
+    {
+      "chunk_id": 263681,
+      "classes": [
+        "HumanLoiterGlobalSettingsDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 263681,
+      "matches": true
+    },
+    {
+      "chunk_id": 263682,
+      "classes": [
+        "GlobalSettingsDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 263682,
+      "matches": true
+    },
+    {
+      "chunk_id": 263683,
+      "classes": [
+        "HUDGlobalSettingsDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 263683,
+      "matches": true
+    },
+    {
+      "chunk_id": 263684,
+      "classes": [
+        "EvaSettingsDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263684,
+      "matches": true
+    },
+    {
+      "chunk_id": 263685,
+      "classes": [
+        "CharacterClassSettingsDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263685,
+      "matches": true
+    },
+    {
+      "chunk_id": 263686,
+      "classes": [
+        "HumanAnimOverrideDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 263686,
+      "matches": true
+    },
+    {
+      "chunk_id": 263687,
+      "classes": [
+        "PurchaseSettingsDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263687,
+      "matches": true
+    },
+    {
+      "chunk_id": 263688,
+      "classes": [
+        "TeamPurchaseSettingsDefClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 263688,
+      "matches": true
+    },
+    {
+      "chunk_id": 263689,
+      "classes": [
+        "CNCModeSettingsDef"
+      ],
+      "found": true,
+      "returned_chunk_id": 263689,
+      "matches": true
+    },
+    {
+      "chunk_id": 524288,
+      "classes": [
+        "LinearCurve1DClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 524288,
+      "matches": true
+    },
+    {
+      "chunk_id": 524289,
+      "classes": [
+        "HermiteSpline1DClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 524289,
+      "matches": true
+    },
+    {
+      "chunk_id": 524290,
+      "classes": [
+        "CatmullRomSpline1DClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 524290,
+      "matches": true
+    },
+    {
+      "chunk_id": 524291,
+      "classes": [
+        "CardinalSpline1DClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 524291,
+      "matches": true
+    },
+    {
+      "chunk_id": 524544,
+      "classes": [
+        "LinearCurve3DClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 524544,
+      "matches": true
+    },
+    {
+      "chunk_id": 524545,
+      "classes": [
+        "HermiteSpline3DClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 524545,
+      "matches": true
+    },
+    {
+      "chunk_id": 524546,
+      "classes": [
+        "CatmullRomSpline3DClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 524546,
+      "matches": true
+    },
+    {
+      "chunk_id": 524547,
+      "classes": [
+        "CardinalSpline3DClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 524547,
+      "matches": true
+    },
+    {
+      "chunk_id": 524548,
+      "classes": [
+        "TCBSpline3DClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 524548,
+      "matches": true
+    },
+    {
+      "chunk_id": 524549,
+      "classes": [
+        "VehicleCurveClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 524549,
+      "matches": true
+    },
+    {
+      "chunk_id": 589825,
+      "classes": [
+        "TDBObjClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 589825,
+      "matches": true
+    },
+    {
+      "chunk_id": 589826,
+      "classes": [
+        "TDBCategoryClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 589826,
+      "matches": true
+    },
+    {
+      "chunk_id": 589827,
+      "classes": [
+        "StringTwiddlerClass"
+      ],
+      "found": true,
+      "returned_chunk_id": 589827,
+      "matches": true
+    }
+  ],
+  "negative_control": "An ID absent from the symbol denominator returned null.",
+  "limits": [
+    "Host graph only; no ARM or physical acceptance.",
+    "Template Chunk_ID symbol denominator only; other factory forms remain open.",
+    "Lookup verifies IDs, not Load/Save, retail closure or class identity.",
+    "Breakpoint at main verifies static initialization only.",
+    "Debugger run disables leak checking; prior sanitizer runs are separate."
+  ]
+}

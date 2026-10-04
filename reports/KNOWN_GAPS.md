@@ -1,5 +1,11 @@
 # Known gaps
 
+2026-10-04 the retained ambient26/139 numeric mismatch is corrected. Dev227
+passes the literal-state regression,492 focused tests and136 ARM compile/link
+actions. This establishes API identity, not physical lighting correctness;
+material/UV/specular behavior and mixed wchar_t ABI remain open.
+See [ambient state evidence](DX8_AMBIENT_STATE_ID.md).
+
 2026-10-04 invalid-pitch raster lock leaks are corrected at the SurfaceClass
 boundary.19 production-method sanitizer cases,492 focused contracts and651
 Dev226 ARM compile/link actions pass. Actual native provider allocation,

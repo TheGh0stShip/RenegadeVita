@@ -196,14 +196,15 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_validate_campaign_flight_bundle \
 		tools.test_explosion_effect_recycler_patch \
 		tools.test_vita3k_build_install_contract
-	echo "Running original DDSFileClass tga-alias executable contract..."
+	echo "Running original DDSFileClass and render-state executable contracts..."
 	cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_host_contract_build" -G Ninja \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-DRENEGADE_USE_CCACHE=ON
 	cmake --build "$rv_host_contract_build" \
-		--target a35_ddsfile_tga_alias_contract_selftest \
+		--target a35_ddsfile_tga_alias_contract_selftest a35_vita_render_state_contract_selftest \
 		--parallel "$rv_build_jobs"
 	"$rv_host_contract_build/a35_ddsfile_tga_alias_contract_selftest"
+	"$rv_host_contract_build/a35_vita_render_state_contract_selftest"
 else
 	echo "Focused fast contracts skipped by RENEGADE_FAST_TESTS=none."
 fi

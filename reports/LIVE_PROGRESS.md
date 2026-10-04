@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## DX8 ambient state identifier — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: ambient state uses API identifier 139; literal-state regression
+rejects the former identifier 26 without changing the color. Evidence: two
+pre-fix failures;13 executable checks,492 focused tests and136 Dev227 ARM
+compile/link actions pass. No device action or visual acceptance is claimed.
+See [ambient state evidence](DX8_AMBIENT_STATE_ID.md).
+
 ## Surface raster lock cleanup — 2026-10-04
 
 Renegade Vita — v3.5 active

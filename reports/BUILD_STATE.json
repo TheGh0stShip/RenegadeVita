@@ -1,4 +1,17 @@
 {
+  "dx8_ambient_state_identifier_20261004": {
+    "state": "NUMERIC_API_REGRESSION_REPRODUCED_HOST_ARM_LINK_PASS",
+    "candidate": "A3.5-dev227",
+    "render_state_checks_passed": 13,
+    "host_fast_contract_tests_passed": 492,
+    "arm_compile_link_actions": 136,
+    "elf_sha256": "c1e116e3aa2de2ed532754b4e7ea75639dbabc69f222e8a7a186297e1e56171b",
+    "map_sha256": "6e6150c99cd1a0ee6c83d1edec65d30918a76c1b2a98f399e0b77cf8ccd007d4",
+    "report": "reports/DX8_AMBIENT_STATE_ID.md",
+    "mixed_wchar_t_abi_warning_open": true,
+    "native_acceptance_gates_closed": 0,
+    "canonical_package_passed": false
+  },
   "surface_raster_pitch_cleanup_20261004": {
     "state": "PRODUCTION_LOCK_FAILURE_REPRODUCED_HOST_SANITIZERS_ARM_LINK_PASS",
     "candidate": "A3.5-dev226",

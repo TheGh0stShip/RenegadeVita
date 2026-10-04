@@ -1,5 +1,10 @@
 # Renegade Vita port status
 
+2026-10-04 Dev227 corrects the ambient render-state identifier from26 to139.
+Two numeric API regression failures are reproduced before the fix;13 executable
+checks,492 focused tests and136 ARM compile/link actions pass. Physical lighting
+and existing mixed wchar_t ABI remain open. See [state evidence](DX8_AMBIENT_STATE_ID.md).
+
 2026-10-04 Dev226 surface raster pitch cleanup passes19 production-method
 ASan/LSan/UBSan cases,492 focused contracts and651 ARM compile/link actions.
 Source and ELF/map hashes are retained. Native surface uploads, pixels,

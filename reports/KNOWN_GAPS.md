@@ -1,10 +1,11 @@
 # Known gaps
 
-2026-10-04 compiler diagnostics confirm an original M09 camera array overrun:
-five stored cameras, ten callback loop iterations. Actual activation/crash
-evidence and a bounded regression-backed correction remain open. Two Apache
-parameter buffers and three pointer casts remain review leads.44 selected
-script units compile;all45 behavioral rows remain unknown. See
+2026-10-04 M09 camera overrun is corrected:the original callback fails at index
+five under UBSan;the bounded five-slot callback passes four cases and host/ARM
+links.15 authored M09 instances are found across27 maps. Actual zone entry,
+camera effects and native mission acceptance remain open. Two Apache parameter
+buffers and three pointer casts remain review leads.44 selected script units
+compile;all45 behavioral rows remain unknown. See
 [compiler diagnostic sweep](SCRIPT_COMPILER_DIAGNOSTICS.md).
 
 2026-10-04 Mission03 host-width correction:three verified pointer-through-int

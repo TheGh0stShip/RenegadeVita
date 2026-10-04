@@ -1,0 +1,319 @@
+{
+  "schema_version": 1,
+  "complete": false,
+  "script": "M09_Camera_Activate",
+  "total": 27,
+  "rows": [
+    {
+      "map": "C&C_Canyon.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "8045026fed95044666eeec1016bb78a9963c21601b7c45f69d4aa018aa4296ba",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "991230b5c5929d4aaeeb474fee71fb2638b213f7d3496f5d4c5e1f8aff1df74b"
+    },
+    {
+      "map": "C&C_City.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "3a48c5b173629a71826e009d97bd13cff531315a2f256f02a6321c3b6ea4018e",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "2dacdc47ee77334847ad73031537cbdf619946e3f31aa6c98c1db9e4ca18a0e7"
+    },
+    {
+      "map": "C&C_City_Flying.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "c3a9c65c5a1f3d480941b29034f5ba57aed2391aea64461ef1afccd0fffda4c3",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "b73dbc833211f6e37c0be635d4640d80f1a859a4a6bc5c0af1ffbe5870ff1cd7"
+    },
+    {
+      "map": "C&C_Complex.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "e63f94f76648be6cdcacb7727911350fff6a3733b614deb2f88c65b1413c4531",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "1a1d33afde1c57879eecc56199039e8dddde5a3a5e730e60287a0e41520857cb"
+    },
+    {
+      "map": "C&C_Field.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "ef8884b15a4c77e59f09d96dbf0885ea48cdfb9e58c9543a0b742820d8414c40",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "3b6d9c48f665e07a60e695a2b7fef616969a7b75292cf65dbda52087a5550ae8"
+    },
+    {
+      "map": "C&C_Glacier_Flying.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "ab15abec6750b08551418593b4b5f6d13003b4cb42c3b39434b63040671fa1aa",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "ec99bdd5e055e24587b7e10f6e054ad6760e7080bfbe1b2bed92053ff02fe616"
+    },
+    {
+      "map": "C&C_Hourglass.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "28c3fc1a26e6aba0f29886e9ca37954eec63ce8d6cd2d24ebffebe57075a47ee",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "4d4ea86f78a4618f817a34bd5e05b89795344e7288f62dbfd427a7b8fb6e6ce9"
+    },
+    {
+      "map": "C&C_Islands.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "d73959a3dd4a2dd9e292f3a8e4e2bce3a7ba4f5547aed323379f8c218e80d1fd",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "9c759b617512c97ea96033ed1a0de3258a37f8b8a4aa846c8452ee6d213492f1"
+    },
+    {
+      "map": "C&C_Mesa.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "400190c56b4763109070a901c9c57c2a5df1ffbd3a1e58e035b31b488994bb0c",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "18ec803c3e086978f780e6bd1fb9f53e7cdb5fbeaa12d715021c466a904ee283"
+    },
+    {
+      "map": "C&C_Under.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "5c57d3206046a2906bd1dbe57c3c0fd4c67afa0d0d44625f250aa1695a2ac02a",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "0ede300d3b51048be1e529d26cfaa3d0e564e581c80d202544b5992a8590e52e"
+    },
+    {
+      "map": "C&C_Volcano.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "0bc5cb096bbd8431ed8ad5932467dbbe31f1b2301ec9c5889bbb432e180bbad4",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "d2f06079932f6cac84d7cd419f66c97a0c407e258a14811d3b973a0600625b41"
+    },
+    {
+      "map": "C&C_Walls.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "72e960d37c39d2bb7f4dea979758b6c8e07106cfa2125d3f73496df1224b25d8",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "12a77f6180ebe016217a7caf219a2309d201d9848d0a8eb25d893603a8c6177a"
+    },
+    {
+      "map": "C&C_Walls_Flying.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "fda92665671f8c7951f258e32e72710d9e51df2870651b8c142e5fc04c4850df",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "9ccd193ad96d72c3a572f2256e44e508d1398f7b486e801ba201139d9be5f37a"
+    },
+    {
+      "map": "M00_Tutorial.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "84f14f6267dd8a88563b3d31540bf857df0b8e111144944cb582edd246f2d438",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "3d2c8f81e8318427c4babf5f089d18e9bb315a4eee0b6f5187a10cdd2235c89f"
+    },
+    {
+      "map": "M01.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "3d814a11fb306b425da74d40648f17053644e6a58ce521182d7c178683b354eb",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "bb136992780f9a28d3f8002aa2a82fff70a4971b4682da28a8bb42057d6f8986"
+    },
+    {
+      "map": "M02.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "f098e9190802dba8c9b453e479cb393a0e4777c5f5b038c3bb0376010d64b3a1",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "fdf3ad09128ede681063e8aa5e3f869a488b749efb804afc849cebf90d9de724"
+    },
+    {
+      "map": "M03.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "e49d5a6233635228ad91c73cd2614f3f33e09cbc37d0650eb79683f35aa47d79",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "b4640bdbc976652245fb197fa14f042adddb3d26cc6d71042b29c5c2d0a0e658"
+    },
+    {
+      "map": "M04.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "1d084c9088474c6664dcb30eb08cd7fc86a265e200fbfcebb606ac56e9530ffa",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "a304b10dc5623b68edadc11a786a015ebc221a45078688e2d87dc6c176b65f8c"
+    },
+    {
+      "map": "M05.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "d3b38752890e0d2102a5ba8f57d10c832b8b60749afc4d0512333ca3f64446ca",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "3f4753738cdde5a11aec284d7bdc1badcd4d697a1db536748dc72cea9170a52f"
+    },
+    {
+      "map": "M06.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "cf98d879ac8cf23e60589407b61eb4c2a43c238c979b54485a25938f7679573a",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "3360de7999881de113487dcde213a6e63f0693ce7e8b6f2463f4f2b6f109652f"
+    },
+    {
+      "map": "M07.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "479f72c76ec145c0289f331a856201d0f4249fa86854a5d664c6e8d4edc08664",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "082fc7fceadf0cd81cbf1bf676893bf0685bc471b6812fd4765021f8a4ba7e9b"
+    },
+    {
+      "map": "M08.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "b95c738add5ce7887ec386d839838d595986a05c2f5240b90fe2cebaa7075429",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "7398f0db7a35cabae5cc77f8b6b457f833cd20ab0fe24e038b29f729dfbe447d"
+    },
+    {
+      "map": "M09.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "3132c75426a357ddff60bf2b1c8f2810d27172978b763bc587310f83797d76d7",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 15,
+      "binding_kinds": {
+        "persisted_script": 15
+      },
+      "parameter_field_counts": {
+        "5": 15
+      },
+      "binding_receipt_sha256": "2fdfc3f91743dd96a7b017969ac87acf2d19b11e0062615d121e538c8caa80bc"
+    },
+    {
+      "map": "M10.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "c9bdaa94686f29a69a16c148671c7a6c05c617f61694fb4aec01185e4c3720ec",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "5f2b18d3983beb46d7dcd101b08752398d4474e1b3b363bf0d1640666192c0e6"
+    },
+    {
+      "map": "M11.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "f29a8a4bf4e94d928b8e49c0d4eecade0d35f54ff683ec0fd5b2e4bedbac80eb",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "652f14a315bafd079efa9bbd05688556970f4788ec7931922b62014334e8f160"
+    },
+    {
+      "map": "M13.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "54d41ea011bf7c4d273064422de961af76ccc38f32dd9b5368ebfbca365bbfc4",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "03f87613e0b54bfbfc520c6667c83d016d23b73fbce59724d0c2bdaaf7879891"
+    },
+    {
+      "map": "Skirmish00.mix",
+      "status": "unknown",
+      "evidence_class": "authored_script_binding_metadata",
+      "archive_sha256": "1ac0110faceb596c2b66993ec5034051e9b116acdf5732fb4383e4e8d2984738",
+      "objects_ddb_sha256": "98253406ee8e99f86db6593e360bf68424ffb432580354038f08838ee5ec94cb",
+      "binding_count": 0,
+      "binding_kinds": {},
+      "parameter_field_counts": {},
+      "binding_receipt_sha256": "fd95008c86d0547202d25e291b3e26f6b251f88030dd3f9662623b8d708c1755"
+    }
+  ],
+  "counts": {
+    "unknown": 27
+  },
+  "binding_count": 15,
+  "limits": [
+    "Authored bindings do not establish instantiation, zone entry or callback execution.",
+    "Zero matches apply only to this retained binding surface; computed/runtime attachments remain open.",
+    "Camera object resolution, archive mounting precedence and native presentation remain unverified."
+  ],
+  "retail_inventory_sha256": "4cc7ebfc811129cb6bfcbcf9ca9a3ef68c1b6348b916d35dfc3cd85b0e611673"
+}

@@ -1,5 +1,5 @@
 {
-  "milestone": "A3.5-dev222",
+  "milestone": "A3.5-dev223",
   "objective": "First authentic M00 tutorial runtime; current source seed preserves accepted A3.0/Combat ownership, links the original Mission00 provider and its direct dependencies, promotes the original CombatGameMode post-load finalization owner, and retains original WWAudio ownership over a Vita-native output boundary",
   "canonical_upstream": "https://github.com/electronicarts/CnC_Renegade",
   "upstream_revision": "3e00c3a1b97381bb28be89a35b856375e0629a08",
@@ -699,8 +699,8 @@
     "port/compatibility/include/winsock.h",
     "port/compatibility/include/winuser.h"
   ],
-  "patch_count": 312,
-  "mechanically_patched_upstream_files": 395,
+  "patch_count": 313,
+  "mechanically_patched_upstream_files": 396,
   "mechanically_patched_upstream_paths": [
     "Code/Combat/WeatherMgr.cpp",
     "Code/Combat/WeatherMgr.h",
@@ -1078,6 +1078,7 @@
     "patch-target/scripts-a35-cinematic-time-budget-only.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-host-m03-pointer-exchange.patch/Mission03.cpp",
     "patch-target/scripts-a35-m01-duncan-beacon-handoff.patch/Mission01.cpp",
+    "patch-target/scripts-a35-m09-camera-bounds.patch/Mission09.cpp",
     "patch-target/scripts-a35-m13-slot19-phases.patch/Test_Cinematic.cpp",
     "patch-target/scripts-a35-parameter-array-delete.patch/scripts.cpp",
     "patch-target/scripts-a35-trim-overlap.patch/strtrim.cpp",
@@ -4127,6 +4128,15 @@
       "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
       "upstream_targets": [
         "Mission03.cpp"
+      ]
+    },
+    {
+      "path": "port/patches/scripts-a35-m09-camera-bounds.patch",
+      "stage_directory": "scripts",
+      "sha256": "3e34362062fd5fed3a883851a23c64cdb5dd63f3685c10ac20b6f6f2b3ba26ce",
+      "application": "generated staging only; patch --batch --forward --fuzz=0 --no-backup-if-mismatch",
+      "upstream_targets": [
+        "Mission09.cpp"
       ]
     },
     {

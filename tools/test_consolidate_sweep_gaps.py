@@ -5,6 +5,16 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_camera_binding_partition(self):
+        value = {'total': 1, 'counts': {'unknown': 1}, 'binding_count': 15,
+                 'rows': [{'status': 'unknown', 'map': 'M09.mix', 'binding_count': 15}]}
+        result = consolidate([('m09_camera_bindings', json.dumps(value).encode())])
+        self.assertEqual(result['counts'], {'unknown': 1})
+        self.assertEqual(result['rows'][0]['cluster'], 'scripts')
+        value['binding_count'] = 16
+        with self.assertRaisesRegex(ValueError, 'binding partition'):
+            consolidate([('m09_camera_bindings', json.dumps(value).encode())])
+
     def test_compiler_diagnostic_partition(self):
         value = {'total': 1, 'counts': {'unknown': 1},
                  'diagnostic_counts': {'-Wuninitialized': 1},

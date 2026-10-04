@@ -1,5 +1,13 @@
 # Renegade Vita port status
 
+2026-10-04 Dev223 supersedes Dev222 as the current fast compile/link candidate.
+M09 camera activation now iterates its five stored slots; the original callback
+fails at index five under UBSan and the corrected callback passes four cases.
+Host617/ARM634 actions and485 fast contracts pass;44 script units recompile
+with the camera warning removed.15 M09 bindings are retained across27 maps.
+Native camera effects, full mission acceptance and wchar_t ABI remain open.
+See [script cluster](SCRIPT_LAYER_SWEEP.md).
+
 2026-10-04 Dev222 is the current fast compile/link candidate. Three verified
 Mission03 synchronous pointer exchanges gain host-only scoped tokens; actual
 script callbacks pass sanitizers and native preprocessing remains unchanged.

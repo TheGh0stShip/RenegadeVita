@@ -1,12 +1,26 @@
 {
+  "m09_camera_bounds_20261004": {
+    "state": "ORIGINAL_CALLBACK_UB_REPRODUCED_CORRECTED_HOST_SANITIZERS_ARM_LINK_PASS",
+    "candidate": "A3.5-dev223",
+    "bounded_cases_passed": 4,
+    "all_map_bindings_scanned": 27,
+    "m09_authored_bindings": 15,
+    "host_compile_link_actions": 617,
+    "arm_compile_link_actions": 634,
+    "fast_contract_tests_passed": 485,
+    "focused_tests_passed": 48,
+    "receipt": "reports/generated/sweeps/m09_camera_bounds_fix.json",
+    "native_acceptance_gates_closed": 0,
+    "canonical_package_passed": false
+  },
   "script_compiler_diagnostics_20261004": {
-    "state": "HOST_OPTIMIZED_COMPILE_PASS_ORIGINAL_M09_ARRAY_OVERRUN_REVIEW_OPEN",
+    "state": "HOST_OPTIMIZED_COMPILE_PASS_M09_OVERRUN_CORRECTED_FIVE_REVIEW_WARNINGS_OPEN",
     "dsp_units": 45,
     "selected_units_compiled": 44,
     "diagnostic_parse_failures": 0,
-    "review_warning_candidates": 6,
+    "review_warning_candidates": 5,
     "tool_tests_passed": 7,
-    "runtime_cpp_changed": false,
+    "runtime_cpp_changed": true,
     "receipt": "reports/generated/sweeps/script_compiler_diagnostics.json",
     "native_acceptance_gates_closed": 0
   },

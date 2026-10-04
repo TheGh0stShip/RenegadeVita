@@ -29786,7 +29786,7 @@
       "original_sha256": "d84a63190a795ae41d57ebc21e997544980971ad42c063dbc014ca147bb6e9cf",
       "staged_source": "staging/scripts/Mission09.cpp",
       "staged_present": true,
-      "staged_sha256": "d84a63190a795ae41d57ebc21e997544980971ad42c063dbc014ca147bb6e9cf",
+      "staged_sha256": "ea9b979f8f7f84c838e2997123b8dacbed758c445625ae4b9d3b499c81e72142",
       "original_findings": [
         {
           "category": "bare_scalar_declaration",
@@ -31690,9 +31690,27 @@
           "evidence_class": "lexical_compiler_assumption_candidate"
         },
         {
+          "category": "size_expression",
+          "line": 4606,
+          "offset": 118654,
+          "syntax_sha256": "24ec296b0457dfce5eb23b7f7ba362d95187c299401610806a36aeb48212c213",
+          "preceding_script_declaration_candidate": "M09_Camera_Activate",
+          "status": "unknown",
+          "evidence_class": "lexical_compiler_assumption_candidate"
+        },
+        {
+          "category": "size_expression",
+          "line": 4606,
+          "offset": 118671,
+          "syntax_sha256": "12cc08d2de033a94d18ae5df3c4e6f0cb94f77b1de9150037758f1413e1bd1ba",
+          "preceding_script_declaration_candidate": "M09_Camera_Activate",
+          "status": "unknown",
+          "evidence_class": "lexical_compiler_assumption_candidate"
+        },
+        {
           "category": "bare_scalar_declaration",
           "line": 4643,
-          "offset": 119306,
+          "offset": 119343,
           "syntax_sha256": "e72002a39214e39d0bf79472df7db1db677db49761658e9c63592919e9b56a0b",
           "preceding_script_declaration_candidate": "M09_Elevator_Exit",
           "status": "unknown",
@@ -57843,7 +57861,7 @@
     "loop_local_declaration": 38,
     "plain_char_declaration": 696,
     "scalar_pointer_cast": 15,
-    "size_expression": 43
+    "size_expression": 45
   },
   "dsp_sha256": "04323c97d93059a62a5e172c3489e1fc6b08513058e6ef498c7ec09f6debbbb6",
   "limits": [

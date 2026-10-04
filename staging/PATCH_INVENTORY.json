@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "b02d42791967ea565da56b3096871c0e108d37f3aab71e5cf9e270786085d585",
-  "patch_count": 312,
+  "stage_script_sha256": "e3fb83b473e0352b77ce4abdea93c20bbf28a98dbb0ac03660bb42cf8ba61c9a",
+  "patch_count": 313,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1530,6 +1530,11 @@
       "sha256": "726e47d7c0000b285ac995db9f527509681e9cc2b9ff552c1797c13efb3675ba"
     },
     {
+      "path": "port/patches/scripts-a35-m09-camera-bounds.patch",
+      "stage_directory": "scripts",
+      "sha256": "3e34362062fd5fed3a883851a23c64cdb5dd63f3685c10ac20b6f6f2b3ba26ce"
+    },
+    {
       "path": "port/patches/ww3d-a35-original-dazzle-lifecycle.patch",
       "stage_directory": "ww3d2",
       "sha256": "d3732d603f9118a9e0994b8d295b20baa628ba7fd502b728306bd0256e8826f1"
@@ -1565,5 +1570,5 @@
       "sha256": "cdc495d554679833dbdea8cd33ab73d8d8697dcfe757622de5811aecd6f13701"
     }
   ],
-  "registry_sha256": "16829d7b63745dc191e5a8a744520ba837c395164af1e5c440c7e1ab3ca893b6"
+  "registry_sha256": "8d0e4bf64906ed4966a01929272194e9ee1ee2aa87afd601dc3bf762dfd3f8b7"
 }

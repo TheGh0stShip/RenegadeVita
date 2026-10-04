@@ -184,30 +184,16 @@
       "status": "unknown",
       "compile_command_matches": 1,
       "evidence_class": "optimized_host_compiler_diagnostics",
-      "source_sha256": "d84a63190a795ae41d57ebc21e997544980971ad42c063dbc014ca147bb6e9cf",
+      "source_sha256": "ea9b979f8f7f84c838e2997123b8dacbed758c445625ae4b9d3b499c81e72142",
       "returncode": 0,
-      "object_sha256": "b9fe4f039869bd9272a0b72e79bd8632b9bc1138277e8b4d680dc3af938eba6d",
+      "object_sha256": "1b6a917ad90439a87d13cb900184a3eafc05b1a360b28c3a646347817bf10b31",
       "diagnostic_counts": {
-        "-Waggressive-loop-optimizations": 1,
         "-Wattributes": 7,
         "-Wwrite-strings": 45,
-        "-fpermissive": 38,
-        "note": 1
+        "-fpermissive": 38
       },
       "dataflow_warning_count": 0,
-      "review_candidates": [
-        {
-          "status": "unknown",
-          "option": "-Waggressive-loop-optimizations",
-          "message": "iteration 5 invokes undefined behavior",
-          "locations": [
-            {
-              "source": "staging/scripts/Mission09.cpp",
-              "line": 4608
-            }
-          ]
-        }
-      ]
+      "review_candidates": []
     },
     {
       "name": "Mission10.cpp",
@@ -796,7 +782,6 @@
   ],
   "dsp_sha256": "04323c97d93059a62a5e172c3489e1fc6b08513058e6ef498c7ec09f6debbbb6",
   "diagnostic_counts": {
-    "-Waggressive-loop-optimizations": 1,
     "-Wattributes": 308,
     "-Wconversion-null": 11,
     "-Wformat-overflow=": 2,
@@ -805,7 +790,7 @@
     "-Wpointer-arith": 3,
     "-Wwrite-strings": 1177,
     "-fpermissive": 1674,
-    "note": 11,
+    "note": 10,
     "warning": 6
   },
   "limits": [

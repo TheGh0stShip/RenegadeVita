@@ -1512,6 +1512,7 @@
     "port/patches/scripts-a35-cinematic-time-budget-only.patch": "dc904cab25938f1bc384e368e1f58adbabe45f1a530d2922ff5c095a7a1de7c7",
     "port/patches/scripts-a35-host-m03-pointer-exchange.patch": "726e47d7c0000b285ac995db9f527509681e9cc2b9ff552c1797c13efb3675ba",
     "port/patches/scripts-a35-m01-duncan-beacon-handoff.patch": "939655508ca44caebc7b7a7d6bee0d1f54fce7e2b1d805e9c0c7a9d6cc4417e8",
+    "port/patches/scripts-a35-m09-camera-bounds.patch": "3e34362062fd5fed3a883851a23c64cdb5dd63f3685c10ac20b6f6f2b3ba26ce",
     "port/patches/scripts-a35-m13-slot19-phases.patch": "a9cccd8cc55507cb2e8ee69ffd2f348d0a99a3d1f8f938d20a7871e78ad0da28",
     "port/patches/scripts-a35-parameter-array-delete.patch": "49c60a18249dc3d708f9fc87f1856272978ba19160cd412e7d2b36d44f1f12de",
     "port/patches/scripts-a35-trim-overlap.patch": "cdc495d554679833dbdea8cd33ab73d8d8697dcfe757622de5811aecd6f13701",
@@ -2527,7 +2528,7 @@
     "staging/scripts/Mission05.cpp": "7a5864f158dc8bab09619f06f0e763ff50149a40613c0e781cef31aa966c2a9f",
     "staging/scripts/Mission06.cpp": "0cb75ea11d0a75828e1f981625c5cf1108c18f625150ed7bf5e9e284c2f2a063",
     "staging/scripts/Mission07.cpp": "c20fc975b32bc8daf1cb6de3c4a6051bcbd16247a13288439728361c03dc10cd",
-    "staging/scripts/Mission09.cpp": "d84a63190a795ae41d57ebc21e997544980971ad42c063dbc014ca147bb6e9cf",
+    "staging/scripts/Mission09.cpp": "ea9b979f8f7f84c838e2997123b8dacbed758c445625ae4b9d3b499c81e72142",
     "staging/scripts/Mission1.h": "6adf71f8a8bfa7b0241968e71cb8e1ba9d95a10bfc4a1b623b1a2e671d1c76b8",
     "staging/scripts/Mission10.cpp": "43914b8899442aff649c5f383503d4b5bcbcde6a8391a8698215adbdf878ed2f",
     "staging/scripts/Mission10.h": "5da498872174d03a59b7bf824003a10a12f0eb5c91e4359c049fa605d2964aa4",
@@ -3731,7 +3732,7 @@
     "tools/run_a35_vita_physical_gate.sh": "fbc5ff0284650391969ad6445554f72a581aca074e50eca1c3ead498d80a0542",
     "tools/run_a35_vita_route_session.sh": "919337aebd28c45d59dad30536418d98efc25a6ac7da19cad28f3521a5e78c19",
     "tools/run_dev82_recorded_demo_session.sh": "f2520f099c808a1311ac65ca6df7bc0add4cffab9fabda064ca3fddb38c4ed1f",
-    "tools/stage_sources.sh": "b02d42791967ea565da56b3096871c0e108d37f3aab71e5cf9e270786085d585",
+    "tools/stage_sources.sh": "e3fb83b473e0352b77ce4abdea93c20bbf28a98dbb0ac03660bb42cf8ba61c9a",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
     "tools/sweep_reviews/port_guards.json": "6f22fe23c0ab42e4a62a1abba1d2135c8d1e5eaa1c1b2bc6abe5302bde9adef8",
@@ -4550,6 +4551,11 @@
     {
       "path": "port/patches/scripts-a35-m01-duncan-beacon-handoff.patch",
       "sha256": "939655508ca44caebc7b7a7d6bee0d1f54fce7e2b1d805e9c0c7a9d6cc4417e8",
+      "stage_reference_count": 1
+    },
+    {
+      "path": "port/patches/scripts-a35-m09-camera-bounds.patch",
+      "sha256": "3e34362062fd5fed3a883851a23c64cdb5dd63f3685c10ac20b6f6f2b3ba26ce",
       "stage_reference_count": 1
     },
     {
@@ -129026,8 +129032,8 @@
       "stubbed_or_noop": 51,
       "unknown": 3537
     },
-    "patch_files": 315,
+    "patch_files": 316,
     "rows": 3597,
-    "stage_patch_references": 312
+    "stage_patch_references": 313
   }
 }

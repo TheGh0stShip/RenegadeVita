@@ -1,7 +1,7 @@
 # Full port gap register
 
 Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`
-status record in the eight sweeps and 33 supplements is retained, including nested records.
+status record in the eight sweeps and 34 supplements is retained, including nested records.
 Supplementary inventories overlap; their counts are not unique missing features.
 Rows count evidence records, not unique defects. Unknown impact is unclassified;
 it is not silently ranked as a confirmed crash or progression blocker.
@@ -51,8 +51,9 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | script_command_port_dependencies | 202 | 346 | False |
 | host_script_command_table | 202 | 202 | False |
 | cinematic_dispatch_dependencies | 18 | 18 | False |
-| script_portability | 90 | 6371 | False |
-| script_compiler_diagnostics | 45 | 51 | False |
+| script_portability | 90 | 6373 | False |
+| script_compiler_diagnostics | 45 | 50 | False |
+| m09_camera_bindings | 27 | 27 | False |
 
 Original owners and detailed evidence remain at the inventory JSON pointers.
 Clusters require caller/mode review and required evidence classes before fixes.
@@ -28292,6 +28293,33 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | live_script_parameters /rows/7 | C&C_Islands.mix | unknown | unclassified | C&C_Islands.mix |
 | live_script_parameters /rows/8 | C&C_Mesa.mix | unknown | unclassified | C&C_Mesa.mix |
 | live_script_parameters /rows/9 | C&C_Under.mix | unknown | unclassified | C&C_Under.mix |
+| m09_camera_bindings /rows/0 | C&C_Canyon.mix | unknown | unclassified | C&C_Canyon.mix |
+| m09_camera_bindings /rows/1 | C&C_City.mix | unknown | unclassified | C&C_City.mix |
+| m09_camera_bindings /rows/10 | C&C_Volcano.mix | unknown | unclassified | C&C_Volcano.mix |
+| m09_camera_bindings /rows/11 | C&C_Walls.mix | unknown | unclassified | C&C_Walls.mix |
+| m09_camera_bindings /rows/12 | C&C_Walls_Flying.mix | unknown | unclassified | C&C_Walls_Flying.mix |
+| m09_camera_bindings /rows/13 | M00_Tutorial.mix | unknown | unclassified | M00_Tutorial.mix |
+| m09_camera_bindings /rows/14 | M01.mix | unknown | unclassified | M01.mix |
+| m09_camera_bindings /rows/15 | M02.mix | unknown | unclassified | M02.mix |
+| m09_camera_bindings /rows/16 | M03.mix | unknown | unclassified | M03.mix |
+| m09_camera_bindings /rows/17 | M04.mix | unknown | unclassified | M04.mix |
+| m09_camera_bindings /rows/18 | M05.mix | unknown | unclassified | M05.mix |
+| m09_camera_bindings /rows/19 | M06.mix | unknown | unclassified | M06.mix |
+| m09_camera_bindings /rows/2 | C&C_City_Flying.mix | unknown | unclassified | C&C_City_Flying.mix |
+| m09_camera_bindings /rows/20 | M07.mix | unknown | unclassified | M07.mix |
+| m09_camera_bindings /rows/21 | M08.mix | unknown | unclassified | M08.mix |
+| m09_camera_bindings /rows/22 | M09.mix | unknown | unclassified | M09.mix |
+| m09_camera_bindings /rows/23 | M10.mix | unknown | unclassified | M10.mix |
+| m09_camera_bindings /rows/24 | M11.mix | unknown | unclassified | M11.mix |
+| m09_camera_bindings /rows/25 | M13.mix | unknown | unclassified | M13.mix |
+| m09_camera_bindings /rows/26 | Skirmish00.mix | unknown | unclassified | Skirmish00.mix |
+| m09_camera_bindings /rows/3 | C&C_Complex.mix | unknown | unclassified | C&C_Complex.mix |
+| m09_camera_bindings /rows/4 | C&C_Field.mix | unknown | unclassified | C&C_Field.mix |
+| m09_camera_bindings /rows/5 | C&C_Glacier_Flying.mix | unknown | unclassified | C&C_Glacier_Flying.mix |
+| m09_camera_bindings /rows/6 | C&C_Hourglass.mix | unknown | unclassified | C&C_Hourglass.mix |
+| m09_camera_bindings /rows/7 | C&C_Islands.mix | unknown | unclassified | C&C_Islands.mix |
+| m09_camera_bindings /rows/8 | C&C_Mesa.mix | unknown | unclassified | C&C_Mesa.mix |
+| m09_camera_bindings /rows/9 | C&C_Under.mix | unknown | unclassified | C&C_Under.mix |
 | missing_definition_callers /rows/0 | /rows/0 | unknown | unclassified | M01.mix, M02.mix, M03.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix |
 | missing_definition_callers /rows/1 | /rows/1 | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Glacier_Flying.mix, C&C_Hourglass.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M01.mix, M02.mix, M04.mix, M05.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix |
 | missing_definition_callers /rows/10 | /rows/10 | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Glacier_Flying.mix, C&C_Hourglass.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix |
@@ -37087,7 +37115,6 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | script_compiler_diagnostics /rows/1 | DPrint.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_compiler_diagnostics /rows/10 | Mission07.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_compiler_diagnostics /rows/11 | Mission09.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
-| script_compiler_diagnostics /rows/11/review_candidates/0 | /rows/11/review_candidates/0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_compiler_diagnostics /rows/12 | Mission10.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_compiler_diagnostics /rows/12/review_candidates/0 | /rows/12/review_candidates/0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_compiler_diagnostics /rows/13 | Mission11.cpp | unknown | unclassified | unknown; callers and retail usage require reconciliation |
@@ -40107,6 +40134,8 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | script_portability /rows/11/staged_findings/103 | /rows/11/staged_findings/103 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_portability /rows/11/staged_findings/104 | /rows/11/staged_findings/104 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_portability /rows/11/staged_findings/105 | /rows/11/staged_findings/105 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_portability /rows/11/staged_findings/106 | /rows/11/staged_findings/106 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| script_portability /rows/11/staged_findings/107 | /rows/11/staged_findings/107 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_portability /rows/11/staged_findings/11 | /rows/11/staged_findings/11 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_portability /rows/11/staged_findings/12 | /rows/11/staged_findings/12 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | script_portability /rows/11/staged_findings/13 | /rows/11/staged_findings/13 | unknown | unclassified | unknown; callers and retail usage require reconciliation |

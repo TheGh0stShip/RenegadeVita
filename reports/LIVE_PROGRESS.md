@@ -1,5 +1,17 @@
 # Live engineering progress
 
+## Mission09 camera bounds correction — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:original callback overrun reproduced;five-slot correction passes
+all/empty/sparse/last-slot and repeated-entry cases.27 maps retain15 M09 bindings.
+Evidence:host617/ARM634 actions;485 fast contracts;four new and48 focused tests.
+All44 selected scripts recompile;five remaining compiler warnings stay open.
+Next:pointer sender/lifetime and Apache array/range review, then real callbacks.
+Blocker:none for source work;wchar_t ABI and native acceptance remain open.
+
 ## Whole-script optimized compiler diagnostics — 2026-10-04
 
 Renegade Vita — v3.5 active

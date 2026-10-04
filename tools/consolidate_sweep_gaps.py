@@ -28,7 +28,7 @@ ISSUES['script_parameter_surface'] = 9
 ISSUES['script_load_destinations'] = 9
 SCRIPT_SUPPLEMENTS = ('script_command_bodies', 'script_command_port_dependencies',
                      'host_script_command_table', 'cinematic_dispatch_dependencies', 'script_portability',
-                     'script_compiler_diagnostics')
+                     'script_compiler_diagnostics', 'm09_camera_bindings')
 SUPPLEMENTS += SCRIPT_SUPPLEMENTS
 ISSUES.update({name: 9 for name in SCRIPT_SUPPLEMENTS})
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
@@ -100,6 +100,9 @@ def root_records(name, value):
                 counts.update(row['diagnostic_counts'])
             if dict(counts) != value['diagnostic_counts']:
                 raise ValueError(f'{name}: diagnostic partition mismatch')
+        if name == 'm09_camera_bindings':
+            if value['binding_count'] != sum(row['binding_count'] for row in rows):
+                raise ValueError(f'{name}: binding partition mismatch')
     elif name=='script_load_destinations':
         if value['total']!=len(rows) or value['counts']!=dict(Counter(r['status'] for r in rows)) or value['parse_complete']!=sum(r['parse_complete'] for r in rows):
             raise ValueError('Script load destination partition mismatch')

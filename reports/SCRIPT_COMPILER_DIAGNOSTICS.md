@@ -1,5 +1,14 @@
 # Script compiler diagnostic sweep
 
+Dev223 refresh:the original Mission09 camera overrun is reproduced by its
+registered callback and corrected with a five-slot loop bound. All44 selected
+units recompile and the aggressive-loop warning disappears. Five review
+warnings remain.15 authored camera bindings are retained across27 maps.
+Host/ARM compile/link and actual callback sanitizers pass;camera presentation
+and full native mission acceptance remain open. Historical discovery below
+describes the pre-correction six-warning result. See
+[fix receipt](generated/sweeps/m09_camera_bounds_fix.json).
+
 The current host runtime's actual Ninja compile commands enumerate 44 of the
 45 original Scripts.dsp units. All 44 compile successfully with optimization
 and uninitialized/maybe-uninitialized/return-type warnings enabled. GCC JSON
@@ -40,10 +49,11 @@ including actual GCC execution. Runtime C++ and ARM artifacts are unchanged;
 Dev222 remains the current compile-only candidate. No game/emulator/device
 session occurred. Physical acceptance remains 0/10.
 
-The consolidated gap register retains the45 unit rows and six nested review
-candidates. It now contains53,138 overlapping evidence records, including
-52,857 unknowns; these are not distinct defect counts.31 diagnostic and
-consolidation tests pass, including warning-partition rejection.
+The refreshed consolidated gap register retains the45 unit rows and five
+nested review candidates plus27 camera binding-map rows. It now contains
+53,166 overlapping evidence records, including52,885 unknowns; these are not
+distinct defect counts.48 focused tests cover diagnostic, binding, consolidation
+and source/staging contracts, including warning-partition rejection.
 
 Reproduce the diagnostic run from the configured host runtime:
 

@@ -1,5 +1,26 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Mission09 camera bounds correction — 2026-10-04
+
+The original registered M09_Camera_Activate callback reads past camera[5] on
+its first entry;UBSan reproduces index five. The zero-fuzz patch changes only
+the loop bound to the array's element count. Five parameter names, save fields,
+zero-slot skips, attachment payload and repeated-entry latch stay unchanged.
+Four actual callback cases pass ASan/UBSan with exact fixture callback types.
+The fixture uses synthetic transport/opaque objects and does not render cameras.
+
+The all-map binding inventory retains27 maps:15 persisted M09 instances each
+have five parameter fields;the other26 maps have zero retained matches. Dynamic
+attachments and mounting/activation remain open. Public metadata excludes raw
+retail parameters. Dev223 host617/ARM634 actions and485 fast contracts pass;
+four additional tests are added to future fast gates.48 focused checks pass.
+ELF32 little-endian ARMv7 hard-float inspection passes;wchar_t warnings remain.
+All44 selected script units recompile and the camera diagnostic disappears;
+two parameter-buffer and three pointer-cast warnings remain.313 patches apply.
+The consolidated register retains53,166 overlapping records with52,885 unknowns.
+See [fix receipt](generated/sweeps/m09_camera_bounds_fix.json) and
+[binding inventory](generated/sweeps/m09_camera_bindings.json).
+
 ## Optimized compiler diagnostic denominator — 2026-10-04
 
 All44 selected DSP units compile with actual host target flags plus optimized

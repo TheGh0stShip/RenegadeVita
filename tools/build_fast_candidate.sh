@@ -150,6 +150,7 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_cinematic_save tools.test_script_load_capacity \
 		tools.test_m03_pointer_exchange tools.test_custom_event_delivery tools.test_script_portability \
 		tools.test_m09_camera tools.test_script_binding_occurrences \
+		tools.test_script_warning_routes \
 		tools.test_logical_stimulus_telemetry \
 		tools.test_vita_mission_ranks \
 		tools.test_vita_text_readiness \

@@ -1,5 +1,15 @@
 # Renegade Vita port status
 
+2026-10-04 Dev224 is the current fast compile/link candidate. The duplicated
+M08/M10 Apache controllers now reject negative and gap timer/event indices,
+preserve the authored `-1` exit sentinel, and reload the reporting Apache's
+area after the active area changes. Eight unchanged-original invalid callback
+routes fail under UBSan; corrected callbacks and valid/high-timer routes pass.
+All 491 fast contracts and 634 ARM actions pass. The optimized 45-unit script
+denominator now has three remaining pointer-cast warnings; the two Apache
+format warnings are gone. Native mission behavior and the wchar_t ABI remain
+open. See [script cluster](SCRIPT_LAYER_SWEEP.md).
+
 2026-10-04 Dev223 supersedes Dev222 as the current fast compile/link candidate.
 M09 camera activation now iterates its five stored slots; the original callback
 fails at index five under UBSan and the corrected callback passes four cases.

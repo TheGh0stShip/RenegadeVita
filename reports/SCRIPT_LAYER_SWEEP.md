@@ -1,5 +1,38 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Mission08/Mission10 Apache controller bounds — 2026-10-04
+
+The two copied three-slot Apache controllers had the same unchecked routes.
+Non-exit events accepted `-1` and indexed three-element arrays; timer IDs3..9
+also indexed those arrays. A child reload event used the controller's current
+area, which can already be `-1` after the player exits, instead of the child's
+validated Area parameter. Their decimal attachment buffers were one byte short
+for the full signed 32-bit range. The zero-fuzz patch bounds non-exit events and
+spawn timers to0..2, retains only the authored type3000 `-1` exit sentinel,
+uses the sender area for reload/timer10..12, and uses a 12-byte int buffer.
+
+The actual registered original callbacks reproduce eight UBSan failures across
+M08 and M10: negative destroy, inactive-area reload, gap timer9 and negative
+timer. Corrected callbacks pass those cases plus valid slots0..2, sentinel exit,
+sender-area reload and high timers13/INT_MAX. High reload IDs are harmless in
+the original branch because it indexes only when `timer_id-10` equals the
+already bounded active area. DeepSeek V4 Pro raised that counterexample and a
+broader negative-sentinel concern; source inspection and the added cases reject
+both as remaining defects. This was advisory review, not execution evidence.
+
+The all-map binding surface covers27 maps. It retains one authored
+M10_Apache_Controller binding, no M08 controller/child binding in this metadata
+surface, and two RMV_Engineer_Wander bindings; computed and serialized runtime
+attachments remain open. Dev224 passes491 focused contracts outside the
+ptrace-conflicted sandbox and all634 ARM build/link actions. The ELF, map and
+symbols validate. The current45-unit optimized compiler inventory has only
+three review warnings, all retained pointer casts in Test_PDS and
+Test_RMV_Toolkit; both Apache format warnings are gone. The mixed wchar_t linker
+warning and native M08/M10 behavior remain open.
+
+See [warning routes](generated/sweeps/script_warning_routes.json) and
+[compiler diagnostics](generated/sweeps/script_compiler_diagnostics.json).
+
 ## Mission09 camera bounds correction — 2026-10-04
 
 The original registered M09_Camera_Activate callback reads past camera[5] on

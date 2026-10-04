@@ -1,5 +1,18 @@
 # Live engineering progress
 
+## Mission08/Mission10 Apache controller bounds — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: duplicated three-slot controllers now bound event/timer indices and
+reload the sender's authored area after the player exits; int text fits ILP32.
+Evidence: eight original callback failures reproduced; corrected/valid/high-ID
+routes pass ASan/UBSan. Dev224 passes 491 contracts and all 634 ARM actions.
+The refreshed 45-unit compiler denominator falls from five to three warnings.
+Next: classify the retained PDS/RMV host pointer casts, then continue S1/S2
+coverage clusters. Blocker:none; wchar_t ABI and native acceptance remain open.
+
 ## Mission09 camera bounds correction — 2026-10-04
 
 Renegade Vita — v3.5 active

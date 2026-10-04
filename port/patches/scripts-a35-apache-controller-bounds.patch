@@ -1,0 +1,88 @@
+--- a/Mission10.cpp
++++ b/Mission10.cpp
+@@ -1217,6 +1217,10 @@
+ 		{
+ 			return;
+ 		}
++		if (param < 0 && type != 3000)
++		{
++			return;
++		}
+ 		
+ 		if (type == 1000)
+ 		{
+@@ -1262,8 +1266,8 @@
+ 		}
+ 		if (type == 5000)
+ 		{
+-			Reload_At_Helipad(area);
+-			Commands->Start_Timer(obj, this, 25.0f, 10 + area);
++			Reload_At_Helipad(param);
++			Commands->Start_Timer(obj, this, 25.0f, 10 + param);
+ 		}
+ 	}
+ 
+@@ -1306,7 +1310,7 @@
+ 
+ 		GameObject * apache = Commands->Create_Object("Nod_Apache_No_Idle", start_loc);
+ 		Commands->Enable_Engine(apache, true);
+-		char param[10];
++		char param[12];
+ 		sprintf(param, "%d", current_area);
+ 		Commands->Attach_Script(apache, "M10_Apache", param);
+ 		Commands->Send_Custom_Event(Owner(), apache, 400, 400);
+@@ -1330,6 +1334,10 @@
+ 			}
+ 			return;
+ 		}
++		if (timer_id < 0 || timer_id > 2)
++		{
++			return;
++		}
+ 
+ 		if (!destroyed[timer_id])
+ 		{
+--- a/mission08.cpp
++++ b/mission08.cpp
+@@ -6312,6 +6312,10 @@
+ 		{
+ 			return;
+ 		}
++		if (param < 0 && type != 3000)
++		{
++			return;
++		}
+ 		
+ 		if (type == 1000)
+ 		{
+@@ -6357,8 +6361,8 @@
+ 		}
+ 		if (type == 5000)
+ 		{
+-			Reload_At_Helipad(area);
+-			Commands->Start_Timer(obj, this, 25.0f, 10 + area);
++			Reload_At_Helipad(param);
++			Commands->Start_Timer(obj, this, 25.0f, 10 + param);
+ 		}
+ 	}
+ 
+@@ -6401,7 +6405,7 @@
+ 
+ 		GameObject * apache = Commands->Create_Object("Nod_Apache_No_Idle", start_loc);
+ 		Commands->Enable_Engine(apache, true);
+-		char param[10];
++		char param[12];
+ 		sprintf(param, "%d", current_area);
+ 		Commands->Attach_Script(apache, "M08_Apache", param);
+ 		Commands->Send_Custom_Event(Owner(), apache, 400, 400);
+@@ -6423,6 +6427,10 @@
+ 			}
+ 			return;
+ 		}
++		if (timer_id < 0 || timer_id > 2)
++		{
++			return;
++		}
+ 
+ 		if (!destroyed[timer_id])
+ 		{

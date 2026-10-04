@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "e3fb83b473e0352b77ce4abdea93c20bbf28a98dbb0ac03660bb42cf8ba61c9a",
-  "patch_count": 313,
+  "stage_script_sha256": "5a8f8083cab96ac610011b121b42a501a04dd3ce02ffa5d117035fdf8d15877f",
+  "patch_count": 314,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1535,6 +1535,11 @@
       "sha256": "3e34362062fd5fed3a883851a23c64cdb5dd63f3685c10ac20b6f6f2b3ba26ce"
     },
     {
+      "path": "port/patches/scripts-a35-apache-controller-bounds.patch",
+      "stage_directory": "scripts",
+      "sha256": "7167c3c8cc3a88f83756b92ee5916a5ed4468d9db4bbcf881619670ad867f5cf"
+    },
+    {
       "path": "port/patches/ww3d-a35-original-dazzle-lifecycle.patch",
       "stage_directory": "ww3d2",
       "sha256": "d3732d603f9118a9e0994b8d295b20baa628ba7fd502b728306bd0256e8826f1"
@@ -1570,5 +1575,5 @@
       "sha256": "cdc495d554679833dbdea8cd33ab73d8d8697dcfe757622de5811aecd6f13701"
     }
   ],
-  "registry_sha256": "8d0e4bf64906ed4966a01929272194e9ee1ee2aa87afd601dc3bf762dfd3f8b7"
+  "registry_sha256": "6f8efc4577fb90969ad51b4f7d9f1f43a1f3b81d9cdc6562a93c34734c3121f1"
 }

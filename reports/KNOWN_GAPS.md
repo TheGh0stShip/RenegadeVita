@@ -1,10 +1,18 @@
 # Known gaps
 
+2026-10-04 M08/M10 Apache controller bounds are corrected. Eight unchanged
+original invalid callback routes reproduce under UBSan; corrected routes,
+valid slots and high reload IDs pass. Dev224 passes491 fast contracts and634
+ARM actions. The all-map metadata surface retains one M10 controller binding
+but no M08 controller/child binding, so native callback reachability and mission
+behavior remain open. Three PDS/RMV pointer-cast warnings and the mixed wchar_t
+ABI warning remain. See [script cluster evidence](SCRIPT_LAYER_SWEEP.md).
+
 2026-10-04 M09 camera overrun is corrected:the original callback fails at index
 five under UBSan;the bounded five-slot callback passes four cases and host/ARM
 links.15 authored M09 instances are found across27 maps. Actual zone entry,
-camera effects and native mission acceptance remain open. Two Apache parameter
-buffers and three pointer casts remain review leads.44 selected script units
+camera effects and native mission acceptance remain open. Three pointer casts
+remain review leads.44 selected script units
 compile;all45 behavioral rows remain unknown. See
 [compiler diagnostic sweep](SCRIPT_COMPILER_DIAGNOSTICS.md).
 

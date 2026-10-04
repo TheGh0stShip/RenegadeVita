@@ -200,30 +200,16 @@
       "status": "unknown",
       "compile_command_matches": 1,
       "evidence_class": "optimized_host_compiler_diagnostics",
-      "source_sha256": "43914b8899442aff649c5f383503d4b5bcbcde6a8391a8698215adbdf878ed2f",
+      "source_sha256": "73981e97edc8e06e484484b02d369b999beaa3f67ef59be720091f345705de39",
       "returncode": 0,
-      "object_sha256": "a0ebde252bddf75e55437d4d6e3f9aee61792f249877c76ad0323ba0912ace55",
+      "object_sha256": "8fe08356d75506cc1fbf5b95e29c015f96284d85f2454bc89c039b7ddb70ea5b",
       "diagnostic_counts": {
         "-Wattributes": 7,
-        "-Wformat-overflow=": 1,
         "-Wwrite-strings": 18,
-        "-fpermissive": 38,
-        "note": 2
+        "-fpermissive": 38
       },
       "dataflow_warning_count": 0,
-      "review_candidates": [
-        {
-          "status": "unknown",
-          "option": "-Wformat-overflow=",
-          "message": "\u2018%d\u2019 directive writing between 1 and 11 bytes into a region of size 10",
-          "locations": [
-            {
-              "source": "staging/scripts/Mission10.cpp",
-              "line": 1309
-            }
-          ]
-        }
-      ]
+      "review_candidates": []
     },
     {
       "name": "Mission11.cpp",
@@ -278,30 +264,20 @@
     {
       "name": "ScriptFactory.cpp",
       "status": "unknown",
-      "compile_command_matches": 1,
+      "compile_command_matches": 3,
       "evidence_class": "optimized_host_compiler_diagnostics",
       "source_sha256": "b536f6f5b740117b2054cd70e10c4bec4f20a03531a53654cc04017753cb1988",
-      "returncode": 0,
-      "object_sha256": "05fc209066c902174afb669a1b20a45b4a293189dd1d4a0ed052f11af9f310ba",
-      "diagnostic_counts": {
-        "-Wattributes": 7,
-        "-fpermissive": 38
-      },
+      "diagnostic_counts": {},
       "dataflow_warning_count": 0,
       "review_candidates": []
     },
     {
       "name": "ScriptRegistrar.cpp",
       "status": "unknown",
-      "compile_command_matches": 1,
+      "compile_command_matches": 3,
       "evidence_class": "optimized_host_compiler_diagnostics",
       "source_sha256": "a3f7b2627e23ef7547ae018d0b7aedca430a7e0b3123e904c21199c91bc1de75",
-      "returncode": 0,
-      "object_sha256": "cf1986828508080a7c8afa4e2e99d775ee77eaa5043bfbf9be00762545a5ef25",
-      "diagnostic_counts": {
-        "-Wattributes": 7,
-        "-fpermissive": 38
-      },
+      "diagnostic_counts": {},
       "dataflow_warning_count": 0,
       "review_candidates": []
     },
@@ -722,75 +698,48 @@
       "status": "unknown",
       "compile_command_matches": 1,
       "evidence_class": "optimized_host_compiler_diagnostics",
-      "source_sha256": "1384b63c785e8aedf2aa77e57473ee3e60466ac202dfc0dbd716179d3cdeec53",
+      "source_sha256": "907948c09f39766482ffac3f8b95940c5ecb08419dfd11a4eeda006e25d17cac",
       "returncode": 0,
-      "object_sha256": "7c22fc975a5cd697f19da28330b997e3d452b7a82eb7dfd36d098ee1e6e329ab",
+      "object_sha256": "3e5e7d4fb7d7ec8275d4b64b7537434e5f4a6565c1eac3e01fba1a247d71c049",
       "diagnostic_counts": {
         "-Wattributes": 7,
-        "-Wformat-overflow=": 1,
         "-Wpointer-arith": 1,
         "-Wwrite-strings": 11,
-        "-fpermissive": 38,
-        "note": 2
+        "-fpermissive": 38
       },
       "dataflow_warning_count": 0,
-      "review_candidates": [
-        {
-          "status": "unknown",
-          "option": "-Wformat-overflow=",
-          "message": "\u2018%d\u2019 directive writing between 1 and 11 bytes into a region of size 10",
-          "locations": [
-            {
-              "source": "staging/scripts/mission08.cpp",
-              "line": 6404
-            }
-          ]
-        }
-      ]
+      "review_candidates": []
     },
     {
       "name": "scripts.cpp",
       "status": "unknown",
-      "compile_command_matches": 1,
+      "compile_command_matches": 3,
       "evidence_class": "optimized_host_compiler_diagnostics",
       "source_sha256": "22558a594370767c103e90490d1ec9c9c174e8371c8e4d958af402ee4cf398b0",
-      "returncode": 0,
-      "object_sha256": "1df7d8cc400d411623ad7ccf80ce43d6b682691ad81ee41b957c677465bf30a5",
-      "diagnostic_counts": {
-        "-Wattributes": 7,
-        "-Wmultichar": 2,
-        "-fpermissive": 38
-      },
+      "diagnostic_counts": {},
       "dataflow_warning_count": 0,
       "review_candidates": []
     },
     {
       "name": "strtrim.cpp",
       "status": "unknown",
-      "compile_command_matches": 1,
+      "compile_command_matches": 3,
       "evidence_class": "optimized_host_compiler_diagnostics",
       "source_sha256": "9fd9d877e95eb0070726f4cb131becb32e140a10814c5b628c3106fed258523a",
-      "returncode": 0,
-      "object_sha256": "02b0fb430df1fe176e9c469137fe2577033952e49a68b968766662a3c8f44ff5",
-      "diagnostic_counts": {
-        "-Wattributes": 7,
-        "-fpermissive": 38
-      },
+      "diagnostic_counts": {},
       "dataflow_warning_count": 0,
       "review_candidates": []
     }
   ],
   "dsp_sha256": "04323c97d93059a62a5e172c3489e1fc6b08513058e6ef498c7ec09f6debbbb6",
   "diagnostic_counts": {
-    "-Wattributes": 308,
+    "-Wattributes": 280,
     "-Wconversion-null": 11,
-    "-Wformat-overflow=": 2,
     "-Wint-to-pointer-cast": 3,
-    "-Wmultichar": 2,
     "-Wpointer-arith": 3,
     "-Wwrite-strings": 1177,
-    "-fpermissive": 1674,
-    "note": 10,
+    "-fpermissive": 1522,
+    "note": 6,
     "warning": 6
   },
   "limits": [

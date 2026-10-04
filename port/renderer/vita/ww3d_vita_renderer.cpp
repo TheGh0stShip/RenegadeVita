@@ -1353,11 +1353,21 @@ struct MaterialVertexColor {
 
 struct MaterialLightDirections {
 	Vector3 normalized[4];
+	RenegadeVitaRenderer::PreparedNormalTransform world_normals;
+	bool has_world_normals = false;
 };
 
 void Prepare_Material_Light_Directions(const RenderInfoClass &render_info,
-	MaterialLightDirections &directions)
+	MaterialLightDirections &directions, const Matrix3D *world_transform = NULL)
 {
+	if (world_transform != NULL) {
+		float matrix[9];
+		for (unsigned row = 0; row < 3U; ++row)
+			for (unsigned column = 0; column < 3U; ++column)
+				matrix[row*3+column] = (*world_transform)[row][column];
+		directions.world_normals.Prepare(matrix);
+		directions.has_world_normals = true;
+	} else directions.has_world_normals = false;
 	const LightEnvironmentClass *environment = render_info.light_environment;
 	if (environment == NULL) return;
 	const int light_count = environment->Get_Light_Count();
@@ -1477,8 +1487,15 @@ MaterialVertexColor Evaluate_Original_Material_Vertex_Color(
 	Vector3 lit_color =
 		Multiply_Color(ambient.color, ambient_light) + emissive.color;
 	if (light_environment != NULL && normals != NULL) {
-		const Vector3 normal = Compute_World_Space_Normal(world_transform,
-			normals[vertex_index]);
+		Vector3 normal;
+		if (light_directions != NULL && light_directions->has_world_normals) {
+			const Vector3 &source_normal = normals[vertex_index];
+			const float source[3] = {source_normal.X, source_normal.Y, source_normal.Z};
+			float components[3] = {};
+			normal = light_directions->world_normals.Apply(source, components) ?
+				Normalize_Or_Default(Vector3(components[0], components[1], components[2]),
+					Vector3(0.0f, 0.0f, 1.0f)) : Vector3(0.0f, 0.0f, 1.0f);
+		} else normal = Compute_World_Space_Normal(world_transform, normals[vertex_index]);
 		const int light_count = light_environment->Get_Light_Count();
 		for (int light_index = 0; light_index < light_count && light_index < 4;
 			++light_index) {
@@ -3003,7 +3020,8 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		const bool cache_material_colors = Begin_Material_Color_Pass(vertex_count);
 		MaterialLightDirections light_directions;
 		if (cache_material_colors) {
-			Prepare_Material_Light_Directions(render_info, light_directions);
+			Prepare_Material_Light_Directions(render_info, light_directions,
+				&original_world_transform);
 		}
 		const bool indexed_batch = (g_render_work_cache_mode & 8U) != 0U;
 		bool current_texturing = false;

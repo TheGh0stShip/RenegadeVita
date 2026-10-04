@@ -8,6 +8,7 @@
 #include <chrono>
 #include <algorithm>
 #include <cstdlib>
+#include <cstring>
 bool fail_scratch_allocation = false;
 void *operator new[](std::size_t bytes, const std::nothrow_t &) noexcept {
     if (fail_scratch_allocation) return nullptr;
@@ -97,6 +98,30 @@ int main() {
         // Translation must not affect normals.
         world_row[12]=1000; view_row[13]=-900;
         const float input[3] = {1,1,1};
+        // Frozen dev237 arithmetic oracle; no prepared helper dependency.
+        const float *m = data;
+        const float cofactor[9] = {
+            m[4]*m[8]-m[5]*m[7], m[5]*m[6]-m[3]*m[8], m[3]*m[7]-m[4]*m[6],
+            m[2]*m[7]-m[1]*m[8], m[0]*m[8]-m[2]*m[6], m[1]*m[6]-m[0]*m[7],
+            m[1]*m[5]-m[2]*m[4], m[2]*m[3]-m[0]*m[5], m[0]*m[4]-m[1]*m[3]};
+        const float determinant=m[0]*cofactor[0]+m[1]*cofactor[1]+m[2]*cofactor[2];
+        float reference_components[3], prepared_components[3];
+        for (unsigned row=0; row<3; ++row)
+            reference_components[row]=(cofactor[row*3]*input[0]+cofactor[row*3+1]*input[1]+cofactor[row*3+2]*input[2])/determinant;
+        RenegadeVitaRenderer::PreparedNormalTransform prepared;
+        prepared.Prepare(data);
+        assert(prepared.Apply(input,prepared_components));
+        assert(std::memcmp(reference_components,prepared_components,sizeof(prepared_components))==0);
+        LightEnvironmentClass case_lights;
+        RenderInfoClass case_info{&case_lights};
+        VertexMaterialClass case_material;
+        MaterialLightDirections prepared_lights;
+        Prepare_Material_Light_Directions(case_info,prepared_lights,&world_case);
+        const Vector3 case_normal(1,1,1);
+        equal(Evaluate_Original_Material_Vertex_Color(&case_material,nullptr,nullptr,0,
+            &case_normal,world_case,case_info,nullptr),
+            Evaluate_Original_Material_Vertex_Color(&case_material,nullptr,nullptr,0,
+            &case_normal,world_case,case_info,&prepared_lights));
         Vector3 direct = Compute_Camera_Space_Normal(world_case, view_case, {1,1,1});
         Vector3 indexed = Compute_Indexed_Camera_Space_Normal(world_row, view_row, input);
         assert(std::fabs(direct.X-indexed.X) < 0.00001f);
@@ -110,6 +135,12 @@ int main() {
     std::fill(singular.m, singular.m+9, 0.0f);
     const Vector3 fallback = Compute_World_Space_Normal(singular, {1,1,1});
     assert(fallback.X==0 && fallback.Y==0 && fallback.Z==1);
+    RenegadeVitaRenderer::PreparedNormalTransform singular_prepared;
+    singular_prepared.Prepare(singular.m);
+    const float singular_input[3]={1,1,1};
+    float untouched[3]={7,8,9};
+    assert(!singular_prepared.Apply(singular_input,untouched));
+    assert(untouched[0]==7 && untouched[1]==8 && untouched[2]==9);
     printf("normal transform perpendicularity/parity PASS cases=%u singular=1\n", normal_cases);
     fail_scratch_allocation=true;
     assert(!Begin_Material_Color_Pass(17));
@@ -125,6 +156,7 @@ int main() {
     VertexMaterialClass materials[2]; materials[1].alpha=0.25f;
     uint64_t comparisons=0;
     for (int pass=0;pass<192;++pass) {
+        world.m[0]=static_cast<float>(pass%7)*0.13f;
         lights.count=pass%6; info.light_environment=pass%7 ? &lights : nullptr;
         materials[0].lighting=pass%2;
         materials[0].ds=static_cast<VertexMaterialClass::ColorSourceType>(pass%3);
@@ -135,7 +167,7 @@ int main() {
         const unsigned vertices=pass%2 ? count : 17;
         if (pass==100) g_material_color_generation=UINT32_MAX;
         assert(Begin_Material_Color_Pass(vertices));
-        MaterialLightDirections directions; Prepare_Material_Light_Directions(info,directions);
+        MaterialLightDirections directions; Prepare_Material_Light_Directions(info,directions,&world);
         for (unsigned j=0;j<500;++j) {
             unsigned i=(j%2 ? j*8192U : j)%vertices;
             VertexMaterialClass *m=j%11 ? &materials[j%2] : nullptr;
@@ -176,6 +208,26 @@ int main() {
     // Fixed CPU fixture: repeated indexed corners, same inputs in both modes.
     lights.count=4; info.light_environment=&lights; materials[0].lighting=true;
     volatile float sink=0;
+    // Isolate normal preparation: same production evaluator and normalized
+    // lights in both runs; vertex-color reuse is not involved.
+    for (bool prepared : {false,true}) {
+        std::vector<double> timings;
+        for (int trial=0;trial<40;++trial) {
+            auto start=std::chrono::steady_clock::now();
+            MaterialLightDirections directions;
+            Prepare_Material_Light_Directions(info,directions,prepared ? &world : nullptr);
+            for (unsigned j=0;j<65536;++j) {
+                auto v=Evaluate_Original_Material_Vertex_Color(&materials[0],c1.data(),c2.data(),
+                    j%4096,normals.data(),world,info,&directions);
+                sink+=v.final_color.X;
+            }
+            timings.push_back(std::chrono::duration<double,std::micro>(
+                std::chrono::steady_clock::now()-start).count());
+        }
+        std::sort(timings.begin(),timings.end());
+        std::printf("HOST normal preparation=%d median/p95/p99/worst_us=%.1f/%.1f/%.1f/%.1f\n",
+            prepared,timings[20],timings[37],timings[39],timings[39]);
+    }
     for (unsigned mode : {0U,2U}) {
         g_render_work_cache_mode=mode; std::vector<double> timings;
         auto before=g_statistics;
@@ -183,7 +235,7 @@ int main() {
             auto start=std::chrono::steady_clock::now();
             bool cached=Begin_Material_Color_Pass(4096);
             MaterialLightDirections directions;
-            if (cached) Prepare_Material_Light_Directions(info,directions);
+            if (cached) Prepare_Material_Light_Directions(info,directions,&world);
             for (unsigned j=0;j<65536;++j) {
                 auto v=Evaluate_Material_Vertex_Color(cached,&materials[0],c1.data(),c2.data(),
                     j%4096,normals.data(),world,info,directions);
@@ -211,7 +263,7 @@ int main() {
         for (int trial=0;trial<80;++trial) {
             auto start=std::chrono::steady_clock::now();
             bool cached=Begin_Material_Color_Pass(4096);
-            MaterialLightDirections directions; Prepare_Material_Light_Directions(info,directions);
+            MaterialLightDirections directions; Prepare_Material_Light_Directions(info,directions,&world);
             for (unsigned j=0;j<4097;++j) {
                 auto v=Evaluate_Material_Vertex_Color(cached,&materials[0],c1.data(),c2.data(),
                     j%4096,normals.data(),world,info,directions,bypass);

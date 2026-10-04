@@ -1,5 +1,23 @@
 # Live engineering progress
 
+## Dev238 M13 performance candidate — 2026-10-04
+
+Performance is the active development priority. Dev236 physical combat records
+15.052 cumulative FPS and rolling p95/p99=301.962/490.461 ms near frame3840.
+Sampled mesh submission dominates renderer CPU time. Dev238 prepares the
+unchanged inverse-transpose normal arithmetic once per original mesh pass.
+Focused production material/normal checks pass, including sanitized testing;
+host improvement is directional only. All502 host and13 ARM/package actions
+pass; Vita3K installed hashes match without launch. Final isolated host median
+is16.1% lower. Authorized physical candidate staging begins after confirming
+only VitaShell is running and installed dev236 matches rollback identity.
+Dev238 executable is now replaced with both hash guards and independently
+hash-verified; physical performance and pixels remain unverified.
+Launch process153561863 is confirmed. User requested to observe the untouched
+scripted opening and first fight; no synthetic input was sent.
+No physical performance acceptance. See
+[normal preparation](M13_NORMAL_PREPARATION_PERFORMANCE.md).
+
 ## Dev236 physical quicksave freeze — 2026-10-04
 
 User confirms opening combat overlap is gone, then reports quicksave freeze

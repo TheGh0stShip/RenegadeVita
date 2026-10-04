@@ -93,7 +93,7 @@ static bool g_logged_first_stage1_mesh=true,g_logged_first_skin_texture_color=tr
 template<class... Args> void Vita_Append_A22_Runtime_Breadcrumb(Args...) {}
 bool Is_Loading_Screen_Diagnostic_Name(const char*) { return false; }
 bool Begin_Material_Color_Pass(int) { return false; }
-void Prepare_Material_Light_Directions(RenderInfoClass&,MaterialLightDirections&) {}
+void Prepare_Material_Light_Directions(RenderInfoClass&,MaterialLightDirections&,const Matrix3D* = nullptr) {}
 void Apply_Original_Shader_State(ShaderClass s) { assert(!open);state[2]=s.bits; }
 void Apply_Original_Texture_Stage_State(ShaderClass,bool,bool) { assert(!open); }
 void Bind_Texture(unsigned,bool) { assert(!open);state[0]=0; }

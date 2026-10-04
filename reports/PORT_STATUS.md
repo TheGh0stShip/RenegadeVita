@@ -1,5 +1,17 @@
 # Renegade Vita port status
 
+2026-10-04 Development priority is M13 combat performance. Dev236 physical
+frame costs remain severe; Dev238 prepares identical normal cofactors once
+per original mesh pass. Focused normal/material and batch correctness tests
+pass, including sanitized testing. Isolated host median improves13.6% in a
+quiet fixture; the successful repeat improves16.1%. This is not a Vita FPS
+claim. All502 host and ARM/package gates pass; Vita3K installed hashes match
+without launch. Physical
+performance, memory high-water and visual acceptance remain open. See
+[normal preparation](M13_NORMAL_PREPARATION_PERFORMANCE.md).
+Dev238 is installed with independently verified SELF hash and launch confirmed;
+the first physical gameplay comparison is pending.
+
 2026-10-04 On dev236 physical Vita the user confirms opening combat overlap
 is gone, but original quicksave stalls with an unfinished conversation save
 chunk. The partial file is privately preserved and cannot establish reload

@@ -1,7 +1,7 @@
 # Full port gap register
 
 Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`
-status record in the eight sweeps and 23 supplements is retained, including nested records.
+status record in the eight sweeps and 24 supplements is retained, including nested records.
 Supplementary inventories overlap; their counts are not unique missing features.
 Rows count evidence records, not unique defects. Unknown impact is unclassified;
 it is not silently ranked as a confirmed crash or progression blocker.
@@ -43,6 +43,7 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | host_network_registry | 29 | 29 | False |
 | host_prototype_registry | 9 | 9 | False |
 | live_script_parameters | 27 | 27 | False |
+| script_parameter_reads | 1201 | 1201 | False |
 
 Original owners and detailed evidence remain at the inventory JSON pointers.
 Clusters require caller/mode review and required evidence classes before fixes.
@@ -36270,6 +36271,1207 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | retail /rows/9/persist_factory_requirements/7 | 0x00020111 | unknown | unclassified | C&C_Under.mix |
 | retail /rows/9/persist_factory_requirements/8 | 0x00020500 | unknown | unclassified | C&C_Under.mix |
 | retail /rows/9/persist_factory_requirements/9 | 0x00020501 | unknown | unclassified | C&C_Under.mix |
+| script_parameter_reads /rows/0 | troop_num | unknown | unclassified |  |
+| script_parameter_reads /rows/1 | troop_num | unknown | unclassified |  |
+| script_parameter_reads /rows/10 | Count | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/100 | Direction | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1000 | 75_Number | unknown | unclassified |  |
+| script_parameter_reads /rows/1001 | 75_Start_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1002 | 25_Number | unknown | unclassified |  |
+| script_parameter_reads /rows/1003 | 25_Start_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1004 | Killed_Broadcast_Radius | unknown | unclassified |  |
+| script_parameter_reads /rows/1005 | 50_Number | unknown | unclassified |  |
+| script_parameter_reads /rows/1006 | 50_Start_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1007 | 75_Number | unknown | unclassified |  |
+| script_parameter_reads /rows/1008 | 75_Start_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1009 | Building_Number | unknown | unclassified |  |
+| script_parameter_reads /rows/101 | Direction | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1010 | Killed_Broadcast_Radius | unknown | unclassified |  |
+| script_parameter_reads /rows/1011 | Custom_Type | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/1012 | Custom_Param_1 | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/1013 | Custom_Param_2 | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/1014 | Building_Number | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/1015 | Evac_Object | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/1016 | Type | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/1017 | Param | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/1018 | Target_ID | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/1019 | Target_ID | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/102 | Direction | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1020 | Type | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/1021 | Param | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/1022 | TargetID | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/1023 | Type | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/1024 | Param | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/1025 | TargetID | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/1026 | Target | unknown | unclassified |  |
+| script_parameter_reads /rows/1027 | Type | unknown | unclassified |  |
+| script_parameter_reads /rows/1028 | Param | unknown | unclassified |  |
+| script_parameter_reads /rows/1029 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/103 | Waypoint_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1030 | Location | unknown | unclassified |  |
+| script_parameter_reads /rows/1031 | Text_File | unknown | unclassified |  |
+| script_parameter_reads /rows/1032 | Number | unknown | unclassified |  |
+| script_parameter_reads /rows/1033 | Nod | unknown | unclassified |  |
+| script_parameter_reads /rows/1034 | Nod | unknown | unclassified |  |
+| script_parameter_reads /rows/1035 | Preset | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/1036 | Bone | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/1037 | Bone | unknown | unclassified |  |
+| script_parameter_reads /rows/1038 | None | unknown | unclassified | M03.mix, M06.mix, M07.mix, M09.mix, M10.mix |
+| script_parameter_reads /rows/1039 | None | unknown | unclassified | M03.mix, M06.mix, M07.mix, M09.mix, M10.mix |
+| script_parameter_reads /rows/104 | Direction | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1040 | Is_Gun | unknown | unclassified | M03.mix, M06.mix, M07.mix, M09.mix, M10.mix |
+| script_parameter_reads /rows/1041 | None | unknown | unclassified | M03.mix, M06.mix, M07.mix, M09.mix, M10.mix |
+| script_parameter_reads /rows/1042 | Alarm_ID | unknown | unclassified | M03.mix, M06.mix, M07.mix, M09.mix, M10.mix |
+| script_parameter_reads /rows/1043 | Alarm_ID | unknown | unclassified | M03.mix, M06.mix, M07.mix, M09.mix, M10.mix |
+| script_parameter_reads /rows/1044 | None | unknown | unclassified | M03.mix, M06.mix, M07.mix, M09.mix, M10.mix |
+| script_parameter_reads /rows/1045 | Delay | unknown | unclassified | M03.mix, M06.mix, M07.mix, M09.mix, M10.mix |
+| script_parameter_reads /rows/1046 | Radius | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/1047 | ID | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/1048 | Type | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/1049 | Param | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/105 | Waypoint_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1050 | ObjToCreate | unknown | unclassified |  |
+| script_parameter_reads /rows/1051 | ActorID | unknown | unclassified |  |
+| script_parameter_reads /rows/1052 | ActorID | unknown | unclassified |  |
+| script_parameter_reads /rows/1053 | ActorID | unknown | unclassified |  |
+| script_parameter_reads /rows/1054 | ActorID | unknown | unclassified |  |
+| script_parameter_reads /rows/1055 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1056 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1057 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1058 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1059 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/106 | Elev_obj_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1060 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1061 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1062 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1063 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1064 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1065 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1066 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1067 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1068 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1069 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/107 | Anim_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1070 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1071 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1072 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1073 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1074 | Update_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/1075 | Pickup_Radius | unknown | unclassified |  |
+| script_parameter_reads /rows/1076 | Enemy_Player_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/1077 | Capture_Respawn_Timer | unknown | unclassified |  |
+| script_parameter_reads /rows/1078 | Flag_Returned_Event_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1079 | Flag_Returned_Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/108 | Elev_obj_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1080 | Flag_Stolen_Event_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1081 | Flag_Stolen_Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1082 | Pickup_Radius | unknown | unclassified |  |
+| script_parameter_reads /rows/1083 | Captures_Needed_To_Win | unknown | unclassified |  |
+| script_parameter_reads /rows/1084 | Captures_Exceeded_Event_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1085 | Captures_Exceeded_Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1086 | Win_Object_To_Kill0 | unknown | unclassified |  |
+| script_parameter_reads /rows/1087 | Win_Object_To_Kill1 | unknown | unclassified |  |
+| script_parameter_reads /rows/1088 | Win_Object_To_Kill2 | unknown | unclassified |  |
+| script_parameter_reads /rows/1089 | Win_Object_To_Kill3 | unknown | unclassified |  |
+| script_parameter_reads /rows/109 | Anim_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1090 | Win_Object_To_Kill4 | unknown | unclassified |  |
+| script_parameter_reads /rows/1091 | Enemy_Home_Position | unknown | unclassified |  |
+| script_parameter_reads /rows/1092 | Home_Radius | unknown | unclassified |  |
+| script_parameter_reads /rows/1093 | Flag_Lost_Event_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1094 | Flag_Lost_Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1095 | Flag_Saved_Event_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1096 | Flag_Saved_Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1097 | Capture_Respawn_Timer | unknown | unclassified |  |
+| script_parameter_reads /rows/1098 | Pickup_Radius | unknown | unclassified |  |
+| script_parameter_reads /rows/1099 | Flag_Returned_Event_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/11 | Damage_multiplier | unknown | unclassified |  |
+| script_parameter_reads /rows/110 | Controller_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1100 | Flag_Returned_Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1101 | Update_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/1102 | Player_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/1103 | Enable | unknown | unclassified |  |
+| script_parameter_reads /rows/1104 | SpawnerID | unknown | unclassified |  |
+| script_parameter_reads /rows/1105 | Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/1106 | Credits | unknown | unclassified |  |
+| script_parameter_reads /rows/1107 | Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/1108 | MinAttackDistance | unknown | unclassified |  |
+| script_parameter_reads /rows/1109 | MaxAttackDistance | unknown | unclassified |  |
+| script_parameter_reads /rows/111 | Controller_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1110 | AttackTimer | unknown | unclassified |  |
+| script_parameter_reads /rows/1111 | Player_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/1112 | Success | unknown | unclassified |  |
+| script_parameter_reads /rows/1113 | Objective_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1114 | Creation_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/1115 | Creation_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/1116 | Creation_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/1117 | Creation_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/1118 | Objective_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1119 | Objective_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/112 | Direction | unknown | unclassified |  |
+| script_parameter_reads /rows/1120 | Short_Desc_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1121 | Long_Desc_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1122 | Position | unknown | unclassified |  |
+| script_parameter_reads /rows/1123 | Pog_Texture | unknown | unclassified |  |
+| script_parameter_reads /rows/1124 | Priority | unknown | unclassified |  |
+| script_parameter_reads /rows/1125 | Pog_Text_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1126 | Player_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/1127 | Success | unknown | unclassified |  |
+| script_parameter_reads /rows/1128 | Player_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/1129 | Success | unknown | unclassified |  |
+| script_parameter_reads /rows/113 | Elev_obj_num | unknown | unclassified |  |
+| script_parameter_reads /rows/1130 | Player_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/1131 | Probability | unknown | unclassified |  |
+| script_parameter_reads /rows/1132 | Max_Creations | unknown | unclassified |  |
+| script_parameter_reads /rows/1133 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/1134 | Create_Object | unknown | unclassified |  |
+| script_parameter_reads /rows/1135 | Position | unknown | unclassified |  |
+| script_parameter_reads /rows/1136 | Enter_Message | unknown | unclassified |  |
+| script_parameter_reads /rows/1137 | Enter_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/1138 | Exit_Message | unknown | unclassified |  |
+| script_parameter_reads /rows/1139 | Exit_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/114 | Anim_num | unknown | unclassified |  |
+| script_parameter_reads /rows/1140 | Custom_Message | unknown | unclassified |  |
+| script_parameter_reads /rows/1141 | Drop_Object | unknown | unclassified |  |
+| script_parameter_reads /rows/1142 | Probability | unknown | unclassified |  |
+| script_parameter_reads /rows/1143 | Drop_Height | unknown | unclassified |  |
+| script_parameter_reads /rows/1144 | Drop_Object | unknown | unclassified |  |
+| script_parameter_reads /rows/1145 | Probability | unknown | unclassified |  |
+| script_parameter_reads /rows/1146 | Drop_Height | unknown | unclassified |  |
+| script_parameter_reads /rows/1147 | Work_Area | unknown | unclassified |  |
+| script_parameter_reads /rows/1148 | Work_Area | unknown | unclassified |  |
+| script_parameter_reads /rows/1149 | timer_length | unknown | unclassified |  |
+| script_parameter_reads /rows/115 | Direction | unknown | unclassified |  |
+| script_parameter_reads /rows/1150 | Logical_Sound | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/1151 | Radius | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/1152 | Logical_Sound | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/1153 | Stationary_Point | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/1154 | Left_Point | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/1155 | Right_Point | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/1156 | Attack_Loc0 | unknown | unclassified |  |
+| script_parameter_reads /rows/1157 | Attack_Loc1 | unknown | unclassified |  |
+| script_parameter_reads /rows/1158 | Attack_Loc2 | unknown | unclassified |  |
+| script_parameter_reads /rows/1159 | Attack_Loc3 | unknown | unclassified |  |
+| script_parameter_reads /rows/116 | Elev_obj_num | unknown | unclassified |  |
+| script_parameter_reads /rows/1160 | Speed | unknown | unclassified |  |
+| script_parameter_reads /rows/1161 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1162 | Max_Range | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/1163 | Max_Range | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/1164 | Attack_Loc0 | unknown | unclassified |  |
+| script_parameter_reads /rows/1165 | Attack_Loc1 | unknown | unclassified |  |
+| script_parameter_reads /rows/1166 | Attack_Loc2 | unknown | unclassified |  |
+| script_parameter_reads /rows/1167 | Attack_Loc3 | unknown | unclassified |  |
+| script_parameter_reads /rows/1168 | Speed | unknown | unclassified |  |
+| script_parameter_reads /rows/1169 | Area | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/117 | Anim_num | unknown | unclassified |  |
+| script_parameter_reads /rows/1170 | Box_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1171 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1172 | Preset | unknown | unclassified |  |
+| script_parameter_reads /rows/1173 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1174 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1175 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1176 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/1177 | Pan_Loc1_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1178 | Pan_Loc2_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/1179 | MusicFile | unknown | unclassified |  |
+| script_parameter_reads /rows/118 | Preset | unknown | unclassified |  |
+| script_parameter_reads /rows/1180 | AnimationName | unknown | unclassified |  |
+| script_parameter_reads /rows/1181 | Frequency_Min | unknown | unclassified | M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/1182 | Frequency_Min | unknown | unclassified | M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/1183 | Frequency_Max | unknown | unclassified | M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/1184 | Sound_Preset | unknown | unclassified | M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/1185 | Offset | unknown | unclassified | M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/1186 | Frequency_Min | unknown | unclassified | M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/1187 | Frequency_Min | unknown | unclassified | M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/1188 | Frequency_Max | unknown | unclassified | M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M07.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/1189 | DestroyedModelPreset | unknown | unclassified |  |
+| script_parameter_reads /rows/119 | Reward_override | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1190 | OriginalModelFAcing | unknown | unclassified |  |
+| script_parameter_reads /rows/1191 | WeaponDef | unknown | unclassified | Skirmish00.mix |
+| script_parameter_reads /rows/1192 | Anim_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/1193 | Anim_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/1194 | DeathType | unknown | unclassified |  |
+| script_parameter_reads /rows/1195 | DeathType | unknown | unclassified |  |
+| script_parameter_reads /rows/1196 | DeathType | unknown | unclassified |  |
+| script_parameter_reads /rows/1197 | ControlFilename | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/1198 | CallbackID | unknown | unclassified |  |
+| script_parameter_reads /rows/1199 | CallbackID | unknown | unclassified |  |
+| script_parameter_reads /rows/12 | Damage_multiplier | unknown | unclassified |  |
+| script_parameter_reads /rows/120 | Animation | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/1200 | AttackDuration | unknown | unclassified |  |
+| script_parameter_reads /rows/121 | Mutant_Num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/122 | Mutant_Goto | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/123 | On | unknown | unclassified |  |
+| script_parameter_reads /rows/124 | Elev_obj_num | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/125 | Direction | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/126 | Anim_num | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/127 | Direction | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/128 | Anim_num | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/129 | Orator_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/13 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/130 | Captive | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/131 | Entrance_Path_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/132 | Helipad_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/133 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/134 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/135 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/136 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/137 | Loc1_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/138 | Animation | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/139 | Loc1_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/14 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/140 | Loc2_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/141 | Loc2_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/142 | Loc3_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/143 | Loc3_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/144 | Loc1_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/145 | Spawner_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/146 | Attack_Loc0 | unknown | unclassified | M05.mix, M07.mix, M08.mix, M09.mix |
+| script_parameter_reads /rows/147 | Attack_Loc1 | unknown | unclassified | M05.mix, M07.mix, M08.mix, M09.mix |
+| script_parameter_reads /rows/148 | Attack_Loc2 | unknown | unclassified | M05.mix, M07.mix, M08.mix, M09.mix |
+| script_parameter_reads /rows/149 | Attack_Loc3 | unknown | unclassified | M05.mix, M07.mix, M08.mix, M09.mix |
+| script_parameter_reads /rows/15 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/150 | Attack_Loc4 | unknown | unclassified | M05.mix, M07.mix, M08.mix, M09.mix |
+| script_parameter_reads /rows/151 | Attack_Loc5 | unknown | unclassified | M05.mix, M07.mix, M08.mix, M09.mix |
+| script_parameter_reads /rows/152 | Attack_Loc6 | unknown | unclassified | M05.mix, M07.mix, M08.mix, M09.mix |
+| script_parameter_reads /rows/153 | Attack_Loc7 | unknown | unclassified | M05.mix, M07.mix, M08.mix, M09.mix |
+| script_parameter_reads /rows/154 | Attack_Loc8 | unknown | unclassified | M05.mix, M07.mix, M08.mix, M09.mix |
+| script_parameter_reads /rows/155 | Attack_Loc9 | unknown | unclassified | M05.mix, M07.mix, M08.mix, M09.mix |
+| script_parameter_reads /rows/156 | Attack_Loc10 | unknown | unclassified | M05.mix, M07.mix, M08.mix, M09.mix |
+| script_parameter_reads /rows/157 | CheckBlocked | unknown | unclassified | M05.mix, M07.mix, M08.mix, M09.mix |
+| script_parameter_reads /rows/158 | Movement_Loc | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/159 | Prisoner1_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/16 | Area_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/160 | Prisoner2_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/161 | Prisoner3_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/162 | Prisoner4_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/163 | Weapon_Loc_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/164 | Exit_Cell_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/165 | Exit_Cell_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/166 | Waypath_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/167 | Controller_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/168 | Point1_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/169 | Point2_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/17 | Area_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/170 | Point3_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/171 | Controller_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/172 | Controller_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/173 | Controller_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/174 | Controller_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/175 | Waypath_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/176 | Waypath_Loc | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/177 | Controller_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/178 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/179 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/18 | Area_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/180 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/181 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/182 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/183 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/184 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/185 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/186 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/187 | Homepoint_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/188 | Unit_ID1 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/189 | Unit_ID2 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/19 | Soldier_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/190 | Unit_ID3 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/191 | Unit_ID4 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/192 | Unit_ID5 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/193 | Waypath_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/194 | Priority | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/195 | Suicide | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/196 | Stationary_at_End | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/197 | Activate_Zone | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/198 | Spawner_ID1 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/199 | Spawner_ID2 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/2 | FaceObj | unknown | unclassified |  |
+| script_parameter_reads /rows/20 | Area_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/200 | Spawner_ID3 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/201 | Spawner_ID4 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/202 | Spawner_ID5 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/203 | Spawner_ID6 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/204 | Spawner_ID1 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/205 | Spawner_ID2 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/206 | Spawner_ID3 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/207 | Spawner_ID4 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/208 | Spawner_ID5 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/209 | Spawner_ID6 | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/21 | Soldier_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/210 | Waypath_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/211 | Point1_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/212 | Point2_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/213 | Waypath_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/214 | Waypath_Loc | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/215 | Waypath_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/216 | Waypath_Loc | unknown | unclassified |  |
+| script_parameter_reads /rows/217 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/218 | Waypath_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/219 | Waypath_Loc | unknown | unclassified |  |
+| script_parameter_reads /rows/22 | Pre_Placed | unknown | unclassified |  |
+| script_parameter_reads /rows/220 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/221 | Param | unknown | unclassified |  |
+| script_parameter_reads /rows/222 | APC_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/223 | Soldier_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/224 | Waypath_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/225 | Waypath_Loc | unknown | unclassified |  |
+| script_parameter_reads /rows/226 | Reinforcment_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/227 | Waypath_ID | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/228 | Waypath_Loc | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/229 | Object1_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/23 | Area_Number | unknown | unclassified |  |
+| script_parameter_reads /rows/230 | Object2_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/231 | Object3_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/232 | Waypath_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/233 | Dead6_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/234 | Move_Loc | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/235 | Text_File | unknown | unclassified |  |
+| script_parameter_reads /rows/236 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/237 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/238 | Zone_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/239 | Waypath_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/24 | Area_Officer | unknown | unclassified |  |
+| script_parameter_reads /rows/240 | APC_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/241 | Waypath_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/242 | APC_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/243 | APC_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/244 | APC_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/245 | APC_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/246 | APC_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/247 | Attack_ID0 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/248 | Attack_ID1 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/249 | Attack_ID2 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/25 | Pre_Placed | unknown | unclassified |  |
+| script_parameter_reads /rows/250 | Stationary | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/251 | Waypath_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/252 | Priority | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/253 | Suicide | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/254 | Stationary_at_End | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/255 | Activate_Zone | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/256 | Spawner_ID1 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/257 | Spawner_ID2 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/258 | Spawner_ID3 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/259 | Spawner_ID4 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/26 | Area_Number | unknown | unclassified |  |
+| script_parameter_reads /rows/260 | Spawner_ID5 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/261 | Spawner_ID6 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/262 | Spawner_ID1 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/263 | Spawner_ID2 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/264 | Spawner_ID3 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/265 | Spawner_ID4 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/266 | Spawner_ID5 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/267 | Spawner_ID6 | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/268 | Zone | unknown | unclassified |  |
+| script_parameter_reads /rows/269 | Zone_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/27 | Area_Number | unknown | unclassified |  |
+| script_parameter_reads /rows/270 | Waypath_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/271 | Spawn_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/272 | Radar_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/273 | APC_ID | unknown | unclassified | M07.mix |
+| script_parameter_reads /rows/274 | APC_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/275 | Zone_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/276 | Move_Loc | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/277 | Loc1_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/278 | Animation | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/279 | Loc1_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/28 | Area_Officer | unknown | unclassified |  |
+| script_parameter_reads /rows/280 | Loc2_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/281 | Loc2_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/282 | Loc3_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/283 | Loc3_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/284 | Loc1_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/285 | Loc1_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/286 | Flyover_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/287 | Active | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/288 | Waypath_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/289 | Waypath_Loc | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/29 | Pre_Placed | unknown | unclassified |  |
+| script_parameter_reads /rows/290 | Waypath_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/291 | Waypath_Loc | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/292 | Waypath_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/293 | Waypath_Loc | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/294 | Waypath_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/295 | Waypath_Loc | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/296 | Waypath_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/297 | Waypath_Loc | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/298 | Alarm_Enemy_Seen | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/299 | Alarm_Damaged | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/3 | GotoDest1 | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/30 | Area_Number | unknown | unclassified |  |
+| script_parameter_reads /rows/300 | Soldier_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/301 | Secret_Door_ID | unknown | unclassified | M03.mix, M06.mix |
+| script_parameter_reads /rows/302 | Loc0_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/303 | Loc1_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/304 | Loc2_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/305 | Loc3_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/306 | Loc4_ID | unknown | unclassified | M06.mix |
+| script_parameter_reads /rows/307 | APC_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/308 | Fire_Gun | unknown | unclassified | M05.mix, M07.mix, M08.mix |
+| script_parameter_reads /rows/309 | Soldier_Qty | unknown | unclassified | M05.mix, M07.mix, M08.mix |
+| script_parameter_reads /rows/31 | chamber_number | unknown | unclassified |  |
+| script_parameter_reads /rows/310 | Preset | unknown | unclassified | M05.mix, M07.mix, M08.mix |
+| script_parameter_reads /rows/311 | Fire_Loc1 | unknown | unclassified |  |
+| script_parameter_reads /rows/312 | Fire_Loc2 | unknown | unclassified |  |
+| script_parameter_reads /rows/313 | Artillery_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/314 | Aggessiveness | unknown | unclassified | M05.mix, M06.mix |
+| script_parameter_reads /rows/315 | Take_Cover | unknown | unclassified | M05.mix, M06.mix |
+| script_parameter_reads /rows/316 | Strike_Loc_ID | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/317 | Artillery_ID1 | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/318 | Artillery_ID2 | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/319 | Artillery_ID3 | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/32 | Damage_multiplier | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/320 | Spawner_ID1 | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/321 | Spawner_ID2 | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/322 | Spawner_ID3 | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/323 | Message_ID | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/324 | Unit_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/325 | Soldier_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/326 | Apache_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/327 | Sniper_ID | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/328 | Unit_ID | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/329 | Unit_ID | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/33 | RepairSpeed | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/330 | Unit_ID | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/331 | Unit_ID | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/332 | Artillery_ID1 | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/333 | Artillery_ID2 | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/334 | Artillery_ID3 | unknown | unclassified | M05.mix |
+| script_parameter_reads /rows/335 | SoundName | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/336 | first_location | unknown | unclassified |  |
+| script_parameter_reads /rows/337 | Console_ID | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/338 | Damage_multiplier | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/339 | Controller_num | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/34 | PadNumber | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/340 | Repair_Priority | unknown | unclassified | M03.mix, M06.mix, M07.mix |
+| script_parameter_reads /rows/341 | Location | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/342 | Officer | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/343 | Conv_Num | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/344 | Conv_Num | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/345 | Spawner_num | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/346 | Control_num | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/347 | Control_num | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/348 | Spawner_num | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/349 | Building | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/35 | SamNumber | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/350 | Receive_Type | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/351 | Receive_Param | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/352 | Volcano_Timer_Id | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/353 | Volcano_Delay | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/354 | Explosion_Delay_Min | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/355 | Explosion_Delay_Max | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/356 | Rumble_Delay_Min | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/357 | Rumble_Delay_Max | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/358 | Powerup | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/359 | None | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/36 | Conv_Num | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/360 | None | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/361 | None | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/362 | None | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/363 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/364 | Preset | unknown | unclassified |  |
+| script_parameter_reads /rows/365 | Controller_ID | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/366 | Type | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/367 | Param | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/368 | Tiberium_Loc | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/369 | Dock_Location | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/37 | Objective | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/370 | Dock_Entrance | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/371 | Tiberium_Loc | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/372 | Dock_Location | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/373 | Dock_Entrance | unknown | unclassified | M03.mix, M10.mix |
+| script_parameter_reads /rows/374 | WaypathID | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/375 | Spawner_ID_1 | unknown | unclassified |  |
+| script_parameter_reads /rows/376 | Spawner_ID_2 | unknown | unclassified |  |
+| script_parameter_reads /rows/377 | Spawner_ID_3 | unknown | unclassified |  |
+| script_parameter_reads /rows/378 | Spawner_ID_1 | unknown | unclassified |  |
+| script_parameter_reads /rows/379 | Spawner_ID_2 | unknown | unclassified |  |
+| script_parameter_reads /rows/38 | Gate1 | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/380 | Spawner_ID_3 | unknown | unclassified |  |
+| script_parameter_reads /rows/381 | Spawner_ID_1 | unknown | unclassified |  |
+| script_parameter_reads /rows/382 | Spawner_ID_2 | unknown | unclassified |  |
+| script_parameter_reads /rows/383 | Spawner_ID_3 | unknown | unclassified |  |
+| script_parameter_reads /rows/384 | Controller_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/385 | Controller_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/386 | Simple_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/387 | Chinook_Controller_ID | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/388 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/389 | Send_Type_When_Killed | unknown | unclassified |  |
+| script_parameter_reads /rows/39 | Gate2 | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/390 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/391 | Trigger_Count | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/392 | Inlet_Preset | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/393 | Base_Preset | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/394 | Number | unknown | unclassified |  |
+| script_parameter_reads /rows/395 | Number | unknown | unclassified |  |
+| script_parameter_reads /rows/396 | Controller_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/397 | Controller_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/398 | Beach_Destination | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/399 | Village_Start | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/4 | GotoDest2 | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/40 | Target_Number | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/400 | Village_Destination | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/401 | Cannon_Start | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/402 | Cannon_Destination | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/403 | Receive_Type | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/404 | Receive_Param_Destroy | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/405 | Receive_Type | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/406 | Receive_Param_For_Village | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/407 | Receive_Type | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/408 | Receive_Param_For_Cannon | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/409 | Disk_ID | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/41 | Zone_Number | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/410 | Disk_ID | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/411 | Area_ID | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/412 | Area_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/413 | Area_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/414 | Area_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/415 | Area_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/416 | Area_ID | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/417 | Area_ID | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/418 | Area_ID | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/419 | Area_ID | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/42 | Zone_Number | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/420 | Soldier_Type | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/421 | Area_ID | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/422 | Soldier_Type | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/423 | Area_ID | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/424 | Area_ID | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/425 | Soldier_Type | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/426 | Objective_ID | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/427 | Objective_ID | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/428 | Pre_Placed | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/429 | Area_Number | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/43 | Zone_Number | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/430 | Area_Officer | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/431 | Pre_Placed | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/432 | Area_Number | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/433 | Area_Number | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/434 | Area_Officer | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/435 | Pre_Placed | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/436 | Area_Number | unknown | unclassified | M02.mix |
+| script_parameter_reads /rows/437 | Area_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/438 | Spawn_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/439 | wave_location | unknown | unclassified |  |
+| script_parameter_reads /rows/44 | Zone_Number | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/440 | delete_location | unknown | unclassified |  |
+| script_parameter_reads /rows/441 | Spawner_ID | unknown | unclassified | Skirmish00.mix |
+| script_parameter_reads /rows/442 | Vehicle_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/443 | Soldier_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/444 | Soldier_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/445 | Soldier_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/446 | Vehicle_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/447 | Vehicle_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/448 | Powerup_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/449 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/45 | Radius | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/450 | Apache_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/451 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/452 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/453 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/454 | Num_States | unknown | unclassified |  |
+| script_parameter_reads /rows/455 | Loop_States | unknown | unclassified |  |
+| script_parameter_reads /rows/456 | Num_States | unknown | unclassified |  |
+| script_parameter_reads /rows/457 | Loop_States | unknown | unclassified |  |
+| script_parameter_reads /rows/458 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/459 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/46 | None | unknown | unclassified |  |
+| script_parameter_reads /rows/460 | Max_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/461 | Send_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/462 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/463 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/464 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/465 | Timer_Min | unknown | unclassified |  |
+| script_parameter_reads /rows/466 | Timer_Max | unknown | unclassified |  |
+| script_parameter_reads /rows/467 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/468 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/469 | Max_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/47 | Preset | unknown | unclassified |  |
+| script_parameter_reads /rows/470 | Send_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/471 | Send_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/472 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/473 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/474 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/475 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/476 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/477 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/478 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/479 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/48 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/480 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/481 | Max_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/482 | Send_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/483 | Send_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/484 | Animation_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/485 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/486 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/487 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/488 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/489 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/49 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/490 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/491 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/492 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/493 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/494 | Max_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/495 | Send_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/496 | Send_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/497 | Action_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/498 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/499 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/5 | Count | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/50 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/500 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/501 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/502 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/503 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/504 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/505 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/506 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/507 | Max_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/508 | Send_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/509 | Send_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/51 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/510 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/511 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/512 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/513 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/514 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/515 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/516 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/517 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/518 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/519 | Max_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/52 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/520 | Send_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/521 | Send_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/522 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/523 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/524 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/525 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/526 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/527 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/528 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/529 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/53 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/530 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/531 | Max_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/532 | Send_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/533 | Send_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/534 | Triggerer | unknown | unclassified |  |
+| script_parameter_reads /rows/535 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/536 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/537 | Max_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/538 | Send_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/539 | Send_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/54 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/540 | Triggerer | unknown | unclassified |  |
+| script_parameter_reads /rows/541 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/542 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/543 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/544 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/545 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/546 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/547 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/548 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/549 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/55 | Area | unknown | unclassified |  |
+| script_parameter_reads /rows/550 | Max_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/551 | Send_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/552 | Send_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/553 | Triggerer | unknown | unclassified |  |
+| script_parameter_reads /rows/554 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/555 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/556 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/557 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/558 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/559 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/56 | CheckBlocked | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/560 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/561 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/562 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/563 | Max_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/564 | Send_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/565 | Send_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/566 | Triggerer | unknown | unclassified |  |
+| script_parameter_reads /rows/567 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/568 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/569 | Trigger_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/57 | Mobius_exit_goto | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/570 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/571 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/572 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/573 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/574 | Max_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/575 | Send_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/576 | Send_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/577 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/578 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/579 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/58 | Camera0 | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/580 | Min_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/581 | Max_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/582 | Send_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/583 | Send_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/584 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/585 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/586 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/587 | Debug_Mode | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/588 | Start_Now | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/589 | Target_ID | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/59 | Camera1 | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/590 | Min_Delay | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/591 | Max_Delay | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/592 | Send_Param | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/593 | Send_Type | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/594 | Receive_Type | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/595 | Receive_Param_On | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/596 | Receive_Param_Off | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/597 | Spawner_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/598 | Custom_Type_To_Enable | unknown | unclassified |  |
+| script_parameter_reads /rows/599 | Custom_Type_To_Trigger | unknown | unclassified |  |
+| script_parameter_reads /rows/6 | Count | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/60 | Camera2 | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/600 | On_When_Created | unknown | unclassified |  |
+| script_parameter_reads /rows/601 | BuildingSpeaker_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/602 | BuildingController_ID | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/603 | Frequency_Min | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/604 | Frequency_Min | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/605 | Frequency_Max | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/606 | Is_3D | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/607 | Offset | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/608 | Offset_Randomness | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/609 | Sound_Normal | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/61 | Camera3 | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/610 | Sound_Normal | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/611 | Is_3D_Destroyed | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/612 | Offset_Destroyed | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/613 | Offset_Randomness_Destroyed | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/614 | Sound_Destroyed | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/615 | Sound_Destroyed | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/616 | Frequency_Min | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/617 | Frequency_Min | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/618 | Frequency_Max | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/619 | Frequency_Min_Destroyed | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/62 | Camera4 | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/620 | Frequency_Min_Destroyed | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/621 | Frequency_Max_Destroyed | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/622 | Explosion_Name | unknown | unclassified | C&C_Canyon.mix, C&C_City.mix, C&C_City_Flying.mix, C&C_Complex.mix, C&C_Field.mix, C&C_Islands.mix, C&C_Mesa.mix, C&C_Under.mix, C&C_Volcano.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M02.mix, M13.mix, Skirmish00.mix |
+| script_parameter_reads /rows/623 | Max_Offset | unknown | unclassified |  |
+| script_parameter_reads /rows/624 | Frequency_Min | unknown | unclassified |  |
+| script_parameter_reads /rows/625 | Frequency_Max | unknown | unclassified |  |
+| script_parameter_reads /rows/626 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/627 | Receive_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/628 | Sound_Preset | unknown | unclassified |  |
+| script_parameter_reads /rows/629 | Sound_Origin | unknown | unclassified |  |
+| script_parameter_reads /rows/63 | Target0 | unknown | unclassified | M03.mix, M09.mix |
+| script_parameter_reads /rows/630 | Custom_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/631 | Custom_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/632 | Preset_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/633 | Is_3D | unknown | unclassified |  |
+| script_parameter_reads /rows/634 | Custom_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/635 | Custom_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/636 | WAV_File | unknown | unclassified |  |
+| script_parameter_reads /rows/637 | Custom_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/638 | Custom_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/639 | Timer_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/64 | Target1 | unknown | unclassified | M03.mix, M09.mix |
+| script_parameter_reads /rows/640 | Delay_Min | unknown | unclassified |  |
+| script_parameter_reads /rows/641 | Delay_Max | unknown | unclassified |  |
+| script_parameter_reads /rows/642 | Repeat | unknown | unclassified |  |
+| script_parameter_reads /rows/643 | Randomize_Each_Time | unknown | unclassified |  |
+| script_parameter_reads /rows/644 | Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/645 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/646 | Play_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/647 | Sound_Delay_Min | unknown | unclassified |  |
+| script_parameter_reads /rows/648 | Sound_Delay_Max | unknown | unclassified |  |
+| script_parameter_reads /rows/649 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/65 | Target2 | unknown | unclassified | M03.mix, M09.mix |
+| script_parameter_reads /rows/650 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/651 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/652 | Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/653 | Sound_Effect | unknown | unclassified |  |
+| script_parameter_reads /rows/654 | Bone_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/655 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/656 | Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/657 | Sound_Effect | unknown | unclassified |  |
+| script_parameter_reads /rows/658 | Bone_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/659 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/66 | Target3 | unknown | unclassified | M03.mix, M09.mix |
+| script_parameter_reads /rows/660 | Play_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/661 | Sound_Delay_Min | unknown | unclassified |  |
+| script_parameter_reads /rows/662 | Sound_Delay_Max | unknown | unclassified |  |
+| script_parameter_reads /rows/663 | Origin | unknown | unclassified |  |
+| script_parameter_reads /rows/664 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/665 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/666 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/667 | Sound_Effect | unknown | unclassified |  |
+| script_parameter_reads /rows/668 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/669 | Sound_Effect | unknown | unclassified |  |
+| script_parameter_reads /rows/67 | Target4 | unknown | unclassified | M03.mix, M09.mix |
+| script_parameter_reads /rows/670 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/671 | Play_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/672 | Sound_Delay_Min | unknown | unclassified |  |
+| script_parameter_reads /rows/673 | Sound_Delay_Max | unknown | unclassified |  |
+| script_parameter_reads /rows/674 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/675 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/676 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/677 | Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/678 | Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/679 | Sound_Effect | unknown | unclassified |  |
+| script_parameter_reads /rows/68 | Target5 | unknown | unclassified | M03.mix, M09.mix |
+| script_parameter_reads /rows/680 | Sound_Effect | unknown | unclassified |  |
+| script_parameter_reads /rows/681 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/682 | Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/683 | Sound_Effect | unknown | unclassified |  |
+| script_parameter_reads /rows/684 | Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/685 | Sound_Effect | unknown | unclassified |  |
+| script_parameter_reads /rows/686 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/687 | Play_Count | unknown | unclassified |  |
+| script_parameter_reads /rows/688 | Sound_Delay_Min | unknown | unclassified |  |
+| script_parameter_reads /rows/689 | Sound_Delay_Max | unknown | unclassified |  |
+| script_parameter_reads /rows/69 | Target6 | unknown | unclassified | M03.mix, M09.mix |
+| script_parameter_reads /rows/690 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/691 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/692 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/693 | Sound_Effect | unknown | unclassified |  |
+| script_parameter_reads /rows/694 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/695 | Sound_Effect | unknown | unclassified |  |
+| script_parameter_reads /rows/696 | My_Group_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/697 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/698 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/699 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/7 | Count | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/70 | Target7 | unknown | unclassified | M03.mix, M09.mix |
+| script_parameter_reads /rows/700 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/701 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/702 | My_Group_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/703 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/704 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/705 | Attraction_Radius | unknown | unclassified |  |
+| script_parameter_reads /rows/706 | Wander_Distance | unknown | unclassified |  |
+| script_parameter_reads /rows/707 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/708 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/709 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/71 | Target8 | unknown | unclassified | M03.mix, M09.mix |
+| script_parameter_reads /rows/710 | TimerLength | unknown | unclassified |  |
+| script_parameter_reads /rows/711 | MoneyAmount | unknown | unclassified |  |
+| script_parameter_reads /rows/712 | TimerLength | unknown | unclassified |  |
+| script_parameter_reads /rows/713 | ScoreAmount | unknown | unclassified |  |
+| script_parameter_reads /rows/714 | Entire_Team | unknown | unclassified |  |
+| script_parameter_reads /rows/715 | Randomizer | unknown | unclassified |  |
+| script_parameter_reads /rows/716 | ScoreAmount | unknown | unclassified |  |
+| script_parameter_reads /rows/717 | Entire_Team | unknown | unclassified |  |
+| script_parameter_reads /rows/718 | Randomizer | unknown | unclassified |  |
+| script_parameter_reads /rows/719 | WeaponEncyclopediaID | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/72 | Target9 | unknown | unclassified | M03.mix, M09.mix |
+| script_parameter_reads /rows/720 | VehicleEncyclopediaID | unknown | unclassified |  |
+| script_parameter_reads /rows/721 | CharacterEncyclopediaID | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/722 | BuildingEncyclopediaID | unknown | unclassified |  |
+| script_parameter_reads /rows/723 | Receiver_ID | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/724 | Param | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/725 | Delay | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/726 | HealthThreshhold | unknown | unclassified |  |
+| script_parameter_reads /rows/727 | DeathType | unknown | unclassified |  |
+| script_parameter_reads /rows/728 | DeathType | unknown | unclassified |  |
+| script_parameter_reads /rows/729 | DeathType | unknown | unclassified |  |
+| script_parameter_reads /rows/73 | Target | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/730 | DeathType | unknown | unclassified |  |
+| script_parameter_reads /rows/731 | DeathType | unknown | unclassified |  |
+| script_parameter_reads /rows/732 | Effect_Model | unknown | unclassified |  |
+| script_parameter_reads /rows/733 | Preset_Name | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/734 | Create_At_Death_Pos | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/735 | Z_Offset | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/736 | Drop_Percentage | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/737 | Spawn_Effect | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/738 | Position | unknown | unclassified | M08.mix |
+| script_parameter_reads /rows/739 | Start_Now | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/74 | Target | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/740 | Debug_Mode | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/741 | Receive_Type | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/742 | Receive_Param_On | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/743 | Receive_Param_Off | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/744 | Receive_Param_Activate | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/745 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/746 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/747 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/748 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/749 | Location | unknown | unclassified |  |
+| script_parameter_reads /rows/75 | Target | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/750 | Script_Params | unknown | unclassified |  |
+| script_parameter_reads /rows/751 | Object_To_Create | unknown | unclassified |  |
+| script_parameter_reads /rows/752 | Facing | unknown | unclassified |  |
+| script_parameter_reads /rows/753 | Script_To_Attach | unknown | unclassified |  |
+| script_parameter_reads /rows/754 | Receive_Type_Activate | unknown | unclassified |  |
+| script_parameter_reads /rows/755 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/756 | Receive_Type | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/757 | Receive_Param_On | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/758 | Location | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/759 | Object_To_Create | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/76 | Target | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/760 | Facing | unknown | unclassified | M03.mix |
+| script_parameter_reads /rows/761 | Set_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/762 | Set_Status | unknown | unclassified |  |
+| script_parameter_reads /rows/763 | Remove | unknown | unclassified |  |
+| script_parameter_reads /rows/764 | Hidden | unknown | unclassified |  |
+| script_parameter_reads /rows/765 | Objective_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/766 | Objective_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/767 | Objective_Description_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/768 | Custom_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/769 | Activate_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/77 | SoundProjector | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/770 | Number_Of_Triggers | unknown | unclassified |  |
+| script_parameter_reads /rows/771 | Trigger_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/772 | Failure_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/773 | Unhide_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/774 | Activate_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/775 | Activate_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/776 | Objective_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/777 | Objective_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/778 | Activate_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/779 | Activate_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/78 | Radius | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/780 | Location | unknown | unclassified |  |
+| script_parameter_reads /rows/781 | Hidden | unknown | unclassified |  |
+| script_parameter_reads /rows/782 | Radar_Blip | unknown | unclassified |  |
+| script_parameter_reads /rows/783 | Objective_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/784 | Objective_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/785 | Objective_Description_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/786 | Custom_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/787 | Activate_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/788 | Success_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/789 | Failure_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/79 | SoundProjector | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/790 | Unhide_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/791 | Hidden | unknown | unclassified |  |
+| script_parameter_reads /rows/792 | Radar_Blip | unknown | unclassified |  |
+| script_parameter_reads /rows/793 | Objective_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/794 | Objective_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/795 | Objective_Description_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/796 | Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/797 | Custom_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/798 | Activate_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/799 | Success_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/8 | GotoDest1 | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/80 | Radius | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/800 | Failure_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/801 | Unhide_Param | unknown | unclassified |  |
+| script_parameter_reads /rows/802 | Loc_ID0 | unknown | unclassified |  |
+| script_parameter_reads /rows/803 | Loc_ID1 | unknown | unclassified |  |
+| script_parameter_reads /rows/804 | Loc_ID2 | unknown | unclassified |  |
+| script_parameter_reads /rows/805 | Loc_ID3 | unknown | unclassified |  |
+| script_parameter_reads /rows/806 | Loc_ID4 | unknown | unclassified |  |
+| script_parameter_reads /rows/807 | Loc_ID5 | unknown | unclassified |  |
+| script_parameter_reads /rows/808 | Loc_ID6 | unknown | unclassified |  |
+| script_parameter_reads /rows/809 | Loc_ID7 | unknown | unclassified |  |
+| script_parameter_reads /rows/81 | GotoObject | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/810 | Loc_ID8 | unknown | unclassified |  |
+| script_parameter_reads /rows/811 | Loc_ID9 | unknown | unclassified |  |
+| script_parameter_reads /rows/812 | Delay_Min | unknown | unclassified |  |
+| script_parameter_reads /rows/813 | Delay_Max | unknown | unclassified |  |
+| script_parameter_reads /rows/814 | Explosion_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/815 | Delay_Min | unknown | unclassified |  |
+| script_parameter_reads /rows/816 | Delay_Max | unknown | unclassified |  |
+| script_parameter_reads /rows/817 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/818 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/819 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/82 | Gunner | unknown | unclassified |  |
+| script_parameter_reads /rows/820 | Object_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/821 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/822 | Explosion_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/823 | Bone_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/824 | Explosion_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/825 | Bone_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/826 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/827 | Create_At_Obj | unknown | unclassified |  |
+| script_parameter_reads /rows/828 | Origin | unknown | unclassified |  |
+| script_parameter_reads /rows/829 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/83 | Condition | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/830 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/831 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/832 | Explosion_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/833 | Explosion_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/834 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/835 | Terminal_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/836 | Prompt_Value | unknown | unclassified |  |
+| script_parameter_reads /rows/837 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/838 | Random_Percentage | unknown | unclassified |  |
+| script_parameter_reads /rows/839 | Random_Param_Min | unknown | unclassified |  |
+| script_parameter_reads /rows/84 | Waypath_id | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/840 | Random_Param_Max | unknown | unclassified |  |
+| script_parameter_reads /rows/841 | Random_Param_Min | unknown | unclassified |  |
+| script_parameter_reads /rows/842 | Random_Param_Max | unknown | unclassified |  |
+| script_parameter_reads /rows/843 | Random_Percentage | unknown | unclassified |  |
+| script_parameter_reads /rows/844 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/845 | Send_Attempts | unknown | unclassified |  |
+| script_parameter_reads /rows/846 | Terminal_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/847 | Send_Delay | unknown | unclassified |  |
+| script_parameter_reads /rows/848 | Action_Priority | unknown | unclassified |  |
+| script_parameter_reads /rows/849 | Action_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/85 | Damage_multiplier | unknown | unclassified | M10.mix |
+| script_parameter_reads /rows/850 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/851 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/852 | Animation | unknown | unclassified |  |
+| script_parameter_reads /rows/853 | Drop_Frame | unknown | unclassified |  |
+| script_parameter_reads /rows/854 | Drop_Object | unknown | unclassified |  |
+| script_parameter_reads /rows/855 | Drop_Bone | unknown | unclassified |  |
+| script_parameter_reads /rows/856 | Animation | unknown | unclassified |  |
+| script_parameter_reads /rows/857 | Drop_Frame | unknown | unclassified |  |
+| script_parameter_reads /rows/858 | Drop_Object | unknown | unclassified |  |
+| script_parameter_reads /rows/859 | Drop_Bone | unknown | unclassified |  |
+| script_parameter_reads /rows/86 | Controller_num | unknown | unclassified |  |
+| script_parameter_reads /rows/860 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/861 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/862 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/863 | Script_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/864 | Script_Params | unknown | unclassified |  |
+| script_parameter_reads /rows/865 | Action_Priority | unknown | unclassified |  |
+| script_parameter_reads /rows/866 | Action_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/867 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/868 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/869 | Animation | unknown | unclassified |  |
+| script_parameter_reads /rows/87 | Waypath_num | unknown | unclassified |  |
+| script_parameter_reads /rows/870 | Drop_Frame | unknown | unclassified |  |
+| script_parameter_reads /rows/871 | Drop_Object | unknown | unclassified |  |
+| script_parameter_reads /rows/872 | Drop_Bone | unknown | unclassified |  |
+| script_parameter_reads /rows/873 | Animation | unknown | unclassified |  |
+| script_parameter_reads /rows/874 | Drop_Frame | unknown | unclassified |  |
+| script_parameter_reads /rows/875 | Drop_Object | unknown | unclassified |  |
+| script_parameter_reads /rows/876 | Drop_Bone | unknown | unclassified |  |
+| script_parameter_reads /rows/877 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/878 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/879 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/88 | Waypath_num | unknown | unclassified |  |
+| script_parameter_reads /rows/880 | Action_Priority | unknown | unclassified |  |
+| script_parameter_reads /rows/881 | Action_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/882 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/883 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/884 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/885 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/886 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/887 | Animation | unknown | unclassified |  |
+| script_parameter_reads /rows/888 | Loop | unknown | unclassified |  |
+| script_parameter_reads /rows/889 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/89 | Waypath_num | unknown | unclassified |  |
+| script_parameter_reads /rows/890 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/891 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/892 | Home_Location | unknown | unclassified |  |
+| script_parameter_reads /rows/893 | Wander_Distance | unknown | unclassified |  |
+| script_parameter_reads /rows/894 | Debug_Mode | unknown | unclassified |  |
+| script_parameter_reads /rows/895 | _Move_Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/896 | _Attack_Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/897 | _Attack_Primary | unknown | unclassified |  |
+| script_parameter_reads /rows/898 | _Attack_Location | unknown | unclassified |  |
+| script_parameter_reads /rows/899 | Action_Priority | unknown | unclassified |  |
+| script_parameter_reads /rows/9 | GotoDest2 | unknown | unclassified | M13.mix |
+| script_parameter_reads /rows/90 | Waypath_num | unknown | unclassified |  |
+| script_parameter_reads /rows/900 | Action_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/901 | _Move_Destination | unknown | unclassified |  |
+| script_parameter_reads /rows/902 | _Move_Speed | unknown | unclassified |  |
+| script_parameter_reads /rows/903 | _Move_Arrive_Distance | unknown | unclassified |  |
+| script_parameter_reads /rows/904 | _Attack_Location | unknown | unclassified |  |
+| script_parameter_reads /rows/905 | _Attack_Range | unknown | unclassified |  |
+| script_parameter_reads /rows/906 | _Attack_Deviation | unknown | unclassified |  |
+| script_parameter_reads /rows/907 | _Move_Backwards | unknown | unclassified |  |
+| script_parameter_reads /rows/908 | _Move_Following | unknown | unclassified |  |
+| script_parameter_reads /rows/909 | _Move_Crouch | unknown | unclassified |  |
+| script_parameter_reads /rows/91 | Controller_num | unknown | unclassified |  |
+| script_parameter_reads /rows/910 | _Move_Pathfind | unknown | unclassified |  |
+| script_parameter_reads /rows/911 | _Attack_Crouched | unknown | unclassified |  |
+| script_parameter_reads /rows/912 | _Move_Waypath_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/913 | _Move_Waypath_Start_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/914 | _Move_Waypath_End_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/915 | _Move_Waypath_Splined | unknown | unclassified |  |
+| script_parameter_reads /rows/916 | _Attack_Range | unknown | unclassified |  |
+| script_parameter_reads /rows/917 | _Attack_Deviation | unknown | unclassified |  |
+| script_parameter_reads /rows/918 | _Move_Speed | unknown | unclassified |  |
+| script_parameter_reads /rows/919 | _Move_Arrive_Distance | unknown | unclassified |  |
+| script_parameter_reads /rows/92 | Target_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/920 | Start_Now | unknown | unclassified |  |
+| script_parameter_reads /rows/921 | Receive_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/922 | Receive_Param_On | unknown | unclassified |  |
+| script_parameter_reads /rows/923 | _Move_Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/924 | _Attack_Target_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/925 | Action_Priority | unknown | unclassified |  |
+| script_parameter_reads /rows/926 | Action_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/927 | _Move_Destination | unknown | unclassified |  |
+| script_parameter_reads /rows/928 | _Move_Speed | unknown | unclassified |  |
+| script_parameter_reads /rows/929 | _Move_Arrive_Distance | unknown | unclassified |  |
+| script_parameter_reads /rows/93 | Target_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/930 | _Attack_Location | unknown | unclassified |  |
+| script_parameter_reads /rows/931 | _Attack_Range | unknown | unclassified |  |
+| script_parameter_reads /rows/932 | _Attack_Deviation | unknown | unclassified |  |
+| script_parameter_reads /rows/933 | _Move_Backwards | unknown | unclassified |  |
+| script_parameter_reads /rows/934 | _Move_Following | unknown | unclassified |  |
+| script_parameter_reads /rows/935 | _Move_Crouch | unknown | unclassified |  |
+| script_parameter_reads /rows/936 | _Move_Pathfind | unknown | unclassified |  |
+| script_parameter_reads /rows/937 | _Attack_Crouched | unknown | unclassified |  |
+| script_parameter_reads /rows/938 | _Move_Waypath_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/939 | _Move_Waypath_Start_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/94 | Elev_obj_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/940 | _Move_Waypath_End_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/941 | _Move_Waypath_Splined | unknown | unclassified |  |
+| script_parameter_reads /rows/942 | _Attack_Range | unknown | unclassified |  |
+| script_parameter_reads /rows/943 | _Attack_Deviation | unknown | unclassified |  |
+| script_parameter_reads /rows/944 | _Move_Speed | unknown | unclassified |  |
+| script_parameter_reads /rows/945 | _Move_Arrive_Distance | unknown | unclassified |  |
+| script_parameter_reads /rows/946 | Receive_Param_Off | unknown | unclassified |  |
+| script_parameter_reads /rows/947 | Action_Priority | unknown | unclassified |  |
+| script_parameter_reads /rows/948 | Action_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/949 | MinAttackDistance | unknown | unclassified | C&C_City.mix, C&C_City_Flying.mix, C&C_Field.mix, C&C_Glacier_Flying.mix, C&C_Hourglass.mix, C&C_Mesa.mix, C&C_Under.mix, Skirmish00.mix |
+| script_parameter_reads /rows/95 | Anim_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/950 | MaxAttackDistance | unknown | unclassified | C&C_City.mix, C&C_City_Flying.mix, C&C_Field.mix, C&C_Glacier_Flying.mix, C&C_Hourglass.mix, C&C_Mesa.mix, C&C_Under.mix, Skirmish00.mix |
+| script_parameter_reads /rows/951 | AttackTimer | unknown | unclassified | C&C_City.mix, C&C_City_Flying.mix, C&C_Field.mix, C&C_Glacier_Flying.mix, C&C_Hourglass.mix, C&C_Mesa.mix, C&C_Under.mix, Skirmish00.mix |
+| script_parameter_reads /rows/952 | Killable_By_Star | unknown | unclassified | M03.mix, M13.mix |
+| script_parameter_reads /rows/953 | Killable_ByNotStar | unknown | unclassified | M03.mix, M13.mix |
+| script_parameter_reads /rows/954 | Star_Modifier | unknown | unclassified | M03.mix, M13.mix |
+| script_parameter_reads /rows/955 | NotStar_Modifier | unknown | unclassified | M03.mix, M13.mix |
+| script_parameter_reads /rows/956 | Damage_multiplier | unknown | unclassified | M03.mix, M13.mix |
+| script_parameter_reads /rows/957 | Damage_multiplier | unknown | unclassified | M03.mix, M13.mix |
+| script_parameter_reads /rows/958 | ConvName | unknown | unclassified |  |
+| script_parameter_reads /rows/959 | On_Created | unknown | unclassified |  |
+| script_parameter_reads /rows/96 | Direction | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/960 | Controller_ID | unknown | unclassified | M02.mix, M07.mix, M10.mix |
+| script_parameter_reads /rows/961 | Controller_ID | unknown | unclassified | C&C_City.mix, C&C_City_Flying.mix, C&C_Field.mix, C&C_Glacier_Flying.mix, C&C_Hourglass.mix, C&C_Mesa.mix, C&C_Under.mix, Skirmish00.mix |
+| script_parameter_reads /rows/962 | Controller_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/963 | Barrel01_Location | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/964 | Barrel02_Location | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/965 | Barrel03_Location | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/966 | Barrel04_Location | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/967 | Barrel05_Location | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/968 | Barrel01_Type (1-8) | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/969 | Barrel02_Type (1-8) | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/97 | Waypoint_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/970 | Barrel03_Type (1-8) | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/971 | Barrel04_Type (1-8) | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/972 | Barrel05_Type (1-8) | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/973 | Barrel01_Facing | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/974 | Barrel02_Facing | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/975 | Barrel03_Facing | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/976 | Barrel04_Facing | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/977 | Barrel05_Facing | unknown | unclassified | M04.mix |
+| script_parameter_reads /rows/978 | Description | unknown | unclassified |  |
+| script_parameter_reads /rows/979 | Filename | unknown | unclassified |  |
+| script_parameter_reads /rows/98 | Direction | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/980 | Frequency_Min | unknown | unclassified | C&C_Field.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/981 | Frequency_Min | unknown | unclassified | C&C_Field.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/982 | Frequency_Max | unknown | unclassified | C&C_Field.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/983 | Sound_Preset | unknown | unclassified | C&C_Field.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/984 | Is_3D | unknown | unclassified | C&C_Field.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/985 | Offset | unknown | unclassified | C&C_Field.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/986 | Offset_Randomness | unknown | unclassified | C&C_Field.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/987 | Frequency_Min | unknown | unclassified | C&C_Field.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/988 | Frequency_Min | unknown | unclassified | C&C_Field.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/989 | Frequency_Max | unknown | unclassified | C&C_Field.mix, C&C_Walls.mix, C&C_Walls_Flying.mix, M01.mix, M02.mix, M03.mix, M04.mix, M05.mix, M06.mix, M08.mix, M09.mix, M10.mix, M11.mix, M13.mix |
+| script_parameter_reads /rows/99 | Waypoint_num | unknown | unclassified | M09.mix |
+| script_parameter_reads /rows/990 | Custom_Type | unknown | unclassified |  |
+| script_parameter_reads /rows/991 | Custom_Param_1 | unknown | unclassified |  |
+| script_parameter_reads /rows/992 | Custom_Param_2 | unknown | unclassified |  |
+| script_parameter_reads /rows/993 | Emergency | unknown | unclassified |  |
+| script_parameter_reads /rows/994 | Animation_Name | unknown | unclassified |  |
+| script_parameter_reads /rows/995 | 25_Number | unknown | unclassified |  |
+| script_parameter_reads /rows/996 | 25_Start_ID | unknown | unclassified |  |
+| script_parameter_reads /rows/997 | Killed_Broadcast_Radius | unknown | unclassified |  |
+| script_parameter_reads /rows/998 | 50_Number | unknown | unclassified |  |
+| script_parameter_reads /rows/999 | 50_Start_ID | unknown | unclassified |  |
 | scripts /rows/0 | Debug_Message | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | scripts /rows/1 | Action_Reset | unknown | unclassified | unknown; callers and retail usage require reconciliation |
 | scripts /rows/10 | Get_Action_ID | unknown | unclassified | unknown; callers and retail usage require reconciliation |

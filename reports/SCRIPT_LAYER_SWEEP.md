@@ -1,5 +1,38 @@
 # S5 script layer — complete slot/unit denominator in progress
 
+## Named parameter-read inventory — 2026-10-04
+
+The 1,636 live original script bodies contain 1,201 lexically identified
+parameter reads: 1,146 literal names match their hash-verified descriptor,
+35 use literal integer indices, and 20 literal names are absent. No computed
+argument or unresolved call parse was found within this body denominator;
+helper/inherited/macro paths remain an explicit coverage risk.
+
+The 20 absent-name call sites belong to eight scripts. Five call sites have
+direct authored bindings in the 27-map receipts: three M05_Park_Controller
+artillery names, M00_Damage_Modifier_DME's Killable_ByNotStar spelling and
+M00_Play_Sound_Object_Bone_DAY's Offset. The damage script occurs directly in
+M03 and M13; the sound script occurs directly in M01–M11 and M13. Other absent
+names occur in toolkit action/trigger scripts and GTH test scripts without
+direct authored occurrences located by this join. An empty map set does not
+prove runtime attachments or editor references cannot reach them.
+
+These are original-source mismatch leads, including original description
+truncation/name quirks, not authorizations to change behavior. Original
+Get_Parameter_Index compares names without case but preserves underscores,
+uses only 511 descriptor bytes and returns -1 when no name matches. Literal
+indices still need supplied-value bounds and original overload/conversion
+checks; no callback execution is claimed.
+
+`python3 -m tools.audit_script_parameter_reads` reproduces source line, method,
+literal name/index and direct authored map sets from the verified live registry.
+Receipt: `reports/generated/sweeps/script_parameter_reads.json`. Twenty focused
+tests pass, including comments/strings, adjacent literals, case/underscores,
+computed nested arguments, index retention and consolidation partition checks.
+The register retains 44,620 overlapping records, with 44,356 unknowns. All new
+rows remain unknown behavior. Original owners, source hashes and parent receipt
+identities are retained; no runtime source or compiled artifact changed.
+
 ## Live parameter descriptors and all-map positions — 2026-10-04
 
 All 1,636 live registry parameter-description hashes match the literal original

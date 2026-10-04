@@ -1,5 +1,19 @@
 # Live engineering progress
 
+## Original script parameter reads — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed:1,201 call sites across1,636 live bodies partition into1,146 matching
+names,35 literal indices and20 absent names in eight scripts. Original typos
+remain preserved; direct authored map references are recorded separately.
+Evidence:20 focused tests pass; registry/retail/source identities retained.
+Next: original parameter conversion probes and helper/macro coverage; startup modes.
+Blocker:none for discovery; callback effects and native acceptance remain open.
+No runtime source change, device action or emulator launch.
+See [script ledger](SCRIPT_LAYER_SWEEP.md).
+
 ## All-map script parameter shapes — 2026-10-04
 
 Renegade Vita — v3.5 active

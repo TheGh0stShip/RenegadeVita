@@ -5,6 +5,16 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_parameter_read_partition_and_maps(self):
+        value={'total':1,'counts':{'unknown':1},'categories':{'literal_name_absent':1},
+               'rows':[{'status':'unknown','category':'literal_name_absent','affected_maps':['M05.mix']}]}
+        result=consolidate([('script_parameter_reads',json.dumps(value).encode())])
+        self.assertEqual(result['rows'][0]['affected_missions_modes'],['M05.mix'])
+        self.assertEqual(result['rows'][0]['cluster'],'scripts')
+        value['categories']={}
+        with self.assertRaisesRegex(ValueError,'partition'):
+            consolidate([('script_parameter_reads',json.dumps(value).encode())])
+
     def test_script_parameter_categories_partition(self):
         receipt={'total':1,'counts':{'unknown':1},'bindings':2,
                  'categories':{'equal_count':1,'excess_values':1},

@@ -151,3 +151,33 @@ Reproduce the host build/run with:
 g++ -std=c++17 -O2 -fsanitize=address,undefined -fno-omit-frame-pointer -Wall -Wextra -Werror -Iport/audio/vita tools/host_wave_archive_probe.cpp port/audio/vita/renegade_wave_decoder.cpp -o build/host-wave-archive-probe
 python3 -m tools.audit_wave_decoder_runtime --data "$RENEGADE_RETAIL_ROOT" --probe build/host-wave-archive-probe --output reports/generated/sweeps/wave_decode.json --stderr build/wave-decoder-sanitizers.log
 ```
+
+## Original provider contract comparison
+
+The supplied Mss32.dll is SHA-256 pinned; all four retained installation backup
+copies have the same hash. Ghidra identifies the WAV-info export at 0x2110d170
+delegating to 0x21115230, and 3D sample loading at 0x2110eb20 reaching
+0x211283f0 and WAV inspection. Original SoundBuffer.cpp:133 calls WAV-info;
+sound3dhandle.cpp uses the raw buffer, while sound2dhandle.cpp:88 uses named
+sample loading with its original source length. These are different contracts.
+
+A 32-bit Windows host probe invokes the original WAV-info export on eight
+authored fixtures: valid PCM/IMA, outer size seven bytes too large, invalid
+trailing content, and both conditions. All eight are accepted with payload
+offsets/lengths within the authored source and unchanged sample counts. The
+current native decoder accepts the two valid fixtures and rejects the other
+six under ASan/LSan/UBSan. This proves a concrete provider compatibility
+difference without assuming that malformed trailing content is audio data.
+
+Receipt: `generated/retail_wave_contract.json`. The probe creates its own
+PCM/IMA fixtures and exports no retail audio. Windows pointers remain 32-bit;
+the stdcall signature and 36-byte output layout are explicit. Guard storage
+does not establish memory safety of the legacy DLL. No game, mixer or audio
+device is launched. The DLL and all decompiled output remain private; no
+proprietary implementation is copied into the port. This DLL identity does
+not establish a retail game.exe version.
+
+Next: preserve bounded format/data validation while reproducing this proven
+inspection behavior, with separate regression cases for truncated payloads,
+duplicate chunks and fact ordering. Validate both metadata and decode paths
+before a new ARM candidate. Physical audio acceptance remains open.

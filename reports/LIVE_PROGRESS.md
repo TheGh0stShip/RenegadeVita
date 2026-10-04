@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## Original Miles WAV contract comparison — 2026-10-03
+
+Identity-pinned original DLL accepts eight authored PCM/IMA WAV-info fixtures;
+current C++ decoder rejects six oversized/trailing-content variants under
+sanitizers. Payload offsets, lengths and frame counts are retained. Ghidra
+export/backend addresses are recorded; proprietary bytes/output stay private.
+No game or device launched. This establishes a compatibility defect class,
+not playback acceptance. Next: bounded provider correction and regressions.
+See [WAV sweep](ALL_ARCHIVE_WAVE_SWEEP.md). Native gates remain 0/10.
+
 ## S4 compiled all-archive WAV decoder — 2026-10-03
 
 Current C++ decoder under ASan/LSan/UBSan: 9,975 of 10,241 WAV entries decode;

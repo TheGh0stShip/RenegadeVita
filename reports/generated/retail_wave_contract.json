@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "evidence_class": "windows_x86_original_provider_metadata_and_host_cpp_decode",
+  "complete_game_acceptance": false,
+  "reference": {
+    "filename": "Mss32.dll",
+    "bytes": 350208,
+    "sha256": "b4adfadcd8b873cd8f1117c4f6f160e3a925688096d4d2969ff83e5dbd502360",
+    "preferred_image_base": "0x21100000",
+    "exports": {
+      "_AIL_WAV_info@8": "0x2110d170",
+      "_AIL_set_3D_sample_file@8": "0x2110eb20",
+      "_AIL_set_sample_file@12": "0x21104680"
+    },
+    "inspection_backend": "0x21115230",
+    "three_dimensional_loading_backend": "0x211283f0",
+    "sample_loading_backend": "0x211159a0",
+    "private_ghidra_analysis_sha256": "708b0c9faad50fa2a2b975764458138916acd6e5f938171242c3d53df92a438f"
+  },
+  "probe_source": {
+    "path": "tools/diagnostics/retail_miles_wave_probe.ps1",
+    "sha256": "8f0f8bfbdc3b1b43d867985012dff4c45c8180c4fb8121582456edb3d2cff33a",
+    "architecture": "Windows x86, 32-bit pointers, stdcall",
+    "output_structure_bytes": 36,
+    "guard_storage_bytes": 4096
+  },
+  "native_decoder_source_sha256": "909a860cabf2e605c985f41c2243dcc2356bc8add68882bfa8d8f4a11431e31c",
+  "host_probe_sha256": "a47fa8b9f75b7f05e4c1899418d4b6c86e09fef5086e1950bc19d6fe5fa19c99",
+  "host_sanitizer_stderr_bytes": 0,
+  "rows": [
+    {"variant": 0, "encoding": "PCM", "condition": "valid", "reference_accepted": true, "reference_payload_offset": 44, "reference_payload_bytes": 4, "reference_frames": 2, "host_decoded": true, "host_frames": 2},
+    {"variant": 1, "encoding": "PCM", "condition": "outer_size_plus_seven", "reference_accepted": true, "reference_payload_offset": 44, "reference_payload_bytes": 4, "reference_frames": 2, "host_decoded": false},
+    {"variant": 2, "encoding": "PCM", "condition": "invalid_trailing_chunk", "reference_accepted": true, "reference_payload_offset": 44, "reference_payload_bytes": 4, "reference_frames": 2, "host_decoded": false},
+    {"variant": 3, "encoding": "PCM", "condition": "both", "reference_accepted": true, "reference_payload_offset": 44, "reference_payload_bytes": 4, "reference_frames": 2, "host_decoded": false},
+    {"variant": 4, "encoding": "IMA", "condition": "valid_fact_before_data", "reference_accepted": true, "reference_payload_offset": 60, "reference_payload_bytes": 8, "reference_frames": 9, "host_decoded": true, "host_frames": 9},
+    {"variant": 5, "encoding": "IMA", "condition": "outer_size_plus_seven", "reference_accepted": true, "reference_payload_offset": 60, "reference_payload_bytes": 8, "reference_frames": 9, "host_decoded": false},
+    {"variant": 6, "encoding": "IMA", "condition": "invalid_trailing_chunk", "reference_accepted": true, "reference_payload_offset": 60, "reference_payload_bytes": 8, "reference_frames": 9, "host_decoded": false},
+    {"variant": 7, "encoding": "IMA", "condition": "both", "reference_accepted": true, "reference_payload_offset": 60, "reference_payload_bytes": 8, "reference_frames": 9, "host_decoded": false}
+  ],
+  "limits": [
+    "Authored fixtures only; original DLL WAV inspection does not prove playback or waveform equality.",
+    "Guard storage protects the standalone inspection allocation; no legacy parser memory-safety acceptance is inferred.",
+    "Binary and decompiled output remain private; no implementation is adopted.",
+    "The reference DLL is identity-pinned; the game executable's retail version is not established by this receipt.",
+    "ADPCM fact ordering, duplicate chunks, truncated payloads and missing formats need separate compatibility checks."
+  ]
+}

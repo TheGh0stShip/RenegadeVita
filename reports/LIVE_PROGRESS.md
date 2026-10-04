@@ -1,5 +1,17 @@
 # Live engineering progress
 
+## Command definition identity correction — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: exact function identity eliminates one false ambiguity; both real
+overload sets retain their definitions. Current 202 rows: 192 equal, eight
+changed, two assigned-overload selections unresolved; all statuses unknown.
+Evidence: seven tests pass; independent regeneration matches exactly.
+Next: signature selection and downstream platform-owner joins.
+Blocker: none for source work. Runtime code/Dev221 unchanged; no device action.
+
 ## Script command body denominator — 2026-10-04
 
 Renegade Vita — v3.5 active

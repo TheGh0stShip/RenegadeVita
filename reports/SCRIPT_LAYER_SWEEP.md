@@ -265,3 +265,16 @@ Six focused tests pass and independent regeneration is byte-identical.
 Runtime source and compiled Dev221 artifacts are unchanged. No device action.
 Run `python3 -m tools.audit_script_command_bodies --output <receipt.json>`.
 See [body records](generated/sweeps/script_command_bodies.json).
+
+### Definition identity correction
+
+The extractor now requires an exact unqualified function token. The earlier
+Enable_Enemy_Seen ambiguity was a suffix match against
+Innate_Soldier_Enable_Enemy_Seen, not an engine defect. Current totals are 192
+equal bodies, eight changed and two unresolved assigned-overload selections.
+Create_Object and Add_Radar_Marker each retain both definition candidates,
+including parameter spelling, line, body hash, directives and lexical calls.
+This prevents ambiguous selection from discarding downstream review evidence.
+Seven tests pass; regeneration is byte-identical. Runtime source and Dev221
+artifacts remain unchanged. Selecting overloads from the command signature and
+evaluating downstream platform branches remain open.

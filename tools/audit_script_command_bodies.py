@@ -11,7 +11,6 @@ import re
 
 from tools.audit_sweep_scripts import command_slots
 from tools.audit_script_command_table import table_assignments
-from tools.audit_missing_definition_callers import body
 from tools.audit_sweep_port_guards import mask_noncode
 
 
@@ -20,12 +19,27 @@ def digest(value):
 
 
 def inspect(source, name):
-    try:
-        text, line = body(source, name)
-    except ValueError as error:
-        return {'resolved': False, 'reason': str(error)}
+    masked = mask_noncode(source)
+    pattern = r'(?<![\w:])' + re.escape(name) + r'\s*\(([^()]*)\)\s*(?:const\s*)?\{'
+    candidates = []
+    for match in re.finditer(pattern, masked):
+        start, end, depth = match.end() - 1, match.end(), 1
+        while depth and end < len(masked):
+            depth += (masked[end] == '{') - (masked[end] == '}')
+            end += 1
+        if depth:
+            raise ValueError('Unterminated command definition: ' + name)
+        candidates.append({'parameters': source[match.start(1):match.end(1)],
+                           **summarize(source[start:end], source.count('\n', 0, match.start()) + 1)})
+    if len(candidates) != 1:
+        return {'resolved': False, 'reason': 'Multiple definitions' if candidates else 'No definition',
+                'definition_candidates': candidates}
+    return {'resolved': True, **candidates[0]}
+
+
+def summarize(text, line):
     clean = mask_noncode(text)
-    return {'resolved': True, 'line': line, 'body_sha256': digest(text),
+    return {'line': line, 'body_sha256': digest(text),
             'preprocessor_directives': [s.strip() for s in clean.splitlines()
                                        if s.lstrip().startswith('#')],
             'return_statements': len(re.findall(r'\breturn\b', clean)),

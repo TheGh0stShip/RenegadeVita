@@ -11,7 +11,14 @@ class CommandBodyTests(unittest.TestCase):
         self.assertEqual(row['call_name_candidates'], ['G'])
 
     def test_ambiguity_is_retained(self):
-        self.assertFalse(inspect('void F(int x) {} void F(float x) {}', 'F')['resolved'])
+        row = inspect('void F(int x) {} void F(float x) {}', 'F')
+        self.assertFalse(row['resolved'])
+        self.assertEqual([c['parameters'] for c in row['definition_candidates']], ['int x', 'float x'])
+
+    def test_suffix_and_qualified_methods_do_not_match(self):
+        row = inspect('void Prefix_F() {} void Class::F() {} void F() { G(); }', 'F')
+        self.assertTrue(row['resolved'])
+        self.assertEqual(row['call_name_candidates'], ['G'])
 
     def test_body_changes_do_not_promote_status(self):
         header = 'typedef struct { void (*First)(); void (*Second)(); } ScriptCommands;'

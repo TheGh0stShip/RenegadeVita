@@ -7,6 +7,8 @@ import json
 import struct
 from pathlib import Path
 from tools.audit_mission_wave_headers import inspect_wave
+from tools.audit_mission_conversations import sound_definitions
+from tools.audit_m13_level_owners import chunks
 from tools.renegade_cinematic_dependency_scan import MixArchive
 
 
@@ -99,6 +101,50 @@ def scan(directory):
     return rows, archives, receipts
 
 
+def match_definitions(definitions, members):
+    """Retain exact/basename candidates separately; do not infer mount precedence."""
+    candidates = {}
+    for identifier, definition in definitions.items():
+        filename = definition.get('filename')
+        if filename:
+            basename = filename.replace('\\', '/').rsplit('/', 1)[-1]
+            candidates.setdefault(basename.casefold(), []).append(
+                {'definition_id': identifier, 'definition_name': definition['name'],
+                 'definition_offset': definition['offset'],
+                 'filename_match': 'exact_casefold' if filename == basename else 'basename_casefold',
+                 'authored_filename_sha256': hashlib.sha256(filename.encode('utf-8')).hexdigest()})
+    return {name: candidates.get(name.casefold(), []) for name in members}
+
+
+def definition_references(directory, rows):
+    names = {f['member'] for row in rows for f in row['findings']}
+    databases = []
+    for path in sorted(directory.iterdir()):
+        if not path.is_file() or path.suffix.lower() not in ('.mix', '.dat', '.dbs'):
+            continue
+        archive = MixArchive(path)
+        with path.open('rb') as stream:
+            for index, (name, _, offset, size) in enumerate(archive.entry_records):
+                if name.casefold() != 'objects.ddb':
+                    continue
+                stream.seek(offset)
+                data = stream.read(size)
+                if len(data) != size:
+                    raise ValueError('truncated definition database')
+                definitions = sound_definitions(chunks(data))
+                matches = match_definitions(definitions, names)
+                identity = {'archive': path.name, 'member': name, 'index_record': index,
+                            'offset': offset, 'sha256': hashlib.sha256(data).hexdigest()}
+                databases.append(identity | {'definitions': len(definitions),
+                    'sound_filename_definitions': sum(bool(d.get('filename')) for d in definitions.values()),
+                    'matched_flagged_filenames': sum(bool(v) for v in matches.values())})
+                for row in rows:
+                    for finding in row['findings']:
+                        finding.setdefault('definition_candidates', []).extend(
+                            identity | candidate for candidate in matches[finding['member']])
+    return databases
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--data', type=Path, required=True)
@@ -109,10 +155,13 @@ def main():
     if args.private_output and not args.private_output.resolve().is_relative_to(root / 'build'):
         parser.error('detailed receipts must remain under private build/')
     rows, archives, receipts = scan(args.data)
+    databases = definition_references(args.data, rows)
     sources = ('tools/audit_all_wave_headers.py', 'tools/audit_mission_wave_headers.py',
-               'tools/renegade_cinematic_dependency_scan.py', 'port/audio/vita/renegade_wave_decoder.cpp')
+               'tools/renegade_cinematic_dependency_scan.py', 'tools/audit_mission_conversations.py',
+               'tools/audit_m13_level_owners.py', 'port/audio/vita/renegade_wave_decoder.cpp')
     result = {'schema': 1, 'complete': False, 'rows': rows, 'total': len(rows),
               'counts': {'unknown': len(rows)}, 'archives': archives,
+              'definition_databases': databases,
               'totals': {key: sum(row[key] for row in rows)
                          for key in ('wave_members', 'header_finding_members', 'block_finding_members')},
               'parser_inputs': [{'source': source, 'sha256': hashlib.sha256((root / source).read_bytes()).hexdigest()}
@@ -120,6 +169,7 @@ def main():
               'limits': ['Every archive index WAV occurrence is counted, including duplicate names.',
                          'Loose WAVs, music and movie streams are separate denominators.',
                          'Strict RIFF failures may prevent format identification; these are not unknown-codec verdicts.',
+                         'Sound-definition matches retain every database alternative; active callers and mount precedence remain open.',
                          'Metadata checks prove no PCM decode, runtime selection, playback or physical acceptance.']}
     args.output.write_text(json.dumps(result, indent=2) + '\n')
     if args.private_output:

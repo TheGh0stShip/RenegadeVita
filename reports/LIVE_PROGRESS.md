@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## S4 flagged WAV definition references — 2026-10-03
+
+215 of 265 flagged files have authored filename-basename references in the
+supplied objects.ddb; 50 remain unresolved in this reference class. All 9,509
+nonempty sound filename definitions were considered. IDs, offsets, database
+hashes and explicit match types are retained; execution and mission usage remain
+open. Thirty-eight focused tests pass. No audio or engine behavior changed.
+Next: conversation/caller chains and retail trailing-content handling evidence.
+See [WAV sweep](ALL_ARCHIVE_WAVE_SWEEP.md). Native gates remain 0/10.
+
 ## S4 physical WAV chunk bounds — 2026-10-03
 
 All 265 flagged files have data payloads within their actual source bounds.

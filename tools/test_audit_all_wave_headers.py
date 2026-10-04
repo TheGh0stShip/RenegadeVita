@@ -1,11 +1,21 @@
 import unittest
 import struct
-from tools.audit_all_wave_headers import summarize, physical_chunks
+from tools.audit_all_wave_headers import summarize, physical_chunks, match_definitions
 from tools.audit_mission_wave_headers import inspect_wave
 from tools.test_mission_wave_headers import wave, fmt, wave_chunk
 
 
 class AllWaveTests(unittest.TestCase):
+    def test_definition_matching_retains_duplicates_and_labels_basename_candidates(self):
+        definitions = {1: {'filename': 'Voice.WAV', 'name': 'a', 'offset': 10},
+                       2: {'filename': 'voice.wav', 'name': 'b', 'offset': 20},
+                       3: {'filename': 'folder/voice.wav', 'name': 'c', 'offset': 30},
+                       4: {'name': 'twiddler', 'offset': 40}}
+        matches = match_definitions(definitions, ['VOICE.WAV', 'absent.wav'])
+        self.assertEqual([r['definition_id'] for r in matches['VOICE.WAV']], [1, 2, 3])
+        self.assertEqual(matches['VOICE.WAV'][2]['filename_match'], 'basename_casefold')
+        self.assertEqual(matches['absent.wav'], [])
+
     def test_outer_size_mismatch_does_not_hide_intact_physical_chunks(self):
         data = wave(fmt(), wave_chunk(b'data', b'\0' * 4))
         altered = data[:4] + struct.pack('<I', len(data) + 100) + data[8:]

@@ -78,3 +78,21 @@ an oversized outer length, truncated data, short trailing headers and final
 odd padding. Next: reconcile definition/conversation references to these exact
 files and establish retail handling of post-data content before changing the
 provider. Physical playback and audio timing remain open.
+
+## Sound-definition reference reconciliation
+
+Every archive index entry named objects.ddb was inspected independently. The
+supplied archive set contains one such database in always.dbs: 15,146 total
+definitions, including 9,509 nonempty sound filename definitions. Of the 265
+flagged WAVs, 215 have one filename-basename candidate each; 50 have none.
+All database alternatives are retained rather than merged into assumed mount
+precedence. Case-insensitive basename matches are explicitly distinguished
+from exact filename matches. Authored directory strings remain private;
+public provenance retains their hashes and definition IDs/names/offsets.
+
+This establishes authored references for 215 files, not executed playback or
+per-mission usage. Unmatched filenames may still occur in direct cinematic,
+script or other data paths; they are not classified as unused. Definition
+duplicates are retained, and the matcher does not choose a winning provider.
+Thirty-eight focused tests pass. The exact retail post-data handling and
+conversation/caller chains remain the next compatibility evidence requirements.

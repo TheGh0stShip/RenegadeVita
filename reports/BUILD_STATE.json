@@ -1,4 +1,17 @@
 {
+  "procedural_renderer_compile_prerequisites_20261003": {
+    "state": "HOST_ARM_ORIGINAL_OBJECT_AND_NATIVE_LINK_PASS_RUNTIME_INTEGRATION_OPEN",
+    "candidate": "A3.5-dev213",
+    "arm_compile_link_actions": 633,
+    "elf_sha256": "c83e2f5690d43dace484a2d5f1ed9a7c30dca09f74210c68ebc10c981299206c",
+    "checked_original_units": 2,
+    "registered_staging_patches": 308,
+    "renderer_absent_symbol_candidates": 14,
+    "renderer_strong_overlap_candidates": 9,
+    "reference_link_candidate": "A3.5-dev212",
+    "native_acceptance_gates_closed": 0,
+    "evidence": "reports/generated/procedural_renderer_closure.json"
+  },
   "empty_pcm_compatibility_20261003": {
     "state": "HOST_SANITIZERS_ALL_ARCHIVE_DECODE_ARM_LINK_PASS_NATIVE_AUDIO_UNVERIFIED",
     "candidate": "A3.5-dev212",

@@ -1,5 +1,20 @@
 # Live engineering progress
 
+## Original procedural renderer compiler and link prerequisites — 2026-10-03
+
+Six original dx8renderer GCC syntax failures are corrected by a hash-checked
+zero-fuzz patch. Host and ARM excluded-source checks compile both renderer and
+texture-worker units; CI now retains renderer compilation. The reusable checker
+reports original-object absent/overlapping symbols against a supplied ELF.
+For renderer versus Dev212: 78 undefined references, 14 absent candidates and
+nine strong overlaps. These are integration leads, not unique visual defects.
+Eight tool/staging tests and 25 additional inventory/consolidation checks pass;
+Dev213 focused contracts pass 473 tests and ARM compile/link passes 633 actions
+with matching ELF identities. No new package, launch or physical acceptance.
+Next: replace duplicate native owners and close original queue/resource/draw
+dependencies as one cluster. Native gates remain 0/10. See
+[renderer ledger](RENDERER_FEATURE_SWEEP.md).
+
 ## S1 renderer/audio boundary review batch — 2026-10-03
 
 Fifteen unchanged boundary bodies are classified with original caller and

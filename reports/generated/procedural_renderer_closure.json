@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "evidence_class": "host_and_arm_object_compile_plus_symbol_comparison",
+  "denominator": 2,
+  "reference_link_candidate": "A3.5-dev212",
+  "reference_elf_sha256": "626a0cd126bed9da99bac60c24d3cca07b59fe8b0fc38e3ef4640d1b5738a14d",
+  "rows": [
+    {
+      "source": "staging/ww3d2/textureloader.cpp",
+      "source_sha256": "e920476ce0921728bbf3b2e30a9f0c64de894b95096bcafb6019cbbfaba18ee3",
+      "host_compile_exit": 0,
+      "arm_compile_exit": 0,
+      "host_object_sha256": "b6043f66352a86de6d8546438f0551e9256efed81c36ff41d9ec155764dee4c5",
+      "arm_object_sha256": "dfde9d6c08b623ec723b02c78a1694dabba9e5e94997e3f089f69ea336579c19",
+      "link_closure": {
+        "undefined_symbols": 68,
+        "absent_symbol_candidates": [
+          "_Z15Get_WW3D_FormatR10WW3DFormatS0_RjRK5Targa",
+          "_Z19Targa_Error_HandlerlPKc",
+          "_Z24Get_Valid_Texture_Format10WW3DFormatb",
+          "_ZN10DX8Wrapper13_MainThreadIDE",
+          "_ZN11ThreadClass12Set_PriorityEi",
+          "_ZN11ThreadClass22_Get_Current_Thread_IDEv",
+          "_ZN11ThreadClass7ExecuteEv",
+          "_ZN12DDSFileClass21Copy_Level_To_SurfaceEj10WW3DFormatjjPhj",
+          "_ZN12DDSFileClass21Copy_Level_To_SurfaceEjP17IDirect3DSurface8",
+          "_ZN12TextureClass17Apply_New_SurfaceEP17IDirect3DTexture8b",
+          "_ZN12TextureClass30Invalidate_Old_Unused_TexturesEj",
+          "_ZN14MissingTexture20_Get_Missing_TextureEv",
+          "_ZN14MissingTexture23_Create_Missing_SurfaceEv",
+          "_ZN17IDirect3DTexture810UnlockRectEj",
+          "_ZN17IDirect3DTexture813GetLevelCountEv",
+          "_ZN17IDirect3DTexture88LockRectEjP14D3DLOCKED_RECTPK5_RECTm",
+          "_ZN18BitmapHandlerClass10Copy_ImageEPhjjj10WW3DFormatS0_jjjS1_PKhjb",
+          "_ZN18BitmapHandlerClass26Copy_Image_Generate_MipmapEjjPhj10WW3DFormatS0_jS1_S0_j",
+          "_ZN21ThumbnailManagerClass20ThumbnailManagerListE",
+          "_ZN21ThumbnailManagerClass23Peek_Thumbnail_InstanceERK11StringClass",
+          "_ZN21ThumbnailManagerClass4InitEv",
+          "_ZN21ThumbnailManagerClass6DeinitEv",
+          "_ZN5Targa10SetPaletteEPc",
+          "_ZNK12TextureClass13Get_ReductionEv"
+        ],
+        "strong_definition_overlap_candidates": [
+          "_ZN13TextureLoader20Suspend_Texture_LoadEv",
+          "_ZN13TextureLoader20TextureLoadSuspendedE",
+          "_ZN13TextureLoader21Continue_Texture_LoadEv",
+          "_ZN13TextureLoader24Flush_Pending_Load_TasksEv",
+          "_ZN13TextureLoader6UpdateEPFvvE"
+        ],
+        "scope": "Symbol presence only; not selected-unit, behavior or runtime proof."
+      },
+      "runtime_status": "excluded; integration unverified"
+    },
+    {
+      "source": "staging/ww3d2/dx8renderer.cpp",
+      "source_sha256": "25f0855a910f1a86e0d63c0e8337622f76485bdfa68506afdd809e02e00bd515",
+      "host_compile_exit": 0,
+      "arm_compile_exit": 0,
+      "host_object_sha256": "0adb379a1a21eae2bb8f67541e1ef30877d5558321f103a4f35ea11376ad1901",
+      "arm_object_sha256": "a2dfce7e95eb0d903dce3cd2f6e2f287e564391c5d9c50abc2e003215f955494",
+      "link_closure": {
+        "undefined_symbols": 78,
+        "absent_symbol_candidates": [
+          "_ZN10DX8Wrapper10Draw_StripEtttt",
+          "_ZN14MeshModelClass20Needs_Vertex_NormalsEv",
+          "_ZN16Debug_Statistics34Record_DX8_Skin_Polys_And_VerticesEii",
+          "_ZN16IndexBufferClass15AppendLockClassC1EPS_jj",
+          "_ZN16IndexBufferClass15AppendLockClassD1Ev",
+          "_ZN17VertexBufferClass15AppendLockClassC1EPS_jj",
+          "_ZN17VertexBufferClass15AppendLockClassD1Ev",
+          "_ZN19DX8RendererDebugger7EnabledE",
+          "_ZN21GenericMultiListClass18Internal_Add_AfterEP20MultiListObjectClassPKS0_b",
+          "_ZN23DX8PolygonRendererClassC1ERKS_P9MeshClass",
+          "_ZN23DX8PolygonRendererClassC1EjP9MeshClassP23DX8TextureCategoryClassjjb",
+          "_ZN24SortingVertexBufferClassC1Et",
+          "_ZN9MeshClass20Render_Material_PassEP17MaterialPassClassP16IndexBufferClass",
+          "__cxa_pure_virtual"
+        ],
+        "strong_definition_overlap_candidates": [
+          "TheDX8MeshRenderer",
+          "_ZN20DX8MeshRendererClass10InvalidateEv",
+          "_ZN20DX8MeshRendererClass18Add_To_Render_ListEP14DecalMeshClass",
+          "_ZN20DX8MeshRendererClass19Render_Decal_MeshesEv",
+          "_ZN20DX8MeshRendererClass5FlushEv",
+          "_ZN20DX8MeshRendererClassC1Ev",
+          "_ZN20DX8MeshRendererClassC2Ev",
+          "_ZN20DX8MeshRendererClassD1Ev",
+          "_ZN20DX8MeshRendererClassD2Ev"
+        ],
+        "scope": "Symbol presence only; not selected-unit, behavior or runtime proof."
+      },
+      "runtime_status": "excluded; integration unverified"
+    }
+  ],
+  "physical_acceptance": false,
+  "complete": false,
+  "limits": [
+    "Object compile does not prove runtime integration or original behavior.",
+    "Raw undefined/overlapping symbol candidates include aliases, runtime-library contracts and disabled paths; these are not unique defects.",
+    "No active native mesh path or retail assets changed."
+  ]
+}

@@ -10,7 +10,36 @@ import shlex
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-CHECKS = [('staging/ww3d2/textureloader.cpp', 'staging/ww3d2/texture.cpp')]
+CHECKS = [('staging/ww3d2/textureloader.cpp', 'staging/ww3d2/texture.cpp'),
+          ('staging/ww3d2/dx8renderer.cpp', 'staging/ww3d2/texture.cpp')]
+
+
+def symbol_inventory(output):
+    """Retain raw linker identities; aliases and weak definitions stay distinct."""
+    symbols = {}
+    for line in output.splitlines():
+        fields = line.split()
+        if len(fields) >= 2 and len(fields[-2]) == 1:
+            symbols[fields[-1]] = fields[-2]
+    return symbols
+
+
+def compare_symbols(undefined, defined, linked):
+    absent = sorted(set(undefined) - set(linked))
+    overlap = sorted(name for name, kind in defined.items()
+                     if kind in 'TDBR' and linked.get(name, '') and linked[name] in 'TDBR')
+    return {'undefined_symbols': len(undefined),
+            'absent_symbol_candidates': absent,
+            'strong_definition_overlap_candidates': overlap,
+            'scope': 'Symbol presence only; not selected-unit, behavior or runtime proof.'}
+
+
+def link_closure(nm, obj, elf):
+    def read(path, option):
+        return symbol_inventory(subprocess.check_output(
+            [nm, '--extern-only', option, str(path)], text=True))
+    return compare_symbols(read(obj, '--undefined-only'),
+                           read(obj, '--defined-only'), read(elf, '--defined-only'))
 
 
 def compile_command(commands, build_dir, template, source, output):
@@ -40,6 +69,9 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--target', required=True)
     parser.add_argument('--report', type=Path, required=True)
+    parser.add_argument('--link-elf', type=Path,
+                        help='Compare each compiled object with this matching target ELF')
+    parser.add_argument('--nm', default='nm', help='Target-compatible nm executable')
     args = parser.parse_args()
     build = args.build_dir.resolve()
     report = args.report.resolve()
@@ -64,7 +96,11 @@ def main():
                      'log': str(log),
                      'log_sha256': hashlib.sha256(log.read_bytes()).hexdigest(),
                      'runtime_status': 'excluded from current runtime graph; integration remains open'})
+        if result.returncode == 0 and args.link_elf is not None:
+            rows[-1]['link_closure'] = link_closure(args.nm, output, args.link_elf)
     report.write_text(json.dumps({'evidence_class': 'object compilation only',
+                                 'link_elf_sha256': hashlib.sha256(args.link_elf.read_bytes()).hexdigest()
+                                     if args.link_elf is not None else None,
                                  'denominator': len(rows), 'rows': rows}, indent=2) + '\n')
     return int(any(row['exit'] != 0 for row in rows))
 

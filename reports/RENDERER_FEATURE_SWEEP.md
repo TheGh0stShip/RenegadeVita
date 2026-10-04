@@ -1,5 +1,37 @@
 # S2 renderer features — inventory in progress
 
+## Original procedural renderer integration prerequisites — 2026-10-03
+
+The original dx8renderer.cpp now stages through a hash-checked zero-fuzz patch
+that fixes two MSVC for-scope dependencies and four multiword functional casts.
+The patched unit compiles on host and ARM. Existing excluded-source CI checks
+now compile it alongside textureloader.cpp, retaining runtime exclusion as an
+explicit open state. Neither original unit is newly selected into the runtime.
+
+The compile checker can compare each object against a matching linked ELF with
+`--link-elf` and a target-compatible `--nm`. It retains raw linker identities,
+separates absent references from strong-definition overlaps, and distinguishes
+weak/local definitions and constructor aliases. Eight tool/staging tests pass.
+The sanitized receipt is [procedural_renderer_closure.json](generated/procedural_renderer_closure.json).
+
+Against Dev212, the original renderer object has 78 undefined symbol references,
+14 absent candidates and nine strong-definition overlaps. Overlaps are the
+renderer singleton and native constructor/destructor, invalidation, decal queue
+and flush owners. Missing candidates include original material-pass rendering,
+append-buffer locks, polygon-renderer construction, sorting vertex buffers and
+normal calculation. These are linker leads, not 14 proven rendering defects.
+Runtime-library and diagnostic symbols remain distinct from visual behavior.
+
+Integration must replace duplicate native owners, close the original resource
+and polygon-renderer dependencies, restore original procedural registration and
+queue flushing, and reconcile native material/draw state. Original rigid-before-
+skin and delayed translucent ordering, reference lifetimes and deformation
+remain required. Active renderer behavior and physical pixels are unverified.
+Dev213 also passes all 633 native ARM compile/link actions and 473 focused
+contract tests. ELF SHA-256:
+`c83e2f5690d43dace484a2d5f1ed9a7c30dca09f74210c68ebc10c981299206c`.
+It has not been packaged or launched.
+
 DXT3 HUD reachability remains unresolved. A bounded literal-reference scan
 of all 18,651 supplied archive index records finds no occurrences of the four
 DXT3 icon basenames inside member payloads. Source searches likewise found no

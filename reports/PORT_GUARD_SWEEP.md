@@ -16,7 +16,7 @@ records still `unknown`. All statuses reconcile to the total.
 | Syntax parse uncertainties | 69 |
 | Linker wrapper references | 4 |
 
-The 310 patch files and 307 literal staging references are separate inventories.
+The 311 patch files and 308 literal staging references are separate inventories.
 Three files have no staging reference; they remain visible without being called
 retail exclusions. Historical hunk coordinates are not current staged line
 proof. Comments, strings, raw strings and continued comments are masked while

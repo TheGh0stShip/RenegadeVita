@@ -1505,6 +1505,7 @@
     "port/patches/ww3d2-a35-create-depth-timing.patch": "ab86f375cf13e6a7ad0b7ed2ae67fe58f1da8f4ca095e1f72d3304a4f5c4cb45",
     "port/patches/ww3d2-a35-dds-block-palette-precompute.patch": "ff4e77d00b38d330d11ca16473155ccb36fe277ddf85c296f313161d86d16e8c",
     "port/patches/ww3d2-a35-dds-disk-width.patch": "eeda3931f849000ebb3599ebccea1492cf4627845aac8165a3bd294520efa3a2",
+    "port/patches/ww3d2-a35-dx8renderer-gcc-syntax.patch": "027962c92ac86bce20036a7cfeedfb58dc85f795c955a5296bb6d31e93a9d7e0",
     "port/patches/ww3d2-a35-dynamic-buffer-growth.patch": "a84434277d0fe08226f54b716df49ec677eab24f89dd4dfeaa85d90bf9a69ea3",
     "port/patches/ww3d2-a35-format-table-init.patch": "42dab9fe7a22408c6e51e4a8510b641252d6804e0c41d00f2bf7a97eec9c64ee",
     "port/patches/ww3d2-a35-freetype-glyph-raster-safety.patch": "596ef83377b5a3d2fe295ed06e75fe742fb064f9aa03d26e27e9855abd0c0aea",
@@ -2645,7 +2646,7 @@
     "staging/ww3d2/dx8list.h": "d8f5100979ca7ae597d47c9d0949372e6b7ff4ffdd04331634c93d3accdb6c0b",
     "staging/ww3d2/dx8polygonrenderer.cpp": "5518f835161ec5d674b7fc476f515a080b5fff5ffb0e61097760d4a0f0dc9913",
     "staging/ww3d2/dx8polygonrenderer.h": "1bad36daa214510a2dfe30571c49152aab4576acc2f1b90416e845b7907380c7",
-    "staging/ww3d2/dx8renderer.cpp": "7fb5704ac01edc93f00129b17b25335b6bf9b4a3e05d8d9ed3a26ac66195ae57",
+    "staging/ww3d2/dx8renderer.cpp": "25f0855a910f1a86e0d63c0e8337622f76485bdfa68506afdd809e02e00bd515",
     "staging/ww3d2/dx8renderer.h": "fc9195ec0187bd6f297b5d582d614f223d91715092e2f35b1e68f8b11e19069f",
     "staging/ww3d2/dx8rendererdebugger.cpp": "9525c93c55ddca889a3ed10ae85380c243d2acba6140053aa5589899f53c766a",
     "staging/ww3d2/dx8rendererdebugger.h": "8e50ac002489186b5c98b63cb6b7b9dca95e751ecd6a17d4015737030c00e03a",
@@ -3691,7 +3692,7 @@
     "tools/run_a35_vita_physical_gate.sh": "fbc5ff0284650391969ad6445554f72a581aca074e50eca1c3ead498d80a0542",
     "tools/run_a35_vita_route_session.sh": "919337aebd28c45d59dad30536418d98efc25a6ac7da19cad28f3521a5e78c19",
     "tools/run_dev82_recorded_demo_session.sh": "f2520f099c808a1311ac65ca6df7bc0add4cffab9fabda064ca3fddb38c4ed1f",
-    "tools/stage_sources.sh": "54fd1a9a00645c71da6198b69e994aae18ac35b4fbf0b1b44d8fcb867a8eee22",
+    "tools/stage_sources.sh": "e57a7bad1b29729ba3aaa7fb0c803156162662c512d079d3591d9ea228280b80",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
     "tools/sweep_reviews/port_guards.json": "6d52b0a48da467fdea309b63f4abfd66e69549c33e6cbe0f403aa63b6dfdf1f1",
@@ -4630,6 +4631,11 @@
     {
       "path": "port/patches/ww3d2-a35-dds-disk-width.patch",
       "sha256": "eeda3931f849000ebb3599ebccea1492cf4627845aac8165a3bd294520efa3a2",
+      "stage_reference_count": 1
+    },
+    {
+      "path": "port/patches/ww3d2-a35-dx8renderer-gcc-syntax.patch",
+      "sha256": "027962c92ac86bce20036a7cfeedfb58dc85f795c955a5296bb6d31e93a9d7e0",
       "stage_reference_count": 1
     },
     {
@@ -127547,8 +127553,8 @@
       "stubbed_or_noop": 54,
       "unknown": 3470
     },
-    "patch_files": 310,
+    "patch_files": 311,
     "rows": 3531,
-    "stage_patch_references": 307
+    "stage_patch_references": 308
   }
 }

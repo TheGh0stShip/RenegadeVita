@@ -1062,6 +1062,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d-a35-original-decal-submission.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a37-prim-anim-sphere-gcc15.patch"
+test "$(sha256sum "$rv_stage/ww3d2/dx8renderer.cpp" | cut -d' ' -f1)" = \
+	"7fb5704ac01edc93f00129b17b25335b6bf9b4a3e05d8d9ed3a26ac66195ae57"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-dx8renderer-gcc-syntax.patch"
 test "$(sha256sum "$rv_stage/commando/dialogtests.cpp" | cut -d' ' -f1)" = \
 	"6addde867fc812575af68d3afd5ecf2bc407abad3fcd20a0880f963d453d5acc"
 test "$(sha256sum "$rv_stage/commando/dialogtests.h" | cut -d' ' -f1)" = \

@@ -99,7 +99,7 @@ def main():
         switches = re.findall(r'argc == 2 && strcmp\(argv\[1\], "([^"]+-selftest)"\) == 0', source)
         cases.extend([str(directory / 'a31_m00_interactive_runtime'), switch] for switch in switches)
         cases.extend([str(directory / 'a31_m00_interactive_runtime'), '--sorting-selftest', case]
-                     for case in ('basic', 'nodes', 'vertices', 'indices', 'zero', 'index-limit', 'vertex-limit', 'interleaved'))
+                     for case in ('basic', 'nodes', 'vertices', 'indices', 'zero', 'index-limit', 'vertex-limit', 'interleaved', 'strip'))
         # Exact asset-free package oracle retained by the TTFS contracts.
         sys.path.insert(0, str(ROOT))
         from tools.make_ttfs_fixture import FIXTURE_FILES

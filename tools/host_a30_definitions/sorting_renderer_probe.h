@@ -163,3 +163,67 @@ static bool Check_Original_Sorting_Renderer()
 	DX8Wrapper::Set_Transform(D3DTS_PROJECTION, old_projection);
 	return queued_refs && flushed && released;
 }
+
+static unsigned strip_observed;
+static bool strip_observation_valid;
+static void Observe_Strip_Submission(const RenegadeVitaRenderer::IndexedTriangleSubmission &submission)
+{
+	const uint16_t expected[] = {0,1,2,2,1,3,2,3,4};
+	++strip_observed;
+	strip_observation_valid = submission.triangle_count == 3 && submission.first_index == 0 &&
+		submission.base_vertex_index == 1 && submission.vertex_count == 5 &&
+		submission.index_capacity == 9 &&
+		std::memcmp(submission.index_data, expected, sizeof(expected)) == 0;
+}
+
+// Execute the actual DX8 strip entry point using original CPU-backed buffers.
+static bool Check_Native_Strip_Renderer()
+{
+	DX8VertexBufferClass *vertices = new DX8VertexBufferClass(
+		D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX2, 6);
+	DX8IndexBufferClass *indices = new DX8IndexBufferClass(7);
+	{
+		VertexBufferClass::WriteLockClass lock(vertices);
+		auto *v = static_cast<VertexFormatXYZNDUV2 *>(lock.Get_Vertex_Array());
+		std::memset(v, 0, sizeof(*v) * 6);
+		for (unsigned i = 0; i < 6; ++i) {
+			v[i].x = static_cast<float>(i % 2);
+			v[i].y = static_cast<float>(i / 2);
+			v[i].nz = 1.0f;
+			v[i].diffuse = 0xffffffffU;
+		}
+	}
+	{
+		IndexBufferClass::WriteLockClass lock(indices);
+		const uint16_t source[] = {99,99,0,1,2,3,4};
+		std::memcpy(lock.Get_Index_Array(), source, sizeof(source));
+	}
+	DX8Wrapper::Set_Transform(D3DTS_WORLD, Matrix4(true));
+	DX8Wrapper::Set_Transform(D3DTS_VIEW, Matrix4(true));
+	DX8Wrapper::Set_Transform(D3DTS_PROJECTION, Matrix4(true));
+	DX8Wrapper::Set_Vertex_Buffer(vertices);
+	DX8Wrapper::Set_Index_Buffer(indices, 1);
+	strip_observed = 0;
+	strip_observation_valid = false;
+	RenegadeVitaRenderer::Set_Host_Indexed_Submission_Observer(Observe_Strip_Submission);
+	const auto before = RenegadeVitaRenderer::Get_Statistics();
+	DX8Wrapper::Draw_Strip(2, 3, 0, 5);
+	const auto valid = RenegadeVitaRenderer::Get_Statistics();
+	bool passed = strip_observed == 1 && strip_observation_valid &&
+		valid.indexed_triangle_submissions == before.indexed_triangle_submissions + 3 &&
+		valid.rejected_indexed_submissions == before.rejected_indexed_submissions;
+	DX8Wrapper::Draw_Strip(5, 3, 0, 5);
+	DX8Wrapper::Draw_Strip(2, 0, 0, 5);
+	const auto after = RenegadeVitaRenderer::Get_Statistics();
+	passed = passed && strip_observed == 1 &&
+		after.indexed_triangle_submissions == valid.indexed_triangle_submissions &&
+		after.rejected_indexed_submissions == valid.rejected_indexed_submissions + 1;
+	RenegadeVitaRenderer::Set_Host_Indexed_Submission_Observer(NULL);
+	DX8Wrapper::Set_Vertex_Buffer(NULL);
+	DX8Wrapper::Set_Index_Buffer(NULL, 0);
+	passed = passed && vertices->Num_Refs() == 1 && indices->Num_Refs() == 1;
+	vertices->Release_Ref();
+	indices->Release_Ref();
+	std::printf("indexed.strip observed=%u winding_offsets_bounds_refs=%d\n", strip_observed, passed ? 1 : 0);
+	return passed;
+}

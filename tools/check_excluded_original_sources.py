@@ -11,7 +11,9 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 CHECKS = [('staging/ww3d2/textureloader.cpp', 'staging/ww3d2/texture.cpp'),
-          ('staging/ww3d2/dx8renderer.cpp', 'staging/ww3d2/texture.cpp')]
+          ('staging/ww3d2/dx8renderer.cpp', 'staging/ww3d2/texture.cpp'),
+          ('staging/ww3d2/dx8polygonrenderer.cpp', 'staging/ww3d2/texture.cpp'),
+          ('staging/ww3d2/statistics.cpp', 'staging/ww3d2/texture.cpp')]
 
 
 def symbol_inventory(output):
@@ -34,12 +36,46 @@ def compare_symbols(undefined, defined, linked):
             'scope': 'Symbol presence only; not selected-unit, behavior or runtime proof.'}
 
 
-def link_closure(nm, obj, elf):
+def selected_compile_objects(commands, build):
+    objects = {}
+    for line in commands.splitlines():
+        args = shlex.split(line)
+        if '-c' in args and '-o' in args:
+            output = Path(args[args.index('-o') + 1])
+            source = Path(args[args.index('-c') + 1])
+            objects[(build / output).resolve()] = (build / source).resolve()
+    return objects
+
+
+def target_object_definitions(nm, objects):
+    """Only inspect objects selected by current target commands, never a glob."""
+    result = {}
+    output = subprocess.check_output(
+        [nm, '-A', '--extern-only', '--defined-only', *map(str, objects)], text=True)
+    for line in output.splitlines():
+        fields = line.rsplit(None, 2)
+        if len(fields) != 3 or ':' not in fields[0]:
+            continue
+        path = Path(fields[0].rsplit(':', 1)[0])
+        if path not in objects:
+            continue
+        result.setdefault(fields[-1], []).append(
+            {'object': str(path), 'source': str(objects[path]), 'kind': fields[-2]})
+    return result
+
+
+def link_closure(nm, obj, elf, object_definitions=None):
     def read(path, option):
         return symbol_inventory(subprocess.check_output(
             [nm, '--extern-only', option, str(path)], text=True))
-    return compare_symbols(read(obj, '--undefined-only'),
-                           read(obj, '--defined-only'), read(elf, '--defined-only'))
+    result = compare_symbols(read(obj, '--undefined-only'),
+                             read(obj, '--defined-only'), read(elf, '--defined-only'))
+    if object_definitions is not None:
+        result['definitions_in_selected_objects'] = {
+            symbol: object_definitions[symbol] for symbol in result['absent_symbol_candidates']
+            if symbol in object_definitions}
+        result['scope'] += ' Selected object definitions distinguish ELF omission from missing providers.'
+    return result
 
 
 def compile_command(commands, build_dir, template, source, output):
@@ -79,6 +115,9 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
     commands = subprocess.check_output(
         ['ninja', '-C', str(build), '-t', 'commands', args.target], text=True)
+    selected_objects = selected_compile_objects(commands, build)
+    object_definitions = target_object_definitions(args.nm, selected_objects) \
+        if args.link_elf is not None else None
     rows = []
     for relative, template in CHECKS:
         source = ROOT / relative
@@ -97,10 +136,12 @@ def main():
                      'log_sha256': hashlib.sha256(log.read_bytes()).hexdigest(),
                      'runtime_status': 'excluded from current runtime graph; integration remains open'})
         if result.returncode == 0 and args.link_elf is not None:
-            rows[-1]['link_closure'] = link_closure(args.nm, output, args.link_elf)
+            rows[-1]['link_closure'] = link_closure(args.nm, output, args.link_elf, object_definitions)
     report.write_text(json.dumps({'evidence_class': 'object compilation only',
                                  'link_elf_sha256': hashlib.sha256(args.link_elf.read_bytes()).hexdigest()
                                      if args.link_elf is not None else None,
+                                 'selected_object_denominator': len(selected_objects),
+                                 'target_commands_sha256': hashlib.sha256(commands.encode()).hexdigest(),
                                  'denominator': len(rows), 'rows': rows}, indent=2) + '\n')
     return int(any(row['exit'] != 0 for row in rows))
 

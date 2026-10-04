@@ -2,16 +2,16 @@
 
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
-source contains 3,531 records with 54 fallback/diagnostic functions reviewed as
+source contains 3,533 records with 54 fallback/diagnostic functions reviewed as
 `stubbed_or_noop`, 1 capability constructor as `boundary_replaced`, 6
-guards as `disabled_by_port_guard`, and 3,470
+guards as `disabled_by_port_guard`, and 3,472
 records still `unknown`. All statuses reconcile to the total.
 
 | Inventory kind | Records |
 | --- | ---: |
 | Changed patch guards, including removals | 513 |
 | Current port/staged source guards | 816 |
-| Port function and lambda definitions | 1,643 |
+| Port function and lambda definitions | 1,645 |
 | Port macro definitions | 486 |
 | Syntax parse uncertainties | 69 |
 | Linker wrapper references | 4 |

@@ -16,11 +16,13 @@
 #include "sortingrenderer.h"
 #include "texture.h"
 #include "texture_upload_contract.h"
+#include "triangle_strip_indices.h"
 #include "targa.h"
 #include "vertmaterial.h"
 #include "ww3dformat.h"
 
 #include <new>
+#include <memory>
 #include <stdio.h>
 #include <string.h>
 #include <vector>
@@ -1353,7 +1355,7 @@ void Apply_Indexed_Texture_Coordinate_State(VertexMaterialClass *material)
 
 void Submit_Bound_Triangles(const RenderStateStruct &state,
 	unsigned short start_index, unsigned short polygon_count,
-	unsigned short min_vertex_index, unsigned short vertex_count)
+	unsigned short min_vertex_index, unsigned short vertex_count, bool strip = false)
 {
 	if (polygon_count == 0U) {
 		return;
@@ -1407,6 +1409,21 @@ void Submit_Bound_Triangles(const RenderStateStruct &state,
 	submission.index_capacity = index_handle->Get_Size() / sizeof(uint16_t);
 	submission.first_index = static_cast<uint32_t>(start_index) + state.iba_offset;
 	submission.triangle_count = polygon_count;
+	std::unique_ptr<uint16_t[]> expanded_indices;
+	if (strip) {
+		const size_t expanded_count = static_cast<size_t>(polygon_count) * 3U;
+		expanded_indices.reset(new (std::nothrow) uint16_t[expanded_count]);
+		if (!expanded_indices || !RenegadeVitaRenderer::Expand_Triangle_Strip(
+			submission.index_data, submission.index_capacity, submission.first_index,
+			polygon_count, expanded_indices.get(), expanded_count)) {
+			RenegadeVitaRenderer::Reject_Indexed_Submission(
+				"strip index bounds or allocation failed", submission.vertex_format);
+			return;
+		}
+		submission.index_data = expanded_indices.get();
+		submission.index_capacity = static_cast<uint32_t>(expanded_count);
+		submission.first_index = 0U;
+	}
 	submission.base_vertex_index = static_cast<uint32_t>(state.index_base_offset) +
 		state.vba_offset;
 	submission.min_vertex_index = effective_min_vertex;
@@ -2572,4 +2589,13 @@ void DX8Wrapper::Draw_Triangles(unsigned short start_index,
 	Apply_Render_State_Changes();
 	Submit_Bound_Triangles(render_state, start_index, polygon_count,
 		min_vertex_index, vertex_count);
+}
+
+void DX8Wrapper::Draw_Strip(unsigned short start_index,
+	unsigned short polygon_count, unsigned short min_vertex_index,
+	unsigned short vertex_count)
+{
+	Apply_Render_State_Changes();
+	Submit_Bound_Triangles(render_state, start_index, polygon_count,
+		min_vertex_index, vertex_count, true);
 }

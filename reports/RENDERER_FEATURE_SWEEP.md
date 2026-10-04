@@ -279,3 +279,19 @@ Fog, alpha/stencil/clip behavior, multitexture operations, environment/bump/cube
 maps, specular, point sprites, depth bias and render targets remain mapping work.
 
 Machine inventory: [renderer.json](generated/sweeps/renderer.json).
+
+Procedural-renderer dependency batch: original textureloader, dx8renderer,
+dx8polygonrenderer and statistics units compile independently on host and ARM.
+The symbol checker now distinguishes definitions in currently selected objects
+from final ELF presence; an absent ELF symbol alone does not prove a missing
+provider or discarded section. Original material-queue methods pass three
+sanitized ownership/order cycles with allocator and draw test doubles.
+
+The native DX8 strip entry point now expands alternating winding into the
+existing indexed submission boundary, retaining degenerate triangles and
+original vertex offsets. Six focused contracts pass. The full original-engine
+host replay passes winding, offsets, bounds rejection and reference release.
+Dev214 ARM compilation/link passed six incremental actions; ELF SHA-256 is
+`6daeb9be454d2b6f5acc2c175a113173418bd8be4c88b31d8c90f359ae335d46`.
+The same full-engine replay passes ASan/LSan/UBSan. Original procedural renderer
+activation, GPU pixels and physical Vita/PSTV acceptance remain open.

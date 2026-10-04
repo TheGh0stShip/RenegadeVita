@@ -8991,3 +8991,15 @@ selected by Dev209 and mentioned in its map, 233 not selected.
 Evidence: authored selection/map distinction test passes. No runtime change.
 Next: absent upstream units, registrars, section retention and retail factory IDs.
 Blocker: none for discovery; physical acceptance remains unverified.
+# Renderer dependency and strip boundary batch — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: restored DX8 triangle-strip boundary; original-engine replay passes
+winding, offsets, invalid bounds and buffer ownership under ASan/LSan/UBSan.
+Six focused contracts pass; four excluded original dependency units compile
+on host/ARM. Dev214 native compile/link passes six incremental actions.
+Evidence: renderer ledger and generated procedural dependency receipt.
+Next: resolve original procedural-renderer providers and duplicate ownership.
+Blocker: none for source work; native pixels and mission acceptance remain open.

@@ -26,7 +26,7 @@
     "staging/commando/console.cpp": "91eb5ecf60bb9f5ef1f6a542652a59a9f179b221107cce342761c2c6991b5bad",
     "staging/commando/consolefunction.cpp": "a686829dc324e66de19f3f86ca7689e19ef6f9af9ee0cf329c3ab1f9126e7cc0",
     "staging/commando/gamemode.cpp": "011f8e5cd9941f8a901467a3ca49065ec166734ba7e12dec9525b8ebc6db582f",
-    "port/renderer/vita/ww3d_dx8_boundary.cpp": "4ef2cbcccfab1d33d18fc22346a0178be5775289f7238cac46483ef9b1cc4e50",
+    "port/renderer/vita/ww3d_dx8_boundary.cpp": "80872f81616dfae73f47837e01d73a76fb74bd221c5b6c58887f5b3c7c22770b",
     "port/platform/vita/a30_static_world_boundary.cpp": "3a79d8885bab27b5402af04c5aaf5a39d03bcca2fe81c469fd357e3436e0a858",
     "staging/ww3d2/texproject.cpp": "1463d624ded9b407bff438336126a936543be52e7c0729910520c8ef259b0d34",
     "staging/ww3d2/dx8wrapper.cpp": "8f9343508d7cd9eec5c9d1d1833a334bc93a84ede6d71876f4c575aff64ecddc",

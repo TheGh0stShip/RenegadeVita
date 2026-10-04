@@ -1,5 +1,11 @@
 # Renegade Vita port status
 
+2026-10-03 Dev210 supersedes Dev209 as the latest canonical package: host gates,
+661 ARM actions, artifact/diagnostics validation and Vita3K install-only hash
+verification pass. The bounded audio correction recovers 255 WAVs; eleven
+decode cases remain open. No launch or physical acceptance. See
+[audio compatibility evidence](ALL_ARCHIVE_WAVE_SWEEP.md).
+
 2026-10-03 compile closure supersedes historical uncompiled statements below:
 31 host binaries,60 ASan/UBSan invocations,5 TSan probes and793 Python tests
 pass. Fast ARM links with652 source/object hash pairs;17 current state fields

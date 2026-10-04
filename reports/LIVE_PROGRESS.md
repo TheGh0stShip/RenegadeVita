@@ -1,5 +1,16 @@
 # Live engineering progress
 
+## Bounded WAV compatibility and Dev210 package — 2026-10-03
+
+The provider now decodes 10,230 of 10,241 archive WAV entries under sanitizers,
+recovering 255 rejections while retaining bounded payload checks. Ten short
+IMA tails and one empty PCM sample remain open. Forty-five focused tests,
+fast ARM compile/link and the 661-action canonical Dev210 build pass.
+Package identity, diagnostics, manifests and Vita3K installed SELF agree.
+No launch or physical device access occurred; native gates remain 0/10.
+The audio fix is pushed as 1e96055; hygiene and TSan CI pass, with other jobs
+still pending at this checkpoint. See [WAV sweep](ALL_ARCHIVE_WAVE_SWEEP.md).
+
 ## Original Miles WAV contract comparison — 2026-10-03
 
 Identity-pinned original DLL accepts eight authored PCM/IMA WAV-info fixtures;

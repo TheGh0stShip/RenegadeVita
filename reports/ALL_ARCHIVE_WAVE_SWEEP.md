@@ -209,7 +209,8 @@ All eight authored original-provider inspection vectors now decode through the
 host provider. Forty-five focused tests pass, including truncated-payload,
 duplicate-chunk, pre-data-malformation and post-data-fact counterexamples.
 ASan/LSan/UBSan report no findings in the all-archive run. Fast ARM compile/link
-passes all 635 actions; the canonical Dev210 build remains pending. Native
+passes all 635 actions; canonical Dev210 also passes all 661 ARM actions,
+host validation, package checks and Vita3K install-only verification. Native
 playback, waveform agreement and audio timing remain unverified.
 
 The regenerated receipts supersede the pre-correction decode totals above;
@@ -229,3 +230,9 @@ of guard pattern. Receipt: `generated/retail_adpcm_contract.json`.
 This proves another compatibility difference, not the correct retail waveform
 or safety of the original unbounded API. The ten 512-byte retail block cases
 remain unresolved. The native decoder is unchanged by this reference probe.
+
+Dev210 identity: ELF `07603eefcdfebf042ebc69674273136cfcea800c78313ecd87b2851b35aaa177`,
+SELF `c9b1bbd8aa1eebc2e965957fff6967938de85818d10680a97d12987f29f3c87a`,
+VPK `12f6a244c46673fd21cb68c8a103fe12569e013dfe73890a47fcf6fc5353efbd`.
+All seven packaged files match the installed title. Retail data is unchanged;
+no emulator launch, physical deployment or native acceptance occurred.

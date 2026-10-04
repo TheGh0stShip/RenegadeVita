@@ -1,4 +1,17 @@
 {
+  "wave_compatibility_20261003": {
+    "state": "HOST_SANITIZERS_ARM_CANONICAL_PACKAGE_PASS_NATIVE_AUDIO_UNVERIFIED",
+    "canonical_candidate": "A3.5-dev210",
+    "canonical_package_passed": true,
+    "arm_build_actions": 661,
+    "vita3k_install": "INSTALLED_NOT_LAUNCHED_SELF_HASH_VERIFIED",
+    "wave_entries": 10241,
+    "decoded_wave_entries": 10230,
+    "remaining_rejections": 11,
+    "recovered_wave_entries": 255,
+    "native_acceptance_gates_closed": 0,
+    "evidence": "reports/ALL_ARCHIVE_WAVE_SWEEP.md"
+  },
   "compile_closure_20261003": {
     "state": "HOST_ARM_CANONICAL_PACKAGE_AND_CLEAN_CI_PASS_NATIVE_RUNTIME_UNVERIFIED",
     "canonical_candidate": "A3.5-dev209",

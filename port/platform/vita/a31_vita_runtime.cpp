@@ -1,5 +1,6 @@
 #include "a31_vita_runtime.h"
 #include "renegade_user_root.h"
+#include "vita_runtime_log.h"
 
 #include "a30_vita_runtime.h"
 #include "a31_interactive_runtime_policy.h"
@@ -3617,7 +3618,14 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					"visible status remains until vitaGL replaces the framebuffer");
 				A30_Vita_Log("A3.5 startup: retaining bootstrap framebuffer through WW3D::Init to avoid black display handoff\n");
 				// Interactive rendering requires original dazzle type/lensflare setup.
+#if defined(RENEGADE_D3DVITA)
+				Vita_Append_A22_Runtime_Breadcrumb("d3dvita", "WW3D::Init entry");
+#endif
 				ww3d_initialized = WW3D::Init(NULL, NULL, false) == WW3D_ERROR_OK;
+#if defined(RENEGADE_D3DVITA)
+				Vita_Append_A22_Runtime_Breadcrumb("d3dvita", "WW3D::Init result=%d",
+					ww3d_initialized ? 1 : 0);
+#endif
 				if (!ww3d_initialized) {
 					A30_Vita_Log("A3.1 interactive: WW3D init FAIL\n");
 					break;
@@ -3625,10 +3633,14 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #if defined(RENEGADE_D3DVITA)
 				// The original DX8Wrapper creates its Direct3D 8 device when a
 				// render device is selected: full screen at the display size.
-				if (WW3D::Set_Render_Device(0,
-						static_cast<int>(RenegadeVitaRenderer::DISPLAY_WIDTH),
-						static_cast<int>(RenegadeVitaRenderer::DISPLAY_HEIGHT),
-						32, 0, false) != WW3D_ERROR_OK) {
+				Vita_Append_A22_Runtime_Breadcrumb("d3dvita", "Set_Render_Device entry");
+				const WW3DErrorType render_device = WW3D::Set_Render_Device(0,
+					static_cast<int>(RenegadeVitaRenderer::DISPLAY_WIDTH),
+					static_cast<int>(RenegadeVitaRenderer::DISPLAY_HEIGHT),
+					32, 0, false);
+				Vita_Append_A22_Runtime_Breadcrumb("d3dvita", "Set_Render_Device result=%d",
+					static_cast<int>(render_device));
+				if (render_device != WW3D_ERROR_OK) {
 					A30_Vita_Log("[d3dvita] WW3D::Set_Render_Device FAIL\n");
 					break;
 				}

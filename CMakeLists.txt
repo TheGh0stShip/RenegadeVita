@@ -672,6 +672,8 @@ if(RENEGADE_GRAPHICS_D3DVITA)
   # every D3D8 type; it keeps its own exceptions-enabled flags.
   set(VITAD3D_BUILD_TESTS OFF CACHE BOOL "" FORCE)
   set(VITAD3D_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
+  # GXM stage markers in ux0:/data/vitad3d/runtime.log while bringing up.
+  set(VITAD3D_VITA_DIAGNOSTICS ON CACHE BOOL "" FORCE)
   set(VITAD3D_WIN32_TYPES_HEADER "renegade_d3dvita_win32_types.h" CACHE STRING "" FORCE)
   set(VITAD3D_WIN32_TYPES_INCLUDE_DIRS
     "${RENEGADE_ROOT}/port/d3dvita/include;${RENEGADE_COMPAT}" CACHE STRING "" FORCE)

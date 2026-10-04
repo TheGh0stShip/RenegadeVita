@@ -1,0 +1,44 @@
+# VitaDevBridge adapter for the Renegade Vita VitaD3D variant (RVDX00001)
+# on the PSTV. External project: evidence is specific to this variant.
+# Build: see port/d3dvita/README.md (build/vita-d3dvita-full).
+schema_version = 1
+
+[project]
+name = "renegade-vita-d3dvita"
+root = "/home/steve/projects/RenegadeVitaBuilder/workspace/d3dvita-demo"
+title_id = "RVDX00001"
+
+[build]
+command = ["ninja", "-C", "build/vita-d3dvita-full"]
+working_directory = "."
+
+[artifacts]
+executable = "build/vita-d3dvita-full/eboot.bin"
+package = "build/vita-d3dvita-full/RenegadeVita-A3.5-dev1-d3dvita.vpk"
+debug_elf = "build/vita-d3dvita-full/RenegadeVitaA31.symbols.elf"
+symbols = []
+
+# Refresh after every rebuild (sha256sum of the three artifacts).
+[identity]
+executable_sha256 = "810c05661ab0938c833646aea3424340b696d8f98be0879e2ce75984f97ee5f1"
+package_sha256 = "9803c5017678df6460ce19ee184e2b4ae30687ebbb73275ff1de9cc93c9c381f"
+debug_elf_sha256 = "40ae831a8ab2bcc2f0016fd7fb02c350569f97559487c13b2eb7bc88415d412e"
+
+[vita]
+installed_executable = "ux0:/app/RVDX00001/eboot.bin"
+# VitaD3D's stage log (ux0:/data/vitad3d/runtime.log) is pulled separately.
+runtime_logs = ["ux0:/data/renegade/user-d3dvita/logs/a35-dev1-d3dvita-runtime.log"]
+captures = []
+crash_roots = ["ux0:/data"]
+
+[evidence]
+output_directory = "build/vdb-run-bundles"
+
+[expectations]
+required_runtime_markers = ["WW3D::Init entry"]
+maximum_new_crashes = 0
+
+[scenario]
+name = "rvdx-startup"
+timeout_seconds = 120
+inputs = ["wait exit 100s"]

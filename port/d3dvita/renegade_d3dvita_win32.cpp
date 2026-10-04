@@ -9,6 +9,9 @@
 #include <strings.h>
 
 #include "a30_vita_runtime.h"
+#include "vita_runtime_log.h"
+
+#include <psp2/kernel/sysmem.h>
 
 namespace {
 
@@ -17,11 +20,34 @@ const int kDisplayHeight = 544;
 // Any non-null token identifies the one module.
 char g_d3d8_module;
 
+void Log_Free_Memory(const char *stage)
+{
+	SceKernelFreeMemorySizeInfo memory = {};
+	memory.size = sizeof(memory);
+	const int result = sceKernelGetFreeMemorySize(&memory);
+	Vita_Append_A22_Runtime_Breadcrumb("d3dvita",
+		"free memory %s: rc=%08X user=%d cdram=%d phycont=%d", stage,
+		static_cast<unsigned>(result), memory.size_user, memory.size_cdram,
+		memory.size_phycont);
+}
+
+// DX8Wrapper resolves Direct3DCreate8 through GetProcAddress; this records
+// the call and its result durably before returning VitaD3D's object.
+IDirect3D8 *WINAPI Logged_Direct3DCreate8(UINT sdk_version)
+{
+	Log_Free_Memory("before Direct3DCreate8");
+	IDirect3D8 *d3d = Direct3DCreate8(sdk_version);
+	Vita_Append_A22_Runtime_Breadcrumb("d3dvita", "Direct3DCreate8 sdk=%u result=%p",
+		static_cast<unsigned>(sdk_version), static_cast<void *>(d3d));
+	return d3d;
+}
+
 } // namespace
 
 HMODULE LoadLibrary(const char *name)
 {
 	if (name != NULL && strcasecmp(name, "D3D8.DLL") == 0) {
+		Vita_Append_A22_Runtime_Breadcrumb("d3dvita", "LoadLibrary D3D8.DLL");
 		return &g_d3d8_module;
 	}
 	A30_Vita_Log("[d3dvita] LoadLibrary unavailable: %s\n", name ? name : "(null)");
@@ -31,7 +57,7 @@ HMODULE LoadLibrary(const char *name)
 FARPROC GetProcAddress(HMODULE module, const char *name)
 {
 	if (module == &g_d3d8_module && name != NULL && strcmp(name, "Direct3DCreate8") == 0) {
-		return reinterpret_cast<FARPROC>(&Direct3DCreate8);
+		return reinterpret_cast<FARPROC>(&Logged_Direct3DCreate8);
 	}
 	return NULL;
 }

@@ -10,7 +10,7 @@ SWEEPS = ('port_guards', 'renderer', 'link', 'retail', 'scripts', 'systems',
           'performance', 'external')
 ISSUES = dict(zip(SWEEPS, range(5, 13)))
 SUPPLEMENTS = ('level_chunks', 'spatial_presence', 'visibility_bounds',
-               'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names')
+               'w3d_chunks', 'w3d_consumers', 'dds_formats', 'w3d_references', 'hlod_names', 'wave_headers')
 ISSUES.update({name: 8 for name in SUPPLEMENTS})
 STATUSES = {'original_compiled', 'original_patched', 'boundary_replaced',
             'stubbed_or_noop', 'disabled_by_port_guard', 'excluded_with_proof',
@@ -72,6 +72,19 @@ def root_records(name, value):
             measured[row['kind']]=measured.get(row['kind'],0)+row['reference_occurrences']
         if value['total']!=len(rows) or measured!=value['reference_counts']:
             raise ValueError('W3D reference denominator mismatch')
+    elif name=='wave_headers':
+        fields=('wave_members','header_finding_members','block_finding_members')
+        if value['total']!=len(rows) or totals!={k:sum(r[k] for r in rows) for k in fields}:
+            raise ValueError('WAV denominator mismatch')
+        if value['counts']!=dict(Counter(r['status'] for r in rows)):
+            raise ValueError('WAV status reconciliation failed')
+        for row in rows:
+            if row['wave_members']!=sum(f['members'] for f in row['formats']):
+                raise ValueError('WAV format partition mismatch')
+            for field, findings in (('header_finding_members','header_findings'),
+                                    ('block_finding_members','block_findings')):
+                if row[field]!=sum(bool(f[findings]) for f in row['findings']):
+                    raise ValueError('WAV finding partition mismatch')
     elif name=='hlod_names':
         if value['total']!=len(rows) or totals['child_occurrences']!=sum(r['child_occurrences'] for r in rows):
             raise ValueError('HLOD name denominator mismatch')
@@ -146,7 +159,7 @@ def markdown(result):
         return str(value).replace('|', '\\|').replace('\n', ' ')
     lines = ['# Full port gap register', '',
              'Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`',
-             'status record in the eight sweeps and eight supplements is retained, including nested records.',
+             f'status record in the eight sweeps and {len(SUPPLEMENTS)} supplements is retained, including nested records.',
              'Supplementary inventories overlap; their counts are not unique missing features.',
              'Rows count evidence records, not unique defects. Unknown impact is unclassified;',
              'it is not silently ranked as a confirmed crash or progression blocker.', '',

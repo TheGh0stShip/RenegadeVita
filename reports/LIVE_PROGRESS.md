@@ -1,5 +1,15 @@
 # Live engineering progress
 
+## S4 WAV reconciliation and compiled boundary check — 2026-10-03
+
+Completed: 31 archive rows and 265 nested findings reconciled into 39,994
+overlapping gap records; format, status and finding partitions fail closed.
+Evidence: 34 Python tests and compiled audio-provider ASan/LSan/UBSan regression
+pass. Strict playback decoding rejects oversized RIFF; duration inspection has
+a separate explicit truncation mode. No engine change or runtime acceptance.
+Next: actual chunk bounds and active retail callers for the 265 findings.
+See [WAV sweep](ALL_ARCHIVE_WAVE_SWEEP.md). Native gates remain 0/10.
+
 ## S4 all-archive WAV metadata batch — 2026-10-03
 
 Renegade Vita — v3.5 active

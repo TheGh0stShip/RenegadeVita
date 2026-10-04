@@ -32,6 +32,22 @@ python3 -m tools.audit_all_wave_headers --data "$RENEGADE_RETAIL_ROOT" --output 
 python3 -m unittest tools.test_audit_all_wave_headers tools.test_mission_wave_headers
 ```
 
-Next: reconcile this supplemental denominator into the consolidated gap
-register, then inspect original decoder behavior for malformed RIFF lengths
-using authored regression cases before considering a provider change.
+The consolidated register now retains these 31 archive rows and 265 nested
+findings. It reconciles archive status counts, WAV format partitions and both
+finding partitions; inconsistent receipts fail generation. The register totals
+39,994 overlapping evidence records, including 39,814 unknown records. This is
+not a count of unique defects.
+
+Current provider review: `Inspect_Wave` in
+`port/audio/vita/renegade_wave_decoder.cpp` rejects oversized RIFF declarations
+by default. `Decode_Wave_With_Info` uses that strict default. Duration-only
+inspection can explicitly allow truncated data; it does not decode PCM.
+The compiled `tools.test_vita_audio_provider` regression passes with ASan,
+LeakSanitizer and UBSan, including strict truncated-payload rejection and the
+bounded 3D oversized-RIFF case. The 34 focused inventory/parser/register tests
+also pass. No provider behavior was changed.
+
+These authored regressions prove the current rejection boundary, not retail
+compatibility. Next: classify the 265 original files by actual chunk bounds,
+trace their active callers and compare documented retail behavior before
+considering any compatibility change. Keep malformed data bounded throughout.

@@ -1,7 +1,7 @@
 # Full port gap register
 
 Initial consolidation; Phase 1 remains incomplete. Every non-`original_compiled`
-status record in the eight sweeps and eight supplements is retained, including nested records.
+status record in the eight sweeps and 9 supplements is retained, including nested records.
 Supplementary inventories overlap; their counts are not unique missing features.
 Rows count evidence records, not unique defects. Unknown impact is unclassified;
 it is not silently ranked as a confirmed crash or progression blocker.
@@ -28,6 +28,7 @@ Reproduce with `python3 -m tools.consolidate_sweep_gaps`.
 | dds_formats | 3463 | 3463 | False |
 | w3d_references | 62 | 77 | False |
 | hlod_names | 31 | 98 | False |
+| wave_headers | 31 | 296 | False |
 
 Original owners and detailed evidence remain at the inventory JSON pointers.
 Clusters require caller/mode review and required evidence classes before fixes.
@@ -39737,3 +39738,299 @@ is not counted twice. Severity escalation and per-gap dependencies remain open.
 | w3d_references /rows/7 | /rows/7 | unknown | unclassified | C&C_City_Flying.mix |
 | w3d_references /rows/8 | /rows/8 | unknown | unclassified | C&C_Complex.mix |
 | w3d_references /rows/9 | /rows/9 | unknown | unclassified | C&C_Complex.mix |
+| wave_headers /rows/0 | /rows/0 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/1 | /rows/1 | unknown | unclassified | C&C_Canyon.mix |
+| wave_headers /rows/10 | /rows/10 | unknown | unclassified | C&C_Under.mix |
+| wave_headers /rows/11 | /rows/11 | unknown | unclassified | C&C_Volcano.mix |
+| wave_headers /rows/12 | /rows/12 | unknown | unclassified | C&C_Walls.mix |
+| wave_headers /rows/13 | /rows/13 | unknown | unclassified | C&C_Walls_Flying.mix |
+| wave_headers /rows/14 | /rows/14 | unknown | unclassified | M00_Tutorial.mix |
+| wave_headers /rows/15 | /rows/15 | unknown | unclassified | M01.mix |
+| wave_headers /rows/16 | /rows/16 | unknown | unclassified | M02.mix |
+| wave_headers /rows/17 | /rows/17 | unknown | unclassified | M03.mix |
+| wave_headers /rows/18 | /rows/18 | unknown | unclassified | M04.mix |
+| wave_headers /rows/19 | /rows/19 | unknown | unclassified | M05.mix |
+| wave_headers /rows/2 | /rows/2 | unknown | unclassified | C&C_City.mix |
+| wave_headers /rows/20 | /rows/20 | unknown | unclassified | M06.mix |
+| wave_headers /rows/21 | /rows/21 | unknown | unclassified | M07.mix |
+| wave_headers /rows/22 | /rows/22 | unknown | unclassified | M08.mix |
+| wave_headers /rows/23 | /rows/23 | unknown | unclassified | M09.mix |
+| wave_headers /rows/24 | /rows/24 | unknown | unclassified | M10.mix |
+| wave_headers /rows/25 | /rows/25 | unknown | unclassified | M11.mix |
+| wave_headers /rows/26 | /rows/26 | unknown | unclassified | M13.mix |
+| wave_headers /rows/27 | /rows/27 | unknown | unclassified | Skirmish00.mix |
+| wave_headers /rows/28 | /rows/28 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/0 | m00gnod_gcon0007r3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/1 | m00gnod_hesx0006i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/10 | mxxdsgn_dsgn0093i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/100 | m05dsgn_dsgn0043a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/101 | m01vggb_dsgn0044r1eval_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/102 | mxxdsgn_dsgn0099i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/103 | m00gnod_kill0006i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/104 | m00gnod_secx0009r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/105 | m00gsrs_kisq0010i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/106 | m00gnod_hesx0028i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/107 | mxxdsgn_dsgn0010i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/108 | mxxdsgn_dsgn0130i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/109 | m00gnod_gcon0017r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/11 | m00gnod_gcon0018i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/110 | m00gnod_kill0009r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/111 | m00gnod_kill0024r2ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/112 | m00gnod_secx0010a3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/113 | m00gsrs_kisq0009i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/114 | m00gnod_hesx0031i3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/115 | m00gnod_hesx0027r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/116 | m00gnod_gcon0026i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/117 | m05dsgn_dsgn0045i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/118 | mxxdsgn_dsgn0121i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/119 | m01nomg_dsgn0203i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/12 | m00gnod_kill0010a2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/120 | m00gnod_kill0019r3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/121 | m00gnod_secx0028i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/122 | mxxdsgn_dsgn0088i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/123 | m00asqr_kill0024i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/124 | m00gnod_gcon0008i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/125 | m04dsgn_dsgn0057i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/126 | mxxdsgn_dsgn0013i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/127 | mxxdsgn_dsgn0085i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/128 | m00gnod_secx0007r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/129 | mxxdsgn_dsgn0063i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/13 | mxxdsgn_dsgn0008i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/130 | m01dsgn_dsgn0282r1eval_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/131 | m00gnod_gcon0042r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/132 | mxxdsgn_dsgn0071i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/133 | m05dsgn_dsgn0048i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/134 | m05dsgn_dsgn0035i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/135 | m06dsgn_dsgn0048i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/136 | m00avis_kill0036i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/137 | m00gnod_hesx0001i2ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/138 | m00bmsf_kill0024i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/139 | m00gnod_secx0004r3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/14 | m00gnod_secx0006i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/140 | m00gnod_kill0026i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/141 | m11dsgn_dsgn0056r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/142 | m00gnod_secx0018i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/143 | m00gnod_kill0017r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/144 | mxxdsgn_dsgn0086i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/145 | m00gnod_hesx0045a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/146 | m00gnod_hesx0003i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/147 | m00gnod_secx0017r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/148 | m00bntu_kill0024i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/149 | m00gnod_gcon0006i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/15 | m00gnod_kill0009r3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/150 | m05dsgn_dsgn0036i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/151 | m00gnod_kill0029r3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/152 | m00gnod_hesx0041i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/153 | mxxdsgn_dsgn0056i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/154 | m00gnod_secx0044r3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/155 | m00avis_kick0038i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/156 | m00gnod_kill0020a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/157 | m00gnod_kill0045a3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/158 | m00gnod_kill0003i3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/159 | m00gnod_kill0007r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/16 | m00gnod_hesx0019r3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/160 | m00gnod_gcon0034r1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/161 | m00gnod_secx0020a3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/162 | mxxdsgn_dsgn0044i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/163 | m00gnod_hesx0029r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/164 | m04dsgn_dsgn0059a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/165 | m00gsrs_kibv0010i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/166 | m00gnod_kill0035a3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/167 | m06dsgn_dsgn0059a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/168 | m00gnod_hesx0009r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/169 | m06dsgn_dsgn0033i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/17 | m00gnod_hesx0027r3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/170 | m00gnod_secx0016i3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/171 | m00gnod_gcon0044r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/172 | m00gnod_secx0002r3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/173 | m01ncxk_dsgn0217a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/174 | m00pwvr_aqob0024i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/175 | m00gnod_secx0010a2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/176 | m00gnod_gcon0018i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/177 | mxxdsgn_dsgn0066i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/178 | m01eval_dsgn0252i1eval_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/179 | m00gnod_hesx0028i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/18 | m00gnod_gcon0026i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/180 | m00gnod_kill0010a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/181 | m06dsgn_dsgn0035a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/182 | m00gnod_gcon0029r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/183 | m00gnod_kill0021i3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/184 | m00gsrs_kiam0010i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/185 | m00gnod_gcon0004r1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/186 | m00gnod_gcon0003i2ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/187 | m00gnod_secx0042r3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/188 | m00gnod_secx0027r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/189 | m00gnod_secx0019r1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/19 | m05dsgn_dsgn0049r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/190 | m00gnod_hesx0033i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/191 | m00gnod_hesx0010a3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/192 | m10dsgn_dsgn0042i1eval_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/193 | m00gnod_secx0023i3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/194 | m01nomg_dsgn0158a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/195 | m01nomg_dsgn0042i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/196 | m01nomg_dsgn0202i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/197 | mxxdsgn_dsgn0120i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/198 | m00gnod_secx0034r1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/199 | m05dsgn_dsgn0044i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/2 | m10dsgn_dsgn0051i1eval_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/20 | m00gnod_hesx0023i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/200 | m05dsgn_dsgn0041a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/201 | m00vnst_kill0022i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/202 | m00gnod_gcon0044r3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/203 | m05dsgn_dsgn0053a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/204 | m00gnod_secx0028i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/205 | m00gnod_hesx0024r3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/206 | m00gnod_gcon0026i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/207 | m00gnod_hesx0035a3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/208 | m01nomg_dsgn0154i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/209 | m10dsgn_dsgn0059i1eval_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/21 | m00vnst_kill0021i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/210 | mxxdsgn_dsgn0104i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/211 | m00gnod_secx0006i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/212 | m00gnod_secx0025a1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/213 | m00gnod_gcon0001i3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/214 | m00gnod_gcon0017r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/215 | m00gnod_hesx0027r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/216 | m00gnod_secx0009r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/217 | m01nomg_dsgn0041i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/218 | mxxdsgn_dsgn0123i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/219 | m00pwvr_aqob0025i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/22 | m00gsrs_kiov0010i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/220 | mxxdsgn_dsgn0098i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/221 | m00gnod_kill0033i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/222 | m00gnod_kill0010a3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/223 | m06dsgn_dsgn0050a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/224 | m00bmsf_kill0023i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/225 | m05dsgn_dsgn0050a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/226 | mxxdsgn_dsgn0011i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/227 | m00gnod_gcon0020a2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/228 | m00gnod_kill0016i2ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/229 | m00gnod_secx0027r3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/23 | m00gnod_hesx0009r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/230 | m00gnod_hesx0010a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/231 | mxxdsgn_dsgn0107i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/232 | m00gnod_gcon0032r3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/233 | m06dsgn_dsgn0053r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/234 | m00gnod_kill0008i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/235 | m01nomg_dsgn0204i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/236 | m05dsgn_dsgn0047a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/237 | m00gnod_hesx0043i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/238 | m00gnod_secx0003i2ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/239 | m01eval_dsgn0018a1eval_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/24 | m09dsgn_dsgn0011aeval_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/240 | m06dsgn_dsgn0055a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/241 | mxxdsgn_dsgn0030i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/242 | m00gnod_hesx0008i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/243 | m00gnod_kill0043i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/244 | m00gnod_secx0018i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/245 | m00gnod_gcon0009r3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/246 | m00gnod_kill0001i2ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/247 | m00gnod_gcon0010a2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/248 | m00gnod_kill0018i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/249 | m00gnod_secx0001i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/25 | m00gnod_gcon0044r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/250 | mxxdsgn_dsgn0005i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/251 | m05dsgn_dsgn0039a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/252 | m00vcc1_aqob0022i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/253 | m00gnod_gcon0006i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/254 | m00gnod_hesx0007r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/255 | m00gnod_secx0030a3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/256 | m00gnod_kill0004r2ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/257 | m00gnod_kill0029r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/258 | m00gnod_secx0043i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/259 | m08dsgn_dsgn0041i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/26 | m00gnod_kill0031i3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/260 | m00gnod_gcon0016i3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/261 | m01nomg_dsgn0092a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/262 | m00avis_kill0037i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/263 | m00gnod_kill0041i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/264 | m00vct2_kill0022i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/27 | m00gnod_gcon0008i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/28 | m00gnod_secx0008i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/29 | m00gnod_kill0007r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/3 | m00gnod_gcon0020a3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/30 | m00gsrs_kitb0009i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/31 | m00asqr_kill0023i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/32 | m00gnod_kill0041i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/33 | m00gnod_hesx0029r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/34 | mxxdsgn_dsgn0118i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/35 | m00gnod_hesx0018i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/36 | m00gnod_kill0020a2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/37 | m00gnod_secx0030a2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/38 | m00gnod_gcon0002r2ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/39 | mxxdsgn_dsgn0061i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/4 | m00gnod_secx0027r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/40 | m00gnod_secx0043i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/41 | m00gnod_hesx0041i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/42 | m00gnod_gcon0010a3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/43 | m05dsgn_dsgn0037i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/44 | m00gnod_secx0017r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/45 | m01vggb_dsgn0048r1eval_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/46 | m00gnod_hesx0045a2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/47 | mxxdsgn_dsgn0109i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/48 | m00gnod_kill0017r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/49 | m00gnod_gcon0009r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/5 | m00gnod_gcon0029r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/50 | m00gnod_hesx0008i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/51 | m00gnod_kill0026i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/52 | m00avis_kifi0011i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/53 | m00gnod_hesx0020a1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/54 | m00gnod_gcon0042r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/55 | m00gnod_hesx0017r3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/56 | mxxdsgn_dsgn0070i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/57 | m00gnod_secx0007r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/58 | m00gnod_hesx0043i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/59 | m00gnod_hesx0005a2ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/6 | mxxdsgn_dsgn0081i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/60 | m00gsrs_kitb0010i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/61 | m05dsgn_dsgn0046r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/62 | m00gnod_secx0008i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/63 | m00gnod_hesx0004r3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/64 | mxxdsgn_dsgn0032i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/65 | m08dsgn_dsgn0040i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/66 | correction.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/67 | m00gnod_kill0041i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/68 | m00gnod_secx0044r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/69 | m00gnod_hesx0018i3nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/7 | m00gnod_kill0002r3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/70 | m04dsgn_dsgn0061a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/71 | m00gnod_kill0045a2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/72 | m00gnod_hesx0007r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/73 | m00gnod_secx0005a1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/74 | m00gnod_secx0043i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/75 | m00gnod_gcon0010a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/76 | mxxdsgn_dsgn0016i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/77 | m00gnod_kill0018i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/78 | m06dsgn_dsgn0057a1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/79 | m00gnod_gcon0024r3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/8 | m00gsrs_kiov0009i1ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/80 | mxxdsgn_dsgn0031i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/81 | m00gnod_secx0018i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/82 | mxxdsgn_dsgn0023i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/83 | m00gnod_kill0043i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/84 | m00gnod_gcon0019r2ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/85 | m00gnod_hesx0017r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/86 | m00gnod_kill0008i2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/87 | mxxdsgn_dsgn0068i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/88 | m05dsgn_dsgn0051i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/89 | m00gnod_secx0032r2ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/9 | m00gnod_kill0006i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/90 | m01nomg_dsgn0090i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/91 | m00gnod_hesx0002r3ners_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/92 | mxxdsgn_dsgn0034i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/93 | m00gnod_gcon0007r1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/94 | m00gnod_hesx0006i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/95 | m01evag_dsgn0195a1eval_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/96 | mxxdsgn_dsgn0106i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/97 | m09dsgn_dsgn0012aeval_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/98 | m00gnod_secx0042r2nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/28/findings/99 | mxxdsgn_dsgn0122i1nomg_snd.wav | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/29 | /rows/29 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/3 | /rows/3 | unknown | unclassified | C&C_City_Flying.mix |
+| wave_headers /rows/30 | /rows/30 | unknown | unclassified | unknown; callers and retail usage require reconciliation |
+| wave_headers /rows/4 | /rows/4 | unknown | unclassified | C&C_Complex.mix |
+| wave_headers /rows/5 | /rows/5 | unknown | unclassified | C&C_Field.mix |
+| wave_headers /rows/6 | /rows/6 | unknown | unclassified | C&C_Glacier_Flying.mix |
+| wave_headers /rows/7 | /rows/7 | unknown | unclassified | C&C_Hourglass.mix |
+| wave_headers /rows/8 | /rows/8 | unknown | unclassified | C&C_Islands.mix |
+| wave_headers /rows/9 | /rows/9 | unknown | unclassified | C&C_Mesa.mix |

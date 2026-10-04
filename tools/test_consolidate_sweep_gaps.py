@@ -5,6 +5,20 @@ from tools.consolidate_sweep_gaps import consolidate
 
 
 class ConsolidationTest(unittest.TestCase):
+    def test_wave_partitions_and_nested_findings(self):
+        row={'archive':'M03.mix','status':'unknown','wave_members':2,
+             'formats':[{'format':None,'members':2}], 'header_finding_members':1,
+             'block_finding_members':0,'findings':[{'member':'voice.wav','status':'unknown',
+             'header_findings':['riff_length_outside_source'],'block_findings':[]}]}
+        value={'total':1,'counts':{'unknown':1},'rows':[row],
+               'totals':{k:row[k] for k in ('wave_members','header_finding_members','block_finding_members')}}
+        result=consolidate([('wave_headers',json.dumps(value).encode())])
+        self.assertEqual(result['total'],2)
+        self.assertTrue(all(r['affected_missions_modes']==['M03.mix'] for r in result['rows']))
+        row['formats'][0]['members']=1
+        with self.assertRaisesRegex(ValueError,'format partition'):
+            consolidate([('wave_headers',json.dumps(value).encode())])
+
     def test_supplement_nested_records_and_parent_identity(self):
         parent={'rows':[{'map':'M11.mix','status':'unknown','members':[
             {'status':'unknown','chunk_paths':[{'status':'unknown','chunk_path':['0x1']}]}]}],

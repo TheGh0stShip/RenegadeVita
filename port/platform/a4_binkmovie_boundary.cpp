@@ -7,6 +7,7 @@
 #include "renegade_paths.h"
 #if defined(RENEGADE_D3DVITA)
 #include "dx8wrapper.h"
+#include "ww3d.h"
 #else
 #include "ww3d_vita_renderer.h"
 #endif
@@ -1355,13 +1356,20 @@ void BINKMovie::Render()
 	if (!g_active || !g_texture_allocated || g_video_texture == NULL) return;
 	IDirect3DDevice8 *device = DX8Wrapper::_Get_D3D_Device8();
 	if (device == NULL) return;
-	const float scale = std::min(960.0F / static_cast<float>(g_video_width),
-		544.0F / static_cast<float>(g_video_height));
+	// Fit the frame to the current back buffer; VitaD3D presents a logical
+	// (for example 800x600 frontend) back buffer scaled to the display.
+	int target_width = 960, target_height = 544, target_bits = 32;
+	bool target_windowed = false;
+	WW3D::Get_Device_Resolution(target_width, target_height, target_bits, target_windowed);
+	const float screen_width = static_cast<float>(target_width);
+	const float screen_height = static_cast<float>(target_height);
+	const float scale = std::min(screen_width / static_cast<float>(g_video_width),
+		screen_height / static_cast<float>(g_video_height));
 	const float draw_width = static_cast<float>(g_video_width) * scale;
 	const float draw_height = static_cast<float>(g_video_height) * scale;
 	// Pixel centres sit at integer coordinates in Direct3D 8.
-	const float x0 = (960.0F - draw_width) * 0.5F - 0.5F;
-	const float y0 = (544.0F - draw_height) * 0.5F - 0.5F;
+	const float x0 = (screen_width - draw_width) * 0.5F - 0.5F;
+	const float y0 = (screen_height - draw_height) * 0.5F - 0.5F;
 	struct MovieVertex { float x, y, z, rhw, u, v; };
 	const MovieVertex quad[4] = {
 		{x0, y0, 0.0F, 1.0F, 0.0F, 0.0F},
@@ -1370,7 +1378,8 @@ void BINKMovie::Render()
 		{x0 + draw_width, y0 + draw_height, 0.0F, 1.0F, 1.0F, 1.0F},
 	};
 	// State goes through DX8Wrapper so its render-state cache stays coherent.
-	D3DVIEWPORT8 full_screen = {0, 0, 960, 544, 0.0F, 1.0F};
+	D3DVIEWPORT8 full_screen = {0, 0, static_cast<DWORD>(target_width),
+		static_cast<DWORD>(target_height), 0.0F, 1.0F};
 	DX8Wrapper::Set_Viewport(&full_screen);
 	DX8Wrapper::Set_DX8_Render_State(D3DRS_ZENABLE, D3DZB_FALSE);
 	DX8Wrapper::Set_DX8_Render_State(D3DRS_CULLMODE, D3DCULL_NONE);

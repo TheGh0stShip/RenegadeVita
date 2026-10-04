@@ -15,6 +15,7 @@ rv_patches=(
 	ww3d2-d3dvita-original-renderer.patch
 	ww3d2-d3dvita-dx8wrapper-gcc.patch
 	ww3d2-d3dvita-thumbnail-boundary.patch
+	ww3d2-d3dvita-device-resolution.patch
 )
 
 rm -rf -- "$rv_target"

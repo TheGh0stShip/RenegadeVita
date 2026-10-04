@@ -1,0 +1,29 @@
+--- a/dx8wrapper.cpp
++++ b/dx8wrapper.cpp
+@@ -504,7 +504,11 @@
+ 	DX8_THREAD_ASSERT();
+ 	if ((IsInitted) && (D3DDevice != NULL)) {
+ 		// Release all non-MANAGED stuff
++#if !defined(RENEGADE_D3DVITA)
++		// VitaD3D keeps managed textures across Reset as D3D8 specifies, and
++		// the Vita runtime resets for every logical resolution change.
+ 		WW3D::_Invalidate_Textures();
++#endif
+ 
+ 		Set_Vertex_Buffer (NULL);
+ 		Set_Index_Buffer (NULL, 0);
+@@ -1016,7 +1020,14 @@
+ 			_PresentParameters.BackBufferHeight = ResolutionHeight = height;
+ 		}
+ #pragma message("TODO: support changing windowed status and changing the bit depth")
++#if defined(RENEGADE_D3DVITA)
++		// Keep Render2D in the new back-buffer space, as Set_Render_Device does.
++		const bool reset = Reset_Device();
++		Render2DClass::Set_Screen_Resolution( RectClass( 0, 0, ResolutionWidth, ResolutionHeight ) );
++		return reset;
++#else
+ 		return Reset_Device();
++#endif
+ 	} else {
+ 		return false;
+ 	}

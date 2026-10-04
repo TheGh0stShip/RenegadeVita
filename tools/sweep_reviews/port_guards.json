@@ -9,7 +9,7 @@
     "CMakeLists.txt": "3dcb221e2a4f227edf7c65b9f14d35abfa6667745765ea482db402dbb2297c70",
     "tools/host_a30_definitions/CMakeLists.txt": "e02f1d0456cbb99d2782d1bb767f7e89ffe07a3b373ed132d863174a1b93e51a",
     "port/platform/a4_binkmovie_boundary.cpp": "6558583666f34a25eaa2e7f3b4511e8d4e87e5bb8cff1dcbb0b6ee9dc63da6a3",
-    "port/platform/a31_gameplay_boundary.cpp": "f9dec496ee91feb2de21c59180268258b95d19fc86234a5525221828b72eff76",
+    "port/platform/a31_gameplay_boundary.cpp": "24e861886345d0d61c2ae6e033d2f2a2af063cb2e6253cb4fb187dbfdd65b55c",
     "staging/commando/movie.cpp": "57f5bbf0188a8fa8fd896c3e819681c354bc0107863f942723010c07bcf4524e",
     "staging/commando/dlgmovieoptions.cpp": "49032fb0849ec72e432d5c0780c477d46b93c52c2a57a8891897e5f68d7bea03",
     "staging/combat/scriptcommands.cpp": "32f85e5a57e59c1fc5dfb62d219183bf81b48553559c03de5c9420becfa6b325",
@@ -36,7 +36,8 @@
     "staging/wwaudio/Sound3D.cpp": "3793fdefe102981a3ce98aa5c41b50cf2e189494421f44a17ddfa9f826cec04d",
     "staging/wwaudio/soundstreamhandle.cpp": "517d919fcd12bccb53d2a1548cef4023f14b015fbe70ef2588dc9ee0323775f0",
     "staging/wwaudio/FilteredSound.cpp": "a66d37b7ce1bd3505310d04fee57b6f99d5afabf74dcee0fe98654a3280291a0",
-    "port/audio/vita/renegade_miles_provider.cpp": "17ea96994e3a7bc37160f4c50a9533b7d75e09c191719bac2237a46e684461d4"
+    "port/audio/vita/renegade_miles_provider.cpp": "17ea96994e3a7bc37160f4c50a9533b7d75e09c191719bac2237a46e684461d4",
+    "port/renderer/vita/original_dx8_light_environment.inc": "66a3761498a9bc4c7e68f49847ce45eb696c64f4aaaf1145feb4954b8c5a16a1"
   },
   "reviews": [
     {
@@ -333,10 +334,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -357,10 +358,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -381,10 +382,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -405,10 +406,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -429,10 +430,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -453,10 +454,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -477,10 +478,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -501,10 +502,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -525,10 +526,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -549,10 +550,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -573,10 +574,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -597,10 +598,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -621,10 +622,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -645,10 +646,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -669,10 +670,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -693,10 +694,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -717,10 +718,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -741,10 +742,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -765,10 +766,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -789,10 +790,10 @@
       "acceptance_open": "Resolve individual callers and supported profiles. Verify physical output and sound-scene save/load; fallback exclusion does not prove audio completeness.",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "branch_line": 1088,
+          "opening_line": 1089,
           "condition": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)",
-          "opening_line": 1088
+          "branch_line": 1089,
+          "branch": "#if !defined(RENEGADE_A35_ORIGINAL_WWAUDIO)"
         }
       ]
     },
@@ -1025,10 +1026,10 @@
       "definition_sha256": "62144930ee0d035adf1018103ab2efd576ebf5e38b934840d636ba1eb081ca87",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_HOST_ABI_TEST)",
-          "branch_line": 1450,
+          "opening_line": 1451,
           "condition": "#if !defined(RENEGADE_HOST_ABI_TEST)",
-          "opening_line": 1450
+          "branch_line": 1451,
+          "branch": "#if !defined(RENEGADE_HOST_ABI_TEST)"
         }
       ],
       "status": "stubbed_or_noop",
@@ -1052,10 +1053,10 @@
       "definition_sha256": "7ddd10510e75b64da7f3d6e089315eec930399e8811c717297a29b573a01cc7d",
       "entry_preprocessor_context": [
         {
-          "branch": "#if !defined(RENEGADE_HOST_ABI_TEST)",
-          "branch_line": 1450,
+          "opening_line": 1451,
           "condition": "#if !defined(RENEGADE_HOST_ABI_TEST)",
-          "opening_line": 1450
+          "branch_line": 1451,
+          "branch": "#if !defined(RENEGADE_HOST_ABI_TEST)"
         }
       ],
       "status": "stubbed_or_noop",
@@ -1111,30 +1112,6 @@
         "Original projector/shadow paths; per-map activation remains unverified. a31 native boundary is selected; a30 source presence is not current graph execution."
       ],
       "acceptance_open": "Restore original allocation/binding/render/restore ownership as one cluster; verify failure paths, native projected-shadow pixels and matching physical artifacts."
-    },
-    {
-      "file": "port/platform/a31_gameplay_boundary.cpp",
-      "declarator": "DX8Wrapper::Set_Light_Environment(LightEnvironmentClass *)",
-      "body_sha256": "7699aeac7d126e52cfd493001b7b17e4dacfe300dc34b37425f432a15ed57fb5",
-      "definition_sha256": "92a407e6820d2b829b590cd8791434b8d05360473758908a264dd40a0fd16174",
-      "entry_preprocessor_context": [
-        {
-          "branch": "#if !defined(RENEGADE_HOST_ABI_TEST)",
-          "branch_line": 1450,
-          "condition": "#if !defined(RENEGADE_HOST_ABI_TEST)",
-          "opening_line": 1450
-        }
-      ],
-      "status": "stubbed_or_noop",
-      "original_owner": "DX8Wrapper light-environment device-state installation",
-      "behavior": "Empty boundary body: original equivalent-ambient and directional-light state are not installed here. Native base mesh submission separately reads RenderInfoClass light_environment for CPU material colors; this stub alone does not establish all lighting is missing.",
-      "callers": [
-        "staging/ww3d2/mesh.cpp:875"
-      ],
-      "affected_scope": [
-        "Original procedural material pass path; native material passes already have a separate omission. Ordinary mesh CPU lighting is a distinct route requiring its own equivalence tests."
-      ],
-      "acceptance_open": "Reconcile procedural material pass restoration with light state. Verify original ambient/directional results, normals, color sources and native pixels; no broad lighting-loss claim from this empty method."
     },
     {
       "file": "port/platform/vita/a30_static_world_boundary.cpp",
@@ -1309,6 +1286,23 @@
         "All modes reaching original WWAudio provider APIs; actual authored effects and per-map execution remain unverified. Timer shutdown calls additionally depend on the original m_UpdateTimer != -1 gate."
       ],
       "acceptance_open": "Resolve exact original API contract and build/caller activation; compare spatial, effects, stream looping, provider lifecycle or timer semantics as applicable, then physical playback evidence."
+    },
+    {
+      "file": "port/renderer/vita/original_dx8_light_environment.inc",
+      "declarator": "DX8Wrapper::Set_Light_Environment(LightEnvironmentClass *light_env)",
+      "body_sha256": "57c8be9c7e948d2c87f99e2cf64561fe0efe69d6412032808bfc2392fc189960",
+      "definition_sha256": "b60687898fd9aee1a3746e1bf8dd9b3e95b0cd10422fb17d61298485fdea1a19",
+      "entry_preprocessor_context": [],
+      "status": "original_patched",
+      "original_owner": "Original DX8Wrapper light-environment state installation",
+      "behavior": "Original equivalent ambient, directional diffuse/direction and four deferred light slots are retained. The sole algorithm-source change is standard C++ for-scope. The null environment retains prior state as in retail. Host state transitions pass sanitizers; indexed lighting draw consumption remains open.",
+      "callers": [
+        "Original MeshClass material-pass rendering in staging/ww3d2/mesh.cpp; native and host boundary include the same method body."
+      ],
+      "affected_scope": [
+        "All modes reaching original mesh material-pass lighting; original category activation, material state and native pixels remain separately unverified."
+      ],
+      "acceptance_open": "Complete original material/light consumption at indexed draw, then verify native rendering and representative content on Vita/PSTV. This source verdict does not close whole lighting support."
     }
   ]
 }

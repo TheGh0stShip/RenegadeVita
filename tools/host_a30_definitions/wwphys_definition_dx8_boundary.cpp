@@ -11,6 +11,7 @@
 #include "dx8indexbuffer.h"
 #include "dx8vertexbuffer.h"
 #include "dx8wrapper.h"
+#include "lightenvironment.h"
 #include "sortingrenderer.h"
 
 #include <stdio.h>
@@ -84,10 +85,8 @@ void DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *surface, bool)
 	Unsupported_GPU_Call("DX8Wrapper::Set_Render_Target(IDirect3DSurface8*,bool)");
 }
 
-void DX8Wrapper::Set_Light_Environment(LightEnvironmentClass *)
-{
-	Unsupported_GPU_Call("DX8Wrapper::Set_Light_Environment");
-}
+// Light installation updates original CPU draw state; it does not draw.
+#include "original_dx8_light_environment.inc"
 
 #if !defined(RENEGADE_ORIGINAL_SORTING)
 void SortingRendererClass::Insert_Triangles(const SphereClass &,

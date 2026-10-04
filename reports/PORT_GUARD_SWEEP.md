@@ -2,8 +2,9 @@
 
 This is a partial source inventory, not a completed sweep or runtime acceptance.
 It establishes explicit denominators before further behavior fixes. The current
-source contains 3,574 records with 52 fallback/diagnostic functions reviewed as
-`stubbed_or_noop`, 1 capability constructor as `boundary_replaced`, 6
+source contains 3,574 records with 51 fallback/diagnostic functions reviewed as
+`stubbed_or_noop`, 1 original light-state method as `original_patched`,
+1 capability constructor as `boundary_replaced`, 6
 guards as `disabled_by_port_guard`, and 3,515
 records still `unknown`. All statuses reconcile to the total.
 

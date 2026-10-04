@@ -19,10 +19,12 @@
     "port/renderer/vita/D3dx8core.h": "db06de140206c8564ff8d00c3dc0a529c12439210e2f4ac56367771d4be480e1",
     "port/renderer/vita/D3dx8tex.h": "34680c431c1abe4cb66e4a9634fbdf7406042901b2dc8aeaedc2a7fa6007e6b2",
     "port/renderer/vita/category_fvf_layout.h": "7a6af9b2a8fba83c849167b99d5a06ddbd51a8f78c63c1552d63efdfe63f5fc5",
-    "port/renderer/vita/d3d8.h": "a78ca0526f0b4e7ad94d9eee298e41f4391428912813685ac8a70093db298504",
+    "port/renderer/vita/d3d8.h": "341fabaed7f1f954d799b6a713715e501c8f5fdca8904a8d75313967bafaeca6",
     "port/renderer/vita/d3d8caps.h": "67c58644d040b72a827fb96853544f0d6fe0418624bd46a60d2c6f5b4f040e02",
     "port/renderer/vita/d3d8types.h": "cdd03ec076dcc397ff49fef29f5ee3f6511d475dedee0de6e74dab6ca5d27644",
     "port/renderer/vita/dynamic_buffer_growth.h": "94e3142ebbaeef11304797486a2d6f0e86a05a7623cbc9ed3152d86972457681",
+    "port/renderer/vita/original_dx8_light_environment.inc": "66a3761498a9bc4c7e68f49847ce45eb696c64f4aaaf1145feb4954b8c5a16a1",
+    "port/renderer/vita/original_dx8_statistics.inc": "0f2965532ff423a260e5fc5a285374f8a4cbd736eb0cd3540ef443f2bb3bd640",
     "port/renderer/vita/renegade_freetype_font_provider.cpp": "3160f4ca269ddc7c41d5903692527b8846bb56dd3609fd5656f6e2313ffc6587",
     "port/renderer/vita/renegade_freetype_font_provider.h": "6b01bd1a14ef1eca95c4822021c1045ff3ce80836578d05a0c6305e54230718e",
     "port/renderer/vita/surface_boundary.cpp": "7d0d65187debed964255d414181aadc00c93a94a2d309143fd268c53befedfa5",
@@ -258,7 +260,7 @@
     "staging/ww3d2/ww3dids.h": "339d44b8752566409b4ae2cd742592cf65339358b0e4efbbd498b3159de44875",
     "staging/ww3d2/ww3dtrig.h": "0bf682e99ce8207ce9cbe0243e335b371695a56b512b7cf69cfc8e8a88245818",
     "tools/audit_sweep_port_guards.py": "1df9fb0b56c3e1af48fb85007e27edd51168b60bd26a0a3e5928e5518c232c04",
-    "tools/audit_sweep_renderer.py": "a0112c5ce5bb4fd9f6e9c4fbc017a0e2674d8ba03500e3b23df85793750a9908",
+    "tools/audit_sweep_renderer.py": "a3e2eeb6ff6fafbf3a12e58fafdfcc21608b503f678c272e421eaf39b142cfd5",
     "tools/sweep-parser-requirements.txt": "d7c2629062f7f6d15821d1a60047405fde1145feb4bb4ea2c691b4415649c615",
     "tools/sweep_cpp_functions.py": "2ac214a70b33c39ee9ed2a96ff2a4a28ce4d2401389e803017f7cad6ab8ba9bf",
     "tools/sweep_reviews/renderer.json": "97676a515888860eb8ec54f3166122b94cf42b30392f7b567b461200f2367653"
@@ -7899,6 +7901,16 @@
       "symbol": "D3DRS_SPECULARMATERIALSOURCE"
     },
     {
+      "column": 53,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8wrapper.cpp",
+      "kind": "draw_state_reference",
+      "line": 358,
+      "row_id": "98c16cf4a0464165a325a3b8fdb73d60e2629357861d35db11813aed1fecc058",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL"
+    },
+    {
       "column": 23,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "staging/ww3d2/dx8wrapper.cpp",
@@ -8539,6 +8551,36 @@
       "symbol": "WW3D_FORMAT_UNKNOWN"
     },
     {
+      "column": 16,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8wrapper.cpp",
+      "kind": "draw_state_reference",
+      "line": 2346,
+      "row_id": "3c3701a838aa1231483593645815d5f319563918a68f27529c7786d825999fea",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_POINT"
+    },
+    {
+      "column": 16,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8wrapper.cpp",
+      "kind": "draw_state_reference",
+      "line": 2351,
+      "row_id": "bd710824c4d3a9423f2f2c46ea19b223eb9af23fc3d3e6fd06ef1f99938bc375",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_DIRECTIONAL"
+    },
+    {
+      "column": 16,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8wrapper.cpp",
+      "kind": "draw_state_reference",
+      "line": 2356,
+      "row_id": "ea9230659b17626dcb159a3ff120c512cbfce84b8131ec020e1de5599b8881fb",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_SPOT"
+    },
+    {
       "column": 24,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "staging/ww3d2/dx8wrapper.cpp",
@@ -8547,6 +8589,16 @@
       "row_id": "20cef888b6e4dcebfb2aa6eb796f672d0e51624e49229bca203d483a5512580d",
       "status": "unknown",
       "symbol": "D3DRS_AMBIENT"
+    },
+    {
+      "column": 14,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8wrapper.cpp",
+      "kind": "draw_state_reference",
+      "line": 2424,
+      "row_id": "d6e143d8cea38c6bd138846d7060323746c387be721852169c730cfc071713ca",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_DIRECTIONAL"
     },
     {
       "column": 52,
@@ -11527,6 +11579,36 @@
       "row_id": "c0d6706f89dfabdbdb38c8b8852a113b08fa6fc925803965e9e0afac1408d3a0",
       "status": "unknown",
       "symbol": "D3DSTENCILOP_DECR"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8wrapper.cpp",
+      "kind": "draw_state_reference",
+      "line": 3294,
+      "row_id": "cbb58c5805b07931c8c66770f52a606df61f58b8e58628e18505a525db9b16f3",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8wrapper.cpp",
+      "kind": "draw_state_reference",
+      "line": 3295,
+      "row_id": "65eb0bc3d98faf9580639c5ed3401eef8daf5f8fc6717ddd8cf4edf3e943c602",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR1"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/dx8wrapper.cpp",
+      "kind": "draw_state_reference",
+      "line": 3296,
+      "row_id": "e35877125bda6db185d2878e400bd2175c04299d93bac1c0dfef3b4ddfad8b56",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR2"
     },
     {
       "bases": [],
@@ -23493,6 +23575,186 @@
       "status": "unknown"
     },
     {
+      "column": 21,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 63,
+      "row_id": "9caa60a6feeaf84ae4d1ae9cc0ab0dfa814481ef7bb8ea0ceaf82e12c7534cc8",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL"
+    },
+    {
+      "column": 22,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 64,
+      "row_id": "a2580bcc7177d2a07c4a9bf12c7201677cce58f1ff4e3058562509bcbaf4099d",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL"
+    },
+    {
+      "column": 21,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 65,
+      "row_id": "e13871acb0462523b20941acda1d16d6a35ae401002dd5eef277baa5b579e8b4",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL"
+    },
+    {
+      "column": 37,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 320,
+      "row_id": "3e43a6918e4a982056ae529217cee26d73cde6375ae0ef9795a465f0cebfa9d6",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR1"
+    },
+    {
+      "column": 37,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 321,
+      "row_id": "490a53c508eead46a5544040bf267d8ad769d799e14968b0044264c1368cbb89",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR2"
+    },
+    {
+      "column": 35,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 322,
+      "row_id": "a9d018178a90b9c45b01af150c01bdfb03a57fcd7dd1c911acca79c522a0af42",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL"
+    },
+    {
+      "column": 38,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 331,
+      "row_id": "b866843e90c75a68bd7a00128cae42fb2089b9ce4053f2a2dec7e2fa882fb1a1",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR1"
+    },
+    {
+      "column": 38,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 332,
+      "row_id": "ab4524ca48342da6932ba7b81951382258f9edaf3964f4e264e95222f1306f80",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR2"
+    },
+    {
+      "column": 36,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 333,
+      "row_id": "bb627e1423ef80ffd3cdb38666ec562892409aabc80db4f8ff98f1c291f7d83b",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL"
+    },
+    {
+      "column": 37,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 342,
+      "row_id": "52dcdf6c3deeafb36ee533f50c776403fc2b35bd2d40dfa035949b324f7801d7",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR1"
+    },
+    {
+      "column": 37,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 343,
+      "row_id": "847aa9b6e54cd66a25793f4708734cc6d68140c8484558de6dc48ebf3581d9f2",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR2"
+    },
+    {
+      "column": 35,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 344,
+      "row_id": "c3a075d5542a0eea0519db8e7a4fbfb1198138a2f61c7b6d9b0e4f1e8fa0713c",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 353,
+      "row_id": "58b5369dd846f647806dffb8f43da0a678154aac7c21fe604125ceb5c85f489c",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR1"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 354,
+      "row_id": "1cdf168abe780ef7a80fcaffc16f4400243f9de48648dd61db4eca4768ec1b80",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR2"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 364,
+      "row_id": "fac24406cbb1f217a1020523c651a50322ae831dbd9b52d9fda044a7bee0f35f",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR1"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 365,
+      "row_id": "ffda34005e4bddd60d6f88c381db5774a76701fe71cfbad41a024c7d86629aa7",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR2"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 375,
+      "row_id": "d099acab99f860b62c274458985eb548c62beb9fd26617eb62bc34f3ca559ce0",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR1"
+    },
+    {
+      "column": 7,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 376,
+      "row_id": "c7a84acaa863a0f3b7786220a99caf0448896bc3e3099e7d58b338d5976cc8ef",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR2"
+    },
+    {
       "column": 35,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "staging/ww3d2/vertmaterial.cpp",
@@ -23593,6 +23855,16 @@
       "symbol": "D3DRS_AMBIENTMATERIALSOURCE"
     },
     {
+      "column": 63,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 904,
+      "row_id": "6ecad7a76a6f84b8d25bbfaddf9063ac3b2380f77032d8bf9d7507922e419fe8",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL"
+    },
+    {
       "column": 35,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "staging/ww3d2/vertmaterial.cpp",
@@ -23603,6 +23875,16 @@
       "symbol": "D3DRS_DIFFUSEMATERIALSOURCE"
     },
     {
+      "column": 63,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 905,
+      "row_id": "ef88e0975b103bd18b98a3a99abdda6f36bc20cdbb7db9cb4d7b80413e141bb6",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL"
+    },
+    {
       "column": 35,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "staging/ww3d2/vertmaterial.cpp",
@@ -23611,6 +23893,16 @@
       "row_id": "4d38157377994dc45137ea6031dd2aeadad6ae09adbf51412b1fd06769c6d536",
       "status": "unknown",
       "symbol": "D3DRS_EMISSIVEMATERIALSOURCE"
+    },
+    {
+      "column": 64,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "staging/ww3d2/vertmaterial.cpp",
+      "kind": "draw_state_reference",
+      "line": 906,
+      "row_id": "1b4151030e7e5eee05e6f6dea9aec940241b763b446b20869b0a50d37f46bbf1",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL"
     },
     {
       "column": 45,
@@ -27053,187 +27345,187 @@
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "5f62987a0a1f7a17246d4bdc8bfe37c5c9db1e8c6132da658499027b4d04ed3c",
-      "end_byte": 1334,
-      "end_line": 52,
+      "end_byte": 1460,
+      "end_line": 58,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 38,
+      "line": 44,
       "name": "D3DLIGHT8",
       "parse_has_error": false,
-      "row_id": "3b0c84078bf80f640aca5b0dbf5ecad43e2951ddebfb714a0101e7902175d819",
+      "row_id": "ce4dc12c43e8e513f70aaabc633458a1f30642125252f192177c685266aa9cda",
       "scope": "",
-      "start_byte": 1063,
+      "start_byte": 1189,
       "status": "unknown"
     },
     {
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "bdbef78ff711583ac03e4e335857a395afa74d362074cd7f23c0c861ff52e53a",
-      "end_byte": 1472,
-      "end_line": 59,
+      "end_byte": 1685,
+      "end_line": 66,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 53,
+      "line": 60,
       "name": "_D3DMATERIAL8",
       "parse_has_error": false,
-      "row_id": "f102b65665f02de1836fccb38e7cd0d2f890e53f44610d1687ba5a7a3cb03e6c",
+      "row_id": "4b6e3c116d57b4073d73cb4828e07ed10ec34eaf16822d52f86cfc3efead2f12",
       "scope": "",
-      "start_byte": 1336,
+      "start_byte": 1549,
       "status": "unknown"
     },
     {
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "f93bd4b49ab8a48c5d77b1100416f8f42fe963d05dab9f1a00c1da699cec7873",
-      "end_byte": 1588,
-      "end_line": 61,
+      "end_byte": 1801,
+      "end_line": 68,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 61,
+      "line": 68,
       "name": "D3DVIEWPORT8",
       "parse_has_error": false,
-      "row_id": "89ea0700b2ef7261bbc82bfbac448092689147ab640bacf58dd5d50dec93c49f",
+      "row_id": "c77d7c381ffed3d26fee121637a156bb48ee9e36ff65242a1b66514ddc9a078e",
       "scope": "",
-      "start_byte": 1517,
+      "start_byte": 1730,
       "status": "unknown"
     },
     {
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "b2916fc06253adfa23fec477a0d7346bc7e98865a68c0d87ff013ed4f34d1f05",
-      "end_byte": 1639,
-      "end_line": 62,
+      "end_byte": 1852,
+      "end_line": 69,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 62,
+      "line": 69,
       "name": "D3DLOCKED_RECT",
       "parse_has_error": false,
-      "row_id": "770316c28c946b7b5a58f867ac525fd10252699f770e4627fa3c7a3a04be8442",
+      "row_id": "9f0668c3895fac8da68f13a3d5be619a18bdd459cf3e6327980be24f57122abb",
       "scope": "",
-      "start_byte": 1590,
+      "start_byte": 1803,
       "status": "unknown"
     },
     {
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "c062f63361e4767f0a6ca0b586987344b49a000b42a9fec6984655f3136536b5",
-      "end_byte": 1798,
-      "end_line": 72,
+      "end_byte": 2011,
+      "end_line": 79,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 63,
+      "line": 70,
       "name": "D3DSURFACE_DESC",
       "parse_has_error": false,
-      "row_id": "1d8c38c78befbe74aff60858b15beca8b70c7e9e3a8aad2f69b8df71eb26c4aa",
+      "row_id": "32322286b7fa3cd9bbdde5337b72f262851e22a511914c592b7b752ec9af1e9f",
       "scope": "",
-      "start_byte": 1641,
+      "start_byte": 1854,
       "status": "unknown"
     },
     {
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "a95a1b9e20c209866530adb912080f60f1b50e39b3e9fb0986c28b791d3e713c",
-      "end_byte": 1874,
-      "end_line": 73,
+      "end_byte": 2087,
+      "end_line": 80,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 73,
+      "line": 80,
       "name": "D3DADAPTER_IDENTIFIER8",
       "parse_has_error": false,
-      "row_id": "8f3cc6d845f53ed976b10ae5a9195b298e0f4b05910f5aa874b9e4c6783b96ad",
+      "row_id": "ef20d3ecce6b92a7cb3f69a8546abb8e6b621157498caa8ea6cad8634b771428",
       "scope": "",
-      "start_byte": 1800,
+      "start_byte": 2013,
       "status": "unknown"
     },
     {
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "cc95676bc0b617b9049cf3ec9c224b0687585373a71115462701eafc84a4cc73",
-      "end_byte": 3150,
-      "end_line": 101,
+      "end_byte": 3363,
+      "end_line": 108,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 78,
+      "line": 85,
       "name": "D3DCAPS8",
       "parse_has_error": false,
-      "row_id": "1317872567f2c321b7aaa4f6ee217acb9a2de647d7992d4dd801b084d87e2d2f",
+      "row_id": "6c31f68ca487fa1d14398e4cc1b18eb4b6b11bcd3bea1ea955b321435f36bba1",
       "scope": "",
-      "start_byte": 2099,
+      "start_byte": 2312,
       "status": "unknown"
     },
     {
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "287a4317e17226ff5505f1ce2147cb09debbbc80bf0b95211b633b90d8705b55",
-      "end_byte": 3976,
-      "end_line": 132,
+      "end_byte": 4189,
+      "end_line": 139,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 104,
+      "line": 111,
       "name": "IDirect3DSurface8",
       "parse_has_error": false,
-      "row_id": "8ce4d2d2605020cc4137503cfc7610dbced872042ae682975fc3461a0efbbf96",
+      "row_id": "8864fbf8560eac80ebc4ad878725d112edd7935314da3a0fcb4d362942f50527",
       "scope": "",
-      "start_byte": 3179,
+      "start_byte": 3392,
       "status": "unknown"
     },
     {
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "aa8c4629114c7cca75a2fb3aa2eab9cd26fa7eb9ad5183d6f957070edb9b8dff",
-      "end_byte": 4798,
-      "end_line": 155,
+      "end_byte": 5011,
+      "end_line": 162,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 141,
+      "line": 148,
       "name": "IDirect3DVertexBuffer8",
       "parse_has_error": false,
-      "row_id": "d39c81889aa80e30d67589f489ad7a0bcd08f93cffe556cf10329292efd9e9f5",
+      "row_id": "1c824ee4a3546c21d97c8c07d0edaacadc2f9a73fcc5df2b09a3df010ca60a3a",
       "scope": "",
-      "start_byte": 4381,
+      "start_byte": 4594,
       "status": "unknown"
     },
     {
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "5975c6d761c8bd36735483aa1de6a30d2f8bebce6eeb50f0d43192197d4b228e",
-      "end_byte": 5215,
-      "end_line": 171,
+      "end_byte": 5428,
+      "end_line": 178,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 157,
+      "line": 164,
       "name": "IDirect3DIndexBuffer8",
       "parse_has_error": false,
-      "row_id": "7af07c39f51f2e51933d8103c7b76d4838be575d9275bfe7280fa3bcb5d48775",
+      "row_id": "17b4ac02138780819286ff4fd149b35cf13756b682394ef174312355ceceff16",
       "scope": "",
-      "start_byte": 4801,
+      "start_byte": 5014,
       "status": "unknown"
     },
     {
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "4e8e43149a1ac61ff06b5ca027f3cbe8652621b65f08968b6048f3f591535970",
-      "end_byte": 6367,
-      "end_line": 207,
+      "end_byte": 6580,
+      "end_line": 214,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 178,
+      "line": 185,
       "name": "IDirect3DBaseTexture8",
       "parse_has_error": false,
-      "row_id": "e0bbe6a6c8ff5b9ff98e502a9603f67072d2ac67ca28b33439e976351a2f67bf",
+      "row_id": "7e7a61b7410901287d01cafa90ead5962299b07828e0e77ac940128bbc85482c",
       "scope": "",
-      "start_byte": 5311,
+      "start_byte": 5524,
       "status": "unknown"
     },
     {
@@ -27242,46 +27534,46 @@
       ],
       "candidate_roles": [],
       "definition_sha256": "773bd915eb75fa66949a66a123846e3d1e5b3d78c763de96281a96129ea2b69f",
-      "end_byte": 6760,
-      "end_line": 217,
+      "end_byte": 6973,
+      "end_line": 224,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 208,
+      "line": 215,
       "name": "IDirect3DTexture8",
       "parse_has_error": false,
-      "row_id": "562c678e6e37ad93c623dd74e953899a2401f0ec1cb36661c8deccfb9bae5107",
+      "row_id": "1d450c55305765c1f79eef649227ed2dd347faa3e2528fbfa122f30a141e2a34",
       "scope": "",
-      "start_byte": 6369,
+      "start_byte": 6582,
       "status": "unknown"
     },
     {
       "bases": [],
       "candidate_roles": [],
       "definition_sha256": "8f0a52e481df28090b4912d2ec39126a1308eea15b5e00780b9fd05cf82208cc",
-      "end_byte": 7564,
-      "end_line": 232,
+      "end_byte": 7777,
+      "end_line": 239,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "class_definition",
-      "line": 218,
+      "line": 225,
       "name": "IDirect3DDevice8",
       "parse_has_error": false,
-      "row_id": "9e89a6da2fb037b67739c61bc746b28bfc6bfecc597e5eccdf095cc0be174550",
+      "row_id": "86a4ac21f624d3746366c6938b1dc8b3d33b9c5fe5ac582f73094790d1aab76d",
       "scope": "",
-      "start_byte": 6762,
+      "start_byte": 6975,
       "status": "unknown"
     },
     {
-      "end_byte": 7843,
+      "end_byte": 8056,
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "parse_unknown",
-      "line": 240,
+      "line": 247,
       "missing": true,
       "node_type": "type_identifier",
-      "row_id": "261ad292202a333ee2fed72a81c49fbfe699be14ec30abcf57f6958e6d83bd29",
-      "start_byte": 7843,
+      "row_id": "e5fb64b1c370ca60c3a4e71c6b8a373f83d638691619f0848e5b1b7e9c2f18b3",
+      "start_byte": 8056,
       "status": "unknown"
     },
     {
@@ -27299,8 +27591,48 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 246,
-      "row_id": "26b316d0c05018ebda12916af789b078349d942a387e1272fdea4ead1f8299bf",
+      "line": 39,
+      "row_id": "758c4ec93d51c61998b5795a72840b2b2a8a4e83647802664fd8f567a7436db4",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_POINT"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "port/renderer/vita/d3d8.h",
+      "kind": "draw_state_reference",
+      "line": 40,
+      "row_id": "2c89d602e28d705c6302b9ddb3c6aa0dca35efe60cb966faed9f8d5e8d579493",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_SPOT"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "port/renderer/vita/d3d8.h",
+      "kind": "draw_state_reference",
+      "line": 41,
+      "row_id": "6e58547498cdf16c454d08a1431682d64bb813db1a07b670bbb6026960113742",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_DIRECTIONAL"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "port/renderer/vita/d3d8.h",
+      "kind": "draw_state_reference",
+      "line": 42,
+      "row_id": "8d6d1eb53fa5babe4464d63ef9909e231f56ea5521f0d2219fa3999267432054",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_FORCE_DWORD"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "port/renderer/vita/d3d8.h",
+      "kind": "draw_state_reference",
+      "line": 253,
+      "row_id": "acba23ff67168f21e2973d7b72de8bf633644e75f307c41bfdfec31d5117e779",
       "status": "unknown",
       "symbol": "D3DTS_VIEW"
     },
@@ -27309,8 +27641,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 247,
-      "row_id": "2a2e696adf6302ecbd0156b6a45f3ca23ea9cefa6667a0742921ae35c8e3b17f",
+      "line": 254,
+      "row_id": "d0cddd404197c3e9bab3250220b66da80ba3b69a2fe273e0ebc3eed9e5068afa",
       "status": "unknown",
       "symbol": "D3DTS_PROJECTION"
     },
@@ -27319,8 +27651,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 248,
-      "row_id": "01840b2d1406c07ed37bdd5f15f16ee68fb85654b2dbe76ad26d1d12f201a3d5",
+      "line": 255,
+      "row_id": "ed292a830c3452c8936acb01290f37ee8b17a9e3c4c910419ee932470223c116",
       "status": "unknown",
       "symbol": "D3DTS_WORLD"
     },
@@ -27329,8 +27661,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 249,
-      "row_id": "1396289ae76bf3283965ef85b06730769eaacc19bd0ee61287476eee94b8ef46",
+      "line": 256,
+      "row_id": "03bb1d4ca5db3b46742c512a0ad2858290e6d74f671a0ceed3d8b49322c14d1b",
       "status": "unknown",
       "symbol": "D3DTS_TEXTURE0"
     },
@@ -27339,8 +27671,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 250,
-      "row_id": "ade4f0405ca48715ce66cd6ffb28287346c24b88b2c9c63d07c32112d40d0754",
+      "line": 257,
+      "row_id": "02259ac2f14d3eb4c545f4a693a57ee15a67033f9c2f3ee75e184fb711689e2a",
       "status": "unknown",
       "symbol": "D3DRS_ZBIAS"
     },
@@ -27349,8 +27681,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 251,
-      "row_id": "9aead2e4f71aa14292317e4f8a6be374b9ea920914a922a44285fcfa82e71698",
+      "line": 258,
+      "row_id": "5b63df420f06558f9033fc8d778f22d22bc1318a02887d2dfdf121c6b51d9b43",
       "status": "unknown",
       "symbol": "D3DRS_AMBIENT"
     },
@@ -27359,8 +27691,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 252,
-      "row_id": "c23c55cd98d77159aecb550de364bea46b1bd3cbd6a6ae223c8450a20f887647",
+      "line": 259,
+      "row_id": "f4d4716d78b7da8e3ccba6607a695bd72afa0e95f3001acafb2e8d3a7299ac5d",
       "status": "unknown",
       "symbol": "D3DRS_FOGENABLE"
     },
@@ -27369,8 +27701,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 253,
-      "row_id": "9a74c063e51a4796aaf21e71944693a7e925c847a032f7a376f4dcdedde4051c",
+      "line": 260,
+      "row_id": "feed07ce5819ab8930c264c7a2c003c68947c8f45652ef0342f50502893d0b43",
       "status": "unknown",
       "symbol": "D3DRS_FOGCOLOR"
     },
@@ -27379,8 +27711,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 254,
-      "row_id": "43a341f68d333ffe6595bc51b11c4fcc491b46ca613ce061516e5d2c7f806f12",
+      "line": 261,
+      "row_id": "a64b1dadc8e9ddefdde2f77607d07ad0eb739886c04fc6166f761a793aa4ccca",
       "status": "unknown",
       "symbol": "D3DRS_FOGSTART"
     },
@@ -27389,8 +27721,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 255,
-      "row_id": "c4f91960067d40f71f67e7f3a8fa39348eb17a3cb519c8793298b9e062505d00",
+      "line": 262,
+      "row_id": "a5b68a043222afaf9264937502d0241077ffb1173350e4f333a9129282468213",
       "status": "unknown",
       "symbol": "D3DRS_FOGEND"
     },
@@ -27399,8 +27731,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 256,
-      "row_id": "9b8ee0d6200f252da496d832660dd192521c1c7a435190bada3ffb279e6a0fab",
+      "line": 263,
+      "row_id": "5b6530526c74880c81e9e8e32a82480f1c29f74a98bff4e432723ed34f2ef8d3",
       "status": "unknown",
       "symbol": "D3DRS_FILLMODE"
     },
@@ -27409,8 +27741,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 257,
-      "row_id": "f4f2110b6c7a7e9a2558d0347f67384103b272df1b57241325dc3bff2b4bfd01",
+      "line": 264,
+      "row_id": "4c0f3c95716d1e959f69693063b06f7667582ece5b68512c2aec78173a4630c2",
       "status": "unknown",
       "symbol": "D3DRS_ZWRITEENABLE"
     },
@@ -27419,8 +27751,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 258,
-      "row_id": "9dcf73998a3216db6cab2024cfdc4803d9f8b34cfe8dd8cc1f06bc20e6507541",
+      "line": 265,
+      "row_id": "04e0bce87de86d142d12be16f7498ad03c4a62bb4b1ca068f58a4ffe18dc6fb4",
       "status": "unknown",
       "symbol": "D3DRS_ALPHATESTENABLE"
     },
@@ -27429,8 +27761,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 259,
-      "row_id": "404de4e297e4e1c4b5a15ad1bcecb987714e5af506817a4792c96e4f05e29ce0",
+      "line": 266,
+      "row_id": "53fd93136fb2fa3848304e31e70816c40a0661f81cec25c570a03f0569ea6be5",
       "status": "unknown",
       "symbol": "D3DRS_SRCBLEND"
     },
@@ -27439,8 +27771,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 260,
-      "row_id": "14813e0c26c9b22e2bad42b1b77335f483811266987a684acdd4a2ef61244a84",
+      "line": 267,
+      "row_id": "07e2221ff1f1b17b4d66a51795cf35ad42fc61fe851a421ac8c2e359e0842ddf",
       "status": "unknown",
       "symbol": "D3DRS_DESTBLEND"
     },
@@ -27449,8 +27781,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 261,
-      "row_id": "eb716e6f1c89a588a7d6d7c274cbcd7a4cc9c4acef4742f4c78acb978a81959a",
+      "line": 268,
+      "row_id": "e7e201e40dd25ee715062990bc4b0baf74b052909d1a073c2868444ed9a86f6f",
       "status": "unknown",
       "symbol": "D3DRS_CULLMODE"
     },
@@ -27459,8 +27791,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 262,
-      "row_id": "f673cc209a0aad7f8e0f3adae912aa203254b9cf0299a2ebece2a580d0ecf25a",
+      "line": 269,
+      "row_id": "fd2ee207ba065c1a58bc1aa709cf47fb3f26db91281c35c2ba0db0a0a566c7bc",
       "status": "unknown",
       "symbol": "D3DRS_ZFUNC"
     },
@@ -27469,8 +27801,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 263,
-      "row_id": "4a8008b4709510c2943426b2d43bc3e982bac89df14db113e79418313cde9734",
+      "line": 270,
+      "row_id": "6b6c43265e9af98993c78970e0ca6424f13950aff30c46bd6962abba8ae794d6",
       "status": "unknown",
       "symbol": "D3DRS_ALPHAREF"
     },
@@ -27479,8 +27811,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 264,
-      "row_id": "a600e5b23d5269000cacfe56be0aa883e3b6ce544774306d0d6e9df0157cdc6d",
+      "line": 271,
+      "row_id": "cb575573ac4d0aa67a5ade7563f3803a6aa19a50da0815d247ea8b00d60a3f70",
       "status": "unknown",
       "symbol": "D3DRS_ALPHAFUNC"
     },
@@ -27489,8 +27821,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 265,
-      "row_id": "9b07645f10fd40eb442c506f7c9bd242155cf6e6039e3ce28df1d5c17ea8e7bd",
+      "line": 272,
+      "row_id": "606ead8ae9dcd9141bfb9f6699c86b029319a59bdbc4087073326b7a6ba77946",
       "status": "unknown",
       "symbol": "D3DRS_ALPHABLENDENABLE"
     },
@@ -27499,8 +27831,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 266,
-      "row_id": "93a328a7f4ccfd6f65b8e893853fc7b981572fd8f8ffecf9553e948349ccc042",
+      "line": 273,
+      "row_id": "59d35a90d57182133082819863639b57b1ac9eddac03f65d9eb6328c61f5afb5",
       "status": "unknown",
       "symbol": "D3DRS_SPECULARENABLE"
     },
@@ -27509,8 +27841,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 267,
-      "row_id": "1a6c0ebe8c274f4932a5ab85c3af08ccff96a6e7da8ccec741957fa9b2111222",
+      "line": 274,
+      "row_id": "0bc3f540092fc37b25b6506e13706b927baef5d9fc01dec27cb20119324e0dc9",
       "status": "unknown",
       "symbol": "D3DRS_LIGHTING"
     },
@@ -27519,8 +27851,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 268,
-      "row_id": "005797383595f8d53fa486701425dc6acf4a5b7875f511f6fcd2b47a70e372cf",
+      "line": 275,
+      "row_id": "88d70e098539cb71bbf4d3ec4c87ad518e590cc373fdf43ec52c3df41019d5a1",
       "status": "unknown",
       "symbol": "D3DRS_DIFFUSEMATERIALSOURCE"
     },
@@ -27529,8 +27861,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 269,
-      "row_id": "5c6c095d6b805f976a233d5618375c72e155c5539a929710b72703ad108bddce",
+      "line": 276,
+      "row_id": "b02aef631c456616652d07840dc7359530f6ac1c628bc2a738b4a4ecfcb494d1",
       "status": "unknown",
       "symbol": "D3DRS_AMBIENTMATERIALSOURCE"
     },
@@ -27539,8 +27871,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 270,
-      "row_id": "d225b48ed1a6edcef51da14548a7e9d88c2b26715a7be2609184c0ad291108a3",
+      "line": 277,
+      "row_id": "7001e86998320512faf23912c5b46e493255da415dccd9ef17de010334d63df8",
       "status": "unknown",
       "symbol": "D3DRS_EMISSIVEMATERIALSOURCE"
     },
@@ -27549,8 +27881,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 271,
-      "row_id": "165aea6551cbf4f91ec14ee05f5fa9f51e3e8084f279cff00edd65a033d397ab",
+      "line": 278,
+      "row_id": "bf9f7f7032e73c42e6e528e0232df6a738d3c9045ac47cd70e16d4fec7d6579a",
       "status": "unknown",
       "symbol": "D3DRS_PATCHSEGMENTS"
     },
@@ -27559,8 +27891,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 272,
-      "row_id": "c32bd4cb186dafab53b5f99a301cb5e243d4dd89511de9c206a04e9908a64652",
+      "line": 279,
+      "row_id": "5a1f78d3501a72e993600c9351a49cac8a29293c314ae55de8a807cbcf071bbd",
       "status": "unknown",
       "symbol": "D3DTSS_COLOROP"
     },
@@ -27569,8 +27901,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 273,
-      "row_id": "b5e4ded48897278c746e43b5c8baad89cfb1a1393b92a28a47d44e4b32147e16",
+      "line": 280,
+      "row_id": "639e31d4900bf1eea3dbf11463d86d94ffbaf5045ea54a35c9a8abb77e08cbad",
       "status": "unknown",
       "symbol": "D3DTSS_COLORARG1"
     },
@@ -27579,8 +27911,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 274,
-      "row_id": "5683bf9da0c75b067eeaa261714af784591b16993277a5b2bbb5cb2c07e32019",
+      "line": 281,
+      "row_id": "abc8d29449771bb8e608f5a78c1a552cbec02aae992af980540221e94e6b3b88",
       "status": "unknown",
       "symbol": "D3DTSS_COLORARG2"
     },
@@ -27589,8 +27921,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 275,
-      "row_id": "bd948891f4a96689b7bdc7e9a49e5fee1d1bdb3b938f64c50434235631db7231",
+      "line": 282,
+      "row_id": "6fd1aef660ec39d3a00b8d2cc7a9ac80facc44e27ff9e2fcad9903e4b06651f0",
       "status": "unknown",
       "symbol": "D3DTSS_ALPHAOP"
     },
@@ -27599,8 +27931,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 276,
-      "row_id": "940e7f971721fcd629853604f22fd33912e801bb7333368d4ef41f907ab66cdf",
+      "line": 283,
+      "row_id": "910243224fc3555fe147fbac3b1cbd5ee5b343a0f5832c683fe2b82ac6043d63",
       "status": "unknown",
       "symbol": "D3DTSS_ALPHAARG1"
     },
@@ -27609,8 +27941,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 277,
-      "row_id": "95dd622814236eb7186fcfee5b92cc1fbbe2d8f4133976180335b831881f423a",
+      "line": 284,
+      "row_id": "5503ac3aa73c536393b1b17957e0302a09204c75f9b5054de88f430151167055",
       "status": "unknown",
       "symbol": "D3DTSS_ALPHAARG2"
     },
@@ -27619,8 +27951,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 278,
-      "row_id": "21286db8fa11a7a06ee5b4a75f506b91c3d12c7ed7c86d35b68d68ccb7b68282",
+      "line": 285,
+      "row_id": "f0e675b51c71aa43f7d94bff808a2501f7a906a2af19d291951f70a95d6c36e1",
       "status": "unknown",
       "symbol": "D3DTSS_BUMPENVMAT00"
     },
@@ -27629,8 +27961,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 279,
-      "row_id": "d1d180c68f20c4a871a0414ffd8f8a5edc1bacdce77fa07b8ecc6254d82aad0f",
+      "line": 286,
+      "row_id": "3018f67f3e2b032f19ac03a3078b2dddda231f34b306918aa12b4b5d9118837a",
       "status": "unknown",
       "symbol": "D3DTSS_BUMPENVMAT01"
     },
@@ -27639,8 +27971,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 280,
-      "row_id": "a79c4b4b7fecf6005b6d81715aa7e5605880b6862c0f80ff80e33668e9f85060",
+      "line": 287,
+      "row_id": "b1b19d997da7beadd0d8f1082bd41c1481eb67acc7bd138741e0c09bbbe42338",
       "status": "unknown",
       "symbol": "D3DTSS_BUMPENVMAT10"
     },
@@ -27649,8 +27981,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 281,
-      "row_id": "70ffd221c48fbdab481ba9bc7b85719e2a872390ea9cd72b320e522c8bd7a868",
+      "line": 288,
+      "row_id": "40bb41573c58c60bf02a7778dfb5c1e742f9765588fc13a89ed5c1f506ff546d",
       "status": "unknown",
       "symbol": "D3DTSS_BUMPENVMAT11"
     },
@@ -27659,8 +27991,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 282,
-      "row_id": "6f6e858c814d04a3387e3b81e1d3693d8d55815c909c5ed49359f3a78b4fe206",
+      "line": 289,
+      "row_id": "85178a76f05c7d35bce15d8eeeecd214f8b3cb5d44c5f01df7edbba486c2c882",
       "status": "unknown",
       "symbol": "D3DTSS_TEXCOORDINDEX"
     },
@@ -27669,8 +28001,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 283,
-      "row_id": "7ad1ea181f4ea2aea0192dcc95b9b583fc99c37fd2a9318c76fe5cd42eb67151",
+      "line": 290,
+      "row_id": "72c76216528b238f8197a43537aa650caa7fb69fc2bfc362c83f3c64de63ce27",
       "status": "unknown",
       "symbol": "D3DTSS_ADDRESSU"
     },
@@ -27679,8 +28011,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 284,
-      "row_id": "a9ded0180fd2728659e839532ca6508cd2295952e4a5c595bdab913956129f85",
+      "line": 291,
+      "row_id": "7798da19b1cd60eed595f26ce2a3fd16149e0d52d8d099e457a772f35cae52c6",
       "status": "unknown",
       "symbol": "D3DTSS_ADDRESSV"
     },
@@ -27689,8 +28021,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 285,
-      "row_id": "5fcfbe3a8704ebc5e67e97b7acb95e90a293cc3e75e46052d976db82b887d85b",
+      "line": 292,
+      "row_id": "f3cbc6afd58c4c085beebd2d788f0ca72f1a7f30ad572635ff1f830c94229d07",
       "status": "unknown",
       "symbol": "D3DTSS_MAGFILTER"
     },
@@ -27699,8 +28031,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 286,
-      "row_id": "40c9673d7264d95da9f798b54d94227637ef5c623409bd3368e8183cfd67e48d",
+      "line": 293,
+      "row_id": "764ebf5b867ba6d473f78d1bf95a984072aec64afb1302a42e69a19ed1f8b49a",
       "status": "unknown",
       "symbol": "D3DTSS_MINFILTER"
     },
@@ -27709,8 +28041,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 287,
-      "row_id": "083404e1a6e7b3d6621085f4094bb6ba75d618bf236722c9dc0984b984369015",
+      "line": 294,
+      "row_id": "a6fdb55f64f56b0f3557f5f5f929ff5aa945dc7657059f4bf3af59d2335f0072",
       "status": "unknown",
       "symbol": "D3DTSS_MIPFILTER"
     },
@@ -27719,8 +28051,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 288,
-      "row_id": "ff6bf6901d721dc2e9e472fdca97ec5c9cf0d8e48eb7de41a6021c80471df936",
+      "line": 295,
+      "row_id": "04444704e2302be370d39a174a2ec1199152e6b23b470bb3c490ea66d3e0cd1a",
       "status": "unknown",
       "symbol": "D3DTSS_MAXANISOTROPY"
     },
@@ -27729,8 +28061,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 289,
-      "row_id": "a7c262b07f3c6c3f3e410a5ad2bbe5085c20e0557a2cbbf366c9ff4b657b45da",
+      "line": 296,
+      "row_id": "dc1da63169e0d0d4ed59613018e54b42653d024aceb12a5ba9dd0716923632b8",
       "status": "unknown",
       "symbol": "D3DTSS_TEXTURETRANSFORMFLAGS"
     },
@@ -27739,8 +28071,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 290,
-      "row_id": "34d687266993d9871d13005806fe0d989b44fca8bb561e3391afed5fcb04d951",
+      "line": 297,
+      "row_id": "680e90acd99ad7f00b84241c14e66782321cbe24b6bda854b558d477dd3e3f7c",
       "status": "unknown",
       "symbol": "D3DTOP_DISABLE"
     },
@@ -27749,8 +28081,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 291,
-      "row_id": "8df99d1d46879418b83fcb4bf0abda77720baee1af44f5e9c5ee8bb245b895f1",
+      "line": 298,
+      "row_id": "48c90d257b9a03edc24c52797ddb5f4f223457ccc87fa94a3221a89a68e20afd",
       "status": "unknown",
       "symbol": "D3DTOP_SELECTARG1"
     },
@@ -27759,8 +28091,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 292,
-      "row_id": "1f0d2dc740adc83ffb8c65ef5fa9428865385207874b954ca6562f2fdacd52b9",
+      "line": 299,
+      "row_id": "d8fc150bab5a5be50c07e991d7dce4c360fc0b376efb3352f91530aeda0f824c",
       "status": "unknown",
       "symbol": "D3DTOP_SELECTARG2"
     },
@@ -27769,8 +28101,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 293,
-      "row_id": "cac85f974cae5216c2e901780fb1ddcaef8fdb824146ecbd61c00ff1f388a363",
+      "line": 300,
+      "row_id": "3abe84c405fd90f7e0cf974ab06193cb4620021dd97f9289f9d3e0486520b644",
       "status": "unknown",
       "symbol": "D3DTOP_MODULATE"
     },
@@ -27779,8 +28111,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 294,
-      "row_id": "e1e687f719beb4ba04f011978fd22480922ac35ef99ec09d52de7189fe2197f7",
+      "line": 301,
+      "row_id": "a6fd97a0b0c8a953c75c0b9718f8956becd903c3a91a5626d6b4746b4864a526",
       "status": "unknown",
       "symbol": "D3DTOP_ADD"
     },
@@ -27789,8 +28121,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 295,
-      "row_id": "7751d3178f36163ca773aaee106e87c129c73ff7bf069bf6ad11041d4e65df7f",
+      "line": 302,
+      "row_id": "5d9b962087fd0f34a46d18636ff0ffd54882b199a9e2455655906a402541f656",
       "status": "unknown",
       "symbol": "D3DTOP_SUBTRACT"
     },
@@ -27799,8 +28131,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 296,
-      "row_id": "74916ecaa7afed7622efec2b05dc14cc84f782dd63fd390989b32bebd5e03a5d",
+      "line": 303,
+      "row_id": "b21598e4fc3cd115fd2d63d7dae960b24bd0f1be2d6d5247ea09aa9508942c8a",
       "status": "unknown",
       "symbol": "D3DTOP_ADDSMOOTH"
     },
@@ -27809,8 +28141,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 297,
-      "row_id": "ee0f69798ac0fc41467347b4bd83795ca806849e6afb7c69583a9fcb35e74d5e",
+      "line": 304,
+      "row_id": "70e4f8dfe0544150c53f5330bf437b98fff295fd0e2f1269a8f939083ee9e8d8",
       "status": "unknown",
       "symbol": "D3DTOP_BLENDTEXTUREALPHA"
     },
@@ -27819,8 +28151,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 298,
-      "row_id": "ccd23da645caed6a2b76f60245760239e9757daeaf913424d15c327c1b76868b",
+      "line": 305,
+      "row_id": "ea8bff44a92679d8a8a6fce310e5da0ac4a024fc809440376dfa4b286eefe8e1",
       "status": "unknown",
       "symbol": "D3DTOP_BLENDCURRENTALPHA"
     },
@@ -27829,8 +28161,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 299,
-      "row_id": "cf644020caa8b3399cc177b1ee588d3b7a70fa5980fd763a851b2904293b0997",
+      "line": 306,
+      "row_id": "efa8ea84885bf4c32b413a8db082e8b9549f34366d6f4a8d8b7950c665da6fc0",
       "status": "unknown",
       "symbol": "D3DTOP_BUMPENVMAP"
     },
@@ -27839,8 +28171,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 300,
-      "row_id": "ba042b64350e254599c7849c7681e8b7ed28474c6653fa527fb77b5446c9defd",
+      "line": 307,
+      "row_id": "09ac1ecbcff15516ccad5205da70e4e2a7b9826bb8da3827c36364574f08e538",
       "status": "unknown",
       "symbol": "D3DTOP_BUMPENVMAPLUMINANCE"
     },
@@ -27849,8 +28181,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 301,
-      "row_id": "d696bd731d01bb74b8a99f703938bf85526f4d10f996d360e122d519bfb11ef8",
+      "line": 308,
+      "row_id": "3748c47dc14c94282899733af464180b1906d61290827db42521aa900647eff6",
       "status": "unknown",
       "symbol": "D3DTOP_DOTPRODUCT3"
     },
@@ -27859,8 +28191,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 302,
-      "row_id": "5ca677dffcc28b97bb9984ca61258a2f567dbf1e64fb6ae7abd5d365960bbdc0",
+      "line": 309,
+      "row_id": "5412c5d69ec6e9a397cfa849c543ea356f13cbb2174a0ed743310724158ca100",
       "status": "unknown",
       "symbol": "D3DBLEND_ZERO"
     },
@@ -27869,8 +28201,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 303,
-      "row_id": "e62617ce6ba52790db6c5edee7a7124796b0acb793734114c55b0d3e1cfa2eba",
+      "line": 310,
+      "row_id": "2f983b3684293144681de5f3d6dfb379f1514d8a0d5166b81cf74e48e3848261",
       "status": "unknown",
       "symbol": "D3DBLEND_ONE"
     },
@@ -27879,8 +28211,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 304,
-      "row_id": "8523c240183b0c6118e0ac78feb315bc5fc0eba8389d9bfa2a1824b4773e42e3",
+      "line": 311,
+      "row_id": "6b770d26487c9cbb75b15637cdaf0dacb5061b70c1ff32ad2cecaed62520b5ef",
       "status": "unknown",
       "symbol": "D3DBLEND_SRCCOLOR"
     },
@@ -27889,8 +28221,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 305,
-      "row_id": "8b97eb5bab0d2ba11d01e7d857a69cfb4cfbc150f98c149383d1531cda7e7404",
+      "line": 312,
+      "row_id": "d6a7132ef864560a2616ea716b4c4bd6204fa6ef819507fbcd95be1b3d12940f",
       "status": "unknown",
       "symbol": "D3DBLEND_INVSRCCOLOR"
     },
@@ -27899,8 +28231,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 306,
-      "row_id": "16e30f964a1c0475bb13921ca89720fd0022336e62968eec1a55f9a495567525",
+      "line": 313,
+      "row_id": "1c80cc4fca3c04bfaa735fe444fa6e224b7c07d228df45e9fe9ebad51fcc7360",
       "status": "unknown",
       "symbol": "D3DBLEND_SRCALPHA"
     },
@@ -27909,8 +28241,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 307,
-      "row_id": "0912a23fd75725f1aa3fdc3e874bbcf750ce29b65fb6a22f34b406afe5d78b5c",
+      "line": 314,
+      "row_id": "660da64d3afc16bf5ecdc8434e34a50abfc1d9feec69b1feb5c42197731b0b55",
       "status": "unknown",
       "symbol": "D3DBLEND_INVSRCALPHA"
     },
@@ -27919,8 +28251,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 308,
-      "row_id": "ceb8f589b414e25d45f5123cb9f95675d9e7ff874d947527c26931825fbb343b",
+      "line": 315,
+      "row_id": "cc5bac2d2ab53066e4808603288e277b62f4e053749bb8a58b92003939ce86c6",
       "status": "unknown",
       "symbol": "D3DCMP_LESSEQUAL"
     },
@@ -27929,8 +28261,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 309,
-      "row_id": "51e70444031ce2e84c7114036fe1d076128998d564d13f5a569c840731dfc39b",
+      "line": 316,
+      "row_id": "52c72c92e83d409dc3043e2760813f187cde8ed18c2a0db61ae6de17152f7cc6",
       "status": "unknown",
       "symbol": "D3DCMP_GREATEREQUAL"
     },
@@ -27939,8 +28271,38 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 313,
-      "row_id": "694527145c76f9e2a79453b9c7504fff1c8ec584054387c5cec115e4280ebfa2",
+      "line": 317,
+      "row_id": "2cada259f91141511df9fb453c32dcb9a28c300b8254992fa01a7b20cc7b41c5",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "port/renderer/vita/d3d8.h",
+      "kind": "draw_state_reference",
+      "line": 318,
+      "row_id": "20eeead1e5723e4b8075715e98ecf8b97db29e37011ac67900a27a064b7f090e",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR1"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "port/renderer/vita/d3d8.h",
+      "kind": "draw_state_reference",
+      "line": 319,
+      "row_id": "ceee37e6af9c98e6aebf8e92fd3cf385210ab8c615c91e30704b8f1579372e13",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR2"
+    },
+    {
+      "column": 2,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "port/renderer/vita/d3d8.h",
+      "kind": "draw_state_reference",
+      "line": 320,
+      "row_id": "f6a4545e9f9193ce42d48307dc6510bf95dc2510ba427ebc67ef6f47a7cf857b",
       "status": "unknown",
       "symbol": "D3DFILL_WIREFRAME"
     },
@@ -27949,8 +28311,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 314,
-      "row_id": "827476b2198b8cbdf8a9f64894613f59a220bf830db90dc98526266d72c9fd51",
+      "line": 321,
+      "row_id": "b0723a46e016c5af63b2e562a2380e91072f76b3f1808fbe2adb24e482da73ed",
       "status": "unknown",
       "symbol": "D3DFILL_POINT"
     },
@@ -27959,8 +28321,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 315,
-      "row_id": "9b42d01c3e5ce13b801bfafe5a5de50dea0374dbf4131e804f5d72e2d1d01bd4",
+      "line": 322,
+      "row_id": "ee68bd6383607b2df1d9f0f1e5ad2c66205f69f002093efa6593d642646a5741",
       "status": "unknown",
       "symbol": "D3DFILL_SOLID"
     },
@@ -27969,8 +28331,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 316,
-      "row_id": "a65ae756352966a1995be7691c659ef586f79b04f036391bdd17c126490f8d08",
+      "line": 323,
+      "row_id": "857b7fc4c4e1bc4d66c5297ad0dc0e6bcb2615cf3411919644f55821463e43f4",
       "status": "unknown",
       "symbol": "D3DTTFF_DISABLE"
     },
@@ -27979,8 +28341,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 317,
-      "row_id": "4462db6c0d5026089e4878fd7f8f9d17df1f8d4442ca36ed9796f8241bf5e4ea",
+      "line": 324,
+      "row_id": "692684a3a250681b2e5c29bd412dd9a10bc6cc1f4c814c2c9c935089a3875419",
       "status": "unknown",
       "symbol": "D3DTTFF_COUNT1"
     },
@@ -27989,8 +28351,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 318,
-      "row_id": "b937831d7b36ccf60b1fabf8c59c567db3ee62cdda1839196b1d61476505f222",
+      "line": 325,
+      "row_id": "50fac322eab8c2c7931a74a00572a5898eb4306c775906ac3d84c0809122f66d",
       "status": "unknown",
       "symbol": "D3DTTFF_COUNT2"
     },
@@ -27999,8 +28361,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 319,
-      "row_id": "0b0a6bd1bd2feb9c0f1beaf2fe64c6783225f74d0739982e03466a12208eb7bc",
+      "line": 326,
+      "row_id": "202b0d4c033ba85671e9f76cd0d429d22a4107aef77392b7ed3531ba2ae1f780",
       "status": "unknown",
       "symbol": "D3DTTFF_COUNT3"
     },
@@ -28009,8 +28371,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 320,
-      "row_id": "d34e5b6ec28516723a348948eec9fca21da3cbe82730317414ba1511aa9174e2",
+      "line": 327,
+      "row_id": "817b72abe5a9fd725fff886282db1bdabc11899511a329ac7678c05107bc0fa3",
       "status": "unknown",
       "symbol": "D3DTTFF_COUNT4"
     },
@@ -28019,8 +28381,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 321,
-      "row_id": "1612318a0d6b642a60508a2e2200d4cadcefadf64bcb9081429a7fbcff55e339",
+      "line": 328,
+      "row_id": "c5fbba48413cad70a9e31b31ccc0cf89cc860c897cd4321271c4510cb4fa9181",
       "status": "unknown",
       "symbol": "D3DTTFF_PROJECTED"
     },
@@ -28029,8 +28391,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 328,
-      "row_id": "4b7314f23dd0e99dec5d4aeb592262e5af7681f7f9cd3b987bada3ddd63d9e7d",
+      "line": 335,
+      "row_id": "8bd4e8253b544495ab6bda482c3fdcb4bb871ceefc9263fd68474008bd82ef24",
       "status": "unknown",
       "symbol": "D3DBLEND_DESTALPHA"
     },
@@ -28039,8 +28401,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 329,
-      "row_id": "ece1c7cb9803ddf1a59a5420efdfc9fc25154b323490d9bafb1deb6a6dac3bdc",
+      "line": 336,
+      "row_id": "111811c48bba7f918bae7ab698f70e9876f0ed6c8fc7a6c810c09e5759a7f958",
       "status": "unknown",
       "symbol": "D3DBLEND_INVDESTALPHA"
     },
@@ -28049,8 +28411,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 330,
-      "row_id": "4da0a57fb4fb5c8816cbec07b4839bcffcfb8af5dfbdffc53c96e995ed458968",
+      "line": 337,
+      "row_id": "39de3e8237e0be18781d45266fd084aa845350ca4505e62d091b50177b75ae63",
       "status": "unknown",
       "symbol": "D3DBLEND_DESTCOLOR"
     },
@@ -28059,8 +28421,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 331,
-      "row_id": "ad3b33d65e5869f0c21837b62827428db4b6036fc03e4b5d158a1da7d61ace1f",
+      "line": 338,
+      "row_id": "b85198cc51faab6e16e73ad1e800e1f123b20594444d6e959ad7db18cc9857d2",
       "status": "unknown",
       "symbol": "D3DBLEND_INVDESTCOLOR"
     },
@@ -28069,8 +28431,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 332,
-      "row_id": "918b92fc4b2731c7b3f67b2bb318cdfea502f516f43af4386ff9548314722f25",
+      "line": 339,
+      "row_id": "e3d848880c737e542db322d861a33afce9f6454750ea6b8c13508ad6e6366068",
       "status": "unknown",
       "symbol": "D3DBLEND_SRCALPHASAT"
     },
@@ -28079,8 +28441,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 333,
-      "row_id": "c1569f1fc6bb23176c0b99a5e73003ea9a30407fa5da0a07e80d6eb87dc8841a",
+      "line": 340,
+      "row_id": "0f64180aca4da0fbc03d3ed1e2e7a020c28e6775af26d9e42c32b3fbc35a309c",
       "status": "unknown",
       "symbol": "D3DBLEND_BOTHSRCALPHA"
     },
@@ -28089,8 +28451,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 334,
-      "row_id": "4ab771455223b0487bba9acd21ce21f8bd78bef374cb1abad4d3d37e5712d864",
+      "line": 341,
+      "row_id": "9cc318b06995d671fec0fb19476303f2f6c503fe3bcb3368654ad02c92559315",
       "status": "unknown",
       "symbol": "D3DBLEND_BOTHINVSRCALPHA"
     },
@@ -28099,8 +28461,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 335,
-      "row_id": "625e634e18b525f145108a28026898e61185e3694e9edb53e9e915642b983e46",
+      "line": 342,
+      "row_id": "66b3646fd4af7a1e57663545e60aa2564460fe1e43c0b1acd773aa32d46d839a",
       "status": "unknown",
       "symbol": "D3DCMP_NEVER"
     },
@@ -28109,8 +28471,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 336,
-      "row_id": "41c6135d1354cf68df2ccc2307fb5a7a54682fa76e25a194faa1407d92817e2b",
+      "line": 343,
+      "row_id": "bb602fa608d03d09ae0a0e1845537c3c726fcf6f0c834e6a90a566553e43cc90",
       "status": "unknown",
       "symbol": "D3DCMP_LESS"
     },
@@ -28119,8 +28481,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 337,
-      "row_id": "9624661721af4201f5025b5fa456fdfce7fa2550a5c1f6ec436d3e07fd15fe3e",
+      "line": 344,
+      "row_id": "12e52d58286d4f4ad1cc0d9cb1103f36aeb745b9b16a465b1d12e9cc8533a677",
       "status": "unknown",
       "symbol": "D3DCMP_EQUAL"
     },
@@ -28129,8 +28491,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 338,
-      "row_id": "aa932b5c5324767c5e8bf347dad767bfde4df31d72b736bafa7f9af5ec0298c9",
+      "line": 345,
+      "row_id": "9d701f9bfa33f9157c1a357d26e55c6abdf2b7460d0924f8823f4e659782c466",
       "status": "unknown",
       "symbol": "D3DCMP_GREATER"
     },
@@ -28139,8 +28501,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 339,
-      "row_id": "58ca36eb9ed4201defd4b93fcb2b4ee4f889f6a49b0be908335f360ca40e9db9",
+      "line": 346,
+      "row_id": "b86a56ad1870feb4c4b3f12a7fff4a4a28e06c1b6f63f91dfb203bb3598b9c53",
       "status": "unknown",
       "symbol": "D3DCMP_NOTEQUAL"
     },
@@ -28149,8 +28511,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 340,
-      "row_id": "a14228932984ab775fd82a60a7b58652f6fc25bcf3074c80999aebb9ff42c4be",
+      "line": 347,
+      "row_id": "5d5c8b76067deeb727ce51f1e3a6fef5006a6b115625ca0b076f708bb8206fc4",
       "status": "unknown",
       "symbol": "D3DCMP_ALWAYS"
     },
@@ -28159,8 +28521,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 341,
-      "row_id": "0bd95b6dfd4e111ee018fc4bdcd5a8356d4df5f306fb3ce0c272def2db447b1d",
+      "line": 348,
+      "row_id": "3a7453fce0c652b4dcdbfc216f038fca6b3d350ecd48dd701e994586a6d31b0e",
       "status": "unknown",
       "symbol": "D3DFOG_NONE"
     },
@@ -28169,8 +28531,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 342,
-      "row_id": "5d830af88e01d76c1df767c409ce0c5b00b1cd3fd4ae789636877c1e5a1df786",
+      "line": 349,
+      "row_id": "bdc6dd5ce0be29569e7d21c742030f050bc3654ff9dc52b056ca7ce180460ec3",
       "status": "unknown",
       "symbol": "D3DFOG_EXP"
     },
@@ -28179,8 +28541,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 343,
-      "row_id": "12eca21b7bdc1242115c0b3cdb4cfaeb73584cc6deb14eecd4e374e1028ab0e7",
+      "line": 350,
+      "row_id": "56d564d1afa71f554c9d0951565b472aa7f1c155ffde2917ffc20871e4ea76d1",
       "status": "unknown",
       "symbol": "D3DFOG_EXP2"
     },
@@ -28189,8 +28551,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 344,
-      "row_id": "9b6f77098b5d6896424bf2a9d156bd8f10b9c440823a96fc28e9c6302ec24cbd",
+      "line": 351,
+      "row_id": "1d43292865678aa3d60d2be1453c5234871ee3a37d2e4cb8848118db968405f5",
       "status": "unknown",
       "symbol": "D3DFOG_LINEAR"
     },
@@ -28199,8 +28561,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 345,
-      "row_id": "ba2870fd295e15847c5b06702404731ab216636d27b5bc1c4fdba15441645ab8",
+      "line": 352,
+      "row_id": "be5fb591c26e352b557379656ffd8858c4880f7606d785bc54da670e2f5aa213",
       "status": "unknown",
       "symbol": "D3DSTENCILOP_KEEP"
     },
@@ -28209,8 +28571,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 346,
-      "row_id": "7bbb129a2708baf429c8acba350495640f615f03c7f4c6c8d284aface6196989",
+      "line": 353,
+      "row_id": "39c4f85eb7715d0f04d1a49203246bab7500b94fefcd12a31c1d6cad7bb240a3",
       "status": "unknown",
       "symbol": "D3DSTENCILOP_ZERO"
     },
@@ -28219,8 +28581,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 347,
-      "row_id": "ba737b61c773f23ba06979bf2a9617475e3e1abcb0e6ce4e6e483423395772f1",
+      "line": 354,
+      "row_id": "87ccba27d8b9f4ead560c44959a766f0b0b089c9d2cc77fde2aecc1042ef89ad",
       "status": "unknown",
       "symbol": "D3DSTENCILOP_REPLACE"
     },
@@ -28229,8 +28591,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 348,
-      "row_id": "f2a0fcca69eaa779a4d7477ef4902a80adcd690687c6526d7789c9b6b22ad705",
+      "line": 355,
+      "row_id": "61fab2b575bbf18d2527fc568d3bc47cdb48aa2c2c3e061ef20b60a66d5918f0",
       "status": "unknown",
       "symbol": "D3DSTENCILOP_INCRSAT"
     },
@@ -28239,8 +28601,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 349,
-      "row_id": "1bb5fb751bf45adcf36d43cdd7687681f791627751cc67fa63979db6bd6c597d",
+      "line": 356,
+      "row_id": "ec68cc4fa920bfe80c949a7d1f41846212dc063fa209b6efb76cd4dd1eb2ac52",
       "status": "unknown",
       "symbol": "D3DSTENCILOP_DECRSAT"
     },
@@ -28249,8 +28611,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 350,
-      "row_id": "b3350c7b106e5ca1c77cd33002917a5e7d5b2f61d8fecac793bd68b066f99dbd",
+      "line": 357,
+      "row_id": "8a076de75f4265521da3855ac8cfef40eebc6ea81b8b9deb3a3f86735ca78635",
       "status": "unknown",
       "symbol": "D3DSTENCILOP_INVERT"
     },
@@ -28259,8 +28621,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 351,
-      "row_id": "2f208bf8fc5983177bf5b59a9c7d7d193da714996584a05bf8af3c4c66d39859",
+      "line": 358,
+      "row_id": "ff35f07d4f5e91581d10adf14683c0bd72d9ad11f442bc1683f869ac2333cf93",
       "status": "unknown",
       "symbol": "D3DSTENCILOP_INCR"
     },
@@ -28269,8 +28631,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 352,
-      "row_id": "869ea2c527e547d09805f4fe134302f3c19731bf76ce4d3433c5b3a369ab4d53",
+      "line": 359,
+      "row_id": "2696d5a1be0114afe7ffa999dbfd006c900ca25d7e9a577259dd421ea4a3e5d1",
       "status": "unknown",
       "symbol": "D3DSTENCILOP_DECR"
     },
@@ -28279,8 +28641,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 368,
-      "row_id": "a86d6d24c84db26a0ac44711bb50d8f16d94cb2f0b48842b79fc6c18e300d91a",
+      "line": 375,
+      "row_id": "cb5793ffce7b803ebdeb4a65feee247e4e40ae4f075b9c2ff1976d0a371ef083",
       "status": "unknown",
       "symbol": "D3DTADDRESS_WRAP"
     },
@@ -28289,8 +28651,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 369,
-      "row_id": "7f5f87ebd191c734f0d9548d015ec3827ec09d60b4cd655cfce5de52cb0b04bd",
+      "line": 376,
+      "row_id": "dd6bcfb163bf617d10671f46a69b62efe1938fadf92ae41b31676b25c651cc5e",
       "status": "unknown",
       "symbol": "D3DTADDRESS_CLAMP"
     },
@@ -28299,8 +28661,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 370,
-      "row_id": "6928b3245bc76698f59cb5467dbcc92519150a1d3863405d12cfc6678db8e468",
+      "line": 377,
+      "row_id": "35475ff490c629b8b5bd3f4c6b10687ee1dc896eaade4d09d7c780dc86dc705f",
       "status": "unknown",
       "symbol": "D3DTEXF_NONE"
     },
@@ -28309,8 +28671,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 371,
-      "row_id": "92ecf8f7421a9f3fcfa0728524e88e9e32ad721639bd9da48b532dad56d2b019",
+      "line": 378,
+      "row_id": "582100446f91b4b94a0a4d2813237601b5e13a4452b95ed62c5333a25448452d",
       "status": "unknown",
       "symbol": "D3DTEXF_POINT"
     },
@@ -28319,8 +28681,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 372,
-      "row_id": "0bdc52053e5a32ed269ab6f16107b6c30d0df41878a0ac204193cf51fb0a3016",
+      "line": 379,
+      "row_id": "5acbabdf9725a682470e02dc0331535b636adf811bbf7029567ee4f5703a11f9",
       "status": "unknown",
       "symbol": "D3DTEXF_LINEAR"
     },
@@ -28329,8 +28691,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 373,
-      "row_id": "e55455858e7cd727ce2804cad43af30dcceb35bf1ba617a35bd3f026f5c18220",
+      "line": 380,
+      "row_id": "b6d3fe40bcfed6381bc5a859a60341fdceeaaea9f51d1f4566b89245fa9f1991",
       "status": "unknown",
       "symbol": "D3DTEXF_ANISOTROPIC"
     },
@@ -28339,8 +28701,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 374,
-      "row_id": "96fb1d319ec709d414ae10323729d5e771287f4842fd67672dd90b7e1122988a",
+      "line": 381,
+      "row_id": "f973f5ff3f7f8ab0f5d4a3fdc12b6d3ea30c3f1ab7a0ac2815907f445f61b763",
       "status": "unknown",
       "symbol": "D3DCULL_NONE"
     },
@@ -28349,8 +28711,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 375,
-      "row_id": "1c8ed13a2d15aa570b88ddefce6ac1184590e4e76754d982395b921648837e1c",
+      "line": 382,
+      "row_id": "0798b066f6f34ba703bded56c510d69c2dee35142898ccb0367c3f6c75039aa6",
       "status": "unknown",
       "symbol": "D3DCULL_CW"
     },
@@ -28359,8 +28721,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 376,
-      "row_id": "3f99f9336df549d8a5d61c8f376c76da21e7b031aa9c942e2ab6e61645085787",
+      "line": 383,
+      "row_id": "c83011ee703325f449c784848012c4621db45d07b3a2baae441381e9b60adab4",
       "status": "unknown",
       "symbol": "D3DCULL_CCW"
     },
@@ -28369,8 +28731,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 377,
-      "row_id": "90b54bf2a5bdfd75c908b6f754445fd7b655ee855c0d62b48bfc393c373d8096",
+      "line": 384,
+      "row_id": "9f8f53fb37e24ed466b2df7ce29af864b3aee8b665fa4cc06d8a2b58f0b6ff12",
       "status": "unknown",
       "symbol": "D3DFMT_R8G8B8"
     },
@@ -28379,8 +28741,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 378,
-      "row_id": "d4f7205013a0b551ce47498bae24a28932417a073d7d6885b6f84245473a766c",
+      "line": 385,
+      "row_id": "5e7a453e83827a291378e27c0df44d6e321889a22e89ce0d65521ccd85e29bb7",
       "status": "unknown",
       "symbol": "D3DFMT_A8R8G8B8"
     },
@@ -28389,8 +28751,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 379,
-      "row_id": "f95b98bf7c20acf607883e94e3f26ca26396af462fcd8920e70d79d8cecd1d88",
+      "line": 386,
+      "row_id": "b36526b337508791aa0e704abafd6564137e6b277c862f60bd9cafea66dea14b",
       "status": "unknown",
       "symbol": "D3DFMT_X8R8G8B8"
     },
@@ -28399,8 +28761,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 380,
-      "row_id": "ecbcdbe856a13b83962f903751327f7fe47f6900b236bede75906f0491af44c3",
+      "line": 387,
+      "row_id": "792c759682c0118f19f78fd6fb181d91e43d1e57899ccf099d8277a0f224ae42",
       "status": "unknown",
       "symbol": "D3DFMT_R5G6B5"
     },
@@ -28409,8 +28771,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 381,
-      "row_id": "fe5b4e3cf4bc8b1a6af5c2ee0799cbf2dba22f628e53c2bdb404add817aa3529",
+      "line": 388,
+      "row_id": "813b4383f13821cb6174ecbefb89264c3045941122e301f7c1170258b01067c6",
       "status": "unknown",
       "symbol": "D3DFMT_X1R5G5B5"
     },
@@ -28419,8 +28781,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 382,
-      "row_id": "d59a43ba928b05d220e358bb32c10669ea0832d48f2a49dceaf841652d895409",
+      "line": 389,
+      "row_id": "c0ca5f93b675833b0cf36198b5de7813f140c500b69cab79c76c89b2d7c7991e",
       "status": "unknown",
       "symbol": "D3DFMT_A1R5G5B5"
     },
@@ -28429,8 +28791,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 383,
-      "row_id": "8bca7b61f1890f00b079ac78444a9f30fe51139b9a89a6c8163f8d4885d3acdb",
+      "line": 390,
+      "row_id": "480b5984eb16fba351780ad900bce805531e639ef768f067d1b5c763ffe44a0d",
       "status": "unknown",
       "symbol": "D3DFMT_A4R4G4B4"
     },
@@ -28439,8 +28801,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 384,
-      "row_id": "6a785bcda11d804a1a33b1b34fafc4fae8b1902832d370d38686ed287a8ea37b",
+      "line": 391,
+      "row_id": "a7141fcbfd863ca3e10f096461e93a37c40a6ccc555df5e8cc6e0d71cefff030",
       "status": "unknown",
       "symbol": "D3DFMT_R3G3B2"
     },
@@ -28449,8 +28811,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 385,
-      "row_id": "d4981f2f8069ba1cf1c405c4f10b659984a8ed5c853b97db485074cec17e9a19",
+      "line": 392,
+      "row_id": "db9f92a0ec4030915808b8f65a11de7d2af0f61a06b8b82ac53a581c36bac182",
       "status": "unknown",
       "symbol": "D3DFMT_A8"
     },
@@ -28459,8 +28821,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 386,
-      "row_id": "7cc0687eea59321439ac8a65a9b8961f1c7617a47e9a523f1c840f6a96952854",
+      "line": 393,
+      "row_id": "06da7a7aecc78235099afc5d7c579a0f23285fcb0b920523e51c7e8b29737c99",
       "status": "unknown",
       "symbol": "D3DFMT_A8R3G3B2"
     },
@@ -28469,8 +28831,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 387,
-      "row_id": "4fed61c0f192c7d29c78d7b30da1fac203086c5eae9c20bc64d59fc50c524396",
+      "line": 394,
+      "row_id": "c67a13c4bb6a0cc39339351b29d63397de0c0452506903f3b99985afc534bbc5",
       "status": "unknown",
       "symbol": "D3DFMT_X4R4G4B4"
     },
@@ -28479,8 +28841,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 388,
-      "row_id": "75eb272c3a660b66928f8cda203ebd5c51fb4c06894461a93091f3386f415698",
+      "line": 395,
+      "row_id": "3eba3a75c80d0b358003f88d516cadbd8b527c4412f567ec181904c78fd1156b",
       "status": "unknown",
       "symbol": "D3DFMT_A8P8"
     },
@@ -28489,8 +28851,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 389,
-      "row_id": "5c0176cb493a03cd77319b9585b557e42d24c76c93067102b1f1b66ae42fcce8",
+      "line": 396,
+      "row_id": "af6f49f2fb36f8e84b140bb8e9170eec6a8ddd980094bac23d3d74fc2181b470",
       "status": "unknown",
       "symbol": "D3DFMT_P8"
     },
@@ -28499,8 +28861,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 390,
-      "row_id": "86ffb3e29c7f207956393631dff39fb212a1b9bc2bc7f3733e9784ec094e5865",
+      "line": 397,
+      "row_id": "14b1e1c130dd88bd1b54a2c71610ae2c0f4d5f8551eac6a9300f956e09162dc3",
       "status": "unknown",
       "symbol": "D3DFMT_L8"
     },
@@ -28509,8 +28871,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 391,
-      "row_id": "a1141b8a53bf8b8a57f33c474638e0f82f7d9e0525186fa2ca0014c20cf43dba",
+      "line": 398,
+      "row_id": "35da13f407c5956a43038c7220498f972b30ff25c1a09a8d80b4b04c6aae259c",
       "status": "unknown",
       "symbol": "D3DFMT_A8L8"
     },
@@ -28519,8 +28881,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 392,
-      "row_id": "fc9964b241910f3621a2730f5178073a6dcbdd849f788b264a8af98e05af5d9c",
+      "line": 399,
+      "row_id": "57760ef8b3566707017b3146c2ef914b459685aa83c60b3bc6f586327b34193d",
       "status": "unknown",
       "symbol": "D3DFMT_A4L4"
     },
@@ -28529,8 +28891,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 393,
-      "row_id": "ee9368dbaa7a75261ec88cac21357064f12fc171a117c772d5e1350d9ff3af97",
+      "line": 400,
+      "row_id": "8d03a53be4772aad1498d47a5292881a822010ae670607f6f5359fff1ec6a838",
       "status": "unknown",
       "symbol": "D3DFMT_V8U8"
     },
@@ -28539,8 +28901,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 394,
-      "row_id": "9abf7d71714cfc36285ba7fc7e2ed1131cd383a9d073ba559f4e2edb3e77e6e7",
+      "line": 401,
+      "row_id": "82886ce8dc1589ab7df32a5b2968ceb73185ee8757fd64c4a4862014666a755c",
       "status": "unknown",
       "symbol": "D3DFMT_L6V5U5"
     },
@@ -28549,8 +28911,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 395,
-      "row_id": "5e6870d7477ec19ecec6b0bce6d814cfa0968e08d97a65fc3b91caefba3e6a59",
+      "line": 402,
+      "row_id": "4476ceb582f845a53d5fffc981f912b84ef38520ebf643ff465fda78d7d6980f",
       "status": "unknown",
       "symbol": "D3DFMT_X8L8V8U8"
     },
@@ -28559,8 +28921,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 396,
-      "row_id": "dc7434bfbdfcea8910e833ef865e6aaf6f472a1883124bba35174bf8a4be6cad",
+      "line": 403,
+      "row_id": "645f1958c3e152d98f481ab276e7cdb0629f2b877f939ee463615e4b3049e4f6",
       "status": "unknown",
       "symbol": "D3DFMT_Q8W8V8U8"
     },
@@ -28569,8 +28931,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 397,
-      "row_id": "b4a5c952956848fcdf3c81c06fcf950c543a63ac10d93132c26e23e3d2e09169",
+      "line": 404,
+      "row_id": "fd6c411f61b505fb65d2d133f74177f03c215c50f6668352f46ac51432b89527",
       "status": "unknown",
       "symbol": "D3DFMT_V16U16"
     },
@@ -28579,8 +28941,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 398,
-      "row_id": "5295032b3f540bb24aa24c0d55f309344e820a7c425f2547ddc57e5116e5e7bc",
+      "line": 405,
+      "row_id": "7b730b678465c9afdfdff4194a106798ca667ed1e2fcca8f375bb440a93dcbfb",
       "status": "unknown",
       "symbol": "D3DFMT_W11V11U10"
     },
@@ -28589,8 +28951,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 399,
-      "row_id": "25d590d656fea694265ea45fc039a4df2124edd355f67485e5dafe43cb4258b9",
+      "line": 406,
+      "row_id": "732b1bb680f02c179071fb8066f71d9341f87c8d37d0424b249eb0fb492edaed",
       "status": "unknown",
       "symbol": "D3DFMT_UYVY"
     },
@@ -28599,8 +28961,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 400,
-      "row_id": "f23146b1f038dc645fd3413a005c2d42670742bac6a48f404c4d47722fc0099a",
+      "line": 407,
+      "row_id": "dc543081299e76c7cfdfe0e8511e9e351705b6999cb1e93763cba64e6611ece4",
       "status": "unknown",
       "symbol": "D3DFMT_YUY2"
     },
@@ -28609,8 +28971,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 401,
-      "row_id": "fa520695604e11649e1b517c2a30251288f11d9b5eefc5d547e89fd5683d55b1",
+      "line": 408,
+      "row_id": "149add1cf221a78ce0e7569a5cda1589cf945944eb71ced6d62f76785ddf8311",
       "status": "unknown",
       "symbol": "D3DFMT_DXT1"
     },
@@ -28619,8 +28981,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 402,
-      "row_id": "dcad60b4f508c76052fc1d5052fd2afab2d34b5c178531abfdfbba6d4fc019f7",
+      "line": 409,
+      "row_id": "e547f73951e03b5dd558636adfb4f602bf5057d49ba6a18a287761bd2fbbebfb",
       "status": "unknown",
       "symbol": "D3DFMT_DXT2"
     },
@@ -28629,8 +28991,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 403,
-      "row_id": "36eabdeca58b8673e7bb6cf694bfde1b2e7253e3f7ea3fe5c871d9ce0992be86",
+      "line": 410,
+      "row_id": "7bf6683b03ec18503f2d87e2c9c4981cefe2dd9cf9d82c939352d73d7bc8c95a",
       "status": "unknown",
       "symbol": "D3DFMT_DXT3"
     },
@@ -28639,8 +29001,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 404,
-      "row_id": "46a39c29460f955c0c668d1a7a1dfff868ef72480fbed2e8a73d4d969ac30f75",
+      "line": 411,
+      "row_id": "323f51db5f549d5eccaf9b19c5bbd96788f5b60497497327728dc74040af1856",
       "status": "unknown",
       "symbol": "D3DFMT_DXT4"
     },
@@ -28649,8 +29011,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 405,
-      "row_id": "e5e33603b90bcc1cdcf34f508c2b9554de0ef9ae205d2d3ce634b55a4c9119f7",
+      "line": 412,
+      "row_id": "7213d94ad397db13b88a6d0d63c2a45564020e3dd851d7d3e7eaccef2fd149cc",
       "status": "unknown",
       "symbol": "D3DFMT_DXT5"
     },
@@ -28659,8 +29021,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 406,
-      "row_id": "91a8c60522855396c3ae4818f3eb59c20e6a8e789dacddeacee824ae8864f77d",
+      "line": 413,
+      "row_id": "d0d9dca5b49268166e11f091291e644de51e0fca3f10870d83bf578010411915",
       "status": "unknown",
       "symbol": "D3DFMT_D16_LOCKABLE"
     },
@@ -28669,8 +29031,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 407,
-      "row_id": "a0c4ce08c9544ecf861512d79518bdc0c2b370d8fe41a9b0bd22e4b475d1cbdf",
+      "line": 414,
+      "row_id": "492647760a7e2aa002904438c2f7547724fceba64d917cc26fb508d1beeb4eaa",
       "status": "unknown",
       "symbol": "D3DFMT_D32"
     },
@@ -28679,8 +29041,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 408,
-      "row_id": "e2f507f938fdb187abebfc07912089edafaabc1f7ae537d124a4138831fb9958",
+      "line": 415,
+      "row_id": "c4a0807f551e98a0003bfae72e5008e37c09efbef4f76ae23e43bc8cb2b5f192",
       "status": "unknown",
       "symbol": "D3DFMT_D15S1"
     },
@@ -28689,8 +29051,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 409,
-      "row_id": "e180cf81bf158611bbd23d567b4f6af6d5664821ffd4a6d750abbf88a19b18ad",
+      "line": 416,
+      "row_id": "22d350424ebcdb1376df5dfc204a4995d8749adc0b25a1e10bf19f2abda2d435",
       "status": "unknown",
       "symbol": "D3DFMT_D24S8"
     },
@@ -28699,8 +29061,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 410,
-      "row_id": "c15fe167193a248e2745fbbe682dd8390f51eef2446d7d7b9570b4ea0df03efd",
+      "line": 417,
+      "row_id": "b41afd3eb747397aa4f6f4c1b89e6048616b4ed8a3e5fc6a402d3925020a4a25",
       "status": "unknown",
       "symbol": "D3DFMT_D16"
     },
@@ -28709,8 +29071,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 411,
-      "row_id": "2ce193c9eaefae4eb6d95c1ac2eec4ffee00ec96760b7c9c263650c0efc53304",
+      "line": 418,
+      "row_id": "ff90c6d31d23e8c764ad5d1f035ba81b84b754a3a9ab180a5883cdef8187a26b",
       "status": "unknown",
       "symbol": "D3DFMT_D24X8"
     },
@@ -28719,8 +29081,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 412,
-      "row_id": "028a05909da3a52c712f836712796e415507dc35e39e0963521586af6876a55d",
+      "line": 419,
+      "row_id": "661b461b2d6e130d8d9e385a63a63b1ecad50e53781f7bb4fc27e0549fe0c9a9",
       "status": "unknown",
       "symbol": "D3DFMT_D24X4S4"
     },
@@ -28729,8 +29091,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 419,
-      "row_id": "8fee5433d7e208f5c378136f08b745a3181f7752cae406c36980202f774c203d",
+      "line": 426,
+      "row_id": "8b82e1ec0e526dc457d86adc684575ca9eada539904ebb3dbd1ed63afba3c64d",
       "status": "unknown",
       "symbol": "D3DTA_DIFFUSE"
     },
@@ -28739,8 +29101,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 420,
-      "row_id": "0d71e80dfc9948090f1629d7e6733d8e90bc1bdfb7061fd68392d1347f65949c",
+      "line": 427,
+      "row_id": "518b9be999d6887863a112404f25832c5a033d13435137f4b12eeb615cc34977",
       "status": "unknown",
       "symbol": "D3DTA_CURRENT"
     },
@@ -28749,8 +29111,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 421,
-      "row_id": "a6799315d5c1c76cd99c39955d0c8bd2f6e3c1b3814c7eb075481f0f63c115cd",
+      "line": 428,
+      "row_id": "fad908d194ad9803fef8a46ff4e28651724f20d695ab4fa5365de9b8a9226207",
       "status": "unknown",
       "symbol": "D3DTA_TEXTURE"
     },
@@ -28759,8 +29121,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 422,
-      "row_id": "2c7d37daf87f02a2f35ec9f562e4cdb72103e14970964a0f0b767b1ddadcdad5",
+      "line": 429,
+      "row_id": "756b0101ec3e7c09f33e8955dd098b0688008f2488de8f3ded74c2e71c33c1d8",
       "status": "unknown",
       "symbol": "D3DTSS_TCI_PASSTHRU"
     },
@@ -28769,8 +29131,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 423,
-      "row_id": "be26993ee2d036dafcacec9fbea41d9ae6c33e930e798522d163879698679a54",
+      "line": 430,
+      "row_id": "09a6e3f684ae874818fb4349864fe461e1acccdd50517c4bb721c7d72d3e8280",
       "status": "unknown",
       "symbol": "D3DTSS_TCI_CAMERASPACENORMAL"
     },
@@ -28779,8 +29141,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 424,
-      "row_id": "a864630d6ff2e49771e1ee8efed85037143ec6ec54813afe826ab7fdd55c26c0",
+      "line": 431,
+      "row_id": "eab19fda06f35a8f89fd98d7eaa3470886936f0ec3a4a1b2d9d21cde8da33065",
       "status": "unknown",
       "symbol": "D3DTSS_TCI_CAMERASPACEPOSITION"
     },
@@ -28789,8 +29151,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 425,
-      "row_id": "5198a56512576322ee5d25e5a62a22757b151979589380f66a843cd6190d2a2b",
+      "line": 432,
+      "row_id": "baca6143aebbc6cc519b71d51566e43e4ad9d75e1d92a55b04db9d7c403a96a9",
       "status": "unknown",
       "symbol": "D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR"
     },
@@ -28799,8 +29161,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 443,
-      "row_id": "4b25afacd5fc5268551204d8b1ac014647c72369bc1c173b682b70a8ec71e08e",
+      "line": 450,
+      "row_id": "f2923f1335e5e286f52c1b9bd5f59c0191cbe3601536fbf54ab73828dd7ee0ff",
       "status": "unknown",
       "symbol": "D3DFVF_XYZ"
     },
@@ -28809,8 +29171,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 444,
-      "row_id": "aa74a6e5396fee2332b9a2da8e1fb8ebe0c94e1cb0aac50feef1055a388b26b2",
+      "line": 451,
+      "row_id": "d1a614c7730fd253ddee24ebdc80b85cdb5b3365dac791b9a55e19fa10976a30",
       "status": "unknown",
       "symbol": "D3DFVF_XYZRHW"
     },
@@ -28819,8 +29181,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 445,
-      "row_id": "065f7f573d4b8855d30881d83a2a083044245595bbd356b2adea7ae4fa5ddbc7",
+      "line": 452,
+      "row_id": "0f2d266c2670aba15da002df4ce03dc3c074b268df6b69d19f6a6b9096152eb4",
       "status": "unknown",
       "symbol": "D3DFVF_XYZB1"
     },
@@ -28829,8 +29191,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 446,
-      "row_id": "835c5a6779d0f9a13674107d02dd45b65c57dc97db8679c40bf24b18356ba6f5",
+      "line": 453,
+      "row_id": "bff2bf89b90775dc6ba9e2d1ee2d57c057ff8db9aa67dc0af5a48d662532f079",
       "status": "unknown",
       "symbol": "D3DFVF_XYZB2"
     },
@@ -28839,8 +29201,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 447,
-      "row_id": "10288f2ddb643b16032b73122b99d06e8db07e7e3271d35fc8d783993f3c3eb7",
+      "line": 454,
+      "row_id": "0eeeffe786575cdc0732dde25a3f2992dee3b3fc4f98df05813c999e4dc35ee7",
       "status": "unknown",
       "symbol": "D3DFVF_XYZB3"
     },
@@ -28849,8 +29211,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 448,
-      "row_id": "fe7f37eeed92bc984ee13881cb56c7462df7a834cf1287ee8639cd0495b4138a",
+      "line": 455,
+      "row_id": "a103eb43498ce05d36e5badc9a2fed1cb87a3ec29d601e4ce634a5e222e9f6f0",
       "status": "unknown",
       "symbol": "D3DFVF_XYZB4"
     },
@@ -28859,8 +29221,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 449,
-      "row_id": "878fcd263611ea68bf8d8a2162f3972208dbbb6b41ba19b40a1a2371e8ea02dc",
+      "line": 456,
+      "row_id": "2f53de0ed2274d392ca68543980dc5278c7da3e936e8e5260e4fcd29c3e2c49b",
       "status": "unknown",
       "symbol": "D3DFVF_XYZB5"
     },
@@ -28869,8 +29231,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 450,
-      "row_id": "0eeab01f964e3dfec63ec276696f00c7890797c5e79cd4c91a0724e896e111ab",
+      "line": 457,
+      "row_id": "423400e56437ecf8d6b2d6481ce1fd091f07f4682e9462d2268a76af5542b0e9",
       "status": "unknown",
       "symbol": "D3DFVF_NORMAL"
     },
@@ -28879,8 +29241,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 451,
-      "row_id": "9eefd6bb029da83d124818ab41c52e885b8c7c5f6c753eb5dfbc393cd4c364e7",
+      "line": 458,
+      "row_id": "1a64a930b11952c6069943e3cd9162e43b08fca8d625ad561b5ec02eae9fc75e",
       "status": "unknown",
       "symbol": "D3DFVF_PSIZE"
     },
@@ -28889,8 +29251,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 452,
-      "row_id": "8eb453d3af84d41626ff79d1c8c239ae631f11f1a23bd6fae2f384088c64e3d0",
+      "line": 459,
+      "row_id": "5c7b56d7c83c3a79a10b9764f275f103fa76567d05147087b03d411280d1d084",
       "status": "unknown",
       "symbol": "D3DFVF_DIFFUSE"
     },
@@ -28899,8 +29261,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 453,
-      "row_id": "0017d8d7a030091f1bbfc8bff7af8de08053c224cb98a81afe90aa54819d7f02",
+      "line": 460,
+      "row_id": "a908d0db1359b0d5c4bbf270a8e1774cdb9ef0609f4cb3bbe76ec373197a1df7",
       "status": "unknown",
       "symbol": "D3DFVF_SPECULAR"
     },
@@ -28909,8 +29271,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 454,
-      "row_id": "e0379c3fcdda024c6c05694ab2d26a5ae79f5ae480e69392ec6528f21d94fe93",
+      "line": 461,
+      "row_id": "5543e4d189d47a46449ae3e7cfb20863ee0c768df3fabbe754792ef953f6eabd",
       "status": "unknown",
       "symbol": "D3DFVF_TEX0"
     },
@@ -28919,8 +29281,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 455,
-      "row_id": "142ee54afa65a1ecc6aba1043c5b7f2d5228ac4c368c44e03a46713db8f92b75",
+      "line": 462,
+      "row_id": "61a843a5da57607d8466468e982c54b382127db01d07611b516c6ec623adcbf9",
       "status": "unknown",
       "symbol": "D3DFVF_TEX1"
     },
@@ -28929,8 +29291,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 456,
-      "row_id": "af059de807cf48ebea03d74e719c3edbc09860ab4bfc88da2f1cbb0e71b27ee2",
+      "line": 463,
+      "row_id": "6aa733837a894e3d8560e91f716a0343828424d1bdd947de1986dacf2b7d0e85",
       "status": "unknown",
       "symbol": "D3DFVF_TEX2"
     },
@@ -28939,8 +29301,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 457,
-      "row_id": "de6d6f0baf6fafa067627221b429c3c82e4df8b589c49dc6cfac40f8b1c75d9c",
+      "line": 464,
+      "row_id": "75288133bcaa9d2e043840e8a2518751452d4d141509343dd2815706d3fffd62",
       "status": "unknown",
       "symbol": "D3DFVF_TEX3"
     },
@@ -28949,8 +29311,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 458,
-      "row_id": "20798bff3bd8da31825aab018bff5b20d282e29790d8d808607a21a7aec7df51",
+      "line": 465,
+      "row_id": "c62602be62e5b56ca7294adc243f2cb707ba89d8d12668289a9831009038780a",
       "status": "unknown",
       "symbol": "D3DFVF_TEX4"
     },
@@ -28959,8 +29321,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 459,
-      "row_id": "9dd01a25df95fe28232fd986c20ebb47c9ea056ffa65a31b8bb802b859c1a97d",
+      "line": 466,
+      "row_id": "ec5200e94764fcba1d526e8b4be508457f5e06d6ef162c046a8d3d16052b5726",
       "status": "unknown",
       "symbol": "D3DFVF_TEX5"
     },
@@ -28969,8 +29331,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 460,
-      "row_id": "2f41aa9d7f05283dc14427e82c4f23d29fd17e518833ede165f1bbb09e9677b4",
+      "line": 467,
+      "row_id": "f024f11f1348cb213daf459efca26305b875ade412d21e71b7a58315879f7bfe",
       "status": "unknown",
       "symbol": "D3DFVF_TEX6"
     },
@@ -28979,8 +29341,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 461,
-      "row_id": "822fc6e230be607760615153a10746242c27de4ffaa9f6c6470bbc45a26bfb7a",
+      "line": 468,
+      "row_id": "545f41d8e0af7b9f1e49e390e1942432651eae4873e7b9c7b318c14bef6af5a1",
       "status": "unknown",
       "symbol": "D3DFVF_TEX7"
     },
@@ -28989,8 +29351,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 462,
-      "row_id": "382a61bc2f23a33db5d4ca2525048142d7f332dcb5c70f08edc0b56fae7e079d",
+      "line": 469,
+      "row_id": "ccc8ad94f77f9f86dd82de5612d263576cbd1d09fc9118173622e681d9595908",
       "status": "unknown",
       "symbol": "D3DFVF_TEX8"
     },
@@ -28999,8 +29361,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 463,
-      "row_id": "80f5d687e5c51b30a7410bff9304920ae103927063441d05d7d33b06e4866d06",
+      "line": 470,
+      "row_id": "6d5069cdf39d51916554789b9d43e8e54e4a1e5e0312cc803fcaeccfc909b1a3",
       "status": "unknown",
       "symbol": "D3DFVF_LASTBETA_UBYTE4"
     },
@@ -29009,8 +29371,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 464,
-      "row_id": "8fd31c2123780d43c7bb1c18e612686c26edcceb7b07b245d3ecec024e5d748f",
+      "line": 471,
+      "row_id": "2ac37009ecf856d3e3168ab5b771c6760d0c06bee54eb9759cd91b2906741c81",
       "status": "unknown",
       "symbol": "D3DFVF_TEXTUREFORMAT1"
     },
@@ -29019,8 +29381,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 465,
-      "row_id": "8358d0a64b8bb2fead3ac1f550804a2eb85842b9a9356febdd9dc847cda3ee14",
+      "line": 472,
+      "row_id": "c60f4383bdb57ff229986e7fdf96bec7424f798230cd670bcdf043327c63a2fb",
       "status": "unknown",
       "symbol": "D3DFVF_TEXTUREFORMAT2"
     },
@@ -29029,8 +29391,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 466,
-      "row_id": "08d09e384929e70d7132cf7c4b9f61e1f91768558549cab929626094b9d54b5e",
+      "line": 473,
+      "row_id": "d66c2f86e2454724fa0bb8cc70f42ab143803149cab2306e3e1cda309d70b032",
       "status": "unknown",
       "symbol": "D3DFVF_TEXTUREFORMAT3"
     },
@@ -29039,8 +29401,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 467,
-      "row_id": "c08f6d2e88da59e7cd500aa7471d0d208fdd366f5b95343dcdafce4c882a6fdf",
+      "line": 474,
+      "row_id": "83c86ac70f756fef02d1da2f26850fc6da6a2a64cc3c9ffe8b7be3fd2fbb7d36",
       "status": "unknown",
       "symbol": "D3DFVF_TEXTUREFORMAT4"
     },
@@ -29049,8 +29411,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 468,
-      "row_id": "ae0b20d1f8f2ab93824038fa902c44cbbba5f071f7978a1bdcd780b554209c5d",
+      "line": 475,
+      "row_id": "a1708db71b0ffd46fec1aa06da90b0c61f076c98166fe88a68b36da9a4ef57cf",
       "status": "unknown",
       "symbol": "D3DFVF_TEXCOORDSIZE1"
     },
@@ -29059,8 +29421,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 468,
-      "row_id": "c8e93bafdefd58294b90a360fb5892f3046d6c89465ef70739d97750c21ca83d",
+      "line": 475,
+      "row_id": "b5180a95b8ba4f955e9acd7a6cde649dad765753db45335872616b730e7c7d4b",
       "status": "unknown",
       "symbol": "D3DFVF_TEXTUREFORMAT1"
     },
@@ -29069,8 +29431,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 469,
-      "row_id": "b95b682459e800550a3c3196fc3a86e22781c29ed4c5b6ba31e9534d8b1e42f8",
+      "line": 476,
+      "row_id": "748405948357b33d981e721ed1f69717a750e78e088e76000b7bddc187834737",
       "status": "unknown",
       "symbol": "D3DFVF_TEXCOORDSIZE2"
     },
@@ -29079,8 +29441,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 469,
-      "row_id": "6412a7bb9dcfeee5317b91f2767df668a10c461860ba0d7faf2c628a5b9ade08",
+      "line": 476,
+      "row_id": "14b455fc8f780908902dd6980e89de29d38176a8ccc94da881429742c014a6b5",
       "status": "unknown",
       "symbol": "D3DFVF_TEXTUREFORMAT2"
     },
@@ -29089,8 +29451,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 470,
-      "row_id": "fd9b6188969479b0add656c65d4361529a0a84f99789cdd55cc134125000022e",
+      "line": 477,
+      "row_id": "5ac65ea5174113e02157d172487cc9cc92db2904591c28d7efbfd963fb75fe85",
       "status": "unknown",
       "symbol": "D3DFVF_TEXCOORDSIZE3"
     },
@@ -29099,8 +29461,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 470,
-      "row_id": "140d48fc05fa7afd809df217bcfe11e1fd644479e91a4a8eeb5ec8a5b3d8d16c",
+      "line": 477,
+      "row_id": "b4c77c57d9ce999e8595f3ca41f4a17da9c131ed7e43b9e3b8863a9f9b1ab98f",
       "status": "unknown",
       "symbol": "D3DFVF_TEXTUREFORMAT3"
     },
@@ -29109,8 +29471,8 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 471,
-      "row_id": "cabcd409aa338ab89c4725657f24058b6e32cf6bb404b32a9453bd68e7c4416c",
+      "line": 478,
+      "row_id": "87f57d85f68b366ca6396c4b269ce9d5982e0a819919931a2a3e0ce125a436d8",
       "status": "unknown",
       "symbol": "D3DFVF_TEXCOORDSIZE4"
     },
@@ -29119,10 +29481,30 @@
       "evidence_class": "unpreprocessed_source_syntax",
       "file": "port/renderer/vita/d3d8.h",
       "kind": "draw_state_reference",
-      "line": 471,
-      "row_id": "480fb8f341e6896cd29368b03f6655918fa7b4d5d24b0e088790ae5844449e41",
+      "line": 478,
+      "row_id": "e7fdff3ea32820f46e44e6b1110c3497ab720adaf29e3a9c9796b9399a13c569",
       "status": "unknown",
       "symbol": "D3DFVF_TEXTUREFORMAT4"
+    },
+    {
+      "column": 24,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "port/renderer/vita/original_dx8_light_environment.inc",
+      "kind": "draw_state_reference",
+      "line": 7,
+      "row_id": "eed366762f8d66a7d5e32a83e9602c02e1f916acb8a9834c99dd53843c061a99",
+      "status": "unknown",
+      "symbol": "D3DRS_AMBIENT"
+    },
+    {
+      "column": 16,
+      "evidence_class": "unpreprocessed_source_syntax",
+      "file": "port/renderer/vita/original_dx8_light_environment.inc",
+      "kind": "draw_state_reference",
+      "line": 12,
+      "row_id": "e5fd2caf1680705b9565e34ff4ce268f6fcd6540ea6129635f4c78985215fb5f",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_DIRECTIONAL"
     },
     {
       "bases": [],
@@ -33083,7 +33465,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 334
+          "line": 341
         }
       ],
       "row_id": "b90d4923bcff6d14cec3b438ab3da939965eb0bf5ceb5baef83a4b3bf5cd4107",
@@ -33104,7 +33486,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 333
+          "line": 340
         }
       ],
       "row_id": "1a9075e260008cf9a69cb1843cadc867466837df61581b23eb457b9776203abd",
@@ -33125,7 +33507,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 328
+          "line": 335
         },
         {
           "column": 7,
@@ -33151,7 +33533,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 330
+          "line": 337
         },
         {
           "column": 7,
@@ -33177,7 +33559,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 329
+          "line": 336
         },
         {
           "column": 7,
@@ -33203,7 +33585,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 331
+          "line": 338
         },
         {
           "column": 7,
@@ -33244,7 +33626,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 307
+          "line": 314
         },
         {
           "column": 7,
@@ -33275,7 +33657,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 305
+          "line": 312
         },
         {
           "column": 7,
@@ -33321,7 +33703,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 303
+          "line": 310
         },
         {
           "column": 7,
@@ -33357,7 +33739,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 306
+          "line": 313
         },
         {
           "column": 7,
@@ -33383,7 +33765,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 332
+          "line": 339
         },
         {
           "column": 7,
@@ -33414,7 +33796,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 304
+          "line": 311
         },
         {
           "column": 7,
@@ -33460,7 +33842,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 302
+          "line": 309
         },
         {
           "column": 7,
@@ -33486,7 +33868,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 340
+          "line": 347
         },
         {
           "column": 7,
@@ -33512,7 +33894,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 337
+          "line": 344
         },
         {
           "column": 7,
@@ -33538,7 +33920,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 338
+          "line": 345
         },
         {
           "column": 7,
@@ -33569,7 +33951,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 309
+          "line": 316
         },
         {
           "column": 7,
@@ -33595,7 +33977,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 336
+          "line": 343
         },
         {
           "column": 7,
@@ -33626,7 +34008,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 308
+          "line": 315
         },
         {
           "column": 7,
@@ -33652,7 +34034,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 335
+          "line": 342
         },
         {
           "column": 7,
@@ -33678,7 +34060,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 339
+          "line": 346
         },
         {
           "column": 7,
@@ -33714,7 +34096,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 376
+          "line": 383
         },
         {
           "column": 24,
@@ -33750,7 +34132,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 375
+          "line": 382
         }
       ],
       "row_id": "3cf56d507a13bffdefb51921b4713eb82ccd679d6900092d35b76621d9c0abf8",
@@ -33776,7 +34158,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 374
+          "line": 381
         },
         {
           "column": 16,
@@ -33807,7 +34189,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 314
+          "line": 321
         },
         {
           "column": 7,
@@ -33843,7 +34225,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 315
+          "line": 322
         },
         {
           "column": 7,
@@ -33884,7 +34266,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 313
+          "line": 320
         },
         {
           "column": 7,
@@ -33936,7 +34318,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 382
+          "line": 389
         },
         {
           "column": 7,
@@ -34023,7 +34405,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 392
+          "line": 399
         }
       ],
       "row_id": "d038979eddd82a4cea37f83d575b309105b041e67e733b30da47471b201af59c",
@@ -34060,7 +34442,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 383
+          "line": 390
         },
         {
           "column": 7,
@@ -34153,7 +34535,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 385
+          "line": 392
         },
         {
           "column": 7,
@@ -34236,7 +34618,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 391
+          "line": 398
         },
         {
           "column": 7,
@@ -34294,7 +34676,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 388
+          "line": 395
         },
         {
           "column": 7,
@@ -34352,7 +34734,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 386
+          "line": 393
         },
         {
           "column": 7,
@@ -34430,7 +34812,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 378
+          "line": 385
         },
         {
           "column": 7,
@@ -34552,7 +34934,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 408
+          "line": 415
         }
       ],
       "row_id": "d1ffe7d9ec81098a33da27eee71a57ccbbf85e827a02e06aa9d0eef15f490328",
@@ -34593,7 +34975,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 410
+          "line": 417
         }
       ],
       "row_id": "4a72ca75b63d7fb6406b8c0a09adc9cebd9c54efcc65a5cf4e2e33c4efbf87ce",
@@ -34614,7 +34996,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 406
+          "line": 413
         }
       ],
       "row_id": "00e0ea61f307c1d80a00a129046d518253445e3556955ae39439b2a310805af0",
@@ -34655,7 +35037,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 409
+          "line": 416
         }
       ],
       "row_id": "6bd7eb57dde33ca2486534bff89395eaa32dccf9c1ec750cddaaa9200b84e60d",
@@ -34691,7 +35073,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 412
+          "line": 419
         }
       ],
       "row_id": "b02a9290c636ddf9b754db98017fb28c98393bcf6e72d098e41a7ac67f6355f2",
@@ -34727,7 +35109,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 411
+          "line": 418
         }
       ],
       "row_id": "4348da7c0c5dd19a24339e640c31df90a7a2fb3622e8809a26b1aad79d756f60",
@@ -34768,7 +35150,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 407
+          "line": 414
         }
       ],
       "row_id": "4ff5e4d456723c9ed3f0805534a645cab43d85686948d2e819534d464211d6da",
@@ -34800,7 +35182,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 401
+          "line": 408
         },
         {
           "column": 19,
@@ -34859,7 +35241,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 402
+          "line": 409
         },
         {
           "column": 44,
@@ -34918,7 +35300,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 403
+          "line": 410
         },
         {
           "column": 13,
@@ -34977,7 +35359,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 404
+          "line": 411
         },
         {
           "column": 38,
@@ -35036,7 +35418,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 405
+          "line": 412
         },
         {
           "column": 13,
@@ -35115,7 +35497,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 394
+          "line": 401
         }
       ],
       "row_id": "c3b1f714d622cf98f088fd6bbae1329231aaa81ba6758902e609ccbcbbdbd394",
@@ -35152,7 +35534,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 390
+          "line": 397
         },
         {
           "column": 7,
@@ -35244,7 +35626,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 389
+          "line": 396
         }
       ],
       "row_id": "1a7107a0e5095dfa8bfd8baed391776f6e3a12959f2ef5e9bcac67dc8a4973a6",
@@ -35265,7 +35647,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 396
+          "line": 403
         }
       ],
       "row_id": "4780103b190e3db0dc98311fb0004ba592dde1da91ec9b2fd14961d88f7d4171",
@@ -35296,7 +35678,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 384
+          "line": 391
         }
       ],
       "row_id": "7373ff2314539583ff017cb338833daa58be134359670200902ddcbb85bbaa86",
@@ -35353,7 +35735,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 380
+          "line": 387
         },
         {
           "column": 7,
@@ -35446,7 +35828,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 377
+          "line": 384
         },
         {
           "column": 7,
@@ -35564,7 +35946,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 399
+          "line": 406
         }
       ],
       "row_id": "c7d2fa66049fe61eaf3f0bead81491ebe59a1fa2397f2715b8c560f667934329",
@@ -35585,7 +35967,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 397
+          "line": 404
         }
       ],
       "row_id": "ce341f3b2e21a7839505ef86f5d6fd0aed25abdda00b3a942364685d338be107",
@@ -35616,7 +35998,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 393
+          "line": 400
         }
       ],
       "row_id": "fb30d9ae27c7a23eaa18b4db3034843de9a1b855d9c23ba211b2d3b5deb57a44",
@@ -35637,7 +36019,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 398
+          "line": 405
         }
       ],
       "row_id": "018157ac31704ee496fbb235d4535c59c410fc39f1ffd0670b3a58b666ec1dcc",
@@ -35684,7 +36066,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 381
+          "line": 388
         },
         {
           "column": 7,
@@ -35742,7 +36124,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 387
+          "line": 394
         },
         {
           "column": 7,
@@ -35804,7 +36186,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 395
+          "line": 402
         }
       ],
       "row_id": "f85d5c287f19ef22dd729f66f4457903bd2d7dc2f21f5a74da91d81becb8f49a",
@@ -35851,7 +36233,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 379
+          "line": 386
         },
         {
           "column": 7,
@@ -35918,7 +36300,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 400
+          "line": 407
         }
       ],
       "row_id": "4685db6a79c9afbff715bf99d39ec99f10a44317d0c0a3f95a6fe69816a0f70c",
@@ -35939,7 +36321,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 342
+          "line": 349
         }
       ],
       "row_id": "6bf7403a55d1f050cce4760630387bb4d3bc4cf577759ebd7f73d0df9daf9934",
@@ -35960,7 +36342,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 343
+          "line": 350
         }
       ],
       "row_id": "5cd52333515595fd91f3e7e886684e67440a9f8e54188486582960c4d09c868a",
@@ -35986,7 +36368,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 344
+          "line": 351
         }
       ],
       "row_id": "6f25368337c8c2706869ceb149f5b9cf5c84950dfcd0b43b26d47782db356311",
@@ -36012,7 +36394,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 341
+          "line": 348
         }
       ],
       "row_id": "5838bbbb15cbb3557eea5de170bbf57378b06e0771fe266ba8a154fcadd50a20",
@@ -36098,7 +36480,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 452
+          "line": 459
         }
       ],
       "row_id": "e8aa13a2a119ed439a2aa79a82ac31574bc4045bbe6e482588a631567391f1fa",
@@ -36124,7 +36506,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 463
+          "line": 470
         }
       ],
       "row_id": "b221738a799f712445002a3fbe6e6a3e654e1f44c71ad834b2b81e6b97c8dca4",
@@ -36215,7 +36597,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 450
+          "line": 457
         }
       ],
       "row_id": "6c2f141892f5dfdd8d40d150ba27c78b997ef03e1971093c1f6b6c32b305f972",
@@ -36236,7 +36618,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 451
+          "line": 458
         }
       ],
       "row_id": "c648ac6ae1f0999444703c9116781b3e814c5dff9815b6c5ef91a7cda827c61a",
@@ -36282,7 +36664,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 453
+          "line": 460
         }
       ],
       "row_id": "626172791cca8bfbc9ff74910cc478b15cdea33d95f72ebf4a454da8df00b50a",
@@ -36298,7 +36680,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 454
+          "line": 461
         }
       ],
       "row_id": "bf8cfb83468189ad4cf1abb6cba48b7582d557bb61ba7762d3769ccc8c0aa8b5",
@@ -36379,7 +36761,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 455
+          "line": 462
         }
       ],
       "row_id": "79a2023b79e08f23475d47a9bc2999c2eb16513c6bbb875c73eb2564c4e1ee1e",
@@ -36450,7 +36832,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 456
+          "line": 463
         }
       ],
       "row_id": "e81beaa062cacd7392c86f3629e0ec51d28baf3d667df379a79c15d41c0e1abe",
@@ -36491,7 +36873,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 457
+          "line": 464
         }
       ],
       "row_id": "84c916b22f989da259e612a35c9bf88c2f50b35b08f45f289bd58e5a6d77300f",
@@ -36532,7 +36914,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 458
+          "line": 465
         }
       ],
       "row_id": "ae702b9f5646a098090356e54bdc70176a27f1c9ace2a7cd5568bc339d4522c8",
@@ -36573,7 +36955,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 459
+          "line": 466
         }
       ],
       "row_id": "e1978c8d32a45389737e30bcb1210bcba318a7b5f6ee9d688ed53f634bb1f507",
@@ -36614,7 +36996,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 460
+          "line": 467
         }
       ],
       "row_id": "9dd5bd78a21edf909c646a19edcd01e3c08130022d2f7d2108046101c06b7f52",
@@ -36655,7 +37037,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 461
+          "line": 468
         }
       ],
       "row_id": "69225917cb1ef962c208ce8b85f3e1542a8f38dc812464608bb6d021de5a4908",
@@ -36696,7 +37078,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 462
+          "line": 469
         }
       ],
       "row_id": "6370e91ca16c80c5c4f39fc5820cfd519a1af15a812e6773f1a6c3fa006299ed",
@@ -36722,7 +37104,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 468
+          "line": 475
         }
       ],
       "row_id": "d2fee968cb7755467dee157f66b17f833fd2839a5696d4f0c52f7c00b962ace4",
@@ -36748,7 +37130,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 469
+          "line": 476
         }
       ],
       "row_id": "a05ad578adfa529044f863152fff2b1762bf7c91fa6bab3665f8dd87ffa20309",
@@ -36774,7 +37156,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 470
+          "line": 477
         }
       ],
       "row_id": "1fd7141c62e270e304bc221a812144b7d012a8525000919ef6dc20a0525978dc",
@@ -36800,7 +37182,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 471
+          "line": 478
         }
       ],
       "row_id": "6318612754d80b89a16fc0cef5a7fbd4f1f0f2793582fb9a6728f4a79d49b3ef",
@@ -36821,12 +37203,12 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 464
+          "line": 471
         },
         {
           "column": 38,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 468
+          "line": 475
         }
       ],
       "row_id": "b67b52ae3b96bd1cf5c5d9a426ddd88bf1ec3956abbbbcf5ce34e7189f096735",
@@ -36842,12 +37224,12 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 465
+          "line": 472
         },
         {
           "column": 37,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 469
+          "line": 476
         }
       ],
       "row_id": "838a60a9a2eae6bac11bf1da773f417a3a5d0e451a7e126f832466142f8d6a4a",
@@ -36868,12 +37250,12 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 466
+          "line": 473
         },
         {
           "column": 38,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 470
+          "line": 477
         }
       ],
       "row_id": "672517e6aa77187ef5d77e6d1fa4c53b3bae74573e1be78734a1f634dad93945",
@@ -36894,12 +37276,12 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 467
+          "line": 474
         },
         {
           "column": 38,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 471
+          "line": 478
         }
       ],
       "row_id": "2f342018739045915c4a9aaf36b131faee5dcbf346189731919991798766ad22",
@@ -37015,7 +37397,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 443
+          "line": 450
         }
       ],
       "row_id": "4a7c2011eaf19c2754733ffc5a776b75227b8086f2245f8bf083fbe1d34dad5f",
@@ -37036,7 +37418,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 445
+          "line": 452
         }
       ],
       "row_id": "ac36e47255fb94cd066e95018bcbd5b70964be05d755d985f7f6efa947a77af2",
@@ -37057,7 +37439,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 446
+          "line": 453
         }
       ],
       "row_id": "9fbff59d338e1beca97b6bad2740a1928388e41d6c492c424a60799e3d6f0226",
@@ -37078,7 +37460,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 447
+          "line": 454
         }
       ],
       "row_id": "fd72fca26b530ebee64d7dc25aa9fde78eaa57009274b8c69d812cdc819d90b6",
@@ -37109,7 +37491,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 448
+          "line": 455
         }
       ],
       "row_id": "0f461c1a28a4940e176eac8355907739fe9f4f907d992710b5cdc3b8a6d6712b",
@@ -37130,7 +37512,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 449
+          "line": 456
         }
       ],
       "row_id": "97de0559216ceaff0701da04c90cb4468b70934b87116a6a47191c37e39fed95",
@@ -37151,12 +37533,274 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 444
+          "line": 451
         }
       ],
       "row_id": "3793d105b22a283592cb73280d434b4f6186e1467faaa66b059c570e37c7cfa2",
       "status": "unknown",
       "symbol": "D3DFVF_XYZRHW",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 16,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2351
+        },
+        {
+          "column": 14,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2424
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 41
+        },
+        {
+          "column": 16,
+          "file": "port/renderer/vita/original_dx8_light_environment.inc",
+          "line": 12
+        }
+      ],
+      "row_id": "deef30138f4cf3ccde56a09f12b70ca934b14346e590953cea6fa082d10a3561",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_DIRECTIONAL",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 42
+        }
+      ],
+      "row_id": "15031bf84c5dbfd7969e8e40bbc7e0b3f2d03cf87b0461173904407f7acedf45",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_FORCE_DWORD",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 16,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2346
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 39
+        }
+      ],
+      "row_id": "5f7fcc245ab5f735d7e8f54fe50c98b76b65b8fa0bac99136a8f15654d0b69e9",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_POINT",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 16,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 2356
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 40
+        }
+      ],
+      "row_id": "8ff0a2cde760b94bd3e6f6e52582e8c0c09af065853e1d2f0e3ee8b30ddade20",
+      "status": "unknown",
+      "symbol": "D3DLIGHT_SPOT",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3295
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 320
+        },
+        {
+          "column": 38,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 331
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 342
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 353
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 364
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 375
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 318
+        }
+      ],
+      "row_id": "196ea8a6f2e2069f19a493b96643098e9ac0d581bd90ac5e6660ca35ebd1ede0",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR1",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3296
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 321
+        },
+        {
+          "column": 38,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 332
+        },
+        {
+          "column": 37,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 343
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 354
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 365
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 376
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 319
+        }
+      ],
+      "row_id": "711645457a442aa2a0039188b3d17a635a8b8216aa2de0cd77dbd05fedfbb691",
+      "status": "unknown",
+      "symbol": "D3DMCS_COLOR2",
+      "symbol_role": "value_or_layout_token"
+    },
+    {
+      "evidence_class": "source_token_aggregation",
+      "kind": "draw_state_symbol",
+      "native_mapping": "unreviewed",
+      "references": [
+        {
+          "column": 53,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 358
+        },
+        {
+          "column": 7,
+          "file": "staging/ww3d2/dx8wrapper.cpp",
+          "line": 3294
+        },
+        {
+          "column": 21,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 63
+        },
+        {
+          "column": 22,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 64
+        },
+        {
+          "column": 21,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 65
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 322
+        },
+        {
+          "column": 36,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 333
+        },
+        {
+          "column": 35,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 344
+        },
+        {
+          "column": 63,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 904
+        },
+        {
+          "column": 63,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 905
+        },
+        {
+          "column": 64,
+          "file": "staging/ww3d2/vertmaterial.cpp",
+          "line": 906
+        },
+        {
+          "column": 2,
+          "file": "port/renderer/vita/d3d8.h",
+          "line": 317
+        }
+      ],
+      "row_id": "92061b3a528221fb74bcd21cba3edaa48a849f4103d92bb23c05a4dc868dde4c",
+      "status": "unknown",
+      "symbol": "D3DMCS_MATERIAL",
       "symbol_role": "value_or_layout_token"
     },
     {
@@ -37183,7 +37827,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 265
+          "line": 272
         },
         {
           "column": 32,
@@ -37252,7 +37896,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 264
+          "line": 271
         },
         {
           "column": 32,
@@ -37321,7 +37965,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 263
+          "line": 270
         },
         {
           "column": 32,
@@ -37390,7 +38034,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 258
+          "line": 265
         },
         {
           "column": 32,
@@ -37459,7 +38103,12 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 251
+          "line": 258
+        },
+        {
+          "column": 24,
+          "file": "port/renderer/vita/original_dx8_light_environment.inc",
+          "line": 7
         },
         {
           "column": 22,
@@ -37523,7 +38172,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 269
+          "line": 276
         }
       ],
       "review": {
@@ -37802,7 +38451,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 261
+          "line": 268
         },
         {
           "column": 32,
@@ -37910,7 +38559,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 260
+          "line": 267
         },
         {
           "column": 32,
@@ -37979,7 +38628,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 268
+          "line": 275
         }
       ],
       "review": {
@@ -38126,7 +38775,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 270
+          "line": 277
         }
       ],
       "review": {
@@ -38205,7 +38854,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 256
+          "line": 263
         },
         {
           "column": 7,
@@ -38264,7 +38913,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 253
+          "line": 260
         },
         {
           "column": 7,
@@ -38377,7 +39026,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 252
+          "line": 259
         },
         {
           "column": 7,
@@ -38446,7 +39095,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 255
+          "line": 262
         },
         {
           "column": 7,
@@ -38510,7 +39159,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 254
+          "line": 261
         },
         {
           "column": 7,
@@ -38760,7 +39409,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 267
+          "line": 274
         }
       ],
       "review": {
@@ -39078,7 +39727,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 271
+          "line": 278
         }
       ],
       "review": {
@@ -39631,7 +40280,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 266
+          "line": 273
         }
       ],
       "review": {
@@ -39734,7 +40383,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 259
+          "line": 266
         },
         {
           "column": 32,
@@ -40669,7 +41318,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 250
+          "line": 257
         },
         {
           "column": 35,
@@ -40778,7 +41427,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 262
+          "line": 269
         },
         {
           "column": 32,
@@ -40886,7 +41535,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 257
+          "line": 264
         },
         {
           "column": 32,
@@ -40939,7 +41588,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 352
+          "line": 359
         }
       ],
       "row_id": "aa399aa01e65022dcda43dc6956cd7a3065663eea36b2fd049c3d5398ffa590d",
@@ -40960,7 +41609,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 349
+          "line": 356
         }
       ],
       "row_id": "550787fb7c36743dd9a67e08a9d6ca3711b26a45cc9d8df4c2c1c2f59f730da9",
@@ -40981,7 +41630,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 351
+          "line": 358
         }
       ],
       "row_id": "e10392b7e028478825431ff8c823cb9beb3c1d8e293f68f7c952f2e9782ab1fd",
@@ -41002,7 +41651,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 348
+          "line": 355
         }
       ],
       "row_id": "22005752c4957c106ac67d23cc005cce98616855dff0c9c261f626d455b0750a",
@@ -41023,7 +41672,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 350
+          "line": 357
         }
       ],
       "row_id": "c40bd5747001ca35467da88fedb485a4eeca21cb1686540b81e5d8ea07c8f4d4",
@@ -41044,7 +41693,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 345
+          "line": 352
         }
       ],
       "row_id": "b68f911bee2ac9a5d2674f5a47285b2a80b9799f2edc664789757674ff04b7f9",
@@ -41065,7 +41714,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 347
+          "line": 354
         }
       ],
       "row_id": "1da8cd8d5ba781b93bc38e5b635d57af40eeb6ddb1769801c7c6c6ecacbe0b36",
@@ -41086,7 +41735,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 346
+          "line": 353
         }
       ],
       "row_id": "daf8d179acce9a57c838382df18cdf2ff82a22f976c9d3fb1e04d19b829e8bb1",
@@ -41133,7 +41782,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 369
+          "line": 376
         }
       ],
       "row_id": "b4735eb86df5cd8088843159cd3221a2fb368918f9218044128f39f6e414e854",
@@ -41196,7 +41845,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 368
+          "line": 375
         },
         {
           "column": 3,
@@ -41374,7 +42023,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 420
+          "line": 427
         },
         {
           "column": 34,
@@ -41500,7 +42149,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 419
+          "line": 426
         },
         {
           "column": 35,
@@ -41754,7 +42403,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 421
+          "line": 428
         },
         {
           "column": 20,
@@ -41861,7 +42510,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 373
+          "line": 380
         }
       ],
       "row_id": "bde3064b7500d2f5437cd8226740e1f6d69e2204566603aaba6dc4463562bc35",
@@ -41949,7 +42598,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 372
+          "line": 379
         },
         {
           "column": 3,
@@ -41995,7 +42644,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 370
+          "line": 377
         },
         {
           "column": 35,
@@ -42056,7 +42705,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 371
+          "line": 378
         }
       ],
       "row_id": "3fe6f72d260f6dee9d4f732ec647f741dd1bcb2c1dfeff3c7ae89bb9098da332",
@@ -42092,7 +42741,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 294
+          "line": 301
         },
         {
           "column": 7,
@@ -42175,7 +42824,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 296
+          "line": 303
         },
         {
           "column": 7,
@@ -42221,7 +42870,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 298
+          "line": 305
         },
         {
           "column": 7,
@@ -42289,7 +42938,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 297
+          "line": 304
         },
         {
           "column": 7,
@@ -42346,7 +42995,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 299
+          "line": 306
         }
       ],
       "row_id": "847fb4874e19444c562a57cc4a826fcdafe9d8e1e5b82e592593943db87634a7",
@@ -42372,7 +43021,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 300
+          "line": 307
         }
       ],
       "row_id": "e5fa32b7373f57221bd24b8ecf42b7898375b97ef61596935a5594855e164782",
@@ -42428,7 +43077,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 290
+          "line": 297
         },
         {
           "column": 3,
@@ -42504,7 +43153,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 301
+          "line": 308
         }
       ],
       "row_id": "d0f9a3303a775f9deea1cee3b4c139fec3a00b9885c9e35404a33954bfef6447",
@@ -42571,7 +43220,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 293
+          "line": 300
         },
         {
           "column": 3,
@@ -42790,7 +43439,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 291
+          "line": 298
         },
         {
           "column": 7,
@@ -42871,7 +43520,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 292
+          "line": 299
         },
         {
           "column": 7,
@@ -42912,7 +43561,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 295
+          "line": 302
         },
         {
           "column": 7,
@@ -42969,7 +43618,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 283
+          "line": 290
         },
         {
           "column": 7,
@@ -43032,7 +43681,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 284
+          "line": 291
         },
         {
           "column": 7,
@@ -43185,7 +43834,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 276
+          "line": 283
         },
         {
           "column": 7,
@@ -43253,7 +43902,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 277
+          "line": 284
         },
         {
           "column": 7,
@@ -43321,7 +43970,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 275
+          "line": 282
         },
         {
           "column": 7,
@@ -43543,7 +44192,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 278
+          "line": 285
         }
       ],
       "review": {
@@ -43606,7 +44255,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 279
+          "line": 286
         }
       ],
       "review": {
@@ -43669,7 +44318,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 280
+          "line": 287
         }
       ],
       "review": {
@@ -43732,7 +44381,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 281
+          "line": 288
         }
       ],
       "review": {
@@ -43837,7 +44486,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 273
+          "line": 280
         },
         {
           "column": 7,
@@ -43905,7 +44554,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 274
+          "line": 281
         },
         {
           "column": 7,
@@ -43973,7 +44622,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 272
+          "line": 279
         },
         {
           "column": 7,
@@ -44036,7 +44685,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 285
+          "line": 292
         },
         {
           "column": 7,
@@ -44094,7 +44743,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 288
+          "line": 295
         }
       ],
       "review": {
@@ -44194,7 +44843,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 286
+          "line": 293
         },
         {
           "column": 7,
@@ -44252,7 +44901,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 287
+          "line": 294
         },
         {
           "column": 7,
@@ -44414,7 +45063,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 423
+          "line": 430
         },
         {
           "column": 17,
@@ -44470,7 +45119,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 424
+          "line": 431
         },
         {
           "column": 11,
@@ -44526,7 +45175,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 425
+          "line": 432
         },
         {
           "column": 11,
@@ -44607,7 +45256,7 @@
         {
           "column": 9,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 422
+          "line": 429
         },
         {
           "column": 3,
@@ -44809,7 +45458,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 282
+          "line": 289
         },
         {
           "column": 5,
@@ -44987,7 +45636,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 289
+          "line": 296
         },
         {
           "column": 5,
@@ -45144,7 +45793,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 247
+          "line": 254
         },
         {
           "column": 59,
@@ -45265,7 +45914,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 249
+          "line": 256
         },
         {
           "column": 53,
@@ -45461,7 +46110,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 246
+          "line": 253
         },
         {
           "column": 22,
@@ -45622,7 +46271,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 248
+          "line": 255
         },
         {
           "column": 22,
@@ -45648,7 +46297,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 317
+          "line": 324
         },
         {
           "column": 31,
@@ -45764,7 +46413,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 318
+          "line": 325
         },
         {
           "column": 52,
@@ -45805,7 +46454,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 319
+          "line": 326
         }
       ],
       "row_id": "7c4e8c7b7b4b66c3108f4c0952d825c052dae8c6a5f501d57edea341f4e4151d",
@@ -45826,7 +46475,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 320
+          "line": 327
         },
         {
           "column": 23,
@@ -45862,7 +46511,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 316
+          "line": 323
         },
         {
           "column": 29,
@@ -45933,7 +46582,7 @@
         {
           "column": 2,
           "file": "port/renderer/vita/d3d8.h",
-          "line": 321
+          "line": 328
         },
         {
           "column": 39,
@@ -49164,23 +49813,23 @@
   "totals": {
     "by_kind": {
       "class_definition": 468,
-      "draw_state_reference": 1929,
-      "draw_state_symbol": 304,
+      "draw_state_reference": 1967,
+      "draw_state_symbol": 311,
       "parse_unknown": 387,
       "required_feature": 28
     },
     "by_status": {
       "boundary_replaced": 42,
       "missing": 92,
-      "unknown": 2982
+      "unknown": 3027
     },
     "candidate_roles": {
       "prototype": 14,
       "prototype_loader": 14,
       "render_object": 25
     },
-    "rows": 3116,
-    "unique_draw_state_symbols": 304
+    "rows": 3161,
+    "unique_draw_state_symbols": 311
   },
   "upstream_files_missing_from_staging": [
     "hueshift/enbassetmgr.cpp",

@@ -7,6 +7,7 @@
 // original WWAudio runtime is brought in as its own coherent closure.
 
 #include "dx8wrapper.h"
+#include "lightenvironment.h"
 #include "debug.h"
 #include "cnetwork.h"
 #include "gamemode.h"
@@ -1478,11 +1479,7 @@ void DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *surface, bool)
 	}
 }
 
-void DX8Wrapper::Set_Light_Environment(LightEnvironmentClass *)
-{
-	// The accepted transitional MeshClass renderer retains engine-owned light
-	// state above this unimplemented fixed-function device edge.
-}
+#include "original_dx8_light_environment.inc"
 
 #if !defined(RENEGADE_ORIGINAL_SORTING)
 void SortingRendererClass::Insert_Triangles(const SphereClass &,

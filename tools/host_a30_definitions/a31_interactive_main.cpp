@@ -55,6 +55,7 @@
 #include "m13_cinematic_probe.h"
 #if defined(RENEGADE_ORIGINAL_SORTING) && defined(RENEGADE_HOST_ABI_TEST)
 #include "sorting_renderer_probe.h"
+#include "light_environment_probe.h"
 #endif
 #include "dinput.h"
 #include "networkobjectmgr.h"
@@ -974,6 +975,7 @@ int main(int argc, char **argv)
 		if (strcmp(argv[2], "basic") == 0) passed = Check_Original_Sorting_Renderer();
 		if (strcmp(argv[2], "strip") == 0) passed = Check_Native_Strip_Renderer();
 		if (strcmp(argv[2], "statistics") == 0) passed = Check_Original_Frame_Statistics();
+		if (strcmp(argv[2], "lights") == 0) passed = Check_Original_Light_Environment();
 		if (strcmp(argv[2], "nodes") == 0) passed = Check_Original_Sorting_Capacity(4097, 3, 1);
 		if (strcmp(argv[2], "vertices") == 0) passed = Check_Original_Sorting_Capacity(3000, 24, 1);
 		if (strcmp(argv[2], "indices") == 0) passed = Check_Original_Sorting_Capacity(2, 3, 11000);

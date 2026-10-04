@@ -35,6 +35,12 @@ typedef void *HWND;
 struct D3DCOLORVALUE { float r, g, b, a; };
 struct D3DVECTOR { float x, y, z; };
 struct D3DMATRIX { float m[4][4]; };
+enum D3DLIGHTTYPE {
+	D3DLIGHT_POINT = 1,
+	D3DLIGHT_SPOT = 2,
+	D3DLIGHT_DIRECTIONAL = 3,
+	D3DLIGHT_FORCE_DWORD = 0x7fffffff
+};
 struct D3DLIGHT8 {
 	uint32_t Type;
 	D3DCOLORVALUE Diffuse;
@@ -50,6 +56,7 @@ struct D3DLIGHT8 {
 	float Theta;
 	float Phi;
 };
+static_assert(sizeof(D3DLIGHT8) == 104, "DX8 light layout must retain 32-bit fields");
 struct _D3DMATERIAL8 {
 	D3DCOLORVALUE Diffuse;
 	D3DCOLORVALUE Ambient;

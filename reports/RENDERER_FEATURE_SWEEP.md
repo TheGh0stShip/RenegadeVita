@@ -1,5 +1,27 @@
 # S2 renderer features — inventory in progress
 
+## Original light-state installation and coverage — 2026-10-03
+
+The native empty light-environment setter now uses the original method shared
+with the host boundary. Only its MSVC for-scope declaration changes. Equivalent
+ambient, directional colors/directions, unused-slot disabling and null-state
+retention match the original owner. The compatibility header adds the original
+light-type values and asserts the 104-byte DX8 light layout.
+
+The actual original-engine probe passes four-to-zero light transitions,
+ambient conversion and null-environment retention. All eleven host renderer
+cases pass ASan/LSan/UBSan; 41 focused source/inventory checks pass. The probe is
+retained in the host runner. Dev219 passes 134 ARM actions and artifact identity;
+its symbol list retains `DX8Wrapper::Set_Light_Environment`.
+ELF SHA-256: `fd3e12adbc4ffadf16e55eb1d68ab83686dae594f2d1f3f13b16e00b3cc01880`.
+
+The sweep now includes source fragments and additional C++ extensions, plus
+light types and material color-source values. Current totals are 3,161 rows:
+92 missing, 42 replaced and 3,027 unknown, with no review-identity mismatches.
+The new tokens are coverage additions, not demonstrated retail failures.
+Indexed lighting/material consumption, category activation and native pixels
+remain open. No package, launch or physical acceptance is claimed.
+
 ## Category vertex-layout decoder — 2026-10-03
 
 The indexed boundary now derives normal, color and UV offsets from a bounded

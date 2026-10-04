@@ -1,4 +1,17 @@
 {
+  "original_light_environment_20261003": {
+    "state": "HOST_ORIGINAL_STATE_SANITIZERS_ARM_LINK_PASS_DRAW_CONSUMPTION_OPEN",
+    "candidate": "A3.5-dev219",
+    "arm_compile_link_actions": 134,
+    "elf_sha256": "fd3e12adbc4ffadf16e55eb1d68ab83686dae594f2d1f3f13b16e00b3cc01880",
+    "map_sha256": "21da728d7dee123a905cff4b03aec18d777a98fb0672aa27354e33804260943c",
+    "light_method_symbol_retained": true,
+    "dx8_light_layout_bytes": 104,
+    "focused_tests_passed": 41,
+    "host_renderer_sanitizer_cases_passed": 11,
+    "native_acceptance_gates_closed": 0,
+    "canonical_package_passed": false
+  },
   "category_fvf_decoder_20261003": {
     "state": "HOST_SANITIZERS_ARM_LINK_PASS_ADMISSION_AND_NATIVE_PIXELS_OPEN",
     "candidate": "A3.5-dev218",

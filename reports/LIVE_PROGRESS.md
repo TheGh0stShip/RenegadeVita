@@ -1,5 +1,20 @@
 # Live engineering progress
 
+## Original light-state boundary batch — 2026-10-03
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: original light-environment method replaces the native empty setter;
+host and native share the owner. DX8 light types and layout assertion restored.
+Evidence: eleven original-engine host cases pass ASan/LSan/UBSan; 41 focused
+checks pass. Dev219 completes 134 ARM actions and artifact identity checks.
+S1: 3,574 rows, 51 stubs, one original-patched method, one boundary, six disabled
+guards and 3,515 unknown. S2: 3,161 rows; source-fragment and light/material value
+coverage added. Both review inventories reconcile without identity mismatches.
+Next: indexed material/light consumption, all-UV handling and category activation.
+Blocker: none for source work; native pixels and mission acceptance remain open.
+
 ## Original procedural renderer compiler and link prerequisites — 2026-10-03
 
 Six original dx8renderer GCC syntax failures are corrected by a hash-checked

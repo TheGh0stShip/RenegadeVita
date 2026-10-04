@@ -11,7 +11,7 @@ from sweep_cpp_functions import parser, walk
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE = re.compile(
-    r'\b(?:D3D(?:RS|TSS|SAMP|FVF|FMT|TS|TOP|TA|TTFF|TADDRESS|TEXF|BLEND|CMP|CULL|FILL|FOG|STENCILOP)_|WW3D_FORMAT_|DX8_FVF_)[A-Za-z0-9_]+\b')
+    r'\b(?:D3D(?:RS|TSS|SAMP|FVF|FMT|TS|TOP|TA|TTFF|TADDRESS|TEXF|BLEND|CMP|CULL|FILL|FOG|STENCILOP|LIGHT|MCS)_|WW3D_FORMAT_|DX8_FVF_)[A-Za-z0-9_]+\b')
 FEATURE_OWNERS = {
     'rigid_mesh': ['MeshClass'], 'skinned_mesh': ['MeshClass', 'MeshModelClass'],
     'hlod': ['HLodClass'], 'aggregate': ['AggregateLoaderClass', 'AggregateDefClass'],
@@ -142,12 +142,16 @@ def ancestry(classes):
                                   if reaches(row['name'], base, set())]
 
 
+SOURCE_SUFFIXES = {'.c', '.cc', '.cpp', '.cxx', '.h', '.hh', '.hpp', '.hxx',
+                   '.inl', '.inc', '.ipp'}
+
+
 def audit(root):
     cpp_parser = parser()
     rows, inputs = [], {}
     for directory in ('staging/ww3d2', 'port/renderer'):
         for path in sorted((root / directory).rglob('*')):
-            if not path.is_file() or path.suffix.lower() not in ('.cpp', '.c', '.h', '.hpp', '.inl'):
+            if not path.is_file() or path.suffix.lower() not in SOURCE_SUFFIXES:
                 continue
             relative = path.relative_to(root).as_posix()
             inputs[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
@@ -178,7 +182,7 @@ def audit(root):
         inputs['tools/' + name] = hashlib.sha256(path.read_bytes()).hexdigest()
     upstream = root / 'upstream/CnC_Renegade/Code/ww3d2'
     missing = [p.relative_to(upstream).as_posix() for p in sorted(upstream.rglob('*'))
-               if p.is_file() and p.suffix.lower() in ('.cpp', '.h', '.inl')
+               if p.is_file() and p.suffix.lower() in SOURCE_SUFFIXES
                and not (root / 'staging/ww3d2' / p.relative_to(upstream)).exists()]
     totals = {'rows': len(rows), 'by_kind': dict(Counter(r['kind'] for r in rows)),
               'by_status': dict(Counter(r['status'] for r in rows)),

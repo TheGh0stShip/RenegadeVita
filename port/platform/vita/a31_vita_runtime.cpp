@@ -27,6 +27,7 @@
 #include "renegade_miles_runtime_stats.h"
 #include "renegade_vita_input_telemetry.h"
 #include "renegade_build_identity.h"
+#include "renegade_vita_frame_profile.h"
 #include "ww3d_vita_renderer.h"
 
 #include "assetmgr.h"
@@ -3882,6 +3883,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 		startup_screen_result >= 0 ? 1 : 0);
 	Renegade_Set_Find_Roots(kVitaRoots);
 	RenegadeRootedFileFactoryClass root_factory(kVitaRoots);
+#if defined(RENEGADE_VITA_FRAME_PROFILE)
+	Renegade_Frame_Profile_Configure();
+#endif
 	// Original Game_Init searches loose DATA_SUBDIRECTORY files before MIX
 	// fallback. Keep explicit Data/user/cache paths at the root factory, and
 	// add the missing loose Data read route without changing writable roots.
@@ -5599,6 +5603,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					break;
 				}
 				const uint64_t frame_begin = sceKernelGetProcessTimeWide();
+#if defined(RENEGADE_VITA_FRAME_PROFILE)
+				Renegade_Frame_Profile_Begin_Frame();
+#endif
 				// The original simulation frame advances WW3D through TimeManager.
 				// A second wall-clock writer can move animation time backward.
 #if RENEGADE_VITA_M00_DEMO
@@ -5857,7 +5864,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				** once after the game render. This services playback completion,
 				** looping, and original sound-ended events; conversation remark timing
 				** remains owned by ActiveConversationClass and TimeManager. */
-				audio->On_Frame_Update(0);
+				{
+					RENEGADE_FRAME_PROFILE("Vita WWAudio Frame Update");
+					audio->On_Frame_Update(0);
+				}
 				last_render_trace = render_trace;
 				const A31MissionProgressState mission_progress =
 					A31_Interactive_Get_Mission_Progress_State();
@@ -5890,6 +5900,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					static_cast<uint32_t>(render_begin - simulation_begin),
 					static_cast<uint32_t>(frame_end - render_begin),
 					static_cast<uint32_t>(frame_end - frame_begin));
+#if defined(RENEGADE_VITA_FRAME_PROFILE)
+				Renegade_Frame_Profile_End_Frame(static_cast<uint32_t>(frame_end - frame_begin));
+#endif
 				if (result.frames == 0U) {
 					A30_Vita_Log("A3.1 breadcrumb: interactive render state scene=%p camera=%p star=%p static/dynamic/lights=%u/%u/%u vis=%u/%u camera=(%.3f,%.3f,%.3f) player=(%.3f,%.3f,%.3f) clip=%.3f..%.3f\n",
 						reinterpret_cast<void *>(render_trace.scene_pointer),

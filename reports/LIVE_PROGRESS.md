@@ -1,5 +1,33 @@
 # Live engineering progress
 
+# Per-frame subsystem timing for ambush frames — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: dev236 counters put ambush frames at about 190 ms (about 97 ms
+simulation, 104 ms render) for only about 135 meshes and 6.5k triangles per
+frame, which the existing logs cannot attribute. The original engine already
+brackets its subsystems with 353 `WWPROFILE` scopes (CombatManager Think,
+Bullets, Game Obj Think, Scene, Soldier/Vehicle Think, PhysicsScene, WWAudio,
+...), compiled out in release. Staging patch
+`wwdebug-a36-vita-frame-profile.patch` (498 patches) routes them on Vita to a
+new flat, inclusive, game-thread-only accumulator
+(`port/platform/vita/renegade_vita_frame_profile.cpp`). Vita-owned scopes add
+the native sim stages, render pre/begin/CombatManager::Render/overlays/
+End_Render/post, `vglSwapBuffers` and the WWAudio frame update. Every 120
+frames the log gets `A3.6 frame-profile:` (top 16 scopes: avg us and calls per
+frame) and `A3.6 frame-profile-worst:` (the window's worst frame, largest
+scopes). Enabled by default (`-DRENEGADE_VITA_FRAME_PROFILE_DEFAULT`);
+`ux0:data/renegade/user/config/frame-profile-v1.flag` = `RVFP1 0` disables it.
+`scopes_per_frame` is logged so profiler overhead can be estimated.
+
+Evidence: vitasdk g++ syntax check of the profiler; patch applies to pristine
+EA source with zero fuzz; patch inventory receipt regenerated. Not built.
+
+Next: build a candidate, run M13 through the ambush, and read the
+`frame-profile` lines to choose the next optimization.
+
 # Cinematic first-spawn spikes: level preset model warm-up — 2026-10-05
 
 Renegade Vita — v3.5 active

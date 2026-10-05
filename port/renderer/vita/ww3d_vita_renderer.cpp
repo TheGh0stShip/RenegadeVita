@@ -1,5 +1,6 @@
 #include "ww3d_vita_renderer.h"
 #include "ww3d_vita_texture_transform.h"
+#include "renegade_vita_frame_profile.h"
 #include "category_fvf_layout.h"
 #include "normal_transform.h"
 
@@ -3033,7 +3034,11 @@ void End_Frame(bool present)
 			Vita_Append_A22_Runtime_Breadcrumb("render-frame",
 				"WW3D first End_Frame present entry: frame_before=%u", vglGetFrameNumber());
 		}
-		vglSwapBuffers(RenegadeVitaTextEntry::Active() ? GL_TRUE : GL_FALSE);
+		{
+			// Includes vitaGL scene submission and any wait for a free buffer.
+			RENEGADE_FRAME_PROFILE("Vita Swap Buffers");
+			vglSwapBuffers(RenegadeVitaTextEntry::Active() ? GL_TRUE : GL_FALSE);
+		}
 		const GLenum present_error = glGetError();
 		if (present_error != GL_NO_ERROR) {
 			++g_statistics.backend_errors;

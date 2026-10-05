@@ -6,6 +6,7 @@
 // Audio and the DX8 device edge remain explicit platform boundaries until the
 // original WWAudio runtime is brought in as its own coherent closure.
 
+#include "renegade_vita_frame_profile.h"
 #include "dx8wrapper.h"
 #include "lightenvironment.h"
 #include "debug.h"
@@ -711,14 +712,20 @@ void A31_Interactive_Run_Simulation_Frame()
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	const uint64_t frame_start_us = sceKernelGetProcessTimeWide();
 #endif
-	TimeManager::Update();
+	{
+		RENEGADE_FRAME_PROFILE("Vita Sim TimeManager");
+		TimeManager::Update();
+	}
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	const uint64_t time_end_us = sceKernelGetProcessTimeWide();
 #endif
-	Input::Update();
+	{
+		RENEGADE_FRAME_PROFILE("Vita Sim Input");
+		Input::Update();
 #if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	A4_Frontend_Pump_WWUI_Key_Transitions();
+		A4_Frontend_Pump_WWUI_Key_Transitions();
 #endif
+	}
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	const uint64_t input_end_us = sceKernelGetProcessTimeWide();
 #endif
@@ -764,21 +771,31 @@ void A31_Interactive_Run_Simulation_Frame()
 	// Original Commando mainloop.cpp services queued paths before game-mode
 	// control/Think. Without this, Goto actions wait forever in THINKING.
 	if (COMBAT_CAMERA != NULL) {
+		RENEGADE_FRAME_PROFILE("Vita Sim Resolve Paths");
 		Vector3 camera_pos = COMBAT_CAMERA->Get_Position();
 		PathMgrClass::Resolve_Paths(camera_pos);
 	}
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	const uint64_t path_end_us = sceKernelGetProcessTimeWide();
 #endif
-	CombatManager::Generate_Control();
+	{
+		RENEGADE_FRAME_PROFILE("Vita Sim Generate Control");
+		CombatManager::Generate_Control();
+	}
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	const uint64_t control_end_us = sceKernelGetProcessTimeWide();
 #endif
-	cNetwork::Update();
+	{
+		RENEGADE_FRAME_PROFILE("Vita Sim Network");
+		cNetwork::Update();
+	}
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	const uint64_t network_end_us = sceKernelGetProcessTimeWide();
 #endif
-	CombatManager::Think();
+	{
+		RENEGADE_FRAME_PROFILE("Vita Sim CombatManager Think");
+		CombatManager::Think();
+	}
 #if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_GAMEMODE) && !RENEGADE_VITA_M00_DEMO
 	if (cNetwork::I_Am_Server()) {
 		// Restore the original server bandwidth-budget owner with the same
@@ -986,14 +1003,24 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present)
 	/* Match the original GameModeManager::Render envelope.  PhysicsScene's
 	** render method consumes its visible lists; without this pre-pass an intact
 	** Combat frame can legally traverse zero objects. */
-	scene->Pre_Render_Processing(*camera);
+	{
+		RENEGADE_FRAME_PROFILE("Vita Render Pre_Render_Processing");
+		scene->Pre_Render_Processing(*camera);
+	}
 	trace.pre_render_completed = true;
-	trace.begin_render_completed =
-		WW3D::Begin_Render(true, true, BackgroundMgrClass::Get_Clear_Color()) ==
-		WW3D_ERROR_OK;
+	{
+		RENEGADE_FRAME_PROFILE("Vita Render Begin_Render");
+		trace.begin_render_completed =
+			WW3D::Begin_Render(true, true, BackgroundMgrClass::Get_Clear_Color()) ==
+			WW3D_ERROR_OK;
+	}
 	if (trace.begin_render_completed) {
-		CombatManager::Render();
+		{
+			RENEGADE_FRAME_PROFILE("Vita Render CombatManager Render");
+			CombatManager::Render();
+		}
 		trace.combat_render_called = true;
+		RENEGADE_FRAME_PROFILE("Vita Render Overlays and HUD");
 		A31ScopedGameplayHUDRender2DResolution hud_render_resolution;
 #if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_GAMEMODE) && !RENEGADE_VITA_M00_DEMO
 		// Preserve original names, player/team lists and game-limit presentation.
@@ -1033,9 +1060,15 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present)
 		A31_Vita_Render_Demo_Ending_Overlay();
 #endif
 	}
-	trace.end_render_completed = trace.begin_render_completed &&
-		WW3D::End_Render(present) == WW3D_ERROR_OK;
-	scene->Post_Render_Processing();
+	{
+		RENEGADE_FRAME_PROFILE("Vita Render End_Render");
+		trace.end_render_completed = trace.begin_render_completed &&
+			WW3D::End_Render(present) == WW3D_ERROR_OK;
+	}
+	{
+		RENEGADE_FRAME_PROFILE("Vita Render Post_Render_Processing");
+		scene->Post_Render_Processing();
+	}
 	trace.post_render_completed = true;
 
 	const RenegadeVitaRenderer::Statistics &statistics =

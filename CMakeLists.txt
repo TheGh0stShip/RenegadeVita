@@ -27,6 +27,10 @@ option(RENEGADE_VITA_M00_DEMO "Interim M00 community showcase; not the full-port
 # sample cost and frees about 4 MiB of depth storage for textures and cached
 # geometry. ux0:data/renegade/user/config/msaa-v1.flag ("RVMSAA1 0|2|4")
 # overrides it at launch without a rebuild.
+# Per-frame game-thread subsystem timing (original WWPROFILE scopes). It is
+# compiled in and starts enabled by default while frame pacing is the active
+# work item; frame-profile-v1.flag ("RVFP1 0") disables it at runtime.
+option(RENEGADE_VITA_FRAME_PROFILE_DEFAULT "Start per-frame subsystem timing enabled" ON)
 set(RENEGADE_VITA_CAMPAIGN_MSAA_SAMPLES "2" CACHE STRING
   "Full-port framebuffer MSAA samples: 0, 2 or 4")
 if(NOT RENEGADE_VITA_CAMPAIGN_MSAA_SAMPLES MATCHES "^(0|2|4)$")
@@ -477,6 +481,7 @@ set(RENEGADE_A30_PORT_SOURCES
   ${RENEGADE_ROOT}/port/platform/vita/a30_vita_runtime.cpp
 	${RENEGADE_ROOT}/port/platform/vita/a31_vita_runtime.cpp
 	${RENEGADE_ROOT}/port/platform/vita/a35_level_load_status.cpp
+	${RENEGADE_ROOT}/port/platform/vita/renegade_vita_frame_profile.cpp
   ${RENEGADE_ROOT}/port/platform/a31_gameplay_boundary.cpp
   ${RENEGADE_ROOT}/port/platform/a31_miscutil_boundary.cpp
 	${RENEGADE_ROOT}/port/platform/a31_network_options_boundary.cpp
@@ -570,6 +575,8 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
   UMBRASUPPORT=0
   RENEGADE_RUNTIME_READ_ONLY=1
   RENEGADE_VITA_PORT=1
+  RENEGADE_VITA_FRAME_PROFILE=1
+  RENEGADE_VITA_FRAME_PROFILE_DEFAULT=$<BOOL:${RENEGADE_VITA_FRAME_PROFILE_DEFAULT}>
   RENEGADE_VITA_A30=1
   RENEGADE_VITA_A31=1
   RENEGADE_VITA_LAN_FRONTEND=1

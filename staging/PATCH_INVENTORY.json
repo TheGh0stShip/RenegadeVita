@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "b76d5ba4ef4256cace19e1b674875f078944825ec3989d30d1059a1d564a4dc5",
-  "patch_count": 497,
+  "stage_script_sha256": "074d9feb74e3666da44daaafc8ce1e6c213c68185f728a64ee46f4b16d48e589",
+  "patch_count": 498,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -13,6 +13,11 @@
       "path": "port/patches/wwbitpack-a31-utf16-get.patch",
       "stage_directory": "wwbitpack",
       "sha256": "ed14794fb3e48abd96962030c4ca89e676df0568765358631d07876b74d5eeee"
+    },
+    {
+      "path": "port/patches/wwdebug-a36-vita-frame-profile.patch",
+      "stage_directory": "wwdebug",
+      "sha256": "3c508221457f5aacf069c6cc6a6e78fb0c104f77d04a38ac564f87f7de80a5f7"
     },
     {
       "path": "port/patches/wwlib-a21-posix.patch",
@@ -2490,5 +2495,5 @@
       "sha256": "b0e9c5c72a9f9620a0980b8ffc9503b4fc21d7c5bb8a26705b9a6e751d4c113f"
     }
   ],
-  "registry_sha256": "b5bdbe7ff8fcd544749e29a0e92f6e3eda3198a5ddc068fc64bc2c900e98c751"
+  "registry_sha256": "4df4546bca11169a316902021ba6977485c525fa973918945ee14db43ade41e6"
 }

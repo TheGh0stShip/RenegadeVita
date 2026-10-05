@@ -293,18 +293,34 @@ unsigned long Get_Health_Color( float percent )
 */
 struct PowerupIconStruct {
 
+#if defined(RENEGADE_VITA_PORT)
+	PowerupIconStruct( void ) : Renderer( NULL ), NameRenderer( NULL ), NumberRenderer( NULL ), Number( 0 )	{}
+#else
 	PowerupIconStruct( void ) : Renderer( NULL ), Number( 0 )	{}
+#endif
 
 	~PowerupIconStruct( void )	{
 		if ( Renderer != NULL ) {
 			delete Renderer;
 			Renderer = NULL;
 		}
+#if defined(RENEGADE_VITA_PORT)
+		delete NameRenderer;
+		NameRenderer = NULL;
+		delete NumberRenderer;
+		NumberRenderer = NULL;
+#endif
 	}
 
+	Render2DClass * Renderer;
+#if defined(RENEGADE_VITA_PORT)
+	// The name and count never change while the icon is shown. Building their
+	// text textures once avoids creating and releasing them every frame.
+	Render2DSentenceClass * NameRenderer;
+	Render2DSentenceClass * NumberRenderer;
+#endif
 	WideStringClass	Name;
 	int				Number;
-	Render2DClass * Renderer;
 	RectClass		UV;
 	RectClass		IconBox;
 	float			Timer;
@@ -384,6 +400,19 @@ static	void	Powerup_Add( const WCHAR * name, int number, const char * texture_na
 	data->Name = name;
 	data->Number = number;
  	data->Timer = POWERUP_TIME;
+#if defined(RENEGADE_VITA_PORT)
+	FontCharsClass * font = StyleMgrClass::Peek_Font( StyleMgrClass::FONT_INGAME_TXT );
+	data->NameRenderer = new Render2DSentenceClass();
+	data->NameRenderer->Set_Font( font );
+	data->NameRenderer->Build_Sentence( data->Name );
+	if ( right_list && data->Number != 0 ) {
+		WideStringClass num(0,true);
+		num.Format( HUD_DECIMAL_FORMAT, data->Number );
+		data->NumberRenderer = new Render2DSentenceClass();
+		data->NumberRenderer->Set_Font( font );
+		data->NumberRenderer->Build_Sentence( num );
+	}
+#endif
 
 	if ( right_list ) {
 		RightPowerupIconList.Add( data );
@@ -478,9 +507,15 @@ static	void	Powerup_Update( void )
 #endif
 
 		// Draw powerup name
+#if defined(RENEGADE_VITA_PORT)
+		LeftPowerupIconList[i]->NameRenderer->Reset_Polys();
+		LeftPowerupIconList[i]->NameRenderer->Set_Location( Vector2( draw_box.Left + 1, draw_box.Top + POWERUP_BOX_HEIGHT - 15 ) );
+		LeftPowerupIconList[i]->NameRenderer->Draw_Sentence( white );
+#else
 		PowerupTextRenderer->Build_Sentence( LeftPowerupIconList[i]->Name );
 		PowerupTextRenderer->Set_Location( Vector2( draw_box.Left + 1, draw_box.Top + POWERUP_BOX_HEIGHT - 15 ) );
 		PowerupTextRenderer->Draw_Sentence( white );
+#endif
 
 #if 0
 		// Draw powerup count
@@ -534,16 +569,30 @@ static	void	Powerup_Update( void )
 #endif
 
 		// Draw powerup name
+#if defined(RENEGADE_VITA_PORT)
+		Render2DSentenceClass * name_renderer = RightPowerupIconList[i]->NameRenderer;
+		name_renderer->Reset_Polys();
+#else
+		Render2DSentenceClass * name_renderer = PowerupTextRenderer;
 		PowerupTextRenderer->Build_Sentence( RightPowerupIconList[i]->Name );
+#endif
 		float left_edge = draw_box.Left + 1;
-		Vector2 extents = PowerupTextRenderer->Get_Text_Extents( RightPowerupIconList[i]->Name );
+		Vector2 extents = name_renderer->Get_Text_Extents( RightPowerupIconList[i]->Name );
 		if ( left_edge + extents.X + 1> Render2DClass::Get_Screen_Resolution().Right ) {
 			left_edge = Render2DClass::Get_Screen_Resolution().Right - extents.X - 1;
 		}
-		PowerupTextRenderer->Set_Location( Vector2( left_edge, draw_box.Top + POWERUP_BOX_HEIGHT - 15 ) );
-		PowerupTextRenderer->Draw_Sentence( white );
+		name_renderer->Set_Location( Vector2( left_edge, draw_box.Top + POWERUP_BOX_HEIGHT - 15 ) );
+		name_renderer->Draw_Sentence( white );
 
 		// Draw powerup count
+#if defined(RENEGADE_VITA_PORT)
+		if ( RightPowerupIconList[i]->NumberRenderer != NULL ) {
+			Render2DSentenceClass * number_renderer = RightPowerupIconList[i]->NumberRenderer;
+			number_renderer->Reset_Polys();
+			number_renderer->Set_Location( Vector2( draw_box.Right - 12, draw_box.Top + 1 ) );
+			number_renderer->Draw_Sentence( white );
+		}
+#else
 		if ( RightPowerupIconList[i]->Number != 0 ) {
 			WideStringClass num(0,true);
 			num.Format( HUD_DECIMAL_FORMAT, RightPowerupIconList[i]->Number );
@@ -551,6 +600,7 @@ static	void	Powerup_Update( void )
 			PowerupTextRenderer->Set_Location( Vector2( draw_box.Right - 12, draw_box.Top + 1 ) );
 			PowerupTextRenderer->Draw_Sentence( white );
 		}
+#endif
 
 		RectClass	icon_box = RightPowerupIconList[i]->IconBox;
 		icon_box += draw_box.Upper_Left();
@@ -583,6 +633,19 @@ static	void	Powerup_Render( void )
 	}
 
 	PowerupTextRenderer->Render();
+#if defined(RENEGADE_VITA_PORT)
+	// Same order as the shared renderer's text: left names, then right names
+	// each followed by its count.
+	for ( i = 0; i < MAX_ICONS && i < LeftPowerupIconList.Count(); i++ ) {
+		LeftPowerupIconList[i]->NameRenderer->Render();
+	}
+	for ( i = 0; i < MAX_ICONS && i < RightPowerupIconList.Count(); i++ ) {
+		RightPowerupIconList[i]->NameRenderer->Render();
+		if ( RightPowerupIconList[i]->NumberRenderer != NULL ) {
+			RightPowerupIconList[i]->NumberRenderer->Render();
+		}
+	}
+#endif
 }
 
 

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "dba70b57d3c719af1359a7292a3a07e1127baab105c7e18cd5711396eba3f728",
-  "patch_count": 322,
+  "stage_script_sha256": "75782a567211050cddffe3225db4c4dea3f1eb4123d0c8923df5f15672eb7645",
+  "patch_count": 323,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1613,7 +1613,12 @@
       "path": "port/patches/ww3d2-a36-sorting-depth-sort-and-runs.patch",
       "stage_directory": "ww3d2",
       "sha256": "2ed2d35558ce461661615d06d7a6db5570b8263e34d9e9c197d0fe9424ebd33b"
+    },
+    {
+      "path": "port/patches/combat-a36-powerup-text-once.patch",
+      "stage_directory": "combat",
+      "sha256": "06ee1fdfd290aa5760e6bce9f3e7753dc747584a2fb1d6ce0b726b63f992423a"
     }
   ],
-  "registry_sha256": "234ae1a1cf73d80707e3eaa0c44a6eec37540c0f5cb371987398376434dbd8d1"
+  "registry_sha256": "b1f9e91a802b60f32ae02426b3f0f4939af7bbd3320029a5748dedd37ce8b5b5"
 }

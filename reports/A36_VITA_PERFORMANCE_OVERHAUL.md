@@ -72,6 +72,11 @@ per frame:
     last node's state, as before.
 - Indexed DX8 draws no longer hash every referenced vertex on Vita; bounds
   validation is unchanged.
+- Powerup labels (shown for six seconds after every pickup) were rebuilt into
+  new text textures every frame. A staged patch
+  (`combat-a36-powerup-text-once.patch`) builds each icon's name and count
+  once when the icon appears and only moves and redraws them per frame, as
+  the HUD help text already does.
 - Framebuffer MSAA defaults to 2x (was 4x); see the switches below.
 
 ### Texture loading

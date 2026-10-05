@@ -44,6 +44,9 @@ struct RenegadeFileFactoryStatistics
 };
 
 void Renegade_File_Factory_Reset_Statistics(void);
+// Moves source over destination, also when the platform rename refuses an
+// existing destination; on failure the previous destination is kept.
+bool Renegade_Replace_File(const char *source, const char *destination);
 RenegadeFileFactoryStatistics Renegade_File_Factory_Get_Statistics(void);
 
 class RenegadeRootedFileClass : public BufferedFileClass
@@ -90,6 +93,8 @@ private:
 	bool Staging;
 	bool WriteFailed;
 	bool AtomicWrite;
+	// Set while RawFileClass::Open runs its leading virtual Close().
+	bool NativeOpening;
 	char AtomicTarget[1024];
 	char AtomicTemporary[1024];
 };

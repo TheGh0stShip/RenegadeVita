@@ -95,6 +95,58 @@ void Remember_Available(const char *path)
 	pthread_mutex_unlock(&g_available_retail_mutex);
 }
 
+} // namespace
+
+// Moves a completed sibling over the destination. POSIX rename replaces an
+// existing file atomically, but the Vita's sceIoRename (behind newlib's
+// rename) refuses an existing destination, so every save into an occupied
+// slot was discarded. Then the previous file is moved aside first and
+// restored if the final rename fails, so a failed save still leaves the
+// previous valid file in place; the aside copy is removed only after the new
+// file is in position.
+#if defined(RENEGADE_TEST_REFUSING_RENAME)
+#include <errno.h>
+#include <sys/stat.h>
+// Host contract tests model sceIoRename, which refuses an existing destination.
+static int Platform_Rename(const char *source, const char *destination)
+{
+	struct stat status;
+	if (stat(destination, &status) == 0) {
+		errno = EEXIST;
+		return -1;
+	}
+	return rename(source, destination);
+}
+#else
+static int Platform_Rename(const char *source, const char *destination)
+{
+	return rename(source, destination);
+}
+#endif
+
+bool Renegade_Replace_File(const char *source, const char *destination)
+{
+	if (Platform_Rename(source, destination) == 0) return true;
+	char previous[1024 + 16];
+	const int length = snprintf(previous, sizeof(previous), "%s.previous", destination);
+	if (length <= 0 || length >= static_cast<int>(sizeof(previous))) return false;
+	remove(previous);
+	if (Platform_Rename(destination, previous) != 0) return false;
+	if (Platform_Rename(source, destination) != 0) {
+		(void)Platform_Rename(previous, destination);
+		return false;
+	}
+	remove(previous);
+	return true;
+}
+
+namespace {
+
+bool Replace_File(const char *source, const char *destination)
+{
+	return Renegade_Replace_File(source, destination);
+}
+
 void Reset(std::atomic<uint32_t> &counter)
 {
 	counter.store(0U, std::memory_order_relaxed);
@@ -171,7 +223,8 @@ RenegadeRootedFileClass::RenegadeRootedFileClass(const RenegadePathRoots &roots,
 	const char *logical_name) : Roots(roots), LastResolution(),
 	PhysicalNamePrepared(false), PreparedAccess(RENEGADE_PATH_READ),
 	NativeProbeForced(false), StagedData(NULL), StagedSize(0), StagedCapacity(0),
-	StagedPosition(0), Staging(false), WriteFailed(false), AtomicWrite(false)
+	StagedPosition(0), Staging(false), WriteFailed(false), AtomicWrite(false),
+	NativeOpening(false)
 {
 	LogicalName[0] = 0;
 	AtomicTarget[0] = 0;
@@ -268,7 +321,11 @@ int RenegadeRootedFileClass::Open(int rights)
 	AtomicWrite = false;
 	AtomicTarget[0] = 0;
 	AtomicTemporary[0] = 0;
-	if ((rights & FileClass::WRITE) != 0) {
+	// Only pure write sessions are staged and replaced atomically. A
+	// READ|WRITE session must see the existing bytes, so it keeps the
+	// original direct file semantics.
+	const bool write_only = rights == FileClass::WRITE;
+	if (write_only) {
 		// Keep an existing save/configuration intact until the complete staged
 		// stream has reached a sibling file and closed successfully. The sibling
 		// path stays on the same Vita filesystem so rename is an atomic replace.
@@ -285,14 +342,19 @@ int RenegadeRootedFileClass::Open(int rights)
 		BufferedFileClass::Set_Name(AtomicTemporary);
 		AtomicWrite = true;
 	}
-	// RawFileClass::Open closes (and so commits) any previous staged file.
+	// Any previous use was committed above. RawFileClass::Open begins with a
+	// virtual Close(); without this guard that Close would treat the session
+	// being opened as finished, drop AtomicWrite and restore the target name,
+	// so the open landed directly on (and truncated) the destination.
+	NativeOpening = true;
 	const int opened = BufferedFileClass::Open(rights);
+	NativeOpening = false;
 	if (opened) WriteFailed = false;
 	if (!opened) {
 		if (AtomicWrite) BufferedFileClass::Set_Name(AtomicTarget);
 		AtomicWrite = false;
 		g_file_factory_counters.open_failures.fetch_add(1U, std::memory_order_relaxed);
-	} else if ((rights & FileClass::WRITE) != 0) {
+	} else if (write_only) {
 		// Each ChunkSaveClass chunk seeks back to patch its header, and every
 		// seek flushes stdio: a save became thousands of small card writes and
 		// seeks on the game thread. The file is created and truncated now, as
@@ -374,10 +436,14 @@ int RenegadeRootedFileClass::Size(void)
 
 void RenegadeRootedFileClass::Close(void)
 {
+	if (NativeOpening) {
+		BufferedFileClass::Close();
+		return;
+	}
 	if (Staging) (void)Flush_Staged_Writes();
 	BufferedFileClass::Close();
 	if (AtomicWrite) {
-		if (!WriteFailed && rename(AtomicTemporary, AtomicTarget) != 0) {
+		if (!WriteFailed && !Replace_File(AtomicTemporary, AtomicTarget)) {
 			WriteFailed = true;
 		}
 		if (WriteFailed) remove(AtomicTemporary);

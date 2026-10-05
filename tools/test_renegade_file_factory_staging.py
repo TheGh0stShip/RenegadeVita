@@ -37,9 +37,15 @@ class RenegadeFileFactoryStagingTests(unittest.TestCase):
     def test_optimized(self):
         self.build_and_run(['-O2'])
 
+    def test_vita_rename_refuses_existing_destination(self):
+        # sceIoRename does not replace; repeated saves to one slot must still land.
+        self.build_and_run(['-O1', '-fsanitize=address,undefined', '-fno-omit-frame-pointer',
+                            '-DRENEGADE_TEST_REFUSING_RENAME=1'])
+
     def test_only_write_only_opens_stage(self):
         source = (ROOT / 'port/filesystem/renegade_file_factory.cpp').read_text()
-        self.assertIn('} else if (rights == FileClass::WRITE) {', source)
+        self.assertIn('const bool write_only = rights == FileClass::WRITE;', source)
+        self.assertIn('} else if (write_only) {', source)
         destructor = source[source.index('RenegadeRootedFileClass::~RenegadeRootedFileClass(void)'):]
         self.assertIn('if (Staging) Close();', destructor[:destructor.index('\n}\n')])
 

@@ -1,5 +1,11 @@
 # Known gaps
 
+- Save writes are now staged, written to `<slot>.pending` and moved over the
+  slot (with a `.previous` fallback because Vita `sceIoRename` cannot
+  replace). A crash between the two renames leaves only `<slot>.previous`,
+  which is not yet restored automatically. Physical repeat-quicksave and
+  reload remain unverified.
+
 - Application memory budget: the newlib heap was newlib's fixed 128 MiB
   default and extended user memory was never requested. Source now sets a
   192 MiB heap and `ATTRIBUTE2=12`. Whether the Vita and PSTV grant the

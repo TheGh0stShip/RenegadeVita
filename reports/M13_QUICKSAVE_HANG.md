@@ -101,3 +101,35 @@ advancing but slow, measure original chunk seek/write costs before changing
 the platform I/O boundary. If it stops, identify the final completed phase and
 obtain available matching thread evidence. No read/write buffering or memory
 staging optimization has been adopted from the incomplete file alone.
+
+## Save writer atomicity and Vita rename (2026-10-05)
+
+Two defects in the rooted save writer (`port/filesystem/renegade_file_factory.cpp`):
+
+1. `RawFileClass::Open` begins with a virtual `Close()`. The override treated
+   that as the end of the session it was opening: it dropped `AtomicWrite`,
+   restored the target name and the open then landed on, and truncated, the
+   destination. Saves were never atomic in practice: an interrupted save
+   destroyed the previous slot, consistent with the truncated dev236 file. A
+   `NativeOpening` guard now limits that inner Close to the native handle.
+2. The final rename relies on POSIX replace semantics. The Vita's
+   `sceIoRename` refuses an existing destination (the port's own route
+   recorder already removes first). With (1) fixed, every save into an
+   occupied slot would have been discarded. `Renegade_Replace_File` now
+   moves the old file to `.previous`, renames the new one in and restores the
+   old file if that fails.
+
+Staging and atomic replacement now apply only to pure `WRITE` sessions;
+`READ|WRITE` keeps the original direct semantics.
+
+Host contract: the staging test adds an overwrite-in-place case and runs once
+more with a rename that refuses existing destinations (modelling the Vita).
+All four tests pass; removing either fix makes its test fail. The
+availability test's ThreadSanitizer case fails identically on the prior
+commit (pre-existing, unrelated).
+
+Finale path: `MX0_Area4_Controller_DLS` saves every member, including
+`basewall_id`; ion strike, 22 s fade and 25 s finale are original script timers
+already logged by `M13 finale:` breadcrumbs. No source defect found there.
+Remaining risk: a crash between moving the old slot aside and renaming the new
+one leaves only `<slot>.previous`; it is not yet recovered automatically.

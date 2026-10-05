@@ -1,5 +1,23 @@
 # Live engineering progress
 
+# Save writer: atomic replace actually atomic, Vita rename — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: found that `RawFileClass::Open`'s leading virtual `Close()` reset
+the atomic-save state, so every save wrote directly over its slot, and that
+Vita `sceIoRename` cannot replace an existing file. Both fixed; details in
+`M13_QUICKSAVE_HANG.md`. M13 finale script state and timers reviewed: fully
+saved, no defect.
+
+Evidence: file-factory staging host tests 4/4 pass, including a simulated
+Vita rename; mutation checks confirm each test catches its defect. Not built
+for ARM.
+
+Next: physical quicksave twice into each slot, confirm `.pending`/`.previous`
+are absent and Load Game restores the newest save.
+
 # Per-frame subsystem timing for ambush frames — 2026-10-05
 
 Renegade Vita — v3.5 active

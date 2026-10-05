@@ -139,6 +139,10 @@ int main()
 		}
 		const std::string expected = Read_All(reference_path);
 		CHECK(!expected.empty() && expected == Read_All(user + "/save/save.sav"));
+		// Every overwrite replaces the slot and leaves no sibling behind.
+		struct stat status;
+		CHECK(stat((user + "/save/save.sav.pending").c_str(), &status) != 0);
+		CHECK(stat((user + "/save/save.sav.previous").c_str(), &status) != 0);
 	}
 
 	// Nothing reaches the card before Close; Size and Tell use the staged view.
@@ -167,8 +171,29 @@ int main()
 		CHECK(Read_All(user + "/second.bin") == "de");
 	}
 
+	// A write session leaves the previous slot untouched until Close, then
+	// replaces it whole, also over an existing file.
+	{
+		{
+			RenegadeRootedFileClass first(roots, "slot.sav");
+			CHECK(first.Open(FileClass::WRITE));
+			CHECK(first.Write("old-save", 8) == 8);
+			first.Close();
+		}
+		CHECK(Read_All(user + "/save/slot.sav") == "old-save");
+		RenegadeRootedFileClass second(roots, "slot.sav");
+		CHECK(second.Open(FileClass::WRITE));
+		CHECK(second.Write("new", 3) == 3);
+		CHECK(Read_All(user + "/save/slot.sav") == "old-save");
+		second.Close();
+		CHECK(Read_All(user + "/save/slot.sav") == "new");
+		struct stat status;
+		CHECK(stat((user + "/save/slot.sav.pending").c_str(), &status) != 0);
+		CHECK(stat((user + "/save/slot.sav.previous").c_str(), &status) != 0);
+	}
+
 	const RenegadeFileFactoryStatistics statistics = Renegade_File_Factory_Get_Statistics();
-	CHECK(statistics.staged_write_files == 600U + 40U + 3U);
+	CHECK(statistics.staged_write_files == 600U + 40U + 3U + 2U);
 	CHECK(statistics.staged_write_fallbacks == 0U && statistics.staged_write_bytes != 0U);
 	std::printf("rooted file factory write staging PASS files=%u bytes=%u\n",
 		statistics.staged_write_files, statistics.staged_write_bytes);

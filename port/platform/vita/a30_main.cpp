@@ -17,6 +17,17 @@
 #include <stdint.h>
 #include <string.h>
 
+// newlib's default heap is a fixed 128 MiB block. The original engine, its
+// physics/scene data and decoded audio all share that heap, and physical M13
+// exhausted it (dev230 operator-new abort in the WAVE decoder) while ~15 MiB
+// of user memory sat unused. The SFO requests the extended application
+// budget (ATTRIBUTE2=12); 192 MiB of it goes to the C heap and vitaGL's
+// RAM pool takes the remainder above its reserve at vglInitExtended. 192 MiB
+// still leaves vitaGL a working pool if extended memory is unavailable.
+extern "C" {
+unsigned int _newlib_heap_size_user = 192U * 1024U * 1024U;
+}
+
 namespace {
 
 // Raw Vita I/O is deliberately independent of newlib, the display, and the

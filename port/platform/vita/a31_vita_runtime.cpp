@@ -1,5 +1,7 @@
 #include "a31_vita_runtime.h"
 
+#include <malloc.h>
+
 #include "a30_vita_runtime.h"
 #include "a31_interactive_runtime_policy.h"
 #include "a31_capture_telemetry.h"
@@ -2650,6 +2652,13 @@ void Log_Input_Telemetry()
 
 void Log_Audio_Runtime_Statistics(const char *reason, uint32_t frame)
 {
+	// Heap pressure accompanies every audio checkpoint: dev230 aborted on an
+	// operator-new failure inside the WAVE decoder with no heap evidence.
+	const struct mallinfo heap = mallinfo();
+	A30_Vita_Log("A3.5 heap: reason=%s frame=%u arena=%u in_use=%u free=%u top_free=%u\n",
+		reason != NULL ? reason : "unknown", frame,
+		static_cast<unsigned>(heap.arena), static_cast<unsigned>(heap.uordblks),
+		static_cast<unsigned>(heap.fordblks), static_cast<unsigned>(heap.keepcost));
 	RenegadeMilesRuntimeStats stats = {};
 	Renegade_Miles_Get_Runtime_Stats(&stats);
 	WWAudioClass *audio = WWAudioClass::Get_Instance();

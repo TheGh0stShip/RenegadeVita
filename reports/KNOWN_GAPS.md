@@ -1,5 +1,11 @@
 # Known gaps
 
+- Application memory budget: the newlib heap was newlib's fixed 128 MiB
+  default and extended user memory was never requested. Source now sets a
+  192 MiB heap and `ATTRIBUTE2=12`. Whether the Vita and PSTV grant the
+  extended budget, the resulting vitaGL pool size and M13 heap high-water are
+  unverified until a candidate runs.
+
 - The original Technical Options button is source-reachable through
   `OptionsMenuClass::On_Command`; it does not depend on its null dialog-factory
   slot. Audio, Video and Performance tabs are linked and resource-checked.

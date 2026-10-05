@@ -742,8 +742,10 @@ add_custom_command(OUTPUT ${RENEGADE_LIVEAREA_FILES}
     "${RENEGADE_ROOT}/assets/branding/renegade-vita-startup.svg"
   VERBATIM)
 # vita_create_vpk otherwise emits an empty CONTENT_ID field. Set the narrow
-# VitaSDK packaging flag immediately before the macro so only param.sfo changes.
-set(VITA_MKSFOEX_FLAGS "-s CONTENT_ID=${RENEGADE_VITA_CONTENT_ID}")
+# VitaSDK packaging flags immediately before the macro so only param.sfo changes.
+# ATTRIBUTE2=12 requests the extended user-memory budget; see the newlib
+# heap size in port/platform/vita/a30_main.cpp.
+set(VITA_MKSFOEX_FLAGS "-s CONTENT_ID=${RENEGADE_VITA_CONTENT_ID} -d ATTRIBUTE2=12")
 vita_create_vpk(RenegadeVita-${RENEGADE_CANDIDATE_LABEL}.vpk ${RENEGADE_VITA_TITLE_ID} eboot.bin
 	VERSION 03.55
 	NAME "Renegade Vita ${RENEGADE_CANDIDATE_LABEL}"

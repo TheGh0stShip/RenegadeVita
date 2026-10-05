@@ -1,5 +1,29 @@
 # Live engineering progress
 
+# Application memory budget: newlib heap and extended user memory — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: disassembly of dev238 `_init_vita_heap` shows the weak
+`_newlib_heap_size_user` was undefined, so the whole engine ran on newlib's
+fixed 128 MiB default. Dev230 physical logs show 108 MiB user memory free
+before `vglInit` and 15 MiB still idle afterwards, while the M13 gate crash
+aborted on operator-new inside the WAVE decoder. The SFO also lacked
+`ATTRIBUTE2=12`, so the extended application budget was never requested.
+Source now defines a 192 MiB heap and requests extended memory; vitaGL's RAM
+pool continues to take the remainder above its 16 MiB reserve. Each audio
+checkpoint now also logs `A3.5 heap:` arena/in-use/free from `mallinfo`.
+
+Evidence: ELF disassembly and dev230 runtime log. Source only; not built,
+not run in Vita3K or on hardware.
+
+Next: on the next candidate confirm in the runtime log that free user memory
+before `vglInit` is about 121 MiB or more and that the vitaGL RAM pool
+exceeds the dev230 86 MiB. Check `A3.5 heap:` through the M13 ambush and gate.
+
+Blocker: none for source work; physical acceptance pending.
+
 # Original Options routing ownership — 2026-10-05
 
 Renegade Vita — v3.5 active

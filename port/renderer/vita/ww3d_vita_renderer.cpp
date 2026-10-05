@@ -45,6 +45,7 @@ void RenegadeVita_Release_DX8_Bound_Textures() __attribute__((weak));
 #include "renegade_vita_text_entry.h"
 
 #include <psp2/io/stat.h>
+#include <psp2/kernel/cpu.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/sysmem.h>
 #include <vitaGL.h>
@@ -2768,6 +2769,8 @@ bool Initialize()
 	Invalidate_Native_State_Cache();
 
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "vglInit entry");
+	// Deferred GPU frees run on user core 2, away from the game thread.
+	vglSetupGarbageCollector(0x10000100, SCE_KERNEL_CPU_MASK_USER_2);
 #if RENEGADE_VITA_M00_DEMO
 	const GLboolean resolution_fallback = vglInit(4 * 1024 * 1024);
 #else

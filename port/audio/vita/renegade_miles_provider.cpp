@@ -18,13 +18,32 @@
 
 #if defined(__vita__)
 #include <psp2/audioout.h>
+#include <psp2/kernel/cpu.h>
+#include <psp2/kernel/threadmgr.h>
 #endif
 
 using RenegadeVitaAudio::DecodedWave;
 using RenegadeVitaAudio::WaveInfo;
 
-struct RenegadeMilesSample {
+// One decoded PCM image. Every voice that plays the same source image shares
+// it, and a bounded cache keeps recently used images, so replaying a sound
+// does not decode its whole file again. References are guarded by the
+// provider mutex.
+struct RenegadeMilesPcm {
 	DecodedWave wave;
+	size_t frames = 0;
+	U32 encoded_data_bytes = 0;
+	uint64_t source_hash = 0;
+	size_t source_bytes = 0;
+	uint64_t last_use = 0;
+	uint32_t references = 0;
+	bool cached = false;
+};
+
+struct RenegadeMilesSample {
+	// Format metadata of the current image; its PCM lives in pcm.
+	DecodedWave wave;
+	RenegadeMilesPcm *pcm = nullptr;
 	std::unique_ptr<RenegadeVitaAudio::MpegPlayback> mpeg;
 	U32 encoded_data_bytes = 0;
 	double cursor = 0.0;
@@ -41,6 +60,8 @@ struct RenegadeMilesSample {
 	bool streaming = false;
 	bool playing = false;
 	bool paused = false;
+
+	~RenegadeMilesSample();
 };
 
 struct RenegadeMilesStream {
@@ -61,6 +82,11 @@ constexpr size_t kOutputFrames = 1024U;
 constexpr S32 kOutputRate = 48000;
 constexpr size_t kMaximumWaveBytes = 64U * 1024U * 1024U;
 constexpr HPROVIDER kNative3DProvider = 1U;
+// Idle decoded images retained for replay. Images still playing are never
+// evicted; an image larger than a quarter of the budget is not retained.
+constexpr size_t kPcmCacheSlots = 128U;
+constexpr size_t kPcmCacheBudgetBytes = 4U * 1024U * 1024U;
+constexpr size_t kPcmCacheMaximumSourceBytes = 1024U * 1024U;
 
 pthread_once_t g_mutex_once = PTHREAD_ONCE_INIT;
 pthread_mutex_t g_mutex;
@@ -81,6 +107,9 @@ AIL_FILE_OPEN_CALLBACK g_file_open = nullptr;
 AIL_FILE_CLOSE_CALLBACK g_file_close = nullptr;
 AIL_FILE_SEEK_CALLBACK g_file_seek = nullptr;
 AIL_FILE_READ_CALLBACK g_file_read = nullptr;
+RenegadeMilesPcm *g_pcm_cache[kPcmCacheSlots] = {};
+size_t g_pcm_cache_bytes = 0U;
+uint64_t g_pcm_cache_clock = 0U;
 
 void Initialize_Mutex()
 {
@@ -123,6 +152,120 @@ size_t Declared_Wave_Bytes(const void *image)
 		? static_cast<size_t>(declared) : 0;
 }
 
+// 64-bit content hash of a source image, eight bytes per step. Decoding is
+// a pure function of the image bytes, so an equal hash and length select the
+// same decoded PCM.
+uint64_t Hash_Image(const uint8_t *data, size_t bytes)
+{
+	uint64_t hash = UINT64_C(0x9e3779b97f4a7c15) ^
+		(static_cast<uint64_t>(bytes) * UINT64_C(0xc2b2ae3d27d4eb4f));
+	size_t offset = 0U;
+	for (; offset + 8U <= bytes; offset += 8U) {
+		uint64_t word = 0U;
+		std::memcpy(&word, data + offset, sizeof(word));
+		hash = (hash ^ word) * UINT64_C(0xff51afd7ed558ccd);
+		hash ^= hash >> 29U;
+	}
+	uint64_t tail = 0U;
+	std::memcpy(&tail, data + offset, bytes - offset);
+	hash = (hash ^ tail ^ (static_cast<uint64_t>(bytes - offset) << 56U)) *
+		UINT64_C(0xc4ceb9fe1a85ec53);
+	return hash ^ (hash >> 32U);
+}
+
+size_t Pcm_Bytes(const RenegadeMilesPcm *pcm)
+{
+	return sizeof(*pcm) + pcm->wave.samples.capacity() * sizeof(int16_t);
+}
+
+void Release_Pcm(RenegadeMilesPcm *pcm)
+{
+	if (pcm != nullptr && --pcm->references == 0U) delete pcm;
+}
+
+void Set_Sample_Pcm(RenegadeMilesSample *sample, RenegadeMilesPcm *pcm)
+{
+	if (pcm != nullptr) ++pcm->references;
+	Release_Pcm(sample->pcm);
+	sample->pcm = pcm;
+}
+
+void Remove_Cached_Pcm(size_t slot)
+{
+	RenegadeMilesPcm *pcm = g_pcm_cache[slot];
+	g_pcm_cache[slot] = nullptr;
+	g_pcm_cache_bytes -= Pcm_Bytes(pcm);
+	pcm->cached = false;
+	Release_Pcm(pcm);
+}
+
+void Clear_Pcm_Cache()
+{
+	for (size_t slot = 0U; slot < kPcmCacheSlots; ++slot) {
+		if (g_pcm_cache[slot] != nullptr) Remove_Cached_Pcm(slot);
+	}
+}
+
+RenegadeMilesPcm *Find_Cached_Pcm(uint64_t hash, size_t bytes)
+{
+	for (RenegadeMilesPcm *pcm : g_pcm_cache) {
+		if (pcm != nullptr && pcm->source_hash == hash && pcm->source_bytes == bytes)
+			return pcm;
+	}
+	return nullptr;
+}
+
+// Evicts least recently used idle images (referenced only by the cache) until
+// `bytes` more fit the budget and a slot is free. Images that voices still
+// play are never evicted; if they fill the budget, nothing new is retained.
+bool Make_Pcm_Cache_Room(size_t bytes)
+{
+	for (;;) {
+		size_t free_slot = kPcmCacheSlots;
+		size_t victim = kPcmCacheSlots;
+		for (size_t slot = 0U; slot < kPcmCacheSlots; ++slot) {
+			const RenegadeMilesPcm *pcm = g_pcm_cache[slot];
+			if (pcm == nullptr) {
+				if (free_slot == kPcmCacheSlots) free_slot = slot;
+			} else if (pcm->references == 1U && (victim == kPcmCacheSlots ||
+				pcm->last_use < g_pcm_cache[victim]->last_use)) {
+				victim = slot;
+			}
+		}
+		if (free_slot != kPcmCacheSlots && g_pcm_cache_bytes + bytes <= kPcmCacheBudgetBytes)
+			return true;
+		if (victim == kPcmCacheSlots) return false;
+		Remove_Cached_Pcm(victim);
+		++g_stats.pcm_cache_evictions;
+	}
+}
+
+void Cache_Pcm(RenegadeMilesPcm *pcm)
+{
+	const size_t bytes = Pcm_Bytes(pcm);
+	if (bytes > kPcmCacheBudgetBytes / 4U || !Make_Pcm_Cache_Room(bytes)) return;
+	for (RenegadeMilesPcm *&slot : g_pcm_cache) {
+		if (slot != nullptr) continue;
+		slot = pcm;
+		++pcm->references;
+		pcm->cached = true;
+		g_pcm_cache_bytes += bytes;
+		return;
+	}
+}
+
+DecodedWave Wave_Metadata(const DecodedWave &wave)
+{
+	DecodedWave metadata;
+	metadata.channels = wave.channels;
+	metadata.sample_rate = wave.sample_rate;
+	metadata.fact_sample_frames = wave.fact_sample_frames;
+	metadata.estimated_sample_frames = wave.estimated_sample_frames;
+	metadata.untrimmed_sample_frames = wave.untrimmed_sample_frames;
+	metadata.trimmed_sample_frames = wave.trimmed_sample_frames;
+	return metadata;
+}
+
 bool Decode_Into_Sample(RenegadeMilesSample *sample, const void *data,
 	size_t bytes)
 {
@@ -131,13 +274,12 @@ bool Decode_Into_Sample(RenegadeMilesSample *sample, const void *data,
 		Set_Error("invalid or oversized WAVE image");
 		return false;
 	}
-	DecodedWave decoded;
-	WaveInfo info;
+	const uint8_t *image = static_cast<const uint8_t *>(data);
 	const char *error = nullptr;
-	if (RenegadeVitaAudio::Is_Mpeg_Media(static_cast<const uint8_t *>(data), bytes)) {
-		auto playback = RenegadeVitaAudio::Open_Mpeg_Playback(
-			static_cast<const uint8_t *>(data), bytes, &error);
+	if (RenegadeVitaAudio::Is_Mpeg_Media(image, bytes)) {
+		auto playback = RenegadeVitaAudio::Open_Mpeg_Playback(image, bytes, &error);
 		if (!playback) { Set_Error(error); return false; }
+		Set_Sample_Pcm(sample, nullptr);
 		sample->wave = {};
 		sample->wave.channels = playback->Channels();
 		sample->wave.sample_rate = playback->Sample_Rate();
@@ -150,14 +292,36 @@ bool Decode_Into_Sample(RenegadeMilesSample *sample, const void *data,
 		sample->playing = sample->paused = false;
 		return true;
 	}
-	if (!RenegadeVitaAudio::Decode_Wave_With_Info(
-		static_cast<const uint8_t *>(data), bytes, &decoded, &info, &error)) {
-		Set_Error(error);
-		return false;
+	const bool cacheable = bytes <= kPcmCacheMaximumSourceBytes;
+	const uint64_t hash = cacheable ? Hash_Image(image, bytes) : 0U;
+	RenegadeMilesPcm *pcm = cacheable ? Find_Cached_Pcm(hash, bytes) : nullptr;
+	if (pcm != nullptr) {
+		++g_stats.pcm_cache_hits;
+	} else {
+		DecodedWave decoded;
+		WaveInfo info;
+		if (!RenegadeVitaAudio::Decode_Wave_With_Info(image, bytes, &decoded, &info, &error)) {
+			Set_Error(error);
+			return false;
+		}
+		pcm = new (std::nothrow) RenegadeMilesPcm;
+		if (pcm == nullptr) {
+			Set_Error("decoded PCM allocation failed");
+			return false;
+		}
+		pcm->frames = decoded.Frame_Count();
+		pcm->wave = std::move(decoded);
+		pcm->encoded_data_bytes = info.data_bytes;
+		pcm->source_hash = hash;
+		pcm->source_bytes = bytes;
+		++g_stats.pcm_decodes;
+		if (cacheable) Cache_Pcm(pcm);
 	}
-	sample->wave = std::move(decoded);
+	pcm->last_use = ++g_pcm_cache_clock;
+	Set_Sample_Pcm(sample, pcm);
+	sample->wave = Wave_Metadata(pcm->wave);
 	sample->mpeg.reset();
-	sample->encoded_data_bytes = info.data_bytes;
+	sample->encoded_data_bytes = pcm->encoded_data_bytes;
 	sample->cursor = 0.0;
 	sample->playback_rate = static_cast<S32>(sample->wave.sample_rate);
 	sample->playing = false;
@@ -168,6 +332,7 @@ bool Decode_Into_Sample(RenegadeMilesSample *sample, const void *data,
 void Reset_Sample(RenegadeMilesSample *sample)
 {
 	if (sample == nullptr) return;
+	Set_Sample_Pcm(sample, nullptr);
 	sample->mpeg.reset();
 	sample->wave = {};
 	sample->encoded_data_bytes = 0;
@@ -189,19 +354,8 @@ void Reset_Sample(RenegadeMilesSample *sample)
 
 size_t Sample_Frame_Count(const RenegadeMilesSample *sample)
 {
-	return sample->mpeg ? sample->mpeg->Frame_Count() : sample->wave.Frame_Count();
-}
-
-int16_t Source_Sample(const RenegadeMilesSample *sample, size_t frame,
-	uint16_t output_channel)
-{
-	const size_t frames = Sample_Frame_Count(sample);
-	if (frames == 0) return 0;
-	frame = std::min(frame, frames - 1U);
-	const uint16_t source_channel = sample->wave.channels == 1
-		? 0 : std::min<uint16_t>(output_channel, sample->wave.channels - 1U);
-	if (sample->mpeg) return sample->mpeg->Sample(frame, source_channel);
-	return sample->wave.samples[frame * sample->wave.channels + source_channel];
+	return sample->mpeg ? sample->mpeg->Frame_Count() :
+		sample->pcm != nullptr ? sample->pcm->frames : 0U;
 }
 
 bool Advance_Loop(RenegadeMilesSample *sample)
@@ -317,21 +471,133 @@ void Record_Output_Stream_Submit_Locked(const RenegadeMilesMixSummary &summary)
 }
 #endif
 
+// The per-voice loops below reproduce the original per-frame mixer exactly
+// (same double cursor sequence, loop handling, float interpolation and
+// truncation) with the per-frame calls, divisions and branches hoisted out.
+
+// Reloads a voice that reached its end; returns false when it stopped.
+bool Wrap_Voice(RenegadeMilesSample *sample, double &cursor, double end)
+{
+	sample->cursor = cursor;
+	while (sample->cursor >= end) {
+		if (!Advance_Loop(sample)) break;
+	}
+	cursor = sample->cursor;
+	return sample->playing;
+}
+
+// A voice whose gains are both zero contributes exactly zero; only its cursor
+// and loop state advance.
+void Advance_Silent_Voice(RenegadeMilesSample *sample, size_t source_frames,
+	double step, size_t frames)
+{
+	const double end = static_cast<double>(source_frames);
+	double cursor = sample->cursor;
+	for (size_t output_frame = 0; output_frame < frames; ++output_frame) {
+		if (cursor >= end && !Wrap_Voice(sample, cursor, end)) return;
+		cursor += step;
+	}
+	sample->cursor = cursor;
+}
+
+template <bool Mono, bool Stream>
+void Mix_Pcm_Voice(RenegadeMilesSample *sample, const int16_t *pcm,
+	size_t source_frames, size_t stride, double step, const float gains[2],
+	int32_t *accumulator, int32_t *stream_accumulator, size_t frames)
+{
+	const double end = static_cast<double>(source_frames);
+	const size_t last = source_frames - 1U;
+	const float left_gain = gains[0];
+	const float right_gain = gains[1];
+	double cursor = sample->cursor;
+	for (size_t output_frame = 0; output_frame < frames; ++output_frame) {
+		if (cursor >= end && !Wrap_Voice(sample, cursor, end)) return;
+		const size_t first = static_cast<size_t>(cursor);
+		const size_t second = std::min(first + 1U, last);
+		const float fraction = static_cast<float>(cursor - first);
+		int32_t left = 0;
+		int32_t right = 0;
+		if (Mono) {
+			const float start = pcm[first];
+			const float finish = pcm[second];
+			const float interpolated = start + (finish - start) * fraction;
+			left = static_cast<int32_t>(interpolated * left_gain);
+			right = static_cast<int32_t>(interpolated * right_gain);
+		} else {
+			const int16_t *a = pcm + first * stride;
+			const int16_t *b = pcm + second * stride;
+			const float left_start = a[0];
+			const float left_finish = b[0];
+			const float left_value = left_start + (left_finish - left_start) * fraction;
+			left = static_cast<int32_t>(left_value * left_gain);
+			const float right_start = a[1];
+			const float right_finish = b[1];
+			const float right_value = right_start + (right_finish - right_start) * fraction;
+			right = static_cast<int32_t>(right_value * right_gain);
+		}
+		accumulator[output_frame * 2U] += left;
+		accumulator[output_frame * 2U + 1U] += right;
+		if (Stream) {
+			stream_accumulator[output_frame * 2U] += left;
+			stream_accumulator[output_frame * 2U + 1U] += right;
+		}
+		cursor += step;
+	}
+	sample->cursor = cursor;
+}
+
+template <bool Stream>
+void Mix_Mpeg_Voice(RenegadeMilesSample *sample, size_t source_frames,
+	double step, const float gains[2], int32_t *accumulator,
+	int32_t *stream_accumulator, size_t frames)
+{
+	RenegadeVitaAudio::MpegPlayback &mpeg = *sample->mpeg;
+	const double end = static_cast<double>(source_frames);
+	const size_t last = source_frames - 1U;
+	const uint16_t channels = sample->wave.channels;
+	const uint16_t right_channel = channels == 1 ? 0U :
+		std::min<uint16_t>(1U, static_cast<uint16_t>(channels - 1U));
+	double cursor = sample->cursor;
+	for (size_t output_frame = 0; output_frame < frames; ++output_frame) {
+		if (cursor >= end && !Wrap_Voice(sample, cursor, end)) return;
+		const size_t first = static_cast<size_t>(cursor);
+		const size_t second = std::min(first + 1U, last);
+		const float fraction = static_cast<float>(cursor - first);
+		// Same decode request order as the original mixer: the playback
+		// keeps a window cache whose refills depend on it.
+		for (uint16_t channel = 0; channel < 2; ++channel) {
+			const uint16_t source_channel = channel == 0 ? 0U : right_channel;
+			const float start = mpeg.Sample(first, source_channel);
+			const float finish = mpeg.Sample(second, source_channel);
+			const float interpolated = start + (finish - start) * fraction;
+			const int32_t contribution =
+				static_cast<int32_t>(interpolated * gains[channel]);
+			accumulator[output_frame * 2U + channel] += contribution;
+			if (Stream) stream_accumulator[output_frame * 2U + channel] += contribution;
+		}
+		cursor += step;
+	}
+	sample->cursor = cursor;
+}
+
 void Mix_Locked(int16_t *output, size_t frames,
 	RenegadeMilesMixSummary *summary = nullptr)
 {
 	if (frames > kOutputFrames) return;
 	if (summary != nullptr) *summary = {};
-	std::fill(output, output + frames * 2U, 0);
 	int32_t accumulator[kOutputFrames * 2U] = {};
-	int32_t stream_accumulator[kOutputFrames * 2U] = {};
+	int32_t stream_accumulator[kOutputFrames * 2U];
 	bool stream_mix_attempted = false;
 	uint32_t stream_mix_peak_abs = 0U;
 	for (RenegadeMilesSample *sample : g_samples) {
-		if (sample == nullptr || !sample->playing || sample->paused ||
-			Sample_Frame_Count(sample) == 0) continue;
+		if (sample == nullptr || !sample->playing || sample->paused) continue;
+		const size_t source_frames = Sample_Frame_Count(sample);
+		if (source_frames == 0) continue;
 		const bool is_stream = sample->streaming;
-		if (is_stream) stream_mix_attempted = true;
+		if (is_stream && !stream_mix_attempted) {
+			std::fill(stream_accumulator, stream_accumulator + frames * 2U, 0);
+			stream_mix_attempted = true;
+		}
 		const double step = static_cast<double>(
 			sample->playback_rate > 0 ? sample->playback_rate :
 			static_cast<S32>(sample->wave.sample_rate)) / kOutputRate;
@@ -359,47 +625,53 @@ void Mix_Locked(int16_t *output, size_t frames,
 			volume * distance_gain * left_pan_gain,
 			volume * distance_gain * right_pan_gain
 		};
-		for (size_t output_frame = 0; output_frame < frames; ++output_frame) {
-			const size_t source_frames = Sample_Frame_Count(sample);
-			while (sample->cursor >= source_frames) {
-				if (!Advance_Loop(sample)) break;
+		if (sample->mpeg) {
+			if (is_stream) {
+				Mix_Mpeg_Voice<true>(sample, source_frames, step, gains,
+					accumulator, stream_accumulator, frames);
+			} else {
+				Mix_Mpeg_Voice<false>(sample, source_frames, step, gains,
+					accumulator, stream_accumulator, frames);
 			}
-			if (!sample->playing) break;
-			const size_t first = static_cast<size_t>(sample->cursor);
-			const size_t second = std::min(first + 1U, source_frames - 1U);
-			const float fraction = static_cast<float>(sample->cursor - first);
-			for (uint16_t channel = 0; channel < 2; ++channel) {
-				const float start = Source_Sample(sample, first, channel);
-				const float end = Source_Sample(sample, second, channel);
-				const float interpolated = start + (end - start) * fraction;
-				const int32_t contribution =
-					static_cast<int32_t>(interpolated * gains[channel]);
-				accumulator[output_frame * 2U + channel] += contribution;
-				if (is_stream) {
-					stream_accumulator[output_frame * 2U + channel] += contribution;
-				}
+			continue;
+		}
+		if (gains[0] == 0.0F && gains[1] == 0.0F) {
+			Advance_Silent_Voice(sample, source_frames, step, frames);
+			continue;
+		}
+		const int16_t *pcm = sample->pcm->wave.samples.data();
+		const size_t stride = sample->wave.channels;
+		if (stride == 1U) {
+			if (is_stream) {
+				Mix_Pcm_Voice<true, true>(sample, pcm, source_frames, stride, step,
+					gains, accumulator, stream_accumulator, frames);
+			} else {
+				Mix_Pcm_Voice<true, false>(sample, pcm, source_frames, stride, step,
+					gains, accumulator, stream_accumulator, frames);
 			}
-			sample->cursor += step;
+		} else if (is_stream) {
+			Mix_Pcm_Voice<false, true>(sample, pcm, source_frames, stride, step,
+				gains, accumulator, stream_accumulator, frames);
+		} else {
+			Mix_Pcm_Voice<false, false>(sample, pcm, source_frames, stride, step,
+				gains, accumulator, stream_accumulator, frames);
 		}
 	}
+	uint32_t mixed_peak_abs = 0U;
+	bool mixed_nonzero = false;
 	for (size_t index = 0; index < frames * 2U; ++index) {
 		const int32_t clamped = std::max<int32_t>(-32768,
 			std::min<int32_t>(32767, accumulator[index]));
 		const uint32_t magnitude = static_cast<uint32_t>(
 			clamped < 0 ? -clamped : clamped);
-		if (magnitude != 0U) {
-			g_stats.mixed_peak_abs = std::max(g_stats.mixed_peak_abs, magnitude);
-		}
+		mixed_peak_abs = std::max(mixed_peak_abs, magnitude);
+		mixed_nonzero = mixed_nonzero || magnitude != 0U;
 		output[index] = static_cast<int16_t>(clamped);
 	}
+	g_stats.mixed_peak_abs = std::max(g_stats.mixed_peak_abs, mixed_peak_abs);
 	++g_stats.mixed_buffers;
 	g_stats.mixed_frames += frames;
-	for (size_t index = 0; index < frames * 2U; ++index) {
-		if (output[index] != 0) {
-			++g_stats.mixed_nonzero_buffers;
-			break;
-		}
-	}
+	if (mixed_nonzero) ++g_stats.mixed_nonzero_buffers;
 	if (stream_mix_attempted) {
 		++g_stats.stream_mixed_buffers;
 		g_stats.stream_mixed_frames += frames;
@@ -439,6 +711,11 @@ void Mix_Locked(int16_t *output, size_t frames,
 #if !defined(RENEGADE_MILES_MANUAL_MIX)
 void *Output_Thread(void *)
 {
+#if defined(__vita__)
+	// The game thread owns user core 0; mixing runs beside it on core 1.
+	(void)sceKernelChangeThreadCpuAffinityMask(SCE_KERNEL_THREAD_ID_SELF,
+		SCE_KERNEL_CPU_MASK_USER_1);
+#endif
 	RenegadeAudioOutputBuffers<kOutputFrames * 2U> buffers;
 	for (;;) {
 		RenegadeMilesMixSummary mix_summary;
@@ -591,6 +868,11 @@ RenegadeMilesSample *Stream_Sample(HSTREAM stream)
 
 } // namespace
 
+RenegadeMilesSample::~RenegadeMilesSample()
+{
+	Release_Pcm(pcm);
+}
+
 void AIL_startup(void)
 {
 	Ensure_Mutex();
@@ -602,6 +884,7 @@ void AIL_shutdown(void)
 	Stop_Output();
 	for (RenegadeMilesSample *sample : g_samples) delete sample;
 	g_samples.clear();
+	Clear_Pcm_Cache();
 	AIL_unlock();
 }
 
@@ -1117,6 +1400,11 @@ void Renegade_Miles_Get_Runtime_Stats(RenegadeMilesRuntimeStats *stats)
 	AIL_lock();
 	*stats = g_stats;
 	stats->allocated_samples = static_cast<uint32_t>(g_samples.size());
+	stats->pcm_cache_entries = 0U;
+	for (const RenegadeMilesPcm *pcm : g_pcm_cache) {
+		if (pcm != nullptr) ++stats->pcm_cache_entries;
+	}
+	stats->pcm_cache_bytes = Saturate_Size_To_U32(g_pcm_cache_bytes);
 	stats->active_samples = 0U;
 	stats->active_streams = 0U;
 	stats->active_stream_position_ms = 0U;

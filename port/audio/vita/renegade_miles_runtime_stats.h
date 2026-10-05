@@ -54,6 +54,11 @@ struct RenegadeMilesRuntimeStats {
 	uint64_t mixed_frames;
 	uint64_t mixed_nonzero_buffers;
 	uint32_t mixed_peak_abs;
+	uint32_t pcm_decodes;
+	uint32_t pcm_cache_hits;
+	uint32_t pcm_cache_evictions;
+	uint32_t pcm_cache_entries;
+	uint32_t pcm_cache_bytes;
 	uint32_t allocated_samples;
 	uint32_t active_samples;
 	uint32_t active_streams;

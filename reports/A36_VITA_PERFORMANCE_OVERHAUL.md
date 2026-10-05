@@ -73,6 +73,31 @@ per frame:
   screen, as the original `TextureLoader` did. The budget is 48 MiB of
   additional resident textures with a 24 MiB vitaGL free-memory floor.
 
+### Audio
+
+The software Miles replacement mixes up to 32 voices at 48 kHz on its own
+thread, but it holds the provider lock that every game-thread audio call
+takes, and it decoded every sound effect in full on each play.
+
+- **Mixer.** Each voice now runs a loop specialised for mono or stereo PCM,
+  stream or not, with the per-frame function calls, frame-count divisions
+  and channel selection hoisted out. Voices with zero gain (silent volume,
+  beyond their maximum distance) advance their cursor without
+  interpolating. The output is bit-identical to the previous mixer: same
+  double-precision cursor sequence, loop handling, float interpolation and
+  truncation. Compressed music keeps its exact decode request order.
+  Shorter mixes also shorten the time the game thread can wait on the lock.
+- **Decoded PCM cache.** Decoded images are shared by every voice playing
+  the same source bytes (64-bit content hash plus length) and kept in a 4 MiB
+  LRU cache of idle images (128 slots; sources up to 1 MiB). Replaying a
+  gunshot, footstep or ambient loop no longer decodes its ADPCM file on the
+  game thread. Images in use are never evicted, and images too large to
+  retain are decoded per use as before.
+- **Thread placement.** The game thread is pinned to user core 0, the mixer
+  to core 1, and the vitaGL garbage collector to core 2 next to the log and
+  flight-recorder writers.
+- The audio provider and WWAudio build at `-O3` with the other hot paths.
+
 ### Logging and diagnostics
 
 - `A30_Vita_Log` and renderer breadcrumbs enqueue complete lines into a
@@ -99,7 +124,7 @@ per frame:
 
 ### Build
 
-- Renderer, WW3D, WWMath and WWPhys translation units build at `-O3`
+- Renderer, audio, WW3D, WWAudio, WWMath and WWPhys translation units build at `-O3`
   (`RENEGADE_VITA_HOT_PATH_O3`, default ON); the target and vitaGL add the
   value-preserving `-fno-math-errno -fno-trapping-math`.
 - `WWMath::Fabs` compiles to one VABS (bit-identical).
@@ -118,6 +143,7 @@ one trailing newline):
 Build-time: `-DRENEGADE_VITA_HOT_PATH_O3=OFF` restores `-O2` everywhere;
 `-DRENEGADE_VITA_CAMPAIGN_MSAA_SAMPLES=0|2|4` sets the default MSAA.
 
+The audio log line reports `pcm=decodes/hits/evictions/entries/bytes`.
 The runtime log prints a `static-mesh-cache` line every 120 frames (entries,
 bytes, hits, builds, rebuilds, ineligible, volatile, evictions,
 invalidations, allocation failures) next to the existing `render-work-cache`
@@ -137,6 +163,12 @@ and `mesh-boundary-time` lines, which makes before/after comparisons direct.
     against synchronous flushing (ASan and TSan).
   - `tools/test_renegade_paths_cache.py`: cached retail lookups against
     uncached lookups, writable roots uncached (ASan/UBSan and TSan).
+  - `tools/test_vita_audio_mixer_equivalence.py`: the new mixer against the
+    previous one on thousands of random voice sets (rates, loops, cursors,
+    gains, distance, streams, compressed music), comparing output, cursor
+    doubles, loop state and statistics bit for bit at `-O1` with sanitizers
+    and at `-O3`. All 13 injected mixer bugs are caught. It also checks the
+    PCM cache's sharing, eviction, size limits and release (ASan/UBSan).
 - The full Python contract suite passes locally apart from the pre-existing
   environment-only errors (no VitaSDK or reference archives in the container).
 - The host probe build had two pre-existing failures: a link failure
@@ -157,3 +189,5 @@ and `mesh-boundary-time` lines, which makes before/after comparisons direct.
   the per-frame path.
 - Longer loading screens are expected on missions that previously deferred
   their textures.
+- Idle decoded sounds can hold up to 4 MiB of additional main memory. The
+  heap headroom during campaign play has not been measured on hardware.

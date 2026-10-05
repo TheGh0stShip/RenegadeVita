@@ -15,6 +15,8 @@ physical hardware. Static meshes are recorded once and replayed from GPU
 buffers instead of being re-emitted vertex by vertex. DXT textures upload
 without a CPU decode and are prepared on every level's loading screen.
 Runtime logging and flight-recorder file I/O move to background threads.
+The audio mixer is faster with bit-identical output, and decoded sounds are
+cached instead of being decoded on every play.
 Hot code builds at `-O3` and MSAA defaults to 2x. Host contracts and the ARM
 compile pass; **no Vita or Vita3K run has measured the result yet**, so no
 frame rate is claimed. Runtime A/B switches and details are in the

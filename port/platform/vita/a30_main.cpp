@@ -6,6 +6,7 @@
 
 #include <psp2/ctrl.h>
 #include <psp2/display.h>
+#include <psp2/kernel/cpu.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
 #include <psp2/io/fcntl.h>
@@ -151,6 +152,12 @@ int main()
 		cpu_result, bus_result, gpu_result, xbar_result,
 		scePowerGetArmClockFrequency(), scePowerGetBusClockFrequency(),
 		scePowerGetGpuClockFrequency(), scePowerGetGpuXbarClockFrequency());
+	// Pin the game thread to user core 0. The audio mixer runs on core 1;
+	// log, flight-recorder and vitaGL garbage-collector threads on core 2.
+	const int affinity_result = sceKernelChangeThreadCpuAffinityMask(
+		SCE_KERNEL_THREAD_ID_SELF, SCE_KERNEL_CPU_MASK_USER_0);
+	A30_Vita_Log("A3.6 thread placement: game=user0 audio=user1 io/gc=user2 result=%08X\n",
+		static_cast<unsigned>(affinity_result));
 	A30_Vita_Log("A3.5 startup: bootstrap display=%d startup_ms=%llu filesystem_ms=%llu; visible bootstrap status precedes retail pre-cache\n",
 		screen_result >= 0 ? 1 : 0,
 		static_cast<unsigned long long>((filesystem_completed_us - startup_started_us) / 1000U),

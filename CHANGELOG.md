@@ -15,6 +15,10 @@ This changelog records public-facing source, process, and evidence changes. It d
   threads; per-frame diagnostic checksums, census and memory walks are gone.
 - Retail asset lookups reuse cached directory listings instead of rescanning
   the memory card on every open.
+- The audio mixer runs specialised, bit-identical per-voice loops and skips
+  silent voices; decoded sound effects are shared and cached instead of being
+  decoded on every play; game, audio and background threads run on separate
+  cores.
 - Hot code builds at `-O3`; MSAA defaults to 2x with a runtime override.
 - Host contracts and the ARM compile pass. No physical or emulator run has
   measured these changes; see the

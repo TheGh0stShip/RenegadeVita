@@ -36,7 +36,7 @@ endif()
 # builds at -O3; everything else keeps RelWithDebInfo's -O2. OFF restores
 # -O2 everywhere for an A/B comparison or a suspected optimizer regression.
 option(RENEGADE_VITA_HOT_PATH_O3
-  "Compile the renderer, WW3D, WWMath and WWPhys translation units at -O3" ON)
+  "Compile the renderer, audio, WW3D, WWAudio, WWMath and WWPhys translation units at -O3" ON)
 option(RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
   "Enable one-shot diagnostic save/mission launch requests; keep OFF for public packages" OFF)
 # Only the native launch boundary consumes this option. A directory-wide
@@ -635,7 +635,7 @@ endforeach()
 if(RENEGADE_VITA_HOT_PATH_O3)
   get_target_property(rv_hot_path_sources ${PROJECT_NAME} SOURCES)
   list(FILTER rv_hot_path_sources INCLUDE REGEX
-    "/staging/(ww3d2|wwmath|wwphys)/|/port/renderer/vita/")
+    "/staging/(ww3d2|wwaudio|wwmath|wwphys)/|/port/(renderer|audio)/vita/")
   set_property(SOURCE ${rv_hot_path_sources} APPEND PROPERTY COMPILE_OPTIONS -O3)
   list(LENGTH rv_hot_path_sources rv_hot_path_source_count)
   message(STATUS "Hot-path -O3 translation units: ${rv_hot_path_source_count}")

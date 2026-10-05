@@ -2581,7 +2581,7 @@ void Log_Audio_Runtime_Statistics(const char *reason, uint32_t frame)
 	WWAudioClass *audio = WWAudioClass::Get_Instance();
 	const float dialog_volume = audio != NULL ? audio->Get_Dialog_Volume() : -1.0F;
 	const float cinematic_volume = audio != NULL ? audio->Get_Cinematic_Volume() : -1.0F;
-	A30_Vita_Log("A3.5 audio: reason=%s frame=%u output_start=%u/%u/%u output_written/fail=%u/%u output_stream=buffers:%llu frames:%llu nonzero:%llu peak:%u last_output_stream=active/frames/nonzero/peak:%u/%u/%u/%u sample_file=%u/%u/%u sample_3d=%u/%u/%u stream=%u/%u/%u stream_start=%u/%u/%u/%u stream_bytes/frames=%llu/%llu stream_mix=buffers:%llu frames:%llu nonzero:%llu peak:%u last_stream_mix=active/frames/nonzero/peak:%u/%u/%u/%u last_stream=%s frames/fact/estimate/untrimmed/trimmed/rate/vol/pan=%u/%u/%u/%u/%u/%u/%u/%u starts=%u/%u/%u mix=buffers:%llu frames:%llu nonzero:%llu peak:%u allocated/active/streams=%u/%u/%u active_stream=pos/len/cursor/frames/loops/vol/pan=%u/%u/%u/%u/%u/%u/%u volumes_dialog/cinematic=%.3f/%.3f last_error=%s\n",
+	A30_Vita_Log("A3.5 audio: reason=%s frame=%u output_start=%u/%u/%u output_written/fail=%u/%u output_stream=buffers:%llu frames:%llu nonzero:%llu peak:%u last_output_stream=active/frames/nonzero/peak:%u/%u/%u/%u sample_file=%u/%u/%u sample_3d=%u/%u/%u stream=%u/%u/%u stream_start=%u/%u/%u/%u stream_bytes/frames=%llu/%llu stream_mix=buffers:%llu frames:%llu nonzero:%llu peak:%u last_stream_mix=active/frames/nonzero/peak:%u/%u/%u/%u last_stream=%s frames/fact/estimate/untrimmed/trimmed/rate/vol/pan=%u/%u/%u/%u/%u/%u/%u/%u starts=%u/%u/%u mix=buffers:%llu frames:%llu nonzero:%llu peak:%u pcm=decodes/hits/evictions/entries/bytes:%u/%u/%u/%u/%u allocated/active/streams=%u/%u/%u active_stream=pos/len/cursor/frames/loops/vol/pan=%u/%u/%u/%u/%u/%u/%u volumes_dialog/cinematic=%.3f/%.3f last_error=%s\n",
 		reason != NULL ? reason : "unknown", frame,
 		stats.output_start_attempts, stats.output_start_successes,
 		stats.output_start_failures, stats.output_buffers_written,
@@ -2621,6 +2621,8 @@ void Log_Audio_Runtime_Statistics(const char *reason, uint32_t frame)
 		static_cast<unsigned long long>(stats.mixed_frames),
 		static_cast<unsigned long long>(stats.mixed_nonzero_buffers),
 		stats.mixed_peak_abs,
+		stats.pcm_decodes, stats.pcm_cache_hits, stats.pcm_cache_evictions,
+		stats.pcm_cache_entries, stats.pcm_cache_bytes,
 		stats.allocated_samples, stats.active_samples, stats.active_streams,
 		stats.active_stream_position_ms, stats.active_stream_length_ms,
 		stats.active_stream_cursor_frame, stats.active_stream_total_frames,

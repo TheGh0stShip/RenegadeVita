@@ -2,6 +2,7 @@
 #include "a35_script_lookup_telemetry.h"
 
 #include <errno.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <inttypes.h>
 #include <pthread.h>
@@ -700,6 +701,56 @@ bool Is_Final_Flush(const char *reason)
 		 strcmp(reason, "final") == 0);
 }
 
+void Copy_Ring_Range(void *destination, const void *source, size_t entry_size,
+	uint32_t capacity, uint64_t start, uint64_t end)
+{
+	for (uint64_t sequence = start; sequence < end;) {
+		const uint32_t index = static_cast<uint32_t>(sequence % capacity);
+		uint64_t run = capacity - index;
+		if (run > end - sequence) run = end - sequence;
+		memcpy(static_cast<char *>(destination) + index * entry_size,
+			static_cast<const char *>(source) + index * entry_size,
+			static_cast<size_t>(run) * entry_size);
+		sequence += run;
+	}
+}
+
+// First ring sequence a non-final Write_Flight_Files pass will read: the
+// whole retained window when it replaces the file, else only new entries.
+uint64_t Flush_Read_Start(bool initialized, uint64_t sequence, uint64_t persisted,
+	uint32_t capacity)
+{
+	const bool replace = !initialized || sequence / capacity > persisted / capacity;
+	return replace ? Ring_First_Sequence(sequence, capacity) :
+		Valid_Range_Start(persisted, sequence, capacity);
+}
+
+// Copies what the background formatter reads while gRecorderMutex is held:
+// every scalar section, plus only the ring entries it will write. A full
+// 1.46 MB copy here would block a game thread that logs during the flush.
+void Snapshot_Recorder_For_Flush(FlightRecorder &destination, const FlightRecorder &source)
+{
+	memcpy(&destination, &source, offsetof(FlightRecorder, frames));
+	memcpy(&destination.frame_cursor, &source.frame_cursor,
+		offsetof(FlightRecorder, events) - offsetof(FlightRecorder, frame_cursor));
+	memcpy(&destination.event_cursor, &source.event_cursor,
+		offsetof(FlightRecorder, logs) - offsetof(FlightRecorder, event_cursor));
+	memcpy(&destination.log_cursor, &source.log_cursor,
+		sizeof(FlightRecorder) - offsetof(FlightRecorder, log_cursor));
+	Copy_Ring_Range(destination.frames, source.frames, sizeof(FlightFrameSample),
+		kFlightFrameCapacity, Flush_Read_Start(source.sidecars_initialized,
+			source.frame_sequence, source.persisted_frame_sequence, kFlightFrameCapacity),
+		source.frame_sequence);
+	Copy_Ring_Range(destination.events, source.events, sizeof(FlightEvent),
+		kFlightEventCapacity, Flush_Read_Start(source.sidecars_initialized,
+			source.event_sequence, source.persisted_event_sequence, kFlightEventCapacity),
+		source.event_sequence);
+	Copy_Ring_Range(destination.logs, source.logs, sizeof(FlightLogLine),
+		kFlightLogCapacity, Flush_Read_Start(source.sidecars_initialized,
+			source.log_sequence, source.persisted_log_sequence, kFlightLogCapacity),
+		source.log_sequence);
+}
+
 void *Flush_Worker(void *)
 {
 #if defined(__vita__)
@@ -721,7 +772,7 @@ void *Flush_Worker(void *)
 			RecorderLock lock;
 			active = gRecorder.active;
 			generation = gRecorderGeneration;
-			if (active) memcpy(gFlushSnapshot, &gRecorder, sizeof(gRecorder));
+			if (active) Snapshot_Recorder_For_Flush(*gFlushSnapshot, gRecorder);
 		}
 		if (active) {
 			Write_Flight_Files(*gFlushSnapshot, reason);

@@ -1392,3 +1392,31 @@ target_include_directories(a31_capture_telemetry_selftest PRIVATE
 target_compile_options(a31_capture_telemetry_selftest PRIVATE
   -O1 -g -Wall -Wextra -Werror
 )
+
+# TextureClass::Apply records every bind through the original Debug_Statistics
+# owner (DX8_RECORD_TEXTURE), so every host target that links texture.cpp also
+# needs statistics.cpp. Derived source lists copy the A22 manifest early, so
+# close the dependency per target once every target is defined.
+get_property(rv_host_targets DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
+foreach(rv_host_target IN LISTS rv_host_targets)
+  get_target_property(rv_host_target_type ${rv_host_target} TYPE)
+  if(rv_host_target_type STREQUAL "INTERFACE_LIBRARY" OR
+     rv_host_target_type STREQUAL "UTILITY")
+    continue()
+  endif()
+  get_target_property(rv_host_target_sources ${rv_host_target} SOURCES)
+  if(NOT rv_host_target_sources)
+    continue()
+  endif()
+  list(FIND rv_host_target_sources "${RV_STAGE}/ww3d2/texture.cpp" rv_texture_index)
+  list(FIND rv_host_target_sources "${RV_STAGE}/ww3d2/statistics.cpp" rv_statistics_index)
+  if(NOT rv_texture_index EQUAL -1 AND rv_statistics_index EQUAL -1)
+    target_sources(${rv_host_target} PRIVATE "${RV_STAGE}/ww3d2/statistics.cpp")
+  endif()
+endforeach()
+
+# The audio decoder turns allocation failures into load failures with
+# try/catch, as in the Vita build (which keeps C++ exceptions enabled). Host
+# targets built with -fno-exceptions compile that one unit with exceptions.
+set_source_files_properties("${RV_ROOT}/port/audio/vita/renegade_wave_decoder.cpp"
+  PROPERTIES COMPILE_OPTIONS -fexceptions)

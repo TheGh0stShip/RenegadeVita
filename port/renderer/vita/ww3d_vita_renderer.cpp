@@ -1930,6 +1930,45 @@ StaticMeshMaterialSnapshot Snapshot_Static_Mesh_Material(VertexMaterialClass *ma
 	return snapshot;
 }
 
+// Everything Evaluate_Original_Material_Vertex_Color reads besides the
+// material and colour arrays: the light environment (equivalent ambient and up
+// to four world-space directional lights), the DX8 ambient without one, and
+// the world transform that orients normals.
+StaticMeshLightingSignature Capture_Static_Mesh_Lighting(
+	const RenderInfoClass &render_info, const Matrix3D &world_transform)
+{
+	StaticMeshLightingSignature signature;
+	memset(&signature, 0, sizeof(signature));
+	signature.uses_lighting = 1U;
+	signature.dx8_ambient = g_dx8_ambient_color;
+	const LightEnvironmentClass *environment = render_info.light_environment;
+	if (environment != NULL) {
+		signature.has_environment = 1U;
+		const Vector3 &ambient = environment->Get_Equivalent_Ambient();
+		signature.ambient[0] = ambient.X;
+		signature.ambient[1] = ambient.Y;
+		signature.ambient[2] = ambient.Z;
+		const int count = environment->Get_Light_Count();
+		signature.light_count = count <= 0 ? 0U : (count > 4 ? 4U : static_cast<uint32_t>(count));
+		for (uint32_t light = 0U; light < signature.light_count; ++light) {
+			const Vector3 &direction = environment->Get_Light_Direction(static_cast<int>(light));
+			const Vector3 &diffuse = environment->Get_Light_Diffuse(static_cast<int>(light));
+			signature.light_direction[light][0] = direction.X;
+			signature.light_direction[light][1] = direction.Y;
+			signature.light_direction[light][2] = direction.Z;
+			signature.light_diffuse[light][0] = diffuse.X;
+			signature.light_diffuse[light][1] = diffuse.Y;
+			signature.light_diffuse[light][2] = diffuse.Z;
+		}
+	}
+	// Normals use only the rotation/scale part; translation never changes a
+	// lit colour, so a moved-but-unrotated object keeps its cached streams.
+	for (unsigned row = 0U; row < 3U; ++row)
+		for (unsigned column = 0U; column < 3U; ++column)
+			signature.world[row * 4U + column] = world_transform[row][column];
+	return signature;
+}
+
 bool Static_Mesh_Passthrough_Stage(const OriginalTextureCoordinateState &state)
 {
 	return Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU &&
@@ -1938,13 +1977,16 @@ bool Static_Mesh_Passthrough_Stage(const OriginalTextureCoordinateState &state)
 
 // Mirrors Submit_Mesh's original pass/triangle traversal and its state-run
 // boundaries, but records each run's first-use vertex attributes once.
-// Returns false when any run depends on per-frame lighting, generated or
-// transformed UVs, or when storage cannot be reserved.
+// Returns false when any run depends on generated or transformed UVs, or when
+// storage cannot be reserved. uses_lighting reports whether any colour came
+// from material lighting, whose inputs the caller then validates per frame.
 bool Build_Static_Mesh_Streams(MeshClass &mesh, MeshModelClass *model,
 	const RenderInfoClass &render_info, const Vector3 *vertices,
 	const Vector3 *normals, const TriIndex *triangles, int vertex_count,
-	int triangle_count, int base_pass_count, const Matrix3D &world_transform)
+	int triangle_count, int base_pass_count, const Matrix3D &world_transform,
+	bool &uses_lighting)
 {
+	uses_lighting = false;
 	StaticMeshStreamBuilder &builder = g_static_mesh_builder;
 	if (!builder.Begin(static_cast<uint32_t>(vertex_count))) return false;
 	const unsigned *user_lighting = mesh.Get_User_Lighting_Array(false);
@@ -2052,7 +2094,7 @@ bool Build_Static_Mesh_Streams(MeshClass &mesh, MeshModelClass *model,
 				const MaterialVertexColor color = Evaluate_Original_Material_Vertex_Color(
 					vertex_material, color1, color2, vertex_index, normals,
 					world_transform, render_info, NULL);
-				if (color.lighting) return false;
+				if (color.lighting) uses_lighting = true;
 				vertex->position[0] = vertices[vertex_index].X;
 				vertex->position[1] = vertices[vertex_index].Y;
 				vertex->position[2] = vertices[vertex_index].Z;
@@ -2080,7 +2122,8 @@ bool Build_Static_Mesh_Streams(MeshClass &mesh, MeshModelClass *model,
 }
 
 bool Static_Mesh_Entry_Current(const StaticMeshEntry &entry, MeshModelClass *model,
-	int vertex_count, int triangle_count, int base_pass_count)
+	int vertex_count, int triangle_count, int base_pass_count,
+	const RenderInfoClass &render_info, const Matrix3D &world_transform)
 {
 	if (entry.vertex_count != static_cast<uint32_t>(vertex_count) ||
 		entry.triangle_count != static_cast<uint32_t>(triangle_count) ||
@@ -2092,7 +2135,8 @@ bool Static_Mesh_Entry_Current(const StaticMeshEntry &entry, MeshModelClass *mod
 		if (!Static_Mesh_Snapshot_Equal(cached, Snapshot_Static_Mesh_Material(
 			static_cast<VertexMaterialClass *>(cached.material)))) return false;
 	}
-	return true;
+	return !entry.lighting.uses_lighting || Static_Mesh_Lighting_Equal(entry.lighting,
+		Capture_Static_Mesh_Lighting(render_info, world_transform));
 }
 
 bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
@@ -2261,8 +2305,13 @@ bool Submit_Static_Mesh_Cache(MeshClass &mesh, MeshModelClass *model,
 		entry->last_used_frame = frame;
 		if (entry->state == STATIC_MESH_ENTRY_VOLATILE) return false;
 		const bool current = Static_Mesh_Entry_Current(*entry, model, vertex_count,
-			triangle_count, base_pass_count);
+			triangle_count, base_pass_count, render_info, world_transform);
 		if (entry->state == STATIC_MESH_ENTRY_READY && current) {
+			// Rebuilds are forgiven after a long stable period, so occasional
+			// lighting changes over a level do not exhaust the volatile limit.
+			if (entry->rebuilds != 0U &&
+				frame - entry->built_frame > STATIC_MESH_CACHE_STALE_FRAMES)
+				entry->rebuilds = 0U;
 			Replay_Static_Mesh_Entry(*entry);
 			++g_static_mesh_statistics.hits;
 			return true;
@@ -2298,9 +2347,11 @@ bool Submit_Static_Mesh_Cache(MeshClass &mesh, MeshModelClass *model,
 	entry->alternate_materials = model->Is_Alternate_Material_Description_Enabled();
 	entry->state = STATIC_MESH_ENTRY_INELIGIBLE;
 	entry->retry_frame = 0U;
+	memset(&entry->lighting, 0, sizeof(entry->lighting));
+	bool uses_lighting = false;
 	const bool built = Build_Static_Mesh_Streams(mesh, model, render_info, vertices,
 		normals, triangles, vertex_count, triangle_count, base_pass_count,
-		world_transform);
+		world_transform, uses_lighting);
 	if (!built && g_static_mesh_builder.Failed()) {
 		// Host allocation failure, not an eligibility verdict.
 		++g_static_mesh_statistics.allocation_failures;
@@ -2329,7 +2380,9 @@ bool Submit_Static_Mesh_Cache(MeshClass &mesh, MeshModelClass *model,
 		if (entry->retry_frame == 0U) entry->retry_frame = 1U;
 		return false;
 	}
+	if (uses_lighting) entry->lighting = Capture_Static_Mesh_Lighting(render_info, world_transform);
 	entry->state = STATIC_MESH_ENTRY_READY;
+	entry->built_frame = frame;
 	++g_static_mesh_statistics.builds;
 	g_static_mesh_statistics.cached_batches += entry->batch_count;
 	g_static_mesh_statistics.cached_triangles += g_static_mesh_builder.Indices().Count() / 3U;

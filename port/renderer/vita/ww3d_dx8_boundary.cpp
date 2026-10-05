@@ -1107,6 +1107,84 @@ IDirect3DTexture8 *Create_Checkerboard_Fallback()
 	return texture;
 }
 
+#if defined(__vita__)
+// Leading DXT levels that vitaGL can keep compressed: power-of-two, at least
+// one 4x4 block in each dimension, at most ten levels. Sub-block tail mips are
+// dropped (GXM clamps LOD to the levels that exist) instead of expanding the
+// whole texture to linear RGBA8888.
+unsigned Native_DXT_Level_Count(DDSFileClass &dds, unsigned mip_count)
+{
+	if (!RenegadeVitaRenderer::Use_Native_DDS_Upload() ||
+		(dds.Get_Format() != WW3D_FORMAT_DXT1 && dds.Get_Format() != WW3D_FORMAT_DXT5))
+		return 0U;
+	const unsigned width = dds.Get_Width(0U), height = dds.Get_Height(0U);
+	if (width > 2048U || height > 2048U || (width & (width - 1U)) != 0U ||
+		(height & (height - 1U)) != 0U) return 0U;
+	const unsigned block_bytes = dds.Get_Format() == WW3D_FORMAT_DXT1 ? 8U : 16U;
+	unsigned levels = 0U;
+	while (levels < mip_count && levels < 10U) {
+		const unsigned level_width = width >> levels, level_height = height >> levels;
+		if (level_width < 4U || level_height < 4U ||
+			dds.Get_Width(levels) != level_width || dds.Get_Height(levels) != level_height ||
+			dds.Get_Level_Size(levels) < (level_width / 4U) * (level_height / 4U) * block_bytes)
+			break;
+		++levels;
+	}
+	return levels;
+}
+
+// Decodes one DXT level into the retained A8R8G8B8 surface representation.
+IDirect3DSurface8 *Decode_DXT_Level_Surface(DDSFileClass &dds, unsigned level,
+	IDirect3DTexture8 *owner)
+{
+	const unsigned width = dds.Get_Width(level), height = dds.Get_Height(level);
+	IDirect3DSurface8 *surface = new (std::nothrow) IDirect3DSurface8(
+		width, height, D3DFMT_A8R8G8B8, Surface_Bytes_Per_Pixel(D3DFMT_A8R8G8B8));
+	if (surface == NULL || surface->Get_Data() == NULL) {
+		if (surface != NULL) surface->Release();
+		return NULL;
+	}
+	const unsigned surface_bpp = Surface_Bytes_Per_Pixel(D3DFMT_A8R8G8B8);
+	for (unsigned y = 0U; y < height; y += 4U) {
+		unsigned char *surface_row = surface->Get_Data() +
+			static_cast<size_t>(y) * surface->Get_Pitch();
+		for (unsigned block_x = 0U; block_x < width; block_x += 4U) {
+			(void)dds.Get_4x4_Block(surface_row +
+				static_cast<size_t>(block_x) * surface_bpp,
+				surface->Get_Pitch(), WW3D_FORMAT_A8R8G8B8, level, block_x, y);
+		}
+	}
+	surface->Set_Texture_Owner(owner, level);
+	return surface;
+}
+
+// Restores the CPU surfaces of a natively uploaded DDS on first CPU access.
+// No compiled caller locks archive textures today; this keeps the DX8
+// contract intact without decoding every texture at first draw.
+bool Materialize_Lazy_DDS_Surface_Levels(IDirect3DTexture8 *texture)
+{
+	if (texture == NULL || texture->LazyDDSSource == NULL) return texture != NULL;
+	if (texture->SurfaceLevels != NULL) return true;
+	DDSFileClass dds(texture->LazyDDSSource, 0U);
+	if (!dds.Is_Available() || !dds.Load() ||
+		!Allocate_Texture_Surface_Levels(texture)) return false;
+	for (UINT level = 0U; level < texture->MipLevels; ++level) {
+		if (dds.Get_Width(level) != (texture->Width >> level) ||
+			dds.Get_Height(level) != (texture->Height >> level)) {
+			Destroy_Texture_Surface_Levels(texture);
+			return false;
+		}
+		IDirect3DSurface8 *surface = Decode_DXT_Level_Surface(dds, level, texture);
+		if (surface == NULL) {
+			Destroy_Texture_Surface_Levels(texture);
+			return false;
+		}
+		texture->SurfaceLevels[level] = surface;
+	}
+	return true;
+}
+#endif
+
 IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 	TextureClass::MipCountType requested_mips, bool *dds_available)
 {
@@ -1150,6 +1228,71 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 	texture->HasAlpha = Texture_Format_Has_Alpha(dds.Get_Format());
 	texture->ReferenceCount = 1U;
 	texture->DiagnosticFallback = false;
+#if defined(__vita__)
+	// Native fast path: the GPU receives the archive's DXT blocks unchanged, so
+	// skip the per-texel CPU decode and the retained 32-bit copies of every mip
+	// (decoded lazily on the first CPU access instead). This decode used to run
+	// inside the gameplay frame that first drew each texture.
+	const unsigned native_levels = Native_DXT_Level_Count(dds, mip_count);
+	const size_t name_length = strlen(filename);
+	char *lazy_source = native_levels != 0U ?
+		new (std::nothrow) char[name_length + 1U] : NULL;
+	if (lazy_source != NULL) {
+		memcpy(lazy_source, filename, name_length + 1U);
+		const void *fast_pixels[10] = {};
+		GLsizei fast_sizes[10] = {};
+		uint64_t fast_bytes = 0U;
+		const unsigned block_bytes = dds.Get_Format() == WW3D_FORMAT_DXT1 ? 8U : 16U;
+		for (unsigned level = 0U; level < native_levels; ++level) {
+			const unsigned count = ((texture->Width >> level) / 4U) *
+				((texture->Height >> level) / 4U) * block_bytes;
+			fast_pixels[level] = dds.Get_Memory_Pointer(level);
+			fast_sizes[level] = static_cast<GLsizei>(count);
+			fast_bytes += count;
+		}
+		(void)glGetError();
+		GLuint fast_native = 0U;
+		glGenTextures(1, &fast_native);
+		if (fast_native != 0U) {
+			glBindTexture(GL_TEXTURE_2D, fast_native);
+			RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+				native_levels > 1U ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			const GLenum fast_format = dds.Get_Format() == WW3D_FORMAT_DXT1 ?
+				GL_COMPRESSED_RGBA_S3TC_DXT1_EXT : GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+			if (vglRenegadeUploadDXTChain(fast_native, fast_format, texture->Width,
+				texture->Height, native_levels, fast_pixels, fast_sizes) &&
+				glGetError() == GL_NO_ERROR) {
+				// Identity checksum of the uploaded level-0 blocks (diagnostic).
+				uint32_t checksum = 2166136261U;
+				const unsigned char *blocks =
+					static_cast<const unsigned char *>(fast_pixels[0]);
+				for (GLsizei offset = 0; offset + 4 <= fast_sizes[0]; offset += 4) {
+					uint32_t word;
+					memcpy(&word, blocks + offset, sizeof(word));
+					checksum = Mix_Texture_Checksum(checksum, word);
+				}
+				texture->MipLevels = native_levels;
+				texture->NativeTexture = fast_native;
+				texture->NativeCompressed = true;
+				texture->LazyDDSSource = lazy_source;
+				texture->Uploaded = true;
+				texture->PixelChecksum = checksum;
+				texture->ResidentBytes = fast_bytes;
+				RenegadeVitaRenderer::Record_Texture_DDS_Load();
+				RenegadeVitaRenderer::Record_Texture_Upload(fast_bytes);
+				Log_Texture_Load("dds", filename, texture);
+				return texture;
+			}
+			RenegadeVitaRenderer::Release_Texture(fast_native);
+		}
+		// Fall through to the full decode path below.
+		delete [] lazy_source;
+	}
+#endif
 	if (!Allocate_Texture_Surface_Levels(texture)) {
 		delete texture;
 		Log_Texture_Fallback("dds-surface-levels", filename);
@@ -1822,6 +1965,8 @@ ULONG IDirect3DBaseTexture8::Release()
 	const ULONG remaining = --ReferenceCount;
 	if (remaining == 0U) {
 		Destroy_Texture_Surface_Levels(static_cast<IDirect3DTexture8 *>(this));
+		delete [] LazyDDSSource;
+		LazyDDSSource = NULL;
 		RenegadeVitaRenderer::Release_Texture(NativeTexture);
 		RenegadeVitaRenderer::Record_Texture_Release(ResidentBytes);
 		delete static_cast<IDirect3DTexture8 *>(this);
@@ -1857,6 +2002,9 @@ HRESULT IDirect3DTexture8::GetSurfaceLevel(UINT level, IDirect3DSurface8 **surfa
 	if (surface == NULL || level >= GetLevelCount()) {
 		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	}
+#if defined(__vita__)
+	(void)Materialize_Lazy_DDS_Surface_Levels(this);
+#endif
 	if (SurfaceLevels != NULL && SurfaceLevels[level] != NULL) {
 		SurfaceLevels[level]->AddRef();
 		*surface = SurfaceLevels[level];
@@ -1880,6 +2028,9 @@ HRESULT IDirect3DTexture8::GetSurfaceLevel(UINT level, IDirect3DSurface8 **surfa
 HRESULT IDirect3DTexture8::LockRect(UINT level, D3DLOCKED_RECT *locked,
 	const RECT *rectangle, DWORD flags)
 {
+#if defined(__vita__)
+	(void)Materialize_Lazy_DDS_Surface_Levels(this);
+#endif
 	if (locked == NULL || level >= GetLevelCount() ||
 		SurfaceLevels == NULL || SurfaceLevels[level] == NULL ||
 		SurfaceLocked == NULL || SurfaceLockFlags == NULL ||

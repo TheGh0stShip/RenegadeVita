@@ -2,6 +2,24 @@
 
 This changelog records public-facing source, process, and evidence changes. It does not turn a build into a physical acceptance claim.
 
+## Unreleased - Vita performance overhaul
+
+- Rigid meshes replay GPU-resident vertex/index buffers recorded once per
+  model and user-lighting array, following the original DX8 renderer's
+  registration lifetime; skins and animated-UV materials keep the per-frame
+  path.
+- DXT textures upload their original blocks without a CPU decode, keep
+  compressed chains for non-square textures, and every non-tutorial level
+  prepares its textures during loading.
+- Runtime logs and flight-recorder sidecars are written by background
+  threads; per-frame diagnostic checksums, census and memory walks are gone.
+- Retail asset lookups reuse cached directory listings instead of rescanning
+  the memory card on every open.
+- Hot code builds at `-O3`; MSAA defaults to 2x with a runtime override.
+- Host contracts and the ARM compile pass. No physical or emulator run has
+  measured these changes; see the
+  [overhaul report](reports/A36_VITA_PERFORMANCE_OVERHAUL.md).
+
 ## Unreleased - M13/M01 source checkpoint
 
 - Corrected zero-distance AI path handling, saved-reference ownership,

@@ -162,6 +162,51 @@ static void Test_Material_Snapshot_And_Colors()
 	assert(builder.Materials().Count() == 1U && builder.Has_Material(left.material));
 }
 
+static void Test_Lighting_Signature()
+{
+	StaticMeshLightingSignature unlit = {};
+	StaticMeshLightingSignature lit = {};
+	lit.uses_lighting = 1U;
+	lit.has_environment = 1U;
+	lit.ambient[0] = lit.ambient[1] = lit.ambient[2] = 1.0f;
+	StaticMeshLightingSignature other = lit;
+	other.world[3] = 25.0f;
+	// Unlit colours ignore every lighting input.
+	assert(Static_Mesh_Lighting_Equal(unlit, other));
+	// Without directional lights the transform cannot change any colour.
+	assert(Static_Mesh_Lighting_Equal(lit, other));
+	other.ambient[1] = 0.5f;
+	assert(!Static_Mesh_Lighting_Equal(lit, other));
+	other = lit;
+	other.has_environment = 0U;
+	assert(!Static_Mesh_Lighting_Equal(lit, other));
+	StaticMeshLightingSignature directional = lit;
+	directional.light_count = 1U;
+	directional.light_direction[0][2] = -1.0f;
+	directional.light_diffuse[0][0] = 0.75f;
+	other = directional;
+	assert(Static_Mesh_Lighting_Equal(directional, other));
+	other.world[7] = 3.0f;
+	assert(!Static_Mesh_Lighting_Equal(directional, other));
+	other = directional;
+	other.light_diffuse[0][0] = 0.5f;
+	assert(!Static_Mesh_Lighting_Equal(directional, other));
+	other = directional;
+	other.light_count = 2U;
+	assert(!Static_Mesh_Lighting_Equal(directional, other));
+	// Lights beyond the four evaluated slots are never compared.
+	other = directional;
+	other.light_direction[1][0] = 9.0f;
+	assert(Static_Mesh_Lighting_Equal(directional, other));
+	StaticMeshLightingSignature global = {};
+	global.uses_lighting = 1U;
+	global.dx8_ambient = 0xff808080U;
+	other = global;
+	assert(Static_Mesh_Lighting_Equal(global, other));
+	other.dx8_ambient = 0xffffffffU;
+	assert(!Static_Mesh_Lighting_Equal(global, other));
+}
+
 static StaticMeshEntry *Ready(StaticMeshCacheTable &table, uintptr_t model,
 	uintptr_t lighting, uint32_t frame, uint32_t bytes)
 {
@@ -256,6 +301,7 @@ int main()
 	Test_Builder_Splits_At_Sixteen_Bit_Windows();
 	Test_Windows_Merge_Small_And_Split_Large();
 	Test_Material_Snapshot_And_Colors();
+	Test_Lighting_Signature();
 	Test_Table_Lifetime_Budget_And_Invalidation();
 	Test_Table_Fills_And_Compacts();
 	std::puts("Static mesh cache host contract PASS");

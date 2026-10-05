@@ -124,6 +124,7 @@
 #include <psp2/io/stat.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
+#include <psp2/power.h>
 
 #include <debugScreen.h>
 
@@ -1849,11 +1850,24 @@ void Warm_Original_Campaign_Referenced_Textures(A31VitaLoadingPresenter &present
 	}
 	SaveLoadStatus::Set_Status_Text("Preparing mission textures", 0);
 	const uint64_t start_bytes = RenegadeVitaRenderer::Get_Statistics().texture_bytes_resident;
-	const uint64_t additional_budget = 32ULL * 1024ULL * 1024ULL;
+	// Native DXT textures count their compressed size, so this covers far more
+	// textures than the former decode-path budget. A vitaGL free-memory floor
+	// keeps room for later dynamic textures, cached geometry and effects.
+	const uint64_t additional_budget = 48ULL * 1024ULL * 1024ULL;
+	const uint64_t free_memory_floor = 24ULL * 1024ULL * 1024ULL;
+	bool memory_floor_reached = false;
 	unsigned prepared = 0U;
 	for (; prepared < count; ++prepared) {
 		const uint64_t resident = RenegadeVitaRenderer::Get_Statistics().texture_bytes_resident;
 		if (resident >= start_bytes && resident - start_bytes >= additional_budget) break;
+		if (prepared % 8U == 0U) {
+			RenegadeVitaRenderer::BackendMemoryStatistics memory = {};
+			if (RenegadeVitaRenderer::Query_Backend_Memory(memory) &&
+				memory.all_free < free_memory_floor) {
+				memory_floor_reached = true;
+				break;
+			}
+		}
 		pending[prepared]->Init();
 		if ((prepared + 1U) % 8U == 0U || prepared + 1U == count) {
 			presenter.Render_Original_Progress("campaign_texture_prepare");
@@ -1861,11 +1875,12 @@ void Warm_Original_Campaign_Referenced_Textures(A31VitaLoadingPresenter &present
 	}
 	for (unsigned i = 0U; i < count; ++i) pending[i]->Release_Ref();
 	const uint64_t end_bytes = RenegadeVitaRenderer::Get_Statistics().texture_bytes_resident;
-	A30_Vita_Log("A4 %s referenced textures: prepared=%u deferred=%u resident_before=%llu resident_after=%llu soft_extra_budget_bytes=%llu\n",
+	A30_Vita_Log("A4 %s referenced textures: prepared=%u deferred=%u resident_before=%llu resident_after=%llu soft_extra_budget_bytes=%llu memory_floor_reached=%d\n",
 		mission, prepared, count - prepared + overflow,
 		static_cast<unsigned long long>(start_bytes),
 		static_cast<unsigned long long>(end_bytes),
-		static_cast<unsigned long long>(additional_budget));
+		static_cast<unsigned long long>(additional_budget),
+		memory_floor_reached ? 1 : 0);
 }
 
 bool Warm_Original_M00_Interactive_Presentation_Cache(WWAudioClass *audio,
@@ -2271,8 +2286,17 @@ A35CampaignFlightRenderState Make_Flight_Render_State(
 
 A35CampaignFlightAudioState Make_Flight_Audio_State()
 {
-	RenegadeMilesRuntimeStats stats = {};
-	Renegade_Miles_Get_Runtime_Stats(&stats);
+	// The statistics query takes the Miles lock that the mixer thread holds
+	// while mixing, so a per-frame query could stall the game thread for a
+	// whole mix. Refresh every 30 frames. Static storage also keeps the
+	// returned name pointers valid after this function returns.
+	static RenegadeMilesRuntimeStats stats = {};
+	static uint32_t sample_age = 0U;
+	if (sample_age == 0U) {
+		stats = {};
+		Renegade_Miles_Get_Runtime_Stats(&stats);
+	}
+	sample_age = (sample_age + 1U) % 30U;
 	WWAudioClass *audio = WWAudioClass::Get_Instance();
 	A35CampaignFlightAudioState state = {};
 	state.active_samples = stats.active_samples;
@@ -2292,6 +2316,26 @@ A35CampaignFlightAudioState Make_Flight_Audio_State()
 	state.cinematic_volume =
 		audio != NULL ? audio->Get_Cinematic_Volume() : -1.0F;
 	return state;
+}
+
+// The boot-time clock request (a30_main) does not survive every system
+// transition; a suspend/resume can return the CPU, bus and GPU to their
+// default clocks. Re-request the same values whenever one has dropped.
+void Reassert_Performance_Clocks(uint32_t frame)
+{
+	const int arm = scePowerGetArmClockFrequency();
+	const int bus = scePowerGetBusClockFrequency();
+	const int gpu = scePowerGetGpuClockFrequency();
+	const int xbar = scePowerGetGpuXbarClockFrequency();
+	if (arm >= 444 && bus >= 222 && gpu >= 222 && xbar >= 166) return;
+	scePowerSetArmClockFrequency(444);
+	scePowerSetBusClockFrequency(222);
+	scePowerSetGpuClockFrequency(222);
+	scePowerSetGpuXbarClockFrequency(166);
+	A30_Vita_Log("A3.6 clocks: reapplied frame=%u before arm/bus/gpu/xbar=%d/%d/%d/%d after=%d/%d/%d/%d\n",
+		frame, arm, bus, gpu, xbar, scePowerGetArmClockFrequency(),
+		scePowerGetBusClockFrequency(), scePowerGetGpuClockFrequency(),
+		scePowerGetGpuXbarClockFrequency());
 }
 
 void Copy_Flight_Memory(A31MemoryTelemetry &output)
@@ -4296,6 +4340,16 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				}
 				Warm_Original_Campaign_Referenced_Textures(loading_presenter, "M01");
 			}
+			// The original loader initialized every foreground texture on the
+			// loading screen (TextureLoader Init_Textures). Without that, each
+			// other mission and skirmish map decoded its textures inside the
+			// gameplay frame that first drew them. The M00 tutorial keeps its
+			// own presentation prewarm below.
+			if (stricmp(selected_archive, "M13.mix") != 0 &&
+				stricmp(selected_archive, "M01.mix") != 0 &&
+				stricmp(selected_archive, "M00_Tutorial.mix") != 0) {
+				Warm_Original_Campaign_Referenced_Textures(loading_presenter, selected_archive);
+			}
 #endif
 			A30_Vita_Log("A3.1 breadcrumb: original M00 level loaded\n");
 
@@ -4893,6 +4947,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					Log_Input_Telemetry();
 					Log_Audio_Runtime_Statistics("checkpoint", result.frames);
 					A35_Campaign_Flight_Flush("checkpoint");
+					Reassert_Performance_Clocks(result.frames);
 					// The background log writer syncs on its own cadence; a
 					// blocking flush here stalled every checkpoint frame.
 				}

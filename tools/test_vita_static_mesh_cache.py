@@ -34,7 +34,8 @@ class StaticMeshCacheTests(unittest.TestCase):
         source = RENDERER.read_text()
         build = source[source.index('bool Build_Static_Mesh_Streams('):
                        source.index('bool Static_Mesh_Entry_Current(')]
-        self.assertIn('if (color.lighting) return false;', build)
+        # Lit colours are cached too; their inputs are revalidated per frame.
+        self.assertIn('if (color.lighting) uses_lighting = true;', build)
         self.assertIn('Static_Mesh_Passthrough_Stage(coordinates[0])', build)
         self.assertIn('Static_Mesh_Passthrough_Stage(coordinates[1])', build)
         self.assertIn('snapshot.mapper[0] != NULL', build)
@@ -43,6 +44,8 @@ class StaticMeshCacheTests(unittest.TestCase):
                          source.index('bool Upload_Static_Mesh_Entry(')]
         self.assertIn('Is_Alternate_Material_Description_Enabled()', current)
         self.assertIn('Static_Mesh_Snapshot_Equal', current)
+        self.assertIn('Static_Mesh_Lighting_Equal(entry.lighting,', current)
+        self.assertIn('Capture_Static_Mesh_Lighting(render_info, world_transform)', current)
 
     def test_lifetime_follows_original_registration(self):
         boundary = (ROOT / 'port/renderer/vita/ww3d_dx8_boundary.cpp').read_text()

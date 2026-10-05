@@ -114,6 +114,45 @@ inline bool Static_Mesh_Snapshot_Equal(const StaticMeshMaterialSnapshot &left,
 		left.emissive_source == right.emissive_source;
 }
 
+// Inputs of lit vertex colours. Light directions are world-space, so a
+// static object's colours depend only on its environment, transform and
+// materials. Moving or re-lit objects fail this comparison and rebuild until
+// they are marked volatile.
+struct StaticMeshLightingSignature {
+	uint8_t uses_lighting;
+	uint8_t has_environment;
+	uint32_t dx8_ambient;
+	uint32_t light_count;
+	float ambient[3];
+	float light_direction[4][3];
+	float light_diffuse[4][3];
+	float world[12];
+};
+
+inline bool Static_Mesh_Lighting_Equal(const StaticMeshLightingSignature &cached,
+	const StaticMeshLightingSignature &current)
+{
+	// Unlit colours never read lighting state.
+	if (!cached.uses_lighting) return true;
+	if (cached.has_environment != current.has_environment) return false;
+	if (!cached.has_environment) return cached.dx8_ambient == current.dx8_ambient;
+	if (cached.light_count != current.light_count) return false;
+	for (unsigned i = 0U; i < 3U; ++i)
+		if (cached.ambient[i] != current.ambient[i]) return false;
+	for (uint32_t light = 0U; light < cached.light_count && light < 4U; ++light) {
+		for (unsigned i = 0U; i < 3U; ++i) {
+			if (cached.light_direction[light][i] != current.light_direction[light][i] ||
+				cached.light_diffuse[light][i] != current.light_diffuse[light][i]) return false;
+		}
+	}
+	// World normals only matter when a directional light contributes.
+	if (cached.light_count != 0U) {
+		for (unsigned i = 0U; i < 12U; ++i)
+			if (cached.world[i] != current.world[i]) return false;
+	}
+	return true;
+}
+
 inline uint8_t Static_Mesh_Color_Byte(float value)
 {
 	if (!(value > 0.0f)) return 0U;
@@ -338,6 +377,7 @@ struct StaticMeshEntry {
 	uint32_t pass_count;
 	bool alternate_materials;
 	uint32_t rebuilds;
+	uint32_t built_frame;
 	uint32_t last_used_frame;
 	uint32_t retry_frame;
 	uint32_t vertex_buffer;
@@ -347,6 +387,7 @@ struct StaticMeshEntry {
 	uint32_t batch_count;
 	StaticMeshMaterialSnapshot *materials;
 	uint32_t material_count;
+	StaticMeshLightingSignature lighting;
 };
 
 struct StaticMeshCacheStatistics {

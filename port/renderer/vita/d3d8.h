@@ -209,6 +209,9 @@ struct IDirect3DBaseTexture8 {
 	// Original DDS blocks are resident on the GPU. CPU SurfaceLevels remain
 	// authoritative for locks/copies; the first write expands the whole chain.
 	bool NativeCompressed;
+	// Archive name of a natively uploaded DDS whose CPU SurfaceLevels were not
+	// decoded at load. The first GetSurfaceLevel/LockRect decodes them.
+	char *LazyDDSSource;
 	ULONG AddRef();
 	ULONG Release();
 };

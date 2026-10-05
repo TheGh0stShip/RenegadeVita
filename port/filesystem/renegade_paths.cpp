@@ -2,11 +2,127 @@
 
 #include <dirent.h>
 #include <errno.h>
+#include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <strings.h>
 
 namespace {
+
+// Case resolution used to re-read every directory on the path (one
+// sceIoDread per entry on the memory card) for every asset open, sound play
+// and texture load. The retail data root is never written while the game
+// runs, so its complete listings are cached for the process lifetime, in
+// readdir order, and resolved with the same exact-then-insensitive rule.
+struct DirectoryListing {
+	char *path;
+	char **names;
+	unsigned count;
+	bool exists;
+};
+
+enum { kDirectoryListingCapacity = 128 };
+DirectoryListing g_directory_listings[kDirectoryListingCapacity];
+unsigned g_directory_listing_count = 0;
+pthread_mutex_t g_directory_listing_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void Free_Listing(DirectoryListing &listing)
+{
+	for (unsigned index = 0; index < listing.count; ++index) free(listing.names[index]);
+	free(listing.names);
+	free(listing.path);
+	memset(&listing, 0, sizeof(listing));
+}
+
+// Reads a complete listing. Returns false (nothing cached) on any error other
+// than a missing directory, so an unreadable card never pins a wrong answer.
+bool Read_Listing(const char *path, DirectoryListing &listing)
+{
+	memset(&listing, 0, sizeof(listing));
+	DIR *directory = opendir(path);
+	if (directory == NULL) {
+		if (errno != ENOENT && errno != ENOTDIR) return false;
+		listing.exists = false;
+	} else {
+		listing.exists = true;
+		unsigned capacity = 0;
+		bool truncated = false;
+		errno = 0;
+		for (dirent *entry = readdir(directory); entry != NULL; entry = readdir(directory)) {
+			if (listing.count == capacity) {
+				const unsigned grown = capacity != 0 ? capacity * 2U : 64U;
+				char **names = static_cast<char **>(realloc(listing.names, sizeof(char *) * grown));
+				if (names == NULL) {
+					truncated = true;
+					break;
+				}
+				listing.names = names;
+				capacity = grown;
+			}
+			char *name = strdup(entry->d_name);
+			if (name == NULL) {
+				truncated = true;
+				break;
+			}
+			listing.names[listing.count++] = name;
+			errno = 0;
+		}
+		const bool complete = !truncated && errno == 0;
+		closedir(directory);
+		if (!complete) {
+			Free_Listing(listing);
+			return false;
+		}
+	}
+	listing.path = strdup(path);
+	if (listing.path == NULL) {
+		Free_Listing(listing);
+		return false;
+	}
+	return true;
+}
+
+// Resolves one component against a cached listing. Returns false when the
+// directory could not be listed; the caller then scans directly.
+bool Select_From_Cached_Listing(const char *directory, const char *component,
+	char *selected, size_t capacity, bool &scan_complete)
+{
+	pthread_mutex_lock(&g_directory_listing_mutex);
+	DirectoryListing *listing = NULL;
+	for (unsigned index = 0; index < g_directory_listing_count; ++index) {
+		if (strcmp(g_directory_listings[index].path, directory) == 0) {
+			listing = &g_directory_listings[index];
+			break;
+		}
+	}
+	if (listing == NULL && g_directory_listing_count < kDirectoryListingCapacity &&
+		Read_Listing(directory, g_directory_listings[g_directory_listing_count])) {
+		listing = &g_directory_listings[g_directory_listing_count++];
+	}
+	if (listing == NULL) {
+		pthread_mutex_unlock(&g_directory_listing_mutex);
+		return false;
+	}
+	const char *insensitive = NULL;
+	const char *exact = NULL;
+	for (unsigned index = 0; index < listing->count; ++index) {
+		if (strcmp(listing->names[index], component) == 0) {
+			exact = listing->names[index];
+			break;
+		}
+		if (insensitive == NULL && strcasecmp(listing->names[index], component) == 0)
+			insensitive = listing->names[index];
+	}
+	const char *match = exact != NULL ? exact : insensitive;
+	if (match != NULL) {
+		strncpy(selected, match, capacity - 1);
+		selected[capacity - 1] = 0;
+	}
+	scan_complete = true;
+	pthread_mutex_unlock(&g_directory_listing_mutex);
+	return true;
+}
 
 void Set_Error(RenegadeResolvedPath &result, const char *message)
 {
@@ -96,7 +212,8 @@ bool Normalize(const char *logical, char *normalized, size_t capacity)
 }
 
 bool Append_With_Existing_Case(char *physical, size_t capacity,
-	const char *relative, bool &all_components_matched, bool &confirmed_missing)
+	const char *relative, bool &all_components_matched, bool &confirmed_missing,
+	bool immutable_root)
 {
 	char remaining[768];
 	strncpy(remaining, relative, sizeof(remaining) - 1);
@@ -112,8 +229,11 @@ bool Append_With_Existing_Case(char *physical, size_t capacity,
 		char selected[256];
 		selected[0] = 0;
 		bool scan_complete = false;
-		DIR *directory = opendir(physical);
-		if (directory != NULL) {
+		DIR *directory = NULL;
+		if (immutable_root && Select_From_Cached_Listing(physical, component,
+				selected, sizeof(selected), scan_complete)) {
+			// Resolved from the process-lifetime listing.
+		} else if ((directory = opendir(physical)) != NULL) {
 			char insensitive[256];
 			insensitive[0] = 0;
 			errno = 0;
@@ -237,7 +357,8 @@ RenegadeResolvedPath Renegade_Resolve_Path(const RenegadePathRoots &roots,
 	result.existing_case_matched = true;
 	if (access == RENEGADE_PATH_READ) {
 		if (!Append_With_Existing_Case(result.physical, sizeof(result.physical),
-				relative, result.existing_case_matched, result.confirmed_missing)) {
+				relative, result.existing_case_matched, result.confirmed_missing,
+				!result.writable_namespace)) {
 			Set_Error(result, "translated read path is too long");
 			return result;
 		}

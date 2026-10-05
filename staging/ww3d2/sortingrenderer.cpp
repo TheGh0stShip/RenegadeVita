@@ -28,6 +28,7 @@
 #include "simplevec.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 bool SortingRendererClass::_EnableTriangleDraw=true;
 
@@ -179,6 +180,112 @@ void Sort (
 	if (do_insertion) InsertionSort(array,keys,0,count);
 	else QuickSort(array,keys,0,count-1);			// quick sort
 }
+
+#if defined(RENEGADE_VITA_PORT)
+// ----------------------------------------------------------------------------
+//
+// Depth_Sort (TempIndexStruct* array, float* keys, unsigned count)
+//
+// Sort() above falls back to an insertion sort, or to a quicksort with the
+// last element as pivot, both of which degrade to O(n^2) (the quicksort also
+// to O(n) recursion depth) when overlapping particle emitters interleave
+// their polygons. This stable LSD radix sort on the depth bits produces the
+// same ascending order in O(n). Only polygons of exactly equal depth may be
+// ordered differently: in submission order instead of an arbitrary one.
+//
+// ----------------------------------------------------------------------------
+
+static unsigned* radix_key_array;
+static unsigned* radix_key_scratch;
+static unsigned* radix_order_array;
+static unsigned* radix_order_scratch;
+static TempIndexStruct* radix_item_scratch;
+static unsigned radix_array_count;
+
+static void Release_Radix_Arrays()
+{
+	delete[] radix_key_array;
+	delete[] radix_key_scratch;
+	delete[] radix_order_array;
+	delete[] radix_order_scratch;
+	delete[] radix_item_scratch;
+	radix_key_array=NULL;
+	radix_key_scratch=NULL;
+	radix_order_array=NULL;
+	radix_order_scratch=NULL;
+	radix_item_scratch=NULL;
+	radix_array_count=0;
+}
+
+// Order-preserving map from float to unsigned: negative values reverse,
+// positive values rise above them. It is exactly invertible.
+static unsigned Depth_To_Radix_Key(float depth)
+{
+	unsigned bits;
+	memcpy(&bits,&depth,sizeof(bits));
+	return (bits&0x80000000U) ? ~bits : (bits|0x80000000U);
+}
+
+static float Radix_Key_To_Depth(unsigned key)
+{
+	const unsigned bits=(key&0x80000000U) ? (key&0x7fffffffU) : ~key;
+	float depth;
+	memcpy(&depth,&bits,sizeof(depth));
+	return depth;
+}
+
+static void Depth_Sort(TempIndexStruct* array, float* keys, unsigned count)
+{
+	if (count<=1) return;
+	// Already ascending: keep the original's early return (same predicate).
+	unsigned i;
+	for (i=1;i<count;++i) if (!(keys[i]>=keys[i-1])) break;
+	if (i==count) return;
+
+	if (count>radix_array_count) {
+		Release_Radix_Arrays();
+		radix_key_array=new unsigned[count];
+		radix_key_scratch=new unsigned[count];
+		radix_order_array=new unsigned[count];
+		radix_order_scratch=new unsigned[count];
+		radix_item_scratch=new TempIndexStruct[count];
+		radix_array_count=count;
+	}
+	unsigned* key=radix_key_array;
+	unsigned* key_next=radix_key_scratch;
+	unsigned* order=radix_order_array;
+	unsigned* order_next=radix_order_scratch;
+	for (i=0;i<count;++i) {
+		key[i]=Depth_To_Radix_Key(keys[i]);
+		order[i]=i;
+	}
+	for (unsigned shift=0;shift<32;shift+=8) {
+		unsigned offsets[256];
+		memset(offsets,0,sizeof(offsets));
+		for (i=0;i<count;++i) ++offsets[(key[i]>>shift)&0xffU];
+		// A digit shared by every key does not reorder anything.
+		if (offsets[(key[0]>>shift)&0xffU]==count) continue;
+		unsigned total=0;
+		for (unsigned digit=0;digit<256;++digit) {
+			const unsigned bucket=offsets[digit];
+			offsets[digit]=total;
+			total+=bucket;
+		}
+		for (i=0;i<count;++i) {
+			const unsigned slot=offsets[(key[i]>>shift)&0xffU]++;
+			key_next[slot]=key[i];
+			order_next[slot]=order[i];
+		}
+		unsigned* swap=key; key=key_next; key_next=swap;
+		swap=order; order=order_next; order_next=swap;
+	}
+	for (i=0;i<count;++i) radix_item_scratch[i]=array[order[i]];
+	for (i=0;i<count;++i) {
+		array[i]=radix_item_scratch[i];
+		keys[i]=Radix_Key_To_Depth(key[i]);
+	}
+}
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -489,6 +596,29 @@ static void Apply_Render_State(RenderStateStruct& render_state)
 #endif
 }
 
+#if defined(RENEGADE_VITA_PORT)
+// Two nodes draw identically when every input the draw boundary reads is
+// equal: shader, material, textures, transforms and, for lit materials only,
+// the lights. Consecutive sorted runs of such nodes are one draw of the same
+// triangles in the same order.
+static bool Same_Draw_State(const RenderStateStruct& a, const RenderStateStruct& b)
+{
+	if (a.shader.Get_Bits()!=b.shader.Get_Bits() || a.material!=b.material) return false;
+	for (unsigned i=0;i<MAX_TEXTURE_STAGES;++i) {
+		if (a.Textures[i]!=b.Textures[i]) return false;
+	}
+	if (memcmp(&a.world,&b.world,sizeof(a.world))!=0 ||
+		memcmp(&a.view,&b.view,sizeof(a.view))!=0) return false;
+	if (a.material!=NULL && a.material->Get_Lighting()) {
+		for (unsigned i=0;i<4;++i) {
+			if (a.LightEnable[i]!=b.LightEnable[i]) return false;
+			if (a.LightEnable[i] && memcmp(&a.Lights[i],&b.Lights[i],sizeof(a.Lights[i]))!=0) return false;
+		}
+	}
+	return true;
+}
+#endif
+
 // ----------------------------------------------------------------------------
 
 void SortingRendererClass::Flush_Sorting_Pool()
@@ -525,7 +655,11 @@ void SortingRendererClass::Flush_Sorting_Pool()
 				depths[polygon_offset++] = (vertex_depths[tri.i]+vertex_depths[tri.j]+vertex_depths[tri.k])/3.0f;
 			}
 		}
+#if defined(RENEGADE_VITA_PORT)
+		Depth_Sort(tris, depths, overlapping_polygon_count);
+#else
 		Sort<TempIndexStruct,float>(tris, depths, overlapping_polygon_count);
+#endif
 		for (unsigned first=0; first<overlapping_polygon_count;) {
 			node_id = tris[first].idx;
 			unsigned end = first+1;
@@ -635,7 +769,11 @@ void SortingRendererClass::Flush_Sorting_Pool()
 	for (unsigned a=0;a<overlapping_polygon_count;++a) {
 		tis[a]=TempIndexStruct(polygon_idx_array[a],node_id_array[a]);
 	}
+#if defined(RENEGADE_VITA_PORT)
+	Depth_Sort(tis,polygon_z_array,overlapping_polygon_count);
+#else
 	Sort<TempIndexStruct,float>(tis,polygon_z_array,overlapping_polygon_count);
+#endif
 
 	DynamicIBAccessClass dyn_ib_access(BUFFER_TYPE_DYNAMIC_DX8,overlapping_polygon_count*3);
 	{
@@ -657,6 +795,51 @@ void SortingRendererClass::Flush_Sorting_Pool()
 	unsigned count_to_render=1;
 	unsigned start_index=0;
 	node_id=tis[0].idx;
+#if defined(RENEGADE_VITA_PORT)
+	// Each node's vertices occupy their own range of the shared dynamic VB
+	// and the indices are absolute, so a merged run draws with the union of
+	// its nodes' vertex ranges.
+	SortingNodeStruct* run_state=overlapping_nodes[node_id];
+	unsigned run_min=run_state->min_vertex_index;
+	unsigned run_end=run_min+run_state->vertex_count;
+	for (unsigned i=1;i<overlapping_polygon_count;++i) {
+		if (node_id!=tis[i].idx) {
+			node_id=tis[i].idx;
+			SortingNodeStruct* state=overlapping_nodes[node_id];
+			if (Same_Draw_State(run_state->sorting_state,state->sorting_state)) {
+				if (state->min_vertex_index<run_min) run_min=state->min_vertex_index;
+				if (state->min_vertex_index+state->vertex_count>run_end)
+					run_end=state->min_vertex_index+state->vertex_count;
+			} else {
+				Apply_Render_State(run_state->sorting_state);
+				DX8Wrapper::Draw_Triangles(
+					start_index*3,
+					count_to_render,
+					run_min,
+					run_end-run_min);
+				count_to_render=0;
+				start_index=i;
+				run_state=state;
+				run_min=state->min_vertex_index;
+				run_end=run_min+state->vertex_count;
+			}
+		}
+		count_to_render++;
+	}
+	if (count_to_render) {
+		Apply_Render_State(run_state->sorting_state);
+		DX8Wrapper::Draw_Triangles(
+			start_index*3,
+			count_to_render,
+			run_min,
+			run_end-run_min);
+	}
+	// Leave the wrapper in the state of the last node, as the unmerged loop
+	// does.
+	if (overlapping_nodes[node_id]!=run_state) {
+		Apply_Render_State(overlapping_nodes[node_id]->sorting_state);
+	}
+#else
 	for (unsigned i=1;i<overlapping_polygon_count;++i) {
 		if (node_id!=tis[i].idx) {
 			SortingNodeStruct* state=overlapping_nodes[node_id];
@@ -686,6 +869,7 @@ void SortingRendererClass::Flush_Sorting_Pool()
 			state->min_vertex_index,
 			state->vertex_count);
 	}
+#endif
 
 	}
 	// Release all references and return nodes back to the clean list for the frame...
@@ -788,4 +972,7 @@ void SortingRendererClass::Deinit()
 	delete[] temp_index_array;
 	temp_index_array=NULL;
 	temp_index_array_count=0;
+#if defined(RENEGADE_VITA_PORT)
+	Release_Radix_Arrays();
+#endif
 }

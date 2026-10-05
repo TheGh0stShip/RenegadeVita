@@ -57,6 +57,19 @@ per frame:
   - A vitaGL dependency patch (`vitagl-attribute-invalidation.patch`) forces a
     full vertex-attribute rebind between array and immediate draws that share
     one fixed-function program.
+- **Sorted (transparent) geometry.** The original sorting pass orders every
+  alpha and particle polygon of the frame by depth and draws one DX8-boundary
+  batch per run of polygons from the same node. A staged patch
+  (`ww3d2-a36-sorting-depth-sort-and-runs.patch`) changes two things:
+  - The insertion/quicksort hybrid, which degrades to O(n^2) (and O(n)
+    recursion depth) when particle emitters overlap, is replaced by a stable
+    O(n) radix sort on the depth bits. Ascending order is unchanged, and the
+    output is identical whenever depths are distinct; polygons of exactly
+    equal depth keep submission order.
+  - Consecutive runs whose draw state is identical (shader, material,
+    textures, world and view transforms, and lights for lit materials) are
+    one draw of the same triangles in the same order. The wrapper ends in the
+    last node's state, as before.
 - Indexed DX8 draws no longer hash every referenced vertex on Vita; bounds
   validation is unchanged.
 - Framebuffer MSAA defaults to 2x (was 4x); see the switches below.
@@ -121,6 +134,17 @@ takes, and it decoded every sound effect in full on each play.
   process-lifetime directory listing instead of rescanning the directory on
   every asset open. Writable roots (saves, configuration) are still scanned
   each time, so files created at runtime are always found.
+- The original factory list re-probes a MIX archive (open and close on the
+  card) for every asset it serves. After the first successful probe of a
+  retail file, unforced availability checks of that path are answered from
+  memory. Forced probes, writable roots and failed probes still reach the
+  card.
+- **Saves.** `ChunkSaveClass` seeks back to patch every chunk header, and
+  each seek flushed stdio, so a quicksave was thousands of small card writes
+  and seeks on the game thread. Write-only files are now assembled in memory
+  and written in one piece when closed (or destroyed). The file is still
+  created and truncated at open; bytes, return values and cursors match
+  direct writes, and an allocation failure falls back to direct writes.
 
 ### Build
 
@@ -163,6 +187,15 @@ and `mesh-boundary-time` lines, which makes before/after comparisons direct.
     against synchronous flushing (ASan and TSan).
   - `tools/test_renegade_paths_cache.py`: cached retail lookups against
     uncached lookups, writable roots uncached (ASan/UBSan and TSan).
+  - `tools/test_sorting_depth_sort.py`: the radix sort against the
+    original `Sort()` on 4,000 random arrays (ascending, stable, identical
+    for distinct depths); the host probe `--sorting-selftest merge` draws
+    1, 40 and 4 batches for identical, alternating and blocked node states.
+  - `tools/test_renegade_file_factory_staging.py`: staged against direct
+    `BufferedFileClass` writes on 600 random write/seek/tell sequences and
+    on original `ChunkSaveClass` output, byte for byte (ASan/UBSan and -O2).
+  - `tools/test_renegade_file_factory_availability.py`: retail availability
+    caching, forced and writable probes, failures (ASan/UBSan and TSan).
   - `tools/test_vita_audio_mixer_equivalence.py`: the new mixer against the
     previous one on thousands of random voice sets (rates, loops, cursors,
     gains, distance, streams, compressed music), comparing output, cursor
@@ -187,6 +220,8 @@ and `mesh-boundary-time` lines, which makes before/after comparisons direct.
   and become volatile (per-frame path), as before this change.
 - Skinned characters, mapper-animated and environment-mapped materials keep
   the per-frame path.
+- Additive particles from different emitters that interleave in depth are
+  still separate runs; only identical-state neighbours merge.
 - Longer loading screens are expected on missions that previously deferred
   their textures.
 - Idle decoded sounds can hold up to 4 MiB of additional main memory. The

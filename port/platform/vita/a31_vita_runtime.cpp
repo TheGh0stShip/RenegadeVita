@@ -2647,8 +2647,10 @@ void Log_File_Factory_Statistics(uint32_t frame = 0U)
 		statistics.create_failures, statistics.delete_attempts,
 		statistics.delete_failures, statistics.read_calls, statistics.read_bytes,
 		statistics.write_calls, statistics.write_bytes);
-	A30_Vita_Log("A3.6 resources: confirmed-readonly-miss native probes skipped available/open=%u/%u logical_failures_retained=1 writable_and_forced_native=1\n",
-		statistics.readonly_availability_skips, statistics.readonly_open_skips);
+	A30_Vita_Log("A3.6 resources: confirmed-readonly-miss native probes skipped available/open=%u/%u retail_available_cached=%u staged_writes=files:%u bytes:%u fallbacks:%u logical_failures_retained=1 writable_and_forced_native=1\n",
+		statistics.readonly_availability_skips, statistics.readonly_open_skips,
+		statistics.readonly_availability_hits, statistics.staged_write_files,
+		statistics.staged_write_bytes, statistics.staged_write_fallbacks);
 	A35_Campaign_Flight_Record_Resource_Snapshot(frame,
 		statistics.open_attempts, statistics.open_failures,
 		statistics.availability_attempts, statistics.availability_failures,

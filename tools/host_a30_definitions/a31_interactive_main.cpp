@@ -983,6 +983,8 @@ int main(int argc, char **argv)
 		if (strcmp(argv[2], "index-limit") == 0) passed = Check_Original_Sorting_Capacity(1, 3, 21845);
 		if (strcmp(argv[2], "vertex-limit") == 0) passed = Check_Original_Sorting_Capacity(1, 65535, 1);
 		if (strcmp(argv[2], "interleaved") == 0) passed = Check_Original_Sorting_Capacity(1000, 72, 2, true);
+		if (strcmp(argv[2], "merge") == 0) passed = Check_Sorting_Run_Merge(0U) &&
+			Check_Sorting_Run_Merge(1U) && Check_Sorting_Run_Merge(2U);
 		WW3D::Shutdown();
 		return passed ? 0 : 1;
 	}

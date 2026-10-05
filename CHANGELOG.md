@@ -15,6 +15,10 @@ This changelog records public-facing source, process, and evidence changes. It d
   threads; per-frame diagnostic checksums, census and memory walks are gone.
 - Retail asset lookups reuse cached directory listings instead of rescanning
   the memory card on every open.
+- Transparent geometry sorts in O(n) and draws consecutive identical-state
+  runs as one batch; saves are written to the card in one piece instead of
+  thousands of small writes; repeated retail archive probes are answered
+  from memory.
 - The audio mixer runs specialised, bit-identical per-voice loops and skips
   silent voices; decoded sound effects are shared and cached instead of being
   decoded on every play; game, audio and background threads run on separate

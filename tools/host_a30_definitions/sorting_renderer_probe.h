@@ -108,6 +108,84 @@ static bool Check_Original_Sorting_Capacity(unsigned nodes, unsigned vertex_coun
 	return passed;
 }
 
+static unsigned sorting_observed_submissions;
+static void Observe_Merged_Submission(const RenegadeVitaRenderer::IndexedTriangleSubmission &submission)
+{
+	++sorting_observed_submissions;
+	Observe_Sorted_Submission(submission);
+}
+
+// Interleaved nodes whose draw state is identical are drawn as one run; any
+// state change between neighbours still splits the run. Twenty nodes each
+// submit a far and a near triangle, so the sorted order is all far triangles
+// in node order, then all near ones. pattern 0: one shader (1 run);
+// 1: alternating shaders (40 runs); 2: two blocks of ten (4 runs).
+static bool Check_Sorting_Run_Merge(unsigned pattern)
+{
+	const unsigned nodes = 20U;
+	SortingVertexBufferClass *vertices = new SortingVertexBufferClass(6);
+	SortingIndexBufferClass *indices = new SortingIndexBufferClass(6);
+	{
+		VertexBufferClass::WriteLockClass lock(vertices);
+		VertexFormatXYZNDUV2 *v = static_cast<VertexFormatXYZNDUV2 *>(lock.Get_Vertex_Array());
+		std::memset(v, 0, sizeof(*v) * 6);
+		for (unsigned i = 0; i < 6; ++i) {
+			v[i].x = static_cast<float>(i % 3);
+			v[i].y = i % 3 == 1 ? 1.0f : 0.0f;
+			v[i].z = i < 3 ? -5.0f : -25.0f;
+			v[i].nz = 1.0f;
+			v[i].diffuse = 0xffffffffU;
+		}
+	}
+	{
+		IndexBufferClass::WriteLockClass lock(indices);
+		for (unsigned i = 0; i < 6; ++i) lock.Get_Index_Array()[i] = i;
+	}
+	Matrix4 view(true);
+	view[2][2] = 2.0f;
+	view[2][3] = 1.0f;
+	DX8Wrapper::Set_Transform(D3DTS_WORLD, Matrix4(true));
+	DX8Wrapper::Set_Transform(D3DTS_VIEW, view);
+	DX8Wrapper::Set_Transform(D3DTS_PROJECTION, Matrix4(true));
+	DX8Wrapper::Set_Vertex_Buffer(vertices);
+	DX8Wrapper::Set_Index_Buffer(indices, 0);
+	for (unsigned i = 0; i < nodes; ++i) {
+		const bool second = pattern == 1U ? (i & 1U) != 0U : pattern == 2U ? i >= nodes / 2U : false;
+		DX8Wrapper::Set_Shader(second ? ShaderClass::_PresetAdditiveShader :
+			ShaderClass::_PresetAlphaShader);
+		DX8Wrapper::Draw_Triangles(BUFFER_TYPE_SORTING, 0, 2, 0, 6);
+	}
+	DX8Wrapper::Set_Vertex_Buffer(NULL);
+	DX8Wrapper::Set_Index_Buffer(NULL, 0);
+	const RenegadeVitaRenderer::Statistics before = RenegadeVitaRenderer::Get_Statistics();
+	sorting_order_valid = true;
+	sorting_observed_triangles = 0;
+	sorting_observed_submissions = 0;
+	sorting_last_depth = -std::numeric_limits<float>::infinity();
+	sorting_min_depth = std::numeric_limits<float>::infinity();
+	sorting_max_depth = -std::numeric_limits<float>::infinity();
+	RenegadeVitaRenderer::Set_Host_Indexed_Submission_Observer(Observe_Merged_Submission);
+	SortingRendererClass::Flush();
+	RenegadeVitaRenderer::Set_Host_Indexed_Submission_Observer(NULL);
+	const RenegadeVitaRenderer::Statistics after = RenegadeVitaRenderer::Get_Statistics();
+	const unsigned expected_runs = pattern == 0U ? 1U : pattern == 1U ? 2U * nodes : 4U;
+	const unsigned drawn = after.indexed_triangle_submissions - before.indexed_triangle_submissions;
+	const bool passed = drawn == 2U * nodes && sorting_observed_triangles == drawn &&
+		sorting_observed_submissions == expected_runs && sorting_order_valid &&
+		sorting_min_depth == -49.0f && sorting_max_depth == -9.0f &&
+		after.rejected_indexed_submissions == before.rejected_indexed_submissions &&
+		vertices->Num_Refs() == 1 && indices->Num_Refs() == 1;
+	std::printf("sorting.merge pattern=%u drawn=%u submissions=%u expected=%u order=%d passed=%d\n",
+		pattern, drawn, sorting_observed_submissions, expected_runs,
+		sorting_order_valid ? 1 : 0, passed ? 1 : 0);
+	std::fflush(stdout);
+	vertices->Release_Ref();
+	indices->Release_Ref();
+	DX8Wrapper::Set_Shader(ShaderClass::_PresetOpaqueShader);
+	SortingRendererClass::Deinit();
+	return passed;
+}
+
 // Exercise the original queue and CPU-backed draw boundary without retail data.
 static bool Check_Original_Sorting_Renderer()
 {

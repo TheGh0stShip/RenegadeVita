@@ -37,6 +37,10 @@ struct RenegadeFileFactoryStatistics
 	uint32_t write_bytes;
 	uint32_t readonly_availability_skips;
 	uint32_t readonly_open_skips;
+	uint32_t readonly_availability_hits;
+	uint32_t staged_write_files;
+	uint32_t staged_write_bytes;
+	uint32_t staged_write_fallbacks;
 };
 
 void Renegade_File_Factory_Reset_Statistics(void);
@@ -46,6 +50,7 @@ class RenegadeRootedFileClass : public BufferedFileClass
 {
 public:
 	RenegadeRootedFileClass(const RenegadePathRoots &roots, const char *logical_name);
+	virtual ~RenegadeRootedFileClass(void);
 
 	virtual char const *File_Name(void) const;
 	virtual char const *Set_Name(char const *filename);
@@ -55,12 +60,17 @@ public:
 	virtual int Open(char const *filename, int rights = READ);
 	virtual int Open(int rights = READ);
 	virtual int Read(void *buffer, int size);
+	virtual int Seek(int pos, int dir = SEEK_CUR);
+	virtual int Size(void);
 	virtual int Write(void const *buffer, int size);
+	virtual void Close(void);
 
 	const RenegadeResolvedPath &Get_Last_Resolution(void) const { return LastResolution; }
 
 private:
 	bool Resolve_And_Set_Physical_Name(int rights);
+	bool Stage_Write(void const *buffer, int size);
+	bool Flush_Staged_Writes(void);
 
 	RenegadePathRoots Roots;
 	char LogicalName[768];
@@ -68,6 +78,13 @@ private:
 	bool PhysicalNamePrepared;
 	RenegadePathAccess PreparedAccess;
 	bool NativeProbeForced;
+	// Write-only files (saves, configuration) are assembled in memory and
+	// written to the card in one piece when they are closed.
+	unsigned char *StagedData;
+	int StagedSize;
+	int StagedCapacity;
+	int StagedPosition;
+	bool Staging;
 };
 
 class RenegadeRootedFileFactoryClass : public FileFactoryClass

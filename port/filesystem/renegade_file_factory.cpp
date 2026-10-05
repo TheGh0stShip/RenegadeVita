@@ -1,6 +1,9 @@
 #include "renegade_file_factory.h"
 
+#include <limits.h>
+#include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <atomic>
 #include <string.h>
 
@@ -29,9 +32,68 @@ struct FileFactoryCounters
 	std::atomic<uint32_t> write_bytes;
 	std::atomic<uint32_t> readonly_availability_skips;
 	std::atomic<uint32_t> readonly_open_skips;
+	std::atomic<uint32_t> readonly_availability_hits;
+	std::atomic<uint32_t> staged_write_files;
+	std::atomic<uint32_t> staged_write_bytes;
+	std::atomic<uint32_t> staged_write_fallbacks;
 };
 
 FileFactoryCounters g_file_factory_counters = {};
+
+// The retail root is never written while the game runs. Once a native probe
+// has opened a physical file there, later non-forced availability checks of
+// the same path are answered without reopening it. The original factory list
+// re-probes a MIX archive for every asset it serves, which otherwise costs a
+// memory-card open and close per asset lookup. Only successes are kept;
+// failures always reach native I/O again.
+enum { kAvailableRetailCapacity = 256 };
+struct AvailableRetailPath {
+	uint32_t hash;
+	char *path;
+};
+AvailableRetailPath g_available_retail[kAvailableRetailCapacity];
+unsigned g_available_retail_count = 0;
+pthread_mutex_t g_available_retail_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+uint32_t Path_Hash(const char *path)
+{
+	uint32_t hash = 2166136261U;
+	for (; *path != 0; ++path) hash = (hash ^ static_cast<unsigned char>(*path)) * 16777619U;
+	return hash;
+}
+
+bool Is_Known_Available(const char *path)
+{
+	const uint32_t hash = Path_Hash(path);
+	pthread_mutex_lock(&g_available_retail_mutex);
+	bool found = false;
+	for (unsigned index = 0; index < g_available_retail_count && !found; ++index) {
+		found = g_available_retail[index].hash == hash &&
+			strcmp(g_available_retail[index].path, path) == 0;
+	}
+	pthread_mutex_unlock(&g_available_retail_mutex);
+	return found;
+}
+
+void Remember_Available(const char *path)
+{
+	const uint32_t hash = Path_Hash(path);
+	pthread_mutex_lock(&g_available_retail_mutex);
+	bool found = false;
+	for (unsigned index = 0; index < g_available_retail_count && !found; ++index) {
+		found = g_available_retail[index].hash == hash &&
+			strcmp(g_available_retail[index].path, path) == 0;
+	}
+	if (!found && g_available_retail_count < kAvailableRetailCapacity) {
+		char *copy = strdup(path);
+		if (copy != NULL) {
+			g_available_retail[g_available_retail_count].hash = hash;
+			g_available_retail[g_available_retail_count].path = copy;
+			++g_available_retail_count;
+		}
+	}
+	pthread_mutex_unlock(&g_available_retail_mutex);
+}
 
 void Reset(std::atomic<uint32_t> &counter)
 {
@@ -68,6 +130,10 @@ void Renegade_File_Factory_Reset_Statistics(void)
 	Reset(g_file_factory_counters.write_bytes);
 	Reset(g_file_factory_counters.readonly_availability_skips);
 	Reset(g_file_factory_counters.readonly_open_skips);
+	Reset(g_file_factory_counters.readonly_availability_hits);
+	Reset(g_file_factory_counters.staged_write_files);
+	Reset(g_file_factory_counters.staged_write_bytes);
+	Reset(g_file_factory_counters.staged_write_fallbacks);
 }
 
 RenegadeFileFactoryStatistics Renegade_File_Factory_Get_Statistics(void)
@@ -94,13 +160,18 @@ RenegadeFileFactoryStatistics Renegade_File_Factory_Get_Statistics(void)
 	result.write_bytes = Snapshot(g_file_factory_counters.write_bytes);
 	result.readonly_availability_skips = Snapshot(g_file_factory_counters.readonly_availability_skips);
 	result.readonly_open_skips = Snapshot(g_file_factory_counters.readonly_open_skips);
+	result.readonly_availability_hits = Snapshot(g_file_factory_counters.readonly_availability_hits);
+	result.staged_write_files = Snapshot(g_file_factory_counters.staged_write_files);
+	result.staged_write_bytes = Snapshot(g_file_factory_counters.staged_write_bytes);
+	result.staged_write_fallbacks = Snapshot(g_file_factory_counters.staged_write_fallbacks);
 	return result;
 }
 
 RenegadeRootedFileClass::RenegadeRootedFileClass(const RenegadePathRoots &roots,
 	const char *logical_name) : Roots(roots), LastResolution(),
 	PhysicalNamePrepared(false), PreparedAccess(RENEGADE_PATH_READ),
-	NativeProbeForced(false)
+	NativeProbeForced(false), StagedData(NULL), StagedSize(0), StagedCapacity(0),
+	StagedPosition(0), Staging(false)
 {
 	LogicalName[0] = 0;
 	Set_Name(logical_name);
@@ -108,6 +179,14 @@ RenegadeRootedFileClass::RenegadeRootedFileClass(const RenegadePathRoots &roots,
 	// Get_File and before Open. Prepare the physical read name here so a later
 	// Open/Is_Available never calls RawFileClass::Set_Name and clears that bias.
 	Resolve_And_Set_Physical_Name(FileClass::READ);
+}
+
+RenegadeRootedFileClass::~RenegadeRootedFileClass(void)
+{
+	// The base destructor closes the handle without reaching this class's
+	// Close, so staged bytes are written here.
+	if (Staging) Close();
+	free(StagedData);
 }
 
 char const *RenegadeRootedFileClass::File_Name(void) const
@@ -181,11 +260,93 @@ int RenegadeRootedFileClass::Open(int rights)
 		g_file_factory_counters.open_failures.fetch_add(1U, std::memory_order_relaxed);
 		return false;
 	}
+	// RawFileClass::Open closes (and so writes out) any previous staged file.
 	const int opened = BufferedFileClass::Open(rights);
 	if (!opened) {
 		g_file_factory_counters.open_failures.fetch_add(1U, std::memory_order_relaxed);
+	} else if (rights == FileClass::WRITE) {
+		// Each ChunkSaveClass chunk seeks back to patch its header, and every
+		// seek flushes stdio: a save became thousands of small card writes and
+		// seeks on the game thread. The file is created and truncated now, as
+		// before, and its bytes are written in one piece by Close.
+		Staging = true;
+		StagedSize = 0;
+		StagedPosition = 0;
+		g_file_factory_counters.staged_write_files.fetch_add(1U, std::memory_order_relaxed);
 	}
 	return opened;
+}
+
+bool RenegadeRootedFileClass::Stage_Write(void const *buffer, int size)
+{
+	if (size < 0 || size > INT_MAX - StagedPosition) return false;
+	// A zero-length write changes nothing, even past the end.
+	if (size == 0) return true;
+	const int end = StagedPosition + size;
+	if (end > StagedCapacity) {
+		int capacity = StagedCapacity != 0 ? StagedCapacity : 64 * 1024;
+		while (capacity < end) capacity = capacity > INT_MAX / 2 ? INT_MAX : capacity * 2;
+		unsigned char *grown = static_cast<unsigned char *>(realloc(StagedData,
+			static_cast<size_t>(capacity)));
+		if (grown == NULL) return false;
+		StagedData = grown;
+		StagedCapacity = capacity;
+	}
+	// Writing past the end leaves a zero-filled gap, as a seek past the end
+	// followed by a write does on the card.
+	if (StagedPosition > StagedSize) {
+		memset(StagedData + StagedSize, 0, static_cast<size_t>(StagedPosition - StagedSize));
+	}
+	memcpy(StagedData + StagedPosition, buffer, static_cast<size_t>(size));
+	StagedPosition = end;
+	if (end > StagedSize) StagedSize = end;
+	return true;
+}
+
+// Writes the staged bytes to the open file, leaves its cursor where the staged
+// cursor was, and continues without staging.
+bool RenegadeRootedFileClass::Flush_Staged_Writes(void)
+{
+	Staging = false;
+	bool written = true;
+	if (StagedSize > 0) {
+		written = BufferedFileClass::Write(StagedData, StagedSize) == StagedSize;
+		g_file_factory_counters.staged_write_bytes.fetch_add(static_cast<uint32_t>(StagedSize),
+			std::memory_order_relaxed);
+	}
+	if (written && StagedPosition != StagedSize) {
+		written = BufferedFileClass::Seek(StagedPosition, SEEK_SET) == StagedPosition;
+	}
+	free(StagedData);
+	StagedData = NULL;
+	StagedSize = 0;
+	StagedCapacity = 0;
+	StagedPosition = 0;
+	return written;
+}
+
+int RenegadeRootedFileClass::Seek(int pos, int dir)
+{
+	if (!Staging) return BufferedFileClass::Seek(pos, dir);
+	long long base = -1;
+	if (dir == SEEK_SET) base = 0;
+	else if (dir == SEEK_CUR) base = StagedPosition;
+	else if (dir == SEEK_END) base = StagedSize;
+	const long long target = base + pos;
+	if (base < 0 || target < 0 || target > INT_MAX) return -1;
+	StagedPosition = static_cast<int>(target);
+	return StagedPosition;
+}
+
+int RenegadeRootedFileClass::Size(void)
+{
+	return Staging ? StagedSize : BufferedFileClass::Size();
+}
+
+void RenegadeRootedFileClass::Close(void)
+{
+	if (Staging) (void)Flush_Staged_Writes();
+	BufferedFileClass::Close();
 }
 
 int RenegadeRootedFileClass::Read(void *buffer, int size)
@@ -202,7 +363,18 @@ int RenegadeRootedFileClass::Read(void *buffer, int size)
 int RenegadeRootedFileClass::Write(void const *buffer, int size)
 {
 	g_file_factory_counters.write_calls.fetch_add(1U, std::memory_order_relaxed);
-	const int bytes_written = BufferedFileClass::Write(buffer, size);
+	int bytes_written = 0;
+	if (Staging && Stage_Write(buffer, size)) {
+		bytes_written = size;
+	} else {
+		if (Staging) {
+			// Out of memory: write what is staged and continue directly.
+			g_file_factory_counters.staged_write_fallbacks.fetch_add(1U,
+				std::memory_order_relaxed);
+			(void)Flush_Staged_Writes();
+		}
+		bytes_written = BufferedFileClass::Write(buffer, size);
+	}
 	if (bytes_written > 0) {
 		g_file_factory_counters.write_bytes.fetch_add(static_cast<uint32_t>(bytes_written),
 			std::memory_order_relaxed);
@@ -225,6 +397,12 @@ bool RenegadeRootedFileClass::Is_Available(int forced)
 		g_file_factory_counters.availability_failures.fetch_add(1U, std::memory_order_relaxed);
 		return false;
 	}
+	const bool immutable_retail = !forced && !LastResolution.writable_namespace;
+	if (immutable_retail && !Is_Open() && Is_Known_Available(LastResolution.physical)) {
+		g_file_factory_counters.readonly_availability_hits.fetch_add(1U, std::memory_order_relaxed);
+		LastResolution.confirmed_missing = false;
+		return true;
+	}
 	// RawFileClass::Is_Available(forced) calls virtual Open. Carry the forced
 	// request through that nested call instead of accidentally short-circuiting it.
 	const bool previous_forced = NativeProbeForced;
@@ -233,6 +411,7 @@ bool RenegadeRootedFileClass::Is_Available(int forced)
 	NativeProbeForced = previous_forced;
 	if (available) {
 		LastResolution.confirmed_missing = false;
+		if (immutable_retail) Remember_Available(LastResolution.physical);
 	}
 	if (!available) {
 		g_file_factory_counters.availability_failures.fetch_add(1U,

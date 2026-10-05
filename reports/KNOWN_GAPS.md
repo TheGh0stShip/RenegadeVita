@@ -1,5 +1,131 @@
 # Known gaps
 
+- The original Technical Options button is source-reachable through
+  `OptionsMenuClass::On_Command`; it does not depend on its null dialog-factory
+  slot. Audio, Video and Performance tabs are linked and resource-checked.
+  Opening, applying, persisting and repeatedly leaving the tabs remain
+  executable and physical evidence gates. Do not populate the null factory
+  slot unless the original direct owner is removed.
+
+- Every child tab selected by the original Controls menu now has a strict
+  canonical-resource contract. Physical rebinding, saved-profile restoration,
+  sniper scope/zoom input and repeated dialog lifetime remain unverified.
+
+- Technical options and all three child tabs now require their complete
+  directly addressed control sets during resource generation. Audio and
+  performance persistence, fixed Vita video presentation, repeated entry and
+  layout remain executable and physical evidence gates.
+
+- The multiplayer Help template now requires every original key-label control.
+  Vita label text, navigation, repeated entry and rendered layout remain
+  executable and physical evidence gates.
+
+- Practice/LAN/Direct-IP pause routing, LAN refusal cleanup and in-game chat
+  resource presence now have source closure. Opening, operating and repeatedly
+  leaving the C&C reference and chat dialogs, plus failed LAN connection
+  recovery, remain executable and physical evidence gates.
+
+- Campaign save/load, INI, registrar and script translation-unit closure is
+  complete by source inspection, with all 13 campaign units asserted as a
+  subset of the released `Scripts.dsp` inventory. Natural mission success to
+  score/movie/next-level, failure/death, ordinary save restore and script-state
+  reconstruction still require executable and physical evidence after the
+  validation hold.
+
+- `ww3d2/meshbuild.cpp`, `polyinfo.cpp` and `stripoptimizer.cpp` remain
+  deliberately unselected after caller-level reconciliation. The apparent
+  `MeshBuilderClass` consumer in `wwphys/bpt.cpp` is wholly disabled by the
+  released file's top-level `#if 0`, `dynamesh.cpp` does not call the
+  `PolygonInfoClass` out-of-line methods, and the strip optimizer's live caller
+  is the excluded desktop `dx8renderer.cpp`. Revisit only if a non-obsolete
+  original caller enters the Vita graph; filename presence alone is not a
+  source-closure defect.
+
+- The missing `inputconfig.cpp` record implementation is now selected beside
+  the existing manager and Controls Save/Load dialog. ARM linkage, profile
+  creation, rename/overwrite/delete, restart persistence, corrupt-profile
+  handling and physical controller behavior remain unverified.
+
+- The original LAN host preset Save/Load dialog is now reachable from host
+  options and retains original game-data validation and preset semantics.
+  Custom configs are rooted in `user/`; the retail default is fallback-only,
+  slave-server behavior remains excluded, and WWUI list pointers use the
+  existing ILP32/host-token boundary. Compilation, dialog presentation,
+  save/load/delete persistence, invalid-settings messages and repeated entry
+  remain unverified under the validation hold. Final server-config
+  close/atomic-replace failure now keeps the dialog open and reports the
+  released storage error; failed deletion keeps its row in place. Opening the
+  dialog performs up to 498 user-file availability probes, so physical latency
+  remains unknown.
+
+- The complete Vita frontend now selects the linked original `GameInitMgrClass`
+  and `DlgMsgBox` through their compatibility headers; their earlier
+  full-profile no-op declarations were a source-wiring and ODR gap. Packaged
+  LAN sources already select the linked real dialog manager and
+  connection/refusal dialogs directly.
+  Compile/runtime behavior and physical dialog presentation remain unverified
+  under the active validation hold. The original `DlgMPTeamSelect` is now
+  selected through a LAN/direct-IP adaptation: released WWUI controls, live
+  player lists, side choice, `MPChooseTeamSignal` and authoritative
+  `cChangeTeamEvent` remain intact, while only WWOnline session/channel/profile
+  inheritance and handlers are excluded. Canonical dialog 246 and its required
+  controls join the generated templates. Compilation, rendered controls,
+  selection submission, server acceptance and repeated-dialog lifetime remain
+  open evidence gates.
+
+- The full-port gameplay boundary no longer unconditionally disables both
+  original projector lists or forces `SHADOW_MODE_NONE`. Original scene and
+  settings ownership can now route authored projectors with existing textures
+  through the retained material-pass adapter. Generated render-target shadows
+  now have a source-only texture/FBO/depth/bind/restore route, but projector
+  pixels, frame cost, cleanup and physical behavior are unverified. The source
+  ownership and acceptance prerequisites are enumerated in
+  `NATIVE_RENDER_TARGET_BOUNDARY.md`; the adjacent D3D Vita project had no
+  completed boundary to import.
+
+- Direct-IP repeated rounds now have source wiring for separate current/pending
+  stock and TT providers, guarded win-event identity, post-Core_Shutdown
+  publication, Glacier supplemental rotation and next-generation replicated
+  player admission. The path is uncompiled and unvalidated under the active
+  hold. Repeated stock, TT-owned, override-only, same-map and changed-map rounds
+  each still need distinct ARM and runtime evidence. Because the admitted TT
+  resource protocol has no explicit end-of-offer packet, the resolver freezes
+  the session resource groups present at the reliable win event and fails the
+  transaction if that generation mutates before publication. This deliberately
+  treats `cWinEvent` as the offer boundary; local source proves earlier reliable
+  packets are serviced first, but does not prove a server cannot send a relevant
+  group afterward. Reference protocol evidence or an explicit offer-completion
+  signal remains required before runtime acceptance.
+- Beacon save/load has source wiring for warning time, weapon-definition
+  identity, conservative legacy recovery and armed-audio reconstruction.
+  Physical save return, reload during arming/armed states, detonation/finale
+  continuation and repeated checkpoint stability remain unverified.
+- New manual, quick and cGod serialization paths reject the ambiguous original
+  `SINGLE_DEAD` terminal state, whose saved integer cannot distinguish player
+  death from mission failure. Autosave waits for `SINGLE_RUNNING`. This closes
+  new terminal-save creation in source without changing the original format;
+  legacy terminal saves and physical UI behavior remain unverified.
+- Practice, LAN and Direct-IP pause input now follows the released multiplayer
+  menu rule: Combat remains active, network updates continue and the original
+  C&C reference location opens. Missions retain suspended EVA ownership.
+  Multiplayer menu pixels, live-match behavior, exit actions and repeated
+  open/close stability are source-only and unvalidated.
+  The concrete C&C reference dialog, canonical resource 245 and suicide event
+  are selected; Main Menu now defers teardown through `GameInitMgr`. Compilation,
+  control rendering, help/suicide/team-change/back actions and server behavior
+  remain unverified.
+  Original team, battle and server information presenters and resources are now
+  selected and receive their released input actions from the native frame.
+  Compilation, Vita bindings, hold/release lifetime, live data and rendering
+  remain unverified.
+
+- The full-port Vita graph selects the original `MultiHUDClass` implementation;
+  the compatibility header includes `multihud.h` on Vita when the demo profile
+  is off, and CMake links `commando/multihud.cpp`. The older claim that a no-op
+  multiplayer HUD stub still replaced this path was stale. Original overlay
+  pixels, player/team data, scaling and repeated-round renderer lifetime remain
+  unverified and cannot be inferred from source selection.
+
 2026-10-04 Dev229 replaces the per-vertex projected-UV division with opt-in
 divisor storage and fragment division.494 contracts and ARM link pass, with
 production storage/interpolation and48 shader-source interface checks retained.
@@ -68,23 +194,29 @@ storage timeouts without an engine change. Canonical packaging, Vita3K install-o
 hash verification and clean ARM CI pass; runtime and full sweeps remain open.
 See [compile closure](COMPILE_CLOSURE.md).
 
-2026-10-03 procedural material review confirms spawn/death/healing/electrocution
-transition push/pop are skipped natively. Stealth still pushes a pass and can
-suppress base rendering, while native mesh rejects added passes. Original
-material renderer depends on polygon/category registration bypassed by native
-base submission, so enabling its caller alone is insufficient. Per-mission
-instances and pixels remain unverified. See
+2026-10-05 follow-up rejected direct reuse of the desktop FVF queues: the Vita
+link graph selects `ww3d_dx8_boundary.cpp`, while the FVF registration and
+category implementation in `dx8renderer.cpp` is excluded. The replacement
+native adapter now retains Mesh/MaterialPass references, separates rigid,
+skinned and delayed-rigid FIFO work, restores transition Push/Pop ownership and
+submits uniform-pass material/shader/texture state through the existing native
+mesh emitter. It is source-only and unvalidated. The queue preserves broad
+original ordering but not desktop FVF-category interleaving. A subsequent
+source-only change ports rigid per-polygon APT selection and keeps the original
+whole-mesh skinned branch. Generic projector pixels, mapper behavior, repeat
+lifecycle and projector render targets remain unvalidated or unsupported. See
 [procedural material owners](PROCEDURAL_MATERIAL_OWNER_REVIEW.md).
 
 2026-10-03 effect sweep confirms native decal omissions. A source correction
 restores original traversal/distance queueing, native flush and rigid/skinned
 draw bodies through the original DX8MeshRenderer list owner. Four source-only
-restoration checks pass; uncompiled. Native D3DRS_ZBIAS mapping remains missing,
-so depth placement and presentation are not closed. Original explosions generate decals
-through PhysicsScene::Create_Decal. Existing release-range correction does not
-restore presentation. Original queue order, parent transforms/deformation,
-material runs and indexed geometry must be preserved in the correction.
-Source finding only; no per-mission decal count or physical effect claim.
+restoration checks pass; uncompiled. Native `D3DRS_ZBIAS` now maps to bounded
+filled-polygon offset with the DX8/OpenGL sign conversion and explicit zero-state
+disable, but its physical sign and magnitude remain unaccepted. Original
+explosions generate decals through `PhysicsScene::Create_Decal`. Original queue
+order, parent transforms/deformation, material runs and indexed geometry must
+remain preserved. Source finding only; no per-mission decal count or physical
+effect claim.
 
 2026-10-03 cinematic HLOD review connects15 M01 helicopter light child records
 to the native DazzleRenderObjClass::Render early return. A source correction

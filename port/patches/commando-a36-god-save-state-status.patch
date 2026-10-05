@@ -1,0 +1,15 @@
+--- a/god.cpp
++++ b/god.cpp
+@@ -98,10 +98,11 @@
+ //-----------------------------------------------------------------------------
+ bool cGod::Save(ChunkSaveClass & csave)
+ {
++	if (!Can_Save_Current_State()) return false;
+ 	csave.Begin_Chunk(CHUNKID_VARIABLES);
+ 	WRITE_MICRO_CHUNK(csave, MICROCHUNK_STATE, State);
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ //-----------------------------------------------------------------------------

@@ -1,0 +1,102 @@
+--- a/objectives.cpp
++++ b/objectives.cpp
+@@ -255,10 +255,18 @@
+ 
+ bool	Objective::Load( ChunkLoadClass &cload )
+ {
++	bool variables_seen = false;
++	bool object_seen = false;
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_VARIABLES:
++				if (variables_seen) {
++					loaded = false;
++					break;
++				}
++				variables_seen = true;
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+ 						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_ID, ID );
+@@ -284,7 +292,11 @@
+ 				break;
+ 
+ 			case CHUNKID_OBJECT:
+-				Object.Load( cload );
++				if (object_seen) loaded = false;
++				else {
++					object_seen = true;
++					loaded = Object.Load(cload) && loaded;
++				}
+ 				break;
+ 
+ 			default:
+@@ -294,7 +306,7 @@
+ 		}
+ 		cload.Close_Chunk();
+ 	}
+-	return true;
++	return loaded && variables_seen && !cload.Has_Error();
+ }
+ 
+ /*
+@@ -375,14 +387,27 @@
+ bool	ObjectiveManager::Load( ChunkLoadClass &cload )
+ {
+ 	WWASSERT( ObjectiveList.Count() == 0 );
++	bool variables_seen = false;
++	bool loaded = true;
++	int tertiary_objectives = 0;
++	bool tertiary_seen = false;
+ 
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_MANAGER_VARIABLES:
++				if (variables_seen) {
++					loaded = false;
++					break;
++				}
++				variables_seen = true;
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+-						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_NUM_SPECIFIED_TERTIARY_OBJECTIVES,	NumSpecifiedTertiaryObjectives );
++						case MICROCHUNKID_NUM_SPECIFIED_TERTIARY_OBJECTIVES:
++							if (tertiary_seen || cload.Cur_Micro_Chunk_Length() != sizeof(tertiary_objectives) ||
++								cload.Read(&tertiary_objectives, sizeof(tertiary_objectives)) != sizeof(tertiary_objectives)) loaded = false;
++							else tertiary_seen = true;
++							break;
+ 						default:
+ 							Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
+ 							break;
+@@ -394,7 +419,9 @@
+ 			case CHUNKID_OBJECTIVE_ENTRY:
+ 			{
+ 				Objective * objective = Add_Loadable_Objective();
+-				objective->Load( cload );
++				if (!objective->Load(cload)) {
++					loaded = false;
++				}
+ 				break;
+ 			}
+ 
+@@ -406,11 +433,13 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	Viewer.Update ();
+-
+-	HUDUpdate = true;
+-
+-	return true;
++	loaded = loaded && variables_seen && tertiary_seen && !cload.Has_Error();
++	if (loaded) {
++		NumSpecifiedTertiaryObjectives = tertiary_objectives;
++		Viewer.Update ();
++		HUDUpdate = true;
++	}
++	return loaded;
+ }
+ 
+ /*

@@ -161,22 +161,27 @@ StringTwiddlerClass::Save (ChunkSaveClass &csave)
 bool
 StringTwiddlerClass::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
+	bool base_seen = false;
+	bool variables_seen = false;
 	while (cload.Open_Chunk ()) {		
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_BASE_CLASS:
-				TDBObjClass::Load (cload);
+				if (base_seen || !TDBObjClass::Load (cload)) loaded = false;
+				base_seen = true;
 				break;
 			
 			case CHUNKID_VARIABLES:
-				Load_Variables (cload);
+				if (variables_seen || !Load_Variables (cload)) loaded = false;
+				variables_seen = true;
 				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && base_seen && variables_seen && !cload.Has_Error();
 }
 
 
@@ -185,9 +190,10 @@ StringTwiddlerClass::Load (ChunkLoadClass &cload)
 //	Load_Variables
 //
 /////////////////////////////////////////////////////////////////
-void
+bool
 StringTwiddlerClass::Load_Variables (ChunkLoadClass &cload)
 {	
+	bool loaded = true;
 	while (cload.Open_Micro_Chunk ()) {
 		switch (cload.Cur_Micro_Chunk_ID ()) {			
 			
@@ -197,7 +203,8 @@ StringTwiddlerClass::Load_Variables (ChunkLoadClass &cload)
 				//	Read the data from the chunk
 				//
 				int string_id = 0;
-				LOAD_MICRO_CHUNK (cload, string_id);
+				if (cload.Cur_Micro_Chunk_Length() != sizeof(string_id) ||
+					cload.Read(&string_id, sizeof(string_id)) != sizeof(string_id)) loaded = false;
 
 				//
 				//	Store this string ID in our list if its valid
@@ -212,7 +219,7 @@ StringTwiddlerClass::Load_Variables (ChunkLoadClass &cload)
 		cload.Close_Micro_Chunk ();
 	}
 
-	return ;
+	return loaded && !cload.Has_Error();
 }
 
 

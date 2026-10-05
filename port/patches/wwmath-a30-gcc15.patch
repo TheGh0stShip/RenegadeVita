@@ -34,8 +34,8 @@
 -		Vector3SolidCylinderRandomizer & Vector3SolidCylinderRandomizer::operator = (const Vector3SolidCylinderRandomizer &that) { that; return *this; }
 +		Vector3SolidCylinderRandomizer & operator = (const Vector3SolidCylinderRandomizer &that) { that; return *this; }
  
-		float	Extent;
-		float	Radius;
+ 		float	Extent;
+ 		float	Radius;
 --- a/gridcull.h
 +++ b/gridcull.h
 @@ -54,3 +54 @@
@@ -59,7 +59,7 @@
 
 --- a/gridcull.cpp
 +++ b/gridcull.cpp
-@@ -179,7 +179,7 @@ GridCullSystemClass::~GridCullSystemClass(void)
+@@ -179,6 +179,6 @@ GridCullSystemClass::~GridCullSystemClass(void)
  {
  	if (Cells != NULL) {
 -		delete Cells;

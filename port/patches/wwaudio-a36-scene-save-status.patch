@@ -1,0 +1,101 @@
+--- a/SoundSceneObj.cpp
++++ b/SoundSceneObj.cpp
+@@ -261,7 +261,7 @@
+ SoundSceneObjClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_BASE_CLASS);
+-		PersistClass::Save (csave);
++		if (!PersistClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);		
+@@ -271,7 +271,7 @@
+ 		WRITE_MICRO_CHUNK (csave, VARID_USER_OBJ, m_UserObj);
+ 		WRITE_MICRO_CHUNK (csave, VARID_ID, m_ID);		
+ 	csave.End_Chunk ();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/AudibleSound.cpp
++++ b/AudibleSound.cpp
+@@ -1946,7 +1946,7 @@
+ 	using namespace AUDIBLE_SOUND_SAVELOAD;
+ 
+ 	csave.Begin_Chunk (CHUNKID_BASE_CLASS);
+-		SoundSceneObjClass::Save (csave);
++		if (!SoundSceneObjClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	uint32 temp_position = 0;
+@@ -1980,7 +1980,7 @@
+ 
+ 	csave.End_Chunk ();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/Sound3D.cpp
++++ b/Sound3D.cpp
+@@ -698,7 +698,7 @@
+ Sound3DClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_BASE_CLASS);
+-		AudibleSoundClass::Save (csave);
++		if (!AudibleSoundClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+@@ -711,7 +711,7 @@
+ 
+ 	csave.End_Chunk ();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/LogicalListener.cpp
++++ b/LogicalListener.cpp
+@@ -163,7 +163,7 @@
+ LogicalListenerClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_BASE_CLASS);
+-		SoundSceneObjClass::Save (csave);
++		if (!SoundSceneObjClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);		
+@@ -173,7 +173,7 @@
+ 		WRITE_MICRO_CHUNK (csave, VARID_POSITION, m_Position);
+ 
+ 	csave.End_Chunk ();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/LogicalSound.cpp
++++ b/LogicalSound.cpp
+@@ -199,7 +199,7 @@
+ LogicalSoundClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_BASE_CLASS);
+-		SoundSceneObjClass::Save (csave);
++		if (!SoundSceneObjClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);		
+@@ -213,7 +213,7 @@
+ 		WRITE_MICRO_CHUNK (csave, VARID_LAST_NOTIFY, m_LastNotification);
+ 
+ 	csave.End_Chunk ();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+

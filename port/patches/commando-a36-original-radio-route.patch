@@ -1,0 +1,41 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -262,6 +262,7 @@
+ 	if (!IS_MISSION && Input::Get_State( INPUT_FUNCTION_SERVER_INFO_TOGGLE )) {
+ 		START_DIALOG (CNCServerInfoDialogClass);
+ 	}
++#endif // service/UI exclusions do not disable original radio commands
+ 
+ 	//
+ 	//	Display the team information page
+@@ -269,2 +270,3 @@
+ 	if (!IS_MISSION && cNetwork::I_Am_Client() && COMBAT_STAR != NULL) {
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 		if (Input::Get_State( INPUT_FUNCTION_TEAM_INFO_TOGGLE )) {
+@@ -276,3 +278,4 @@
+ 		}*/
++#endif
+ 
+ 		// Handle radio commands
+@@ -298,5 +301,6 @@
+ 	}
+ 
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 	if (!IS_MISSION && Input::Get_State( INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE )) {
+ 		//MultiHUDClass::Toggle_Verbose_Lists();
+ 		MultiHUDClass::Next_Playerlist_Format();
+@@ -367,3 +371,3 @@
+-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+-	RadioCommandDisplayClass::Initialize ();
+-#endif
++	if (!IS_MISSION) {
++		RadioCommandDisplayClass::Initialize ();
++	}
+@@ -389,3 +393,1 @@
+-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 	RadioCommandDisplayClass::Shutdown ();
+-#endif
+@@ -1599,3 +1601,1 @@
+-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 	RadioCommandDisplayClass::Render ();
+-#endif

@@ -1,0 +1,115 @@
+--- a/inputconfigmgr.h
++++ b/inputconfigmgr.h
+@@ -83,6 +83,7 @@
+ 	//
+ 	static bool		Get_Current_Configuration (InputConfigClass &config);
+ 	static int		Get_Current_Configuration_Index (void)							{ return CurrentConfigIndex; }
++	static bool		Current_Configuration_Is_Custom (void);
+ 	static void		Load_Current_Configuration (void);
+ 	static void		Load_Default_Configuration (void);
+ 	static void		Load_Configuration (const InputConfigClass &config);
+--- a/inputconfigmgr.cpp
++++ b/inputconfigmgr.cpp
+@@ -50,7 +50,11 @@
+ ////////////////////////////////////////////////////////////////
+ //	Local constants
+ ////////////////////////////////////////////////////////////////
++#if defined(RENEGADE_VITA_PORT)
++static const char *CFG_DICTIONARY_FILENAME = "user/config/CONFIG.DAT";
++#else
+ static const char *CFG_DICTIONARY_FILENAME = "CONFIG.DAT";
++#endif
+ 
+ ////////////////////////////////////////////////////////////////
+ //	Registry key names
+@@ -141,6 +145,12 @@
+ 	return true;
+ }
+ 
++bool InputConfigMgrClass::Current_Configuration_Is_Custom (void)
++{
++	return CurrentConfigIndex >= 0 && CurrentConfigIndex < ConfigList.Count() &&
++		ConfigList[CurrentConfigIndex].Is_Custom();
++}
++
+ 
+ ////////////////////////////////////////////////////////////////
+ //
+@@ -433,7 +443,9 @@
+ 	//	Get the local path of the configuration files
+ 	//
+ 	StringClass config_path;
++#if !defined(RENEGADE_VITA_PORT)
+ 	Get_Config_Path (config_path);
++#endif
+ 
+ 	int slot	= 1;
+ 
+@@ -448,9 +460,17 @@
+ 		//
+ 		//	Check to see if this file exists
+ 		//
++#if defined(RENEGADE_VITA_PORT)
++		full_path.Format("user/config/%s", (const char *)filename);
++		FileClass *probe = _TheWritingFileFactory->Get_File(full_path);
++		const bool exists = probe != NULL && probe->Is_Available();
++		if (probe != NULL) _TheWritingFileFactory->Return_File(probe);
++		if (!exists) break;
++#else
+ 		full_path.Format ("%s\\%s", (const char *)config_path, filename);
+-
+-	} while (::GetFileAttributes (full_path) != 0xFFFFFFFF);
++		if (::GetFileAttributes (full_path) == 0xFFFFFFFF) break;
++#endif
++	} while (true);
+ 
+ 	return ;
+ }
+@@ -464,7 +484,11 @@
+ void
+ InputConfigMgrClass::Save (void)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	FileClass *file = _TheWritingFileFactory->Get_File (CFG_DICTIONARY_FILENAME);
++#else
+ 	FileClass *file = _TheFileFactory->Get_File (CFG_DICTIONARY_FILENAME);
++#endif
+ 	WWASSERT (file != NULL);
+ 	if (file == NULL) {
+ 		return ;
+@@ -494,7 +518,11 @@
+ 	//	Close the file
+ 	//
+ 	file->Close ();
++#if defined(RENEGADE_VITA_PORT)
++	_TheWritingFileFactory->Return_File (file);
++#else
+ 	_TheFileFactory->Return_File (file);
++#endif
+ 	return ;
+ }
+ 
+@@ -507,7 +535,11 @@
+ void
+ InputConfigMgrClass::Load (void)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	FileClass *file = _TheWritingFileFactory->Get_File (CFG_DICTIONARY_FILENAME);
++#else
+ 	FileClass *file = _TheFileFactory->Get_File (CFG_DICTIONARY_FILENAME);
++#endif
+ 	WWASSERT (file != NULL);
+ 	if (file == NULL) {
+ 		return ;
+@@ -559,7 +591,11 @@
+ 	//	Close the file
+ 	//
+ 	file->Close ();
++#if defined(RENEGADE_VITA_PORT)
++	_TheWritingFileFactory->Return_File (file);
++#else
+ 	_TheFileFactory->Return_File (file);
++#endif
+ 	return ;
+ }
+ 

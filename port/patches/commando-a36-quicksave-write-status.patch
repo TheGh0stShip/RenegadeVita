@@ -1,0 +1,20 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -1702,2 +1702,8 @@
+ 		SaveGameManager::Save_Game( SAVEGAME_NAME_A, &_CommandoSaveLoad, NULL );
++#if defined(RENEGADE_VITA_PORT)
++		if (!SaveGameManager::Last_Save_Write_Succeeded()) {
++			delete registry;
++			return;
++		}
++#endif
+ 		Debug_Say(( "Quicksaved A\n" ));
+@@ -1706,2 +1712,8 @@
+ 		SaveGameManager::Save_Game( SAVEGAME_NAME_B, &_CommandoSaveLoad, NULL );
++#if defined(RENEGADE_VITA_PORT)
++		if (!SaveGameManager::Last_Save_Write_Succeeded()) {
++			delete registry;
++			return;
++		}
++#endif
+ 		Debug_Say(( "Quicksaved B\n" ));

@@ -1,0 +1,43 @@
+--- a/saveload.h
++++ b/saveload.h
+@@ -150,6 +150,7 @@
+ 	static bool		Load (ChunkLoadClass &cload,bool auto_post_load = true,
+ 		bool require_player_save_subsystems = false);
+ 	static bool		Post_Load_Processing (void(*network_callback)(void));
++	static void		Discard_Post_Load_Callbacks (void);
+ 	/*
+ 	** Look up the persist factory for a given chunk id
+ 	*/
+--- a/saveload.cpp
++++ b/saveload.cpp
+@@ -121,8 +121,12 @@
+ 	PointerRemapper.Reset();
+ 	WWLOG_INTERMEDIATE("PointerRemapper.Reset()");
+ 
+-	// Call PostLoad on each PersistClass that wanted post-load
+-	if (auto_post_load) {
++	// A rejected load still remaps pointer tokens above so partially created
++	// objects can be destroyed safely, but it must never execute their post-load
++	// behavior. Remove registrations while every registered object is alive.
++	if (!ok) {
++		Discard_Post_Load_Callbacks();
++	} else if (auto_post_load) {
+ 		Post_Load_Processing(NULL);
+ 	}
+ 	WWLOG_INTERMEDIATE("PostLoadProcessing");
+@@ -156,6 +160,15 @@
+ 	return true;
+ }
+ 
++void SaveLoadSystemClass::Discard_Post_Load_Callbacks (void)
++{
++	PostLoadableClass *obj = PostLoadList.Remove_Head();
++	while (obj != NULL) {
++		obj->Set_Post_Load_Registered(false);
++		obj = PostLoadList.Remove_Head();
++	}
++}
++
+ void SaveLoadSystemClass::Register_Sub_System (SaveLoadSubSystemClass * sys)
+ {
+ 	WWASSERT(sys != NULL);

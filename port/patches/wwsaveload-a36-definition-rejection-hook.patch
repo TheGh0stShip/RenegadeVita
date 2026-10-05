@@ -1,0 +1,23 @@
+--- a/definition.h
++++ b/definition.h
+@@ -89,6 +89,7 @@
+ 
+ 	// Validation methods
+ 	virtual bool						Is_Valid_Config (StringClass &message);
++	virtual void						On_Load_Rejected (void) {}
+ 
+ 	// From PersistClass
+ 	virtual bool						Save (ChunkSaveClass &csave);
+--- a/definitionmgr.cpp
++++ b/definitionmgr.cpp
+@@ -853,7 +853,8 @@
+ 			_SortedDefinitionArray[index]->m_DefinitionMgrLink = index;
+ 		}
+ 	} else {
+-		for (int index = 0; index < pending_definitions.Count(); ++index) {
++		for (int index = pending_definitions.Count() - 1; index >= 0; --index) {
++			pending_definitions[index]->On_Load_Rejected();
+ 			SaveLoadSystemClass::Retain_Rejected_Object_Until_Next_Load(pending_definitions[index]);
+ 		}
+ 	}
+

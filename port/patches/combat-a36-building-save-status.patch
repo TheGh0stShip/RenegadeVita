@@ -1,0 +1,182 @@
+--- a/building.cpp
++++ b/building.cpp
+@@ -440,7 +440,7 @@
+ BuildingGameObj::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		DamageableGameObj::Save (csave);
++		if (!DamageableGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+@@ -449,7 +449,7 @@
+ 		WRITE_MICRO_CHUNK (csave, MICROCHUNKID_COLLECTION_SPHERE,	CollectionSphere);		
+ 	csave.End_Chunk ();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/powerplantgameobj.cpp
++++ b/powerplantgameobj.cpp
+@@ -293,12 +293,12 @@
+ PowerPlantGameObj::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		BuildingGameObj::Save (csave);
++		if (!BuildingGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+ 	csave.End_Chunk ();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/comcentergameobj.cpp
++++ b/comcentergameobj.cpp
+@@ -294,12 +294,12 @@
+ ComCenterGameObj::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		BuildingGameObj::Save (csave);
++		if (!BuildingGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+ 	csave.End_Chunk ();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/refinerygameobj.cpp
++++ b/refinerygameobj.cpp
+@@ -364,7 +364,7 @@
+ RefineryGameObj::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		BuildingGameObj::Save (csave);
++		if (!BuildingGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+@@ -373,7 +373,7 @@
+ 		WRITE_MICRO_CHUNK (csave, MICROCHUNKID_UNLOAD_TIMER,			UnloadTimer);
+ 		WRITE_MICRO_CHUNK (csave, MICROCHUNKID_DOCK_TM,					DockTM);
+ 	csave.End_Chunk ();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/vehiclefactorygameobj.cpp
++++ b/vehiclefactorygameobj.cpp
+@@ -339,7 +339,7 @@
+ VehicleFactoryGameObj::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		BuildingGameObj::Save (csave);
++		if (!BuildingGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+@@ -350,7 +350,7 @@
+ 		WRITE_MICRO_CHUNK (csave, MICROCHUNKID_GENERATING_VEHICLE_ID,	GeneratingVehicleID);
+ 
+ 	csave.End_Chunk ();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/airstripgameobj.cpp
++++ b/airstripgameobj.cpp
+@@ -341,12 +341,12 @@
+ AirStripGameObj::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		VehicleFactoryGameObj::Save (csave);
++		if (!VehicleFactoryGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+ 	csave.End_Chunk ();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/warfactorygameobj.cpp
++++ b/warfactorygameobj.cpp
+@@ -305,12 +305,12 @@
+ WarFactoryGameObj::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		VehicleFactoryGameObj::Save (csave);
++		if (!VehicleFactoryGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+ 	csave.End_Chunk ();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/soldierfactorygameobj.cpp
++++ b/soldierfactorygameobj.cpp
+@@ -295,12 +295,12 @@
+ SoldierFactoryGameObj::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		BuildingGameObj::Save (csave);
++		if (!BuildingGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+ 	csave.End_Chunk ();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/repairbaygameobj.cpp
++++ b/repairbaygameobj.cpp
+@@ -361,12 +361,12 @@
+ RepairBayGameObj::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		BuildingGameObj::Save (csave);
++		if (!BuildingGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+ 	csave.End_Chunk ();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/buildingaggregate.cpp
++++ b/buildingaggregate.cpp
+@@ -314,14 +314,14 @@
+ bool BuildingAggregateClass::Save(ChunkSaveClass & csave)
+ {
+ 	csave.Begin_Chunk(BAG_CHUNK_STATICANIMPHYS);
+-		StaticAnimPhysClass::Save(csave);
++		if (!StaticAnimPhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(BAG_CHUNK_VARIABLES);
+ 		WRITE_MICRO_CHUNK(csave, BAG_VARIABLE_CURRENTSTATE, CurrentState );
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+

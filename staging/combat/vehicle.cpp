@@ -336,20 +336,25 @@ bool	VehicleGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	VehicleGameObjDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	Free_Transition_List ();
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				SmartGameObjDef::Load( cload );
+				if (!SmartGameObjDef::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_DEF_TRANSITION:
 			{
 				TransitionDataClass *transition = new TransitionDataClass;
-				transition->Load( cload );
-				Transitions.Add( transition );
+				if (transition->Load(cload)) {
+					Transitions.Add(transition);
+				} else {
+					delete transition;
+					loaded = false;
+				}
 			}
 			break;
 
@@ -393,7 +398,7 @@ bool	VehicleGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 /*
@@ -605,7 +610,7 @@ bool	VehicleGameObj::Save( ChunkSaveClass & csave )
 	Destroy_Transitions();
 
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	SmartGameObj::Save( csave );
+	if (!SmartGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -625,18 +630,19 @@ bool	VehicleGameObj::Save( ChunkSaveClass & csave )
 
 	Create_And_Destroy_Transitions();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	VehicleGameObj::Load( ChunkLoadClass &cload )
 {
 	int num_seats = 0;
+	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				SmartGameObj::Load( cload );
+				if (!SmartGameObj::Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -688,7 +694,7 @@ bool	VehicleGameObj::Load( ChunkLoadClass &cload )
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 void	VehicleGameObj::On_Post_Load( void )
@@ -2250,7 +2256,7 @@ void	VehicleGameObj::Create_New_Transitions( TransitionDataClass::StyleType tran
 
 void	VehicleGameObj::Update_Transitions( void )
 {
-#if defined(__vita__)
+#if defined(__vita__) && defined(RENEGADE_VITA_DETAILED_TIMING)
 	const uint64_t update_start_us = sceKernelGetProcessTimeWide();
 #endif
 	Matrix3D tm = Get_Transform();
@@ -2259,7 +2265,7 @@ void	VehicleGameObj::Update_Transitions( void )
 	for ( int i = 0; i < TransitionInstances.Count(); i++ ) {
 		TransitionInstances[i]->Set_Parent_Transform( tm );
 	}
-#if defined(__vita__)
+#if defined(__vita__) && defined(RENEGADE_VITA_DETAILED_TIMING)
 	const uint64_t update_elapsed_us =
 		sceKernelGetProcessTimeWide() - update_start_us;
 	const float star_distance = Vita_Distance_To_Star(this);

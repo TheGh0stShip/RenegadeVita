@@ -1,0 +1,14 @@
+--- a/renegadedialogmgr.cpp
++++ b/renegadedialogmgr.cpp
+@@ -299,6 +299,11 @@
+ 		FactoryArray[IDC_MENU_QUIT_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<QuitVerificationDialogClass>;
+ 	if (FactoryArray[IDC_MENU_MAIN_MENU_BUTTON - DIALOG_LINK_FIRST] == NULL)
+ 		FactoryArray[IDC_MENU_MAIN_MENU_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<MainMenuDialogClass>;
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++	if (FactoryArray[IDC_MENU_MP_LAN_GAME_BUTTON - DIALOG_LINK_FIRST] == NULL)
++		FactoryArray[IDC_MENU_MP_LAN_GAME_BUTTON - DIALOG_LINK_FIRST] =
++			new DialogFactoryClass<MPLanGameListMenuClass>;
++#endif
+ #endif
+ 	const char *	STYLE_MGR_INI	= "stylemgr.ini";
+ 

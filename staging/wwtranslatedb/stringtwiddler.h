@@ -119,7 +119,7 @@ protected:
 	//	Protected methods
 	//////////////////////////////////////////////////////////////
 	void								Save_Variables (ChunkSaveClass &csave);
-	void								Load_Variables (ChunkLoadClass &cload);
+	bool								Load_Variables (ChunkLoadClass &cload);
 
 	void								Randomize (int lang_id = TranslateDBClass::LANGID_ENGLISH);
 
@@ -133,4 +133,3 @@ private:
 
 
 #endif //__STRING_TWIDDLER_H
-

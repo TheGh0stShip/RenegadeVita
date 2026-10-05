@@ -1261,6 +1261,10 @@ PersistClass *	RenderObjPersistFactoryClass::Load(ChunkLoadClass & cload) const
 
 void RenderObjPersistFactoryClass::Save(ChunkSaveClass & csave,PersistClass * obj)	const
 {
+	if (obj == NULL) {
+		csave.Report_Error();
+		return;
+	}
 	RenderObjClass * robj = (RenderObjClass *)obj;
 	const char * name = robj->Get_Name();
 	Matrix3D tm = robj->Get_Transform();

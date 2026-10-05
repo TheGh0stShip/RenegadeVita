@@ -1,0 +1,67 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -190,6 +190,31 @@
+ 	}
+ }
+ 
++void CombatGameModeClass::Process_Radio_Command_Input()
++{
++	if (IS_MISSION || !cNetwork::I_Am_Client() || COMBAT_STAR == NULL) return;
++	// Handle radio commands
++	for (int radioCmdIndex = INPUT_FUNCTION_RADIO_CMD_01; radioCmdIndex <= INPUT_FUNCTION_RADIO_CMD_30; ++radioCmdIndex) {
++		if (Input::Get_State((InputFunction)radioCmdIndex)) {
++			CNCModeSettingsDef* cncDef = CNCModeSettingsDef::Get_Instance();
++
++			if (cncDef) {
++				int radioCmdNum = (radioCmdIndex - INPUT_FUNCTION_RADIO_CMD_01);
++				int radioCmd = cncDef->Get_Radio_Command(radioCmdNum);
++
++				if (radioCmd) {
++					CSAnnouncement* announce = new CSAnnouncement;
++					assert(announce != NULL);
++					announce->Init(cNetwork::Get_My_Team_Number(), radioCmd, ANNOUNCEMENT_TEAM, radioCmdNum);
++					RadioCommandDisplayClass::Reset_Display_Timer();
++				}
++			}
++
++			break;
++		}
++	}
++}
++
+ void	CombatGameModeClass::Combat_Keyboard( void )
+ {
+ 	WWPROFILE( "Combat_Keyboard" );
+@@ -281,20 +306,1 @@
+-		// Handle radio commands
+-		for (int radioCmdIndex = INPUT_FUNCTION_RADIO_CMD_01; radioCmdIndex <= INPUT_FUNCTION_RADIO_CMD_30; ++radioCmdIndex) {
+-			if (Input::Get_State((InputFunction)radioCmdIndex)) {
+-				CNCModeSettingsDef* cncDef = CNCModeSettingsDef::Get_Instance();
+-
+-				if (cncDef) {
+-					int radioCmdNum = (radioCmdIndex - INPUT_FUNCTION_RADIO_CMD_01);
+-					int radioCmd = cncDef->Get_Radio_Command(radioCmdNum);
+-
+-					if (radioCmd) {
+-						CSAnnouncement* announce = new CSAnnouncement;
+-						assert(announce != NULL);
+-						announce->Init(cNetwork::Get_My_Team_Number(), radioCmd, ANNOUNCEMENT_TEAM, radioCmdNum);
+-						RadioCommandDisplayClass::Reset_Display_Timer();
+-					}
+-				}
+-
+-				break;
+-			}
+-		}
++		Process_Radio_Command_Input();
+--- a/combatgmode.h
++++ b/combatgmode.h
+@@ -84,6 +84,8 @@
+ 	static	AudibleSoundClass	* BackgroundMusic;
+ 
+ 	static	void	Quick_Save( void );
++	static	void	Process_Radio_Command_Input();
++	static	void	Process_Chat_Input();
+ 
+ private:
+ 

@@ -207,10 +207,19 @@ TDBObjClass::Save (ChunkSaveClass &csave)
 bool
 TDBObjClass::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
+	bool variables_seen = false;
+	bool english_seen = false;
+	bool base_seen = false;
+
 	while (cload.Open_Chunk ()) {		
 		switch (cload.Cur_Chunk_ID ()) {
 
-			READ_WWSTRING_CHUNK (cload, CHUNKID_ENGLISH_STRING, EnglishString);
+			case CHUNKID_ENGLISH_STRING:
+				if (english_seen || cload.Read(EnglishString.Get_Buffer(cload.Cur_Chunk_Length()),
+					cload.Cur_Chunk_Length()) != cload.Cur_Chunk_Length()) loaded = false;
+				english_seen = true;
+				break;
 
 			case CHUNKID_TRANSLATED_STRING:
 			{
@@ -218,7 +227,9 @@ TDBObjClass::Load (ChunkLoadClass &cload)
 				//	Load the translated string from its chunk
 				//
 				WideStringClass string;
-				cload.Read (string.Get_Buffer((cload.Cur_Chunk_Length () + 1) / 2), cload.Cur_Chunk_Length ());
+				const uint32 byte_count = cload.Cur_Chunk_Length ();
+				if ((byte_count & 1U) != 0U || cload.Read(string.Get_Buffer((byte_count + 1) / 2),
+					byte_count) != byte_count) loaded = false;
 
 				//
 				//	Add the translated string to our list
@@ -228,18 +239,22 @@ TDBObjClass::Load (ChunkLoadClass &cload)
 			break;
 			
 			case CHUNKID_BASE_CLASS:
-				PersistClass::Load (cload);
+				if (base_seen || !PersistClass::Load (cload)) loaded = false;
+				base_seen = true;
 				break;
 			
 			case CHUNKID_VARIABLES:
-				Load_Variables (cload);
+				if (variables_seen || !Load_Variables (cload)) loaded = false;
+				variables_seen = true;
 				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && base_seen && variables_seen && english_seen &&
+		ID >= TranslateDBClass::ID_MIN && ID <= TranslateDBClass::ID_MAX &&
+		!IDDesc.Is_Empty() && !cload.Has_Error();
 }
 
 
@@ -268,17 +283,37 @@ TDBObjClass::Save_Variables (ChunkSaveClass &csave)
 //	Load_Variables
 //
 /////////////////////////////////////////////////////////////////
-void
+bool
 TDBObjClass::Load_Variables (ChunkLoadClass &cload)
 {	
+	unsigned int fields_seen = 0;
+	bool loaded = true;
 	while (cload.Open_Micro_Chunk ()) {
 		switch (cload.Cur_Micro_Chunk_ID ()) {			
-			READ_MICRO_CHUNK					(cload, VARID_ID,					ID);
-			READ_MICRO_CHUNK					(cload, VARID_SOUND_ID,			SoundID);	
-			READ_MICRO_CHUNK					(cload, VARID_CATEGORY_ID,		CategoryID);
-			READ_MICRO_CHUNK_WWSTRING		(cload, VARID_ID_DESC,			IDDesc);
-			READ_MICRO_CHUNK_WWSTRING		(cload, VARID_ENGLISH_STRING,	EnglishString);
-			READ_MICRO_CHUNK_WWSTRING		(cload, VARID_ANIMATION_NAME,	AnimationName);
+			case VARID_ID:
+				if ((fields_seen & 0x01U) || cload.Cur_Micro_Chunk_Length() != sizeof(ID) ||
+					cload.Read(&ID, sizeof(ID)) != sizeof(ID)) loaded = false;
+				fields_seen |= 0x01U; break;
+			case VARID_SOUND_ID:
+				if ((fields_seen & 0x02U) || cload.Cur_Micro_Chunk_Length() != sizeof(SoundID) ||
+					cload.Read(&SoundID, sizeof(SoundID)) != sizeof(SoundID)) loaded = false;
+				fields_seen |= 0x02U; break;
+			case VARID_CATEGORY_ID:
+				if ((fields_seen & 0x04U) || cload.Cur_Micro_Chunk_Length() != sizeof(CategoryID) ||
+					cload.Read(&CategoryID, sizeof(CategoryID)) != sizeof(CategoryID)) loaded = false;
+				fields_seen |= 0x04U; break;
+			case VARID_ID_DESC:
+				if ((fields_seen & 0x08U) || cload.Read(IDDesc.Get_Buffer(cload.Cur_Micro_Chunk_Length()),
+					cload.Cur_Micro_Chunk_Length()) != cload.Cur_Micro_Chunk_Length()) loaded = false;
+				fields_seen |= 0x08U; break;
+			case VARID_ENGLISH_STRING:
+				if ((fields_seen & 0x10U) || cload.Read(EnglishString.Get_Buffer(cload.Cur_Micro_Chunk_Length()),
+					cload.Cur_Micro_Chunk_Length()) != cload.Cur_Micro_Chunk_Length()) loaded = false;
+				fields_seen |= 0x10U; break;
+			case VARID_ANIMATION_NAME:
+				if ((fields_seen & 0x20U) || cload.Read(AnimationName.Get_Buffer(cload.Cur_Micro_Chunk_Length()),
+					cload.Cur_Micro_Chunk_Length()) != cload.Cur_Micro_Chunk_Length()) loaded = false;
+				fields_seen |= 0x20U; break;
 
 			case VARID_STRING:
 			{
@@ -286,7 +321,9 @@ TDBObjClass::Load_Variables (ChunkLoadClass &cload)
 				//	Load the translated string from its chunk
 				//
 				WideStringClass string;
-				cload.Read (string.Get_Buffer((cload.Cur_Micro_Chunk_Length () + 1) / 2), cload.Cur_Micro_Chunk_Length ());
+				const uint32 byte_count = cload.Cur_Micro_Chunk_Length ();
+				if ((byte_count & 1U) != 0U || cload.Read(string.Get_Buffer((byte_count + 1) / 2),
+					byte_count) != byte_count) loaded = false;
 
 				//
 				//	Add the translated string to our list
@@ -299,7 +336,7 @@ TDBObjClass::Load_Variables (ChunkLoadClass &cload)
 		cload.Close_Micro_Chunk ();
 	}
 
-	return ;
+	return loaded && (fields_seen & 0x0FU) == 0x0FU && !cload.Has_Error();
 }
 
 

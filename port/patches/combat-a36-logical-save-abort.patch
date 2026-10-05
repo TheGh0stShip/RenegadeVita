@@ -1,0 +1,93 @@
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -128,6 +128,7 @@
+ #endif
+ 
+ 	ChunkSaveClass csave(file);
++	bool save_succeeded = true;
+ 
+ 	csave.Begin_Chunk( CHUNKID_LEVEL_INFO );
+ 		WRITE_MICRO_CHUNK_WWSTRING( csave,		MICROCHUNKID_MAP_FILENAME,			MapFilename );
+@@ -140,22 +141,22 @@
+ 		_ConversationMgrSaveLoad.Set_Category_To_Save (ConversationMgrClass::CATEGORY_LEVEL);
+ 
+ 		RV_SAVE_PHASE("combat-begin");
+-		SaveLoadSystemClass::Save( csave, _CombatSaveLoad );
++		save_succeeded = SaveLoadSystemClass::Save( csave, _CombatSaveLoad ) && save_succeeded;
+ 		RV_SAVE_PHASE("combat-end");
+ 		RV_SAVE_PHASE("conversations-begin");
+-		SaveLoadSystemClass::Save( csave, _ConversationMgrSaveLoad );
++		save_succeeded = SaveLoadSystemClass::Save( csave, _ConversationMgrSaveLoad ) && save_succeeded;
+ 		RV_SAVE_PHASE("conversations-end");
+ 		RV_SAVE_PHASE("physics-begin");
+-		SaveLoadSystemClass::Save( csave, _PhysDynamicSaveSystem );
++		save_succeeded = SaveLoadSystemClass::Save( csave, _PhysDynamicSaveSystem ) && save_succeeded;
+ 		RV_SAVE_PHASE("physics-end");
+ 		RV_SAVE_PHASE("encyclopedia-begin");
+-		SaveLoadSystemClass::Save( csave, _TheEncyclopediaMgrSaveLoadSubsystem );
++		save_succeeded = SaveLoadSystemClass::Save( csave, _TheEncyclopediaMgrSaveLoadSubsystem ) && save_succeeded;
+ 		RV_SAVE_PHASE("encyclopedia-end");
+ 		RV_SAVE_PHASE("audio-begin");
+-		SaveLoadSystemClass::Save( csave, _DynamicAudioSaveLoadSubsystem );
++		save_succeeded = SaveLoadSystemClass::Save( csave, _DynamicAudioSaveLoadSubsystem ) && save_succeeded;
+ 		RV_SAVE_PHASE("audio-end");
+ 		RV_SAVE_PHASE("map-begin");
+-		SaveLoadSystemClass::Save( csave, _TheMapMgrSaveLoadSubsystem );
++		save_succeeded = SaveLoadSystemClass::Save( csave, _TheMapMgrSaveLoadSubsystem ) && save_succeeded;
+ 		RV_SAVE_PHASE("map-end");
+ 
+ 		va_list arg_list;
+@@ -165,7 +166,7 @@
+ 		while ( !done ) {
+ 			SaveLoadSubSystemClass * sub_system = va_arg( arg_list, SaveLoadSubSystemClass * );
+ 			if ( sub_system != NULL ) {
+-				SaveLoadSystemClass::Save( csave, *sub_system );
++				save_succeeded = SaveLoadSystemClass::Save( csave, *sub_system ) && save_succeeded;
+ 			} else {
+ 				done = true;
+ 			}
+@@ -175,10 +176,15 @@
+ 	csave.End_Chunk();
+ 
+ 	RV_SAVE_PHASE("close-begin");
++#if defined(RENEGADE_VITA_PORT)
++	if (!save_succeeded) {
++		file->Abort_Write();
++	}
++#endif
+ 	file->Close();
+ 	RV_SAVE_PHASE("close-end");
+ #if defined(RENEGADE_VITA_PORT)
+-	LastSaveWriteSucceeded = !file->Has_Write_Failed();
++	LastSaveWriteSucceeded = save_succeeded && !file->Has_Write_Failed();
+ 	RV_SAVE_PHASE(LastSaveWriteSucceeded ? "write-complete" : "write-failed");
+ #endif
+ 
+@@ -672,6 +678,7 @@
+ 	WWASSERT(file);
+ 	file->Open(FileClass::WRITE);
+ 	ChunkSaveClass csave(file);
++	bool save_succeeded = true;
+ 
+ 	va_list arg_list;
+ 	va_start( arg_list, filename );
+@@ -679,13 +686,18 @@
+ 	while ( !done ) {
+ 		SaveLoadSubSystemClass * sub_system = va_arg( arg_list, SaveLoadSubSystemClass * );
+ 		if ( sub_system != NULL ) {
+-			SaveLoadSystemClass::Save( csave, *sub_system );
++			save_succeeded = SaveLoadSystemClass::Save( csave, *sub_system ) && save_succeeded;
+ 		} else {
+ 			done = true;
+ 		}
+ 	}
+ 	va_end (arg_list);
+ 
++#if defined(RENEGADE_VITA_PORT)
++	if (!save_succeeded) {
++		file->Abort_Write();
++	}
++#endif
+ 	file->Close();
+ 	_TheWritingFileFactory->Return_File(file);
+ }

@@ -171,9 +171,11 @@ RenegadeRootedFileClass::RenegadeRootedFileClass(const RenegadePathRoots &roots,
 	const char *logical_name) : Roots(roots), LastResolution(),
 	PhysicalNamePrepared(false), PreparedAccess(RENEGADE_PATH_READ),
 	NativeProbeForced(false), StagedData(NULL), StagedSize(0), StagedCapacity(0),
-	StagedPosition(0), Staging(false)
+	StagedPosition(0), Staging(false), WriteFailed(false), AtomicWrite(false)
 {
 	LogicalName[0] = 0;
+	AtomicTarget[0] = 0;
+	AtomicTemporary[0] = 0;
 	Set_Name(logical_name);
 	// Original MixFileFactoryClass applies RawFileClass::Bias immediately after
 	// Get_File and before Open. Prepare the physical read name here so a later
@@ -246,6 +248,9 @@ int RenegadeRootedFileClass::Open(char const *filename, int rights)
 int RenegadeRootedFileClass::Open(int rights)
 {
 	g_file_factory_counters.open_attempts.fetch_add(1U, std::memory_order_relaxed);
+	// Commit or close a prior use of this reusable FileClass before replacing
+	// its atomic target metadata for the new logical open.
+	if (Staging || AtomicWrite || Is_Open()) Close();
 	if (!Resolve_And_Set_Physical_Name(rights)) {
 		g_file_factory_counters.open_failures.fetch_add(1U, std::memory_order_relaxed);
 		return false;
@@ -260,11 +265,34 @@ int RenegadeRootedFileClass::Open(int rights)
 		g_file_factory_counters.open_failures.fetch_add(1U, std::memory_order_relaxed);
 		return false;
 	}
-	// RawFileClass::Open closes (and so writes out) any previous staged file.
+	AtomicWrite = false;
+	AtomicTarget[0] = 0;
+	AtomicTemporary[0] = 0;
+	if ((rights & FileClass::WRITE) != 0) {
+		// Keep an existing save/configuration intact until the complete staged
+		// stream has reached a sibling file and closed successfully. The sibling
+		// path stays on the same Vita filesystem so rename is an atomic replace.
+		const int target_length = snprintf(AtomicTarget, sizeof(AtomicTarget), "%s",
+			LastResolution.physical);
+		const int temporary_length = snprintf(AtomicTemporary, sizeof(AtomicTemporary),
+			"%s.pending", LastResolution.physical);
+		if (target_length <= 0 || target_length >= static_cast<int>(sizeof(AtomicTarget)) ||
+			temporary_length <= 0 || temporary_length >= static_cast<int>(sizeof(AtomicTemporary))) {
+			WriteFailed = true;
+			g_file_factory_counters.open_failures.fetch_add(1U, std::memory_order_relaxed);
+			return false;
+		}
+		BufferedFileClass::Set_Name(AtomicTemporary);
+		AtomicWrite = true;
+	}
+	// RawFileClass::Open closes (and so commits) any previous staged file.
 	const int opened = BufferedFileClass::Open(rights);
+	if (opened) WriteFailed = false;
 	if (!opened) {
+		if (AtomicWrite) BufferedFileClass::Set_Name(AtomicTarget);
+		AtomicWrite = false;
 		g_file_factory_counters.open_failures.fetch_add(1U, std::memory_order_relaxed);
-	} else if (rights == FileClass::WRITE) {
+	} else if ((rights & FileClass::WRITE) != 0) {
 		// Each ChunkSaveClass chunk seeks back to patch its header, and every
 		// seek flushes stdio: a save became thousands of small card writes and
 		// seeks on the game thread. The file is created and truncated now, as
@@ -322,6 +350,7 @@ bool RenegadeRootedFileClass::Flush_Staged_Writes(void)
 	StagedSize = 0;
 	StagedCapacity = 0;
 	StagedPosition = 0;
+	if (!written) WriteFailed = true;
 	return written;
 }
 
@@ -347,6 +376,22 @@ void RenegadeRootedFileClass::Close(void)
 {
 	if (Staging) (void)Flush_Staged_Writes();
 	BufferedFileClass::Close();
+	if (AtomicWrite) {
+		if (!WriteFailed && rename(AtomicTemporary, AtomicTarget) != 0) {
+			WriteFailed = true;
+		}
+		if (WriteFailed) remove(AtomicTemporary);
+		BufferedFileClass::Set_Name(AtomicTarget);
+		AtomicWrite = false;
+	}
+}
+
+void RenegadeRootedFileClass::Error(int error, int canretry, char const *filename)
+{
+	// RawFileClass reports short writes, seek errors and fclose failure through
+	// this virtual callback. Retain them through Close for the save owner.
+	if (PreparedAccess == RENEGADE_PATH_WRITE) WriteFailed = true;
+	BufferedFileClass::Error(error, canretry, filename);
 }
 
 int RenegadeRootedFileClass::Read(void *buffer, int size)
@@ -364,6 +409,9 @@ int RenegadeRootedFileClass::Write(void const *buffer, int size)
 {
 	g_file_factory_counters.write_calls.fetch_add(1U, std::memory_order_relaxed);
 	int bytes_written = 0;
+	// A failed staged flush lost previously accepted bytes. Only a successful
+	// reopen starts a new write session; later chunk writes cannot repair it.
+	if (WriteFailed) return 0;
 	if (Staging && Stage_Write(buffer, size)) {
 		bytes_written = size;
 	} else {
@@ -371,7 +419,9 @@ int RenegadeRootedFileClass::Write(void const *buffer, int size)
 			// Out of memory: write what is staged and continue directly.
 			g_file_factory_counters.staged_write_fallbacks.fetch_add(1U,
 				std::memory_order_relaxed);
-			(void)Flush_Staged_Writes();
+			// Do not report the next write as successful after losing part of
+			// the already-accepted save or failing to restore its cursor.
+			if (!Flush_Staged_Writes()) return 0;
 		}
 		bytes_written = BufferedFileClass::Write(buffer, size);
 	}

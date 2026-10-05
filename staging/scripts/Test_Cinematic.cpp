@@ -768,6 +768,12 @@ public:
 
 
 		GameObject * to = Commands->Find_Object( to_id );
+		#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		if (stricmp(Get_Parameter("ControlFilename"), "X0Z_Finale.txt") == 0) {
+			A30_Vita_Log("M13 finale: cinematic Send_Custom target=%d resolved=%d type=%d param=%d\n",
+				to_id, to != NULL ? 1 : 0, type, parameter);
+		}
+		#endif
 		if ( to ) {
 			Commands->Send_Custom_Event( Owner(), to, type, parameter );
 		} else {

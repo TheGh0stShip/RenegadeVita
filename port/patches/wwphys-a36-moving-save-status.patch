@@ -1,0 +1,275 @@
+--- a/movephys.cpp
++++ b/movephys.cpp
+@@ -408,7 +408,7 @@
+ bool MoveablePhysClass::Save(ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(MOVEABLE_CHUNK_DYNAMICPHYS);
+-	DynamicPhysClass::Save(csave);
++	if (!DynamicPhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(MOVEABLE_CHUNK_VARIABLES);
+@@ -427,7 +427,7 @@
+ 	}
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/rbody.cpp
++++ b/rbody.cpp
+@@ -2096,7 +2096,7 @@
+ bool RigidBodyClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(RBODY_CHUNK_MOVEABLE);
+-	MoveablePhysClass::Save(csave);
++	if (!MoveablePhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 	
+ 	uint32 ode_ptr_token = static_cast<uint32>(
+@@ -2111,7 +2111,7 @@
+ 	WRITE_MICRO_CHUNK(csave,RBODY_VARIABLE_STATE_AMOMENTUM,State.AMomentum);
+ 	WRITE_MICRO_CHUNK(csave,RBODY_VARIABLE_CONTACT_LENGTH,ContactThickness);
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool RigidBodyClass::Load (ChunkLoadClass &cload)
+--- a/vehiclephys.cpp
++++ b/vehiclephys.cpp
+@@ -706,14 +706,14 @@
+ bool VehiclePhysClass::Save(ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(VEHICLEPHYS_CHUNK_RIGIDBODY);
+-	RigidBodyClass::Save(csave);
++	if (!RigidBodyClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(VEHICLEPHYS_CHUNK_VARIABLES);
+ 	WRITE_MICRO_CHUNK(csave,VEHICLEPHYS_VARIABLE_ISENGINEON,IsEngineOn);
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool VehiclePhysClass::Load(ChunkLoadClass &cload)
+--- a/motorvehicle.cpp
++++ b/motorvehicle.cpp
+@@ -234,7 +234,7 @@
+ bool MotorVehicleClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(MOTO_CHUNK_VEHICLEPHYS);
+-	VehiclePhysClass::Save(csave);
++	if (!VehiclePhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(MOTO_CHUNK_VARIABLES);
+@@ -242,7 +242,7 @@
+ 	WRITE_MICRO_CHUNK(csave,MOTO_VARIABLE_CURRENTGEAR,CurrentGear);
+ 	WRITE_MICRO_CHUNK(csave,MOTO_VARIABLE_SHIFTIMER,ShiftTimer);
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool MotorVehicleClass::Load (ChunkLoadClass &cload)
+--- a/wheelvehicle.cpp
++++ b/wheelvehicle.cpp
+@@ -200,13 +200,13 @@
+ bool WheeledVehicleClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(WHEELEDVEHICLE_CHUNK_MOTORVEHICLE);
+-	MotorVehicleClass::Save(csave);
++	if (!MotorVehicleClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(WHEELEDVEHICLE_CHUNK_VARIABLES);
+ 	WRITE_MICRO_CHUNK(csave,WV_VARIABLE_STEERINGANGLE,SteeringAngle);
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool WheeledVehicleClass::Load (ChunkLoadClass &cload)
+--- a/trackedvehicle.cpp
++++ b/trackedvehicle.cpp
+@@ -429,10 +429,10 @@
+ bool TrackedVehicleClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(TRACKEDVEHICLE_CHUNK_VEHICLEPHYS);
+-	VehiclePhysClass::Save(csave);
++	if (!VehiclePhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool TrackedVehicleClass::Load (ChunkLoadClass &cload)
+--- a/vtolvehicle.cpp
++++ b/vtolvehicle.cpp
+@@ -399,10 +399,10 @@
+ bool VTOLVehicleClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(VTOLVEHICLE_CHUNK_VEHICLEPHYS);
+-	VehiclePhysClass::Save(csave);
++	if (!VehiclePhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool VTOLVehicleClass::Load (ChunkLoadClass &cload)
+--- a/phys3.cpp
++++ b/phys3.cpp
+@@ -2481,7 +2481,7 @@
+ bool Phys3Class::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(PHYS3_CHUNK_MOVEABLEPHYS);
+-	MoveablePhysClass::Save(csave);
++	if (!MoveablePhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(PHYS3_CHUNK_VARIABLES);
+@@ -2499,7 +2499,7 @@
+ 	WRITE_MICRO_CHUNK(csave,PHYS3_VARIABLE_VELOCITY,State.Velocity);
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool Phys3Class::Load (ChunkLoadClass &cload)
+--- a/humanphys.cpp
++++ b/humanphys.cpp
+@@ -542,14 +542,14 @@
+ bool HumanPhysClass::Save(ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(HUMANPHYS_CHUNK_PHYS3);
+-	Phys3Class::Save(csave);
++	if (!Phys3Class::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(HUMANPHYS_CHUNK_VARIABLES);
+ 	WRITE_MICRO_CHUNK(csave,HUMANPHYS_VARIABLE_JUSTJUMPED,JustJumped);
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/projectile.cpp
++++ b/projectile.cpp
+@@ -451,7 +451,7 @@
+ bool ProjectileClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(PROJECTILE_CHUNK_MOVEABLEPHYS);
+-	MoveablePhysClass::Save(csave);
++	if (!MoveablePhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(PROJECTILE_CHUNK_VARIABLES);
+@@ -465,7 +465,7 @@
+ 	WRITE_MICRO_CHUNK(csave,PROJECTILE_VARIABLE_BOUNCECOUNT,BounceCount);
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool ProjectileClass::Load (ChunkLoadClass &cload)
+--- a/decophys.cpp
++++ b/decophys.cpp
+@@ -193,10 +193,10 @@
+ bool DecorationPhysClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(DECOPHYS_CHUNK_DYNAMICPHYS);
+-	DynamicPhysClass::Save(csave);
++	if (!DynamicPhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool DecorationPhysClass::Load (ChunkLoadClass &cload)
+--- a/renderobjphys.cpp
++++ b/renderobjphys.cpp
+@@ -163,10 +163,10 @@
+ bool RenderObjPhysClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(RENDEROBJPHYS_CHUNK_DYNAMICPHYS);
+-	DynamicPhysClass::Save(csave);
++	if (!DynamicPhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool RenderObjPhysClass::Load (ChunkLoadClass &cload)
+--- a/timeddecophys.cpp
++++ b/timeddecophys.cpp
+@@ -124,14 +124,14 @@
+ bool TimedDecorationPhysClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(TIMEDDECOPHYS_CHUNK_DECOPHYS);
+-	DecorationPhysClass::Save(csave);
++	if (!DecorationPhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(TIMEDDECOPHYS_CHUNK_VARIABLES);
+ 	WRITE_MICRO_CHUNK(csave,TIMEDDECOPHYS_VARIABLE_LIFETIME,Lifetime);
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool TimedDecorationPhysClass::Load (ChunkLoadClass &cload)
+--- a/dynamicanimphys.cpp
++++ b/dynamicanimphys.cpp
+@@ -162,14 +162,14 @@
+ bool DynamicAnimPhysClass::Save(ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(DYNAMICANIMPHYS_CHUNK_DECOPHYS);
+-	DecorationPhysClass::Save(csave);
++	if (!DecorationPhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(DYNAMICANIMPHYS_CHUNK_ANIMMANAGER);
+-	AnimManager.Save(csave);
++	if (!AnimManager.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 	
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool DynamicAnimPhysClass::Load(ChunkLoadClass &cload)
+--- a/motorcycle.cpp
++++ b/motorcycle.cpp
+@@ -165,14 +165,14 @@
+ bool MotorcycleClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(MOTORCYCLE_CHUNK_WHEELEDVEHICLE);
+-	WheeledVehicleClass::Save(csave);
++	if (!WheeledVehicleClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(MOTORCYCLE_CHUNK_VARIABLES);
+ 	WRITE_MICRO_CHUNK(csave,MOTORCYCLE_VARIABLE_LEANK0,LeanK0);
+ 	WRITE_MICRO_CHUNK(csave,MOTORCYCLE_VARIABLE_LEANK1,LeanK1);
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool MotorcycleClass::Load (ChunkLoadClass &cload)
+

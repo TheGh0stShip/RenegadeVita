@@ -158,36 +158,42 @@ bool	ReferenceableClass<T>::Save( ChunkSaveClass & csave )
 	csave.Begin_Chunk( CHUNKID_REF_VARIABLES );
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_PTR, ptr_token );
 	csave.End_Chunk();
-	return true;
+	return !csave.Has_Error();
 }
 
 template<class T>
 bool	ReferenceableClass<T>::Load( ChunkLoadClass & cload )
 {
 	uint32 old_ptr_token = 0;
-	cload.Open_Chunk();
-	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_REF_VARIABLES );
+	bool variables_seen = false;
+	bool pointer_seen = false;
+	bool loaded = true;
 
 	WWASSERT( ReferencerListHead == NULL );
 
-	while (cload.Open_Micro_Chunk()) {
-		switch(cload.Cur_Micro_Chunk_ID()) {
-			case MICROCHUNKID_PTR:
-				cload.Read(&old_ptr_token,sizeof(old_ptr_token));
-				if (old_ptr_token != 0) {
-					SaveLoadSystemClass::Register_Pointer(
-						reinterpret_cast<void *>(static_cast<uintptr_t>(old_ptr_token)),
-						this);
+	while (cload.Open_Chunk()) {
+		if (cload.Cur_Chunk_ID() != CHUNKID_REF_VARIABLES || variables_seen) {
+			loaded = false;
+		} else {
+			variables_seen = true;
+			while (cload.Open_Micro_Chunk()) {
+				if (cload.Cur_Micro_Chunk_ID() != MICROCHUNKID_PTR || pointer_seen ||
+					cload.Cur_Micro_Chunk_Length() != sizeof(old_ptr_token) ||
+					cload.Read(&old_ptr_token, sizeof(old_ptr_token)) != sizeof(old_ptr_token)) {
+					loaded = false;
+				} else {
+					pointer_seen = true;
 				}
-				break;
-
-			default:
-//				Debug_Say(( "Unrecognized REFLIST Variable chunkID\n" ));
-				break;
+				cload.Close_Micro_Chunk();
+			}
 		}
-		cload.Close_Micro_Chunk();
+		cload.Close_Chunk();
 	}
-	cload.Close_Chunk();
+	loaded = loaded && variables_seen && pointer_seen && old_ptr_token != 0 && !cload.Has_Error();
+	if (!loaded) return false;
+
+	SaveLoadSystemClass::Register_Pointer(
+		reinterpret_cast<void *>(static_cast<uintptr_t>(old_ptr_token)), this);
 
 	return true;
 }

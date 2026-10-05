@@ -1,0 +1,34 @@
+--- a/scripts.cpp
++++ b/scripts.cpp
+@@ -357,5 +357,9 @@
+ 	for (int index = 0; index < ActiveScriptList.Count(); index++) {
+ 		ScriptClass* script = ActiveScriptList[ index ];
++		if (script == NULL) {
++			csave.Report_Error();
++			continue;
++		}
+ 
+ 		csave.Begin_Chunk( CHUNKID_SCRIPT_ENTRY );
+ 		csave.Begin_Chunk( CHUNKID_SCRIPT_HEADER );
+@@ -393,7 +397,7 @@
+ 
+ 		csave.End_Chunk();
+ 	}
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/scriptcommands.cpp
++++ b/scriptcommands.cpp
+@@ -1605,6 +1605,10 @@
+ */
+ void	Save_Data( ScriptSaver & saver, int id, int size, void * data )
+ {
++	if (data == NULL || size < 0 || size > 250) {
++		saver.CSave.Report_Error();
++		return;
++	}
+ 	SCRIPT_PTR_CHECK( data );
+ 	saver.CSave.Begin_Micro_Chunk(id);
+ 	saver.CSave.Write(data,size);

@@ -1,0 +1,28 @@
+--- a/gameobjmanager.cpp
++++ b/gameobjmanager.cpp
+@@ -425,1 +425,1 @@
+-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
+@@ -443,1 +443,1 @@
+-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
+@@ -450,1 +450,1 @@
+-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
+@@ -474,1 +474,1 @@
+-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
+@@ -478,1 +478,1 @@
+-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
+@@ -483,1 +483,1 @@
+-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
+--- a/vehicle.cpp
++++ b/vehicle.cpp
+@@ -2108,1 +2108,1 @@
+-#if defined(__vita__)
++#if defined(__vita__) && defined(RENEGADE_VITA_DETAILED_TIMING)
+@@ -2117,1 +2117,1 @@
+-#if defined(__vita__)
++#if defined(__vita__) && defined(RENEGADE_VITA_DETAILED_TIMING)

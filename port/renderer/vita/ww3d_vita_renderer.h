@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 class MeshClass;
+class MaterialPassClass;
 class RenderInfoClass;
 class RenderObjClass;
 class ShaderClass;
@@ -163,9 +164,12 @@ enum IndexedSubmissionResult {
 
 bool Initialize();
 void Shutdown();
-void Begin_Frame(float red, float green, float blue);
+void Begin_Frame(bool clear_color, bool clear_depth, float red, float green,
+	float blue);
 void End_Frame(bool present);
 void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info);
+bool Submit_Material_Pass(MeshClass &mesh, MaterialPassClass &material_pass,
+	RenderInfoClass &render_info);
 // GPU-resident static mesh streams follow the original DX8 mesh renderer's
 // registration lifetime: DX8MeshRendererClass::Invalidate() drops all of
 // them, and model or user-lighting destruction drops the matching entries.
@@ -228,6 +232,10 @@ void Record_Texture_Checkerboard_Bind();
 void Record_Texture_Upload(uint64_t resident_bytes);
 void Record_Texture_Release(uint64_t resident_bytes);
 void Invalidate_Texture_State_Cache();
+bool Bind_Offscreen_Render_Target(uint32_t framebuffer, uint32_t width,
+	uint32_t height);
+bool Restore_Default_Render_Target();
+bool Get_Active_Render_Target_Size(uint32_t *width, uint32_t *height);
 bool Use_Direct_Text_Atlas_Upload();
 bool Use_Native_DDS_Upload();
 bool Bind_Texture(uint32_t native_texture, bool valid);

@@ -1,0 +1,34 @@
+--- a/renegadedialogmgr.cpp
++++ b/renegadedialogmgr.cpp
+@@ -52,6 +52,9 @@
+ #include "dlgpreviewoptions.h"
+ #include "dlgcredits.h"
+ #endif
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++#include "dlgcredits.h"
++#endif
+ #include "inputctrl.h"
+ #include "translatedb.h"
+ #include "string_ids.h"
+@@ -126,5 +129,5 @@
+ 	NULL,
+ 	NULL,
+-	NULL,
++	new DialogFactoryClass<CreditsMenuClass>,
+ 	new DialogFactoryClass<QuitVerificationDialogClass>,
+ 	NULL,
+@@ -276,2 +279,4 @@
+ 		FactoryArray[IDC_MENU_LOAD_SP_GAME_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<LoadSPGameMenuClass>;
++	if (FactoryArray[IDC_MENU_CREDITS_BUTTON - DIALOG_LINK_FIRST] == NULL)
++		FactoryArray[IDC_MENU_CREDITS_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<CreditsMenuClass>;
+ 	if (FactoryArray[IDC_MENU_QUIT_BUTTON - DIALOG_LINK_FIRST] == NULL)
+--- a/dialogtests.cpp
++++ b/dialogtests.cpp
+@@ -112,7 +112,6 @@
+ 	const int unsupported_options[] = {
+ 		IDC_MENU_CONTROLS_BUTTON,
+ 		IDC_MENU_MOVIES_BUTTON,
+-		IDC_MENU_CREDITS_BUTTON,
+ 		IDC_MENU_MULTIPLAY_OPTS_BUTTON
+ 	};
+ 	for (unsigned index = 0; index < sizeof(unsupported_options) / sizeof(unsupported_options[0]); ++index) {

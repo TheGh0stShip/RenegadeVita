@@ -154,9 +154,10 @@ bool Start_Runtime_Log_Writer()
 bool Renegade_Runtime_Log_Enqueue(const char *line, unsigned length)
 {
 	if (!Start_Runtime_Log_Writer()) return false;
+	if (g_runtime_log_ring.Failed()) return false;
 	// A full ring drops (and later reports) rather than stalling the game.
 	(void)g_runtime_log_ring.Enqueue(line, length);
-	return true;
+	return !g_runtime_log_ring.Failed();
 }
 
 void Renegade_Runtime_Log_Flush()

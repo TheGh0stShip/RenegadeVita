@@ -54,6 +54,9 @@
 #include "god.h"
 #include "dlgloadspgame.h"
 #include "ccamera.h"
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+#include "a4_frontend_lifecycle_boundary.h"
+#endif
 
 /*
 **
@@ -84,6 +87,13 @@ DynamicVectorClass<BackdropDescriptionStruct>	BackdropDescriptions;
 */
 void	CampaignManager::Init( void )
 {
+	// Init can be reached again after frontend recovery without a process
+	// restart. These catalogs are process globals, so rebuilding them on top
+	// of an earlier generation would duplicate the retail campaign sequence
+	// and its backdrop records. Treat each Init as a fresh parse while leaving
+	// campaign.ini as the sole owner of ordering and content.
+	CampaignFlowDescriptions.Clear();
+	BackdropDescriptions.Clear();
 	State = NOT_IN_CAMPAIGN_STATE;
 	BackdropIndex = 0;
 
@@ -124,6 +134,75 @@ void	CampaignManager::Init( void )
 
 }
 
+bool CampaignManager::Is_Catalog_Ready(void)
+{
+	// Campaign order remains data-owned. Admit only the directive forms that
+	// Continue can parse; malformed data must not reach progression indexing.
+	if (CampaignFlowDescriptions.Count() <= 0 || BackdropDescriptions.Count() <= 0) {
+		return false;
+	}
+	for (int index = 0; index < CampaignFlowDescriptions.Count(); ++index) {
+		const char *description = CampaignFlowDescriptions[index];
+		if (description == NULL || description[0] == '\0') return false;
+		if (::strncmp(description, "Message ", 8) == 0) {
+			if (description[8] == '\0') return false;
+		} else if (::strncmp(description, "Score", 5) == 0) {
+			// Continue intentionally accepts the released Score prefix.
+		} else if (::strncmp(description, "Level ", 6) == 0) {
+			char map[96] = {};
+			char trailing = '\0';
+			if (::sscanf(description + 6, "%95s %c", map, &trailing) != 1 ||
+				map[0] == '\0' || ::strchr(map, '.') == NULL) return false;
+		} else if (::strncmp(description, "Movie ", 6) == 0) {
+			char movie[96] = {};
+			char unlock[96] = {};
+			if (::sscanf(description + 6, "%95s %95s", movie, unlock) != 2 ||
+				movie[0] == '\0' || unlock[0] == '\0') return false;
+		} else {
+			return false;
+		}
+	}
+	for (int index = 0; index < BackdropDescriptions.Count(); ++index) {
+		if (BackdropDescriptions[index].Lines.Count() <= 0) return false;
+	}
+	return true;
+}
+
+bool CampaignManager::Current_Level_Matches_Archive(const char *archive)
+{
+	if (archive == NULL || archive[0] == '\0' ||
+		State < 0 || State >= CampaignFlowDescriptions.Count()) {
+		return false;
+	}
+	const char *description = CampaignFlowDescriptions[State];
+	if (description == NULL || ::strncmp(description, "Level ", 6) != 0) {
+		return false;
+	}
+	char map[96] = {};
+	char trailing = '\0';
+	if (::sscanf(description + 6, "%95s %c", map, &trailing) != 1) {
+		return false;
+	}
+	return ::stricmp(map, archive) == 0;
+}
+
+bool CampaignManager::Loaded_Save_State_Matches_Archive(const char *archive)
+{
+	if (archive == NULL || archive[0] == '\0') return false;
+	if (State == NOT_IN_CAMPAIGN_STATE) {
+		// The original Tutorial is outside campaign.ini but may be saved.
+		return ::stricmp(archive, "M00_Tutorial.mix") == 0;
+	}
+	if (State == REPLAY_LEVEL) {
+		// Replay has no campaign-flow index; the save header owns its map.
+		return true;
+	}
+	if (State == REPLAY_SCORE) {
+		// This intermission-only state cannot own a gameplay save.
+		return false;
+	}
+	return Current_Level_Matches_Archive(archive);
+}
 
 /*
 **
@@ -154,20 +233,43 @@ bool CampaignManager::Save(ChunkSaveClass & csave)
 		WRITE_MICRO_CHUNK(csave, MICROCHUNK_STATE, State);
 		WRITE_MICRO_CHUNK(csave, MICROCHUNK_BACKDROP_INDEX, BackdropIndex);
 	csave.End_Chunk();
-	return true;
+	return !csave.Has_Error();
 }
 
 //-----------------------------------------------------------------------------
 bool CampaignManager::Load(ChunkLoadClass &cload)
 {
+	const int missing_value = (-2147483647 - 1);
+	int loaded_state = missing_value;
+	int loaded_backdrop_index = missing_value;
+	bool variables_seen = false;
+	bool state_seen = false;
+	bool backdrop_seen = false;
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
+				if (variables_seen) loaded = false;
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						READ_MICRO_CHUNK(cload, MICROCHUNK_STATE, State);
-						READ_MICRO_CHUNK(cload, MICROCHUNK_BACKDROP_INDEX, BackdropIndex);
+						case MICROCHUNK_STATE:
+							if (state_seen || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_state)) loaded = false;
+							else {
+								state_seen = true;
+								loaded = cload.Read(&loaded_state, sizeof(loaded_state)) ==
+									sizeof(loaded_state) && loaded;
+							}
+							break;
+						case MICROCHUNK_BACKDROP_INDEX:
+							if (backdrop_seen || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_backdrop_index)) loaded = false;
+							else {
+								backdrop_seen = true;
+								loaded = cload.Read(&loaded_backdrop_index,
+									sizeof(loaded_backdrop_index)) == sizeof(loaded_backdrop_index) && loaded;
+							}
+							break;
 						default:
 							Debug_Say(( "Unrecognized Campaign Variable chunkID\n" ));
 							break;
@@ -183,6 +285,21 @@ bool CampaignManager::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
+	const bool state_valid = loaded_state == NOT_IN_CAMPAIGN_STATE ||
+		loaded_state == REPLAY_LEVEL || loaded_state == REPLAY_SCORE ||
+		(loaded_state >= -1 && loaded_state < CampaignFlowDescriptions.Count());
+	const bool backdrop_valid = loaded_backdrop_index >= 0 &&
+		loaded_backdrop_index < BackdropDescriptions.Count();
+	if (!loaded || !variables_seen || !state_seen || !backdrop_seen ||
+		loaded_state == missing_value || loaded_backdrop_index == missing_value ||
+		!state_valid || !backdrop_valid) {
+		Debug_Say(("CampaignManager::Load - invalid campaign state=%d backdrop=%d flow=%d backdrops=%d\n",
+			loaded_state, loaded_backdrop_index, CampaignFlowDescriptions.Count(),
+			BackdropDescriptions.Count()));
+		return false;
+	}
+	State = loaded_state;
+	BackdropIndex = loaded_backdrop_index;
 	return true;
 }
 
@@ -299,6 +416,9 @@ void	CampaignManager::Continue( bool success )
 
 		int mission = cGameData::Get_Mission_Number_From_Map_Name( state_description );
 		Select_Backdrop_Number( mission );
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+		A4_Frontend_Mark_Next_Start_Game_As_Campaign_Level();
+#endif
 		GameInitMgrClass::Start_Game ( state_description, PLAYERTYPE_RENEGADE, 0 );
 
 		// Hack to not autosave for Mission 0 (M13)
@@ -336,8 +456,10 @@ void	CampaignManager::Continue( bool success )
 			// can watch it later)
 			//	
 			RegistryClass registry( APPLICATION_SUB_KEY_NAME_MOVIES );
-			if ( registry.Is_Valid() ) {
-				registry.Set_String( filename, description );
+			if ( !registry.Is_Valid() ||
+				!registry.Set_String_Checked( filename, description ) ) {
+				Debug_Say(( "CampaignManager::Continue - unable to persist movie unlock %s\n",
+					filename.Peek_Buffer() ));
 			}
 		}
 
@@ -374,7 +496,7 @@ void	CampaignManager::Replay_Level( const char * mission_name, int difficulty )
 */
 int	CampaignManager::Get_Backdrop_Description_Count( void )
 {
-	if (BackdropDescriptions.Count() > 0) {
+	if (BackdropIndex >= 0 && BackdropIndex < BackdropDescriptions.Count()) {
 		return BackdropDescriptions[BackdropIndex].Lines.Count();
 	}
 	return 0;
@@ -382,6 +504,10 @@ int	CampaignManager::Get_Backdrop_Description_Count( void )
 
 const char * CampaignManager::Get_Backdrop_Description( int index )
 {
+	if (BackdropIndex < 0 || BackdropIndex >= BackdropDescriptions.Count() ||
+		index < 0 || index >= BackdropDescriptions[BackdropIndex].Lines.Count()) {
+		return "";
+	}
 	return BackdropDescriptions[BackdropIndex].Lines[index];
 }
 
@@ -389,13 +515,16 @@ void	CampaignManager::Select_Backdrop_Number( int state_number )
 {
 	// Find Backdrop Index
 	BackdropIndex = 0;
+	bool found = false;
 	for ( int i = 0; i < BackdropDescriptions.Count(); i++ ) {
 		if ( BackdropDescriptions[i].State == state_number ) {
 			BackdropIndex = i;
+			found = true;
+			break;
 		}
 	}
 
-	if ( BackdropIndex == 0 ) {
+	if ( !found ) {
 		Debug_Say(( "Failed to find load menu for state %d\n", state_number ));
 	}
 }

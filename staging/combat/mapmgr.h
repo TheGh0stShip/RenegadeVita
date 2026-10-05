@@ -120,6 +120,7 @@ public:
 	//
 	//	From SaveLoadSubSystemClass
 	//
+	bool					Required_For_Player_Save (void) const	{ return true; }
 	uint32						Chunk_ID (void) const			{ return CHUNKID_MAPMGR; }
 
 	//
@@ -147,7 +148,7 @@ protected:
 	//
 	//	Save load support
 	//
-	void							Load_Variables (ChunkLoadClass &cload);
+	bool							Load_Variables (ChunkLoadClass &cload);
 	
 private:
 

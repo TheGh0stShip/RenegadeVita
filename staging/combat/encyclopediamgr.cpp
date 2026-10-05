@@ -321,6 +321,8 @@ EncyclopediaMgrClass::Load (ChunkLoadClass &cload)
 	Hide_All_Objects ();
 
 	int type_index = 0;
+	bool loaded_variables = false;
+	bool loaded = true;
 
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
@@ -329,23 +331,36 @@ EncyclopediaMgrClass::Load (ChunkLoadClass &cload)
 			//	Load all the variables from this chunk
 			//
 			case CHUNKID_VARIABLES:
-				Load_Variables (cload);
+				if (loaded_variables) {
+					loaded = false;
+				} else {
+					loaded_variables = true;
+					Load_Variables (cload);
+				}
 				break;
 
 			case CHUNKID_TYPE_DATA:
 			{
+				if (type_index >= TYPE_COUNT) {
+					loaded = false;
+					break;
+				}
 				//
 				//	Read the bit vector from its chunk
 				//
-				int size = cload.Cur_Chunk_Length ();
-				
-				int vector_size = max (size, KnownObjectVector[type_index].Get_Bit_Array().Length ());
+				const uint32 size = cload.Cur_Chunk_Length ();
+				const int vector_size = KnownObjectVector[type_index].Get_Bit_Array().Length ();
+				if (vector_size < 0 || vector_size > 0x0FFFFFFF ||
+					size > static_cast<uint32>(vector_size)) {
+					loaded = false;
+					break;
+				}
 				//unsigned char *bit_vector = new unsigned char[vector_size];
 
 				//
 				//	Initialize the known object array from the saved bit vector
 				//
-				int bitcount = vector_size * 8;
+				const int bitcount = vector_size * 8;
 				KnownObjectVector[type_index].Init (bitcount);
 
 				//
@@ -353,7 +368,7 @@ EncyclopediaMgrClass::Load (ChunkLoadClass &cload)
 				//
 				const VectorClass<unsigned char> &bit_array = KnownObjectVector[type_index].Get_Bit_Array ();
 				if (size > 0) {
-					cload.Read (const_cast<unsigned char*>(&bit_array[0]), size);
+					loaded = cload.Read (const_cast<unsigned char*>(&bit_array[0]), size) == size && loaded;
 				}
 
 				//
@@ -367,7 +382,7 @@ EncyclopediaMgrClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && loaded_variables && type_index == TYPE_COUNT;
 }
 
 

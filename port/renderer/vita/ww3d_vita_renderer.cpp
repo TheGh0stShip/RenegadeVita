@@ -7,13 +7,16 @@
 #include "d3d8.h"
 #include "dx8wrapper.h"
 #include "lightenvironment.h"
+#include "matpass.h"
 #include "mesh.h"
 #include "meshmatdesc.h"
 #include "meshmdl.h"
 #include "matrix4.h"
+#include "obbox.h"
 #include "rendobj.h"
 #include "rinfo.h"
 #include "shader.h"
+#include "simplevec.h"
 #include "texture.h"
 #include "tri.h"
 #include "vertmaterial.h"
@@ -38,6 +41,9 @@
 
 #if defined(RENEGADE_HOST_RENDERER_LIFECYCLE_SELFTEST) && defined(__GNUC__)
 void RenegadeVita_Release_DX8_Bound_Textures() __attribute__((weak));
+void RenegadeVita_Release_DX8_Render_Target() __attribute__((weak));
+#else
+void RenegadeVita_Release_DX8_Render_Target();
 #endif
 
 #if defined(__vita__)
@@ -64,15 +70,21 @@ Statistics g_statistics = {};
 uint32_t g_dx8_ambient_color = 0U;
 bool g_dx8_color_vertex = true;
 bool g_dx8_normalize_normals = false;
+uint32_t g_active_render_target_width = 0U;
+uint32_t g_active_render_target_height = 0U;
 #if defined(RENEGADE_HOST_ABI_TEST)
 void (*g_host_indexed_observer)(const IndexedTriangleSubmission &) = NULL;
 #endif
 BackendLifecycleStatistics g_lifecycle = {};
 bool g_logged_first_unsupported = false;
 bool g_logged_first_indexed_rejection = false;
+bool g_logged_first_invalid_procedural_apt = false;
 Vector3 *g_deformed_skin_vertices = NULL;
 Vector3 *g_deformed_skin_normals = NULL;
 int g_deformed_skin_capacity = 0;
+// Original MeshClass uses a retained scratch APT rather than allocating one
+// for every projected mesh. Rendering is single-threaded at this boundary.
+SimpleDynVecClass<uint32> g_procedural_material_apt;
 
 bool Ensure_Deformed_Skin_Scratch(int vertex_count)
 {
@@ -1760,6 +1772,7 @@ bool Reactivate_Native_Backend_State()
 	g_logged_first_frame = false;
 	g_logged_first_present = false;
 	g_logged_first_mesh = false;
+	g_logged_first_invalid_procedural_apt = false;
 #endif
 	return true;
 }
@@ -2433,6 +2446,61 @@ void Invalidate_Texture_State_Cache()
 #endif
 }
 
+bool Bind_Offscreen_Render_Target(uint32_t framebuffer, uint32_t width,
+	uint32_t height)
+{
+	if (framebuffer == 0U || width == 0U || height == 0U) return false;
+#if defined(__vita__)
+	GLint previous_framebuffer = 0;
+	GLint previous_viewport[4] = {};
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previous_framebuffer);
+	glGetIntegerv(GL_VIEWPORT, previous_viewport);
+	(void)glGetError();
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previous_framebuffer));
+		++g_statistics.backend_errors;
+		return false;
+	}
+	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+	if (glGetError() != GL_NO_ERROR) {
+		glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previous_framebuffer));
+		glViewport(previous_viewport[0], previous_viewport[1],
+			previous_viewport[2], previous_viewport[3]);
+		++g_statistics.backend_errors;
+		return false;
+	}
+#endif
+	g_active_render_target_width = width;
+	g_active_render_target_height = height;
+	Invalidate_Native_State_Cache();
+	return true;
+}
+
+bool Restore_Default_Render_Target()
+{
+#if defined(__vita__)
+	glBindFramebuffer(GL_FRAMEBUFFER, 0U);
+	if (glGetError() != GL_NO_ERROR) {
+		++g_statistics.backend_errors;
+		return false;
+	}
+#endif
+	g_active_render_target_width = 0U;
+	g_active_render_target_height = 0U;
+	Invalidate_Native_State_Cache();
+	return true;
+}
+
+bool Get_Active_Render_Target_Size(uint32_t *width, uint32_t *height)
+{
+	if (g_active_render_target_width == 0U || g_active_render_target_height == 0U)
+		return false;
+	if (width != NULL) *width = g_active_render_target_width;
+	if (height != NULL) *height = g_active_render_target_height;
+	return true;
+}
+
 bool Build_Indexed_Transform_Matrices(const float *world_transform,
 	const float *view_transform, const float *projection_transform,
 	IndexedTransformMatrices &matrices)
@@ -2861,6 +2929,7 @@ bool Initialize()
 	g_logged_first_frame = false;
 	g_logged_first_present = false;
 	g_logged_first_mesh = false;
+	g_logged_first_invalid_procedural_apt = false;
 #endif
 	g_lifecycle.native_backend_ready = true;
 	g_statistics.initialized = true;
@@ -2884,10 +2953,14 @@ void Shutdown()
 		++g_lifecycle.logical_shutdowns;
 	}
 #if defined(RENEGADE_HOST_RENDERER_LIFECYCLE_SELFTEST) && defined(__GNUC__)
+	if (RenegadeVita_Release_DX8_Render_Target != NULL) {
+		RenegadeVita_Release_DX8_Render_Target();
+	}
 	if (RenegadeVita_Release_DX8_Bound_Textures != NULL) {
 		RenegadeVita_Release_DX8_Bound_Textures();
 	}
 #else
+	RenegadeVita_Release_DX8_Render_Target();
 	RenegadeVita_Release_DX8_Bound_Textures();
 #endif
 	g_statistics.initialized = false;
@@ -2912,7 +2985,8 @@ void Shutdown()
 #endif
 }
 
-void Begin_Frame(float red, float green, float blue)
+void Begin_Frame(bool clear_color, bool clear_depth, float red, float green,
+	float blue)
 {
 	if (!g_statistics.initialized) {
 		return;
@@ -2923,8 +2997,13 @@ void Begin_Frame(float red, float green, float blue)
 		Vita_Append_A22_Runtime_Breadcrumb("render-frame",
 			"WW3D first Begin_Frame entry: clear=(%.3f,%.3f,%.3f)", red, green, blue);
 	}
-	glClearColor(red, green, blue, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	GLbitfield clear_mask = 0U;
+	if (clear_color) {
+		glClearColor(red, green, blue, 1.0f);
+		clear_mask |= GL_COLOR_BUFFER_BIT;
+	}
+	if (clear_depth) clear_mask |= GL_DEPTH_BUFFER_BIT;
+	if (clear_mask != 0U) glClear(clear_mask);
 	if (!g_logged_first_frame) {
 		const GLenum error = glGetError();
 		Vita_Append_A22_Runtime_Breadcrumb("render-frame",
@@ -2941,6 +3020,8 @@ void Begin_Frame(float red, float green, float blue)
 	(void)red;
 	(void)green;
 	(void)blue;
+	(void)clear_color;
+	(void)clear_depth;
 #endif
 }
 
@@ -2982,6 +3063,7 @@ void End_Frame(bool present)
 				static_cast<unsigned long long>(g_material_skin_rgb_skips));
 #if !RENEGADE_VITA_M00_DEMO
 			Log_Static_Mesh_Cache_Statistics();
+#if defined(RENEGADE_VITA_DETAILED_TIMING)
 			Vita_Append_A22_Runtime_Breadcrumb("mesh-boundary-time",
 				"frame=%u meshes=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu max_name=%s draw_ends=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu",
 				g_statistics.frames, g_mesh_boundary_timing.mesh_count,
@@ -3000,6 +3082,7 @@ void End_Frame(bool present)
 			g_mesh_boundary_timing = {};
 			g_mesh_boundary_timing_sequence = 0U;
 			g_draw_end_timing_sequence = 0U;
+#endif
 #endif
 		}
 	}
@@ -3424,6 +3507,18 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 	case D3DRS_FILLMODE:
 		glPolygonMode(GL_FRONT_AND_BACK, To_GL_DX8_Fill_Mode(value));
 		break;
+	case D3DRS_ZBIAS:
+		// DX8's positive integer bias pulls coplanar decals toward the camera.
+		// OpenGL polygon-offset units use the opposite sign. Keep the mapping
+		// scoped to filled triangles and disable it exactly at the released zero.
+		if (value != 0U) {
+			glEnable(GL_POLYGON_OFFSET_FILL);
+			glPolygonOffset(0.0f, -static_cast<float>(value));
+		} else {
+			glPolygonOffset(0.0f, 0.0f);
+			glDisable(GL_POLYGON_OFFSET_FILL);
+		}
+		break;
 	default:
 		handled = false;
 		break;
@@ -3473,7 +3568,8 @@ void Release_Texture(uint32_t native_texture)
 #endif
 }
 
-void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
+static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
+	MaterialPassClass *material_pass)
 {
 	MeshModelClass *model = mesh.Peek_Model();
 	if (!g_statistics.initialized || model == NULL) {
@@ -3489,7 +3585,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 	if (vertices == NULL || triangles == NULL || vertex_count <= 0 || triangle_count <= 0) {
 		return;
 	}
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 	const bool sample_mesh_boundary =
 		(g_mesh_boundary_timing_sequence++ % MESH_BOUNDARY_TIMING_SAMPLE_STRIDE) == 0U;
 	const uint64_t mesh_boundary_start_us = sample_mesh_boundary ?
@@ -3520,29 +3616,93 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 		g_statistics.deformed_skin_vertices += static_cast<uint32_t>(vertex_count);
 	}
 
-	const int pass_count = model->Get_Pass_Count();
-	const int base_pass_count = pass_count > 0 ? pass_count : 1;
+	const bool procedural_pass = material_pass != NULL;
+	SimpleDynVecClass<uint32> &active_triangles = g_procedural_material_apt;
+	active_triangles.Delete_All(false);
+	int submitted_triangle_count = triangle_count;
+	if (procedural_pass && !is_skin &&
+		material_pass->Get_Cull_Volume() != NULL &&
+		MaterialPassClass::Is_Per_Polygon_Culling_Enabled()) {
+		// Preserve MeshClass::Render_Material_Pass ownership: rigid projected
+		// passes generate an active polygon table in model space.  Skinned
+		// meshes intentionally bypass this branch in the original renderer.
+		Matrix3D inverse_model_transform;
+		mesh.Get_Transform().Get_Orthogonal_Inverse(inverse_model_transform);
+		OBBoxClass local_box;
+		OBBoxClass::Transform(inverse_model_transform,
+			*material_pass->Get_Cull_Volume(), &local_box);
+		Vector3 view_direction;
+		local_box.Basis.Get_Z_Vector(&view_direction);
+		view_direction = -view_direction;
+		if (model->Has_Cull_Tree()) {
+			model->Generate_Rigid_APT(local_box, view_direction, active_triangles);
+		} else {
+			model->Generate_Rigid_APT(view_direction, active_triangles);
+		}
+		if (active_triangles.Count() == 0) return;
+		for (int i = 0; i < active_triangles.Count(); ++i) {
+			if (active_triangles[i] >= static_cast<uint32>(triangle_count)) {
+				++g_statistics.backend_errors;
+#if defined(__vita__)
+				if (!g_logged_first_invalid_procedural_apt) {
+					Vita_Append_A22_Runtime_Breadcrumb("material-pass",
+						"invalid rigid APT entry: index=%u triangles=%d apt_count=%d",
+						active_triangles[i], triangle_count, active_triangles.Count());
+					g_logged_first_invalid_procedural_apt = true;
+				}
+#endif
+				return;
+			}
+		}
+		submitted_triangle_count = active_triangles.Count();
+		if (submitted_triangle_count == 0) return;
+	}
+	const auto triangle_at = [&active_triangles](int draw_index) {
+		return active_triangles.Count() == 0 ? draw_index :
+			static_cast<int>(active_triangles[draw_index]);
+	};
+	const int model_pass_count = model->Get_Pass_Count();
+	const int base_pass_count = model_pass_count > 0 ? model_pass_count : 1;
+	const int draw_pass_count = procedural_pass ? 1 : base_pass_count;
+	const auto texture_for = [model, material_pass](int triangle_index, int pass,
+		int stage) -> TextureClass * {
+		return material_pass != NULL ? material_pass->Peek_Texture(stage) :
+			model->Peek_Texture(triangle_index, pass, stage);
+	};
+	const auto shader_for = [model, material_pass](int triangle_index, int pass)
+		-> ShaderClass {
+		return material_pass != NULL ? material_pass->Peek_Shader() :
+			model->Get_Shader(triangle_index, pass);
+	};
+	const auto material_for = [model, material_pass](int vertex_index, int pass)
+		-> VertexMaterialClass * {
+		return material_pass != NULL ? material_pass->Peek_Material() :
+			model->Peek_Material(vertex_index, pass);
+	};
 	++g_statistics.mesh_submissions;
 	g_statistics.vertex_submissions += static_cast<uint32_t>(vertex_count);
-	g_statistics.triangle_submissions += static_cast<uint32_t>(triangle_count);
+	g_statistics.triangle_submissions += static_cast<uint32_t>(submitted_triangle_count);
 	g_statistics.geometry_checksum = Mix_Checksum(g_statistics.geometry_checksum,
 		static_cast<uint32_t>(vertex_count));
 	g_statistics.geometry_checksum = Mix_Checksum(g_statistics.geometry_checksum,
-		static_cast<uint32_t>(triangle_count));
+		static_cast<uint32_t>(submitted_triangle_count));
 	g_statistics.material_passes +=
-		static_cast<uint64_t>(base_pass_count);
+		static_cast<uint64_t>(draw_pass_count);
 
 #if !defined(__vita__)
+	(void)shader_for;
+	(void)material_for;
 	// The host target has no Vita framebuffer, but it must still execute the
 	// same original material-to-TextureClass boundary as the physical path.
 	// This validates archive lookup, DDS decode, upload representation, bind
 	// ownership, and repeat lifecycle teardown rather than mistaking a
 	// geometry-only headless frame for a textured-frame proof.
-	for (int pass = 0; pass < base_pass_count; ++pass) {
+	for (int pass = 0; pass < draw_pass_count; ++pass) {
 		TextureClass *bound_textures[MeshMatDescClass::MAX_TEX_STAGES] = {};
-		for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
+		for (int draw_index = 0; draw_index < submitted_triangle_count; ++draw_index) {
+			const int triangle_index = triangle_at(draw_index);
 			for (int stage = 0; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
-				TextureClass *texture = model->Peek_Texture(triangle_index, pass, stage);
+				TextureClass *texture = texture_for(triangle_index, pass, stage);
 				if (texture != bound_textures[stage]) {
 					bound_textures[stage] = texture;
 					if (bound_textures[stage] != NULL) {
@@ -3590,11 +3750,11 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(transform_matrices.modelview);
 	g_statistics.state_changes += 4U;
-	TextureClass *first_texture = model->Peek_Texture(0, 0, 0);
+	TextureClass *first_texture = texture_for(0, 0, 0);
 	if (!g_logged_first_mesh) {
 		Vita_Append_A22_Runtime_Breadcrumb("mesh-submit",
 			"first original MeshClass submission entry: vertices=%d triangles=%d passes=%d",
-			vertex_count, triangle_count, base_pass_count);
+			vertex_count, triangle_count, draw_pass_count);
 	}
 		const char *first_texture_name = first_texture != NULL ?
 			first_texture->Get_Texture_Name().Peek_Buffer() : "none";
@@ -3603,36 +3763,37 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			!Is_Loading_Screen_Diagnostic_Name(first_texture_name)) {
 			Vita_Append_A22_Runtime_Breadcrumb("skin-submit",
 				"first original deformed skin submission: mesh=%s vertices=%d triangles=%d passes=%d texture=%s uv=%d dcg=%d world=identity",
-				mesh.Get_Name(), vertex_count, triangle_count, pass_count,
+				mesh.Get_Name(), vertex_count, triangle_count, draw_pass_count,
 				first_texture_name,
 				model->Get_UV_Array(0, 0) != NULL ? 1 : 0,
 				model->Get_DCG_Array(0) != NULL ? 1 : 0);
 		g_logged_first_skin = true;
 	}
-#if !RENEGADE_VITA_M00_DEMO
+		#if !RENEGADE_VITA_M00_DEMO
 	// Rigid unlit meshes replay GPU-resident streams, as the original DX8
 	// mesh renderer did; everything else keeps the per-frame path below.
-	if (!is_skin && Submit_Static_Mesh_Cache(mesh, model, render_info, vertices,
+	if (!procedural_pass && !is_skin && Submit_Static_Mesh_Cache(mesh, model, render_info, vertices,
 		normals, triangles, vertex_count, triangle_count, base_pass_count,
 		original_world_transform)) {
 	} else
 #endif
-	for (int pass = 0; pass < base_pass_count; ++pass) {
+	for (int pass = 0; pass < draw_pass_count; ++pass) {
+		const int model_pass = procedural_pass ? 0 : pass;
 		const Vector2 *uvs[MeshMatDescClass::MAX_TEX_STAGES] = {
-			model->Get_UV_Array(pass, 0),
-			model->Get_UV_Array(pass, 1)
+			model->Get_UV_Array(model_pass, 0),
+			model->Get_UV_Array(model_pass, 1)
 		};
-		const unsigned *diffuse_colors = model->Get_DCG_Array(pass);
+		const unsigned *diffuse_colors = model->Get_DCG_Array(model_pass);
 		const unsigned *user_lighting =
 			is_skin ? NULL : mesh.Get_User_Lighting_Array(false);
 		const unsigned *color1 =
 			user_lighting != NULL ? user_lighting :
 				model->Get_Color_Array(0, false);
 		const unsigned *color2 = model->Get_Color_Array(1, false);
-		if (color1 == NULL && model->Get_DCG_Source(pass) == VertexMaterialClass::COLOR1) {
+		if (color1 == NULL && model->Get_DCG_Source(model_pass) == VertexMaterialClass::COLOR1) {
 			color1 = diffuse_colors;
 		}
-		if (color2 == NULL && model->Get_DCG_Source(pass) == VertexMaterialClass::COLOR2) {
+		if (color2 == NULL && model->Get_DCG_Source(model_pass) == VertexMaterialClass::COLOR2) {
 			color2 = diffuse_colors;
 		}
 #if defined(__vita__)
@@ -3682,8 +3843,9 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			** VertexMaterial lighting and color-source state below the WW3D
 			** boundary before handing the result to vitaGL for texture modulation. */
 			VertexMaterialClass *material =
-				model->Peek_Material(static_cast<int>(vertex_index), pass);
-			const bool skin_color_passthrough = is_skin && bound_textures[0] != NULL &&
+				material_for(static_cast<int>(vertex_index), pass);
+			const bool skin_color_passthrough = !procedural_pass && is_skin &&
+				bound_textures[0] != NULL &&
 				current_texturing;
 			const bool record_original_skin_color = skin_color_passthrough &&
 				!g_logged_first_skin_texture_color &&
@@ -3723,7 +3885,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 				vertices[vertex_index].Z);
 		};
 		auto end_batch = [&]() {
-#if !RENEGADE_VITA_M00_DEMO
+#if !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 			const bool sample_draw_end =
 				(g_draw_end_timing_sequence++ % MESH_BOUNDARY_TIMING_SAMPLE_STRIDE) == 0U;
 			const uint64_t draw_end_start_us = sample_draw_end ?
@@ -3739,7 +3901,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 				g_mesh_unique_vertices += g_indexed_mesh_batch.Vertices();
 				++g_mesh_indexed_batches;
 			} else glEnd();
-#if !RENEGADE_VITA_M00_DEMO
+#if !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 			++g_mesh_boundary_timing.draw_end_count;
 			if (sample_draw_end) {
 				const uint64_t draw_end_us = sceKernelGetProcessTimeWide() - draw_end_start_us;
@@ -3751,17 +3913,18 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			}
 #endif
 		};
-		for (int triangle_index = 0; triangle_index < triangle_count; ++triangle_index) {
+		for (int draw_index = 0; draw_index < submitted_triangle_count; ++draw_index) {
+			const int triangle_index = triangle_at(draw_index);
 			TextureClass *triangle_textures[MeshMatDescClass::MAX_TEX_STAGES] = {
-				model->Peek_Texture(triangle_index, pass, 0),
-				model->Peek_Texture(triangle_index, pass, 1)
+				texture_for(triangle_index, pass, 0),
+				texture_for(triangle_index, pass, 1)
 			};
 			const TriIndex &group_triangle = triangles[triangle_index];
 			VertexMaterialClass *triangle_material =
 				group_triangle[0] < vertex_count ?
-					model->Peek_Material(static_cast<int>(group_triangle[0]), pass) :
+					material_for(static_cast<int>(group_triangle[0]), pass) :
 					NULL;
-			const ShaderClass triangle_shader = model->Get_Shader(triangle_index, pass);
+			const ShaderClass triangle_shader = shader_for(triangle_index, pass);
 			const unsigned triangle_shader_bits = triangle_shader.Get_Bits();
 			const bool detail_stage =
 				triangle_shader.Uses_Post_Detail_Texture() &&
@@ -3888,7 +4051,7 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 			static_cast<unsigned>(error));
 		g_logged_first_mesh = true;
 	}
-#if !RENEGADE_VITA_M00_DEMO
+#if !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 	++g_mesh_boundary_timing.mesh_count;
 	if (sample_mesh_boundary) {
 		const uint64_t mesh_boundary_us = sceKernelGetProcessTimeWide() - mesh_boundary_start_us;
@@ -3905,6 +4068,18 @@ void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
 #else
 	(void)render_info;
 #endif
+}
+
+void Submit_Mesh(MeshClass &mesh, RenderInfoClass &render_info)
+{
+	Submit_Mesh_Internal(mesh, render_info, NULL);
+}
+
+bool Submit_Material_Pass(MeshClass &mesh, MaterialPassClass &material_pass,
+	RenderInfoClass &render_info)
+{
+	Submit_Mesh_Internal(mesh, render_info, &material_pass);
+	return true;
 }
 
 #if defined(RENEGADE_HOST_ABI_TEST)

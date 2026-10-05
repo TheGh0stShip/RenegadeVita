@@ -181,6 +181,9 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present = true);
 /* Install a presentation/lifecycle observer at CombatManager's original misc
 ** handler seam. Mission00 and Combat remain the sole owners of completion. */
 void A31_Interactive_Begin_Mission_Completion_Observation();
+// Begin the next original level's observation only if the native owner is
+// already installed. Leave non-native/original callers on their own handler.
+bool A31_Interactive_Restart_Mission_Completion_Observation();
 A31MissionCompletionState A31_Interactive_Get_Mission_Completion_State();
 void A31_Interactive_End_Mission_Completion_Observation();
 /* Observe only original ObjectiveManager, ConversationMgr, and Star state.

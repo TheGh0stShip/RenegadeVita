@@ -1,0 +1,62 @@
+--- a/savegame.h
++++ b/savegame.h
+@@ -68,6 +68,10 @@
+ 
+ 	// LDD Access - Editor only calls Save_Game, App calls both
+ 	static void _cdecl Save_Game( const char * filename, ... );
++#if defined(RENEGADE_VITA_PORT)
++	static bool Last_Save_Write_Succeeded(void) { return LastSaveWriteSucceeded; }
++	static bool LastSaveWriteSucceeded;
++#endif
+ 	static void	Load_Game( const char * filename );
+ 	static void	Pre_Load_Game( const char * filename, StringClass &filename_to_load, StringClass &lsd_filename );
+ 	static const char * Get_Current_Game_Filename( void )	{ return CurrentGameFilename; }
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -108,11 +108,23 @@
+ void _cdecl SaveGameManager::Save_Game( const char * filename, ... )
+ {
++#if defined(RENEGADE_VITA_PORT)
++	LastSaveWriteSucceeded = false;
++#endif
+ 	Debug_Say(( "Save Game %s\n", filename ));
+ 	CurrentGameFilename = filename;
+ 	RV_SAVE_PHASE("open");
+ 
+ 	FileClass * file = _TheWritingFileFactory->Get_File( filename );
+ 	WWASSERT(file);
++#if defined(RENEGADE_VITA_PORT)
++	if (file == NULL) { RV_SAVE_PHASE("file-failed"); return; }
++	if (!file->Open(FileClass::WRITE)) {
++		RV_SAVE_PHASE("open-failed");
++		_TheWritingFileFactory->Return_File(file);
++		return;
++	}
++#else
+	file->Open(FileClass::WRITE);
++#endif
+
+	ChunkSaveClass csave(file);
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -177,12 +177,20 @@
+ 	RV_SAVE_PHASE("close-begin");
+ 	file->Close();
+ 	RV_SAVE_PHASE("close-end");
++#if defined(RENEGADE_VITA_PORT)
++	LastSaveWriteSucceeded = !file->Has_Write_Failed();
++	RV_SAVE_PHASE(LastSaveWriteSucceeded ? "write-complete" : "write-failed");
++#endif
+ 
+ 	_TheWritingFileFactory->Return_File(file);
+ 
+ }
+ 
+ 
++#if defined(RENEGADE_VITA_PORT)
++bool SaveGameManager::LastSaveWriteSucceeded = false;
++#endif
++
+ void	SaveGameManager::Pre_Load_Game
+ (
+ 	 const char *	filename,

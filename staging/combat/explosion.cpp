@@ -155,11 +155,12 @@ bool	ExplosionDefinitionClass::Save( ChunkSaveClass & csave )
 
 bool	ExplosionDefinitionClass::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_EXPLOSION_DEF_PARENT:
-				DefinitionClass::Load( cload );
+				if (!DefinitionClass::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_EXPLOSION_DEF_VARIABLES:
@@ -193,7 +194,7 @@ bool	ExplosionDefinitionClass::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 void	ExplosionManager::Shutdown( void )

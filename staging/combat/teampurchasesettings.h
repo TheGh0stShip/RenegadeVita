@@ -102,6 +102,7 @@ public:
 	virtual PersistClass *					Create (void) const ;
 	virtual bool								Save (ChunkSaveClass &csave);
 	virtual bool								Load (ChunkLoadClass &cload);
+	virtual void								On_Load_Rejected (void);
 	virtual const PersistFactoryClass &	Get_Factory (void) const;	
 
 	//
@@ -137,7 +138,7 @@ protected:
 	//////////////////////////////////////////////////////////////////////
 	//	Protected methods
 	//////////////////////////////////////////////////////////////////////
-	void				Load_Variables (ChunkLoadClass &cload);
+	bool				Load_Variables (ChunkLoadClass &cload);
 
 	//////////////////////////////////////////////////////////////////////
 	//	Protected constants
@@ -174,6 +175,8 @@ protected:
 	StringClass			SupplyTextureName;
 	
 	static TeamPurchaseSettingsDefClass *	DefinitionArray[TEAM_COUNT];
+	int					PublishedTeam;
+	TeamPurchaseSettingsDefClass *	PreviousDefinition;
     bool Hidden[MAX_ENTRIES] = {};
     bool Disabled[MAX_ENTRIES] = {};
     bool Busy[MAX_ENTRIES] = {};

@@ -65,8 +65,11 @@ class MPLanHostMapCycleOptionsTabClass;
 //
 ////////////////////////////////////////////////////////////////
 class MPLanHostOptionsMenuClass :
-	public MenuDialogClass,
+	public MenuDialogClass
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+	,
 	protected Signaler<WolGameModeClass>
+#endif
 {
 public:
 
@@ -90,7 +93,9 @@ private:
 	////////////////////////////////////////////////////////////////
 	//	Private methods
 	////////////////////////////////////////////////////////////////
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 	void ReceiveSignal(WolGameModeClass&);
+#endif
 	void Start_Game(cGameData* theGame);
 
 	////////////////////////////////////////////////////////////////
@@ -319,7 +324,6 @@ public:
 
 
 #endif //__DLG_MP_LAN_HOST_OPTIONS_H
-
 
 
 

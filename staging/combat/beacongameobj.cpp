@@ -126,6 +126,8 @@ enum
 	MICROCHUNKID_DETONATE_TIMER,
 	MICROCHUNKID_PRE_DETONATE_TIMER,
 	MICROCHUNKID_IS_ARMED,
+	MICROCHUNKID_WARNING_TIMER,
+	MICROCHUNKID_WEAPON_DEFINITION_ID,
 };
 
 
@@ -276,12 +278,13 @@ BeaconGameObjDef::Save (ChunkSaveClass &csave)
 bool
 BeaconGameObjDef::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ())
 	{
 		switch (cload.Cur_Chunk_ID ())
 		{
 			case CHUNKID_DEF_PARENT:
-				SimpleGameObjDef::Load (cload);
+				if (!SimpleGameObjDef::Load (cload)) loaded = false;
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -296,7 +299,7 @@ BeaconGameObjDef::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -368,7 +371,9 @@ BeaconGameObj::BeaconGameObj (void)	:
 	WeaponDefinition (NULL),
 	MessageSound (NULL),
 	ArmedSound (NULL),
-	OwnerBackup( NULL )
+	OwnerBackup( NULL ),
+	LoadedWeaponDefinition (false),
+	LoadedWarningTimer (false)
 {
 	Set_App_Packet_Type(APPPACKETTYPE_BEACON);
 	return ;
@@ -485,7 +490,7 @@ bool
 BeaconGameObj::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		SimpleGameObj::Save (csave);
+		if (!SimpleGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
@@ -494,6 +499,12 @@ BeaconGameObj::Save (ChunkSaveClass &csave)
 		WRITE_MICRO_CHUNK (csave, MICROCHUNKID_DETONATE_TIMER,	DetonateTimer);
 		WRITE_MICRO_CHUNK (csave, MICROCHUNKID_PRE_DETONATE_TIMER,	PreDetonateTimer);
 		WRITE_MICRO_CHUNK (csave, MICROCHUNKID_IS_ARMED,		IsArmed);
+		WRITE_MICRO_CHUNK (csave, MICROCHUNKID_WARNING_TIMER,	WarningTimer);
+		if (WeaponDefinition != NULL) {
+			int weapon_definition_id = WeaponDefinition->Get_ID ();
+			WRITE_MICRO_CHUNK (csave, MICROCHUNKID_WEAPON_DEFINITION_ID,
+				weapon_definition_id);
+		}
 	csave.End_Chunk ();
 
 	//
@@ -501,17 +512,17 @@ BeaconGameObj::Save (ChunkSaveClass &csave)
 	//
 	if (Owner != NULL) {
 		csave.Begin_Chunk (CHUNKID_OWNER);
-			Owner.Save (csave);
+			if (!Owner.Save(csave)) csave.Report_Error();
 		csave.End_Chunk ();
 	}
 
 	if (CinematicObject != NULL) {
 		csave.Begin_Chunk (CHUNKID_CINEMATIC);
-			CinematicObject.Save (csave);
+			if (!CinematicObject.Save(csave)) csave.Report_Error();
 		csave.End_Chunk ();
 	}
 
-	return true;
+	return !csave.Has_Error();
 }
 
 
@@ -523,11 +534,12 @@ BeaconGameObj::Save (ChunkSaveClass &csave)
 bool
 BeaconGameObj::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				SimpleGameObj::Load (cload);
+				if (!SimpleGameObj::Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -535,11 +547,11 @@ BeaconGameObj::Load (ChunkLoadClass &cload)
 				break;
 
 			case CHUNKID_OWNER:
-				Owner.Load (cload);
+				if (!Owner.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_CINEMATIC:
-				CinematicObject.Load (cload);
+				if (!CinematicObject.Load(cload)) loaded = false;
 				break;
 
 			default:
@@ -550,7 +562,36 @@ BeaconGameObj::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
+}
+
+
+////////////////////////////////////////////////////////////////
+//
+//	On_Post_Load
+//
+////////////////////////////////////////////////////////////////
+void
+BeaconGameObj::On_Post_Load (void)
+{
+	SimpleGameObj::On_Post_Load ();
+	Restore_Owner ();
+	Restore_Weapon_Definition ();
+	if (!LoadedWarningTimer && IsArmed) {
+		const float elapsed = max (Get_Definition ().DetonateTime - DetonateTimer, 0.0F);
+		WarningTimer = max (Get_Definition ().BroadcastToAllTime - elapsed, 0.0F);
+	}
+	if (State == STATE_ARMING && WeaponDefinition == NULL) {
+		Debug_Say (("BeaconGameObj::On_Post_Load - unresolved arming weapon; deleting beacon safely\n"));
+		Stop_Owner_Animation ();
+		State = STATE_NULL;
+		IsArmed = false;
+		Set_Delete_Pending ();
+		return;
+	}
+	if (IsArmed && ArmedSound == NULL) {
+		Start_Armed_Sound ();
+	}
 }
 
 
@@ -571,6 +612,18 @@ BeaconGameObj::Load_Variables (ChunkLoadClass &cload)
 			READ_MICRO_CHUNK (cload, MICROCHUNKID_DETONATE_TIMER,	DetonateTimer);
 			READ_MICRO_CHUNK (cload, MICROCHUNKID_PRE_DETONATE_TIMER,	PreDetonateTimer);
 			READ_MICRO_CHUNK (cload, MICROCHUNKID_IS_ARMED,		IsArmed);
+			case MICROCHUNKID_WARNING_TIMER:
+				cload.Read (&WarningTimer, sizeof (WarningTimer));
+				LoadedWarningTimer = true;
+				break;
+			case MICROCHUNKID_WEAPON_DEFINITION_ID: {
+				int weapon_definition_id = 0;
+				cload.Read (&weapon_definition_id, sizeof (weapon_definition_id));
+				WeaponDefinition = WeaponManager::Find_Weapon_Definition (
+					weapon_definition_id);
+				LoadedWeaponDefinition = true;
+				break;
+			}
 
 			default:
 				Debug_Say (("Unrecognized Beacon Variable chunkID\n"));
@@ -581,6 +634,47 @@ BeaconGameObj::Load_Variables (ChunkLoadClass &cload)
 	}
 
 	return ;
+}
+
+
+////////////////////////////////////////////////////////////////
+//
+//	Restore_Weapon_Definition
+//
+////////////////////////////////////////////////////////////////
+void
+BeaconGameObj::Restore_Weapon_Definition (void)
+{
+	if (WeaponDefinition != NULL || LoadedWeaponDefinition) {
+		return;
+	}
+
+	SoldierGameObj *soldier = Get_Owner ();
+	WeaponBagClass *bag = soldier != NULL ? soldier->Get_Weapon_Bag () : NULL;
+	const WeaponDefinitionClass *candidate = NULL;
+	if (bag != NULL) {
+		for (int index = 0; index < bag->Get_Count (); ++index) {
+			WeaponClass *weapon = bag->Peek_Weapon (index);
+			const WeaponDefinitionClass *definition = weapon != NULL ?
+				weapon->Get_Definition () : NULL;
+			if (definition == NULL) continue;
+			const AmmoDefinitionClass *primary =
+				WeaponManager::Find_Ammo_Definition (definition->PrimaryAmmoDefID);
+			const AmmoDefinitionClass *secondary =
+				WeaponManager::Find_Ammo_Definition (definition->SecondaryAmmoDefID);
+			const int beacon_definition_id = Get_Definition ().Get_ID ();
+			const bool matches =
+				(primary != NULL && primary->BeaconDefID == beacon_definition_id) ||
+				(secondary != NULL && secondary->BeaconDefID == beacon_definition_id);
+			if (!matches) continue;
+			if (candidate != NULL && candidate != definition) {
+				candidate = NULL;
+				break;
+			}
+			candidate = definition;
+		}
+	}
+	WeaponDefinition = candidate;
 }
 
 
@@ -713,6 +807,27 @@ BeaconGameObj::Stop_Armed_Sound (void)
 
 ////////////////////////////////////////////////////////////////
 //
+//	Start_Armed_Sound
+//
+////////////////////////////////////////////////////////////////
+void
+BeaconGameObj::Start_Armed_Sound (void)
+{
+	if (ArmedSound != NULL || WWAudioClass::Get_Instance () == NULL) {
+		return;
+	}
+
+	ArmedSound = WWAudioClass::Get_Instance ()->Create_Continuous_Sound (
+		Get_Definition ().ArmedSoundDefID);
+	if (ArmedSound != NULL) {
+		ArmedSound->Set_Transform (Get_Transform ());
+		ArmedSound->Add_To_Scene ();
+	}
+}
+
+
+////////////////////////////////////////////////////////////////
+//
 //	Set_State
 //
 ////////////////////////////////////////////////////////////////
@@ -759,15 +874,7 @@ BeaconGameObj::Set_State (int state)
 				//
 				//	Create the "armed" sound
 				//
-				ArmedSound = WWAudioClass::Get_Instance ()->Create_Continuous_Sound (Get_Definition ().ArmedSoundDefID);
-				if (ArmedSound != NULL) {
-
-					//
-					//	Insert the sound object into the world
-					//
-					ArmedSound->Set_Transform (Get_Transform ());
-					ArmedSound->Add_To_Scene ();
-				}
+				Start_Armed_Sound ();
 
 				// Only on Server
 				if ( CombatManager::I_Am_Server() ) {

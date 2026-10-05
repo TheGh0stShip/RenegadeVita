@@ -1,0 +1,9 @@
+--- a/pathmgr.cpp
++++ b/pathmgr.cpp
+@@ -356,1 +356,5 @@
+-			uint32 time_slice = uint32((end_time - Get_Time ()) / TicksPerMilliSec);
++			const __int64 now = Get_Time ();
++			if (now >= end_time) {
++				break;
++			}
++			uint32 time_slice = uint32((end_time - now) / TicksPerMilliSec);

@@ -1,0 +1,39 @@
+--- a/assetmgr.cpp
++++ b/assetmgr.cpp
+@@ -555,23 +555,24 @@
+ 	}
+ 
+ 	ChunkLoadClass cload(&w3dfile);
++	bool loaded = true;
+ 
+ 	while (cload.Open_Chunk()) {
+ 
+ 		switch (cload.Cur_Chunk_ID()) {
+ 
+ 			case W3D_CHUNK_HIERARCHY:
+-				HTreeManager.Load_Tree(cload);
++				loaded = (HTreeManager.Load_Tree(cload) == 0) && loaded;
+ 				break;
+ 
+ 			case W3D_CHUNK_ANIMATION:
+ 			case W3D_CHUNK_COMPRESSED_ANIMATION:
+ 			case W3D_CHUNK_MORPH_ANIMATION:
+-				HAnimManager.Load_Anim(cload);
++				loaded = (HAnimManager.Load_Anim(cload) == 0) && loaded;
+ 				break;
+         
+ 			default:
+-				Load_Prototype(cload);
++				loaded = Load_Prototype(cload) && loaded;
+ 				break;
+ 		}
+ 
+@@ -580,7 +581,7 @@
+ 
+ 	w3dfile.Close();
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 

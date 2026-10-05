@@ -1,0 +1,34 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -199,6 +199,21 @@
+ 	}
+ }
+ 
++void CombatGameModeClass::Process_Multiplayer_Info_Input()
++{
++	if (IS_MISSION) return;
++	if (Input::Get_State(INPUT_FUNCTION_SERVER_INFO_TOGGLE)) {
++		START_DIALOG(CNCServerInfoDialogClass);
++	}
++	if (cNetwork::I_Am_Client() && COMBAT_STAR != NULL) {
++		if (Input::Get_State(INPUT_FUNCTION_TEAM_INFO_TOGGLE)) {
++			START_DIALOG(CNCTeamInfoDialogClass);
++		} else if (Input::Get_State(INPUT_FUNCTION_BATTLE_INFO_TOGGLE)) {
++			START_DIALOG(CNCBattleInfoDialogClass);
++		}
++	}
++}
++
+ void CombatGameModeClass::Process_Radio_Command_Input()
+ {
+ 	if (IS_MISSION || !cNetwork::I_Am_Client() || COMBAT_STAR == NULL) return;
+--- a/combatgmode.h
++++ b/combatgmode.h
+@@ -92,6 +92,7 @@
+ 	static	void	Process_Overlay_Update();
+ 	static	void	Render_Overlays();
+ 	static	void	Process_Player_List_Input();
++	static	void	Process_Multiplayer_Info_Input();
+ 	static	void	Process_Autosave_Request();
+ 	static	void	Process_Radio_Command_Input();
+ 	static	void	Process_Chat_Input();

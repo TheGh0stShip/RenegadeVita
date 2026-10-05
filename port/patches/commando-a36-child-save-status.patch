@@ -1,0 +1,68 @@
+--- a/commandosaveload.cpp
++++ b/commandosaveload.cpp
+@@ -59,20 +59,21 @@
+ bool	CommandoSaveLoadClass::Save( ChunkSaveClass &csave )
+ {
+ 	WWMEMLOG(MEM_GAMEDATA);
++	bool saved = true;
+ 
+ 	csave.Begin_Chunk( CHUNKID_NETWORK );
+-	cNetwork::Save( csave );
+-	csave.End_Chunk();
++	saved = cNetwork::Save(csave) && saved;
++	saved = csave.End_Chunk() && saved;
+ 
+ 	csave.Begin_Chunk( CHUNKID_GOD );
+-	cGod::Save( csave );
+-	csave.End_Chunk();
++	saved = cGod::Save(csave) && saved;
++	saved = csave.End_Chunk() && saved;
+ 
+ 	csave.Begin_Chunk( CHUNKID_CAMPAIGN );
+-	CampaignManager::Save( csave );
+-	csave.End_Chunk();
++	saved = CampaignManager::Save(csave) && saved;
++	saved = csave.End_Chunk() && saved;
+ 
+-	return true;
++	return saved && !csave.Has_Error();
+ }
+ 
+ bool	CommandoSaveLoadClass::Load( ChunkLoadClass &cload )
+--- a/cnetwork.cpp
++++ b/cnetwork.cpp
+@@ -791,11 +791,11 @@
+ //-----------------------------------------------------------------------------
+ bool cNetwork::Save(ChunkSaveClass & csave)
+ {
+-	csave.Begin_Chunk(CHUNKID_PLAYERMANAGER);
+-	cPlayerManager::Save(csave);
+-	csave.End_Chunk();
++	bool saved = csave.Begin_Chunk(CHUNKID_PLAYERMANAGER);
++	saved = cPlayerManager::Save(csave) && saved;
++	saved = csave.End_Chunk() && saved;
+ 
+-	return true;
++	return saved && !csave.Has_Error();
+ }
+ 
+ //-----------------------------------------------------------------------------
+--- a/playermanager.cpp
++++ b/playermanager.cpp
+@@ -1449,13 +1449,13 @@
+ 		cPlayer * p_player = objnode->Data();
+       WWASSERT(p_player != NULL);
+ 		csave.Begin_Chunk(CHUNKID_PLAYER);
+-		p_player->Save(csave);
++		if (p_player == NULL || !p_player->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ //-----------------------------------------------------------------------------
+

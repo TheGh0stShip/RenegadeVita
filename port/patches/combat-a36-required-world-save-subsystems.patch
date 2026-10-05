@@ -1,0 +1,32 @@
+--- a/combatsaveload.h
++++ b/combatsaveload.h
+@@ -62,4 +62,5 @@
+ 
+ protected:
++	virtual bool	Required_For_Player_Save(void) const { return true; }
+ 	virtual bool	Save( ChunkSaveClass &csave );
+ 	virtual bool	Load( ChunkLoadClass &cload );
+--- a/conversationmgr.h
++++ b/conversationmgr.h
+@@ -176,4 +176,5 @@
+ 	//
+ 	bool						Contains_Data (void) const			{ return true; }
++	bool						Required_For_Player_Save (void) const	{ return true; }
+ 	const char *			Name (void) const						{ return "ConversationMgrClass"; }
+ 	bool						Save (ChunkSaveClass &csave);
+--- a/encyclopediamgr.h
++++ b/encyclopediamgr.h
+@@ -130,4 +130,5 @@
+ 	//	Inherited
+ 	//
++	bool					Required_For_Player_Save (void) const	{ return true; }
+ 	bool					Save (ChunkSaveClass &csave);
+ 	bool					Load (ChunkLoadClass &cload);
+--- a/mapmgr.h
++++ b/mapmgr.h
+@@ -121,4 +121,5 @@
+ 	//	From SaveLoadSubSystemClass
+ 	//
++	bool					Required_For_Player_Save (void) const	{ return true; }
+ 	uint32						Chunk_ID (void) const			{ return CHUNKID_MAPMGR; }
+ 

@@ -1,0 +1,11 @@
+--- a/chunkio.h
++++ b/chunkio.h
+@@ -216,6 +216,7 @@
+ 	// this, then you are probably hacking so be careful!
+ 	bool					Peek_Next_Chunk(uint32 * set_id,uint32 * set_size);
+ 	bool					Has_Error(void) const { return Error; }
++	void					Report_Error(void) { Error = true; }
+ 
+ private:
+ 
+

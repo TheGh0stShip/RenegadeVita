@@ -109,7 +109,7 @@ protected:
 	//	Protected methods
 	//////////////////////////////////////////////////////////////
 	void								Save_Variables (ChunkSaveClass &csave);
-	void								Load_Variables (ChunkLoadClass &cload);
+	bool								Load_Variables (ChunkLoadClass &cload);
 
 private:
 

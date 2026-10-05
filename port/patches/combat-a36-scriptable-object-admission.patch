@@ -1,0 +1,139 @@
+--- a/scriptablegameobj.cpp
++++ b/scriptablegameobj.cpp
+@@ -502,7 +502,13 @@
+ 
+ bool	ScriptableGameObj::Load( ChunkLoadClass &cload )
+ {
+-	ReferenceableGameObj * referenceable_ptr = NULL;
++	uint32 referenceable_token = 0;
++	bool parent_seen = false;
++	bool referenceable_seen = false;
++	bool variables_seen = false;
++	bool referenceable_token_seen = false;
++	bool pending_seen = false;
++	bool loaded = true;
+ 
+ 	WWASSERT( Observers.Count() == 0 );
+ 
+@@ -510,31 +516,55 @@
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				BaseGameObj::Load( cload );
++				if (parent_seen) loaded = false;
++				else {
++					parent_seen = true;
++					loaded = BaseGameObj::Load(cload) && loaded;
++				}
+ 				break;
+ 
+ 			case CHUNKID_REFERENCEABLE:
+-				ReferenceableGameObj::Load( cload );
++				if (referenceable_seen) loaded = false;
++				else {
++					referenceable_seen = true;
++					loaded = ReferenceableGameObj::Load(cload) && loaded;
++				}
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
++				if (variables_seen) {
++					loaded = false;
++					break;
++				}
++				variables_seen = true;
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_REFERENCEABLE_PTR, referenceable_ptr );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_OBSERVER_CREATED_PENDING, ObserverCreatedPending );
++						case MICROCHUNKID_REFERENCEABLE_PTR:
++							if (referenceable_token_seen || cload.Cur_Micro_Chunk_Length() != sizeof(referenceable_token) ||
++								cload.Read(&referenceable_token, sizeof(referenceable_token)) != sizeof(referenceable_token)) loaded = false;
++							else referenceable_token_seen = true;
++							break;
++
++						case MICROCHUNKID_OBSERVER_CREATED_PENDING:
++							if (pending_seen || cload.Cur_Micro_Chunk_Length() != sizeof(ObserverCreatedPending) ||
++								cload.Read(&ObserverCreatedPending, sizeof(ObserverCreatedPending)) != sizeof(ObserverCreatedPending)) loaded = false;
++							else pending_seen = true;
++							break;
+ 
+ 						case MICROCHUNKID_GAME_OBJ_OBSERVER_PTR:
+-							GameObjObserverClass * ptr;
+-#if defined(RENEGADE_HOST_ABI_TEST)
+-							RV_Read_Micro_Chunk_Value(cload, ptr);
+-#else
+-							cload.Read(&ptr,sizeof(ptr));
+-#endif
+-							Observers.Add( ptr );
++						{
++							uint32 observer_token = 0;
++							if (cload.Cur_Micro_Chunk_Length() != sizeof(observer_token) ||
++								cload.Read(&observer_token, sizeof(observer_token)) != sizeof(observer_token) || observer_token == 0) {
++								loaded = false;
++							} else {
++								Observers.Add(reinterpret_cast<GameObjObserverClass *>(static_cast<uintptr_t>(observer_token)));
++							}
+ 							break;
++						}
+ 
+ 						default:
+-							Debug_Say(( "Unhandled Variable Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
++							loaded = false;
+ 							break;
+ 					}
+ 					cload.Close_Micro_Chunk();
+@@ -542,21 +572,25 @@
+ 				break;
+ 
+ 			case CHUNKID_OBSERVER_TIMER:
++			{
+ 				GameObjObserverTimerClass * otimer;
+ 				otimer = new GameObjObserverTimerClass();
+-				otimer->Load( cload );
++				loaded = otimer->Load(cload) && loaded;
+ 				ObserverTimerList.Add( otimer );
+ 				break;
++			}
+ 
+ 			case CHUNKID_CUSTOM_TIMER:
++			{
+ 				GameObjCustomTimerClass * ctimer;
+ 				ctimer = new GameObjCustomTimerClass();
+-				ctimer->Load( cload );
++				loaded = ctimer->Load(cload) && loaded;
+ 				CustomTimerList.Add( ctimer );
+ 				break;
++			}
+ 
+ 			default:
+-				Debug_Say(( "Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
++				loaded = false;
+ 				break;
+ 
+ 		}
+@@ -568,14 +602,19 @@
+ 		REQUEST_POINTER_REMAP( (void **)&(Observers[ ob_idx ]) );
+ 	}
+ 
+-	WWASSERT(referenceable_ptr != NULL);
+-	if (referenceable_ptr != NULL) {
+-		SaveLoadSystemClass::Register_Pointer(referenceable_ptr , (ReferenceableGameObj *)this);
++	if (referenceable_token_seen && referenceable_token != 0) {
++		SaveLoadSystemClass::Register_Pointer(
++			reinterpret_cast<void *>(static_cast<uintptr_t>(referenceable_token)),
++			(ReferenceableGameObj *)this);
++	} else {
++		loaded = false;
+ 	}
+ 
+-	SaveLoadSystemClass::Register_Post_Load_Callback(this);
++	loaded = loaded && parent_seen && referenceable_seen && variables_seen && pending_seen &&
++		!cload.Has_Error();
++	if (loaded) SaveLoadSystemClass::Register_Post_Load_Callback(this);
+ 
+-	return true;
++	return loaded;
+ }
+ 
+ void ScriptableGameObj::On_Post_Load( void )

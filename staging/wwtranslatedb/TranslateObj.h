@@ -130,7 +130,7 @@ protected:
 	//	Protected methods
 	//////////////////////////////////////////////////////////////
 	void								Save_Variables (ChunkSaveClass &csave);
-	void								Load_Variables (ChunkLoadClass &cload);
+	bool								Load_Variables (ChunkLoadClass &cload);
 
 	//////////////////////////////////////////////////////////////
 	//	Protected member data
@@ -146,4 +146,3 @@ protected:
 
 
 #endif //__TRANSLATE_OBJ_H
-

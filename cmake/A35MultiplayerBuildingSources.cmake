@@ -19,6 +19,8 @@ set(RENEGADE_A35_MULTIPLAYER_BUILDING_SOURCES
   ${RENEGADE_STAGE}/combat/characterclasssettings.cpp
   ${RENEGADE_STAGE}/combat/scobeliskevent.cpp
   ${RENEGADE_STAGE}/commando/AnnounceEvent.cpp
+  ${RENEGADE_STAGE}/commando/suicideevent.cpp
+  ${RENEGADE_STAGE}/commando/radiocommanddisplay.cpp
   ${RENEGADE_STAGE}/commando/floodprotectionmgr.cpp
   ${RENEGADE_STAGE}/commando/cstextobj.cpp
   ${RENEGADE_STAGE}/commando/loadingevent.cpp
@@ -31,5 +33,10 @@ set(RENEGADE_A35_MULTIPLAYER_BUILDING_SOURCES
   ${RENEGADE_STAGE}/commando/dlgcncpurchasemainmenu.cpp
   ${RENEGADE_STAGE}/commando/dlgcncpurchasemenu.cpp
   ${RENEGADE_STAGE}/commando/dlgmpingamechat.cpp
+  ${RENEGADE_STAGE}/commando/dlgcncwinscreen.cpp
+  ${RENEGADE_STAGE}/commando/dlgcncreference.cpp
+  ${RENEGADE_STAGE}/commando/dlgcncteaminfo.cpp
+  ${RENEGADE_STAGE}/commando/dlgcncbattleinfo.cpp
+  ${RENEGADE_STAGE}/commando/dlgcncserverinfo.cpp
   ${RENEGADE_STAGE}/commando/mpsettingsmgr.cpp
 )

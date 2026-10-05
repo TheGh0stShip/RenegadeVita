@@ -414,10 +414,13 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn(
-            "A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(\n\tint startup_screen_result = -1, bool start_at_main_menu = false,\n\tconst char *reload_source = nullptr, const char *campaign_source = nullptr,",
+            "A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(\n\tint startup_screen_result = -1, bool start_at_main_menu = false,\n\tbool start_at_lan_menu = false,\n\tconst char *reload_source = nullptr, const char *campaign_source = nullptr,",
             header,
         )
-        self.assertIn("A31_Vita_Run_Interactive_Runtime(screen_result, start_at_main_menu,", main)
+        self.assertIn(
+            "A31_Vita_Run_Interactive_Runtime(screen_result, start_at_main_menu,\n\t\tstart_at_lan_menu,",
+            main,
+        )
 
         boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(
             encoding="utf-8"

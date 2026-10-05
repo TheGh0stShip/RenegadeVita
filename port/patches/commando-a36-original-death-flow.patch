@@ -1,0 +1,170 @@
+--- a/god.h
++++ b/god.h
+@@ -60,2 +60,6 @@
+ 		static void					Restart( void );
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++		static void					Request_Restart( void );
++		static bool					Has_Pending_Restart( void );
++#endif
+ 		static void					Load_Game( void );
+--- a/god.cpp
++++ b/god.cpp
+@@ -38,1 +38,6 @@
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "gameinitmgr.h"
++#include "a35_level_load_status.h"
++#else
+ #include "a31_gameinit_stub.h"
++#endif
+@@ -45,1 +50,5 @@
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "dialogmgr.h"
++#else
+ #include "a31_dialogmgr_stub.h"
++#endif
+@@ -65,3 +74,6 @@
+ InventoryClass	cGod::LevelStartInventory;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++static bool NativeRestartPending = false;
++#endif
+ 
+ //-----------------------------------------------------------------------------
+@@ -469,2 +481,5 @@
+ 	State = GOD_STATE_UNINITIALIZED;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	NativeRestartPending = false;
++#endif
+ }
+@@ -474,2 +489,5 @@
+ 	State = GOD_STATE_EXITING;
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	NativeRestartPending = false;
++#endif
+ }
+@@ -518,1 +536,14 @@
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++void cGod::Request_Restart( void )
++{
++	// UI dispatch must not unload a world retained by the native frame.
++	if (State == GOD_STATE_SINGLE_DEAD) NativeRestartPending = true;
++}
++
++bool cGod::Has_Pending_Restart( void )
++{
++	return NativeRestartPending && State == GOD_STATE_SINGLE_DEAD;
++}
++#endif
++
+ void cGod::Restart( void )
+@@ -519,3 +550,6 @@
+ {
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	NativeRestartPending = false;
++#endif
+ 	if ( State == GOD_STATE_SINGLE_DEAD ) {
+ //		WWASSERT( State == GOD_STATE_SINGLE_DEAD );
+@@ -524,4 +558,8 @@
+ 		((CombatGameModeClass *)GameModeManager::Find("Combat"))->Core_Restart();
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++		// Preserve known load failure; never create a player in a partial world.
++		if (A35_Level_Load_Get_Failure() != A35_LOAD_NO_FAILURE) return;
++#endif
+ 
+ 		//
+ 		//	Reset the player's stats
+@@ -549,1 +587,8 @@
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	// Keep the original load menu over the suspended world. Its Start_Game
++	// request is consumed only after the native session has released it.
++	GameModeClass *combat_mode = GameModeManager::Find("Combat");
++	if (combat_mode != NULL && combat_mode->Is_Active()) combat_mode->Suspend();
++#else
+ 	GameInitMgrClass::End_Game();
++#endif
+--- a/dialogtests.cpp
++++ b/dialogtests.cpp
+@@ -49,3 +49,7 @@
+ #include "dlgtechoptions.h"
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "combat.h"
++#include "wwaudio.h"
++#endif
+ 
+ #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+@@ -1570,1 +1574,1 @@
+-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || (defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO)
+@@ -1614,3 +1618,7 @@
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++			GameInitMgrClass::Set_Needs_Game_Exit(true);
++#else
+ 			GameInitMgrClass::Continue_Game();
+ 			GameInitMgrClass::End_Game ();
+ 			GameInitMgrClass::Display_End_Game_Menu ();
++#endif
+@@ -1623,1 +1631,5 @@
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++			cGod::Request_Restart();
++#else
+ 			cGod::Restart();
++#endif
+@@ -1628,1 +1640,3 @@
++#if !defined(RENEGADE_A4_ORIGINAL_FRONTEND) || RENEGADE_VITA_M00_DEMO
+ 			GameInitMgrClass::Continue_Game();
++#endif
+@@ -1684,1 +1698,5 @@
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++			cGod::Request_Restart();
++#else
+ 			cGod::Restart();
++#endif
+@@ -1689,1 +1707,3 @@
++#if !defined(RENEGADE_A4_ORIGINAL_FRONTEND) || RENEGADE_VITA_M00_DEMO
+ 			GameInitMgrClass::Continue_Game();
++#endif
+@@ -1700,3 +1720,7 @@
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++			GameInitMgrClass::Set_Needs_Game_Exit(true);
++#else
+ 			GameInitMgrClass::Continue_Game();
+ 			GameInitMgrClass::End_Game();
+ 			GameInitMgrClass::Display_End_Game_Menu();
++#endif
+@@ -1721,1 +1745,4 @@
++#endif // original death/failure dialogs
++
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ ////////////////////////////////////////////////////////////////
+--- a/renegadedialogmgr.cpp
++++ b/renegadedialogmgr.cpp
+@@ -351,1 +351,7 @@
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || (defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO)
++		case LOC_LOAD_GAME:
++			LoadSPGameMenuClass::Display ();
++			break;
++#endif
++
+ #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+@@ -380,4 +386,0 @@
+-		case LOC_LOAD_GAME:
+-			LoadSPGameMenuClass::Display ();
+-			break;
+-
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -108,2 +108,5 @@
+ #endif
++#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "a31_interactive_runtime_policy.h"
++#endif
+ #include "string_ids.h"
+@@ -836,1 +839,9 @@
++#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++	// Preserve the native callback observer through load and start-script
++	// creation. Non-native sessions retain their original misc handler.
++	if (!A31_Interactive_Restart_Mission_Completion_Observation()) {
++		CombatManager::Set_Combat_Misc_Handler( &GameMiscHandler );
++	}
++#else
+ 	CombatManager::Set_Combat_Misc_Handler( &GameMiscHandler );
++#endif

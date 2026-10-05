@@ -202,7 +202,8 @@ enum
 //	CharacterClassSettingsDefClass
 //
 ///////////////////////////////////////////////////////////////////////////////////////////
-CharacterClassSettingsDefClass::CharacterClassSettingsDefClass (void)
+CharacterClassSettingsDefClass::CharacterClassSettingsDefClass (void) :
+	PreviousInstance (GlobalInstance)
 {
 	//
 	//	Initialize the cost and definition tables
@@ -255,8 +256,13 @@ CharacterClassSettingsDefClass::CharacterClassSettingsDefClass (void)
 ///////////////////////////////////////////////////////////////////////////////////////////
 CharacterClassSettingsDefClass::~CharacterClassSettingsDefClass (void)
 {
-	GlobalInstance = NULL;
+	if (GlobalInstance == this) GlobalInstance = PreviousInstance;
 	return ;
+}
+
+void CharacterClassSettingsDefClass::On_Load_Rejected (void)
+{
+	if (GlobalInstance == this) GlobalInstance = PreviousInstance;
 }
 
 
@@ -451,11 +457,12 @@ CharacterClassSettingsDefClass::Save (ChunkSaveClass &csave)
 bool
 CharacterClassSettingsDefClass::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				DefinitionClass::Load (cload);
+				if (!DefinitionClass::Load (cload)) loaded = false;
 				break;
 								
 			case CHUNKID_VARIABLES:
@@ -599,7 +606,7 @@ CharacterClassSettingsDefClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -659,4 +666,3 @@ CharacterClassSettingsDefClass::Get_Definition
 
 	return definition_id;
 }
-

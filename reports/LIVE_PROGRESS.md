@@ -1,5 +1,1035 @@
 # Live engineering progress
 
+# Original Options routing ownership — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: reconciled every control in the original `IDD_MENU_OPTIONS` template
+against the combined Vita frontend. Controls, Movies and Credits retain the
+dialog manager's original factory routes. Technical Options deliberately does
+not need a factory entry: `OptionsMenuClass::On_Command` directly starts the
+linked `TechOptionsMenuClass`, which owns the linked Audio, Video and
+Performance tabs. The multiplayer-options button remains hidden because that
+separate desktop/WOL options surface is not part of the supported LAN or
+Direct-IP provider boundary.
+
+Evidence: canonical resource, command-handler, factory-array and CMake source
+inspection. No source change is required. No compiler, test suite, emulator,
+device, GitHub, or GitHub Actions runner was used.
+
+Next: continue caller-level reconciliation of reachable original frontend and
+gameplay lifecycle owners without treating null factory slots as missing code.
+
+Blocker: executable validation remains paused.
+
+# Original Controls-tab resource closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: the five original Controls tabs selected by `ControlsMenuClass` now
+have strict generated-resource contracts for every primary/secondary hotkey
+control and every directly accessed movement, attack, weapon, look and
+multiplayer option. This complements the restored `InputConfigClass` record
+owner and prevents an incomplete child template from silently dropping scope,
+zoom, movement, combat or multiplayer bindings.
+
+Evidence: original tab-construction/function-map inspection and canonical
+resource selection; combined campaign/multiplayer canonical template
+generation passes with every new tab contract. No compiler, test suite,
+emulator, device, GitHub, or GitHub Actions runner was used.
+
+Next: run the canonical template generator and deterministic integrity checks,
+then continue the next lifecycle owner.
+
+Blocker: executable validation remains paused.
+
+# Active retail W3D mesh-load artifact gates — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: canonical and fast packaged-build checks now require the active
+original `MeshLoaderClass::Load_W3D` and `MeshModelClass::Load_W3D` owners.
+These are the retail prebuilt-W3D path that replaces the false obsolete
+`MeshBuilderClass` lead, and complement the existing original `MeshClass`
+render and native submission gates.
+
+Evidence: caller/implementation/link-manifest inspection. Gates are added but
+unexecuted under the validation hold; no compiler, test suite, emulator,
+device, GitHub, or GitHub Actions runner was used.
+
+Next: finish reachable frontend resource closure and verify deterministic
+staging/inventory integrity.
+
+Blocker: executable validation remains paused.
+
+# Original options dialog resource closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: added strict canonical-resource contracts for the original
+technical-options shell and its audio, video and performance tabs. Generation
+now rejects missing tab, volume, device, fixed-display, performance, LOD,
+texture and effects controls before those linked original owners can
+dereference them. Existing Vita adaptations remain limited to unavailable
+hardware settings and durable native option storage.
+
+Evidence: original options caller/control inspection and canonical resource
+selection; the combined campaign/multiplayer canonical template generator
+passes with all new contracts. No compiler, test suite, emulator, device,
+GitHub, or GitHub Actions runner was used.
+
+Next: continue through the remaining reachable frontend dialogs and lifecycle
+edges, then rerun deterministic source/inventory checks.
+
+Blocker: executable validation remains paused.
+
+# Multiplayer Help resource contract — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: followed the restored C&C reference menu's Help action into the
+linked original `HelpScreenDialogClass`. Dialog generation now rejects a
+template missing any of the 17 key-label controls that the original screen
+addresses directly. This preserves the original help owner and the existing
+Vita control-label translation while preventing a partial resource from
+silently admitting a blank or incomplete screen.
+
+Evidence: original dialog caller/control inspection and canonical resource
+selection; the combined campaign/multiplayer canonical template generator
+passes with the new Help and chat contracts. No compiler, test suite, emulator,
+device, GitHub, or GitHub Actions runner was used.
+
+Next: audit the other newly reachable full-profile options and multiplayer
+dialogs for unchecked required controls and incomplete lifecycle owners.
+
+Blocker: executable validation remains paused.
+
+# Practice/LAN multiplayer dialog closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: restored the original C&C reference pause route for full-profile
+Practice, LAN and Direct-IP sessions without enabling retired WOL siblings.
+The LAN connect-failure path no longer compiles a WOL refusal fallback after
+its WOL type and header are intentionally excluded. Resource generation now
+requires the three controls dereferenced by the original in-game chat module.
+Original Practice completion, win/intermission, restart and looping map-cycle
+ownership remain unchanged.
+
+Evidence: source/CMake/preprocessor and dialog-resource reachability
+inspection; deterministic reconstruction and staging consistency pass for 497
+ordered patches with inventory SHA-256
+`b5bdbe7ff8fcd544749e29a0e92f6e3eda3198a5ddc068fc64bc2c900e98c751`;
+`git diff --check` and staging debris inspection pass. No compiler, test suite,
+emulator, device, GitHub, or GitHub Actions runner was used.
+
+Next: restage all deterministic patches, verify inventories and continue the
+next proven original-owner gap.
+
+Blocker: executable validation remains paused.
+
+# Campaign save/script source closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: reconciled the complete campaign save/load, INI, script registrar
+and mission-completion graph. All 83 selected persistence factory/subsystem
+implementation units have owners, the released 44-unit static Scripts graph
+contains all 13 campaign mission units, and the original CampaignManager,
+score, movie and next-level owners are selected. CMake now also rejects any
+future campaign mission list entry that is absent from the released
+`Scripts.dsp` inventory instead of relying on two independent counts.
+
+Evidence: source/CMake reachability inspection and configure-time manifest
+assertion. Source evidence only; no compiler, test suite, emulator, device,
+GitHub, or GitHub Actions runner was used.
+
+Next: finish the parallel Practice/multiplayer closure audit, then continue
+the next proven missing original owner.
+
+Blocker: executable validation remains paused.
+
+# WW3D MeshBuilder omission reconciled — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: reconciled the apparently omitted released `meshbuild.cpp` against
+the active WWPhys graph. The only runtime-tree construction caller found in
+`wwphys/bpt.cpp` is enclosed by the file's top-level
+`#if 0 // OBSOLETE!!!` together with the corresponding declarations in
+`bpt.h`. Remaining `MeshBuilderClass` references use header constants or
+forward declarations. `polyinfo.cpp` has no active out-of-line caller in the
+selected `dynamesh.cpp`, while `stripoptimizer.cpp` serves the excluded desktop
+`dx8renderer.cpp`. Adding these units would therefore expand dead or replaced
+renderer code rather than close a live game owner.
+
+Evidence: current source, preprocessor and CMake reachability inspection.
+Source evidence only; no compiler, test suite, emulator, device, GitHub, or
+GitHub Actions runner was used.
+
+Next: continue the save/script, Practice/multiplayer and non-obsolete renderer
+source-closure audits and integrate only callers with a proven missing owner.
+
+Blocker: executable validation remains paused.
+
+# Original input-configuration record owner — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: added the omitted released `inputconfig.cpp` translation unit to
+the full frontend. `InputConfigMgrClass` and the restored Controls Save/Load
+dialog already construct, copy, serialize and deserialize
+`InputConfigClass`; only the record implementation that owns
+`Save`, `Load`, `Load_Variables` and assignment was absent. Canonical and
+fast artifact gates now require both chunk serialization entry points.
+
+Evidence: exact source/caller/link-list inspection. Deterministic staging still
+passes at 495 patches with inventory SHA-256
+`6392bf3f224d18bc8798f067b327436c00df124b58f6f8ed9d9ac2aa9d37c826`.
+Source selection is uncompiled and unvalidated; no build, test, emulator,
+device, GitHub, or GitHub Actions runner was used.
+
+Next: continue reconciling active callers against omitted original Commando
+translation units.
+
+Blocker: executable validation remains paused.
+
+# Original LAN host preset Save/Load — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: restored the released server-settings Save/Load dialog behind the
+visible LAN host control. Original game-data validation, settings descriptions,
+numbered preset allocation, list/edit/load/save/delete flow and message boxes
+remain the owners. Vita adapts only the retired slave/WOL dependency, WWUI's
+32-bit list-data pointer boundary, and desktop `data\\` file access. Custom
+presets now use the existing rooted `user/` server-config boundary; the
+shipped default remains a read-only retail fallback. Canonical dialog 250 and
+the host trigger are required by generated-resource checks, and packaged symbol
+gates require `ServerSaveLoadMenuClass::On_Init_Dialog`.
+
+Evidence: deterministic reconstruction passes for 495 ordered patches with
+inventory SHA-256
+`6392bf3f224d18bc8798f067b327436c00df124b58f6f8ed9d9ac2aa9d37c826`.
+This is source/staging evidence only; no compiler, test suite, emulator,
+physical device, GitHub, or GitHub Actions runner was used.
+
+Next: reconcile the parallel campaign and Practice completion audits, then
+continue the highest-impact original-engine wiring.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+Follow-up: server-config writes now accumulate success across the original
+base and derived game-data saves, inspect `Has_Write_Failed()` after final
+close/atomic replacement, and return the result to the preset dialog. The
+dialog remains open and shows the released no-disk-space error when persistence
+fails instead of reporting success.
+
+# Original LAN/Direct-IP team-selection owner — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: replaced the full-profile no-op `DlgMPTeamSelect` selection with a
+narrow adaptation of the released dialog. LAN and Direct-IP clients retain the
+original menu/list controls, live `PlayerMgrEvent` population, preferred/auto
+side controls, `MPChooseTeamSignal`, `cGameData::ReceiveSignal` and
+server-authoritative `cChangeTeamEvent`. Only the retired WWOnline
+session/channel/profile bases, members and handlers are excluded. The LAN path
+shows the released WOL-gated confirmation control, and canonical dialog 246 now
+joins the generated multiplayer templates with required-control checks. Both
+canonical and fast artifact gates now require the linked
+`DlgMPTeamSelect::DoDialog` symbol so later source-selection regressions fail
+before packaging.
+
+Evidence: deterministic reconstruction passes for 494 ordered patches with
+inventory SHA-256
+`dbd1ccf93ec6c760dd256f75ffc67121b3604db3810f6d355f20e0a7ffdd7a61`.
+This is source/staging evidence only; no compiler, test suite, emulator,
+physical device, GitHub, or GitHub Actions runner was used.
+
+Next: continue the remaining full-profile compatibility audit, then validate
+this dialog's compile/link and LAN/Direct-IP behavior when the runtime hold is
+lifted.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+## 2026-10-05 terminal-save status reconciliation
+
+The authoritative staged source already prevents creation of ambiguous
+terminal saves. `cGod::Can_Save_Current_State` admits only
+`SINGLE_RUNNING`; manual save reports a WWUI error and stays open, quicksave
+returns before slot mutation, autosave waits, and `cGod::Save` enforces the
+same rule at the serialization owner. The prior report claiming this remained
+unresolved was corrected. No new saved field or invented death/failure popup
+identity was added. Legacy terminal saves and physical behavior remain
+unverified.
+
+Deterministic staging remains at 493 ordered patches with inventory SHA-256
+`42c8ca2afacc6f7f42adbab6c7bb42aa71cf209ce9f815c8536fef140bf81361`;
+inventory consistency and `git diff --check` pass. No compiler, test, emulator,
+device, GitHub, or GitHub Actions runner was used.
+
+## 2026-10-05 Direct-IP connecting-dialog input ownership
+
+The Direct-IP wait loop now continues dispatching frontend WWUI key edges while
+its Vita provider popup remains visible in a disabled `Connecting` state.
+Circle reaches the popup's `VK_ESCAPE`/`IDCANCEL` route, which explicitly
+signals cancellation to `A31ClientConnect`; the classified network-join failure
+path then performs strong teardown and returns to the main menu. The released
+`DlgMPConnect` remains owned by LAN/WOL and is deliberately not introduced here
+because it would compete for `Start_Game` ownership. Previously Direct-IP
+closed its endpoint popup and stopped all WWUI dispatch once the join began,
+leaving no ordinary user-facing cancel action.
+
+Deterministic incremental staging remains at 493 ordered patches with inventory
+SHA-256 `42c8ca2afacc6f7f42adbab6c7bb42aa71cf209ce9f815c8536fef140bf81361`;
+the staging inventory, debris scan and `git diff --check` pass. Source evidence
+only: no compiler, tests, emulator, physical device, GitHub, or GitHub Actions
+runner was used.
+
+## 2026-10-05 Direct-IP failure recovery
+
+Direct-IP parse/initialization failure, refused or failed admission, 30-second
+timeout, and user cancellation now set a durable frontend failure observation.
+If no original world was requested, the runtime assigns the distinct
+`A35_LOAD_NETWORK_JOIN_FAILED` classification, completes the same strong
+session teardown gate used by rejected loads, and reopens the original main
+menu. It no longer treats a failed Internet-menu join as an application exit or
+as a successfully loaded game.
+
+The shared remote-network ownership check also distinguishes a failed LAN
+selection. LAN client/host flags retain `LOC_LAN_MAIN` as the recovery
+destination and use a LAN-specific phase; Direct-IP returns to the ordinary
+main menu. This prevents the shared initialized-network flag from relabeling or
+misrouting LAN failure.
+
+Deterministic incremental staging remains at 493 ordered patches with inventory
+SHA-256 `42c8ca2afacc6f7f42adbab6c7bb42aa71cf209ce9f815c8536fef140bf81361`;
+the staging inventory, debris scan and `git diff --check` pass. Source/staging
+evidence only: no compiler, tests, emulator, physical device, GitHub, or GitHub
+Actions runner was used.
+
+## 2026-10-05 original Internet control to Direct-IP
+
+The enabled original main-menu Internet control now opens a Vita-owned popup
+made from the existing WWUI popup/edit controls. Cross on its edit field uses
+the established native IME path. Input is ASCII-bounded and admitted by the
+shared strict Direct-IP/optional `tt://` parser before the frontend latches it.
+The same menu generation then enters the existing original
+`GameInitMgr::Initialize_Direct_IP`, `cNetwork` and `A31ClientConnect` lifecycle;
+no obsolete GameSpy service or replacement gameplay loop owns the session. A
+bare IPv4 address uses port 4848, while the private one-shot compatibility file
+retains its previous explicit-port requirement.
+
+Deterministic incremental staging passes with 493 ordered patches and inventory
+SHA-256 `42c8ca2afacc6f7f42adbab6c7bb42aa71cf209ce9f815c8536fef140bf81361`;
+the staging inventory and `git diff --check` pass. Source/staging evidence only:
+no compiler, tests, emulator, physical device, GitHub, or GitHub Actions runner
+was used. Connection-failure recovery and physical IME behavior remain runtime
+acceptance items.
+
+## 2026-10-05 ordinary-save campaign/source binding
+
+An accepted original save now reaches post-load publication only when its
+restored campaign state is compatible with the map named by its original save
+header. Normal campaign states must resolve to the same retail archive;
+Tutorial's non-campaign sentinel is admitted only for `M00_Tutorial.mix`, the
+active Replay sentinel retains its header-owned non-advancing route, and the
+intermission-only replay-score sentinel is rejected. A mismatch discards
+post-load callbacks, aborts partial level finalization, and enters the existing
+classified local-load recovery path.
+
+Deterministic incremental staging passes with 492 ordered patches and inventory
+SHA-256 `8f44da574ac3e926a5061edb80927e3aedfb0461cb6fd09316b77173c7f468cd`;
+the staging inventory, debris scan and `git diff --check` pass. Source/staging
+evidence only: no compiler, tests, emulator, physical device, GitHub, or GitHub
+Actions runner was used.
+
+## 2026-10-05 campaign movie-unlock write status
+
+The original campaign movie directive now uses a checked string-write boundary.
+The Vita Movies provider reports invalid/locked registry state, rejected keys,
+allocation failure and durable-file replacement failure to
+`CampaignManager::Continue`; the campaign records a diagnostic and continues
+the released progression rather than silently losing the unlock or rolling back
+an already completed mission.
+
+Deterministic incremental staging passes with 491 ordered patches and inventory
+SHA-256 `6be2fc715c9bcbb9cd090005ec53da7cd27bd5704b5c23070e52ea9e326a3697`;
+the staging inventory, debris scan and `git diff --check` pass. Source/staging
+evidence only: no compiler, tests, emulator, physical device, GitHub, or GitHub
+Actions runner was used.
+
+## 2026-10-05 campaign intermission owner loss
+
+Campaign intermission now classifies sustained absence of both dialogs and an
+active original Movie mode. This closes an infinite pump after failed score
+construction, a lost movie callback, or an unexpectedly vanished end menu,
+while preserving unlimited valid dialog dwell and full movie duration.
+
+Source inspection and `git diff --check` are the available evidence. No
+compiler, tests, emulator, physical device, GitHub, or GitHub Actions runner was
+used.
+
+## 2026-10-05 campaign backdrop selection
+
+Campaign backdrop lookup now distinguishes a valid match at catalog index zero
+from a real lookup miss and stops at the first matching retail record. The
+released index-zero fallback remains in place for missing states.
+
+Deterministic incremental staging passes with 490 ordered patches and inventory
+SHA-256 `389ebb97b2aa993a9b460f28f31c5132ab360527598b21cd2832f76bb298f9e6`;
+the staging inventory, debris scan and `git diff --check` pass. Source/staging
+evidence only: no compiler, tests, emulator, physical device, GitHub, or GitHub
+Actions runner was used.
+
+## 2026-10-05 load and replay inventory commit
+
+The Vita frontend no longer resets original carried inventory merely because
+the load dialog was invoked. Ordinary saves reset after their request is
+latched; replay retains the existing reset in `CampaignManager::Replay_Level`
+after difficulty acceptance. Cancel and no-selection paths preserve the
+suspended campaign.
+
+Deterministic incremental staging passes with 489 ordered patches and inventory
+SHA-256 `0c7850abe0fd95f967e88d1771918b22b1b13907d8e1de0a9e28a96dc43007af`;
+the staging inventory, debris scan and `git diff --check` pass. Source/staging
+evidence only: no compiler, tests, emulator, physical device, GitHub, or GitHub
+Actions runner was used.
+
+## 2026-10-05 mission dependency preload admission
+
+Original dependency preloading now reports optional absence separately from
+malformed dependency chunks and rejected listed W3D assets. File open, chunk
+closure, filename reads, child asset results and final stream status feed a new
+dependency-preload failure code. The native failure latch now resets before
+preload so that result survives into established level-load cleanup.
+
+Deterministic incremental staging passes with 488 ordered patches and inventory
+SHA-256 `e59bda7d9e17fe0f76e74fcb2ff712223c7f8316e5b4539a83488d31df3ee474`;
+the staging inventory, debris scan and `git diff --check` pass. Source/staging
+evidence only: no compiler, tests, emulator, physical device, GitHub, or GitHub
+Actions runner was used.
+
+## 2026-10-05 campaign state/source binding
+
+The next-session campaign restore now requires the loaded original campaign
+state to point at a `Level` directive matching the separately resolved archive.
+Catalog, source, state-read, state-load and mismatch failures are classified
+before world creation and routed through existing cleanup-gated menu recovery.
+
+Deterministic incremental staging passes with 486 ordered patches and inventory
+SHA-256 `9a0e690b9c4907c982e62c26a26f898338827bfc6e98ebbb1614b2a9fcb7eda9`;
+the staging inventory, debris scan and `git diff --check` pass. Source/staging
+evidence only: no compiler, tests, emulator, physical device, GitHub, or GitHub
+Actions runner was used.
+
+## 2026-10-05 original LAN browser routing
+
+The Vita frontend now restores the linked original
+`MPLanGameListMenuClass` factory during every dialog-manager initialization.
+The LAN main-menu command can therefore route from original network
+initialization into the original LAN browser instead of hitting a null factory.
+
+Deterministic incremental staging passes with 485 ordered patches and inventory
+SHA-256 `9ab8f19ef67bedabc43acbcb449b0d6abf23a86c317b6c2c088f757c944db056`;
+the staging inventory, debris scan and `git diff --check` pass. Source/staging
+evidence only: no compiler, tests, emulator, physical device, GitHub, or GitHub
+Actions runner was used.
+
+## 2026-10-05 configured Practice map-cycle names
+
+The native next-round resolver no longer imposes an extra `C&C_` or
+`Skirmish` prefix on original configured map-cycle entries. It accepts bounded
+MIX basenames while still rejecting control characters, separators and colons;
+the rooted file factory remains the availability owner. This preserves legal
+later-slot maps selected by original `Rotate_Map`.
+
+Source inspection and `git diff --check` are the available evidence. No
+compiler, tests, emulator, physical device, GitHub, or GitHub Actions runner was
+used.
+
+## 2026-10-05 animated primitives and Practice menu handoff
+
+Sphere and ring W3D prototypes now require one exact definition and unique
+animation-channel records, retain child stream failure, and publish only after
+successful admission. Separately, a Practice intermission that completes while
+the original C&C reference menu is open now exits that nested pump when the
+original restart, exit, or client-quit request appears, allowing the existing
+outer transition owner to rotate/reload or cleanly leave the session.
+
+Deterministic incremental staging passes with 484 ordered patches and inventory
+SHA-256 `5df10056c72816b157e0c92b0640c01f8c5b9c03108c3ff023dbef36940a0192`;
+the staging inventory, debris scan and `git diff --check` pass. Source/staging
+evidence only: no compiler, tests, emulator, physical device, GitHub, or GitHub
+Actions runner was used.
+
+## 2026-10-05 fixed W3D prototype admission
+
+Box and null-object prototype loaders now require their exact released record
+size, a complete stream read and a nonempty terminated name. Truncated records
+return through the existing WW3D failure path instead of publishing partially
+initialized render prototypes.
+
+Deterministic incremental staging passes with 483 ordered patches and inventory
+SHA-256 `059da1e58c8bab9535c53b21b7301c4b97ccad3ec0a1f119d16b62b583624385`;
+the staging inventory, debris scan and `git diff --check` pass. Source/staging
+evidence only: no compiler, tests, emulator, physical device, GitHub, or GitHub
+Actions runner was used.
+
+## 2026-10-05 Dazzle definition admission
+
+Original Dazzle prototypes now require exactly one nonempty name and registered
+type. Duplicate, missing, truncated and unknown type records fail through the
+existing W3D loader instead of publishing a prototype with an arbitrary type
+zero. Dazzle rendering and the retail type registry remain the owners.
+
+Deterministic incremental staging passes with 482 ordered patches and inventory
+SHA-256 `ea7590dcc843d5ae08085953218b9cbcc22d8c2d0b9d29a54e85542bcfd26a53`;
+the staging inventory, debris scan and `git diff --check` pass. Source/staging
+evidence only: no compiler, tests, emulator, physical device, GitHub, or GitHub
+Actions runner was used.
+
+## 2026-10-05 WW3D aggregate load status
+
+The original WW3D asset manager now propagates failures from hierarchy,
+animation and prototype loaders and includes the chunk reader's sticky status
+in its result. A required W3D file can no longer be reported as successfully
+loaded after one of those original child owners rejected content. Publication
+and failure cleanup remain with the existing asset manager and level lifecycle.
+
+Deterministic incremental staging passes with 481 ordered patches and inventory
+SHA-256 `6c51e64c9bd530866af09836377a4d20ef13b1e2e5959bc41e5a90bf36c34b1b`;
+the staging inventory, debris scan and `git diff --check` pass. Source/staging
+evidence only: no compiler, tests, emulator, physical device, GitHub, or GitHub
+Actions runner was used.
+
+## 2026-10-05 campaign catalog reinitialization
+
+Source review closed a repeated-frontend-generation defect in the original
+campaign owner. `CampaignManager::Init` now clears its process-global flow and
+backdrop catalogs before reparsing retail `campaign.ini`, preventing duplicate
+score/movie/level directives after recovery or reinitialization. Retail data
+continues to own the complete sequence.
+
+Deterministic incremental staging passes with 480 ordered patches and inventory
+SHA-256 `474d34cab6a8e72e51016cfb9e875ae52ff9eaa7b37783d1ad6580bad492f74f`;
+the staging inventory, debris scan and `git diff --check` pass. This is source
+and staging evidence only. No compiler, tests, emulator, physical device,
+GitHub, or GitHub Actions runner was used.
+
+## Native retained procedural material passes
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: review the source-only native projector/APT implementation and identify the
+next original material-effect boundary without linking the incompatible desktop
+FVF renderer.
+Completed: existing `Submit_Mesh` callers retain their null/base behavior; the
+native renderer now retains both MaterialPass and Mesh owners in separate rigid,
+skinned and delayed-rigid FIFO queues, drains them in the original broad order
+around decals, and releases them on flush, invalidation and shutdown. The
+internal emitter selects the retained pass's shader, textures and material while
+reusing original transforms, skin deformation, UV generation and material
+lighting. Static-sort levels flush their own queued passes. TransitionEffect's
+original Push/Pop route is restored. Rigid projected passes now transform the
+original world cull box into model space, invoke the original cull-tree/backface
+APT generator, and emit triangles in returned APT order. As in the original
+`Render_Material_Pass`, skinned meshes keep their whole-mesh procedural path.
+Evidence: source inspection, delegated read-only ownership review, deterministic
+zero-fuzz patch replay and `git diff --check` only; no build, test, emulator,
+device, GitHub or GitHub Actions runner.
+Next: reconcile delegated source review, close any remaining mapper/projector
+state gap, and then compile and validate when the runtime-test hold is lifted.
+Blocker: runtime validation remains paused; changes local/uncommitted/unvalidated.
+
+## Direct-IP two-generation round resources
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: preserve original Direct-IP intermission and repeated-round ownership across
+stock maps, TT-provided levels, override-only groups and Glacier supplementation.
+Completed: `cWinEvent` hands map/mod CRC identity to the native client seam
+without mounting original `.pkg` state; incomplete TT offers remain pending;
+validated resources mount into an unpublished second factory; a latched restart
+publishes the next stock/TT/Glacier provider set only after original
+`Core_Shutdown`; and the new generation waits for reciprocal replicated
+player/star binding. Direct round map validity fails closed while resources are
+pending or failed, preventing stale stock files from authorizing a restart.
+Cycle-over win events are claimed without preparing or downloading another
+generation, leaving original intermission exit ownership intact. With no
+end-of-offer packet in the admitted TT subset, selection uses a frozen resource
+snapshot at the reliable win event and fails if its generation mutates before
+publication; the remaining event-boundary protocol assumption stays explicit
+in KNOWN_GAPS.
+Evidence: source inspection, delegated read-only review, `git diff --check`, and
+zero-fuzz reverse/forward patch structure checks only. No build, test suite,
+emulator, physical device, GitHub or GitHub Actions runner was used.
+Next: resolve final source review findings, then retain this batch for later ARM
+compile/link and bounded Direct-IP repeated-round validation when the hold lifts.
+Blocker: runtime validation remains paused; changes local/uncommitted/unvalidated.
+
+## Fallible round-provider publication
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: prevent a failed next-round provider transaction from loading against a
+partial or stale resource set.
+Completed: the original Combat core-restart callback now returns success or
+failure after old-world shutdown. Failure records a dedicated resource-provider
+load code and stops before Load_Level, player re-admission, loading-finished
+events, MultiHUD initialization and waiting-player enablement. The current
+Practice archive swap callback follows the new contract.
+Evidence: source inspection and zero-fuzz deterministic patch application only;
+no build, test suite, emulator, hardware, GitHub or GitHub Actions runner.
+Next: compile and validate the current/pending Direct-IP generations now wired
+through this fail-closed seam.
+Blocker: runtime validation remains paused; changes local/uncommitted/unvalidated.
+
+## Development campaign-save launch
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: remove the tutorial-only bottleneck from the opt-in development save route.
+Completed: full-port development builds accept sanitized original campaign save
+requests only after the existing SaveGameManager-backed resolver validates the
+save map and derives its retail archive name. The original load path still owns
+archive availability and deserialization. Campaign death restart now supplies
+the resolver's required save-classification output and rejects save sources in
+that map-only reload envelope; the prior null output rejected every restart.
+M00 demo remains tutorial-only and standalone mission requests
+remain map-only.
+Evidence: source inspection and local contract edits only; no tests, staging,
+build, emulator, hardware, GitHub or GitHub Actions runner.
+Next: compile the Direct-IP next-round provider transaction and continue
+procedural material passes.
+Blocker: runtime validation remains paused; changes local/uncommitted/unvalidated.
+
+## Beacon checkpoint state and Direct-IP exit ownership
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: preserve original beacon checkpoint state and consume remote terminal exits.
+Completed: beacon save/load now retains warning time and weapon-definition
+identity, restores legacy state conservatively, and reconstructs armed audio
+without resetting original detonation state. Its two zero-fuzz staging patches
+reproduce the active source byte for byte. Direct-IP broken-connection and
+original pending-exit edges now enter the shared GameInitMgr teardown owner.
+Evidence: source inspection, deterministic patch replay and diff inspection
+only; no build, test suite, emulator, device, GitHub or GitHub Actions runner.
+Next: validate the two-generation Direct-IP resource transaction before claiming
+remote repeated-round restart; continue native procedural material-pass work.
+Blocker: runtime validation remains paused; changes local/uncommitted/unvalidated.
+
+## Per-generation player-binding evidence
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: prevent a prior world's player evidence from admitting a later round.
+Completed: interactive results now count loaded, reciprocally player-bound and
+first-rendered world generations separately. Final success requires all three
+nonzero counts to match. Campaign restart advances binding only after its
+immediate original star contract succeeds; Practice/LAN advances only after the
+post-restart simulation or replication frame establishes player/star/control
+ownership.
+Evidence: source inspection and local edits only; no staging, compilation,
+tests, emulator, hardware, GitHub or GitHub Actions runner.
+Next: Direct-IP next-round resource identity/preparation and procedural pass
+rendering.
+Blocker: runtime validation remains paused; changes local/uncommitted/unvalidated.
+
+## M13 finale retail-to-source linkage
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: the original M13 finale target/type is confirmed across private retail
+data and released source.
+Completed: read-only `M13.mix` inspection resolves `x0z_finale.txt`; its final
+frame sends custom 445009 to placed object 1500017, matching
+`MX0_MISSION_SUCCESS` and `MX0_Area4_Controller_DLS::Custom`, which owns
+`Mission_Complete(true)`. The authored 22/25-second timer chain and final
+camera/HUD restoration remain intact. No retail bytes or inventory were added
+to tracked files, and no completion fallback was fabricated.
+Evidence: local source and private retail inspection only; no staging, test,
+build, emulator, device or GitHub Actions operation.
+Next: eventual candidate evidence must distinguish Area4 FINALE timer delivery,
+control-file open, target resolution, custom dispatch and completion callback.
+Blocker: runtime validation remains paused; source work continues elsewhere.
+
+## Frame-rate-independent stuck animation recovery
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: the retained one-shot action recovery measures stalled gameplay time.
+Completed: removed the 300/1,800 `Act()`-call thresholds that changed authored
+completion timing with frame rate. The existing `Frame >= NumFrames-1`
+completion correction remains authoritative; fallback completion now requires
+five logical seconds with no frame advance, does not accumulate while paused,
+and explicitly resets for objects under active cinematic freeze. The diagnostic
+reports logical stalled time instead of misleading frame counts.
+Evidence: source inspection and local source/patch/contract edits only; no test,
+staging, build, emulator or device operation was performed.
+Next: retain this in the eventual death/cinematic action acceptance matrix and
+continue renderer/projector and complete-game lifecycle closure.
+Blocker: testing/device hold; changes local/uncommitted/unvalidated.
+
+## Procedural material-pass adapter rejection
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: reject an adapter that depended on desktop renderer symbols absent from
+the Vita link graph.
+Completed: traced the proposed Mesh registration route through CMake and found
+that Vita links the reduced `ww3d_dx8_boundary.cpp` implementation instead of
+`dx8renderer.cpp`. `Register_Mesh_Type`, FVF material queues and skin-container
+methods therefore have no linked implementation in the native graph. The
+invalid source/patch changes were removed and the established transition guard
+restored before they could become candidate state.
+Evidence: source/link-graph inspection only; no staging, compilation, test,
+emulator or device work was performed.
+Next: implement a native queue with explicit Mesh/MaterialPass references,
+uniform-pass geometry submission, skin deformation, APT selection, delayed
+ordering and state restoration, or prove that the complete original renderer
+can replace the reduced boundary without duplicate definitions.
+Blocker: testing/device hold; changes local/uncommitted/unvalidated.
+
+## Native DXT CPU/mip contract
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: native DDS acceleration fails explicitly when lazy CPU reconstruction fails and preserves complete requested mip chains.
+Completed: `GetSurfaceLevel`/`LockRect` no longer manufacture or expose blank surfaces after a failed lazy decode; native compressed upload is selected only when it represents every requested mip, otherwise the existing decoded path retains sub-4x4 tail levels.
+Evidence: GPT-5.6 source audit and local source edits only; no staging/tests/build/device work.
+Next: reconcile texture/static-geometry/audio residency under a shared measured resource budget.
+Blocker: testing/device hold; changes local/uncommitted/unvalidated.
+
+## Static-mesh mutation invalidation
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: cached rigid-mesh streams are forgotten before released engine mutation entry points change their source data.
+Completed: connected pass, material, texture and shader setters; writable colour/material/texture/shader array acquisition; geometry/UV/colour uniqueness; and alternate-material switching to model-scoped cache invalidation. Existing reset/destruction and user-lighting invalidation remain intact.
+Evidence: GPT-5.6 source audit and local source/patch edits only; no staging/tests/build/device work.
+Next: cover retained writable-array aliases and lazy DXT source/mip correctness, then reconcile the unified resource budget.
+Blocker: testing/device hold; changes local/uncommitted/unvalidated.
+
+## Transparent-sort low-memory correctness
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: radix workspace growth no longer destroys the old workspace before allocation succeeds.
+Completed: changed all five native sort-buffer allocations to non-throwing transactional replacement; allocation pressure retains the prior workspace and falls back to the original sorter instead of aborting under the target's `-fno-exceptions` build.
+Evidence: GPT-5.6 source audit plus local patch/staged-source inspection; no executed tests/build/device work.
+Next: close static-mesh cache mutation/lifetime validity before accepting the renderer optimizations.
+Blocker: testing/device hold; changes local/uncommitted/unvalidated.
+
+## Original Movies teardown ownership
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: the original Movies dialog balances Bink and main-audio ownership on every teardown path.
+Completed: added dialog destruction cleanup so frontend flush/session transition stops an active replay and releases temporary main-audio suppression even when Escape or a final render callback is not delivered.
+Evidence: source inspection and local patch edit only; no staging/tests/build/device work.
+Next: reconcile campaign, LAN/direct-IP and renderer/performance completion audits.
+Blocker: testing/device hold; changes local/uncommitted/unvalidated.
+
+## Atomic rooted save replacement
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: interrupted save/config writes preserve the previous visible file.
+Completed: current staged writer targets a sibling, closes it, then renames on
+success; failed flush/close/rename removes the sibling and retains failure state.
+Evidence: dev236 partial-save/source reconciliation and local edits only; no
+staging/tests/build/device work.
+Next: stale pending cleanup, terminal-save admission and invalid-save listing.
+Blocker: testing/device hold; changes local/uncommitted/unvalidated.
+
+## Original Practice win-screen resource closure
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: canonical C&C victory dialog is selected for full-port generation.
+Completed: added original dialog 248 required by restored CNCWinScreenMenuClass;
+added its required-control generation gate; documented persisted higher
+map-cycle entries and unchanged default looping.
+Evidence: source inspection/local edits only; no generator/tests/build/device work.
+Next: critical-control resource gate and remaining delegated audit integration.
+Blocker: testing/device hold; changes local/uncommitted/unvalidated.
+
+## Original campaign catalog readiness
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: full-port New Campaign requires a non-empty original parsed catalog.
+Completed: exposed read-only CampaignManager readiness and gated native startup;
+retail campaign.ini remains the sole sequence/order owner and teardown stays balanced.
+Evidence: source inspection/local edits only; no staging/tests/build/device work.
+Next: integrate remaining campaign, Practice and full-game subsystem audits.
+Blocker: testing/device hold; changes local/uncommitted/unvalidated.
+
+## Practice map-cycle archive lifetime follow-up
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: changed-map Practice archive publication occurs inside original restart.
+Completed: confirmed one-map replay semantics; moved multi-map factory swap to
+the post-Core_Shutdown/pre-Load_Level seam so old resources cannot outlive their
+provider. Same-map replay and original rotation remain unchanged. Post-reload
+player identity now rejects a missing/inactive/stale Practice binding while
+leaving next-frame commando creation with original cNetwork/cGod ownership;
+the first normal post-reload frame must then produce a mutually bound local star
+with the expected control owner. Campaign restart requires cGod's immediate
+original star binding.
+Evidence: source inspection/local edits only; no staging/tests/build/device work.
+Next: remaining original restart/player/resource ownership and campaign gaps.
+Blocker: testing/device hold; changes local/uncommitted/unvalidated.
+
+## Original gameplay overlay source consumers
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: native frame calls shared original name/list and game-limit presentation.
+Completed: original CombatGameMode overlay groups extracted and shared with
+native simulation/render; existing cNetwork/cGod spawn owner traced and retained;
+original non-mission player-list format action connected to Select release.
+Original local-server bandwidth-budget adaptation now receives native frame
+network/Combat intervals through the linked cSbboManager owner.
+Missing original player/team/game-data process initialization and shutdown are
+now connected around the native gameplay session under HUD coordinates.
+Original player-name construction now treats the optional WOL presenter as
+nullable while preserving its service-specific recruit tag.
+Evidence: source inspection/local edits only; no staging/tests/build/device work.
+Next: repeated-round progression and remaining original input/session gaps.
+Blocker: testing/device hold; changes local/uncommitted/unvalidated.
+
+## Original reload loading-screen source lifetime
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: original Combat reload's fresh screen supplies scoped native callbacks.
+Completed: first-load callback/model/font references released before full-port
+gameplay; borrowed reload screen disarms before destruction; local reload uses
+loading layout scope before existing gameplay rebind. Demo lifetime retained.
+Evidence: source inspection/local edits only; no staging/tests/build/device work.
+Next: remaining original restart/resource and campaign progression gaps.
+Blocker: testing/device hold; changes local/uncommitted/unvalidated.
+
+## Skirmish next-round rejection source classification
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: next-round source/archive rejection retains failure before original restart.
+Completed: original default map-cycle and Practice launch re-inspected; missing
+failure classification connected to existing cleanup-gated menu recovery.
+Evidence: source inspection/local edit only; no staging/tests/build/device work.
+Next: remaining original restart/loading/resource ownership gaps; repeated-round
+acceptance and campaign completion stay open.
+Blocker: testing/device hold; source work continues. Changes uncommitted.
+
+## Manual save and restored-player failure source wiring
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: manual-save errors retain the original dialog; invalid restored bindings
+request guarded original-menu recovery after cleanup.
+Completed: writer status connected to manual dialog, original error popup,
+null-factory slot-search exit, free-space-query feedback; four existing player
+binding rejections retain failure code11. Original terminal-state save reviewed.
+Evidence: source inspection only; no staging/tests/build/device work.
+Next: original save/state/frontend gaps; terminal popup restoration remains open.
+Blocker: testing/device hold; source work continues. Changes uncommitted.
+
+## Initial mission/save failure recovery source wiring
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: known local initial-load failure routes request original-menu recovery.
+Completed: rejected selections/missing selected MIX and original reported load
+failures retain distinct evidence; pre-load owns partial teardown; loading gates
+unwind; early SP/partial network/server-FPS ownership retained for cleanup.
+Recovery requires null game data/transport/server-FPS as well as world resources.
+Evidence: source inspection only; no staging/tests/build/emulator/device work.
+Next: save/death-state and remaining original frontend/session ownership gaps.
+Blocker: testing/device hold; source work continues. Changes uncommitted.
+
+## Original mission replay frontend source wiring
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: original unlocked-map difficulty and deferred replay source route connected.
+Completed: LoadSPGame bypass restricted to demo; difficulty callback records
+replay; selection retained across pause/death cleanup; startup invokes original
+CampaignManager replay. Final-score/menu save/replay choices use their own
+load handoff. Original difficulty load semantics inspected.
+Evidence: source inspection only; staging/compile/runtime behavior unverified.
+Next: remaining initial-load failure and save/frontend ownership gaps.
+Blocker: testing/device hold; source work continues. Changes uncommitted.
+
+## Original campaign death/failure source wiring
+
+Renegade Vita — v3.5 active
+[░░░░░░░░░░] 0/10 new runtime evidence gates complete
+
+Now: original death/failure UI and deferred restart/load/quit are source-wired.
+Completed: real popup handlers and cGod/frontend includes selected; restart
+request consumed between frames through original cGod; original load-menu
+location and selected-source retention restored; terminal evidence retained
+until actual reload. Shared reload presentation references are rebound.
+Evidence: source inspection only; no executed staging/tests/build/device work.
+Next: remaining original session/frontend ownership gaps.
+Blocker: validation/device hold; source development continues.
+
+Reload callback follow-up: original Load_Level preserves an active native
+observer before object/script creation; new callbacks are no longer reset
+after reload. The first terminal-event consumer offers deferred failures/death
+to original cGod with its duplicate/state guards. Source-only wiring; startup
+callback behavior remains unverified.
+
+## Original Practice victory screen source wiring
+
+Confirmed original DoMapsLoop true: one-map cycles replay, longer cycles
+advance and wrap. Restored source selection/creation and real close callbacks
+for the original CNC win dialog. Optional WOL lookup is guarded and native
+cancel requests deferred original teardown; automatic countdown close still
+leads to original cycle restart. Also replaced messages.cpp's empty GameInit
+include in the full frontend so cycle-end/manual-exit requests reach the real
+owner. No original round rule changed. Source only,
+local/uncommitted/unvalidated; no tests/build/staging/device actions.
+
+## Failed Practice reload recovery source wiring
+
+Separated known required-load failure from renderer failure in the native
+result. Original menu re-entry now requires released world/player/network,
+renderer and audio state; the failed session remains excluded from PASS.
+Recovery logs retain code/count and menu re-entry primes existing held-key
+tracking. Local/uncommitted/unvalidated; no tests/build/staging/device actions.
+
+## Required Practice reload failure propagation
+
+Reused the existing native required-load status at original Combat Load_Level.
+Known failures now skip post-load gameplay finalization; the shared restart
+owner suppresses in-game/loading-success handoff and native cleanup observes
+the failure. Corrupt-level menu recovery remains open. Local source only;
+no staging, tests, builds or device actions.
+
+## Original pending game-exit source wiring
+
+Connected local map-cycle/manual-exit requests to original GameInitMgr::Think
+between native frames. Read-only request query, presentation reference release,
+and observed Combat inactivity preserve original teardown ownership; full exit
+and menu return remain distinct. Source only, uncommitted/unvalidated; no
+tests/build/staging/device actions. See PRACTICE_COMPLETION_WIRING.md.
+
+## Practice completion source trace
+
+Local source now connects a shared original Combat restart consumer between
+Practice frames. It mounts changed-map data, releases old presentation references,
+restores completion/HUD bindings and resets cached observations after original
+reload. Unsupported/missing next archives return through normal cleanup.
+Patch application, compile and runtime behavior remain unvalidated; all edits
+local/uncommitted. Remote restart remains separate and incomplete.
+
+Confirmed existing original network win/intermission owner and missing native
+core-restart consumer. Remote handling currently treats restart as menu exit.
+Original restart unloads level/resources; native cached state must be reconciled
+before connecting it. Source evidence only; no tests/build/device actions.
+See [Practice completion](PRACTICE_COMPLETION_WIRING.md).
+
+## Single-player completion priority
+
+M13 finale source trace identifies the Area 4 controller in Test_DLS.cpp,
+its 25-second FINALE timer, Test_Cinematic control file and custom success
+event. Area 3's end zone and the beacon planter do not own mission success.
+Current retail control-file target and live delivery remain unverified;
+no forced-success workaround or authored timing change was made.
+
+Source review traces the existing original CampaignManager intermission route
+and finds a missing native consumer for its next-level autosave request.
+Local source now connects a shared original Combat autosave consumer after
+simulation, retaining request clearing and checking close-time write status.
+M13 finale, score/next-level behavior and Practice restart remain unverified.
+No tests, builds or device actions under the hold. See
+[completion review](SINGLE_PLAYER_COMPLETION_WIRING.md).
+
+## Native text-entry provider correction and chat controls
+
+Inspection found the existing SceImeDialog provider and EditCtrl/session/input/
+renderer hooks; earlier missing-provider wording was incorrect. Added local
+non-mission chat chords (Select+Triangle public, Select+Circle team), Square
+submission to original focused-edit Enter handling, and a generic keyboard
+title. Source only; no executed checks, builds or device actions. See
+[chat route](ORIGINAL_CHAT_ROUTE_WIRING.md).
+
+## Original public/team chat entry source wiring
+
+Extracted the original chat-entry block into a shared Combat method and called
+it from native input processing. Existing popup/dialog/text-event owners are
+preserved. Vita text entry and bindings remain absent; no usable-chat claim.
+No executed validation or device actions under the hold. See
+[chat entry](ORIGINAL_CHAT_ROUTE_WIRING.md).
+
+## Original radio route source wiring
+
+Selected the original radio display unit, separated original radio command
+processing from online-UI guards, and connected its shared original input owner
+and HUD rendering to native frame boundaries. Source edits only; staging,
+compile/link, Vita controls and controlled peer acceptance remain open.
+No tests or device actions. See [radio route](ORIGINAL_RADIO_ROUTE_WIRING.md).
+
+## A3.6 source follow-up
+
+Save-owner continuation carries native provider close-time status through
+SaveGameManager to original Quick_Save. Failed open/write now suppresses the
+success HUD and slot toggle. New staging patches are selected but unexecuted;
+native FileClass interface changes require a coherent rebuild. No tests,
+builds, device actions or acceptance claims. Changes remain local.
+
+Reviewed main through9f05633 and preserved the performance overhaul. Local
+corrections check log sync deadlines while producers remain active, stop the
+writer on sink failure, wake flush waiters, and retain staged-save write failure
+until successful reopen. Source inspection only; no tests/build/device actions
+under the user's current restriction. Final save failure propagation into the
+original caller and GPU-cache/render/audio review remain open. No new physical
+gate or performance acceptance. See
+[source review follow-up](A36_SOURCE_REVIEW_FOLLOWUP.md).
+
 ## Dev238 M13 performance candidate — 2026-10-04
 
 Performance is the active development priority. Dev236 physical combat records
@@ -154,6 +1184,22 @@ Triangle interactions, and C4 detonation. First full dev232 validation failed
 under tracer because LeakSanitizer cannot run under ptrace, plus the stale
 Triangle expectation; that expectation is corrected and sanitized validation
 passed outside the tracer with sanitizers enabled.
+
+2026-10-05 source continuation: the original controls UI now describes the
+already-restored Vita bindings for primary fire, secondary fire/UseWeapon,
+reload, both weapon-cycle directions, sniper zoom and camera toggle instead of
+falling through to `Unbound`. This changes labels only; the original Input
+action map and Dev232 L-edge scope behavior remain the owners. The update is
+uncompiled and has no new Vita/PSTV evidence.
+
+PSTV continuation: original `FirstPersonToggle` now also receives a
+campaign-only Select+Circle chord because PSTV cannot emit rear-touch input.
+The chord suppresses Circle crouch for that edge. Practice/LAN retain their
+existing Select+Circle team-chat route, plain Circle remains crouch, and Vita
+rear touch remains available. This is source-only and physically unverified.
+Both original control-description routes now show that composite camera-toggle
+label, and the configurable-controls key-name route identifies F5 as
+Select+Square instead of an untranslated keyboard key.
 
 ## Animation clock regression — 2026-10-04
 
@@ -9897,3 +10943,2175 @@ unknowns, 20 patched-original rows, eight boundary replacements, seven disabled
 guards and 12 exclusions.
 Next: review the renderer presentation guards in coherent source-owner clusters.
 Blocker: none for source work; all-map asset cases and hardware stalls remain open.
+
+# Campaign save integrity source closure — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: coordinated findings from three GPT-5.6 Sol audits into campaign
+save-state admission and corrupt-save list filtering. Saves are admitted only
+while original `cGod` owns a running single-player state; unreadable `.sav`
+metadata is no longer offered by the original load menu. This complements the
+same-directory atomic rooted-file replacement already wired locally.
+Evidence: source inspection only. No staging, test, build, emulator, device,
+commit or push operation ran under the active user test hold.
+Next: continue source closure for durable preferences and omitted original
+frontend routes, then validate the accumulated candidate when the hold changes.
+Blocker: runtime validation remains intentionally paused.
+
+# Parallel completion audits and rejected-load callback order — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: three GPT-5.6 Sol read-only audits traced campaign progression,
+Practice repetition and remaining save/runtime gaps. Practice retains original
+always-looping behavior: one configured map reloads itself, while additional
+configured slots rotate and wrap. The native direct startup path now checks the
+required-load failure latch and discards callbacks before any behavioral
+post-load callback runs, matching the hardened original reload owner.
+
+Evidence: source inspection plus deterministic 424-patch staging verification
+and `git diff --check`; no build, test, emulator, device, GitHub or GitHub
+Actions runner was used. Campaign and Practice conclusions remain source-only.
+
+Next: close factory/remap load transactions and the remaining mission-script,
+spawner, conversation and dynamic-environment admission gaps; separately retain
+campaign catalog/archive preflight and repeated-round teardown for later
+runtime acceptance.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Purchase-table definition transaction — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: original purchase and team-purchase definitions now require one
+parent and variables envelope, validate decoded team/type slots, and publish to
+their indexed static tables only after the individual record succeeds. Rejected
+catalog batches restore the previous slot owners in reverse order. Writers and
+variable readers propagate stream status, protecting purchase terminals and
+Practice from partial retail overrides.
+
+Evidence: deterministic reconstruction passes for 479 ordered patches with
+inventory SHA-256
+`b0c4210066c243bd0f833f7b8901e9a505f3a27441cd61f5cdf1d153ecdcf46d`;
+staging consistency, debris inspection and `git diff --check` pass. Source and
+staging evidence only; no build, test suite, emulator, device, GitHub or GitHub
+Actions runner was used.
+
+Next: close the lazy human-loiter table rollback and continue campaign and
+Practice transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Global definition singleton rollback — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: general gameplay, HUD, character-class and C&C mode definitions now
+retain their previous original singleton owner and restore it on catalog-batch
+rejection. Destructors restore ownership only when they still own the active
+slot, and the manager invokes rejection in reverse construction order. A
+rejected retail override can no longer leave these global lookup paths pointing
+at quarantined definitions.
+
+Evidence: deterministic reconstruction passes for 478 ordered patches with
+inventory SHA-256
+`151aec2dac053098619fcc7f74a8fe02184395440f55c49c20a37fdb9a9c0942`;
+staging consistency, debris inspection and `git diff --check` pass. Source and
+staging evidence only; no build, test suite, emulator, device, GitHub or GitHub
+Actions runner was used.
+
+Next: cover indexed purchase/team-purchase and loiter singleton tables, then
+continue campaign and Practice transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# EVA singleton rollback and post-load effects — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: definition transactions now expose a rejection hook. EVA settings
+use it to restore the previous original singleton owner when their enclosing
+catalog batch fails. Objective-viewer reload and message-window reset moved
+from parsing to the original post-load callback phase, so a later definition
+failure cannot clear live HUD/message state. Parent/variables envelopes are
+required once and writer status propagates. The lowercase and mixed-case
+definition headers are synchronized after late patches.
+
+Evidence: deterministic reconstruction passes for 477 ordered patches with
+inventory SHA-256
+`3914efa20cfefc290480f19496b3a259764d8b672e501923b145b36da699d494`;
+staging consistency, definition/factory alias identity, debris inspection and
+`git diff --check` pass. Source and staging evidence only; no build, test suite,
+emulator, device, GitHub or GitHub Actions runner was used.
+
+Next: apply rejection rollback to the remaining original global settings owners,
+then continue campaign and Practice transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Transactional definition-catalog publication — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: `DefinitionMgrClass` now stages factory-loaded definitions outside
+the searchable catalog, rejects zero and duplicate IDs across incoming and live
+definitions, and publishes only after the complete batch succeeds. Rejected
+objects remain alive through pointer remapping and the failed-load return so
+partial world owners can unwind, then retire at the next load boundary. This
+closes the path where a factory-reported failure still entered the live preset
+catalog while preserving original pointer-token semantics.
+
+Evidence: deterministic reconstruction passes for 475 ordered patches with
+inventory SHA-256
+`581a8099c872aedc0b1216bb4af91ef6686870373a66f2b5dd967f35a2fe7da5`;
+staging consistency, mixed-case factory identity, debris inspection and
+`git diff --check` pass. Source and staging evidence only; no build, test suite,
+emulator, device, GitHub or GitHub Actions runner was used.
+
+Next: continue remaining global-definition side-effect admission and original
+campaign/Practice transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Shared defense-definition admission — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: the original shared defense-definition loader now requires one
+variables envelope and each of its eight writer-owned fields exactly once,
+checks fixed 32-bit widths and armor-save-ID resolution, and publishes health,
+shield, armor and score values only after the whole record succeeds. Its writer
+also propagates stream failure. Original damage and armor systems remain the
+owners.
+
+Evidence: deterministic reconstruction passes for 474 ordered patches with
+inventory SHA-256
+`6fd304491ce385501ae8dc4f11ec9770d2070c601be9047ada372c5a17fe9df6`;
+staging consistency, debris inspection and `git diff --check` pass. Source and
+staging evidence only; no build, test suite, emulator, device, GitHub or GitHub
+Actions runner was used.
+
+Next: implement safe deferred publication for rejected definition-catalog
+entries, preserving pointer-remap teardown ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Original audio definition and scene admission — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: original audible-sound definitions now require their base and
+variables envelopes and propagate stream status. Static/dynamic audio subsystem
+writers and readers propagate `SoundScene` failures, reject duplicate scene
+records, and defer logical-listener scale and background-music changes until a
+complete dynamic audio record succeeds.
+
+Evidence: deterministic reconstruction passes for 473 ordered patches with
+inventory SHA-256
+`61bd767d6eac6eab86249486c3c6141ff1ad2518b5fd6e0271285f3c4ac3860f`;
+staging consistency, debris inspection and `git diff --check` pass. Source and
+staging evidence only; no build, test suite, emulator, device, GitHub or GitHub
+Actions runner was used.
+
+Next: close rejected-definition catalog publication and remaining campaign and
+Practice transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Translated-string database load admission — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: the original `strings.tdb` loader now requires its variables,
+objects and categories envelopes exactly once, propagates factory and stream
+failures through translation objects, string twiddlers and categories, checks
+required fixed-width fields and UTF-16 byte alignment, and removes partially
+published tables after rejection. Original lookup, language selection and
+retail database ownership remain unchanged.
+
+Evidence: deterministic reconstruction passes for 472 ordered patches with
+inventory SHA-256
+`589cf12640d81bce136813dcdc4e2c15caf7796e75ee69697163ede864a1aa7c`;
+staging consistency, mixed-case translated-header identity, debris inspection
+and `git diff --check` pass. Source and staging evidence only; no build, test
+suite, emulator, device, GitHub or GitHub Actions runner was used.
+
+Next: continue the remaining original resource database and campaign/Practice
+transition admission boundaries.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Definition hierarchy and deterministic staging closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: definition catalog admission now extends through 47 Combat
+definition loaders, the complete WWPhys definition hierarchy, dialogue and
+dialogue-option children, transition records and building-aggregate state
+animation data. Failed child records are not published as valid definition
+members. The staged mixed-case `PersistFactory.h` alias is refreshed from the
+hardened lowercase template after all factory patches.
+
+The full deterministic patch chain was reconstructed from pristine EA source.
+During that reconstruction, stale zero-fuzz contexts in the chunk, save,
+runtime-load and definition-load layers were regenerated against their exact
+ordered predecessors; no patch was skipped and fuzz remains disabled in the
+authoritative staging script.
+
+Evidence: local reconstruction and inventory validation pass for 471 ordered
+patches with registry SHA-256
+`c6a42325bffba0941cd29d6b2e05608c772cf7c4934ab12836f8c1c1492efe19`;
+`persistfactory.h` and `PersistFactory.h` are byte-identical, the staged tree
+contains no `.orig` or `.rej` files, and `git diff --check` passes. This is
+source and staging evidence only. No compiler, test suite, emulator, physical
+device, GitHub operation or GitHub Actions runner was used.
+
+Next: continue the remaining retail resource loaders, beginning with
+TranslateDB, WW3D asset leaf loaders and WWAudio definition/dynamic-state
+admission, then return to campaign and repeated-Practice lifecycle closure.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Definition catalog admission handoff — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: definition loading now returns the save/load transaction result.
+The required base `objects.ddb` failure stops the Combat load thread before
+animated-sound or level loading consumes a rejected catalog. Missing optional
+level `.ddb` files remain optional, while malformed present overrides record a
+required-load failure and skip that static-level load envelope.
+
+Evidence: deterministic reconstruction passes for 468 ordered patches with
+inventory SHA-256
+`85a495e081ae7a2c44eef52de5ed1fac37d407f4cc2b9921c60b2a6f22e7bda6`;
+staging consistency and `git diff --check` pass. Source and staging evidence
+only; no build, test suite, emulator, device, GitHub or GitHub Actions runner
+was used.
+
+Next: continue the remaining definition classes outside WWPhys and ensure their
+nested failures reach this catalog admission boundary.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Derived WWPhys load-status closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: runtime load failures now propagate through generic, motor, wheeled,
+tracked and VTOL vehicles; Phys3 and human movement; projectiles; decoration,
+render-object, timed and dynamic animated physics; accessible objects; lights;
+and shakeable static objects. Parent physics and animation-manager failures now
+reach the enclosing Combat load transaction instead of being replaced with an
+unconditional success. No serialized fields, class ownership or post-load
+ordering changed.
+
+Evidence: deterministic reconstruction passes for 466 ordered patches with
+inventory SHA-256
+`97251596c2111b626f0bf57e22fb8af4e660ed5d068ebfaacef44b98b9e9373e`.
+Source and staging evidence only; no build, test suite, emulator, device,
+GitHub or GitHub Actions runner was used.
+
+Next: continue the remaining definition/resource load-status audit and the
+campaign/Practice completion failure paths.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Foundational WWPhys load-status propagation — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: base physical, dynamic, static, animated-static, moveable and
+rigid-body restoration now propagates nested failures. Physical model records
+reject a missing inner chunk, missing persistence factory or null render
+product before model installation.
+
+Evidence: deterministic reconstruction passes for 465 ordered patches with
+inventory SHA-256
+`39918eac42bf33a2bf27115a28f559e9158c421771468a43180b368464d2262f`;
+staging consistency and `git diff --check` pass. This is source and staging
+evidence only; no build, test, emulator, physical device, GitHub operation or
+GitHub Actions runner was used.
+
+Next: carry load status through vehicle, Phys3/human, projectile, decoration
+and accessible-physics derived classes, then resume campaign and Practice
+transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Boss load-status propagation — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: Mendoza, Sakura and Raveshaw restoration now propagates parent,
+state-machine, defense, reference, spline/path, pilot, stealth and effect
+failures. Sakura releases its constructor-created path before restoring the
+saved path, and Raveshaw checks its required Tiberium effect before use.
+
+Evidence: deterministic reconstruction passes for 464 ordered patches with
+inventory SHA-256
+`322421111fec8d723ad1660369c824231d0f55e7d2b01dd66b1761a430b9bfa4`;
+staging consistency and `git diff --check` pass. This is source and staging
+evidence only; no build, test, emulator, physical device, GitHub operation or
+GitHub Actions runner was used.
+
+Next: propagate load status through WWPhys and audio-scene restoration, then
+resume campaign and repeated-Practice transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Building and special-object load-status propagation — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: building, power plant, communications center, refinery,
+vehicle/soldier factory, airstrip, war factory and repair-bay restoration now
+propagates parent failure. Powerup, C4, beacon, cinematic/special-effect, SAM,
+damage/script-zone and transition objects now retain child and object-reference
+load failures as well.
+
+Evidence: deterministic reconstruction passes for 463 ordered patches with
+inventory SHA-256
+`d168eaea1cba4b4287bc79f32b6857c600333be4978750a5bf46be4e7edb39ec`;
+staging consistency and `git diff --check` pass. This is source and staging
+evidence only; no build, test, emulator, physical device, GitHub operation or
+GitHub Actions runner was used.
+
+Next: close boss restoration and WWPhys load inheritance, then resume campaign
+and repeated-Practice transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Game-object load-status propagation — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: damageable, physical, armed, smart, soldier and vehicle restoration
+now propagates nested parent, defense, animation, weapon, control, action,
+human-state, transition and reference failures. Required physical objects,
+observers, animation/stealth controls, render factories and render products are
+validated before use.
+
+Evidence: deterministic reconstruction passes for 461 ordered patches with
+inventory SHA-256
+`46139b9f3af259374b5c7fc038fcd3a02ffe77dc450044d33c53d3c3d2990db5`;
+staging consistency and `git diff --check` pass. This is source and staging
+evidence only; no build, test, emulator, physical device, GitHub operation or
+GitHub Actions runner was used.
+
+Next: propagate load status through special game objects, buildings, bosses
+and the WWPhys restoration hierarchy, then resume campaign and Practice
+transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Action and weapon load-status admission — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: AI action restoration now rejects failed move/attack/look
+references, missing factories, null action-code products and missing or failed
+parameters. Weapon bags reject malformed structure, failed weapon children and
+invalid selected indices; weapon records reject unresolved weapon/ammo
+definitions and failed owner/target references.
+
+Evidence: deterministic reconstruction passes for 460 ordered patches with
+inventory SHA-256
+`8f5a4a916c30866388ded592a8661b89dc9131c79736b9a6cfe63e00c832ac60`;
+staging consistency and `git diff --check` pass. This is source and staging
+evidence only; no build, test, emulator, physical device, GitHub operation or
+GitHub Actions runner was used.
+
+Next: propagate child-load status through the game-object and physical-object
+inheritance chains, then resume campaign and repeated-Practice transitions.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# World-state save-status closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: combat camera/star state, cinematic fade interpolators, radar
+markers, static pathfinding, action/waypath portals and sectors,
+shakeable/light physics, and terrain material layers now propagate nested
+writer failures. Required terrain material pointers and pass-list entries are
+validated before use.
+
+Evidence: deterministic reconstruction passes for 458 ordered patches with
+inventory SHA-256
+`941dc0bb52ab86735b1c552f352b99c4ed2793590358249e107274fe3edafd19`;
+staging consistency and `git diff --check` pass. This is source and staging
+evidence only; no build, test, emulator, physical device, GitHub operation or
+GitHub Actions runner was used.
+
+Next: classify the remaining unconditional-success writers, close genuine
+compound-state gaps, then resume campaign and repeated-Practice transitions.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Mission-manager and animation save-status closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: animation channels, conversation/orator state, active conversation
+participants, game-object lists, objectives, cover positions, persistent
+observers and spawners now propagate nested writer failures. Pointer lists
+reject null entries, and objective-target and last-spawn references are checked
+before the save can be published.
+
+Evidence: deterministic reconstruction passes for 457 ordered patches with
+inventory SHA-256
+`ba2ed537ca3c1b854e2503e3a12bf51de0f3528b2bae394535ff824a7760af35`;
+staging consistency and `git diff --check` pass. This is source and staging
+evidence only; no build, test, emulator, physical device, GitHub operation or
+GitHub Actions runner was used.
+
+Next: inspect remaining terrain/material, pathfinding, screen-effect and
+manager writers, then resume campaign and repeated-Practice transitions.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Audio-scene save-status closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: base sound-scene objects, audible sounds, positional 3D sounds,
+logical sounds and logical listeners now propagate their parent and writer
+failures. This protects both restored audio state and logical AI-hearing
+stimuli without changing the original records or playback ownership.
+
+Evidence: deterministic reconstruction passes for 456 ordered patches with
+inventory SHA-256
+`5d4c4aec3984c0355ff645dc4fc0879d43e70adf93ea2e75d3a1cc88ec5d54e5`;
+staging consistency and `git diff --check` pass. This is source and staging
+evidence only; no build, test, emulator, physical device, GitHub operation or
+GitHub Actions runner was used.
+
+Next: inspect remaining compound writers and return to campaign and
+repeated-Practice transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Moving-physics save-status closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: nested save failure now propagates through moveable physics, rigid
+bodies, generic/motor/wheeled/tracked/VTOL vehicles, motorcycles, Phys3 and
+human movement, projectiles, decorations, render-object physics, timed
+decorations and dynamic animated physics. Dynamic animation also checks its
+animation-manager writer. Original chunk layout and simulation ownership are
+unchanged.
+
+Evidence: deterministic reconstruction passes for 455 ordered patches with
+inventory SHA-256
+`54340c2d311f1c58b9daf575d9a402e212e7bf56cafba016eb249f3cfa3925fb`;
+staging consistency and `git diff --check` pass. This is source and staging
+evidence only; no build, test, emulator, physical device, GitHub operation or
+GitHub Actions runner was used.
+
+Next: audit audio-scene compound writers and remaining specialized physics,
+then resume campaign and repeated-Practice transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Base physical-object save-status closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: the base physical, dynamic physical, static physical and animated
+static physical save chain now propagates nested failures. A physical object
+without its required render model is rejected safely, and the render-model
+factory and animation-manager status reaches the atomic campaign-save owner.
+
+Evidence: deterministic reconstruction passes for 454 ordered patches with
+inventory SHA-256
+`53b95cc7a4821ac49524bc27740318826441b60b32eaadcb17023aa42911576d`;
+staging consistency and `git diff --check` pass. This is source and staging
+evidence only; no build, test, emulator, physical device, GitHub operation or
+GitHub Actions runner was used.
+
+Next: continue specialized moving-physics and audio-scene compound writers,
+then return to campaign and repeated-Practice transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Player and interactive-world save-status closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: player records, accessible animated physics, doors, elevators,
+elevator rider references and damageable static objects now propagate nested
+serialization failures into the existing atomic campaign-save transaction.
+The released chunk structure and original runtime ownership are unchanged.
+
+Evidence: deterministic reconstruction passes for 453 ordered patches with
+inventory SHA-256
+`364568a49f614eae10f2ad518db81f03a59b77dfd42a0eef702b019ce392217d`;
+staging consistency and `git diff --check` pass. This is source and staging
+evidence only; no build, test, emulator, physical device, GitHub operation or
+GitHub Actions runner was used.
+
+Next: audit and close the deeper WWPhys compound-writer inheritance chain,
+then resume campaign and repeated-Practice transition ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Mission combat and trigger save-status closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: projectile, beacon, special-effects, SAM-site, damage-zone,
+script-zone, transition and persistent soldier-observer writers now propagate
+their nested save failures. Bullet and script-zone list serialization also
+rejects null entries without dereferencing them. Existing save fields and
+original gameplay ownership remain unchanged.
+
+Evidence: deterministic reconstruction passes for 452 ordered patches with
+inventory SHA-256
+`35e0167bfb0fdda8a43fccc01f3254ac1fb275af9734fdb91caeb94db6438689`;
+staging consistency and `git diff --check` pass, with no `.orig` or `.rej`
+debris. This is source and staging evidence only; no build, test, emulator,
+device, GitHub or GitHub Actions runner was used.
+
+Next: continue the remaining campaign and repeated-Practice compound-state and
+lifecycle audit, then validate the accumulated candidate when the testing hold
+is lifted.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Building and production save status — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: wired save failure propagation through the original building graph:
+generic buildings, power and communications structures, refinery docking,
+soldier and vehicle production, airstrip/war-factory delivery, repair bays and
+animated building aggregates. Original chunk schemas and gameplay ownership
+remain unchanged.
+
+Evidence: deterministic reconstruction passes for 451 ordered patches with
+inventory SHA-256
+`273c20aae336637e543b2434ac51af6d2f3b054a07f80f2a53e782e088857638`;
+staging consistency and `git diff --check` pass. Source and staging evidence
+only; no build, test, emulator, device, GitHub or GitHub Actions runner was
+used.
+
+Next: inspect projectile/explosion and specialized mission-object persistence,
+then return to multiplayer frontend capability closure.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Specialized gameplay-object save status — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: closed the remaining common persistent branches beneath the game
+object factory. Simple objects, powerups and optional weapon bags, C4 owner and
+attachment references, and cinematic actors now propagate nested write failure
+without changing their released chunk layout or runtime ownership.
+
+Evidence: deterministic reconstruction passes for 450 ordered patches with
+inventory SHA-256
+`5018721f97b1b2a7193f3afc26e0fd2785c0ca9d77593a52b5924db2d94eec13`;
+staging consistency and `git diff --check` pass. Source and staging evidence
+only; no build, test, emulator, device, GitHub or GitHub Actions runner was
+used.
+
+Next: inspect specialized building/projectile records and continue multiplayer
+frontend capability closure.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Persistent gameplay-object save status — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: extended the shared save transaction through the original
+game-object inheritance chain. Base, damageable, physical, armed, smart,
+soldier and vehicle records now carry nested animation, reference, defense,
+weapon, control, AI action, stealth, human-state and transition failures to the
+persist factory. The original serialized format and vehicle transition rebuild
+ordering are unchanged.
+
+Evidence: deterministic reconstruction passes for 449 ordered patches with
+inventory SHA-256
+`faff68450150c5d769a557cc1174d18d02f879b8d381c4851bbaf1d45f29dd1f`;
+staging consistency and `git diff --check` pass. Source and staging evidence
+only; no build, test, emulator, device, GitHub or GitHub Actions runner was
+used.
+
+Next: close the simple/powerup/C4/cinematic branches and inspect the remaining
+specialized campaign and multiplayer gameplay records.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Gameplay save graph status propagation — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: inspected multiplayer exit/recovery ownership and found its current
+original-owner teardown ordering coherent. Closed a demonstrated save-graph
+gap instead: mission script timers, object references, AI action targets and
+parameters, weapons, and weapon bags now propagate nested or structural write
+failure into the shared chunk transaction. Null timer and weapon entries reject
+the save rather than crashing or disappearing from a published checkpoint.
+
+Evidence: deterministic reconstruction passes for 448 ordered patches with
+inventory SHA-256
+`cb0320ed2a57b7e10fbbd3b2e25a9198d8d3d3f5dd0da610a01d5d4ca82707e7`;
+staging consistency passes. Source and staging evidence only; no build, test,
+emulator, device, GitHub or GitHub Actions runner was used.
+
+Next: continue the gameplay-object save hierarchy and multiplayer frontend
+capability closure without changing original engine ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Campaign intermission state-write status — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: traced mission success through the original score, movie, next-level
+and final-menu owners. `CampaignManager::Save` now reports the sticky chunk
+writer result, allowing the existing native intermission recovery to reject a
+partial RAM handoff instead of treating any nonempty buffer as valid campaign
+state. Campaign order and lifecycle remain owned by the original manager.
+
+Evidence: source inspection plus deterministic reconstruction of 447 ordered
+patches with inventory SHA-256
+`948dd304a5c9c7908fdfd6a997b2e8e3d3d4ca7b2fee37ce1cda11b50a617ba7`;
+staging consistency and `git diff --check` pass. No build, test, emulator,
+device, GitHub or GitHub Actions runner was used.
+
+Next: continue multiplayer exit/recovery ownership and remaining compound save
+writers.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Unresolved remaps and script-timer records — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: the shared remapper now rejects unresolved non-null serialized
+tokens before post-load behavior, while preserving serialized null and explicit
+old-token-to-null mappings. Ref-counted remaps do not dereference intentional
+null replacements. Observer and custom script timers now require their released
+variables root and all three exact fields, reject duplicate or unknown state,
+and permit at most one optional custom sender reference.
+
+Evidence: deterministic reconstruction passes for 429 ordered patches with
+inventory SHA-256
+`85a703ffe175f625a2e1e39a5d2dba97dd77ea8c320f3e675c1b8cced9c5be25`;
+`git diff --check` passes and no staging reject/backup debris exists. Source and
+staging evidence only; no build, test, emulator, device, GitHub or GitHub
+Actions runner was used.
+
+Next: add explicit generic persist-factory transaction ownership, then make
+`ScriptableGameObj` propagate timer/reference failures and publish remap and
+post-load registrations only after complete admission.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Exact objective field admission — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: the original objective loader now admits an objective only when all
+13 fields emitted by its writer occur exactly once with their original widths.
+Sound and HUD POG names must be bounded, NUL-terminated microchunks. The two
+released age IDs remain separate required fields, and optional object-reference
+ownership still stays alive until outer rejected-load callback teardown.
+
+Evidence: deterministic reconstruction passes for 424 ordered patches with
+inventory SHA-256
+`138809d07072d1e6580870e94dd0d1044866b1720d9927c11313d7c56e1bc773`;
+`git diff --check` passes and no staging reject/backup debris exists. Source and
+staging evidence only; no build, test, emulator, device, GitHub or GitHub
+Actions runner was used.
+
+Next: integrate the parallel campaign, Practice cycle and remaining save/runtime
+audits, then close the next coherent original-engine boundary.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Conversation object admission and current deterministic state — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: conversation-category loading now checks each original object's
+load result, requires the restored category to match its enclosing category and
+rejects out-of-range category indices before indexing the live manager array.
+Failed active conversations are released rather than published. Structural
+chunk-reader errors propagate through the manager's existing rejected-load and
+post-load quarantine path.
+
+The current source also restores released Practice map-cycle semantics: a
+single configured map repeats indefinitely, while configured later entries
+rotate and wrap through original `cGameData`. Same-iteration transition checks
+prevent stale gameplay work after original intermission teardown requests.
+
+Evidence: deterministic reconstruction and patch inventory verification pass
+for 423 ordered patches; inventory SHA-256 is
+`78c21c516f1db9a5d6e978c63c5ea7b01f0d4ee2a9687f68676dde277bfc3731`.
+No compile, test, emulator, physical device, GitHub operation or GitHub Actions
+runner was used.
+
+Additional closure: the required dynamic-physics owner now propagates checked
+results from PhysicsConstants and PathMgr. Constants require all seven
+exact-width fields once before global publication. Every PathSolve requires its
+complete writer envelope and registers post-load work only after admission.
+Rejected paths are released before publication; previously admitted paths stay
+alive for outer callback discard and teardown. Original post-load initialization
+and path solving remain unchanged.
+
+ScriptManager now admits only complete entry headers with bounded terminated
+strings, exact 32-bit disk tokens and observer IDs, and at most one correctly
+positioned data child. Pointer publication and owner remapping occur only after
+the entry passes. The released missing-script null remap remains nonfatal;
+malformed created instances are detached from the active list and destroyed.
+
+Writer-side closure: all fixed and variadic save subsystems contribute to one
+transaction result. A false serializer result reaches the native file's narrow
+write-abort method before close, so the `.pending` sibling is deleted rather
+than replacing the previous valid file. Quicksave/manual-save status now
+requires logical serialization and physical close/rename success.
+
+Save preflight now shares the real Vita loader's level-info parser, including
+bounded terminated strings, exact mission-ID width and `.LSD` validation. The
+load menu and development resolver require exactly one ordered `LEVEL_INFO`
+and one `LEVEL_DATA`, so incomplete or reordered envelopes are not presented as
+usable saves.
+
+Radar, objective and spawner managers now require manager state and propagate
+child failure. Radar marker fields are exact-width/exact-once. Pointer-bearing
+objective and spawner instances stay alive for outer callback discard and
+teardown rather than being deleted under queued remaps. Spawners also require
+parent/variables, a resolved retail definition and balanced script lists.
+
+GameObjObserver state requires its exact NextID value. WeaponView requires its
+variables and enabled state and reads the optional hands object as a 32-bit
+disk token. Bullets require all eight exact fields, a valid ammo definition and
+projectile token; only admitted bullets register post-load work, and their
+constructor placeholder projectile is released before token installation.
+
+Persistent GameObjObserver loading now requires its one released root, rejects
+unknown factories, propagates null factory results and rejects trailing roots.
+Original manager ownership is retained for rejected-load teardown.
+
+HUD now requires and conditionally publishes its exact enabled value. All five
+screen-fade children are required once and each requires value, target and rate.
+Dynamic background and weather require one released dynamic root and propagate
+structural reader failure.
+
+Cover entries now require one variables root, exact transform/crouch/in-use and
+32-bit remap-token fields, and exact repeated attack-position widths. Only an
+admitted entry registers its pointer mapping or enters the live collection.
+
+CombatManager now requires star/variables state, rejects duplicate camera or
+state children, validates bounded terminated script names and enforces the
+writer's conditional first-load versus running-game field masks. Globals and
+cheat-history side effects publish only after complete admission.
+
+Next: tighten the remaining objective/spawner and background/weather inner
+field masks, then continue non-Combat player-save subsystem audit.
+
+Blocker: runtime validation remains intentionally paused; GitHub Actions
+runners are prohibited for this work.
+
+# Structural chunk admission — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: the shared original chunk reader now records structural errors for
+truncated headers/payloads, child boundaries outside their parent or file,
+invalid nesting and failed reads/seeks while still treating exact exhaustion as
+normal loop termination. SaveLoad and the player-save envelope propagate this
+sticky error into the existing cleanup path. Typed vector and quaternion reads
+now use serialized object sizes instead of pointer sizes. Map state additionally
+requires all six exact-width variables before registering post-load work.
+
+Evidence: deterministic reconstruction of 401 ordered patches passed with
+inventory SHA-256
+`790a0bb5192e330026a1e81bc13d713f6a0b4a51e5cdd616037b9248a20ed84d`.
+This remains source/staging evidence. No build, compile, test, emulator,
+physical device, GitHub operation or GitHub Actions runner was used.
+
+Next: propagate checked results through pointer-bearing physics, game-object
+and script inner loaders, then continue remaining full-game ownership closure.
+
+Blocker: runtime validation remains intentionally paused; GitHub Actions
+runners are prohibited for this work.
+
+# Campaign save envelope and Practice transition ownership — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: player-save metadata is now validated in temporary storage before
+definition/static-world loading, with one ordered info/data envelope. Campaign
+and God fields require exact widths and occurrence counts; Vita rejects terminal
+God snapshots that cannot reconstruct their original death-versus-failure UI.
+Campaign handoff failure can no longer report PASS and recovers to the original
+main menu only after strong session cleanup. Practice again preserves the
+released configured map cycle rather than clearing entries above slot zero.
+Exit/restart requests raised by the pause menu or simulation now return directly
+to the existing loop-head transition owner before stale-world inspection or
+rendering.
+
+Evidence: three independent read-only 5.6 Sol audits plus coordinator source
+inspection; deterministic reconstruction of 398 ordered patches passed with
+inventory SHA-256
+`1fcf46ec07f56729403d2602740e21b67de3eec7152635959a73ab2ed91043c7`.
+`git diff --check` and staging debris inspection pass. No build, compile, test,
+emulator, physical device, GitHub operation or GitHub Actions runner was used.
+
+Next: harden the structural chunk reader and the deepest pointer-bearing game
+object/script/physics loaders, then continue campaign and repeated-round source
+closure.
+
+Blocker: runtime validation remains intentionally paused; GitHub Actions
+runners are prohibited for this work.
+
+# Rejected-load post-load quarantine — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: a rejected save or level load can no longer run `On_Post_Load` over
+partial state. The generic loader still resolves pointer tokens before cleanup,
+then discards callback registrations without invoking them. Original Combat
+level loading now checks the retained required-load failure before its global
+post-load pass and discards callbacks for failures detected outside the generic
+subsystem call.
+
+Evidence: deterministic reconstruction of 396 ordered patches passed with
+inventory SHA-256
+`5c754c9324965fbf60f5a57cec9057ac3f637c1cb56ec307e1a68fc1bfb63e49`.
+This is source and staging evidence only. No build, compile, test, emulator,
+physical device, GitHub operation or GitHub Actions runner was used.
+
+Next: integrate the independent campaign, Practice and save-chain source audits
+and close the next demonstrated original-owner gap.
+
+Blocker: runtime validation remains intentionally paused; GitHub Actions
+runners are prohibited for this work.
+
+# Required manager child state — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: closed the remaining demonstrated internal gaps beneath the required
+dynamic-save owners. Conversation state now requires manager variables and one
+current category or its released legacy representation. Encyclopedia state
+requires every fixed type vector and rejects excess vectors before array access.
+Map state requires its variables and correctly sized shroud. Dynamic audio
+preserves its conditional empty-writer format while requiring the variables and
+scene children to appear as a pair and rejecting duplicates.
+
+Evidence: source inspection and deterministic reconstruction of 394 ordered
+patches passed; inventory SHA-256 is
+`37bdf1d2304c20239b0c1b9ed2e1cefe74f8e79301d800b0407a960295919683`.
+No build, compile, test, emulator, physical device, GitHub operation or GitHub
+Actions runner was used.
+
+Next: continue source-only campaign and Practice completion closure at the next
+original ownership boundary.
+
+Blocker: runtime validation remains intentionally paused; GitHub Actions
+runners are prohibited for this work.
+
+# Required Combat and physics child state — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: dynamic player-save admission now validates the complete fixed
+Combat child set written by the original owner. All 15 children must occur
+exactly once and every boolean child-loader failure propagates. Dynamic physics
+requires exactly one scene, constants and PathMgr child. Both post-load
+callbacks are registered only after successful admission, so a partial world
+cannot proceed into their post-load work.
+
+Evidence: source inspection, 392-patch deterministic staging, patch-inventory
+SHA-256
+`3fbd0377410e0a67cc5c28a2dac4fee8c3cb9320beac2e4ef108343bc772ea82`,
+reject/original-debris inspection and `git diff --check` only. No build,
+compile, test, emulator, physical device, GitHub operation or GitHub Actions
+runner was used.
+
+Next: inspect the required conversation, encyclopedia, dynamic-audio and map
+owners for writer/load symmetry and close only demonstrated partial-load gaps.
+
+Blocker: runtime validation remains intentionally paused; GitHub Actions
+runners are prohibited for this work.
+
+# Complete fixed dynamic-save subsystem admission — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: aligned required player-save admission with the exact fixed
+subsystem sequence emitted by original `SaveGameManager::Save_Game`. Combat,
+level conversations, dynamic physics, encyclopedia, dynamic audio, map state
+and Commando state must each occur exactly once. The rule is active only for
+dynamic player saves; static level/resource loads preserve their permissive
+format behavior. Static audio was inspected and remains outside this required
+set.
+
+Evidence: deterministic zero-fuzz staging passed for 390 ordered patches;
+inventory SHA-256 is
+`ad6306026aaaf0020b042858ed994583817e0280039d52fbda68d7555742c794`.
+Patch inventory verification, staging debris inspection and `git diff --check`
+passed. No compile, test, emulator, physical device, GitHub operation or GitHub
+Actions runner was used.
+
+Next: validate the required internal chunks of Combat and dynamic physics so a
+present but empty subsystem cannot pass the new outer admission gate.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Required per-player save record — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: closed required-save admission at the individual original `cPlayer`
+record. Each present player requires one PlayerData parent, one variables
+container, and one each of the released ID, name, kills, deaths, team and
+pointer-remap fields. PlayerData requires its variables container while keeping
+weapon-stat chunks optional and repeatable. Invalid players are deleted from
+the constructor-registered manager list, and their old pointers are never
+published to the global remapper.
+
+Evidence: deterministic zero-fuzz staging passed for 387 ordered patches;
+inventory SHA-256 is
+`ed000babdd594f362fb39b3b07d632813b23105d51a5f0baa381f28aac9694a3`.
+Patch inventory verification, staging debris inspection and `git diff --check`
+passed. No compile, test, emulator, physical device, GitHub operation or GitHub
+Actions runner was used.
+
+Next: continue save-owner inspection below world/object persistence, then
+return to LAN session continuation and renderer/resource lifecycle gaps.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Required nested Network/player save state — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: extended strict player-save admission through the original Commando
+Network child. `cNetwork::Load` now requires exactly one PlayerManager child and
+propagates its load result. `cPlayerManager::Load` requires exactly one
+PlayerList container and rejects duplicate containers without constructing the
+duplicate contents. Empty released player lists remain valid; no synthetic
+player or disk-format change was introduced.
+
+Evidence: deterministic zero-fuzz staging passed for 385 ordered patches;
+inventory SHA-256 is
+`3df70b6de9dfe3de69b445c771eb118021152b493c58eb768526c8291bcf786f`.
+Patch inventory verification, staging debris inspection and `git diff --check`
+passed. No compile, test, emulator, physical device, GitHub operation or GitHub
+Actions runner was used.
+
+Next: inspect the remaining per-player required state and preserve compatibility
+with released empty multiplayer player lists while rejecting partial mission
+player records before they can publish pointer remaps.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Deferred Tutorial and Practice continuation — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: an unmarked Tutorial or Practice selection made from campaign
+intermission is now retained as bounded process-local source/classification
+data. After the completed world tears down, the outer lifecycle enters a fresh
+frontend generation, restores the original SP or Skirmish initializer and
+latches the selected source automatically. World, player and gameplay objects
+are never retained. LAN and remote-client selections still return to their
+original menu because they require live network/session ownership beyond a map
+token.
+
+Evidence: source inspection and `git diff --check` only. The existing 384-patch
+deterministic staging receipt remains valid with SHA-256
+`324290a8d84262418d830a10dae93d9bf8a3646e773fa063ecdbb03b538b68d1`;
+this unit changes only platform lifecycle sources. No compile, test, emulator,
+physical device, GitHub operation or GitHub Actions runner was used.
+
+Next: audit the original LAN session continuation and campaign end-menu
+teardown for state that must remain owned within one session instead of being
+represented as a deferred source.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Campaign level-start provenance — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: the original `CampaignManager::Continue` Level directive now marks
+its immediately following `GameInitMgrClass::Start_Game` request as
+campaign-owned. The one-shot process-local provenance reaches the shared
+frontend latch and is required before the intermission owner serializes
+campaign state. Load/replay requests retain their existing route. Tutorial,
+Practice, LAN and other unmarked starts now request clean return to the
+appropriate original menu instead of being misclassified as campaign
+advancement or a campaign handoff failure.
+
+Evidence: deterministic zero-fuzz staging passed for 384 ordered patches;
+inventory SHA-256 is
+`324290a8d84262418d830a10dae93d9bf8a3646e773fa063ecdbb03b538b68d1`.
+Patch inventory verification, staging debris inspection and `git diff --check`
+passed. No compile, test, emulator, physical device, GitHub operation or GitHub
+Actions runner was used.
+
+Next: retain the complete non-campaign frontend selection across clean session
+teardown so Tutorial and Practice launch without requiring a second selection;
+LAN remains owned by its original list/session initialization boundary.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Required player-save state admission — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: added an opt-in required-subsystem contract to the original generic
+save/load framework and enabled it only for dynamic player-save loading.
+Commando state is required exactly once, and its Network, God and Campaign
+children must each occur exactly once. God state loads into temporary storage,
+requires one state value in the released enum range and publishes only after
+validation. Partial or duplicate owner state now reaches the existing dynamic
+load-failure unwind instead of silently continuing with default or stale
+campaign state. Static level/resource loads retain permissive compatibility.
+
+Evidence: deterministic zero-fuzz staging passed for 383 ordered patches;
+inventory SHA-256 is
+`dba77fc75046c77e39739cdc23a969de4cb10ac4031f9505175c3bf69e48a77f`.
+Patch inventory verification, staging debris inspection and `git diff --check`
+passed. No compile, test, emulator, physical device, GitHub operation or GitHub
+Actions runner was used.
+
+Next: distinguish campaign-authored frontend starts from Tutorial, Practice and
+LAN starts so only genuine campaign level transitions serialize campaign
+handoff state.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Deterministic patch integrity and replacement-world evidence — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: added unified-diff hunk-size validation to the authoritative patch
+inventory and repaired malformed historical declarations. This exposed and
+fixed a silently truncated closing brace in `CampaignManager::Is_Catalog_Ready`.
+All 380 ordered patches now pass strict inventory validation and zero-fuzz
+staging, with no reject or backup debris. Practice/LAN replacement-world
+admission now compares renderer-counter deltas from a post-load snapshot, so
+old geometry cannot admit a blank new world and old rejection telemetry cannot
+invalidate a clean new generation.
+
+Evidence: deterministic staging passed; inventory SHA-256 is
+`bb28865454add2ece10cd6ba770c3fb5c1a066f1a03088f1b096911e7c696442`.
+The later per-generation delta edit has source inspection and `git diff` scope
+only. No build, test, emulator, physical device, GitHub operation or GitHub
+Actions runner was used.
+
+Next: close required campaign/God save-chunk admission, then restage the new
+patch and continue campaign end-menu origin classification.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Practice one-map cycle ownership — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Superseded correction: a deeper caller audit established that the released
+Practice path overwrites only map-cycle slot zero and retains configured higher
+slots. The native route now matches it. A one-entry configuration repeats the
+same map indefinitely; a longer configured cycle rotates and wraps under the
+original `Rotate_Map` and `DoMapsLoop` owners. The earlier claim that both
+paths clear higher entries was inaccurate.
+
+Evidence: deterministic zero-fuzz staging passed with 380 ordered patches;
+inventory SHA-256 is
+`f4bc0b0ff56c935b0caabbd124c0ec15a07d996df265763363af6e263f85aaa3`.
+No build, test, emulator, physical device, GitHub operation or GitHub Actions
+runner was used.
+
+Next: consume the parallel campaign/save/Practice source audits and close the
+next highest-impact original-owner boundary.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Multiplayer information input closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: connected the original held team, battle and server information
+functions to non-conflicting Vita multiplayer chords through unused logical
+F7–F9 keys. Multiplayer chat, radio and information chords now suppress their
+ordinary gameplay button effects while active. Campaign quicksave and camera
+toggle ownership remain unchanged.
+
+Evidence: source inspection and `git diff --check` only. No build, test,
+emulator, physical device, GitHub operation or GitHub Actions runner was used.
+
+Next: inspect the next source-level single-player and repeated Practice-round
+completion boundary.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Original multiplayer information presenters — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: selected the original team, battle and server information dialogs,
+added canonical WWUI resources 240/242/249 with strict direct and array-indexed
+control validation, and restored their released input actions through a shared
+native `CombatGameModeClass` owner. Removed only unused WOL includes around the
+already-disabled clan-label branch and supplied the missing standard C++ type on
+the two battle-dialog constants.
+
+Evidence: all 379 ordered patches stage successfully; patch inventory SHA-256
+is `32e9bf5103d537643a04afc3989ab56743946521eb20dc566816f687171cef55`.
+`git diff --check` and staging identity verification pass. This is source and
+deterministic-staging evidence only; no build, test suite, emulator, physical
+device, GitHub operation or GitHub Actions runner was used.
+
+Next: continue original multiplayer help/action bindings and repeated-session
+ownership, then campaign progression closure.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Original C&C reference dialog closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: selected `CnCReferenceMenuClass` and `cSuicideEvent`, added canonical
+dialog 245 to generated multiplayer WWUI resources, and made resource generation
+require every control the dialog initializer dereferences. The dialog's Main
+Menu action now queues original `GameInitMgr` exit for the native between-frame
+teardown envelope; it no longer destroys the live world inside a WWUI callback.
+
+Evidence: all 377 ordered patches stage successfully; patch inventory SHA-256
+is `7fc4431ea17ca94e6914afd2525b9b44d671954026202564a057a7b7e2724581`.
+`git diff --check` and staging identity verification pass. This is source and
+deterministic-staging evidence only; no build, test suite, emulator, physical
+device, GitHub operation or GitHub Actions runner was used.
+
+Next: close the remaining original multiplayer information/help presenter graph
+and continue repeated-round and campaign progression ownership.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Native render-target clear ownership — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: carried the original WW3D color/depth clear requests through the
+native renderer rather than clearing both attachments unconditionally. This
+applies equally to the default framebuffer and the newly restored projector
+render-target route, while original scene and projector code retains pass
+ownership. Repaired the affected zero-fuzz hunk metadata and refreshed each
+anchored `ww3d.cpp` source identity in the deterministic staging pipeline.
+
+Evidence: all 376 ordered patches staged successfully; patch inventory SHA-256
+is `9e686c975709f84be5049a4d7aae4879d739d675a50fcbd683635c7937c760c9`.
+`git diff --check` and the staging identity check passed. This is source and
+deterministic-staging evidence only; no build, test suite, emulator, physical
+device, GitHub operation or GitHub Actions runner was used.
+
+Next: continue source-level campaign and skirmish completion closure, including
+repeated round ownership and abnormal render-target teardown.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Native render-target shutdown ownership — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: moved the active DX8-shaped render-target references out of
+function-local storage and added an explicit renderer-shutdown release route.
+Logical WW3D teardown now restores the default framebuffer, releases the
+retained surface and texture, and clears render-to-texture state. Cleanup still
+releases ownership if the native default-target bind itself reports failure,
+preventing a later frontend/gameplay session from inheriting the interrupted
+projector pass.
+
+Evidence: source inspection and `git diff --check` only. The previously staged
+376-patch inventory remains unchanged because this boundary is maintained in
+direct platform source. No build, test suite, emulator, physical device,
+GitHub operation or GitHub Actions runner was used.
+
+Next: continue original Practice/campaign repeated-session ownership and close
+the next source-provable lifecycle gap.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Original multiplayer pause-menu ownership — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: removed the native Direct-IP Start-to-disconnect shortcut and the
+single-player EVA routing that affected Practice/LAN. The shared original menu
+pump now follows released `Combat_To_Menu` semantics: missions suspend Combat
+for EVA, while multiplayer leaves Combat active, continues `cNetwork::Update`,
+and opens `LOC_CNC_REFERENCE` over the live match.
+
+Evidence: source inspection and `git diff --check` only. No build, test suite,
+emulator, physical device, GitHub operation or GitHub Actions runner was used.
+
+Next: continue multiplayer/Practice dialog actions and repeated-round/session
+ownership, then campaign progression boundaries.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Native projector render-target source route — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: implemented the audited render-target source boundary. A native
+render-target texture now owns its VitaGL framebuffer and depth renderbuffer;
+partial allocation and final release unwind in reverse order. Original
+power-of-two target creation returns a `TextureClass`, level-zero surface binds
+are owner-validated, null binding restores the default framebuffer and logical
+viewport, and resolution queries distinguish offscreen from display targets.
+Texture/render state caches are invalidated across direct framebuffer changes.
+The active binder now retains the raw owning texture as well as its surface,
+preventing FBO deletion while bound. Render-target locks and `CopyRects` read
+the GPU image back into the declared DX8 surface layout with the required row
+flip, preserving the original static-shadow capability test instead of forcing
+it to pass.
+
+Evidence: source inspection, local diff-format checks and deterministic patch
+inventory only. No compilation, test, emulator, physical device, GitHub
+operation or GitHub Actions runner ran. Generated projector pixels and cleanup
+remain unaccepted.
+
+Next: inspect clear/orientation and repeated target reuse semantics, then obtain
+ARM and physical evidence when validation is permitted.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Native render-target ownership audit — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: traced original projector target allocation/binding/restoration to
+the three current Vita gaps: null creation, rejecting bind stubs and absent
+framebuffer/depth ownership in the DX8-shaped texture. The adjacent
+`d3dvita-demo` also defers non-default render targets, so it supplies no proven
+implementation. Recorded the required allocation, reverse-order cleanup,
+surface-owner validation, viewport/cache restoration and evidence gates in
+`NATIVE_RENDER_TARGET_BOUNDARY.md`.
+
+Evidence: local source, installed vitaGL header and adjacent-tree inspection
+only. No build, test, emulator, physical device, GitHub operation or GitHub
+Actions runner ran.
+
+Next: implement the texture-owned FBO/depth lifetime as one coherent boundary
+when compile validation is permitted; continue other source-owned game closure
+without claiming generated shadows meanwhile.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Original projector enablement ownership — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: removed the full-port gameplay boundary's unconditional suppression
+of original static and dynamic projector lists and forced no-shadow mode.
+Original scene/system settings again own projector enablement, so authored
+projectors with existing textures can enter the retained material-pass path.
+Render-target allocation remains explicitly unsupported and generated shadows
+are not claimed.
+
+Evidence: source inspection and local diff validation only. No build, test,
+emulator, physical device, GitHub operation or GitHub Actions runner ran.
+
+Next: close renderer state restoration around retained projector/material-pass
+draws, then design the missing native render-target owner.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Audio stream file-I/O lock split — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: `AIL_open_stream_by_sample` now snapshots the original Miles file
+callbacks and detaches the pooled sample under the provider mutex, then opens,
+sizes, allocates, reads and decodes the stream image without holding the mixer
+deadline lock. A detached prepared source owns MPEG decoder construction or
+decoded PCM until the provider lock is reacquired. Error/byte accounting,
+shared-cache selection and mutation, and the final sample publication remain
+serialized. This removes filesystem and whole-track preparation latency from
+the interval that makes the native output thread submit zero-filled starvation
+buffers. Streams remain whole-image bounded rather than incrementally decoded;
+native deadline and memory behavior remain unverified.
+
+Evidence: local source inspection and diff-format validation only. No build,
+test, emulator, physical device, GitHub operation or GitHub Actions runner ran.
+
+Next: retain preparation-generation safety if stream opens become concurrent,
+then continue missing native material-pass ownership.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Campaign/Practice handoff closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: restored the original post-load Bio-event path for campaign,
+Practice, LAN-host and LAN-client player creation; strengthened reciprocal
+player/star/control-owner admission; and reason-coded missing identities back
+through clean main/LAN menu recovery. Campaign next-level handoff failures now
+return to the original menu after owned teardown instead of silently ending the
+title. Overlong consumed Start_Game requests publish a rejection edge rather
+than hanging the frontend pump. Vita audio grace windows retain their released
+elapsed durations while yielding between service calls.
+Evidence: source inspection, deterministic patch integration and `git diff
+--check` only. No staging, build, test, emulator, device, GitHub Actions,
+commit or push operation ran.
+Next: close forced score-dialog teardown advancement, campaign autosave
+abandonment and per-movie skip-edge lifetime; continue the remote round-cycle
+and arbitrary LAN map compatibility audit.
+Blocker: runtime validation remains intentionally paused.
+
+# Campaign cinematic camera teardown — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: released any level-owned cinematic camera host at the start of
+`CombatManager::Unload_Level`, before original game-object destruction and W3D
+asset release. The persistent main camera previously could retain a finale
+render object and cinematic-freeze state when an independent mission-success
+timer beat the authored `Control_Camera, -1` command. Mission 01 contains that
+reachable ordering. The fix uses the original camera setter and preserves all
+scripted timing and mission ownership. A deterministic source-staging patch is
+wired after the selected Vita control-profile patch.
+Evidence: source inspection and local deterministic edits only. No staging,
+compile, test, emulator, device, GitHub Actions, commit or push operation ran.
+Next: complete the remaining campaign intermission and Practice round-transition
+source audits, then validate only when the hold is lifted.
+Blocker: runtime validation remains intentionally paused.
+
+# Campaign intermission input edge — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: the native mission-success handoff now samples current input and
+primes the established WWUI edge tracker before original
+`CampaignManager::Continue` creates the score/movie presentation. Held gameplay
+input can no longer be introduced to that presentation as a fresh menu edge.
+Original campaign, score and movie owners remain unchanged.
+Evidence: source inspection and local edit only. No build, runtime test, device,
+GitHub Actions, commit or push operation ran.
+Next: continue campaign score/movie/next-level and Practice repeat-cycle source
+closure, retaining separate runtime and physical acceptance gates.
+Blocker: runtime validation remains intentionally paused.
+
+# Pooled stream storage release — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: closed a repeat-playback memory lifetime defect in the Vita Miles
+provider. Original WWAudio pools the 2D sample used by a stream, but the provider
+left the complete MPEG image and decoder owned by that sample after stream
+close. A later movie or music open therefore retained the previous source while
+reading and copying the next one. Borrowed samples now release stream payload at
+close and are reset before another open; provider-owned samples still follow
+their existing release path.
+Evidence: local source inspection and bounded provider edit only. No staging,
+compilation, test, emulator, device, GitHub or GitHub Actions work ran.
+Next: separate long stream preparation from mixer-state locking, while keeping
+WWAudio as the game-facing owner and using generation-checked publication.
+Blocker: runtime validation remains intentionally paused.
+
+# Practice/LAN round arbitration — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: preserved original continuous Practice map-cycle ownership while
+closing same-frame exit/restart ambiguity. Invalid next-map exits retain failure
+classification, stale process-global restart requests are cleared at exit and
+session teardown, LAN clients receive a bounded replication window for both
+player and star after initial load and round reload, and LAN load failures route
+back to the LAN list. Practice player creation again uses the released automatic
+team selection instead of forcing GDI.
+Evidence: local source inspection and lifecycle edits only. No compilation,
+test, emulator, device, GitHub or GitHub Actions work ran.
+Next: harden campaign-state load bounds, then address always-on instrumentation
+and the audio stream-preparation lock without changing original gameplay owners.
+Blocker: runtime validation remains intentionally paused.
+
+# Campaign chunk bounds and failure propagation — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: campaign save loading now validates both required 32-bit chunks
+before publishing process globals, rejects progression and backdrop indices
+outside the parsed retail catalog, guards backdrop accessors, and propagates
+child-loader failures through `CommandoSaveLoadClass`. This preserves original
+chunk widths and sentinels without clamping, packing changes or invented
+campaign order.
+Evidence: local source inspection and deterministic staging patch only. No
+compilation, test, emulator, device, GitHub or GitHub Actions work ran.
+Next: remove known production profiling contamination, then separate audio file
+preparation from the mixer deadline lock.
+Blocker: runtime validation remains intentionally paused.
+
+# Repeated-world physics resource release — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: `PhysResourceMgrClass::Shutdown` now releases the lazily acquired
+`grid_effect.tga` texture alongside its shadow, highlight and stealth resources.
+This closes a definite reference leak across repeated world/engine lifecycles
+without changing resource lookup or effect ownership.
+Evidence: local source inspection and deterministic staging patch only. No
+compilation, test, emulator, device, GitHub or GitHub Actions work ran.
+Next: continue resource/cache lifetime closure and production instrumentation
+gating before implementing missing additional material passes.
+Blocker: runtime validation remains intentionally paused.
+
+# User-lighting GPU cache invalidation — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: moved static-mesh invalidation ahead of the first user-lighting array
+allocation. The renderer cache key used by the preceding draw contains the old
+lighting pointer, including null on first installation; invalidating after
+allocation targeted only the new key and left stale GPU geometry resident.
+Original user-lighting generation and mesh ownership remain unchanged.
+Evidence: local source and deterministic patch inspection only. No compilation,
+test, emulator, device, GitHub or GitHub Actions work ran.
+Next: gate known intrusive production timing probes and continue missing
+additional-material-pass restoration.
+Blocker: runtime validation remains intentionally paused.
+
+# Audio deadline silence and profiling opt-in — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: the Vita audio output thread now submits a freshly zeroed hardware
+buffer when the legacy Miles mutex is contended instead of sleeping and leaving
+the preceding buffer to repeat. A monotonic starvation counter is exposed in
+runtime statistics. Expensive sampled per-object PostThink, per-vehicle
+transition and per-mesh/draw kernel timing is now compiled only when
+`RENEGADE_VITA_DETAILED_TIMING` is explicitly enabled; normal counters and
+coarse lifecycle telemetry remain present.
+Evidence: local source inspection and deterministic staging edits only. No
+compilation, test, emulator, device, GitHub or GitHub Actions work ran.
+Next: split stream preparation from provider mixer-state publication, then
+restore native additional material passes needed by stealth and other effects.
+Blocker: runtime validation remains intentionally paused.
+
+# Native decal depth bias — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: mapped released DX8 `D3DRS_ZBIAS` state to bounded VitaGL polygon
+offset for filled geometry. Positive DX8 bias uses the opposite OpenGL units
+sign to pull coplanar decals forward, while the released zero state resets and
+disables polygon offset after the decal list. Existing render-state caching and
+decal traversal remain the owners.
+Evidence: local source inspection only. Visual correctness and sign/magnitude
+remain unaccepted until physical Vita/PSTV comparison; no build, emulator,
+device, GitHub or GitHub Actions work ran.
+Next: design the additional-material-pass adapter required for stealth,
+transition and projector effects without bypassing original pass ownership.
+Blocker: runtime validation remains intentionally paused.
+
+# Pathfinding frame-budget underflow — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: corrected a signed-to-unsigned underflow in the original
+`PathMgrClass::Resolve_Paths` time-slice boundary. Priority-path selection can
+consume the remaining frame budget; the released calculation then converted a
+negative tick remainder to a near-`UINT32_MAX` millisecond slice and allowed a
+path solve to run to completion. The Vita staging patch now samples the clock
+once and defers the active path when the original budget is exhausted. Path
+selection, path state, the 5 ms caller budget and original solver ownership are
+unchanged.
+Evidence: local source inspection and deterministic patch wiring only. No
+staging, compilation, test, emulator, device, GitHub or GitHub Actions work ran.
+Next: reconcile Practice/LAN restart arbitration and remove always-on intrusive
+timing probes from production candidates before addressing Miles stream-open
+lock duration.
+Blocker: runtime validation remains intentionally paused.
+
+# Dazzle source-state reconciliation — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: rechecked the current staged Dazzle implementation before proposing
+new renderer code. The later `ww3d-a35-original-dazzle-lifecycle.patch` already
+supersedes the historical all-Vita no-op: physical Vita retains the released
+visibility, blink, intensity/history, layer, dynamic XYZNDUV2 buffer, additive
+shader, texture and indexed-draw path. WW3D loads `DAZZLE.INI` and performs
+type cleanup; only headless host presentation remains skipped. No duplicate or
+replacement Dazzle renderer was added.
+
+Evidence: current source and deterministic patch inspection. Native Dazzle
+pixels, archive precedence and resource lifetime remain unvalidated.
+
+Next: keep Dazzle in the eventual physical renderer matrix and continue actual
+source omissions rather than reimplementing an already restored owner.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Original LAN menu return across teardown — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: retained `GameInitMgr`'s LAN-list return destination across the
+native application session boundary. LAN pending exit, broken connection, EVA
+exit and failed round cleanup still release the original world, network and UI
+owners completely; the next clean frontend session opens `LOC_LAN_MAIN`
+instead of incorrectly collapsing every exit into the ordinary main menu.
+Updated the runtime interface, application handoff, artifact-symbol gates and
+source contracts for the explicit destination.
+
+Evidence: source inspection and deterministic local edits only. No staging,
+compile, test, emulator, physical device, commit or push operation ran.
+
+Next: continue shared complete-game lifecycle and audio/resource closure.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Shared save, animated-audio and movie-teardown closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: made original save metadata peeks reject missing or unopened files
+before constructing a chunk reader, allowing the original Load menu to omit an
+unreadable `.sav` safely. Restored the released W3D embedded-animation sound
+discovery and trigger calls for single, blended and combination animations;
+the previously selected Vita patches had deliberately suppressed all of them.
+Unified `MovieGameModeClass` stop ownership so completion, skip, deactivation
+and shutdown restore temporarily disabled WWAudio categories exactly once
+before stopping Bink.
+
+Evidence: three independent GPT-5.6 Sol read-only source audits followed by
+coordinator inspection and deterministic source/patch edits. No staging,
+compile, test, emulator, physical device, commit or push operation ran under
+the active test hold. These changes are implementation candidates only.
+
+Next: reconcile the remaining save/campaign, audio-streaming and broader
+gameplay findings into the source closure plan, then continue the earliest
+shared complete-game dependency.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Original LAN launch and round ownership — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: classified multiplayer frontend launches as LAN host, LAN client or
+the existing direct client from original `GameInitMgr` requirements. The native
+session path now preserves original LAN `cGameData` and `cNetwork` ownership,
+waits for the original replicated LAN-client player, creates the local LAN-host
+player, and routes Practice/LAN map changes through the shared original
+`CombatGameModeClass` core-restart owner. Archive replacement occurs only after
+the old world has completed `Core_Shutdown`. Direct-client behavior remains on
+its separate `A31ClientConnect` lifecycle.
+
+The released `cGameData` default is `DoMapsLoop=true`; its `Rotate_Map` returns
+to map-cycle entry zero and sets `g_b_core_restart` after intermission. A
+one-map Practice cycle therefore reloads that map indefinitely unless the user
+or settings explicitly disable looping. The Vita path must preserve this
+behavior and must not treat an ordinary Practice round end as return-to-menu.
+
+Evidence: source inspection and local deterministic patch/source edits only.
+No staging, compile, test, emulator, physical device, commit or push operation
+ran under the active test hold. Runtime correctness remains unproved.
+
+Next: close LAN disconnect/failure presentation and reconcile the delegated
+frontend, audiovisual and broader-gameplay audits before the next coherent
+candidate.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Original Controls and profile ownership — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: restored the original Controls factory, tab set and profile page;
+wired Vita button-edge capture into original DirectInput remapping; added Vita
+labels for physical bindings; and restored InputConfigMgr startup/shutdown over
+rooted user-only CONFIG.DAT/custom CFG files. Choosing Defaults reapplies the
+Vita default mapping before the original UI saves a custom profile.
+Evidence: source inspection only. The accumulated patch chain has not been
+staged, compiled or run under the active test hold.
+Next: close remaining Controls source dependencies by inspection, then restore
+Direct-IP/LAN dialog ownership over the existing provider seam.
+Blocker: runtime validation remains intentionally paused.
+
+# Original Movies frontend and unlock persistence — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: selected the original Movies dialog, generated its original WWUI
+resource, routed playback into the established rooted Bink provider, and added
+atomic persistence for the original campaign-populated Movies registry key.
+The provider stores only logical filenames and translation identifiers under
+the user config root; no retail media is copied or repackaged.
+Evidence: source inspection only. No staging, build, runtime, commit or push.
+Next: restore original Vita control-profile ownership and mapping capture, then
+continue into Direct-IP/LAN frontend ownership.
+Blocker: runtime validation remains intentionally paused.
+
+# Original Credits frontend route — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: admitted the original Credits dialog into the full Vita frontend,
+including its source unit, factory recreation, Options button, generated WWUI
+template and required-control manifest. The released dialog remains owner and
+loads `credits.txt` through the original file-factory chain.
+Evidence: source inspection only; no staging/build/runtime validation ran.
+Next: adapt the original Movies menu to the existing Bink provider and durable
+movie-unlock preferences without reviving desktop CD-drive assumptions.
+Blocker: runtime validation remains intentionally paused.
+
+# Original LAN channel-data boundary — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: admitted the original `cGameChannel` and `cGameChannelList` units
+without importing their WWOnline-only metadata into the Vita build. Under the
+narrow `RENEGADE_VITA_LAN_FRONTEND` boundary, LAN advertisements retain their
+original `cGameData` ownership and update player/map fields exactly as released;
+desktop/WOL builds retain the released `RefPtr<WWOnline::ChannelData>` path.
+The deterministic staging patch and source selection are present. This does
+not activate the LAN menu, socket owner, hosting, joining or Direct-IP route.
+Evidence: source inspection and local edits only. No staging, compilation,
+runtime, device, commit or push operation ran under the active test hold.
+Next: port the original `LanGameModeClass`/`cLanChat` dependency boundary and
+register that mode before exposing the original LAN dialogs.
+Blocker: runtime validation remains intentionally paused.
+
+# Original LAN service and UI ABI preparation — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: prepared the released `cLanChat`, connection and refusal dialogs for
+a LAN-only Vita build by excluding GameSpy/WOL-only branches while retaining
+original UDP/Tier-1 discovery, nickname persistence and `GameInitMgr` handoff.
+Added the three canonical dialog resources needed for connect, nickname
+collision and refusal. LAN list row pointers now cross WWUI's 32-bit payload
+through the existing ILP32/LP64 token boundary, and host mod-package rows store
+stable manager indices rather than truncated pointers. These service/UI units
+are prepared but deliberately not selected or exposed until their full host,
+password and lifecycle dependency set is closed.
+Evidence: source inspection and local deterministic patch edits only. No
+staging, compile, test, emulator, device, commit or push operation ran.
+Next: close the original LAN list/host/password source graph, then register
+`LanGameModeClass` and expose `LOC_LAN_MAIN` without admitting WOL/GameSpy.
+Blocker: runtime validation remains intentionally paused.
+
+# Original LAN host dependency preparation — 2026-10-04
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: expanded the canonical WWUI resource set to the released LAN game
+list, host tabs, C&C settings and password prompt; selected the independent
+original password dialog and LAN NIC enumerator; removed the NIC enumerator's
+unused GameSpy header in the Vita profile. All direct host-options WOL-mode
+queries now tolerate the intentionally absent WOL mode instead of dereferencing
+a null `GameModeManager::Find("WOL")` result. Original LAN/C&C settings and
+map-cycle data remain owned by `cGameData`.
+Evidence: source inspection and local deterministic patch edits only. No
+staging, compile, test, emulator, device, commit or push operation ran.
+Next: isolate the remaining WOL/GameSpy, slave-farm and desktop server-save
+branches in host options, then select and register the complete LAN graph.
+Blocker: runtime validation remains intentionally paused.
+
+# M13 finale delivery trace — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: added bounded Vita breadcrumbs at each open boundary of the
+original M13 finale: ion-strike timer delivery, finale timer delivery,
+`X0Z_Finale.txt` custom-event target resolution, and the Area 4 controller's
+mission-success receipt. The instrumentation preserves the retail-authored
+25-second delay and final custom event; it does not invent or force mission
+completion. A failed invisible-controller allocation is retained as
+`cinematic_owner=0` and no longer passes null to `Set_Facing` or
+`Attach_Script`. The beacon actor has the same bounded owner breadcrumb and
+null guard; either allocation failure leaves the mission incomplete through
+its original route. The hard-coded beacon-position object 1500087 is also
+reported independently and no longer dereferenced if level loading failed to
+preserve that authored ID.
+Evidence: source and deterministic patch inspection only. No staging, build,
+test, emulator, device, GitHub Actions, commit or push operation ran.
+Next: continue source-level campaign and skirmish completion wiring, then use
+these breadcrumbs when runtime validation is explicitly resumed.
+Blocker: runtime validation remains intentionally paused.
+
+# Beacon save/load audio continuity — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[░░░░░░░░░░] 0/10 native mission/runtime evidence gates closed`
+
+Completed: restored an armed beacon's continuous sound through the original
+post-load callback without replaying its state transition. The shared
+idempotent sound helper recreates exactly the missing audio object while saved
+detonation timers, weather, scripts and mission ownership remain intact.
+Evidence: source inspection, deterministic staging patch integration and
+`git diff --check` only. No build, test, emulator, device, GitHub Actions,
+commit or push operation ran.
+Next: continue remaining Practice/Direct-IP round ownership and renderer
+material-pass work after source lifecycle closure.
+Blocker: runtime validation remains intentionally paused.
+
+# Deterministic full staging and campaign intermission input route — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: repaired the accumulated zero-fuzz patch definitions through the
+original Movies, Controls, loading, overlays and LAN frontend chain. All 376
+ordered patches now materialize without rejects or backup debris. Campaign
+intermission now disables the gameplay input route before its first menu input
+sample, preventing a recorded gameplay frame from entering the original score
+or movie UI while preserving original CampaignManager ownership.
+
+Evidence: local deterministic staging and patch-inventory verification passed;
+inventory SHA-256 is
+`bbcb885a6dca85788b414615cffb06ec01c7fc28941df1fb35979f59300c6091`.
+`git diff --check` passed before the final scoped route/report edit. No build,
+runtime test, emulator, physical device, GitHub operation or GitHub Actions
+runner was used.
+
+Additional source closure: the native procedural material emitter now includes
+its `SimpleDynVecClass` dependency explicitly and rejects the complete rigid
+submission when generated APT data contains an out-of-range polygon ID. The
+failure increments renderer error evidence and emits one bounded Vita
+breadcrumb instead of silently producing a partial effect. This is
+source-inspection evidence only.
+
+The native DX8 boundary now restores the released sorting-buffer conversion for
+retained transparent draws. It copies the declared sorting vertex window and
+rebased indices into original dynamic DX8-shaped buffers, validates every index,
+and submits through the established indexed renderer. Original
+`SortingRendererClass` insertion, global depth order and flush timing remain the
+owners. This is uncompiled source evidence; transparent output and performance
+remain physically unaccepted.
+
+Next: continue original renderer/resource lifetime closure, including generic
+projector render-target ownership, then return to complete campaign and repeated
+round lifecycle gaps.
+
+Blocker: runtime validation remains intentionally paused.
+
+# Spawner, objective and active-conversation admission — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: spawners now require all seven writer-owned singleton fields at
+their original widths, exact repeated spawn-point transforms, a resolved retail
+definition, and bounded NUL-terminated alternating script name/parameter pairs.
+Objectives additionally require their two released age fields to agree, valid
+type/status values, positive IDs and manager-wide unique IDs. Active
+conversations reject duplicate/missing variable roots, reference-load failure,
+unknown children and more than ten monitor chunks before touching the fixed
+array. Rejected pointer-bearing conversations remain alive for outer callback
+discard and teardown.
+
+Evidence: deterministic reconstruction passes for 427 ordered patches with
+inventory SHA-256
+`5ee00227927cdb026ff38437327069d8265e1e6f43d2bf8e1a1abea103d9521e`;
+`git diff --check` passes and no staging reject/backup debris exists. Source and
+staging evidence only; no build, test, emulator, device, GitHub or GitHub
+Actions runner was used.
+
+Next: implement factory/remap load transactions before tightening inner
+scriptable-object and conversation graphs that currently register callbacks or
+pointer mappings during parsing.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Persist factory and scriptable-object transactions — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: `GameObjReference` and referenceable identity records now require
+one exact variables root and 32-bit token before registering remap/callback
+work. The simple persist factory requires its ordered pointer/data envelope,
+nonzero identity and successful concrete loader, and reports failure through a
+sticky outer transaction flag while retaining manager ownership for teardown.
+`ScriptableGameObj` now propagates parent, referenceable, variables and timer
+failures, validates observer tokens, and registers its behavioral callback only
+after complete admission.
+
+Evidence: deterministic reconstruction passes for 432 ordered patches with
+inventory SHA-256
+`e206f772745fdfd90fc4a0119aef524a68c7b7c7eb3c7ba69096fba734f4c4b6`;
+`git diff --check` passes and no staging reject/backup debris exists. Source and
+staging evidence only; no build, test, emulator, device, GitHub or GitHub
+Actions runner was used.
+
+Next: close exact inner conversation/orator state and background/weather field
+transactions, then audit remaining player/statistics records and writer-side
+semantic failure propagation.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Complete player/statistics record admission — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: `PlayerDataClass` now requires all 24 writer-owned scalar fields
+exactly once and validates every repeated weapon statistic as a complete,
+unique ID/count pair. Score and money publish only after whole-record success.
+The enclosing `cPlayer` requires exact identity, kill/death/team and 32-bit
+remap fields plus a bounded, even-width, NUL-terminated UTF-16 name before
+publishing state or pointer identity.
+
+Evidence: deterministic reconstruction passes for 434 ordered patches with
+inventory SHA-256
+`8e110226f929c8ee5a15c2d11f7b21d37a01fffd5dc888cead63081092cbd90c`;
+`git diff --check` passes and no staging reject/backup debris exists. Source and
+staging evidence only; no build, test, emulator, device, GitHub or GitHub
+Actions runner was used.
+
+Next: close conversation/orator state and the 81-field background plus 51-field
+weather dynamic transactions, then propagate writer-side semantic failures.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Nested semantic save failure propagation — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: corrected the structural chunk patch so the reader owns and
+initializes its error state. `ChunkSaveClass` now has a sticky semantic error;
+the generic simple persist factory sets it when a concrete object's `Save`
+fails, and `SaveLoadSystemClass::Save` returns failure for child rejection,
+chunk-open/close failure, or sticky stream failure. The existing atomic save
+owner can now refuse publication without changing the released void persist
+factory ABI.
+
+Evidence: deterministic reconstruction passes for 436 ordered patches with
+inventory SHA-256
+`4a023619299d3f52ddeec7c020eb080e9b19978b25fc8ca6f650c1ced85294f8`;
+staging consistency and `git diff --check` pass, with no staging reject/backup
+debris. Source and staging evidence only; no build, test, emulator, device,
+GitHub or GitHub Actions runner was used.
+
+Next: inspect custom persist factories and remaining subsystem writers for
+failure paths that do not yet report through this stream status.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Case-complete persist writer status — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: the case-distinct `PersistFactory.h` used by `CNCModeSettings.cpp`
+now propagates concrete-object save rejection like the lowercase engine header.
+The custom RenderObj and Dazzle factories reject null objects through the same
+sticky stream status. Chunk header, micro-chunk header and payload short writes
+now remain visible even when their historical boolean returns are ignored.
+
+Evidence: deterministic reconstruction passes for 437 ordered patches with
+inventory SHA-256
+`796cf78b21e5173929c0350c5f40e02a262f59cae38d61768efa546c5055067c`;
+staging consistency and `git diff --check` pass. Source and staging evidence
+only; no build, test, emulator, device, GitHub or GitHub Actions runner was used.
+
+Next: audit the 61 subsystem writers and compound object writers for ignored
+child-save failures that occur outside persistence factories.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Required child-save result chain — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: the original Combat save subsystem now combines results from all 15
+required manager records. Commando combines network, cGod and campaign results;
+the dynamic physics subsystem retains structural errors across its scene,
+constants and path-manager records. Network/player and conversation list owners now report failed child
+records through the sticky stream status. These changes preserve chunk order
+and the original synchronous serializer while preventing incomplete nested
+state from being published as a successful atomic save.
+
+Evidence: deterministic reconstruction passes for 440 ordered patches with
+inventory SHA-256
+`39df12486971d2f6c534caba03e13cbf776f0e884980c0cf54fbed7c643bd468`;
+staging consistency and `git diff --check` pass. Source and staging evidence
+only; no build, test, emulator, device, GitHub or GitHub Actions runner was used.
+
+Next: continue the remaining compound-writer audit, prioritizing script state
+and mission/boss records whose child failures can affect campaign completion.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Mission-script and boss writer status — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: ScriptManager rejects null active entries and returns its sticky
+stream status. Script-command save data rejects null buffers, negative sizes
+and payloads beyond the released 250-byte micro-chunk limit before any write.
+Mendoza, Sakura and Raveshaw definition/object writers propagate their
+bool-returning parent, defense, reference, stealth and effect saves; Raveshaw
+also rejects a missing Tiberium effect safely.
+
+Evidence: deterministic reconstruction passes for 442 ordered patches with
+inventory SHA-256
+`e66ca9a28f5685cf2108f2dba5d8e4f0c1686e36a62aacd84fe9a809ee2af6d6`;
+staging consistency and `git diff --check` pass. Source and staging evidence
+only; no build, test, emulator, device, GitHub or GitHub Actions runner was used.
+
+Next: inspect remaining gameplay compound writers and restored terminal-state
+behavior, then continue campaign and repeated-Practice lifecycle closure.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Terminal-save and script-data transaction closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: `cGod::Save` now enforces its running-state admission directly and
+returns the chunk stream status, preventing any caller from serializing the
+ambiguous shared death/failure terminal state. `ChunkLoadClass` exposes a
+narrow sticky failure report, and script-data loading uses it for null
+destinations, negative capacities and saved fields larger than their declared
+destination. The outer script/save transaction rejects the load before
+behavioral callbacks.
+
+Evidence: deterministic reconstruction passes for 445 ordered patches with
+inventory SHA-256
+`f1c4b9613aaf8d0ccffde00fd317a0ff272b8dcd5716e800a2e77268d5d083d6`;
+staging consistency and `git diff --check` pass. Source and staging evidence
+only; no build, test, emulator, device, GitHub or GitHub Actions runner was used.
+
+Next: continue remaining gameplay compound writers and campaign/Practice
+transition failure paths.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Idempotent core restart failure cleanup — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: `Load_Level` now establishes explicit ownership of partial or
+complete core resources, and `Core_Shutdown` consumes that ownership before
+releasing level, radar, HUD, music and sound-page state. If the fallible
+post-shutdown archive/provider callback fails, later Combat deactivation skips
+a duplicate core teardown. Successful reloads establish a fresh generation's
+ownership without changing original Practice map rotation.
+
+Evidence: deterministic reconstruction passes for 446 ordered patches with
+inventory SHA-256
+`d54f18d1d5671c8b66cc350b1bd8add904184ad90278e6a7066c810b41a5bd6d`;
+staging consistency and `git diff --check` pass. Source and staging evidence
+only; no build, test, emulator, device, GitHub or GitHub Actions runner was used.
+
+Next: close the Direct-IP current/pending provider transaction, then continue
+remaining campaign and Practice lifecycle failure paths.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# Checked Direct-IP round-provider handoff — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[█████░░░░░] 5/10 current evidence gates complete`
+
+Completed: reconciled the live Direct-IP client against the stale gap report.
+The source already prepares a second TT resource factory while the current
+world retains the published provider, then promotes or removes providers only
+after `Core_Shutdown`. The final round-load transition now returns an explicit
+result, and the Vita runtime classifies a missing `LoadingRound` handoff as a
+resource-provider failure before attempting player rebinding.
+
+Evidence: source inspection plus deterministic 446-patch staging consistency;
+`git diff --check` passes. This is source-only evidence. No build, test,
+emulator, device, GitHub or GitHub Actions runner was used.
+
+Next: audit campaign intermission reload/final-movie cleanup and remaining
+multiplayer exit/recovery ownership.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+
+# WWPhys definition load-status closure — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: 20 WWPhys definition classes now propagate nested definition,
+projector-manager and animation-manager load failures through the complete
+physical preset hierarchy. This covers vehicle, motorcycle, human, projectile,
+decoration, timed, accessible and shakeable definitions while leaving original
+retail definition ownership and chunk layouts unchanged.
+
+Evidence: deterministic reconstruction passes for 467 ordered patches with
+inventory SHA-256
+`fa1c0cda16f5225fec97f9d667a233480f5e53e4ea25e0044fc0ba6ed176802d`;
+staging consistency and `git diff --check` pass. Source and staging evidence
+only; no build, test suite, emulator, device, GitHub or GitHub Actions runner
+was used.
+
+Next: audit the definition-manager publication boundary and remaining resource
+loaders so a rejected preset cannot enter the live retail definition catalog.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.
+# Full-profile UI and lifecycle owner restoration — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: the compatibility selectors for `GameInitMgrClass` and `DlgMsgBox`
+now select their linked original implementations in the complete Vita frontend
+profile. Full-profile lifecycle users cannot silently compile against a
+different no-op `GameInitMgrClass`, and admission, disconnect, MOTD and
+administrator messages can remain visible. Demo/headless profiles retain the
+narrow no-op compatibility shells. The packaged LAN graph already selects the
+real dialog manager and connection/refusal types at its source include sites;
+their combined host-only fallback remains unchanged because those classes have
+incompatible object layouts and the focused host target does not link their
+implementations.
+The WOL-dependent team-selection implementation remains excluded pending a
+separate LAN-only adaptation; its stub was not mistaken for an interchangeable
+original implementation.
+
+Evidence: current source/CMake reachability inspection, deterministic staging
+inventory PASS for 493 ordered patches with SHA-256
+`42c8ca2afacc6f7f42adbab6c7bb42aa71cf209ce9f815c8536fef140bf81361`,
+and `git diff --check`. Source evidence only; no compiler, test suite, emulator,
+physical device, GitHub, or GitHub Actions runner was used.
+
+Next: audit and adapt the original LAN team-selection owner without importing
+retired WOL dependencies, then continue the remaining campaign/Practice and
+multiplayer presentation closure.
+
+Blocker: runtime validation remains paused; GitHub Actions runners are
+prohibited.

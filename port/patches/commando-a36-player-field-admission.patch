@@ -1,0 +1,100 @@
+--- a/player.cpp
++++ b/player.cpp
+@@ -179,7 +179,12 @@
+ //-----------------------------------------------------------------------------
+ bool cPlayer::Load(ChunkLoadClass &cload)
+ {
+-	void * old_ptr = NULL;
++	uint32 old_ptr_token = 0;
++	int id = 0;
++	int kills = 0;
++	int deaths = 0;
++	int team = 0;
++	WideStringClass name;
+ 	bool parent_seen = false;
+ 	bool variables_seen = false;
+ 	bool id_seen = false;
+@@ -210,25 +215,38 @@
+ 				variables_seen = true;
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+-						case MICROCHUNK_ID: loaded = !id_seen && loaded; id_seen = true; break;
+-						case MICROCHUNK_NAME: loaded = !name_seen && loaded; name_seen = true; break;
+-						case MICROCHUNK_KILLS: loaded = !kills_seen && loaded; kills_seen = true; break;
+-						case MICROCHUNK_DEATHS: loaded = !deaths_seen && loaded; deaths_seen = true; break;
+-						case MICROCHUNK_TEAMNUMBER: loaded = !team_seen && loaded; team_seen = true; break;
+-						case MICROCHUNK_REMAP_POINTER: loaded = !remap_seen && loaded; remap_seen = true; break;
+-						default: break;
+-					}
+-
+-					switch(cload.Cur_Micro_Chunk_ID()) {
+-						READ_MICRO_CHUNK(cload, MICROCHUNK_ID, Id);
+-						READ_MICRO_CHUNK_WIDESTRING(cload, MICROCHUNK_NAME, Name);
+-						READ_SAFE_MICRO_CHUNK(cload, MICROCHUNK_KILLS, Kills,int);
+-						READ_SAFE_MICRO_CHUNK(cload, MICROCHUNK_DEATHS, Deaths, int);
+-						READ_SAFE_MICRO_CHUNK(cload, MICROCHUNK_TEAMNUMBER, PlayerType, int);
+-						READ_MICRO_CHUNK(cload, MICROCHUNK_REMAP_POINTER, old_ptr);
++						case MICROCHUNK_ID:
++							if (id_seen || cload.Cur_Micro_Chunk_Length() != sizeof(id) ||
++								cload.Read(&id, sizeof(id)) != sizeof(id)) loaded = false;
++							else id_seen = true;
++							break;
++						case MICROCHUNK_NAME:
++						{
++							const uint32 length = cload.Cur_Micro_Chunk_Length();
++							WCHAR value[128];
++							if (name_seen || length < sizeof(WCHAR) || length > sizeof(value) ||
++								(length % sizeof(WCHAR)) != 0 || cload.Read(value, length) != length ||
++								value[(length / sizeof(WCHAR)) - 1U] != 0) loaded = false;
++							else {
++								name_seen = true;
++								name = value;
++							}
++							break;
++						}
++#define READ_REQUIRED_PLAYER_VALUE(id_value, value, seen) \
++						case (id_value): \
++							if ((seen) || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
++								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
++							else (seen) = true; \
++							break
++						READ_REQUIRED_PLAYER_VALUE(MICROCHUNK_KILLS, kills, kills_seen);
++						READ_REQUIRED_PLAYER_VALUE(MICROCHUNK_DEATHS, deaths, deaths_seen);
++						READ_REQUIRED_PLAYER_VALUE(MICROCHUNK_TEAMNUMBER, team, team_seen);
++						READ_REQUIRED_PLAYER_VALUE(MICROCHUNK_REMAP_POINTER, old_ptr_token, remap_seen);
++#undef READ_REQUIRED_PLAYER_VALUE
+ 
+ 						default:
+-							Debug_Say(( "Unrecognized cPlayer Variable chunkID\n" ));
++							loaded = false;
+ 							break;
+ 					}
+ 
+@@ -237,7 +255,7 @@
+ 				break;
+ 
+ 			default:
+-				Debug_Say(( "Unrecognized cPlayer chunkID\n" ));
++				loaded = false;
+ 				break;
+ 
+ 		}
+@@ -245,9 +263,16 @@
+ 	}
+ 
+ 	loaded = loaded && parent_seen && variables_seen && id_seen && name_seen &&
+-		kills_seen && deaths_seen && team_seen && remap_seen && old_ptr != NULL;
++		kills_seen && deaths_seen && team_seen && remap_seen && old_ptr_token != 0 &&
++		!cload.Has_Error();
+ 	if (loaded) {
+-		SaveLoadSystemClass::Register_Pointer(old_ptr, this);
++		Id = id;
++		Name = name;
++		Kills = kills;
++		Deaths = deaths;
++		PlayerType = team;
++		SaveLoadSystemClass::Register_Pointer(
++			reinterpret_cast<void *>(static_cast<uintptr_t>(old_ptr_token)), this);
+ 	}
+ 
+ 	return loaded;

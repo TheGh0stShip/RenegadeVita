@@ -15,6 +15,7 @@
 #include "a4_frontend_lifecycle_boundary.h"
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 #include "dialogmgr.h"
+#include "gametype.h"
 #endif
 #endif
 
@@ -607,6 +608,64 @@ void DirectInput::Read(void)
 	const bool dialog_navigation = frontend_menu_navigation;
 #endif
 	const bool gameplay_input_active = !dialog_navigation;
+	bool public_chat_chord = false;
+	bool team_chat_chord = false;
+	bool team_info_chord = false;
+	bool battle_info_chord = false;
+	bool server_info_chord = false;
+	unsigned radio_page = 0U;
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	// Preserve campaign Action/crouch. Only multiplayer/Practice interprets
+	// Select+Triangle/Circle as the original public/team message edges.
+	if (gameplay_input_active && The_Game() != NULL && !IS_MISSION &&
+		(buttons & SCE_CTRL_SELECT) != 0U) {
+		radio_page = ((buttons & SCE_CTRL_LTRIGGER) != 0U ? 1U : 0U) |
+			((buttons & SCE_CTRL_RTRIGGER) != 0U ? 2U : 0U);
+		public_chat_chord = radio_page == 0U && (buttons & SCE_CTRL_TRIANGLE) != 0U;
+		team_chat_chord = radio_page == 0U && !public_chat_chord && (buttons & SCE_CTRL_CIRCLE) != 0U;
+		team_info_chord = radio_page == 0U && (buttons & SCE_CTRL_SQUARE) != 0U;
+		battle_info_chord = radio_page == 0U && !team_info_chord &&
+			(buttons & SCE_CTRL_CROSS) != 0U;
+		server_info_chord = radio_page == 0U && !team_info_chord &&
+			!battle_info_chord && (buttons & SCE_CTRL_UP) != 0U;
+	}
+#endif
+	const bool radio_input = radio_page != 0U;
+	const bool multiplayer_chord = public_chat_chord || team_chat_chord ||
+		team_info_chord || battle_info_chord || server_info_chord;
+	const bool ordinary_gameplay_input = gameplay_input_active && !radio_input &&
+		!multiplayer_chord;
+	// PSTV has no rear touch surface. Keep the existing Vita rear-touch route,
+	// and expose the same original FirstPersonToggle key through a campaign-only
+	// chord. Multiplayer retains Select+Circle for team chat.
+	const bool camera_toggle_chord = ordinary_gameplay_input &&
+		The_Game() != NULL && IS_MISSION &&
+		(buttons & (SCE_CTRL_SELECT | SCE_CTRL_CIRCLE)) ==
+			(SCE_CTRL_SELECT | SCE_CTRL_CIRCLE);
+	// Right modifiers do not activate the mapped left-Control crouch key.
+	Set_Button(DIKeyboardButtons, DIK_RCONTROL, (radio_page & 1U) != 0U);
+	Set_Button(DIKeyboardButtons, DIK_RMENU, (radio_page & 2U) != 0U);
+	// Input::Get_Value checks these aggregate modifier slots. Keep radio
+	// modifiers separate from the existing left-Control crouch mapping.
+	Set_Button(DIKeyboardButtons, DIK_CONTROL, (radio_page & 1U) != 0U);
+	Set_Button(DIKeyboardButtons, DIK_ALT, (radio_page & 2U) != 0U);
+	static const unsigned radio_buttons[8] = {
+		SCE_CTRL_UP, SCE_CTRL_DOWN, SCE_CTRL_LEFT, SCE_CTRL_RIGHT,
+		SCE_CTRL_TRIANGLE, SCE_CTRL_CIRCLE, SCE_CTRL_CROSS, SCE_CTRL_SQUARE
+	};
+	static const int radio_keys[10] = {
+		DIK_1, DIK_2, DIK_3, DIK_4, DIK_5, DIK_6, DIK_7, DIK_8, DIK_9, DIK_0
+	};
+	for (unsigned command = 0U; command < 10U; ++command) {
+		const bool down = command < 8U ? (buttons & radio_buttons[command]) != 0U :
+			(command == 8U ? controller.ly < 64U : controller.ly > 192U);
+		Set_Button(DIKeyboardButtons, radio_keys[command], radio_input && down);
+	}
+	Set_Button(DIKeyboardButtons, DIK_T, public_chat_chord);
+	Set_Button(DIKeyboardButtons, DIK_Y, team_chat_chord);
+	Set_Button(DIKeyboardButtons, DIK_F7, team_info_chord);
+	Set_Button(DIKeyboardButtons, DIK_F8, battle_info_chord);
+	Set_Button(DIKeyboardButtons, DIK_F9, server_info_chord);
 	Set_Button(DIKeyboardButtons, DIK_BACK, g_select_tap.Sample(
 		(buttons & SCE_CTRL_SELECT) != 0U,
 		(buttons & ~SCE_CTRL_SELECT) != 0U || front_touch.down || back_touch.down,
@@ -615,7 +674,7 @@ void DirectInput::Read(void)
 		Vita_Append_A22_Runtime_Breadcrumb("input",
 			"SELECT release feeds original CyclePog; diagnostic capture disabled");
 	}
-	const bool quicksave_chord = gameplay_input_active &&
+	const bool quicksave_chord = ordinary_gameplay_input &&
 		(buttons & (SCE_CTRL_SELECT | SCE_CTRL_SQUARE)) == (SCE_CTRL_SELECT | SCE_CTRL_SQUARE);
 	Set_Button(DIKeyboardButtons, DIK_F5, quicksave_chord);
 		Set_Virtual_Key(VK_UP,
@@ -627,29 +686,35 @@ void DirectInput::Read(void)
 		Set_Virtual_Key(VK_RIGHT,
 			dialog_navigation && (buttons & SCE_CTRL_RIGHT) != 0);
 	Set_Virtual_Key(VK_RETURN, (buttons & SCE_CTRL_CROSS) != 0);
+	Set_Virtual_Key(VK_F6, dialog_navigation && (buttons & SCE_CTRL_SQUARE) != 0);
 	Set_Virtual_Key(VK_ESCAPE, (buttons & SCE_CTRL_CIRCLE) != 0);
 	Set_Virtual_Key(VK_TAB, (buttons & SCE_CTRL_SELECT) != 0);
 	Set_Button(DIKeyboardButtons, DIK_UP,
-		gameplay_input_active && (buttons & SCE_CTRL_UP) != 0);
+		(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_UP) != 0);
 	Set_Button(DIKeyboardButtons, DIK_DOWN,
-		gameplay_input_active && (buttons & SCE_CTRL_DOWN) != 0);
+		(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_DOWN) != 0);
 	Set_Button(DIKeyboardButtons, DIK_LEFT,
-		gameplay_input_active && (buttons & SCE_CTRL_LEFT) != 0);
+		(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_LEFT) != 0);
 	Set_Button(DIKeyboardButtons, DIK_RIGHT,
-		gameplay_input_active && (buttons & SCE_CTRL_RIGHT) != 0);
+		(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_RIGHT) != 0);
 	Set_Button(DIKeyboardButtons, DIK_W, false);
 	Set_Button(DIKeyboardButtons, DIK_S, false);
 	Set_Button(DIKeyboardButtons, DIK_A, false);
 	Set_Button(DIKeyboardButtons, DIK_D, false);
 	Set_Button(DIKeyboardButtons, DIK_SPACE,
-		gameplay_input_active && (buttons & SCE_CTRL_CROSS) != 0);
+		(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_CROSS) != 0);
 	Set_Button(DIKeyboardButtons, DIK_LCONTROL,
-		gameplay_input_active && (buttons & SCE_CTRL_CIRCLE) != 0);
+		(ordinary_gameplay_input || dialog_navigation) &&
+		(buttons & SCE_CTRL_CIRCLE) != 0 && !team_chat_chord &&
+		!camera_toggle_chord);
 	Set_Button(DIKeyboardButtons, DIK_E,
-		gameplay_input_active && (buttons & SCE_CTRL_TRIANGLE) != 0);
-	Set_Button(DIKeyboardButtons, DIK_F, gameplay_input_active && back_touch.down);
+		(ordinary_gameplay_input || dialog_navigation) &&
+		(buttons & SCE_CTRL_TRIANGLE) != 0 && !public_chat_chord);
+	Set_Button(DIKeyboardButtons, DIK_F,
+		ordinary_gameplay_input && (back_touch.down || camera_toggle_chord));
 	Set_Button(DIKeyboardButtons, DIK_R,
-		gameplay_input_active && (buttons & SCE_CTRL_SQUARE) != 0 && !quicksave_chord);
+		(ordinary_gameplay_input || dialog_navigation) &&
+		(buttons & SCE_CTRL_SQUARE) != 0 && !quicksave_chord);
 	Set_Button(DIMouseButtons, DirectInput::BUTTON_MOUSE_LEFT & 0xFF,
 		front_touch.down);
 	if (!front_touch.down) {
@@ -677,9 +742,28 @@ void DirectInput::Read(void)
 	}
 #endif
 	Set_Button(DIJoystickButtons, 0,
-		gameplay_input_active && (buttons & SCE_CTRL_LTRIGGER) != 0);
+		(ordinary_gameplay_input || dialog_navigation) &&
+		(buttons & SCE_CTRL_LTRIGGER) != 0);
 	Set_Button(DIJoystickButtons, 1,
-		gameplay_input_active && (buttons & SCE_CTRL_RTRIGGER) != 0);
+		(ordinary_gameplay_input || dialog_navigation) &&
+		(buttons & SCE_CTRL_RTRIGGER) != 0);
+	if (dialog_navigation) {
+		// InputCtrl asks for this original key ID when a focused binding row
+		// receives its corresponding WWUI key edge. Publish only fresh edges so
+		// a held button cannot repeatedly overwrite adjacent bindings.
+		if ((DIKeyboardButtons[DIK_SPACE] & DI_BUTTON_HIT) != 0) LastKeyPressed = DIK_SPACE;
+		if ((DIKeyboardButtons[DIK_LCONTROL] & DI_BUTTON_HIT) != 0) LastKeyPressed = DIK_LCONTROL;
+		if ((DIKeyboardButtons[DIK_E] & DI_BUTTON_HIT) != 0) LastKeyPressed = DIK_E;
+		if ((DIKeyboardButtons[DIK_R] & DI_BUTTON_HIT) != 0) LastKeyPressed = DIK_R;
+		if ((DIKeyboardButtons[DIK_UP] & DI_BUTTON_HIT) != 0) LastKeyPressed = DIK_UP;
+		if ((DIKeyboardButtons[DIK_DOWN] & DI_BUTTON_HIT) != 0) LastKeyPressed = DIK_DOWN;
+		if ((DIKeyboardButtons[DIK_LEFT] & DI_BUTTON_HIT) != 0) LastKeyPressed = DIK_LEFT;
+		if ((DIKeyboardButtons[DIK_RIGHT] & DI_BUTTON_HIT) != 0) LastKeyPressed = DIK_RIGHT;
+		if ((DIJoystickButtons[0] & DI_BUTTON_HIT) != 0)
+			LastKeyPressed = DirectInput::BUTTON_JOYSTICK_A;
+		if ((DIJoystickButtons[1] & DI_BUTTON_HIT) != 0)
+			LastKeyPressed = DirectInput::BUTTON_JOYSTICK_B;
+	}
 	if (!g_logged_action_hit &&
 		(DIKeyboardButtons[DIK_E] & DirectInput::DI_BUTTON_HIT) != 0) {
 		Vita_Append_A22_Runtime_Breadcrumb("input",
@@ -719,12 +803,12 @@ void DirectInput::Read(void)
 	const RenegadeVitaInput::StickSample right =
 		RenegadeVitaInput::Sample_Device_Stick(controller.rx, controller.ry);
 	g_vita_joystick_axis[JOYSTICK_X_AXIS] =
-		gameplay_input_active ? left.x.logical : 0;
+		ordinary_gameplay_input ? left.x.logical : 0;
 	// Preserve the raw DirectInput slider orientation.  Input's original
 	// SLIDER_JOYSTICK_UP/DOWN bindings interpret a negative Y axis as up; an
 	// extra negation here reverses physical forward/backward movement.
 	g_vita_joystick_axis[JOYSTICK_Y_AXIS] =
-		gameplay_input_active ? left.y.logical : 0;
+		ordinary_gameplay_input ? left.y.logical : 0;
 	const float frame_seconds = TimeManager::Get_Frame_Real_Seconds();
 	if (gameplay_input_active) {
 		DIMouseAxis[MOUSE_X_AXIS] = RenegadeVitaInput::To_Camera_Mouse_Delta(

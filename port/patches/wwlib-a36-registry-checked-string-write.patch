@@ -1,0 +1,27 @@
+diff --git a/wwlib/registry.h b/wwlib/registry.h
+--- a/wwlib/registry.h
++++ b/wwlib/registry.h
+@@ -80,6 +80,7 @@ public:
+       const char * default_string = NULL );
+ 	void	Get_String( const char * name, StringClass &string, const char *default_string = NULL);
+ 	void	Set_String( const char * name, const char *value );
++	bool	Set_String_Checked( const char * name, const char *value );
+ 
+ 	// Wide string data type access
+ 	void	Get_String( const WCHAR * name, WideStringClass &string, const WCHAR *default_string = NULL);
+diff --git a/commando/campaign.cpp b/commando/campaign.cpp
+--- a/commando/campaign.cpp
++++ b/commando/campaign.cpp
+@@ -439,8 +439,10 @@ void CampaignManager::Continue( void )
+ 			// can watch it later)
+ 			//	
+ 			RegistryClass registry( APPLICATION_SUB_KEY_NAME_MOVIES );
+-			if ( registry.Is_Valid() ) {
+-				registry.Set_String( filename, description );
++			if ( !registry.Is_Valid() ||
++				!registry.Set_String_Checked( filename, description ) ) {
++				Debug_Say(( "CampaignManager::Continue - unable to persist movie unlock %s\n",
++					filename.Peek_Buffer() ));
+ 			}
+ 		}
+ 

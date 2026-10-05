@@ -8,11 +8,20 @@ struct A4FrontendTrace
 	bool menu_loop_active;
 	bool pause_loop_active;
 	bool reload_requested;
+	bool replay_requested;
+	int replay_difficulty;
 	bool exit_requested;
 	int exit_code;
 	bool tutorial_start_latched;
+	bool campaign_level_start;
+	bool start_game_rejected;
 	bool skirmish_selected;
 	bool client_only_selected;
+	bool lan_host_selected;
+	bool lan_client_selected;
+	bool direct_ip_requested;
+	bool direct_ip_failed;
+	char direct_ip_endpoint[64];
 	char tutorial_map[96];
 	int tutorial_team_choice;
 	unsigned long tutorial_clan_id;
@@ -36,8 +45,12 @@ bool A4_Frontend_Resolve_Skirmish_Archive(const char *source,
 	char *archive, unsigned archive_size);
 bool A4_Frontend_Resolve_Single_Player_Archive(const char *source,
 	char *archive, unsigned archive_size, bool *is_save);
+bool A4_Frontend_Latch_Replay_Level(const char *source, int difficulty);
 #endif
 bool A4_Frontend_Latch_Start_Game(const char *map_name, int teamChoice, unsigned long clanID);
+bool A4_Frontend_Latch_Direct_IP(const char *endpoint);
+void A4_Frontend_Record_Direct_IP_Failure(void);
+void A4_Frontend_Mark_Next_Start_Game_As_Campaign_Level(void);
 A4FrontendTrace A4_Frontend_Get_Trace(void);
 void A4_Frontend_Record_Bink_Init(bool initialized);
 void A4_Frontend_Record_Bink_Play(const char *filename);

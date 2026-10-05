@@ -1,0 +1,35 @@
+--- a/renegadedialogmgr.cpp
++++ b/renegadedialogmgr.cpp
+@@ -95,5 +95,8 @@
+ #include "dlgcncreference.h"
+ #endif
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "dlgcncreference.h"
++#endif
+ #include "wwmemlog.h"
+ #if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "a31_console_stub.h"
+@@ -401,10 +404,6 @@
+ 			EVAEncyclopediaMenuClass::Display (EVAEncyclopediaMenuClass::TAB_MAP);
+ 			break;
+ 
+-		case LOC_CNC_REFERENCE:
+-			CnCReferenceMenuClass::Display ();
+-			break;
+-
+ 		case LOC_IN_GAME_HELP:
+ 			HelpScreenDialogClass::Display ();
+ 			break;
+@@ -417,6 +416,12 @@
+ 			break;
+ #endif
+ 
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++		case LOC_CNC_REFERENCE:
++			CnCReferenceMenuClass::Display ();
++			break;
++#endif
++
+ #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || defined(RENEGADE_VITA_LAN_FRONTEND)
+ 		case LOC_LAN_MAIN:
+ 			MPLanGameListMenuClass::Display ();

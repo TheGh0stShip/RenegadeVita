@@ -1,0 +1,12 @@
+--- a/gamedata.cpp
++++ b/gamedata.cpp
+@@ -639,6 +639,9 @@ bool cGameData::Is_Map_Valid(char **out_filename)
+ 			*out_filename = MapName.Peek_Buffer();
+ 		}
+ #if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++		bool round_map_valid = false;
++		if (A31ClientConnect::Round_Map_Validity(MapName, round_map_valid))
++			return round_map_valid;
+ 		if (A31ClientConnect::Is_Prepared_Map(MapName)) return true;
+ #endif
+ 		map_exists = cMiscUtil::File_Exists (MapName);

@@ -1,0 +1,25 @@
+diff --git a/commando/dlgmainmenu.cpp b/commando/dlgmainmenu.cpp
+--- a/commando/dlgmainmenu.cpp
++++ b/commando/dlgmainmenu.cpp
+@@ -70,6 +70,9 @@
+ #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "gamespyadmin.h"
+ #endif
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && defined(__vita__)
++#include "renegade_vita_direct_ip_dialog.h"
++#endif
+ 
+ #if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+ #include "vita/a30_vita_runtime.h"
+@@ -509,6 +512,11 @@ void MainMenuDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
+ 			allow_default = false;
+ 			break;
+ #endif
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && defined(__vita__)
++		case IDC_MENU_MP_INTERNET_GAME_BUTTON:
++			allow_default = !RenegadeVitaDirectIPDialog::DoDialog();
++			break;
++#endif
+ #endif
+ 
+ 		default:

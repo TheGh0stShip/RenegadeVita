@@ -1,0 +1,108 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -1287,8 +1287,12 @@
+-void CombatGameModeClass::Core_Restart(void)
++bool CombatGameModeClass::Core_Restart(CoreRestartResourceCallback resource_callback,
++	void *resource_context)
+ {
+ 	Debug_Say(("CombatGameModeClass::Core_Restart\n"));
+ 
+ 	Core_Shutdown();
++	// The old level is now fully released. Platform archive providers may be
++	// replaced here without invalidating files still owned by Core_Shutdown.
++	if (resource_callback != NULL && !resource_callback(resource_context)) return false;
+ 
+ 	GameModeManager::Safely_Deactivate();
+ 
+@@ -1355,2 +1359,3 @@
+ #endif
++	return true;
+ }
+@@ -1398,1 +1403,32 @@
++bool CombatGameModeClass::Process_Core_Restart_Request(
++	CoreRestartResourceCallback resource_callback, void *resource_context)
++{
++	if (!g_b_core_restart) return false;
++	WWPROFILE( "g_b_core_restart" );
++	g_b_core_restart = false;
++	cPlayer *p_me = cNetwork::Get_My_Player_Object();
++	if (p_me != NULL) {
++		p_me->Set_Is_In_Game(false);
++		cLoadingEvent *p_loading_1 = new cLoadingEvent;
++		p_loading_1->Init(true);
++		if (!Core_Restart(resource_callback, resource_context)) return true;
++#if defined(__vita__)
++		if (A35_Level_Load_Get_Failure() != A35_LOAD_NO_FAILURE) return true;
++#endif
++		p_me->Set_Is_In_Game(true);
++		cLoadingEvent *p_loading_2 = new cLoadingEvent;
++		p_loading_2->Init(false);
++	} else {
++		if (!Core_Restart(resource_callback, resource_context)) return true;
++#if defined(__vita__)
++		if (A35_Level_Load_Get_Failure() != A35_LOAD_NO_FAILURE) return true;
++#endif
++	}
++	if (!IS_MISSION) {
++		MultiHUDClass::Init();
++	}
++	cNetwork::Enable_Waiting_Players();
++	return true;
++}
++
+ void 	CombatGameModeClass::Think()
+@@ -1483,44 +1519,1 @@
+-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+-	if (g_b_core_restart)	{
+-		WWPROFILE( "g_b_core_restart" );
+-
+-		g_b_core_restart = false;
+-
+-		//Core_Restart();
+-
+-		cPlayer * p_me = cNetwork::Get_My_Player_Object();
+-
+-		if (p_me != NULL) {// && cNetwork::I_Am_Only_Client()) {
+-
+-			p_me->Set_Is_In_Game(false);
+-			cLoadingEvent * p_loading_1 = new cLoadingEvent;
+-			p_loading_1->Init(true);
+-
+-			Core_Restart();
+-
+-			p_me->Set_Is_In_Game(true);
+-			cLoadingEvent * p_loading_2 = new cLoadingEvent;
+-			p_loading_2->Init(false);
+-
+-		} else {
+-			Core_Restart();
+-		}
+-
+-		if (!IS_MISSION) {
+-			MultiHUDClass::Init();
+-		}
+-
+-		cNetwork::Enable_Waiting_Players();
+-
+-/*
+-#if(0)
+-		WWDEBUG_SAY(("****** CombatGameModeClass::Think On_Game_Begin()\n"));
+-		WWASSERT(The_Game() != NULL);
+-
+-		//		The_Game()->On_Game_End();
+-		The_Game()->Reset_Game(false);
+-		The_Game()->On_Game_Begin();//TSS091201
+-#endif
+-*/
+-	}
+-#endif // !RENEGADE_VITA_FRONTEND_SINGLEPLAYER
++	Process_Core_Restart_Request();
+--- a/combatgmode.h
++++ b/combatgmode.h
+@@ -75,1 +75,5 @@
+-				void 	Core_Restart();
++				typedef bool (*CoreRestartResourceCallback)(void *context);
++				bool 	Core_Restart(CoreRestartResourceCallback resource_callback = NULL,
++					void *resource_context = NULL);
++				bool Process_Core_Restart_Request(CoreRestartResourceCallback resource_callback = NULL,
++					void *resource_context = NULL);

@@ -119,6 +119,8 @@ struct IDirect3DSurface8 {
 	HRESULT UnlockRect();
 	void Set_Texture_Owner(IDirect3DTexture8 *texture, UINT level);
 	HRESULT Upload_Texture_Owner();
+	IDirect3DTexture8 *Get_Texture_Owner() const { return OwnerTexture; }
+	UINT Get_Texture_Owner_Level() const { return OwnerTextureLevel; }
 
 	const unsigned char *Get_Data() const { return Storage; }
 	unsigned char *Get_Data() { return Storage; }
@@ -187,6 +189,10 @@ struct IDirect3DBaseTexture8 {
 	// ownership contract.  Source pixels remain in the original archive; this
 	// is only the process-local uploaded representation.
 	uint32_t NativeTexture;
+	// Process-local offscreen ownership. These are VitaGL object names rather
+	// than serialized or Direct3D pointers.
+	uint32_t NativeFramebuffer;
+	uint32_t NativeDepthRenderbuffer;
 	uint32_t Width;
 	uint32_t Height;
 	uint32_t MipLevels;
@@ -200,6 +206,7 @@ struct IDirect3DBaseTexture8 {
 	UINT LockedSurfaceCount;
 	bool HasAlpha;
 	bool Uploaded;
+	bool RenderTarget;
 	bool *SurfaceLocked;
 	bool TextureLocked;
 	// A shared, intentionally conspicuous diagnostic texture.  This remains

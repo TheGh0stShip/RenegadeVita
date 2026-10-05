@@ -1449,22 +1449,29 @@ bool cPlayerManager::Save(ChunkSaveClass & csave)
 		cPlayer * p_player = objnode->Data();
       WWASSERT(p_player != NULL);
 		csave.Begin_Chunk(CHUNKID_PLAYER);
-		p_player->Save(csave);
+		if (p_player == NULL || !p_player->Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 //-----------------------------------------------------------------------------
 bool cPlayerManager::Load(ChunkLoadClass &cload)
 {
+	bool player_list_seen = false;
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PLAYERLIST:
+				if (player_list_seen) {
+					loaded = false;
+					break;
+				}
+				player_list_seen = true;
 
 				//Remove_All(); // TSS091401
 
@@ -1475,7 +1482,11 @@ bool cPlayerManager::Load(ChunkLoadClass &cload)
 						case CHUNKID_PLAYER:
 							cPlayer * p_player;
 							p_player = new cPlayer();
-							p_player->Load(cload);
+							if (!p_player->Load(cload)) {
+								delete p_player;
+								loaded = false;
+								break;
+							}
 
 							/*
 							if (!The_Game()->Is_Valid_Player_Type(p_player->Get_Player_Type())) {
@@ -1511,7 +1522,7 @@ bool cPlayerManager::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && player_list_seen;
 }
 
 //-----------------------------------------------------------------------------

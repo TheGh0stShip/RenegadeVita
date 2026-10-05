@@ -1,0 +1,42 @@
+--- a/dx8renderer.h
++++ b/dx8renderer.h
+@@ -356,6 +356,10 @@ public:
+ 	void						Set_Camera(CameraClass* cam) { camera=cam; }
+ 	CameraClass *			Peek_Camera(void)	{ return camera; }
+ 	void						Add_To_Render_List(DecalMeshClass * decalmesh);
++#if defined(RENEGADE_VITA_PORT)
++	bool						Queue_Material_Pass(MaterialPassClass *pass,
++		MeshClass *mesh, bool skin, bool delayed);
++#endif
+ 
+ 	// Enable or disable lighting on all objects inserted from now on. (Doesn't affect the objects that are already in the lists)
+ 	void						Enable_Lighting(bool enable) { enable_lighting=enable; }
+--- a/mesh.cpp
++++ b/mesh.cpp
+@@ -758,8 +758,17 @@ void MeshClass::Render(RenderInfoClass & rinfo)
+ 					TheDX8MeshRenderer.Add_To_Render_List(DecalMesh);
+ 				}
+ 			}
+-			if (rinfo.Additional_Pass_Count() > 0) {
+-				RenegadeVitaRenderer::Submit_Unsupported(this);
++			for (int i = 0; i < rinfo.Additional_Pass_Count(); ++i) {
++				MaterialPassClass *matpass = rinfo.Peek_Additional_Pass(i);
++				if ((!Is_Translucent()) || matpass->Is_Enabled_On_Translucent_Meshes()) {
++					const bool skin = Model->Get_Flag(MeshGeometryClass::SKIN);
++					const bool delayed = !skin &&
++						(rinfo.Current_Override_Flags() &
++						 RenderInfoClass::RINFO_OVERRIDE_ADDITIONAL_PASSES_ONLY);
++					if (!TheDX8MeshRenderer.Queue_Material_Pass(matpass, this, skin, delayed)) {
++						RenegadeVitaRenderer::Submit_Unsupported(this);
++					}
++				}
+ 			}
+ #else
+ 			bool rendered_something = false;
+--- a/ww3d.cpp
++++ b/ww3d.cpp
+@@ -2005,3 +2005,2 @@
+-#if !defined(RENEGADE_VITA_PORT)
++			TheDX8MeshRenderer.Set_Camera(&rinfo.Camera);
+ 			TheDX8MeshRenderer.Flush();
+-#endif

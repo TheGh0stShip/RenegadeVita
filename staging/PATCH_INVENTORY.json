@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "75782a567211050cddffe3225db4c4dea3f1eb4123d0c8923df5f15672eb7645",
-  "patch_count": 323,
+  "stage_script_sha256": "b76d5ba4ef4256cace19e1b674875f078944825ec3989d30d1059a1d564a4dc5",
+  "patch_count": 497,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -12,7 +12,7 @@
     {
       "path": "port/patches/wwbitpack-a31-utf16-get.patch",
       "stage_directory": "wwbitpack",
-      "sha256": "a40caed19d483ba3ed3d6546a1f56aa5fa8f4af811a1ff2f9151189537bca39e"
+      "sha256": "ed14794fb3e48abd96962030c4ca89e676df0568765358631d07876b74d5eeee"
     },
     {
       "path": "port/patches/wwlib-a21-posix.patch",
@@ -32,7 +32,7 @@
     {
       "path": "port/patches/wwlib-a31-gcc15.patch",
       "stage_directory": "wwlib",
-      "sha256": "1d27a484a892a8e35cf9dcff9455a411c6486cc6cfcd67c657b6a204fba4955a"
+      "sha256": "4acfe6a2ef64433b909b10105298f4d20304a003c3a31b2efb1a86758c1295eb"
     },
     {
       "path": "port/patches/wwlib-a31-thread-posix.patch",
@@ -87,7 +87,7 @@
     {
       "path": "port/patches/wwmath-a30-gcc15.patch",
       "stage_directory": "wwmath",
-      "sha256": "7e868f26297ef3dc0d6b7d2ade1ff7ebefefa36919cd571fc076367086bd922c"
+      "sha256": "bb427865f8bb17680b5c81e2b1e2d78966832cb78e5aba15fc7ddc5192973383"
     },
     {
       "path": "port/patches/wwmath-a4-fastcall-vita.patch",
@@ -120,14 +120,24 @@
       "sha256": "a8b8b9085cb70f90d42beac791c7c26ed397fd63b453e205955770c4465df663"
     },
     {
+      "path": "port/patches/wwtranslatedb-a36-load-admission.patch",
+      "stage_directory": "wwtranslatedb",
+      "sha256": "3d5633dcc722fbe531461fbd40c7d9334e00774dc355735cdbcf41efa244e9a9"
+    },
+    {
       "path": "port/patches/ww3d2-a22-gcc15.patch",
       "stage_directory": "ww3d2",
-      "sha256": "961e7b6a09649ffc465969f6fa1ab8bae0f6d8c4cdc321202ad8c3426c6431b0"
+      "sha256": "9149ee48fd75f043b8c78deb554e7953e83e0f35cdede18143d4fa2f40bad522"
     },
     {
       "path": "port/patches/ww3d2-a22-vita-boundaries.patch",
       "stage_directory": "ww3d2",
-      "sha256": "524a088677405ca879efdac19738e7ab5a1c1cabca054f6287fab9f133dc4bf5"
+      "sha256": "b8194b520611e9a28b398d6f76c035bc13827192204e3509373db861576b73b1"
+    },
+    {
+      "path": "port/patches/ww3d2-a36-animated-sound-restore.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "cf8b551ef5f3ea9162f58d290c1d513ae5ecb646a19b831e91d1838111e925fd"
     },
     {
       "path": "port/patches/ww3d2-a315-texture-lifecycle.patch",
@@ -172,7 +182,7 @@
     {
       "path": "port/patches/ww3d2-a35-render2d-text-atlas-vita-diagnostics.patch",
       "stage_directory": "ww3d2",
-      "sha256": "3c94a6419718a440ee78048e78da2d5fa06b9092425c8e1c9b3d7ee2594be827"
+      "sha256": "3edd3ab9061716d43e934c33db628bd0fc6d0147de284ee955e81f3dd5bf8896"
     },
     {
       "path": "port/patches/ww3d2-a35-render2d-text-atlas-uv.patch",
@@ -182,7 +192,7 @@
     {
       "path": "port/patches/ww3d2-a315-dds-vita.patch",
       "stage_directory": "ww3d2",
-      "sha256": "9cbc478d3af4e21d80c4bf790157677c24eb26cc0fd7100df505b458c89744a8"
+      "sha256": "7b754d94cf914cb04c2a6d577ed67a7ca2db1b101a9fd22a26188135e37aeb75"
     },
     {
       "path": "port/patches/ww3d2-a30-gcc15.patch",
@@ -225,16 +235,6 @@
       "sha256": "9e4a720955978017d532ca7d0172f27aae193fe6c19fe255da0c804d433a0974"
     },
     {
-      "path": "port/patches/wwphys-a31-vita-material-effect-boundary.patch",
-      "stage_directory": "wwphys",
-      "sha256": "e6eaa70cae2927d1adb04722a5c18b5f21a42af8e0bcc01e0d44f0be9b374f99"
-    },
-    {
-      "path": "port/patches/wwphys-a31-vita-material-effect-close.patch",
-      "stage_directory": "wwphys",
-      "sha256": "b6c4335580848f3fab9a40d9d5aceb4ffb59328bb95c4130160b0fd91cf272f7"
-    },
-    {
       "path": "port/patches/wwphys-a30-pointer-tokens.patch",
       "stage_directory": "wwphys",
       "sha256": "e7ff7b79d1240e2cb2b615625084d74fbeef83fcd1ff551e76ebc45062ccf990"
@@ -248,6 +248,16 @@
       "path": "port/patches/wwphys-a35-vita-durable-static-trace.patch",
       "stage_directory": "wwphys",
       "sha256": "17c3bb6c09b1bbe86767d11bffdd81453d637ce20090c1b96900f1af5404db95"
+    },
+    {
+      "path": "port/patches/wwphys-a36-path-timeslice-underflow.patch",
+      "stage_directory": "wwphys",
+      "sha256": "555d2fc21e2dd94d7e92f3739abfd54e9c5ddca0df139a18856ab92b5fdc8ae2"
+    },
+    {
+      "path": "port/patches/wwphys-a36-grid-texture-release.patch",
+      "stage_directory": "wwphys",
+      "sha256": "ac44a8ebfd105fba9ef4ef0ca5b9479ebf33b0a15e11c2e9ceb8eb2ec6cfb3ab"
     },
     {
       "path": "port/patches/combat-a30-pointer-tokens.patch",
@@ -402,7 +412,7 @@
     {
       "path": "port/patches/combat-a35-vita-hud-presentation-boundary.patch",
       "stage_directory": "combat",
-      "sha256": "2c07c18a3205cb128400b74f3883318323a33eea24af8bd7ccf2970516274c61"
+      "sha256": "dbadbfa47392c601e0cc3d4edfe30006ee2ddcd6ed63a50cdeb8c7513a107915"
     },
     {
       "path": "port/patches/combat-a35-target-box-diagnostics.patch",
@@ -477,7 +487,7 @@
     {
       "path": "port/patches/commando-a31-session-gcc15.patch",
       "stage_directory": "commando",
-      "sha256": "e75388a0d518fae94ff40ec3404f137b616f2f746ec5e741a3e3dbb18405e4e6"
+      "sha256": "b03c4629422a0825f0ad9f09391edf2fc775c3d8c451125d273e8fa7d14ab67c"
     },
     {
       "path": "port/patches/commando-a31-gdcnc-gcc15.patch",
@@ -487,7 +497,12 @@
     {
       "path": "port/patches/commando-a31-winevent-gcc15.patch",
       "stage_directory": "commando",
-      "sha256": "1599aa76c3d9a8bedc60cf38fa889fbce91ca913fcb56f2d95444da25534554f"
+      "sha256": "025b8b140fa91d7c15226450ee4ba79467f29a75375439097ae62488674d7d50"
+    },
+    {
+      "path": "port/patches/commando-a36-direct-client-round-identity.patch",
+      "stage_directory": "commando",
+      "sha256": "68978a262d6db92454a9fbd22a1eb68d9e703e96f887338726a192049e73045e"
     },
     {
       "path": "port/patches/commando-a31-messages-headless-ui.patch",
@@ -532,7 +547,7 @@
     {
       "path": "port/patches/commando-a4-mainmenu-instance-lifecycle.patch",
       "stage_directory": "commando",
-      "sha256": "f5d7992883aa33496bd06697f925d7552a464d2eff322468f564dd30ce602e67"
+      "sha256": "d8285064756bc95cc3ce39a40ebc22078f27c997710bd4ef46ddb88acd167546"
     },
     {
       "path": "port/patches/commando-a4-cnetwork-crc-file-lifetime.patch",
@@ -557,7 +572,7 @@
     {
       "path": "port/patches/commando-a4-textdisplay-vector-include.patch",
       "stage_directory": "commando",
-      "sha256": "172227c6a7262c2a43c8c4ad8f5aaefd5e8ae226fdee937789d012f51811ca07"
+      "sha256": "0627b3b2594b089d60d5e9883bf23f0f9e6e9b064779b6504fe46c8f0c4d0921"
     },
     {
       "path": "port/patches/commando-a35-consolemode-add-message-return.patch",
@@ -582,7 +597,7 @@
     {
       "path": "port/patches/commando-a4-gameinitmgr-online-boundary.patch",
       "stage_directory": "commando",
-      "sha256": "7b6f107c3f80d5cf82cc76a230208a7986a33ca8de03e00194b280d123b83c02"
+      "sha256": "7e99d47d81239f82b5af4b8d6ad02854386ee069b30c831478e4137527c115c3"
     },
     {
       "path": "port/patches/commando-a4-gameinitmgr-skirmish-boundary.patch",
@@ -607,7 +622,7 @@
     {
       "path": "port/patches/commando-a4-combatgmode-wol-boundary.patch",
       "stage_directory": "commando",
-      "sha256": "1d0a8735143e4d3bfbae11985fbd0322a1a814bd3d33949ed49e7927f21563b2"
+      "sha256": "3c6ab766bd6a1181fd1e191cb5ff545360891318525e9063deb98a60efc9edce"
     },
     {
       "path": "port/patches/commando-a4-announceevent-include-case.patch",
@@ -692,7 +707,7 @@
     {
       "path": "port/patches/wwaudio-a35-file-pointer-width.patch",
       "stage_directory": "wwaudio",
-      "sha256": "5e1853330b82a464112b77c39f1b74306b1797431767351cb81e2ee4d2c7fef5"
+      "sha256": "3b405a44d04e178339f2c61993e55baca7c5d08abfc812db8da2f71eadd226cd"
     },
     {
       "path": "port/patches/wwaudio-a35-release-lock-order.patch",
@@ -707,7 +722,7 @@
     {
       "path": "port/patches/wwaudio-a35-logical-removal-lifetime.patch",
       "stage_directory": "wwaudio",
-      "sha256": "73d9907c89e0e794d07483c6dd462c53340a544c6b9b5ced820e4ded27122047"
+      "sha256": "780bc03eafda67ad3afef88fb1955417e33af1ae79036014488305f9a3c1b3cb"
     },
     {
       "path": "port/patches/wwaudio-a35-audible-removal-lifetime.patch",
@@ -895,6 +910,11 @@
       "sha256": "c553bfa32ead6388a775680c76da42bc0e79dd83baf16547d9e61b7475f448f4"
     },
     {
+      "path": "port/patches/commando-a36-campaign-catalog-readiness.patch",
+      "stage_directory": "commando",
+      "sha256": "5adfa5865988026688563e01ce539184f7701c3835ab61135c7bfd1edd324752"
+    },
+    {
       "path": "port/patches/commando-a35-demo-singleplayer-options.patch",
       "stage_directory": "commando",
       "sha256": "a0458d6eb3b0004e25468ea912442fad8cdb2797bcd96fe802de712a2e7d6d03"
@@ -942,7 +962,7 @@
     {
       "path": "port/patches/wwui-a35-controller-button-focus.patch",
       "stage_directory": "wwui",
-      "sha256": "9f6767df6d04bf5e91b0700e859e1122f6a74be5c63cef5616b318f705284d69"
+      "sha256": "580a39eb60fddb164eda1042d4e8a11c55781dae2c23b863525b2f432959372d"
     },
     {
       "path": "port/patches/wwui-a35-native-text-entry.patch",
@@ -1037,7 +1057,7 @@
     {
       "path": "port/patches/wwphys-a35-trackedvehicle-mesh-names.patch",
       "stage_directory": "wwphys",
-      "sha256": "e48c1c4753ee475cf50289b8cb97dc9894a229c43b961c0ce2ab65a7f5e79cdc"
+      "sha256": "f264283d687c4bbaf65617264999a38f71a78894bcb5f82048070a5c8459ac23"
     },
     {
       "path": "port/patches/wwphys-a35-trackedvehicle-delta-time.patch",
@@ -1107,12 +1127,22 @@
     {
       "path": "port/patches/dev168-m13-loader-summary.patch",
       "stage_directory": "",
-      "sha256": "01b2cc46c9a7db0f0221dda1c0cf36f78b1019324a1aa0b6821841bf437d23e0"
+      "sha256": "916665fe8ca9aa7b2cc32ae9863129c04cee24a1920ba78ecbbda6ab3133b4f0"
     },
     {
       "path": "port/patches/a35-dev190-staging-preserve.patch",
       "stage_directory": "",
       "sha256": "8597377222ff18fb9956bbf4da9de16439b91cb961b6f18123bfa0b907129a91"
+    },
+    {
+      "path": "port/patches/combat-a36-action-stall-logical-time.patch",
+      "stage_directory": "combat",
+      "sha256": "1ea26cb919a071f2519a42be83c714d202e78b2abef343c1b7e6aeb207b6d86d"
+    },
+    {
+      "path": "port/patches/combat-a36-detailed-timing-opt-in.patch",
+      "stage_directory": "combat",
+      "sha256": "eb78afff007fc0d87bbd64c1287a93d4d99a4a0500ebdc1af0b4c1c299cc9c39"
     },
     {
       "path": "port/patches/ww3d2-a35-unresolved-prototype-reload-cache.patch",
@@ -1212,7 +1242,7 @@
     {
       "path": "port/patches/commando-a35-client-identity.patch",
       "stage_directory": "commando",
-      "sha256": "39e86690f9279b96a5f28b7877573205779a4a6b391ca80a3011884e87ff390d"
+      "sha256": "708e37b215a7510bedb7d629e297e7db59a873999371b359f5622eb32f9ecc65"
     },
     {
       "path": "port/patches/commando-a35-client-admission-message.patch",
@@ -1303,6 +1333,11 @@
       "path": "port/patches/commando-a35-tt-resource-world.patch",
       "stage_directory": "",
       "sha256": "a3a4844f1a26832dd1198597372337a064678697ddc6a5289f4c232cfb4312a4"
+    },
+    {
+      "path": "port/patches/commando-a36-direct-client-round-validity.patch",
+      "stage_directory": "commando",
+      "sha256": "ea3c1ed394034e0eca49087fe1cea6f9467ca562aae6258c064db88d2b40d524"
     },
     {
       "path": "port/patches/commando-a35-tt-client-greeting.patch",
@@ -1462,7 +1497,7 @@
     {
       "path": "port/patches/wwlib-a35-thread-completion-acquire.patch",
       "stage_directory": "wwlib",
-      "sha256": "d9a903ec34276a3da0251be96caacbbbfa79649417ea934dbfa769dcbd5b7aa6"
+      "sha256": "3ed3c51c8ea4afcdd40fa4594d50c4fcad7514affea6507d3e01d9b502ac0b4f"
     },
     {
       "path": "port/patches/ww3d-a35-texture-worker-cancellation.patch",
@@ -1502,7 +1537,7 @@
     {
       "path": "port/patches/scripts-a35-cinematic-filename-diagnostics.patch",
       "stage_directory": "scripts",
-      "sha256": "2c26a16c461bca615951961ef94cdf2a5be184842bf75996ac569bae927b3481"
+      "sha256": "ba8cf92c55671c8b431545098a887c837f251dacd1373b59cd3bfa9d55ccbee7"
     },
     {
       "path": "port/patches/combat-a35-logical-stimulus-telemetry.patch",
@@ -1545,6 +1580,11 @@
       "sha256": "f79516454ff9c734df14ce2d527ed7157862c904c47ac6473ea0dccd56f0895c"
     },
     {
+      "path": "port/patches/scripts-a36-m13-finale-delivery-trace.patch",
+      "stage_directory": "scripts",
+      "sha256": "6eb405114d43b9bc4b2fc9ecd0911f5c93f5fe17ceed23a435371d31f8b86f66"
+    },
+    {
       "path": "port/patches/ww3d-a35-original-dazzle-lifecycle.patch",
       "stage_directory": "ww3d2",
       "sha256": "d3732d603f9118a9e0994b8d295b20baa628ba7fd502b728306bd0256e8826f1"
@@ -1567,12 +1607,12 @@
     {
       "path": "port/patches/ww3d-a35-original-statistics-lifecycle.patch",
       "stage_directory": "ww3d2",
-      "sha256": "6311de080c87c5e0f5dbe186641775f7d1b8bac7ead4c9e4f4d91aea312012d1"
+      "sha256": "b83e08d8b8a63bc6aa840a349a05928115fa2ecd987acaa12843bbb958ac8000"
     },
     {
       "path": "port/patches/commando-a35-options-staging-closure.patch",
       "stage_directory": "commando",
-      "sha256": "7f8d5b6d947fd7f354ada6c4f6524d58edb5cf044a965416bcc1745ceeb5191c"
+      "sha256": "d27f36b7bd6856e4f6f70dea7236c02166833d3a8df3249a43036c05ce19493c"
     },
     {
       "path": "port/patches/scripts-a35-trim-overlap.patch",
@@ -1602,7 +1642,7 @@
     {
       "path": "port/patches/ww3d2-a36-static-mesh-cache-lifetime.patch",
       "stage_directory": "ww3d2",
-      "sha256": "a84b5a5fec62711391fe416b81aa2cc519b73e0322cca8e188d39ea8076e1f0f"
+      "sha256": "75576bff9d8f7d22bec40b545a5c1bbf8bbe434f8941c822adc495d23ecafc9a"
     },
     {
       "path": "port/patches/wwmath-a36-fabs-vabs.patch",
@@ -1612,13 +1652,843 @@
     {
       "path": "port/patches/ww3d2-a36-sorting-depth-sort-and-runs.patch",
       "stage_directory": "ww3d2",
-      "sha256": "2ed2d35558ce461661615d06d7a6db5570b8263e34d9e9c197d0fe9424ebd33b"
+      "sha256": "a2364eee2f1ce12847953e0c7dde2c648e8a88480a6083be84ad55d61fc4fcdb"
     },
     {
       "path": "port/patches/combat-a36-powerup-text-once.patch",
       "stage_directory": "combat",
       "sha256": "06ee1fdfd290aa5760e6bce9f3e7753dc747584a2fb1d6ce0b726b63f992423a"
+    },
+    {
+      "path": "port/patches/wwlib-a36-write-failure-status.patch",
+      "stage_directory": "wwlib",
+      "sha256": "11c925faaef4631fb87990043f3fa79910b04f5f33c5d01de02b8d4ccae0c6e2"
+    },
+    {
+      "path": "port/patches/combat-a36-save-write-status.patch",
+      "stage_directory": "combat",
+      "sha256": "1642c64e5c9a99b64aec31102431c3f863e4c9111cf7d237ebf4ce4ec3d3c3c0"
+    },
+    {
+      "path": "port/patches/combat-a36-save-metadata-open-failure.patch",
+      "stage_directory": "combat",
+      "sha256": "20dcd634853457482382a6ba5a3b78e5202f68ccd8ac1e5e066c96a547564c64"
+    },
+    {
+      "path": "port/patches/combat-a36-beacon-armed-sound-postload.patch",
+      "stage_directory": "combat",
+      "sha256": "1cad904e6de778118941810a64a6e3c6362efe93e0c89ed6f96536c181c43151"
+    },
+    {
+      "path": "port/patches/combat-a36-beacon-save-state.patch",
+      "stage_directory": "combat",
+      "sha256": "f75b6957cbfceb9f4fa17c03ede8b420dc3f88b407ccbe7d7aab2a344c238a08"
+    },
+    {
+      "path": "port/patches/commando-a36-quicksave-write-status.patch",
+      "stage_directory": "commando",
+      "sha256": "ce4d1b3913404b070b0b98af03e154ebaac38b162b0dee6d39c2d6499204d6af"
+    },
+    {
+      "path": "port/patches/commando-a36-original-radio-route.patch",
+      "stage_directory": "commando",
+      "sha256": "679432a0b9ede7b5fb7d82acc4a49d7aa53e0bfc31b3a5e23338b12624c71a14"
+    },
+    {
+      "path": "port/patches/commando-a36-radio-input-owner.patch",
+      "stage_directory": "commando",
+      "sha256": "aa897c85bf585b93bc54ce628154ad1070a19457625c26f97db1ebfd7f1adfe5"
+    },
+    {
+      "path": "port/patches/commando-a36-chat-input-owner.patch",
+      "stage_directory": "commando",
+      "sha256": "4c75a30cee4c85814059aa1e575d23c5960e1adcd892aacdec13fd038c9b7d9e"
+    },
+    {
+      "path": "port/patches/wwui-a36-native-text-submit.patch",
+      "stage_directory": "wwui",
+      "sha256": "b1b87802250c56c1052ccf80fb58c334d522ee5cfa858beee88f9d6204ed1d9f"
+    },
+    {
+      "path": "port/patches/commando-a36-autosave-owner.patch",
+      "stage_directory": "commando",
+      "sha256": "81dd1a467ba5016cd1419abf5fb55576d1c40ad9deeb37b524400a7695f0dfa9"
+    },
+    {
+      "path": "port/patches/commando-a36-core-restart-owner.patch",
+      "stage_directory": "commando",
+      "sha256": "44eb906ad537dba317b8da2f92bc2acacf957d6febc415688b23747bddb1cd68"
+    },
+    {
+      "path": "port/patches/commando-a36-pending-exit-owner.patch",
+      "stage_directory": "commando",
+      "sha256": "42df069c027d965d9b483a4f274ad16610945c55c743084a89fb254b93c4498e"
+    },
+    {
+      "path": "port/patches/commando-a36-required-reload-failure.patch",
+      "stage_directory": "commando",
+      "sha256": "bac98e0328de2f7fbc71f3920600a75de12213a25de8422c50c5f272025e8981"
+    },
+    {
+      "path": "port/patches/commando-a36-original-win-screen.patch",
+      "stage_directory": "commando",
+      "sha256": "bf934ef257989f9ef19bc2084204df41c123c4d13104fbd3745a2c9facdeb3bf"
+    },
+    {
+      "path": "port/patches/commando-a36-score-forced-teardown.patch",
+      "stage_directory": "commando",
+      "sha256": "268ef2184de8e2533e4425b05af7740ad5576c2fed72a04ec09c7a56cc7d49eb"
+    },
+    {
+      "path": "port/patches/commando-a36-original-death-flow.patch",
+      "stage_directory": "commando",
+      "sha256": "02d6b4c6c1be979a89ce27f5777416169b658f01a2b912dcfd901c02edb1e1e4"
+    },
+    {
+      "path": "port/patches/commando-a36-original-replay-flow.patch",
+      "stage_directory": "commando",
+      "sha256": "d636c0e169fa281dc831ba9d10b26cb45a8a88043aa28af348f9e6c06cae6ceb"
+    },
+    {
+      "path": "port/patches/commando-a36-load-failure-unwind.patch",
+      "stage_directory": "commando",
+      "sha256": "e311155c7476c63097ad8355819998631e978f278f819ee23dd45737da841685"
+    },
+    {
+      "path": "port/patches/commando-a36-manual-save-write-status.patch",
+      "stage_directory": "commando",
+      "sha256": "0c09b4df2dfb4eecbee0561e92f833f7bf278428db5f8913b0c92ad9ced8b82e"
+    },
+    {
+      "path": "port/patches/commando-a36-save-state-admission.patch",
+      "stage_directory": "commando",
+      "sha256": "71f63aeaa4a41225c910dd019d2c1bc8734d4d6512585a328c53559fb5f0b9fa"
+    },
+    {
+      "path": "port/patches/commando-a36-campaign-state-validation.patch",
+      "stage_directory": "commando",
+      "sha256": "153549c0898fc6182cb713b532b4456145659bd3fdf7830ee00056e37f8563a1"
+    },
+    {
+      "path": "port/patches/commando-a36-load-menu-save-validation.patch",
+      "stage_directory": "commando",
+      "sha256": "e62112421edb74996bf91a1b9c291885e306abeb7115259b6f83bffef62c825c"
+    },
+    {
+      "path": "port/patches/commando-a36-original-credits-route.patch",
+      "stage_directory": "commando",
+      "sha256": "03e61a2f1e77ab085e56f02fc914a5847a2000801d5ca2289fdcf37ec8c3ebf0"
+    },
+    {
+      "path": "port/patches/commando-a36-original-movies-route.patch",
+      "stage_directory": "commando",
+      "sha256": "13985fbe445867a64f7811c8967fa53ba55e758ed20e997df5b6c6447e915c9e"
+    },
+    {
+      "path": "port/patches/commando-a36-movie-audio-teardown.patch",
+      "stage_directory": "commando",
+      "sha256": "ff525f071ce7d9c436d7ccd306d97993a43b5c1d09dca3f8e8a3e06404ddfbde"
+    },
+    {
+      "path": "port/patches/commando-a36-movie-skip-edge-lifetime.patch",
+      "stage_directory": "commando",
+      "sha256": "120efb26fef10f10704506f3f37e9d02db9ca399491a7fad1697d22a5e1a0456"
+    },
+    {
+      "path": "port/patches/commando-a36-audio-service-yield.patch",
+      "stage_directory": "commando",
+      "sha256": "9dccfbd829b9ada268066db516dda9559c0b7d9f864ee1f2b7eac3a96a77db3d"
+    },
+    {
+      "path": "port/patches/combat-a36-vita-control-profile-boundary.patch",
+      "stage_directory": "combat",
+      "sha256": "90fc0fadc1e2528716ba974cd39a023019880c7b6789a3b272e1eb09281d2dca"
+    },
+    {
+      "path": "port/patches/combat-a36-level-cinematic-camera-release.patch",
+      "stage_directory": "combat",
+      "sha256": "787de0117ae292883159cc197c6f908a1d93ec2bdef389e72f857aaefd7895bb"
+    },
+    {
+      "path": "port/patches/commando-a36-input-config-user-root.patch",
+      "stage_directory": "commando",
+      "sha256": "6b13ba596aaf00532789a5ea1962f46665069e6e8fa680a1484b92f3c69a147d"
+    },
+    {
+      "path": "port/patches/commando-a36-input-config-lifecycle.patch",
+      "stage_directory": "commando",
+      "sha256": "3d233b01fa6d2764bcc9ad4157c26a9374b8bcf1609b19ecd3166eb7b8463362"
+    },
+    {
+      "path": "port/patches/commando-a36-original-controls-route.patch",
+      "stage_directory": "commando",
+      "sha256": "9e0155fe7117b9abbf671bf578b6eac649757f5eed829bb1777a72861edd1251"
+    },
+    {
+      "path": "port/patches/commando-a36-reload-loading-presentation.patch",
+      "stage_directory": "commando",
+      "sha256": "0de30ba11827badf4e975f1ea282c354ea7256f1ef8a43266feb416bd1e8878b"
+    },
+    {
+      "path": "port/patches/commando-a36-original-overlay-owner.patch",
+      "stage_directory": "commando",
+      "sha256": "79f103c6cbe067e67921a6e185829d5318d7e8093ac75a112b3eabf77605c842"
+    },
+    {
+      "path": "port/patches/commando-a36-player-list-input-owner.patch",
+      "stage_directory": "commando",
+      "sha256": "c84992617d127e85f33d00c75aba008cf2988357122eec5d7885aff3d2eb30ab"
+    },
+    {
+      "path": "port/patches/commando-a36-multihud-optional-network-mode.patch",
+      "stage_directory": "commando",
+      "sha256": "3892e284cb4c714036ebd9d4b3ccdfd8218ff21265f9a2747981538f8e7c594d"
+    },
+    {
+      "path": "port/patches/commando-a36-cnc-reference-exit-owner.patch",
+      "stage_directory": "commando",
+      "sha256": "c23774a8cfb54dd32c09459eaa74f6051a3c28b03d651456d864e902109ad612"
+    },
+    {
+      "path": "port/patches/commando-a36-multiplayer-info-dialogs.patch",
+      "stage_directory": "commando",
+      "sha256": "f79d9e8323be44cbf1eeb4182cf875db5f128e6de49f478d0b6458cc2462099b"
+    },
+    {
+      "path": "port/patches/commando-a36-multiplayer-info-input-owner.patch",
+      "stage_directory": "commando",
+      "sha256": "7ca15e567d1fd05d7b0c013d25ccf0bfd2f2094d917a16f59052c9e68b4cb6d1"
+    },
+    {
+      "path": "port/patches/commando-a36-lan-channel-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "8dcad29b2b866812924f5f3fc021ae11f06dddc5dd161a2a147324c53b67978e"
+    },
+    {
+      "path": "port/patches/commando-a36-lan-service-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "ef1737428820eb30d65f931e21a89dd0117a34612dbddc028f264a4aacaa2743"
+    },
+    {
+      "path": "port/patches/commando-a36-lan-list-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "5d3e1533d75b251c75dd977a4d9dd47339b526794ffbe689831a0fec234a3f7f"
+    },
+    {
+      "path": "port/patches/commando-a36-lan-host-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "18923a31ce290b3f867078a4d0041e1dd17c42448486711e9b643c28a1db807b"
+    },
+    {
+      "path": "port/patches/commando-a36-lan-nic-boundary.patch",
+      "stage_directory": "commando",
+      "sha256": "8f26a7ad9830736963866ec2a16f84b9ab0dc8046dd09c01b5d33bbf812f2975"
+    },
+    {
+      "path": "port/patches/commando-a36-lan-network-callbacks.patch",
+      "stage_directory": "commando",
+      "sha256": "f3a2d598213d0cb93cc9eab41b2280a9bad8d2e4553624bb2cbcbab9e5c85d11"
+    },
+    {
+      "path": "port/patches/commando-a36-lan-frontend-route.patch",
+      "stage_directory": "commando",
+      "sha256": "3b72413a6665472e0434a3a5ab8970d24a803e75df4da0a98e0d14a5920e9651"
+    },
+    {
+      "path": "port/patches/commando-a36-lan-launch-classification.patch",
+      "stage_directory": "commando",
+      "sha256": "8eaf0bcafdbe137fcb44d748486a74302d3eeccabf429ee46d4d43c932322aa1"
+    },
+    {
+      "path": "port/patches/ww3d2-a36-native-material-pass-queue.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "4fedcfadad78fef43fab9382907d115a82d52b71ba194a5c8374894860353728"
+    },
+    {
+      "path": "port/patches/wwsaveload-a36-required-player-save-subsystems.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "6667524d182c8fd6dbaa9f3b2c0717db10b8553e0938fdf2f8131c4b7d644c62"
+    },
+    {
+      "path": "port/patches/commando-a36-required-save-state.patch",
+      "stage_directory": "commando",
+      "sha256": "c2e38ed2b54f18a0bd4a43afb479e48a9666863292302dc1fb33e1e6efab1fa6"
+    },
+    {
+      "path": "port/patches/combat-a36-required-player-save-subsystems.patch",
+      "stage_directory": "combat",
+      "sha256": "69c1635c5db34331a9fe59ead7cc9ad8794b16c33b1c2a3b3b67642b09831725"
+    },
+    {
+      "path": "port/patches/commando-a36-campaign-level-start-origin.patch",
+      "stage_directory": "commando",
+      "sha256": "222aa95ccf20ae7a6de451418bc0fc81e84973c6ca2dd5ab138b8293656e1ac0"
+    },
+    {
+      "path": "port/patches/commando-a36-required-network-player-state.patch",
+      "stage_directory": "commando",
+      "sha256": "86b444ab789babe0806e0caf76d3358917ea57a25152172a9325c266db002490"
+    },
+    {
+      "path": "port/patches/combat-a36-required-playerdata-state.patch",
+      "stage_directory": "combat",
+      "sha256": "2db26f1a0248f6b5da2b57d886301acd1f2575d8dc9de447d6c958017efd7f64"
+    },
+    {
+      "path": "port/patches/commando-a36-required-player-record.patch",
+      "stage_directory": "commando",
+      "sha256": "11c6c2ed98445d7e2af804c4f0db7c5b5d41d6c17de5d965769755c505bf7fea"
+    },
+    {
+      "path": "port/patches/combat-a36-required-world-save-subsystems.patch",
+      "stage_directory": "combat",
+      "sha256": "8cc3bb3c860c3caa9825440e988cf31cd76eae18c37c97d96e2b4b402cd3d828"
+    },
+    {
+      "path": "port/patches/wwphys-a36-required-dynamic-save-subsystem.patch",
+      "stage_directory": "wwphys",
+      "sha256": "9b6e0526a2f8c947f3528223f6fea947fcb8f8a70280c2098b11b6e609a6489d"
+    },
+    {
+      "path": "port/patches/wwaudio-a36-required-dynamic-save-subsystem.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "cddc82002d11a6bb5f838a8b5b31d144d2cc9dd3914ae675bf93ef67640a28ce"
+    },
+    {
+      "path": "port/patches/combat-a36-required-inner-save-state.patch",
+      "stage_directory": "combat",
+      "sha256": "1cd2c8769f7e6023bc666a44b2b4dc3f9bc5aac783052fa50ec9e3d3e1a9377c"
+    },
+    {
+      "path": "port/patches/wwphys-a36-required-inner-dynamic-state.patch",
+      "stage_directory": "wwphys",
+      "sha256": "2cd1c5b279d46ecb83da7e3f2f66f3c2107c8ca68f0d0124b387fa7330129400"
+    },
+    {
+      "path": "port/patches/combat-a36-required-manager-save-state.patch",
+      "stage_directory": "combat",
+      "sha256": "3d607fe147b045b059326dc8397b15250710662858c119ed7202c4ee553f0ecf"
+    },
+    {
+      "path": "port/patches/wwaudio-a36-required-inner-dynamic-state.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "e8b3ac72f2aab776e333666d0f6c14d83f73a20ac6567d91adf9f8659e20a5c8"
+    },
+    {
+      "path": "port/patches/wwsaveload-a36-rejected-load-postload-discard.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "36973642bbe47073df0294036605f2fbe001947012b5b4d06f55036e7cebea47"
+    },
+    {
+      "path": "port/patches/commando-a36-rejected-load-postload-order.patch",
+      "stage_directory": "commando",
+      "sha256": "67d5a580806e7242c1a03e2b574e396617d5f94cb45b85b22dea8c1e0afbde2d"
+    },
+    {
+      "path": "port/patches/combat-a36-required-map-values.patch",
+      "stage_directory": "combat",
+      "sha256": "7de1cb192b4d6024ede847ea26e2e76b6bcfe8496e2b50023585f61c2edb249b"
+    },
+    {
+      "path": "port/patches/combat-a36-player-save-envelope-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "54e12f43e3c25ceedeeb43b3b4ea02b8c8f1d640cf6983590a17f432b2753cd6"
+    },
+    {
+      "path": "port/patches/commando-a36-campaign-save-admission.patch",
+      "stage_directory": "commando",
+      "sha256": "9649c2cf94194d0047b0ea7998802d9cd728633316c76855371308bf0fea05f8"
+    },
+    {
+      "path": "port/patches/wwlib-a36-chunk-structural-admission.patch",
+      "stage_directory": "wwlib",
+      "sha256": "3dafadd51a2500bfe94c0e4fa2852efbcbfbe66de3166e240902bf44eefd372b"
+    },
+    {
+      "path": "port/patches/wwsaveload-a36-chunk-error-propagation.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "ef49471c1454b77397ab543059d5485c49e1bb3cff74a8de67a24cf948817b5f"
+    },
+    {
+      "path": "port/patches/combat-a36-chunk-error-propagation.patch",
+      "stage_directory": "combat",
+      "sha256": "aa93287ea34eec4619cba03cfed090d13268c95653692784739ee5678dd5b9ff"
+    },
+    {
+      "path": "port/patches/wwphys-a36-dynamic-scene-admission.patch",
+      "stage_directory": "wwphys",
+      "sha256": "862ed9c72a1ee1d82c8dda58a8cd3376ffbb19c181a153a84afe16f804a23295"
+    },
+    {
+      "path": "port/patches/combat-a36-gameobj-save-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "1df422a2d62b0969178c26eb74a3fe2db2c2c531b5bd9451bdd0c99bf064b2cf"
+    },
+    {
+      "path": "port/patches/combat-a36-encyclopedia-size-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "199981ee95ed71fd20275a80941c9800e18dae1bdf9d19e6486355032703442f"
+    },
+    {
+      "path": "port/patches/combat-a36-conversation-object-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "d3d8212fbf7a10af3d218c0f7e537ef51f7132c78c5bd83de4c98b7146abf285"
+    },
+    {
+      "path": "port/patches/wwphys-a36-physics-path-load-admission.patch",
+      "stage_directory": "wwphys",
+      "sha256": "819c29cf692ea1e4ecd1636058ca1dd212e987f17ab0bd60cf2ccc0ae810a504"
+    },
+    {
+      "path": "port/patches/combat-a36-script-manager-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "0da7fae548da2a7031e90015fc64ed79cb3bf403874b242508cebaf1f309ca19"
+    },
+    {
+      "path": "port/patches/wwlib-a36-logical-write-abort.patch",
+      "stage_directory": "wwlib",
+      "sha256": "be7c7f09540e42589d626eb3e3be6909773dfe253aea4bcae44eb22ebec0110b"
+    },
+    {
+      "path": "port/patches/combat-a36-logical-save-abort.patch",
+      "stage_directory": "combat",
+      "sha256": "e379f17445c73f54b665448c605d44a4f56c0a6df593a48e5f76a1a73e4d84ab"
+    },
+    {
+      "path": "port/patches/combat-a36-save-envelope-preflight.patch",
+      "stage_directory": "combat",
+      "sha256": "f898a79f372ef73c09824c281d3a2728e4f6bfeeb193019453ad1830b9e927bc"
+    },
+    {
+      "path": "port/patches/combat-a36-radar-load-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "31bf843a53d64ce3733e5c152e45b3171df84efe418d1fa5df7d179b904adc37"
+    },
+    {
+      "path": "port/patches/combat-a36-objective-load-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "9b256fd0a11f557f76c6f36414fba6d0590934968a7841a7e126039f42233cc6"
+    },
+    {
+      "path": "port/patches/combat-a36-objective-field-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "f00be59a291098f3fd8abc556e929319a4e1048acd0686ac3b190d60d11ad779"
+    },
+    {
+      "path": "port/patches/combat-a36-objective-semantic-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "b0dd191f8be7c9c1a23ef5d9db27b1760f929b4f06bb919c4370cef99b957a6d"
+    },
+    {
+      "path": "port/patches/combat-a36-spawner-load-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "2e5523c4ec9ce52b9385a80eeac6dac0addd11c601483985f7d57cd0804f1f5b"
+    },
+    {
+      "path": "port/patches/combat-a36-spawner-field-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "e336a67f8b35865aaeaa0cf5389e51b43a25b3aa9a7794f009341aec125d4920"
+    },
+    {
+      "path": "port/patches/combat-a36-gameobj-observer-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "efa1a1a44b9d1fd5848ee4dd6796ee27e10627cab617125b090e2e7abdc4b998"
+    },
+    {
+      "path": "port/patches/combat-a36-weapon-view-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "83a34b61aaa8db6e116624a7ac8ea13c0c20829d6fdfa1f1b4e81c4948d74437"
+    },
+    {
+      "path": "port/patches/combat-a36-bullet-load-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "f4386856512db5b2c6f23bafdd950f3c60284f2d08a17a148b57e12ed885319e"
+    },
+    {
+      "path": "port/patches/combat-a36-persistent-observer-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "a640852b5fe3a363cc7d38df3a421e0e144351a540aa5e59fd13aa3ab232b4b8"
+    },
+    {
+      "path": "port/patches/combat-a36-hud-load-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "d21f401349fb1618417e9cdb77f69e6117f45222da4c1f376c1856ed48018368"
+    },
+    {
+      "path": "port/patches/combat-a36-screen-fade-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "b25d4d6d6622dca5b6f964113baaa2d704568294d44c2e8d00c6497f4505416a"
+    },
+    {
+      "path": "port/patches/combat-a36-background-dynamic-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "b7475d7bff5b214af4022ae1ef8106e1e8e929a01a0161730bf9f077140a3580"
+    },
+    {
+      "path": "port/patches/combat-a36-weather-dynamic-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "7e995ad16e7a6890a1002dbd665f91170de1b3ad689ea2d2e663c3b9132317f8"
+    },
+    {
+      "path": "port/patches/combat-a36-cover-load-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "3295d5907280fe6271fa449dfaa98e6982db6d470fed4ed628a868f0114b6278"
+    },
+    {
+      "path": "port/patches/combat-a36-combat-manager-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "4cd9c6f3277da5ea4150b043e7b08b7038961169274c6554beca13a48c1fb067"
+    },
+    {
+      "path": "port/patches/combat-a36-active-conversation-monitor-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "edd5026ae9e608cd61d012ef994616c0e8979a5fb402e8dbb77d51edacf38029"
+    },
+    {
+      "path": "port/patches/wwsaveload-a36-unresolved-remap-admission.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "d0c8f0dfc6faff8b8c7df529d2f872852debc1b15974bd7553045f49381b69dd"
+    },
+    {
+      "path": "port/patches/combat-a36-script-timer-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "c2ece625632e659f1d9b26c1fafed0640274776b312eb677bdbbf7e170aede20"
+    },
+    {
+      "path": "port/patches/combat-a36-gameobj-reference-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "93b02cdbb15a5391b476621953133e95afb1d0c79532deb765ee27b3012977b2"
+    },
+    {
+      "path": "port/patches/wwsaveload-a36-persist-factory-admission.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "0077cc3b7b455d176b9a31c6892ffb62078f7ca388abe4e29904214fad4abf9b"
+    },
+    {
+      "path": "port/patches/combat-a36-scriptable-object-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "12dd7ffac10dd360ea2a9eee552ba436d099558f195364be6670e8d202e6df4e"
+    },
+    {
+      "path": "port/patches/combat-a36-playerdata-field-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "51ba1ef356135c269cb6b8365998891ef5bb286d856527c4ee48f2282badaf24"
+    },
+    {
+      "path": "port/patches/commando-a36-player-field-admission.patch",
+      "stage_directory": "commando",
+      "sha256": "12bf86c9836fb3291e1dd7284fde18876014a8815c5973bf4db5e42ebf6784e4"
+    },
+    {
+      "path": "port/patches/wwlib-a36-chunk-save-status.patch",
+      "stage_directory": "wwlib",
+      "sha256": "a2312e9de16fe939a19270c08c3f5797547d4870259077af2f9fec59013258e3"
+    },
+    {
+      "path": "port/patches/wwsaveload-a36-persist-save-status.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "19e57746be401d8e47a4f518010991463e87ff21eab6ae76b1f1ba59394d4ee2"
+    },
+    {
+      "path": "port/patches/ww3d2-a36-custom-persist-save-status.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "9539838eca7093a2343dd0b3441162e04b4432b80bee876e999e61ac2b6b50ec"
+    },
+    {
+      "path": "port/patches/combat-a36-child-save-status.patch",
+      "stage_directory": "combat",
+      "sha256": "c2e23e17c4d45deae60f93e63feca35f425a3b60373f15914fd2f9129786934a"
+    },
+    {
+      "path": "port/patches/commando-a36-child-save-status.patch",
+      "stage_directory": "commando",
+      "sha256": "3f55f8e59143333cd5cb761236ba18b5aeeb84372a2d20aac04d923c7f5b55c1"
+    },
+    {
+      "path": "port/patches/wwphys-a36-child-save-status.patch",
+      "stage_directory": "wwphys",
+      "sha256": "bbf4ccb66306bed59f528e19985bfd13b09b4a9e053c9570f2679fb96b38318c"
+    },
+    {
+      "path": "port/patches/combat-a36-script-save-status.patch",
+      "stage_directory": "combat",
+      "sha256": "e71c4f0e5b9eb8871e6dcdbfc11f60be7b95aa2989bec3dae707e8701a61e724"
+    },
+    {
+      "path": "port/patches/combat-a36-boss-save-status.patch",
+      "stage_directory": "combat",
+      "sha256": "dd619b7ade8772c6feee2c418ac07f65c1996044b849f2d35a48b7c6ff671429"
+    },
+    {
+      "path": "port/patches/commando-a36-god-save-state-status.patch",
+      "stage_directory": "commando",
+      "sha256": "894579119cfa2bd76c6637594d1e92636817c18d91989335516e4fe1498d8ba7"
+    },
+    {
+      "path": "port/patches/wwlib-a36-chunk-load-status-report.patch",
+      "stage_directory": "wwlib",
+      "sha256": "1f8e06ef876a5f128653ee2cb2997296c21a720772987b326cfd5c78fcaa582a"
+    },
+    {
+      "path": "port/patches/combat-a36-script-load-status.patch",
+      "stage_directory": "combat",
+      "sha256": "84dfd6a5b3856c03ca1b15458cf65cb76c46896d67c665635bc40c0e88eeca7f"
+    },
+    {
+      "path": "port/patches/commando-a36-core-shutdown-idempotence.patch",
+      "stage_directory": "commando",
+      "sha256": "7124bd965f7467fbc0b631bc32abf941ef99c1419c2defd90001fc6d312a126e"
+    },
+    {
+      "path": "port/patches/commando-a36-campaign-save-status.patch",
+      "stage_directory": "commando",
+      "sha256": "8ab7a75973fb90125611ab0a1cb9211a5df59c3f8fb3528cedf6ce4cd5c523c3"
+    },
+    {
+      "path": "port/patches/combat-a36-gameplay-save-status.patch",
+      "stage_directory": "combat",
+      "sha256": "638be161eb5373cdfe0c4e7d3a45cf3328e9d7b807b43876b3c410de8bedc90f"
+    },
+    {
+      "path": "port/patches/combat-a36-gameobj-hierarchy-save-status.patch",
+      "stage_directory": "combat",
+      "sha256": "28cca53d530d2a3e1afd554fc8dabca3cb6ed8f2a4c7552b45a518cf8be586d6"
+    },
+    {
+      "path": "port/patches/combat-a36-special-gameobj-save-status.patch",
+      "stage_directory": "combat",
+      "sha256": "9a2c61ab269cd3f35872b2437963c2bee7b441483f3b07bde71eedc564836e2f"
+    },
+    {
+      "path": "port/patches/combat-a36-building-save-status.patch",
+      "stage_directory": "combat",
+      "sha256": "b36f4ef8d24ddc795cd0ce22f9b39bd147cf348e6f808a5d6c78e24706770a9c"
+    },
+    {
+      "path": "port/patches/combat-a36-mission-combat-save-status.patch",
+      "stage_directory": "combat",
+      "sha256": "f10d40b7de3229ec76ae71c3f024b115c591fa07b0effa00986da205fc9dee19"
+    },
+    {
+      "path": "port/patches/combat-a36-interactive-world-save-status.patch",
+      "stage_directory": "",
+      "sha256": "c9169805b1a54b9ed35ae1ee577faafadd9dbe2b5dab1d5c34e6ca4f9580b8dc"
+    },
+    {
+      "path": "port/patches/wwphys-a36-physical-save-status.patch",
+      "stage_directory": "wwphys",
+      "sha256": "f15d111be9cf3e7e377e86eedd77148046b2fd44e606a25b96ba9366bb455b55"
+    },
+    {
+      "path": "port/patches/wwphys-a36-moving-save-status.patch",
+      "stage_directory": "wwphys",
+      "sha256": "6bd0208792d010ef8e25256e0eb5ccc326d2e867b520e2242cd116e10ee0cc16"
+    },
+    {
+      "path": "port/patches/wwaudio-a36-scene-save-status.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "29b047845a862e7c09ed2c200b0bfcb23870a6559e721e807ba37b57b58a09fd"
+    },
+    {
+      "path": "port/patches/wwaudio-a36-load-admission.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "8f2568656a29c507cdda473edf399e9f8cb1f8bf73e968b62553a13381ab9aa0"
+    },
+    {
+      "path": "port/patches/combat-a36-mission-manager-save-status.patch",
+      "stage_directory": "combat",
+      "sha256": "f9b58f8eea5e4c1bbb5418782ed3cca64cffcd97f414dc020c5e52be18278deb"
+    },
+    {
+      "path": "port/patches/combat-a36-world-state-save-status.patch",
+      "stage_directory": "",
+      "sha256": "9f10eaaa6d58f1fa910cf20c01d0c4b50316259a1f1ef5f76bafa067f9bbbb0f"
+    },
+    {
+      "path": "port/patches/combat-a36-damage-owner-save-status.patch",
+      "stage_directory": "combat",
+      "sha256": "d7cd8d39e861635ad2289ebc3c76955b9c911cecb92fd6d9175158beb477cdd9"
+    },
+    {
+      "path": "port/patches/combat-a36-action-weapon-load-status.patch",
+      "stage_directory": "combat",
+      "sha256": "75b530f473a25cdecc3faf99c330e495497ab7882ea2a6313151a7062568b5a6"
+    },
+    {
+      "path": "port/patches/combat-a36-gameobj-load-status.patch",
+      "stage_directory": "combat",
+      "sha256": "51924dccde95429594c00df660e6d475b15a7bf3bf1d1152b358c228f50825a7"
+    },
+    {
+      "path": "port/patches/combat-a36-building-load-status.patch",
+      "stage_directory": "combat",
+      "sha256": "bea86108c763732116c4d12fafa75c2d089d0426fcd1cc18c6525d39d033431b"
+    },
+    {
+      "path": "port/patches/combat-a36-special-object-load-status.patch",
+      "stage_directory": "combat",
+      "sha256": "2cc61732dc6034a2aaa5013cacfa4b9b8051c5aff2edecf6fe0644c264f27d9f"
+    },
+    {
+      "path": "port/patches/combat-a36-boss-load-status.patch",
+      "stage_directory": "combat",
+      "sha256": "c69c59d86e887651aeb68c14d30e69672c57938d83098ef232f3733c42fa28af"
+    },
+    {
+      "path": "port/patches/wwphys-a36-base-load-status.patch",
+      "stage_directory": "wwphys",
+      "sha256": "aaec8ecaf167afac97ffd8c1adb0e3266a2f8761b971cbe2483a787fcfcd3fd3"
+    },
+    {
+      "path": "port/patches/wwphys-a36-derived-load-status.patch",
+      "stage_directory": "wwphys",
+      "sha256": "e9e39a7e9b59ef3b718880d83dc0f508b0833e0ebcd391af590dbd79f804065e"
+    },
+    {
+      "path": "port/patches/wwphys-a36-definition-load-status.patch",
+      "stage_directory": "wwphys",
+      "sha256": "bdcd1064688192d0c02a369f9efaa31584c55504cb8f30fa23080a369d8aef89"
+    },
+    {
+      "path": "port/patches/combat-a36-definition-load-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "9a52a9fa01801f7647044401b6a1c12b6a95fa6179a5e8fcd197ab929832884f"
+    },
+    {
+      "path": "port/patches/wwsaveload-a36-definition-admission.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "7eff57729c5200a091649928739b855a9557e0afcc8d43f546e33904b1c16c23"
+    },
+    {
+      "path": "port/patches/combat-a36-definition-hierarchy-load-status.patch",
+      "stage_directory": "combat",
+      "sha256": "5926aced96a7b8173f356953c2880eda9074a2f2e2e68284c7815292b00ed04f"
+    },
+    {
+      "path": "port/patches/combat-a36-definition-child-load-status.patch",
+      "stage_directory": "combat",
+      "sha256": "f455f35c535ecad03da6890296f695350c765d89ed84265f1d2844febcc63430"
+    },
+    {
+      "path": "port/patches/combat-a36-defense-definition-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "23e4fc2360fc40e0a679ad34a89e4e46bc4c2919ef99b27e08e89fe51c062e3f"
+    },
+    {
+      "path": "port/patches/wwsaveload-a36-definition-catalog-transaction.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "60f2c7a44a4c53244baf4a260d772a66e1167123bb49fc45f166e68caac8b99a"
+    },
+    {
+      "path": "port/patches/wwsaveload-a36-definition-rejection-hook.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "e1e21cad0656c2225aee8f6f01bddd0a8f6821ea33eb6655ea747492c78ca7c7"
+    },
+    {
+      "path": "port/patches/combat-a36-eva-settings-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "def5ea8338af7fbe8cb70de51118f0c4a6b872e1d08a31e81338631cb4318496"
+    },
+    {
+      "path": "port/patches/combat-a36-global-definition-rollback.patch",
+      "stage_directory": "combat",
+      "sha256": "f645fe4ef04cbaf841b1b36aab96c9be93b44a13f2b9ffab15c59f9d8b52651c"
+    },
+    {
+      "path": "port/patches/combat-a36-purchase-definition-transaction.patch",
+      "stage_directory": "combat",
+      "sha256": "48ae0719529dee92ba211ed1ef91f5b3da1195c713baa31cc45d92cf9f6326ff"
+    },
+    {
+      "path": "port/patches/commando-a36-campaign-catalog-reinit.patch",
+      "stage_directory": "commando",
+      "sha256": "11c649089ad34a69909e939935d8d51c87a35686a89e0385bb51b4339abd0db2"
+    },
+    {
+      "path": "port/patches/ww3d2-a36-asset-load-status.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "4816559bb7a7f31625398386c7ee2c6b06a267c0e0e3c78bd17225426208779f"
+    },
+    {
+      "path": "port/patches/ww3d2-a36-dazzle-load-admission.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "218dc08671cef1835c846b21d86fa6229065d096f0a2361cf2f809770b7a68d6"
+    },
+    {
+      "path": "port/patches/ww3d2-a36-fixed-prototype-admission.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "6b2f68ec3bbb54a6b47b14e866552c65f50799a0df572e2709911a1a3b1591b6"
+    },
+    {
+      "path": "port/patches/ww3d2-a36-primitive-animation-admission.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "1a70074f1bcf5fefed34456f701bd70c8144a660e0d5188a632fbed8356a249a"
+    },
+    {
+      "path": "port/patches/commando-a36-lan-browser-factory.patch",
+      "stage_directory": "commando",
+      "sha256": "409f464f9e922206ae78d9f46116e6bd4e92ea2a8ef1a95452d3f146d251f222"
+    },
+    {
+      "path": "port/patches/commando-a36-campaign-state-source-binding.patch",
+      "stage_directory": "commando",
+      "sha256": "e7c84cc6ca9434391174f69f48aab2379fb26425f424cb284abb6f5f3d7fa353"
+    },
+    {
+      "path": "port/patches/combat-a36-asset-dependency-admission.patch",
+      "stage_directory": "combat",
+      "sha256": "744e807111de3a799f2d3c04065d6bbe64daffbde62b8e17ca7a2d11a932f13e"
+    },
+    {
+      "path": "port/patches/combat-a36-asset-dependency-close-status.patch",
+      "stage_directory": "combat",
+      "sha256": "d6578197c2291794765b284329b9d6b2214b04d65b89886e03cbf3a3b97b9e2e"
+    },
+    {
+      "path": "port/patches/commando-a36-load-inventory-commit.patch",
+      "stage_directory": "commando",
+      "sha256": "a833b8c3f35ce701e5ff0b933ab7b8ecffe83e757b87f1353abab79d9b543ae4"
+    },
+    {
+      "path": "port/patches/commando-a36-campaign-backdrop-selection.patch",
+      "stage_directory": "commando",
+      "sha256": "b051dae6c0b4bed2d028d37ea2683996bc50bb9f8bc78668bb1f106884108989"
+    },
+    {
+      "path": "port/patches/wwlib-a36-registry-checked-string-write.patch",
+      "stage_directory": "",
+      "sha256": "c9979c4db20a43c515e764994477f398b3a6c3a48b150d10b356d7916126a683"
+    },
+    {
+      "path": "port/patches/commando-a36-save-campaign-source-binding.patch",
+      "stage_directory": "",
+      "sha256": "c1180f40db9fb4d66d0d332c902b7bcbbb228e48280114a159119976631f90c9"
+    },
+    {
+      "path": "port/patches/commando-a36-direct-ip-frontend-dialog.patch",
+      "stage_directory": "",
+      "sha256": "aed1833bdca8f34cd89adbea9980a0c3ade8f5833fc195925ce994b4a2df8ab5"
+    },
+    {
+      "path": "port/patches/commando-a36-lan-team-selection.patch",
+      "stage_directory": "commando",
+      "sha256": "99f64a56c995fc2f4ead39cdf48154cc15258dc6c57ac1b3397e8697d8d93783"
+    },
+    {
+      "path": "port/patches/commando-a36-lan-server-presets.patch",
+      "stage_directory": "commando",
+      "sha256": "c1dbd517879bc66af2156cb63d6707892785bf230e5f0fa8932774b162765b04"
+    },
+    {
+      "path": "port/patches/commando-a36-multiplayer-pause-route.patch",
+      "stage_directory": "commando",
+      "sha256": "a89e61ace27b719b2d1eaa735291a74681959515c5337547928f7b44543666dc"
+    },
+    {
+      "path": "port/patches/commando-a36-lan-connect-refusal.patch",
+      "stage_directory": "commando",
+      "sha256": "b0e9c5c72a9f9620a0980b8ffc9503b4fc21d7c5bb8a26705b9a6e751d4c113f"
     }
   ],
-  "registry_sha256": "b1f9e91a802b60f32ae02426b3f0f4939af7bbd3320029a5748dedd37ce8b5b5"
+  "registry_sha256": "b5bdbe7ff8fcd544749e29a0e92f6e3eda3198a5ddc068fc64bc2c900e98c751"
 }

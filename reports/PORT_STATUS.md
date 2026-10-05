@@ -1,5 +1,278 @@
 # Renegade Vita port status
 
+The original Options screen has complete source routing in the combined Vita
+frontend. Controls, Movies and Credits use the released dialog-factory path;
+Technical Options uses the released `OptionsMenuClass::On_Command` direct
+route into the linked Audio, Video and Performance tabs. Its null factory slot
+is therefore intentional rather than a missing implementation. The unrelated
+desktop/WOL multiplayer-options surface remains hidden. Source inspection
+only; no build, test, emulator, device, GitHub or GitHub Actions runner work.
+
+All five original Controls child tabs now require their complete hotkey and
+option control sets during canonical resource generation. This closes the
+resource half of the restored Controls/InputConfig path; physical rebinding,
+persistence and scope/zoom behavior remain runtime evidence gates.
+
+Packaged-build artifact checks now require both original retail W3D mesh-load
+owners, `MeshLoaderClass::Load_W3D` and `MeshModelClass::Load_W3D`, alongside
+the existing mesh render and Vita submission symbols. The gates are source
+only and unexecuted under the validation hold.
+
+The original technical-options shell and audio, video and performance tabs now
+have strict generated-resource contracts for every directly addressed control.
+This hardens the already linked options owners against partial templates;
+runtime persistence and physical presentation remain unverified. Source only;
+no build, test, emulator, device, GitHub or GitHub Actions runner work.
+
+The original multiplayer Help screen now has a strict generated-resource
+contract covering all 17 key-label controls it dereferences. The route remains
+owned by `CnCReferenceMenuClass` and `HelpScreenDialogClass`; Vita contributes
+only translated control labels. Source only; no build, test, emulator, device,
+GitHub or GitHub Actions runner work.
+
+The full-profile Practice/LAN/Direct-IP pause request now reaches the original
+C&C reference dialog despite the single-player compatibility macro used by the
+combined frontend. The LAN connect dialog no longer retains an undeclared WOL
+fallback under its LAN-only build, and the chat resource generator requires
+all controls dereferenced by the original chat owner. Source only; no build,
+test, emulator, device, GitHub or GitHub Actions runner work.
+
+The campaign save/load, INI, static script registrar and mission-completion
+source graph is closed at translation-unit level. All 13 campaign mission
+units now also have an explicit configure-time subset assertion against the
+released `Scripts.dsp` inventory. Natural success, score/movie continuation,
+ordinary save restoration and script reconstruction remain runtime evidence
+gates. Source only; no build, test, emulator, device, GitHub or GitHub Actions
+runner work.
+
+The WW3D omission audit did not add `meshbuild.cpp`, `polyinfo.cpp` or
+`stripoptimizer.cpp`. Their apparent consumers resolve to top-level-disabled
+obsolete BPT code, unused out-of-line polygon helpers, or the excluded desktop
+DX8 renderer. This avoids converting lexical source similarity into a false
+runtime dependency. Source only; no build, test, emulator, device, GitHub or
+GitHub Actions runner work.
+
+The restored Controls configuration manager and dialog now link the released
+`inputconfig.cpp` record owner. Its chunk Save/Load, variable parsing and copy
+assignment were required by active `InputConfigMgrClass` paths but had been
+omitted from the target. Artifact gates require both serialization symbols.
+Source only and unvalidated; no build, test, emulator, device, GitHub or
+GitHub Actions runner work.
+
+The original LAN host preset Save/Load action is no longer disabled. Its
+released dialog retains original settings validation, descriptions and
+numbered preset semantics while custom files use the existing rooted `user/`
+server-config boundary and retail defaults remain read-only fallbacks.
+Slave-server behavior stays excluded, WWUI list pointers use explicit tokens,
+canonical dialog 250 is generated with strict control checks, and artifact
+gates require the dialog symbol. Final close/atomic-replace failure is now
+returned to the dialog, which remains open with the released storage error;
+failed deletion retains its row. Source only and unvalidated; no build, test,
+emulator, device, GitHub or GitHub Actions runner work.
+
+The complete Vita frontend's compatibility selectors now route deferred
+game-exit requests and message boxes to the original linked
+`GameInitMgrClass` and `DlgMsgBox` owners. The packaged LAN sources already
+select their linked real dialog manager and connection/refusal classes
+directly. Demo and headless profiles retain their compatibility shells.
+Original LAN/direct-IP team selection now links through a narrow adaptation of
+the released dialog. Original WWUI/player-list/team-signal and authoritative
+change-event ownership remain; retired WWOnline inheritance and handlers are
+excluded. Canonical dialog 246 is selected with required-control checks. Source
+only and unvalidated; no build, test, emulator, device, GitHub or GitHub Actions
+runner work.
+
+Full-port gameplay no longer unconditionally disables both original projector
+lists or overwrites the scene's shadow mode. Original settings again own those
+values. The source now also gives generated targets texture-owned VitaGL
+framebuffer/depth lifetime, validated level-zero surface binding, default-target
+and viewport restoration, active-target resolution reporting, and bounded GPU
+readback for original surface-lock/`CopyRects` capability checks. Projector
+pixels and lifecycle remain uncompiled/unvalidated; no build, test, emulator,
+device, GitHub or GitHub Actions runner work.
+
+The native gameplay menu pump now preserves original mode ownership: campaign
+and tutorial pause suspend Combat and open EVA, while Practice, LAN and
+Direct-IP keep Combat/network simulation active behind the original C&C
+reference menu. Direct-IP Start no longer means an unconditional disconnect.
+This is source-only, local and unvalidated; no build, runtime or hardware claim.
+The full-port graph now includes the original C&C reference dialog and suicide
+network event, plus canonical WWUI dialog 245 with strict control-presence
+checks. Its quit action is handed to the native between-frame original
+`GameInitMgr` teardown owner instead of freeing gameplay state in a WWUI callback.
+Original team, battle and server information dialogs now join that graph with
+canonical resources 240, 242 and 249, strict control checks, and a shared native
+CombatGameMode input owner. This is source-only and uncompiled.
+
+The native Miles provider now performs stream file callbacks, encoded-image
+allocation/read, MPEG initialization/scanning and WAVE decode outside the mixer
+deadline mutex. It stops and clears a pooled sample under the lock first, then
+publishes errors, shared-cache state and the prepared decoder/PCM atomically
+after reacquiring it. This removes known blocking preparation work from the
+audio output deadline but retains whole-image stream memory and synchronous
+game-thread preparation. Source only, local/uncommitted/unvalidated; no build,
+test, emulator, device, GitHub or GitHub Actions runner work.
+
+Beacon checkpoint source wiring now preserves warning cadence and weapon
+definition identity, restores legacy owner/weapon state conservatively, and
+recreates armed audio without replaying the armed transition. Its deterministic
+patch chain reproduces the active staged files with zero fuzz. Direct-IP clients
+now feed broken-connection and original pending-exit requests through the shared
+GameInitMgr teardown owner. Direct-IP next-round source wiring retains server
+win-event identity, waits for complete TT resource enumeration, prepares a
+second unpublished provider generation, and publishes stock, TT and Glacier
+providers only after original Combat core shutdown. Restart requests are latched
+until that generation is ready, map validity fails closed while pending, and
+replicated player/star binding remains generation-counted. Source only,
+local/uncommitted/unvalidated; no build, test, emulator, device, GitHub or
+GitHub Actions runner work.
+
+The Dev184 one-shot animation escape no longer uses frame-call thresholds. Its
+proven end-frame comparison is retained, while the fallback now requires five
+logical seconds of a genuinely stalled non-looping animation and resets during
+cinematic freeze; paused frames contribute zero game time. This prevents low or
+high frame rate from changing action completion. Source only,
+local/uncommitted/unvalidated; no staging, build, test, or device work.
+
+Native DDS acceleration now propagates lazy CPU-surface reconstruction failure
+instead of returning an all-zero descriptor surface. The unchanged compressed
+fast path is admitted only when it covers the complete requested mip chain;
+textures with sub-4x4 tail mips retain the decoded full-chain path. Source only,
+local/uncommitted/unvalidated; no staging, build, test, or device work.
+
+Static rigid-mesh cache invalidation now covers the released engine's model
+mutation entry points: pass/material/texture/shader setters, writable array
+acquisition, geometry/UV/colour uniqueness and alternate-material switching.
+Reset/destruction and user-lighting replacement were already covered. Retained
+writable-array aliases still require review. Source only, local/uncommitted/
+unvalidated; no staging, build, test, or device work.
+
+The A3.6 transparent radix sorter now grows its five-buffer workspace
+transactionally with non-throwing allocation. Memory pressure retains the old
+workspace and falls back to the original sorter rather than aborting in the
+target's `-fno-exceptions` build. Source only, local/uncommitted/unvalidated;
+no staging, build, test, or device work.
+
+The restored original Movies route now has a balanced destruction path: a
+frontend flush or session transition stops an active Bink replay and releases
+temporary main-audio suppression even when no Escape/final render callback is
+delivered. Source only, local/uncommitted/unvalidated; no staging, build, test,
+or device work.
+
+Full native frame now calls shared original CombatGameMode player-name HUD,
+player/team list and game-limit/countdown update/render owners. Original network
+server update already owns cGod spawning; no extra simulation/spawn pass added.
+Source only, local/uncommitted/unvalidated; no staging/tests/build/device work.
+Cached layout, list controls, repeated rounds and multiplayer acceptance remain
+open. The original player-list format action is now shared with the native frame;
+Vita Select release invokes it only outside missions. See
+ORIGINAL_GAMEPLAY_OVERLAY_WIRING.md.
+Native local-server frames now also feed their measured network/Combat intervals
+to the original cSbboManager bandwidth-budget owner. Source only and unvalidated.
+Original player/team/game-data text owners now receive their missing Onetime_Init
+and Onetime_Shutdown lifecycle under gameplay coordinates; null renderer state
+is no longer the intended native path. Source only and unvalidated.
+Original MultiHUD player names no longer dereference an absent optional WOL mode;
+the online recruit tag still requires an active compatible provider.
+
+Full-port initial loading presentation now disarms/releases before gameplay.
+Original Combat reload's own fresh stack screen supplies loading callbacks only
+within its lifetime; native local restart scopes loading layout and restores
+gameplay presentation. Source only, local/uncommitted/unvalidated; no staging,
+tests/build/device work. Save freeze, performance and repeated-round acceptance
+remain open. See RELOAD_LOADING_PRESENTATION_WIRING.md.
+
+Local next-round preparation now records unsupported next sources or invalid
+changed-map archives as load failures before original restart. Existing cleanup
+and menu recovery gates remain required, and these failures are excluded from
+session PASS. Original default looping and valid reload route unchanged. Source
+only, local/uncommitted/unvalidated; no staging/tests/build/device actions. See
+PRACTICE_COMPLETION_WIRING.md.
+
+Manual-save source wiring now checks the writer's final status before closing
+the original dialog, uses original WWUI error popups and exits failed new-slot
+searches. Existing restored-player binding rejections now request guarded menu
+recovery. Terminal-save popup reason remains ambiguous in the original serialized
+state; no inferred death/failure policy added. Source only, local/uncommitted/
+unvalidated; no staging/tests/build/device work. See MANUAL_SAVE_FAILURE_WIRING.md.
+
+Initial local load-failure recovery now has source wiring for rejected frontend
+sources, missing selected archives and reported required-level failures.
+Partial-level cleanup begins at pre-load ownership; original load gates unwind
+and SP/server-FPS cleanup no longer depends on network establishment. Recovery
+still requires full resource release and retains failure evidence. No executed
+validation; local/uncommitted/unvalidated. See INITIAL_LOAD_FAILURE_RECOVERY.md.
+
+Local full-port Load Game source wiring restores original unlocked-map
+difficulty selection and defers CampaignManager replay until session cleanup.
+Difficulty survives pause/death handoff; final-score/menu save/replay choices
+remain distinct from campaign advancement. Desktop/demo routes preserved.
+No staging/tests/build/device work; local/uncommitted/unvalidated. See
+SINGLE_PLAYER_COMPLETION_WIRING.md.
+
+Local death/failure source wiring now restores the original popups and load
+menu location, defers cGod restart to the between-frame reload envelope,
+retains selected load requests through cleanup, and routes quit/cancel through
+original pending exit. New-level callback evidence is retained through reload
+and start-script creation. The observer-preservation hunk is now materialized in
+tracked staging. No tests/build/device actions; local,
+uncommitted and unvalidated. See SINGLE_PLAYER_COMPLETION_WIRING.md.
+
+Local Practice victory-screen source wiring now selects the original
+CNCWinScreenMenuClass, restores Begin_Intermission creation and real network
+close callbacks, tolerates an absent optional WOL mode, and defers native
+cancel teardown through the original pending-exit request. Original looping
+map-cycle defaults remain unchanged. No staging/tests/build/device actions;
+all new wiring remains local/uncommitted/unvalidated. See
+PRACTICE_COMPLETION_WIRING.md.
+
+The full-port canonical dialog-template selection now includes
+`IDD_CNC_WINSCREEN` (248). The restored original victory screen previously had
+no generated template and could dereference absent title controls on the first
+completed Practice match. M00 demo resources remain unchanged; generation and
+runtime presentation are unvalidated.
+
+The pending Practice restart wiring now defers a changed-map MIX factory swap
+until original Combat Core_Shutdown has released the previous level, then
+publishes the prepared next-map provider before original Load_Level. This fixes
+an unsafe multi-map-cycle lifetime ordering while leaving the default one-map
+Skirmish replay path and original rotation rules unchanged. Source inspection
+also connected a post-reload identity gate: Practice must retain an active,
+in-game, disembodied local player for next-frame original cGod spawning, while
+campaign cGod restart must return a mutually bound star. Invalid identity uses
+the existing failed-load cleanup route. Local edits only; staging, compilation
+and runtime behavior remain unverified.
+
+Local completion wiring now includes original autosave consumption and local
+Practice core restart with native presentation/resource rebinding. These source
+changes also service original local pending exit and propagate known required
+reload failures before gameplay finalization. Known Practice load failures now
+have guarded original-menu recovery source wiring with retained failure evidence;
+runtime acceptance and remote transitions remain open. These
+changes are uncommitted and unvalidated under the test/device hold; campaign
+and Practice completion are not accepted. See SINGLE_PLAYER_COMPLETION_WIRING.md
+and PRACTICE_COMPLETION_WIRING.md.
+
+Full-port campaign startup now has a selected source-level catalog-readiness
+gate. A missing or empty original `campaign.ini` is rejected before New Campaign
+instead of being misread as immediate campaign completion. Retail data retains
+complete ordering ownership; no M13/M01 sequence is hard-coded. This is local,
+uncommitted and unvalidated.
+
+Writable rooted save/configuration streams now retain the existing destination
+while the unchanged ChunkSave bytes are staged and written to a same-directory
+`.pending` sibling. Successful close atomically renames the sibling into place;
+failure removes it and feeds the existing write-status path. This builds on
+`522dabb`'s in-memory back-patching and prevents an interrupted save from
+truncating a valid slot. Source only; Vita return time and atomic replacement
+remain unverified.
+
+Source follow-up: main now includes the six A3.6 performance commits through
+9f05633. Local save-failure and async-log corrections remain unvalidated and
+uncommitted under the user's no-tests/no-device instruction. No quicksave or
+combat-performance recovery is accepted. See
+[source review follow-up](A36_SOURCE_REVIEW_FOLLOWUP.md).
+
 2026-10-04 Development priority is M13 combat performance. Dev236 physical
 frame costs remain severe; Dev238 prepares identical normal cofactors once
 per original mesh pass. Focused normal/material and batch correctness tests
@@ -105,8 +378,10 @@ untested. See [live physical progress](LIVE_PROGRESS.md).
 division through the established renderer/vitaGL path. Host production-body
 and shader-source checks pass;494 focused tests and six ARM actions pass.
 The dependency's30 archive members retain ARMv7/VFP-register attributes.
-Native shader compilation, projected pixels, additional procedural/projector
-execution, physical acceptance and mixed wchar_t ABI remain open. See
+Native shader compilation, projected pixels, generic projector/APT execution,
+physical acceptance and mixed wchar_t ABI remain open. A later source-only
+retained queue now routes null-cull-volume transition and stealth passes through
+the native emitter, but it has no compile or runtime evidence. See
 [projective correction](PROJECTIVE_TEXTURE_COORDINATES.md).
 
 2026-10-04 Dev228 corrects nonuniform-scale/shear normal transforms in direct
@@ -1149,6 +1424,37 @@ The initial fast build reused stale staging and failed on the new readiness
 declaration; a restaged retry is the next action. No new visual acceptance,
 full-M00 completion, or 60 FPS+ result exists. Both physical devices remain held.
 See `DEV102_PRESENTATION_AND_DEMO_PLAN.md` for the current plan and estimate.
+
+2026-10-04 original Credits route source wiring: the Vita full-frontend source
+closure now selects the released `CreditsMenuClass`, its original
+`IDD_OPTIONS_CREDITS` WWUI template, and the Credits factory/re-entry slot.
+The Options page leaves that button visible and the dialog continues to read
+`credits.txt` through `_TheFileFactory`, preserving the established rooted
+retail/MIX ownership. No substitute credits text is embedded. This is local,
+uncommitted source wiring only; staging, compilation and runtime presentation
+remain unverified under the active test hold.
+
+2026-10-04 original Movies route source wiring: the full frontend now admits
+the released `MovieOptionsMenuClass`, its original list/play WWUI template and
+factory re-entry slot. List-row pointers use the ILP32/host-safe WWUI token
+boundary. On Vita the menu hands the original logical BIK filename directly to
+the existing rooted FFmpeg/Bink provider; Windows drive probing and movie-CD UI
+remain outside the platform boundary. Campaign.cpp still owns unlock creation.
+A bounded, versioned, atomic user-config provider now persists that original
+Movies registry key without storing media or changing campaign data. The route
+has source inspection only and remains unbuilt/unrun under the test hold.
+
+2026-10-04 original Controls route source wiring: the full frontend now admits
+the released Controls dialog, five original tabs and original profile
+save/load page. The native input provider publishes fresh Vita button edges as
+the corresponding original DirectInput IDs, and key-name presentation labels
+those IDs as Vita controls. `InputConfigMgrClass` again owns profile selection,
+creation, deletion and shutdown persistence; CONFIG.DAT and custom CFG files
+resolve only under the writable user config namespace, while
+DEFAULT_INPUT.CFG still falls back to unchanged retail data. The Vita mapping
+is applied only for the original default profile, so a saved custom profile is
+not overwritten at startup. Source is local and unvalidated under the test
+hold.
 
 ## 2026-09-08: Dev100 M00-only demo work in progress
 

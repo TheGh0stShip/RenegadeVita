@@ -1,0 +1,142 @@
+--- a/playerdata.cpp
++++ b/playerdata.cpp
+@@ -146,6 +146,10 @@
+ {
+ 	bool variables_seen = false;
+ 	bool loaded = true;
++	uint32 loaded_values = 0;
++	const uint32 required_values = (1U << 24) - 1U;
++	float score = 0.0F;
++	float money = 0.0F;
+ 	StatTimeInSession=0.0f;
+ 	StatLastWeaponIndex = -1;
+ 	WWASSERT( StatWeaponIDFired.Count() == 0 );
+@@ -162,32 +166,39 @@
+ 				variables_seen = true;
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+-						READ_SAFE_MICRO_CHUNK( cload, MICROCHUNKID_SCORE, Score, float );
+-						READ_SAFE_MICRO_CHUNK( cload, MICROCHUNKID_MONEY, Money, float );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_TIME_IN_GAME, StatTimeInGame );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_ENEMIES_KILLED, StatEnemiesKilled );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_ALLIES_KILLED, StatAlliesKilled );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_SHOTS_FIRED, StatShotsFired );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_HEAD_SHOTS, StatHeadShots );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_TORSO_SHOTS, StatTorsoShots );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_ARM_SHOTS, StatArmShots );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_LEG_SHOTS, StatLegShots );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_CROTCH_CHOTS, StatCrotchShots );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_FINAL_HEALTH, StatFinalHealth );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_POWERUPS, StatPowerups );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_VEHICLES_DESTROYED, StatVehiclesDestroyed );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_TIME_IN_VEHICLES, StatTimeInVehicles );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_KILLS_FROM_VEHICLES, StatKillsFromVehicles );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_SQUISHES, StatSquishes );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_CREDITS_GRANTED, StatCreditsGranted );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_BUILDINGS_DESTROYED, StatBuildingsDestroyed );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_HEAD_HITS, StatHeadHits );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_TORSO_HITS, StatTorsoHits );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_ARM_HITS, StatArmHits );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_LEG_HITS, StatLegHits );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_CROTCH_HITS, StatCrotchHits );
++#define READ_REQUIRED_PLAYER_DATA_VALUE(id, value, bit) \
++						case (id): \
++							if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
++								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
++							else loaded_values |= (bit); \
++							break
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_SCORE, score, 1U << 0);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_MONEY, money, 1U << 1);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_TIME_IN_GAME, StatTimeInGame, 1U << 2);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_ENEMIES_KILLED, StatEnemiesKilled, 1U << 3);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_ALLIES_KILLED, StatAlliesKilled, 1U << 4);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_SHOTS_FIRED, StatShotsFired, 1U << 5);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_HEAD_SHOTS, StatHeadShots, 1U << 6);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_TORSO_SHOTS, StatTorsoShots, 1U << 7);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_ARM_SHOTS, StatArmShots, 1U << 8);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_LEG_SHOTS, StatLegShots, 1U << 9);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_CROTCH_CHOTS, StatCrotchShots, 1U << 10);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_FINAL_HEALTH, StatFinalHealth, 1U << 11);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_POWERUPS, StatPowerups, 1U << 12);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_VEHICLES_DESTROYED, StatVehiclesDestroyed, 1U << 13);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_TIME_IN_VEHICLES, StatTimeInVehicles, 1U << 14);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_KILLS_FROM_VEHICLES, StatKillsFromVehicles, 1U << 15);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_SQUISHES, StatSquishes, 1U << 16);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_CREDITS_GRANTED, StatCreditsGranted, 1U << 17);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_BUILDINGS_DESTROYED, StatBuildingsDestroyed, 1U << 18);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_HEAD_HITS, StatHeadHits, 1U << 19);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_TORSO_HITS, StatTorsoHits, 1U << 20);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_ARM_HITS, StatArmHits, 1U << 21);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_LEG_HITS, StatLegHits, 1U << 22);
++						READ_REQUIRED_PLAYER_DATA_VALUE(MICROCHUNKID_STAT_CROTCH_HITS, StatCrotchHits, 1U << 23);
++#undef READ_REQUIRED_PLAYER_DATA_VALUE
+ 						default:
+-							Debug_Say(("Unhandled Micro Chunk:%d File:%s Line:%d\r\n",cload.Cur_Micro_Chunk_ID(),__FILE__,__LINE__));
++							loaded = false;
+ 							break;
+ 					}
+ 					cload.Close_Micro_Chunk();
+@@ -198,34 +209,55 @@
+ 			{
+ 				int id = 0;
+ 				int count = 0;
++				bool id_seen = false;
++				bool count_seen = false;
+ 
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_WEAPON_ID, id );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STAT_WEAPON_COUNT, count );
++						case MICROCHUNKID_STAT_WEAPON_ID:
++							if (id_seen || cload.Cur_Micro_Chunk_Length() != sizeof(id) ||
++								cload.Read(&id, sizeof(id)) != sizeof(id)) loaded = false;
++							else id_seen = true;
++							break;
++						case MICROCHUNKID_STAT_WEAPON_COUNT:
++							if (count_seen || cload.Cur_Micro_Chunk_Length() != sizeof(count) ||
++								cload.Read(&count, sizeof(count)) != sizeof(count)) loaded = false;
++							else count_seen = true;
++							break;
+ 
+ 						default:
+-							Debug_Say(("Unhandled Micro Chunk:%d File:%s Line:%d\r\n",cload.Cur_Micro_Chunk_ID(),__FILE__,__LINE__));
++							loaded = false;
+ 							break;
+ 					}
+ 					cload.Close_Micro_Chunk();
+ 				}
+ 
+-				WWASSERT( id != 0 );
+-				StatWeaponIDFired.Add(id);
+-				StatWeaponFireCount.Add(count);
++				bool duplicate_id = false;
++				for (int index = 0; index < StatWeaponIDFired.Count(); ++index) {
++					if (StatWeaponIDFired[index] == id) duplicate_id = true;
++				}
++				if (!id_seen || !count_seen || id == 0 || count < 0 || duplicate_id) loaded = false;
++				else {
++					StatWeaponIDFired.Add(id);
++					StatWeaponFireCount.Add(count);
++				}
+ 				break;
+ 			}
+ 
+ 			default:
+-				Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
++				loaded = false;
+ 				break;
+ 
+ 		}
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return loaded && variables_seen;
++	loaded = loaded && variables_seen && loaded_values == required_values && !cload.Has_Error();
++	if (loaded) {
++		Score = score;
++		Money = money;
++	}
++	return loaded;
+ }
+ 
+ void PlayerDataClass::Reset_Player(void)

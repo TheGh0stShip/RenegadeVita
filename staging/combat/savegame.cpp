@@ -102,20 +102,117 @@ enum	{
 	MICROCHUNKID_DESCRIPTION,
 };
 
+#if defined(RENEGADE_VITA_PORT)
+static bool Read_Player_Save_Level_Info(ChunkLoadClass &cload,
+	StringClass &map_filename, WideStringClass &description, int &mission_description)
+{
+	StringClass loaded_map(0, true);
+	WideStringClass loaded_description;
+	int loaded_mission_description = 0;
+	uint32 loaded_values = 0U;
+	bool loaded = true;
+	while (cload.Open_Micro_Chunk()) {
+		const uint32 length = cload.Cur_Micro_Chunk_Length();
+		switch(cload.Cur_Micro_Chunk_ID()) {
+			case MICROCHUNKID_MAP_FILENAME:
+				if ((loaded_values & 1U) != 0U || length == 0U || length > 512U) loaded = false;
+				else {
+					loaded_values |= 1U;
+					loaded = cload.Read(loaded_map.Get_Buffer(length), length) == length && loaded;
+					loaded = static_cast<uint32>(loaded_map.Get_Length() + 1) == length && loaded;
+				}
+				break;
+			case MICROCHUNKID_MISSION_DESCRIPTION:
+				if ((loaded_values & 2U) != 0U || length != sizeof(loaded_mission_description)) loaded = false;
+				else {
+					loaded_values |= 2U;
+					loaded = cload.Read(&loaded_mission_description, sizeof(loaded_mission_description)) ==
+						sizeof(loaded_mission_description) && loaded;
+				}
+				break;
+			case MICROCHUNKID_DESCRIPTION:
+				if ((loaded_values & 4U) != 0U || length < sizeof(WCHAR) ||
+					(length % sizeof(WCHAR)) != 0U || length > 4096U) loaded = false;
+				else {
+					loaded_values |= 4U;
+					loaded = cload.Read(loaded_description.Get_Buffer(length / sizeof(WCHAR)), length) == length && loaded;
+					loaded = static_cast<uint32>((loaded_description.Get_Length() + 1) * sizeof(WCHAR)) == length && loaded;
+				}
+				break;
+			default:
+				break;
+		}
+		cload.Close_Micro_Chunk();
+	}
+
+	const int map_length = loaded_map.Get_Length();
+	loaded = loaded && loaded_values == 7U && map_length > 4 &&
+		::stricmp(&loaded_map[map_length - 4], ".LSD") == 0 && !cload.Has_Error();
+	if (loaded) {
+		map_filename = loaded_map;
+		description = loaded_description;
+		mission_description = loaded_mission_description;
+	}
+	return loaded;
+}
+
+static bool Read_Player_Save_Envelope(ChunkLoadClass &cload,
+	StringClass &map_filename, WideStringClass &description, int &mission_description)
+{
+	bool level_info_seen = false;
+	bool level_data_seen = false;
+	bool loaded = true;
+	while (cload.Open_Chunk()) {
+		switch(cload.Cur_Chunk_ID()) {
+			case CHUNKID_LEVEL_INFO:
+				if (level_info_seen || level_data_seen) loaded = false;
+				else {
+					level_info_seen = true;
+					loaded = Read_Player_Save_Level_Info(cload, map_filename,
+						description, mission_description) && loaded;
+				}
+				break;
+			case CHUNKID_LEVEL_DATA:
+				if (!level_info_seen || level_data_seen) loaded = false;
+				else level_data_seen = true;
+				break;
+			default:
+				loaded = false;
+				break;
+		}
+		cload.Close_Chunk();
+	}
+	return loaded && level_info_seen && level_data_seen && !cload.Has_Error();
+}
+#endif
+
 /*
 **
 */
 void _cdecl SaveGameManager::Save_Game( const char * filename, ... )
 {
+#if defined(RENEGADE_VITA_PORT)
+	LastSaveWriteSucceeded = false;
+#endif
 	Debug_Say(( "Save Game %s\n", filename ));
 	CurrentGameFilename = filename;
 	RV_SAVE_PHASE("open");
 
 	FileClass * file = _TheWritingFileFactory->Get_File( filename );
 	WWASSERT(file);
+#if defined(RENEGADE_VITA_PORT)
+	if (file == NULL) { RV_SAVE_PHASE("file-failed"); return; }
+	if (!file->Open(FileClass::WRITE)) {
+		RV_SAVE_PHASE("open-failed");
+		_TheWritingFileFactory->Return_File(file);
+		return;
+	}
+#else
 	file->Open(FileClass::WRITE);
+#endif
 
 	ChunkSaveClass csave(file);
+	bool save_succeeded = true;
 
 	csave.Begin_Chunk( CHUNKID_LEVEL_INFO );
 		WRITE_MICRO_CHUNK_WWSTRING( csave,		MICROCHUNKID_MAP_FILENAME,			MapFilename );
@@ -128,22 +225,22 @@ void _cdecl SaveGameManager::Save_Game( const char * filename, ... )
 		_ConversationMgrSaveLoad.Set_Category_To_Save (ConversationMgrClass::CATEGORY_LEVEL);
 
 		RV_SAVE_PHASE("combat-begin");
-		SaveLoadSystemClass::Save( csave, _CombatSaveLoad );
+		save_succeeded = SaveLoadSystemClass::Save( csave, _CombatSaveLoad ) && save_succeeded;
 		RV_SAVE_PHASE("combat-end");
 		RV_SAVE_PHASE("conversations-begin");
-		SaveLoadSystemClass::Save( csave, _ConversationMgrSaveLoad );
+		save_succeeded = SaveLoadSystemClass::Save( csave, _ConversationMgrSaveLoad ) && save_succeeded;
 		RV_SAVE_PHASE("conversations-end");
 		RV_SAVE_PHASE("physics-begin");
-		SaveLoadSystemClass::Save( csave, _PhysDynamicSaveSystem );
+		save_succeeded = SaveLoadSystemClass::Save( csave, _PhysDynamicSaveSystem ) && save_succeeded;
 		RV_SAVE_PHASE("physics-end");
 		RV_SAVE_PHASE("encyclopedia-begin");
-		SaveLoadSystemClass::Save( csave, _TheEncyclopediaMgrSaveLoadSubsystem );
+		save_succeeded = SaveLoadSystemClass::Save( csave, _TheEncyclopediaMgrSaveLoadSubsystem ) && save_succeeded;
 		RV_SAVE_PHASE("encyclopedia-end");
 		RV_SAVE_PHASE("audio-begin");
-		SaveLoadSystemClass::Save( csave, _DynamicAudioSaveLoadSubsystem );
+		save_succeeded = SaveLoadSystemClass::Save( csave, _DynamicAudioSaveLoadSubsystem ) && save_succeeded;
 		RV_SAVE_PHASE("audio-end");
 		RV_SAVE_PHASE("map-begin");
-		SaveLoadSystemClass::Save( csave, _TheMapMgrSaveLoadSubsystem );
+		save_succeeded = SaveLoadSystemClass::Save( csave, _TheMapMgrSaveLoadSubsystem ) && save_succeeded;
 		RV_SAVE_PHASE("map-end");
 
 		va_list arg_list;
@@ -153,7 +250,7 @@ void _cdecl SaveGameManager::Save_Game( const char * filename, ... )
 		while ( !done ) {
 			SaveLoadSubSystemClass * sub_system = va_arg( arg_list, SaveLoadSubSystemClass * );
 			if ( sub_system != NULL ) {
-				SaveLoadSystemClass::Save( csave, *sub_system );
+				save_succeeded = SaveLoadSystemClass::Save( csave, *sub_system ) && save_succeeded;
 			} else {
 				done = true;
 			}
@@ -163,13 +260,26 @@ void _cdecl SaveGameManager::Save_Game( const char * filename, ... )
 	csave.End_Chunk();
 
 	RV_SAVE_PHASE("close-begin");
+#if defined(RENEGADE_VITA_PORT)
+	if (!save_succeeded) {
+		file->Abort_Write();
+	}
+#endif
 	file->Close();
 	RV_SAVE_PHASE("close-end");
+#if defined(RENEGADE_VITA_PORT)
+	LastSaveWriteSucceeded = save_succeeded && !file->Has_Write_Failed();
+	RV_SAVE_PHASE(LastSaveWriteSucceeded ? "write-complete" : "write-failed");
+#endif
 
 	_TheWritingFileFactory->Return_File(file);
 
 }
 
+
+#if defined(RENEGADE_VITA_PORT)
+bool SaveGameManager::LastSaveWriteSucceeded = false;
+#endif
 
 void	SaveGameManager::Pre_Load_Game
 (
@@ -286,6 +396,7 @@ void	SaveGameManager::Load_Game( const char * filename )
 	ChunkLoadClass cload(file);
 #if defined(__vita__)
 	bool level_info_found = false;
+	bool level_info_valid = false;
 	bool level_data_found = false;
 #endif
 
@@ -295,8 +406,26 @@ void	SaveGameManager::Load_Game( const char * filename )
 
 			case CHUNKID_LEVEL_INFO:
 #if defined(__vita__)
+				if (level_info_found || level_data_found) {
+					A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_INFO_MISSING);
+					break;
+				}
 				level_info_found = true;
-#endif
+				{
+					StringClass loaded_map_filename(0, true);
+					WideStringClass loaded_description;
+					int loaded_mission_description = 0;
+					if (!Read_Player_Save_Level_Info(cload, loaded_map_filename,
+						loaded_description, loaded_mission_description)) {
+						A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_INFO_MISSING);
+						break;
+					}
+					MapFilename = loaded_map_filename;
+					Description = loaded_description;
+					MissionDescriptionID = loaded_mission_description;
+					level_info_valid = true;
+				}
+#else
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
 						
@@ -310,6 +439,7 @@ void	SaveGameManager::Load_Game( const char * filename )
 					}
 					cload.Close_Micro_Chunk();
 				}
+#endif
 
 
 				{
@@ -318,7 +448,13 @@ void	SaveGameManager::Load_Game( const char * filename )
 				WWASSERT( temp_ddb.Get_Length() > 4 );
 				temp_ddb.Erase( MapFilename.Get_Length()-4, 4 );
 				temp_ddb	+= ".ddb";
-				Load_Definitions(temp_ddb);
+				if (!Load_Definitions(temp_ddb, false)) {
+#if defined(__vita__)
+					DefinitionMgrClass::Free_Definitions();
+					A35_Level_Load_Record_Failure(A35_LOAD_STATIC_SUBSYSTEM_FAILED);
+					break;
+#endif
+				}
 				}
 				WWLOG_INTERMEDIATE("Load_Definitions");
 
@@ -330,15 +466,19 @@ void	SaveGameManager::Load_Game( const char * filename )
 								
 			case CHUNKID_LEVEL_DATA:
 #if defined(__vita__)
+				if (level_data_found || !level_info_valid) {
+					A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_SUBSYSTEM_FAILED);
+					break;
+				}
 				level_data_found = true;
 #endif
 				if (CombatManager::I_Am_Server()) {
 #if defined(__vita__)
-					if (!SaveLoadSystemClass::Load(cload, false)) {
+					if (!SaveLoadSystemClass::Load(cload, false, true)) {
 						A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_SUBSYSTEM_FAILED);
 					}
 #else
-					SaveLoadSystemClass::Load( cload, false );
+					SaveLoadSystemClass::Load( cload, false, true );
 #endif
 				}
 				WWLOG_INTERMEDIATE("Load");
@@ -353,7 +493,8 @@ void	SaveGameManager::Load_Game( const char * filename )
 	}
 
 #if defined(__vita__)
-	if (!level_info_found) A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_INFO_MISSING);
+	if (cload.Has_Error()) A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_SUBSYSTEM_FAILED);
+	if (!level_info_found || !level_info_valid) A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_INFO_MISSING);
 	if (CombatManager::I_Am_Server() && !level_data_found) {
 		A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_DATA_MISSING);
 	}
@@ -430,14 +571,20 @@ bool SaveGameManager::Peek_Description
 	//	Open the file as a chunk
 	//
 	FileClass * file = _TheFileFactory->Get_File(filename);
-	WWASSERT(file != NULL);
-	file->Open(FileClass::READ);
+	if (file == NULL) return false;
+	if (!file->Open(FileClass::READ)) {
+		_TheFileFactory->Return_File(file);
+		return false;
+	}
 	ChunkLoadClass cload(file);
 
 	bool retval			= false;
 	int mission_name_id	= 0;
 	StringClass map_filename(0,true);
 	
+	#if defined(RENEGADE_VITA_PORT)
+	retval = Read_Player_Save_Envelope(cload, map_filename, description, mission_name_id);
+	#else
 	//
 	//	Loop until we've found the header chunk
 	//
@@ -463,6 +610,7 @@ bool SaveGameManager::Peek_Description
 		}
 		cload.Close_Chunk();
 	}
+	#endif
 
 	//
 	//	Either load the mission name from the translation database
@@ -493,12 +641,20 @@ bool SaveGameManager::Peek_Map_Name( const char * filename, StringClass &map_nam
 	//	Open the file as a chunk
 	//
 	FileClass * file = _TheFileFactory->Get_File(filename);
-	WWASSERT(file != NULL);
-	file->Open(FileClass::READ);
+	if (file == NULL) return false;
+	if (!file->Open(FileClass::READ)) {
+		_TheFileFactory->Return_File(file);
+		return false;
+	}
 	ChunkLoadClass cload(file);
 
 	bool retval = false;
 	
+	#if defined(RENEGADE_VITA_PORT)
+	WideStringClass description;
+	int mission_description = 0;
+	retval = Read_Player_Save_Envelope(cload, map_name, description, mission_description);
+	#else
 	//
 	//	Loop until we've found the header chunk
 	//
@@ -523,6 +679,7 @@ bool SaveGameManager::Peek_Map_Name( const char * filename, StringClass &map_nam
 		}
 		cload.Close_Chunk();
 	}
+	#endif
 
 	//
 	//	Close the file
@@ -564,11 +721,11 @@ void	SaveGameManager::Save_Definitions( const char * filename )
 	Save_Save_Load_System( filename, &_TheDefinitionMgr, NULL );
 }
 
-void	SaveGameManager::Load_Definitions( const char * filename )
+bool	SaveGameManager::Load_Definitions( const char * filename, bool required_file )
 {
 	WWMEMLOG(MEM_GAMEDATA);
 	Debug_Say(( "Load Definitions %s\n", filename ));
-	Load_Save_Load_System( filename, true );	// true = automatic post load processing
+	return Load_Save_Load_System(filename, true, required_file);
 }
 
 /*
@@ -580,6 +737,7 @@ void _cdecl SaveGameManager::Save_Save_Load_System( const char * filename, ... )
 	WWASSERT(file);
 	file->Open(FileClass::WRITE);
 	ChunkSaveClass csave(file);
+	bool save_succeeded = true;
 
 	va_list arg_list;
 	va_start( arg_list, filename );
@@ -587,45 +745,52 @@ void _cdecl SaveGameManager::Save_Save_Load_System( const char * filename, ... )
 	while ( !done ) {
 		SaveLoadSubSystemClass * sub_system = va_arg( arg_list, SaveLoadSubSystemClass * );
 		if ( sub_system != NULL ) {
-			SaveLoadSystemClass::Save( csave, *sub_system );
+			save_succeeded = SaveLoadSystemClass::Save( csave, *sub_system ) && save_succeeded;
 		} else {
 			done = true;
 		}
 	}
 	va_end (arg_list);
 
+#if defined(RENEGADE_VITA_PORT)
+	if (!save_succeeded) {
+		file->Abort_Write();
+	}
+#endif
 	file->Close();
 	_TheWritingFileFactory->Return_File(file);
 }
 
-void	SaveGameManager::Load_Save_Load_System( const char * filename, bool auto_post_load, bool required_level )
+bool	SaveGameManager::Load_Save_Load_System( const char * filename, bool auto_post_load, bool required_file )
 {
+	bool load_succeeded = !required_file;
 	FileClass * file = _TheFileFactory->Get_File( filename );
 	if ( file != NULL ) {
 #if defined(__vita__)
 		if (!file->Open(FileClass::READ)) {
-			if (required_level) A35_Level_Load_Record_Failure(A35_LOAD_STATIC_OPEN_FAILED);
+			if (required_file) A35_Level_Load_Record_Failure(A35_LOAD_STATIC_OPEN_FAILED);
 			file->Close();
 			_TheFileFactory->Return_File(file);
-			return;
+			return !required_file;
 		}
 		ChunkLoadClass cload(file);
-		if (!SaveLoadSystemClass::Load(cload, auto_post_load) && required_level) {
+		load_succeeded = SaveLoadSystemClass::Load(cload, auto_post_load);
+		if (!load_succeeded && required_file) {
 			A35_Level_Load_Record_Failure(A35_LOAD_STATIC_SUBSYSTEM_FAILED);
 		}
 #else
 		file->Open( FileClass::READ );
 		ChunkLoadClass cload(file);
-		SaveLoadSystemClass::Load( cload, auto_post_load );
+		load_succeeded = SaveLoadSystemClass::Load( cload, auto_post_load );
 #endif
 		file->Close();
 		_TheFileFactory->Return_File(file);
 	} else {
 #if defined(__vita__)
-		if (required_level) A35_Level_Load_Record_Failure(A35_LOAD_STATIC_UNAVAILABLE);
+		if (required_file) A35_Level_Load_Record_Failure(A35_LOAD_STATIC_UNAVAILABLE);
 #endif
 		Debug_Say(( "Failed to load file %s\n", filename ));
 //		WWASSERT( file );
 	}
+	return load_succeeded;
 }
-

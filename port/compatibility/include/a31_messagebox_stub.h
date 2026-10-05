@@ -1,5 +1,14 @@
 #pragma once
 
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+
+// The complete Vita frontend links the original WWUI message-box owner and
+// its canonical resources.  Preserve visible admission, disconnect, MOTD and
+// administrator messages in that profile.
+#include "DlgMessageBox.h"
+
+#else
+
 // Desktop message boxes are presentation only.  cScTextObj remains the
 // original replicated message owner; this boundary simply makes its optional
 // local popup a no-op until the Vita dialog layer supplies it.
@@ -10,3 +19,5 @@ public:
 		unsigned long = 0) { return false; }
 	static int Get_Current_Count(void) { return 0; }
 };
+
+#endif

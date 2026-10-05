@@ -542,14 +542,14 @@ const PersistFactoryClass & HumanPhysClass::Get_Factory(void) const
 bool HumanPhysClass::Save(ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(HUMANPHYS_CHUNK_PHYS3);
-	Phys3Class::Save(csave);
+	if (!Phys3Class::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(HUMANPHYS_CHUNK_VARIABLES);
 	WRITE_MICRO_CHUNK(csave,HUMANPHYS_VARIABLE_JUSTJUMPED,JustJumped);
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 
@@ -567,12 +567,13 @@ bool HumanPhysClass::Save(ChunkSaveClass &csave)
  *=============================================================================================*/
 bool HumanPhysClass::Load(ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case HUMANPHYS_CHUNK_PHYS3:
-				Phys3Class::Load(cload);
+				if (!Phys3Class::Load(cload)) loaded = false;
 				break;
 
 			case HUMANPHYS_CHUNK_VARIABLES:
@@ -592,7 +593,7 @@ bool HumanPhysClass::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 		
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -770,11 +771,12 @@ bool HumanPhysDefClass::Save(ChunkSaveClass &csave)
 
 bool HumanPhysDefClass::Load(ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case HUMANPHYSDEF_CHUNK_PHYS3DEF:
-				Phys3DefClass::Load(cload);
+				if (!Phys3DefClass::Load(cload)) loaded = false;
 				break;
 
 			default:
@@ -783,7 +785,7 @@ bool HumanPhysDefClass::Load(ChunkLoadClass &cload)
 		}
 		cload.Close_Chunk();
 	}
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 

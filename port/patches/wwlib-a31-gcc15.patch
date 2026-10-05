@@ -12,7 +12,7 @@
       void destroy(pointer p)                      { p->~T(); }
 --- a/FastAllocator.cpp
 +++ b/FastAllocator.cpp
-@@ -21,2 +21,4 @@
+@@ -21,3 +21,5 @@
  #include "FastAllocator.h"
 +
 +#include <new>

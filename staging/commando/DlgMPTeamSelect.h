@@ -41,6 +41,7 @@
 #include <WWUI\MenuDialog.h>
 #include <WWLib\Notify.h>
 #include <WWLib\Signaler.h>
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include <WWOnline\RefPtr.h>
 #include "WOLGameInfo.h"
 
@@ -51,6 +52,7 @@ class ChannelEvent;
 class UserEvent;
 class GameOptionsMessage;
 };
+#endif
 
 class cPlayer;
 
@@ -59,9 +61,11 @@ typedef TypedEventPair<bool, int> MPChooseTeamSignal;
 class DlgMPTeamSelect :
 		public MenuDialogClass,
 		protected Signaler<MPChooseTeamSignal>,
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 		protected Observer<WWOnline::ChannelEvent>,
 		protected Observer<WWOnline::UserEvent>,
 		protected Observer<WWOnline::GameOptionsMessage>,
+#endif
 		protected Observer<PlayerMgrEvent>
 	{
 	public:
@@ -82,31 +86,35 @@ class DlgMPTeamSelect :
 		void SelectSideChoice(int side);
 		int GetSideChoice(void);
 
-		void RequestWOLGameInfo(void);
-
 		void ShowTimeRemaining(float remainingSecond);
 		bool FindPlayerInListCtrl(const WCHAR* name, ListCtrlClass*& outList, int& outIndex);
 
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+		void RequestWOLGameInfo(void);
 		void HandleNotification(WWOnline::ChannelEvent&);
 		void HandleNotification(WWOnline::UserEvent&);
 		void HandleNotification(WWOnline::GameOptionsMessage&);
-		void HandleNotification(PlayerMgrEvent&);
-
 		static void ProcessWOLGameInfo(DlgMPTeamSelect& dialog, const char* data);
 		static void ProcessWOLTeamInfo(DlgMPTeamSelect& dialog, const char* data);
 		static void ProcessWOLPlayerInfo(DlgMPTeamSelect& dialog, const char* data);
+#endif
+		void HandleNotification(PlayerMgrEvent&);
 
 		void PopulateWithLANPlayers(void);
 		void AddLANPlayerInfo(cPlayer* lanPlayer);
 		void RemoveLANPlayerInfo(cPlayer* lanPlayer);
 
 	protected:
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 		bool mWOLGame;
+#endif
 		bool mCanChoose;
 		float mTimeRemaining;
 
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 		RefPtr<WWOnline::Session> mWOLSession;
 		WOLGameInfo mGameInfo;
+#endif
 	};
 
 #endif // __DLGMPTEAMSELECT_H__

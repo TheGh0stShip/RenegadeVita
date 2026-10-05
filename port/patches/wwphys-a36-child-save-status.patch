@@ -1,0 +1,29 @@
+--- a/physdynamicsavesystem.cpp
++++ b/physdynamicsavesystem.cpp
+@@ -66,20 +66,21 @@
+ bool PhysDynamicSaveSystemClass::Save(ChunkSaveClass &csave)
+ {	
+ 	WWMEMLOG(MEM_GAMEDATA);
++	bool saved = true;
+ 
+ 	csave.Begin_Chunk(PDSSC_CHUNKID_SCENE);
+ 	PhysicsSceneClass::Get_Instance()->Save_Level_Dynamic_Data(csave);
+-	csave.End_Chunk();
++	saved = csave.End_Chunk() && saved;
+ 
+ 	csave.Begin_Chunk(PDSSC_CHUNKID_CONSTANTS);
+ 	PhysicsConstants::Save(csave);
+-	csave.End_Chunk();
++	saved = csave.End_Chunk() && saved;
+ 
+ 	csave.Begin_Chunk(PDSSC_CHUNKID_PATHMGR);
+ 	PathMgrClass::Save(csave);
+-	csave.End_Chunk();
++	saved = csave.End_Chunk() && saved;
+ 
+-	return true;
++	return saved && !csave.Has_Error();
+ }
+ 
+ bool PhysDynamicSaveSystemClass::Load(ChunkLoadClass &cload)
+

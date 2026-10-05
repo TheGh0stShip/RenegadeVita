@@ -51,10 +51,5 @@
  	cPlayer * p_player = cPlayerManager::Find_Player(ClientId);
  	if (p_player != NULL)
  	{
-@@ -114,6 +135,7 @@ cGameSpyCsChallengeResponseEvent::Act
- 		p_player->Set_GameSpy_Auth_State(GAMESPY_AUTH_STATE_VALIDATING);
- 	}
- 
+@@ -116,0 +138 @@ cGameSpyCsChallengeResponseEvent::Act
 +#endif
- 	Set_Delete_Pending();
- }

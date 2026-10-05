@@ -1,0 +1,26 @@
+--- a/playerdata.cpp
++++ b/playerdata.cpp
+@@ -145,4 +145,6 @@
+ bool	PlayerDataClass::Load( ChunkLoadClass &cload )
+ {
++	bool variables_seen = false;
++	bool loaded = true;
+ 	StatTimeInSession=0.0f;
+ 	StatLastWeaponIndex = -1;
+@@ -154,4 +156,9 @@
+ 
+ 			case CHUNKID_VARIABLES:
++				if (variables_seen) {
++					loaded = false;
++					break;
++				}
++				variables_seen = true;
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+@@ -219,5 +226,5 @@
+ 	}
+ 
+-	return true;
++	return loaded && variables_seen;
+ }
+ 

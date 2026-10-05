@@ -234,7 +234,7 @@ void MotorVehicleClass::Shift_Down(void)
 bool MotorVehicleClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(MOTO_CHUNK_VEHICLEPHYS);
-	VehiclePhysClass::Save(csave);
+	if (!VehiclePhysClass::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(MOTO_CHUNK_VARIABLES);
@@ -242,21 +242,22 @@ bool MotorVehicleClass::Save (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK(csave,MOTO_VARIABLE_CURRENTGEAR,CurrentGear);
 	WRITE_MICRO_CHUNK(csave,MOTO_VARIABLE_SHIFTIMER,ShiftTimer);
 	csave.End_Chunk();
-	return true;
+	return !csave.Has_Error();
 }
 
 bool MotorVehicleClass::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case MOTO_CHUNK_RIGIDBODY:				// used to be derived directly from RigidBody... Obsolete now
-				RigidBodyClass::Load(cload);
+				if (!RigidBodyClass::Load(cload)) loaded = false;
 				break;
 				
 			case MOTO_CHUNK_VEHICLEPHYS:
-				VehiclePhysClass::Load(cload);
+				if (!VehiclePhysClass::Load(cload)) loaded = false;
 				break;
 
 			case MOTO_CHUNK_VARIABLES:
@@ -278,7 +279,7 @@ bool MotorVehicleClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 /***********************************************************************************************
@@ -409,16 +410,17 @@ bool MotorVehicleDefClass::Save(ChunkSaveClass &csave)
 
 bool MotorVehicleDefClass::Load(ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case MOTORVEHICLEDEF_CHUNK_RIGIDBODYDEF:		// old parent class
-				RigidBodyDefClass::Load(cload);
+				if (!RigidBodyDefClass::Load(cload)) loaded = false;
 				break;
 
 			case MOTORVEHICLEDEF_CHUNK_VEHICLEPHYSDEF:	// current parent class
-				VehiclePhysDefClass::Load(cload);
+				if (!VehiclePhysDefClass::Load(cload)) loaded = false;
 				break;
 
 			case MOTORVEHICLEDEF_CHUNK_VARIABLES:
@@ -472,7 +474,7 @@ bool MotorVehicleDefClass::Load(ChunkLoadClass &cload)
 		EngineTorqueCurve = LookupTableMgrClass::Get_Table("DefaultTable");
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 bool MotorVehicleDefClass::Is_Type(const char * type_name)

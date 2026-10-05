@@ -23,6 +23,10 @@
 #include <stdio.h>
 #include <time.h>
 
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+extern int A30_Vita_Log(const char *format, ...);
+#endif
+
 DECLARE_SCRIPT (DLS_SpawnTest, "")
 {
 	bool already_entered;
@@ -2019,6 +2023,9 @@ DECLARE_SCRIPT (MX0_Area4_Controller_DLS, "")
 		// Finale concludes, mission success
 		if(type == MX0_MISSION_SUCCESS)
 		{
+			#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+			A30_Vita_Log("M13 finale: area controller received mission-success custom type=%d param=%d\n", type, param);
+			#endif
 			Commands->Mission_Complete(true);
 		}
 		if(type == MX0_GDI_REINFORCEMENT_KILLED)
@@ -2392,8 +2399,22 @@ DECLARE_SCRIPT (MX0_Area4_Controller_DLS, "")
 			Commands->Join_Conversation(NULL, conv_id, false, true);
 			Commands->Start_Conversation (conv_id, 1);
 			// Ion Cannon strike
-			GameObject * ion_cannon_strike = Commands->Create_Object("Nod_RocketSoldier_1Off", Commands->Get_Position(Commands->Find_Object(1500087)));
-			Commands->Attach_Script(ion_cannon_strike, "MX0_Plant_Ion_Beacon_DLS", "");
+			#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+			A30_Vita_Log("M13 finale: ion-cannon-strike timer fired owner=%d basewall=%d\n",
+				Commands->Get_ID(obj), basewall_id);
+			#endif
+			GameObject * ion_cannon_position = Commands->Find_Object(1500087);
+			GameObject * ion_cannon_strike = ion_cannon_position != NULL
+				? Commands->Create_Object("Nod_RocketSoldier_1Off", Commands->Get_Position(ion_cannon_position))
+				: NULL;
+			#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+			A30_Vita_Log("M13 finale: ion beacon position=%d owner=%d\n",
+				ion_cannon_position != NULL ? 1 : 0,
+				ion_cannon_strike ? Commands->Get_ID(ion_cannon_strike) : 0);
+			#endif
+			if (ion_cannon_strike != NULL) {
+				Commands->Attach_Script(ion_cannon_strike, "MX0_Plant_Ion_Beacon_DLS", "");
+			}
 			Commands->Start_Timer (obj, this, 22.0f, FLASH_TO_WHITE);
 			Commands->Start_Timer (obj, this, 25.0f, FINALE);
 
@@ -2411,8 +2432,14 @@ DECLARE_SCRIPT (MX0_Area4_Controller_DLS, "")
 		{
 			Commands->Destroy_Object(Commands->Find_Object(basewall_id));
 			GameObject *controller = Commands->Create_Object("Invisible_Object", Vector3(0.0f, 0.0f, 0.0f));
-			Commands->Set_Facing(controller, 0.000f);
-			Commands->Attach_Script(controller, "Test_Cinematic", "X0Z_Finale.txt");
+			#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+			A30_Vita_Log("M13 finale: finale timer fired owner=%d basewall=%d cinematic_owner=%d\n",
+				Commands->Get_ID(obj), basewall_id, controller ? Commands->Get_ID(controller) : 0);
+			#endif
+			if (controller != NULL) {
+				Commands->Set_Facing(controller, 0.000f);
+				Commands->Attach_Script(controller, "Test_Cinematic", "X0Z_Finale.txt");
+			}
 		}
 		if(timer_id == ORCA_STRIKE1 && orca_strike)
 		{

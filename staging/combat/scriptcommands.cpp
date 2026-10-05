@@ -1605,6 +1605,10 @@ void	Display_Int( int value, const char * format )
 */
 void	Save_Data( ScriptSaver & saver, int id, int size, void * data )
 {
+	if (data == NULL || size < 0 || size > 250) {
+		saver.CSave.Report_Error();
+		return;
+	}
 	SCRIPT_PTR_CHECK( data );
 	saver.CSave.Begin_Micro_Chunk(id);
 	saver.CSave.Write(data,size);
@@ -1632,10 +1636,15 @@ bool	Load_Begin( ScriptLoader & loader, int * id )
 
 void	Load_Data( ScriptLoader & loader, int size, void * data )
 {
+	if (data == NULL) {
+		loader.CLoad.Report_Error();
+		return;
+	}
 	SCRIPT_PTR_CHECK( data );
 	unsigned int chunkSize = loader.CLoad.Cur_Micro_Chunk_Length();
 	if (size < 0 || chunkSize > static_cast<unsigned int>(size)) {
 		fprintf(stderr, "script load: field exceeds destination capacity\n");
+		loader.CLoad.Report_Error();
 		return;
 	}
 	WWASSERT((unsigned)size >= chunkSize);

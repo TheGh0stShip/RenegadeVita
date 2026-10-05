@@ -1,0 +1,82 @@
+--- a/god.cpp
++++ b/god.cpp
+@@ -121,11 +121,12 @@
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+ 						case MICROCHUNK_STATE:
+-							if (state_seen) {
++							if (state_seen || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_state)) {
+ 								loaded = false;
+ 							} else {
+ 								state_seen = true;
+-								READ_MICRO_CHUNK(cload, MICROCHUNK_STATE, loaded_state);
++								loaded = cload.Read(&loaded_state, sizeof(loaded_state)) ==
++									sizeof(loaded_state) && loaded;
+ 							}
+ 							break;
+ 						default:
+@@ -143,8 +144,13 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	if (!loaded || !variables_seen || !state_seen ||
+-		loaded_state < GOD_STATE_UNINITIALIZED || loaded_state > GOD_STATE_SINGLE_DEAD) {
++	const bool state_valid =
++#if defined(__vita__)
++		loaded_state == GOD_STATE_SINGLE_RUNNING;
++#else
++		loaded_state >= GOD_STATE_UNINITIALIZED && loaded_state <= GOD_STATE_SINGLE_DEAD;
++#endif
++	if (!loaded || !variables_seen || !state_seen || !state_valid) {
+ 		return false;
+ 	}
+ 
+--- a/campaign.cpp
++++ b/campaign.cpp
+@@ -199,14 +199,34 @@
+ 	const int missing_value = (-2147483647 - 1);
+ 	int loaded_state = missing_value;
+ 	int loaded_backdrop_index = missing_value;
++	bool variables_seen = false;
++	bool state_seen = false;
++	bool backdrop_seen = false;
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_VARIABLES:
++				if (variables_seen) loaded = false;
++				variables_seen = true;
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+-						READ_MICRO_CHUNK(cload, MICROCHUNK_STATE, loaded_state);
+-						READ_MICRO_CHUNK(cload, MICROCHUNK_BACKDROP_INDEX, loaded_backdrop_index);
++						case MICROCHUNK_STATE:
++							if (state_seen || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_state)) loaded = false;
++							else {
++								state_seen = true;
++								loaded = cload.Read(&loaded_state, sizeof(loaded_state)) ==
++									sizeof(loaded_state) && loaded;
++							}
++							break;
++						case MICROCHUNK_BACKDROP_INDEX:
++							if (backdrop_seen || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_backdrop_index)) loaded = false;
++							else {
++								backdrop_seen = true;
++								loaded = cload.Read(&loaded_backdrop_index,
++									sizeof(loaded_backdrop_index)) == sizeof(loaded_backdrop_index) && loaded;
++							}
++							break;
+ 						default:
+ 							Debug_Say(( "Unrecognized Campaign Variable chunkID\n" ));
+ 							break;
+@@ -227,7 +247,8 @@
+ 		(loaded_state >= -1 && loaded_state < CampaignFlowDescriptions.Count());
+ 	const bool backdrop_valid = loaded_backdrop_index >= 0 &&
+ 		loaded_backdrop_index < BackdropDescriptions.Count();
+-	if (loaded_state == missing_value || loaded_backdrop_index == missing_value ||
++	if (!loaded || !variables_seen || !state_seen || !backdrop_seen ||
++		loaded_state == missing_value || loaded_backdrop_index == missing_value ||
+ 		!state_valid || !backdrop_valid) {
+ 		Debug_Say(("CampaignManager::Load - invalid campaign state=%d backdrop=%d flow=%d backdrops=%d\n",
+ 			loaded_state, loaded_backdrop_index, CampaignFlowDescriptions.Count(),

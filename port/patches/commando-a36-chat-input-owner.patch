@@ -1,0 +1,62 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -190,6 +190,30 @@
+ 	}
+ }
+ 
++void CombatGameModeClass::Process_Chat_Input()
++{
++	if (	(The_Game() != NULL &&
++		    (Input::Get_State(INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE) ||
++		     (Input::Get_State(INPUT_FUNCTION_BEGIN_TEAM_MESSAGE) && cNetwork::I_Am_Client()))) &&
++			!IS_MISSION)
++	{
++		MPIngameChatPopupClass * p_dialog = new MPIngameChatPopupClass;
++		WWASSERT(p_dialog != NULL);
++
++		//
++		//	Configure the dialog
++		//
++		if (Input::Get_State(INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE)) {
++			p_dialog->Set_Default_Type(TEXT_MESSAGE_PUBLIC);
++		} else {
++			p_dialog->Set_Default_Type(TEXT_MESSAGE_TEAM);
++		}
++
++		p_dialog->Start_Dialog();
++		REF_PTR_RELEASE (p_dialog);
++	}
++}
++
+ void	CombatGameModeClass::Combat_Keyboard( void )
+ {
+ 	WWPROFILE( "Combat_Keyboard" );
+@@ -318,26 +342,7 @@
+ 	}
+ #endif
+ 
+-	if (	(The_Game() != NULL &&
+-		    (Input::Get_State(INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE) ||
+-		     (Input::Get_State(INPUT_FUNCTION_BEGIN_TEAM_MESSAGE) && cNetwork::I_Am_Client()))) &&
+-			!IS_MISSION)
+-	{
+-		MPIngameChatPopupClass * p_dialog = new MPIngameChatPopupClass;
+-		WWASSERT(p_dialog != NULL);
+-
+-		//
+-		//	Configure the dialog
+-		//
+-		if (Input::Get_State(INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE)) {
+-			p_dialog->Set_Default_Type(TEXT_MESSAGE_PUBLIC);
+-		} else {
+-			p_dialog->Set_Default_Type(TEXT_MESSAGE_TEAM);
+-		}
+-
+-		p_dialog->Start_Dialog();
+-		REF_PTR_RELEASE (p_dialog);
+-	}
++	Process_Chat_Input();
+ #endif // !RENEGADE_VITA_FRONTEND_SINGLEPLAYER
+ 
+ 	if ( Input::Get_State( INPUT_FUNCTION_QUICKSAVE )) {
+

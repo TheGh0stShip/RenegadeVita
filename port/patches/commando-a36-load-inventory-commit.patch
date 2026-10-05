@@ -1,0 +1,22 @@
+--- a/dlgloadspgame.cpp
++++ b/dlgloadspgame.cpp
+@@ -596,10 +596,19 @@
+ 			GameInitMgrClass::Initialize_SP ();
+ #endif
+ 			GameInitMgrClass::Start_Game (save_name, -1, 0);
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++			// The native outer owner has now received an ordinary save request.
++			// Replay resets through CampaignManager only after difficulty is
++			// accepted; cancelling replay or having no selection must leave the
++			// suspended campaign inventory intact.
++			cGod::Reset_Inventory();
++#endif
+ 		}
+ 	}
+ 
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 	cGod::Reset_Inventory();
++#endif
+ 
+ 	return ;
+ 

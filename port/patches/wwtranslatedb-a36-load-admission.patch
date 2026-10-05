@@ -1,0 +1,462 @@
+--- a/translateobj.h
++++ b/translateobj.h
+@@ -130,7 +130,7 @@
+ 	//	Protected methods
+ 	//////////////////////////////////////////////////////////////
+ 	void								Save_Variables (ChunkSaveClass &csave);
+-	void								Load_Variables (ChunkLoadClass &cload);
++	bool								Load_Variables (ChunkLoadClass &cload);
+ 
+ 	//////////////////////////////////////////////////////////////
+ 	//	Protected member data
+@@ -146,4 +146,3 @@
+ 
+ 
+ #endif //__TRANSLATE_OBJ_H
+-
+--- a/tdbcategory.h
++++ b/tdbcategory.h
+@@ -109,7 +109,7 @@
+ 	//	Protected methods
+ 	//////////////////////////////////////////////////////////////
+ 	void								Save_Variables (ChunkSaveClass &csave);
+-	void								Load_Variables (ChunkLoadClass &cload);
++	bool								Load_Variables (ChunkLoadClass &cload);
+ 
+ private:
+ 
+--- a/stringtwiddler.h
++++ b/stringtwiddler.h
+@@ -119,7 +119,7 @@
+ 	//	Protected methods
+ 	//////////////////////////////////////////////////////////////
+ 	void								Save_Variables (ChunkSaveClass &csave);
+-	void								Load_Variables (ChunkLoadClass &cload);
++	bool								Load_Variables (ChunkLoadClass &cload);
+ 
+ 	void								Randomize (int lang_id = TranslateDBClass::LANGID_ENGLISH);
+ 
+@@ -133,4 +133,3 @@
+ 
+ 
+ #endif //__STRING_TWIDDLER_H
+-
+--- a/translateobj.cpp
++++ b/translateobj.cpp
+@@ -207,10 +207,19 @@
+ bool
+ TDBObjClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
++	bool variables_seen = false;
++	bool english_seen = false;
++	bool base_seen = false;
++
+ 	while (cload.Open_Chunk ()) {		
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+-			READ_WWSTRING_CHUNK (cload, CHUNKID_ENGLISH_STRING, EnglishString);
++			case CHUNKID_ENGLISH_STRING:
++				if (english_seen || cload.Read(EnglishString.Get_Buffer(cload.Cur_Chunk_Length()),
++					cload.Cur_Chunk_Length()) != cload.Cur_Chunk_Length()) loaded = false;
++				english_seen = true;
++				break;
+ 
+ 			case CHUNKID_TRANSLATED_STRING:
+ 			{
+@@ -218,7 +227,9 @@
+ 				//	Load the translated string from its chunk
+ 				//
+ 				WideStringClass string;
+-				cload.Read (string.Get_Buffer((cload.Cur_Chunk_Length () + 1) / 2), cload.Cur_Chunk_Length ());
++				const uint32 byte_count = cload.Cur_Chunk_Length ();
++				if ((byte_count & 1U) != 0U || cload.Read(string.Get_Buffer((byte_count + 1) / 2),
++					byte_count) != byte_count) loaded = false;
+ 
+ 				//
+ 				//	Add the translated string to our list
+@@ -228,18 +239,22 @@
+ 			break;
+ 			
+ 			case CHUNKID_BASE_CLASS:
+-				PersistClass::Load (cload);
++				if (base_seen || !PersistClass::Load (cload)) loaded = false;
++				base_seen = true;
+ 				break;
+ 			
+ 			case CHUNKID_VARIABLES:
+-				Load_Variables (cload);
++				if (variables_seen || !Load_Variables (cload)) loaded = false;
++				variables_seen = true;
+ 				break;
+ 		}
+ 
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && base_seen && variables_seen && english_seen &&
++		ID >= TranslateDBClass::ID_MIN && ID <= TranslateDBClass::ID_MAX &&
++		!IDDesc.Is_Empty() && !cload.Has_Error();
+ }
+ 
+ 
+@@ -268,17 +283,37 @@
+ //	Load_Variables
+ //
+ /////////////////////////////////////////////////////////////////
+-void
++bool
+ TDBObjClass::Load_Variables (ChunkLoadClass &cload)
+ {	
++	unsigned int fields_seen = 0;
++	bool loaded = true;
+ 	while (cload.Open_Micro_Chunk ()) {
+ 		switch (cload.Cur_Micro_Chunk_ID ()) {			
+-			READ_MICRO_CHUNK					(cload, VARID_ID,					ID);
+-			READ_MICRO_CHUNK					(cload, VARID_SOUND_ID,			SoundID);	
+-			READ_MICRO_CHUNK					(cload, VARID_CATEGORY_ID,		CategoryID);
+-			READ_MICRO_CHUNK_WWSTRING		(cload, VARID_ID_DESC,			IDDesc);
+-			READ_MICRO_CHUNK_WWSTRING		(cload, VARID_ENGLISH_STRING,	EnglishString);
+-			READ_MICRO_CHUNK_WWSTRING		(cload, VARID_ANIMATION_NAME,	AnimationName);
++			case VARID_ID:
++				if ((fields_seen & 0x01U) || cload.Cur_Micro_Chunk_Length() != sizeof(ID) ||
++					cload.Read(&ID, sizeof(ID)) != sizeof(ID)) loaded = false;
++				fields_seen |= 0x01U; break;
++			case VARID_SOUND_ID:
++				if ((fields_seen & 0x02U) || cload.Cur_Micro_Chunk_Length() != sizeof(SoundID) ||
++					cload.Read(&SoundID, sizeof(SoundID)) != sizeof(SoundID)) loaded = false;
++				fields_seen |= 0x02U; break;
++			case VARID_CATEGORY_ID:
++				if ((fields_seen & 0x04U) || cload.Cur_Micro_Chunk_Length() != sizeof(CategoryID) ||
++					cload.Read(&CategoryID, sizeof(CategoryID)) != sizeof(CategoryID)) loaded = false;
++				fields_seen |= 0x04U; break;
++			case VARID_ID_DESC:
++				if ((fields_seen & 0x08U) || cload.Read(IDDesc.Get_Buffer(cload.Cur_Micro_Chunk_Length()),
++					cload.Cur_Micro_Chunk_Length()) != cload.Cur_Micro_Chunk_Length()) loaded = false;
++				fields_seen |= 0x08U; break;
++			case VARID_ENGLISH_STRING:
++				if ((fields_seen & 0x10U) || cload.Read(EnglishString.Get_Buffer(cload.Cur_Micro_Chunk_Length()),
++					cload.Cur_Micro_Chunk_Length()) != cload.Cur_Micro_Chunk_Length()) loaded = false;
++				fields_seen |= 0x10U; break;
++			case VARID_ANIMATION_NAME:
++				if ((fields_seen & 0x20U) || cload.Read(AnimationName.Get_Buffer(cload.Cur_Micro_Chunk_Length()),
++					cload.Cur_Micro_Chunk_Length()) != cload.Cur_Micro_Chunk_Length()) loaded = false;
++				fields_seen |= 0x20U; break;
+ 
+ 			case VARID_STRING:
+ 			{
+@@ -286,7 +321,9 @@
+ 				//	Load the translated string from its chunk
+ 				//
+ 				WideStringClass string;
+-				cload.Read (string.Get_Buffer((cload.Cur_Micro_Chunk_Length () + 1) / 2), cload.Cur_Micro_Chunk_Length ());
++				const uint32 byte_count = cload.Cur_Micro_Chunk_Length ();
++				if ((byte_count & 1U) != 0U || cload.Read(string.Get_Buffer((byte_count + 1) / 2),
++					byte_count) != byte_count) loaded = false;
+ 
+ 				//
+ 				//	Add the translated string to our list
+@@ -299,7 +336,7 @@
+ 		cload.Close_Micro_Chunk ();
+ 	}
+ 
+-	return ;
++	return loaded && (fields_seen & 0x0FU) == 0x0FU && !cload.Has_Error();
+ }
+ 
+ 
+--- a/tdbcategory.cpp
++++ b/tdbcategory.cpp
+@@ -154,22 +154,27 @@
+ bool
+ TDBCategoryClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
++	bool base_seen = false;
++	bool variables_seen = false;
+ 	while (cload.Open_Chunk ()) {		
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_BASE_CLASS:
+-				PersistClass::Load (cload);
++				if (base_seen || !PersistClass::Load (cload)) loaded = false;
++				base_seen = true;
+ 				break;
+ 			
+ 			case CHUNKID_VARIABLES:
+-				Load_Variables (cload);
++				if (variables_seen || !Load_Variables (cload)) loaded = false;
++				variables_seen = true;
+ 				break;
+ 		}
+ 
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && base_seen && variables_seen && !Name.Is_Empty() && !cload.Has_Error();
+ }
+ 
+ 
+@@ -195,18 +200,26 @@
+ //	Load_Variables
+ //
+ /////////////////////////////////////////////////////////////////
+-void
++bool
+ TDBCategoryClass::Load_Variables (ChunkLoadClass &cload)
+ {	
++	unsigned int fields_seen = 0;
++	bool loaded = true;
+ 	while (cload.Open_Micro_Chunk ()) {
+ 		switch (cload.Cur_Micro_Chunk_ID ()) {			
+ 			
+-			READ_MICRO_CHUNK					(cload, VARID_ID,		ID);
+-			READ_MICRO_CHUNK_WWSTRING		(cload, VARID_NAME,	Name);	
++			case VARID_ID:
++				if ((fields_seen & 0x01U) || cload.Cur_Micro_Chunk_Length() != sizeof(ID) ||
++					cload.Read(&ID, sizeof(ID)) != sizeof(ID)) loaded = false;
++				fields_seen |= 0x01U; break;
++			case VARID_NAME:
++				if ((fields_seen & 0x02U) || cload.Read(Name.Get_Buffer(cload.Cur_Micro_Chunk_Length()),
++					cload.Cur_Micro_Chunk_Length()) != cload.Cur_Micro_Chunk_Length()) loaded = false;
++				fields_seen |= 0x02U; break;
+ 		}
+ 
+ 		cload.Close_Micro_Chunk ();
+ 	}
+ 
+-	return ;
++	return loaded && fields_seen == 0x03U && !cload.Has_Error();
+ }
+--- a/stringtwiddler.cpp
++++ b/stringtwiddler.cpp
+@@ -161,22 +161,27 @@
+ bool
+ StringTwiddlerClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
++	bool base_seen = false;
++	bool variables_seen = false;
+ 	while (cload.Open_Chunk ()) {		
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_BASE_CLASS:
+-				TDBObjClass::Load (cload);
++				if (base_seen || !TDBObjClass::Load (cload)) loaded = false;
++				base_seen = true;
+ 				break;
+ 			
+ 			case CHUNKID_VARIABLES:
+-				Load_Variables (cload);
++				if (variables_seen || !Load_Variables (cload)) loaded = false;
++				variables_seen = true;
+ 				break;
+ 		}
+ 
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && base_seen && variables_seen && !cload.Has_Error();
+ }
+ 
+ 
+@@ -185,9 +190,10 @@
+ //	Load_Variables
+ //
+ /////////////////////////////////////////////////////////////////
+-void
++bool
+ StringTwiddlerClass::Load_Variables (ChunkLoadClass &cload)
+ {	
++	bool loaded = true;
+ 	while (cload.Open_Micro_Chunk ()) {
+ 		switch (cload.Cur_Micro_Chunk_ID ()) {			
+ 			
+@@ -197,7 +203,8 @@
+ 				//	Read the data from the chunk
+ 				//
+ 				int string_id = 0;
+-				LOAD_MICRO_CHUNK (cload, string_id);
++				if (cload.Cur_Micro_Chunk_Length() != sizeof(string_id) ||
++					cload.Read(&string_id, sizeof(string_id)) != sizeof(string_id)) loaded = false;
+ 
+ 				//
+ 				//	Store this string ID in our list if its valid
+@@ -212,7 +219,7 @@
+ 		cload.Close_Micro_Chunk ();
+ 	}
+ 
+-	return ;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/translatedb.cpp
++++ b/translatedb.cpp
+@@ -278,7 +278,10 @@
+ 	Free_Objects ();
+ 	Free_Categories ();
+ 
+-	bool retval = true;	
++	bool retval = true;
++	bool variables_seen = false;
++	bool objects_seen = false;
++	bool categories_seen = false;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 			
+@@ -286,22 +289,41 @@
+ 			//	Load all the presets from this chunk
+ 			//
+ 			case CHUNKID_VARIABLES:
+-				retval &= Load_Variables (cload);
++				if (variables_seen) retval = false;
++				else {
++					variables_seen = true;
++					retval &= Load_Variables (cload);
++				}
+ 				break;
+ 
+ 			case CHUNKID_OBJECTS:
+-				retval &= Load_Objects (cload);
++				if (objects_seen) retval = false;
++				else {
++					objects_seen = true;
++					retval &= Load_Objects (cload);
++				}
+ 				break;
+ 
+ 			case CHUNKID_CATEGORIES:
+-				retval &= Load_Categories (cload);
++				if (categories_seen) retval = false;
++				else {
++					categories_seen = true;
++					retval &= Load_Categories (cload);
++				}
+ 				break;
+ 		}
+ 
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	Validate_Data ();
++	retval = retval && variables_seen && objects_seen && categories_seen &&
++		!cload.Has_Error() && !SaveLoadSystemClass::Has_Reported_Load_Failure();
++	if (retval) {
++		Validate_Data ();
++	} else {
++		Free_Objects ();
++		Free_Categories ();
++	}
+ 	return retval;
+ }
+ 
+@@ -325,14 +347,18 @@
+ 		if (factory != NULL) {
+ 			TDBCategoryClass *category = (TDBCategoryClass *)factory->Load (cload);
+ 			if (category != NULL) {
+-				Add_Category (category, false);
++				retval &= Add_Category (category, false);
++			} else {
++				retval = false;
+ 			}
++		} else {
++			retval = false;
+ 		}
+ 
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return retval;
++	return retval && !cload.Has_Error() && !SaveLoadSystemClass::Has_Reported_Load_Failure();
+ }
+ 
+ 
+@@ -355,14 +381,18 @@
+ 		if (factory != NULL) {
+ 			TDBObjClass *translate_obj = (TDBObjClass *)factory->Load (cload);
+ 			if (translate_obj != NULL) {
+-				Add_Object (translate_obj);
++				retval &= Add_Object (translate_obj);
++			} else {
++				retval = false;
+ 			}
++		} else {
++			retval = false;
+ 		}
+ 
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return retval;
++	return retval && !cload.Has_Error() && !SaveLoadSystemClass::Has_Reported_Load_Failure();
+ }
+ 
+ 
+@@ -375,18 +405,27 @@
+ TranslateDBClass::Load_Variables (ChunkLoadClass &cload)
+ {
+ 	bool retval = true;
++	unsigned int fields_seen = 0;
+ 
+ 	while (cload.Open_Micro_Chunk ()) {
+ 		switch (cload.Cur_Micro_Chunk_ID ()) {
+ 
+-			READ_MICRO_CHUNK (cload, VARID_VERSION_NUMBER,	m_VersionNumber);
+-			READ_MICRO_CHUNK (cload, VARID_LANGUAGE_ID,		m_LanguageID);
++			case VARID_VERSION_NUMBER:
++				if ((fields_seen & 0x01U) || cload.Cur_Micro_Chunk_Length() != sizeof(m_VersionNumber) ||
++					cload.Read(&m_VersionNumber, sizeof(m_VersionNumber)) != sizeof(m_VersionNumber)) retval = false;
++				fields_seen |= 0x01U;
++				break;
++			case VARID_LANGUAGE_ID:
++				if ((fields_seen & 0x02U) || cload.Cur_Micro_Chunk_Length() != sizeof(m_LanguageID) ||
++					cload.Read(&m_LanguageID, sizeof(m_LanguageID)) != sizeof(m_LanguageID)) retval = false;
++				fields_seen |= 0x02U;
++				break;
+ 		}
+ 			
+ 		cload.Close_Micro_Chunk ();
+ 	}
+ 
+-	return retval;
++	return retval && fields_seen == 0x03U && !cload.Has_Error();
+ }
+ 
+ 
+@@ -800,7 +839,6 @@
+ 
+ 	WWASSERT (new_category != NULL);
+ 	if (new_category != NULL) {
+-
+ 		//
+ 		//	Assign this category an ID (if necessary)
+ 		//
+@@ -812,6 +850,10 @@
+ 			}
+ 			new_category->Set_ID (new_id);
+ 		}
++		if (Find_Category(new_category->Get_ID()) != NULL ||
++			Find_Category(new_category->Get_Name()) != NULL) {
++			return false;
++		}
+ 
+ 		//
+ 		//	Add the new category to our list
+@@ -890,6 +932,12 @@
+ 		if (new_obj->Get_ID () < ID_MIN) {
+ 			new_obj->Set_ID (Find_Unique_ID ());
+ 		}
++		if (new_obj->Get_ID() < ID_MIN || new_obj->Get_ID() > ID_MAX ||
++			new_obj->Get_ID_Desc().Is_Empty() ||
++			Find_Object(new_obj->Get_ID()) != NULL ||
++			Find_Object(new_obj->Get_ID_Desc()) != NULL) {
++			return false;
++		}
+ 
+ 		//
+ 		//	Determine where in the list this object should
+

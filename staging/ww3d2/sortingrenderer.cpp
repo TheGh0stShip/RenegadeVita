@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <new>
 
 bool SortingRendererClass::_EnableTriangleDraw=true;
 
@@ -243,12 +244,30 @@ static void Depth_Sort(TempIndexStruct* array, float* keys, unsigned count)
 	if (i==count) return;
 
 	if (count>radix_array_count) {
+		// The native target builds without exceptions. Allocate a complete
+		// replacement before releasing the usable workspace; if memory is
+		// tight, preserve correctness with the original sorter.
+		unsigned* new_key=new (std::nothrow) unsigned[count];
+		unsigned* new_key_scratch=new (std::nothrow) unsigned[count];
+		unsigned* new_order=new (std::nothrow) unsigned[count];
+		unsigned* new_order_scratch=new (std::nothrow) unsigned[count];
+		TempIndexStruct* new_items=new (std::nothrow) TempIndexStruct[count];
+		if (new_key==NULL || new_key_scratch==NULL || new_order==NULL ||
+			new_order_scratch==NULL || new_items==NULL) {
+			delete[] new_key;
+			delete[] new_key_scratch;
+			delete[] new_order;
+			delete[] new_order_scratch;
+			delete[] new_items;
+			Sort<TempIndexStruct,float>(array,keys,0,count);
+			return;
+		}
 		Release_Radix_Arrays();
-		radix_key_array=new unsigned[count];
-		radix_key_scratch=new unsigned[count];
-		radix_order_array=new unsigned[count];
-		radix_order_scratch=new unsigned[count];
-		radix_item_scratch=new TempIndexStruct[count];
+		radix_key_array=new_key;
+		radix_key_scratch=new_key_scratch;
+		radix_order_array=new_order;
+		radix_order_scratch=new_order_scratch;
+		radix_item_scratch=new_items;
 		radix_array_count=count;
 	}
 	unsigned* key=radix_key_array;

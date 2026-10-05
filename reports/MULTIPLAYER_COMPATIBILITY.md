@@ -1,5 +1,109 @@
 # Native multiplayer compatibility
 
+## Original LAN host preset Save/Load
+
+The released LAN host-options screen now opens its original server-settings
+Save/Load dialog. The original list, editable display names, validation,
+numbered preset allocation, overwrite prompt and load/save/delete commands
+remain intact. A narrow Vita adaptation removes the absent slave-server path,
+stores list pointers through the established 32-bit token boundary, and routes
+custom preset discovery and mutation through the existing rooted `user/`
+server-config helper. Retail `def_svrcfg_cnc.ini` remains readable as the
+unchanged default and cannot be deleted or overwritten through this route.
+
+Canonical dialog 250 and the host screen's `IDC_SAVELOAD_BUTTON` now have
+strict generated-resource checks. Artifact gates require the restored dialog
+symbol. This is source and deterministic staging evidence only; compilation,
+rendering, input and persistence behavior remain unverified.
+
+## Original LAN team-selection boundary
+
+The full profile now selects the released `DlgMPTeamSelect` implementation for
+LAN and Direct-IP sessions instead of consuming its one-shot request through a
+no-op class. The adaptation preserves the original WWUI menu and player lists,
+`PlayerMgrEvent` updates, side controls, `MPChooseTeamSignal`,
+`cGameData::ReceiveSignal`, and server-authoritative `cChangeTeamEvent`. It
+compile-excludes only the retired WWOnline session, channel, profile and private
+options branch. The released template's WOL-gated Start control is explicitly
+shown for the live LAN/direct-IP route so a selection can be committed.
+
+Canonical dialog 246 and all controls used by the implementation now join the
+generated multiplayer resource set with strict presence checks. Canonical and
+fast artifact checks require the linked dialog entry point. This is source and
+deterministic staging evidence only. Compilation, pixels, input focus,
+team-change replication, denied changes, and repeated prompt lifetime remain
+unverified.
+
+## Original LAN browser factory
+
+The full Vita frontend already linked the original LAN list dialog and its
+canonical resource, and the main-menu command initialized the original LAN
+network mode. Its active single-player factory table left the LAN-game slot
+null, however, so default dialog routing opened nothing after initialization.
+
+`RenegadeDialogMgrClass::Initialize` now restores the existing
+`MPLanGameListMenuClass` factory whenever the LAN frontend profile is enabled,
+including after a frontend shutdown/reinitialization cycle. Discovery, host,
+join and game-list behavior remain owned by the original LAN dialog and network
+classes. Source and deterministic staging evidence only; live LAN behavior is
+not accepted.
+
+## 2026-10-04: Original LAN channel boundary, source only
+
+The Vita source graph now selects the released `gamechannel.cpp` and
+`gamechanlist.cpp`. A narrow compile boundary removes only the WWOnline channel
+metadata from the Vita representation; the original LAN `cGameData` payload,
+ownership, list update, removal and lookup behavior remain intact. The desktop
+branch retains its original WWOnline `RefPtr` and accessors. This is the first
+dependency closure needed by released `cLanChat` discovery on UDP port 3373.
+
+The change does not enable the LAN menu or claim discovery, host, join, refusal,
+disconnect or map-cycle behavior. `langmode.cpp`, `lanchat.cpp` and the released
+LAN dialogs still require their GameSpy/WOL-independent source boundaries and
+mode registration. The custom `RVL1` provider remains separate and is not being
+substituted for original Tier-1 LAN advertisements. Source inspection only;
+no staging, build, emulator or hardware action ran under the active test hold.
+
+The next dependency layer is now prepared in deterministic source patches.
+`cLanChat` retains its released port-3373 broadcasts, Tier-1 `cGameData`
+serialization, channel-list updates and registry-backed nickname/side
+preference, while GameSpy and demo-security branches are excluded only for the
+Vita LAN profile. The released connect/refusal dialogs similarly retain LAN
+cleanup and `GameInitMgr::Start_Game`; their WOL/GameSpy exit branches are not
+part of the Vita profile. Canonical resources 160, 252 and 257 have been added
+to the generated multiplayer template set with required-control checks.
+
+Two 32-bit UI payload hazards are also closed in prepared source: LAN list
+`cGameChannel*` values use the established pointer-token boundary for LP64 host
+probes while remaining raw-width-compatible on Vita ILP32, and host-option mod
+packages are represented by stable `ModPackageMgr` indices rather than pointer
+casts. These dialog/service translation units remain unselected until the
+complete original LAN list, host options, password, nickname and mode graph is
+ready; therefore this is source preparation rather than an enabled LAN route.
+
+Host dependency preparation now includes canonical dialog records 174,
+176–181 and 188, with required controls for the game list, host root and
+password prompt. The original password prompt and NIC enumerator are selected
+independent units; the Vita NIC profile excludes only an unused GameSpy QnR
+header. Host options no longer assume a registered WOL mode: every direct
+`Find("WOL")->Is_Active()` dereference is routed through a null-safe query.
+This prevents the LAN-only mode graph from crashing during basic/advanced tab
+initialization and application. WOL signaling, GameSpy listing, slave servers
+and desktop server-save UI remain to be excluded before the host dialog itself
+can join the selected build.
+
+Current local source follow-up: full native frame now consumes shared original
+CombatGameMode overlay update/render groups for names, player/team lists and
+game-limit/countdown text. Prior source linkage did not establish these native
+frame calls. No staging/tests/build/device work; local/uncommitted/unvalidated.
+Bandwidth graph stays disabled; cached layout, list controls and repeated-round
+acceptance remain open. See ORIGINAL_GAMEPLAY_OVERLAY_WIRING.md.
+
+Local source now also shares the original player-list format action with the
+native frame. A chord-free Select release cycles the original tiny/medium/full
+list formats only outside missions; campaign POG cycling and Select radio/chat
+chords retain their existing routes. Source only; no executed validation.
+
 ## 2026-09-27: Dev202 Original Mode Loading And Practice HUD Candidate
 
 The full-port loading presenter now selects original campaign backdrops for
@@ -1210,6 +1314,28 @@ No request is installed automatically. Campaign/demo defaults are unchanged.
 START disconnects; remote round changes disconnect until original round flow
 is connected. Native execution and TT admission remain unverified.
 
+The original main-menu Internet control is also wired to this provider. It
+opens a Vita-owned popup built from original WWUI popup/edit controls, uses the
+existing native IME for controller text entry, validates through the same
+strict Direct-IP parser, and begins the existing `GameInitMgr`/`cNetwork`/
+`A31ClientConnect` path without leaving the frontend generation. A bare IPv4
+address uses the original Renegade port 4848. This is source/staging evidence;
+physical IME, connection, cancellation and failure recovery are not yet
+accepted.
+
+The source path now classifies Direct-IP initialization/admission failure,
+timeout and cancellation as `A35_LOAD_NETWORK_JOIN_FAILED`. It exits the menu
+generation, performs the existing strong network/player/world cleanup gate,
+and returns to a fresh original main menu rather than terminating the title.
+This recovery is source/staging evidence and still needs physical acceptance.
+The same shared recovery gate recognizes LAN client/host selection separately
+and reopens the original LAN browser after cleanup.
+During Direct-IP admission, the Vita provider retains its WWUI endpoint popup
+as a disabled `Connecting` presentation and continues pumping key transitions.
+Circle signals cancellation to `A31ClientConnect`, then enters classified
+cleanup and main-menu recovery. The released `DlgMPConnect` remains on its
+LAN/WOL route so two owners cannot issue competing `Start_Game` requests.
+
 Fixed a native platform defect: newlib socket descriptors were passed directly
 to SceNet handle APIs for close/nonblocking/receive-size lookup. Use libc close,
 libc SO_NONBLOCK and original PacketManager with MSG_DONTWAIT recvfrom instead.
@@ -1552,7 +1678,7 @@ test, and the package test suite includes the standalone TTFS contracts.
 | Tutorial regression | passed on host | `skirmish-m00-regression.log`, two original M00 cycles |
 | Changed ARM objects | passed | `skirmish-arm-objects.log`, `wwnet-bounds-arm.log`; not an ELF/VPK or runtime acceptance |
 | Vita skirmish UI/gameplay | unverified | ARM objects/build plus device input, purchases, HUD, death/respawn and round-end tests required |
-| Multiplayer HUD | incomplete | `a31_multihud_stub.h` still replaces original HUD; do not call skirmish feature-complete |
+| Multiplayer HUD | original source selected; runtime unverified | In the full-port Vita profile `a31_multihud_stub.h` includes original `multihud.h`, and CMake links `commando/multihud.cpp`; the no-op class remains only for demo/non-Vita profiles. Original name/player/team renderers and format cycling therefore own the path, but pixels, scaling, live data and repeated-round lifetime still need physical evidence. |
 | Remote original cNetwork session | separate-world host join/replication passed; native adoption incomplete | Original UDP options, connection-preserving Skirmish00 load, server-owned player/soldier replication and 60 client frames pass ASan/LSan; native frontend/lifecycle still gated |
 | TT 4.x negotiation / integrity checks | unimplemented | Public scripts headers expose requests, not complete wire/client implementation |
 | TTFS packages | host fixture pipeline passed; native partial | reader, bounded HTTP(S) downloader, verified cache, original file-factory mount; live repository negotiation, modern native TLS and in-game joining remain unimplemented |
@@ -1624,6 +1750,43 @@ multiplayer HUD/round flow. Connect real
 server repository/package negotiation to the tested cache pipeline, resolve
 the native TLS gate, and verify RenCorner's endpoint/admission before the
 final physical demonstration. Do not advertise a fabricated TT revision.
+
+## A3.6 LAN frontend and round lifecycle candidate
+
+The source candidate now selects the original LAN list, host settings,
+connection/refusal, password, nickname, channel-list, `LanGameModeClass` and
+`cLanChat` graph behind `RENEGADE_VITA_LAN_FRONTEND`. WOL, GameSpy, slave-farm,
+dedicated-server and desktop server-save branches remain excluded from this
+Vita LAN profile. Original Tier-1 LAN advertisements and `cGameData` remain the
+protocol and settings owners.
+
+Frontend launch classification now distinguishes LAN host and LAN client from
+the existing one-shot direct client. LAN clients retain the connection created
+by `DlgMPConnect` and wait for `cNetwork::Get_My_Player_Object`; LAN hosts retain
+the host-options `cGameData` and initialize the original local server/client
+pair. Practice and LAN round changes call the original Combat core-restart
+owner, retaining player/network identity and swapping a changed map archive
+only after old-world shutdown.
+
+Original map-cycle semantics are explicit: `cGameData` initializes
+`DoMapsLoop=true`; `Game_Over_Processing` rotates the map before intermission;
+the server/client end-game messages set `g_b_core_restart`; and `Rotate_Map`
+wraps to entry zero. Consequently a one-map Practice cycle continuously reloads
+that map. Returning to the menu at every round end would contradict the
+released behavior.
+
+This is source-only, uncompiled and unvalidated work. It is not evidence of LAN
+discovery, hosting, joining, intermission, map reload, disconnect, Vita3K, or
+physical Vita behavior. LAN failure/disconnect UI and repeated-round resource
+lifetime remain open acceptance items.
+
+The native application handoff now also preserves the original LAN menu return
+destination across complete session teardown. Original pending-exit,
+broken-connection, EVA exit and failed-round cleanup paths record a LAN-list
+return separately from the ordinary main-menu return; the next clean frontend
+session opens `LOC_LAN_MAIN`. This avoids retaining live world/UI objects while
+also avoiding the previous behavior change that discarded `GameInitMgr`'s LAN
+destination. This path is source-only and has no runtime evidence.
 
 Additional receive audit: `Break_Packet` read declared base payloads without
 checking the available datagram length; delta reconstruction lacked an input

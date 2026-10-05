@@ -165,14 +165,14 @@ const PersistFactoryClass & MotorcycleClass::Get_Factory (void) const
 bool MotorcycleClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(MOTORCYCLE_CHUNK_WHEELEDVEHICLE);
-	WheeledVehicleClass::Save(csave);
+	if (!WheeledVehicleClass::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(MOTORCYCLE_CHUNK_VARIABLES);
 	WRITE_MICRO_CHUNK(csave,MOTORCYCLE_VARIABLE_LEANK0,LeanK0);
 	WRITE_MICRO_CHUNK(csave,MOTORCYCLE_VARIABLE_LEANK1,LeanK1);
 	csave.End_Chunk();
-	return true;
+	return !csave.Has_Error();
 }
 
 bool MotorcycleClass::Load (ChunkLoadClass &cload)
@@ -275,12 +275,13 @@ bool MotorcycleDefClass::Save(ChunkSaveClass &csave)
 
 bool MotorcycleDefClass::Load(ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case MOTORCYCLEDEF_CHUNK_WHEELEDVEHICLEDEF:
-				WheeledVehicleDefClass::Load(cload);
+				if (!WheeledVehicleDefClass::Load(cload)) loaded = false;
 				break;
 
 			case MOTORCYCLEDEF_CHUNK_VARIABLES:
@@ -296,7 +297,7 @@ bool MotorcycleDefClass::Load(ChunkLoadClass &cload)
 
 		cload.Close_Chunk();
 	}
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 bool MotorcycleDefClass::Is_Type(const char * type_name)

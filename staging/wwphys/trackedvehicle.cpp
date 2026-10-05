@@ -429,20 +429,21 @@ const PersistFactoryClass & TrackedVehicleClass::Get_Factory (void) const
 bool TrackedVehicleClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(TRACKEDVEHICLE_CHUNK_VEHICLEPHYS);
-	VehiclePhysClass::Save(csave);
+	if (!VehiclePhysClass::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool TrackedVehicleClass::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case TRACKEDVEHICLE_CHUNK_VEHICLEPHYS:
-				VehiclePhysClass::Load(cload);
+				if (!VehiclePhysClass::Load(cload)) loaded = false;
 				break;
 
 			default:
@@ -453,7 +454,7 @@ bool TrackedVehicleClass::Load (ChunkLoadClass &cload)
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 void TrackedVehicleClass::On_Post_Load (void)
@@ -535,12 +536,13 @@ bool TrackedVehicleDefClass::Save(ChunkSaveClass &csave)
 
 bool TrackedVehicleDefClass::Load(ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case TRACKEDVEHICLEDEF_CHUNK_VEHICLEPHYSDEF:
-				VehiclePhysDefClass::Load(cload);
+				if (!VehiclePhysDefClass::Load(cload)) loaded = false;
 				break;
 
 			case TRACKEDVEHICLEDEF_CHUNK_VARIABLES:
@@ -563,7 +565,7 @@ bool TrackedVehicleDefClass::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 

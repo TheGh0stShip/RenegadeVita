@@ -16,22 +16,12 @@
  	return ;
 --- a/SoundScene.cpp
 +++ b/SoundScene.cpp
-@@ -214,16 +214,16 @@
- 	// been completely processed
- 	//
- 	MultiListIterator<LogicalSoundClass> single_shot_it (&m_SingleShotLogicalSounds);
-+	for (single_shot_it.First (); !single_shot_it.Is_Done (); ) {
+@@ -217 +217 @@
 -	for (single_shot_it.First (); !single_shot_it.Is_Done (); single_shot_it.Next ()) {
- 		LogicalSoundClass *sound_obj = single_shot_it.Peek_Obj ();
++	for (single_shot_it.First (); !single_shot_it.Is_Done (); ) {
+@@ -218,0 +219,2 @@
 +		// Remove_From_Scene removes the current list node; advance before that.
 +		single_shot_it.Next ();
- 
- 		//
- 		//	Remove this sound if its been completely processed
- 		//
- 		if (sound_obj->Get_Listener_Timestamp () <= LogicalListenerClass::Get_Oldest_Timestamp ()) {
- 			sound_obj->Remove_From_Scene ();
+@@ -225,2 +227,0 @@
 -			single_shot_it.Remove_Current_Object ();
 -			single_shot_it.Prev ();
- 		}
- 	}

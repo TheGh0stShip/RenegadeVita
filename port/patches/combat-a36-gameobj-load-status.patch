@@ -1,0 +1,309 @@
+--- a/damageablegameobj.cpp
++++ b/damageablegameobj.cpp
+@@ -262,11 +262,12 @@
+ 
+ bool	DamageableGameObj::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				ScriptableGameObj::Load( cload );
++				if (!ScriptableGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
+@@ -284,7 +285,7 @@
+ 				break;
+ 								
+ 			case CHUNKID_DEFENSEOBJECT:
+-				DefenseObject.Load( cload );
++				if (!DefenseObject.Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			default:
+@@ -295,7 +296,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void	DamageableGameObj::Apply_Damage( const OffenseObjectClass & damager, float scale, int alternate_skin )
+--- a/physicalgameobj.cpp
++++ b/physicalgameobj.cpp
+@@ -486,16 +486,17 @@
+ {
+ 	WWASSERT( PhysObj == NULL );		// May need to change to release???
+ 	CombatPhysObserverClass * phys_observer_ptr = NULL;
++	bool loaded = true;
+ 
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case LEGACY_CHUNKID_PARENT_OLD:
+-				ScriptableGameObj::Load( cload );
++				if (!ScriptableGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_PARENT:
+-				DamageableGameObj::Load( cload );
++				if (!DamageableGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
+@@ -526,16 +527,16 @@
+ 				break;
+ 								
+ 			case LEGACY_CHUNKID_DEFENSE:
+-				DefenseObject.Load( cload );
++				if (!DefenseObject.Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_ANIM_CONTROL:
+ 				Set_Animation( NULL );  // Build AnimControl
+-				AnimControl->Load( cload );
++				if (AnimControl == NULL || !AnimControl->Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_HOST_GAME_OBJ:
+-				HostGameObj.Load( cload );
++				if (!HostGameObj.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -546,8 +547,11 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	WWASSERT( PhysObj != NULL );		
+-	REQUEST_REF_COUNTED_POINTER_REMAP( (RefCountClass **)&PhysObj );
++	if (PhysObj != NULL) {
++		REQUEST_REF_COUNTED_POINTER_REMAP((RefCountClass **)&PhysObj);
++	} else {
++		loaded = false;
++	}
+ 
+ 	if ( ActiveConversation != NULL ) {
+ 		REQUEST_REF_COUNTED_POINTER_REMAP( (RefCountClass **)&ActiveConversation );
+@@ -557,11 +561,13 @@
+ 	WWASSERT(phys_observer_ptr != NULL);
+ 	if (phys_observer_ptr != NULL) {
+ 		SaveLoadSystemClass::Register_Pointer(phys_observer_ptr, (CombatPhysObserverClass *)this);
++	} else {
++		loaded = false;
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void PhysicalGameObj::On_Post_Load (void)					
+--- a/armedgameobj.cpp
++++ b/armedgameobj.cpp
+@@ -304,11 +304,12 @@
+ 
+ bool	ArmedGameObj::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				PhysicalGameObj::Load( cload );
++				if (!PhysicalGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
+@@ -325,7 +326,7 @@
+ 				break;
+ 
+ 			case CHUNKID_WEAPONBAG:
+-			 	WeaponBag->Load( cload );
++				if (WeaponBag == NULL || !WeaponBag->Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -338,7 +339,7 @@
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void	ArmedGameObj::On_Post_Load( void )
+--- a/smartgameobj.cpp
++++ b/smartgameobj.cpp
+@@ -347,17 +347,18 @@
+ 	WWASSERT( PlayerData == NULL );
+ 
+ 	int new_control_owner = 0;
++	bool loaded = true;
+ 
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case OLD_CHUNKID_PHYSICALGAMEOBJ_PARENT:
+ 				Debug_Say(( "Loading old SmartGameObj format\n" ));
+-				PhysicalGameObj::Load( cload );
++				if (!PhysicalGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_ARMEDGAMEOBJ_PARENT:
+-				ArmedGameObj::Load( cload );
++				if (!ArmedGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -392,20 +393,20 @@
+ 				break;
+ 
+ 			case CHUNKID_CONTROL:
+-				Control.Load( cload );
++				if (!Control.Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_CONTROLLER:
+-				Controller.Load( cload );
++				if (!Controller.Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_ACTION:
+-				Action.Load( cload );
++				if (!Action.Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_STEALTH_EFFECT:
+ 				Alloc_Stealth_Effect();
+-				StealthEffect->Load(cload);
++				if (StealthEffect == NULL || !StealthEffect->Load(cload)) loaded = false;
+ 				break;
+ 			
+ 			default:
+@@ -423,7 +424,7 @@
+ 	Set_Control_Owner( new_control_owner );	// Be sure soldier virtual function calls
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/soldier.cpp
++++ b/soldier.cpp
+@@ -708,6 +708,7 @@
+ {
+ 	char anim_string[80];
+ 	int dialog_index = 0;
++	bool loaded = true;
+ 
+ 	WWASSERT( Vehicle == NULL );
+ 
+@@ -715,12 +716,14 @@
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				SmartGameObj::Load( cload );
++				if (!SmartGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DIALOG_ENTRY:
+ 				if (dialog_index < DIALOG_MAX) {
+-					DialogList[dialog_index++].Load (cload);
++					if (!DialogList[dialog_index++].Load(cload)) loaded = false;
++				} else {
++					loaded = false;
+ 				}
+ 				break;
+ 								
+@@ -774,22 +777,31 @@
+ 
+ 			case CHUNKID_WEAPON_ANIM:
+ 				Set_Weapon_Animation( NULL );	// Get the anim control built
+-				WeaponAnimControl->Load( cload );
++				if (WeaponAnimControl == NULL || !WeaponAnimControl->Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_HUMAN_STATE:
+-				HumanState.Load( cload );
++				if (!HumanState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_RENDER_OBJS:
+-				cload.Open_Chunk();
++				if (!cload.Open_Chunk()) {
++					loaded = false;
++					break;
++				}
+ 				PersistFactoryClass * factory;
+ 				factory = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
+ 				WWASSERT(factory != NULL);
+ 				if (factory != NULL) {
+ 					RenderObjClass * robj = (RenderObjClass *)factory->Load(cload);
+-					Add_RenderObj( robj );
+-					robj->Release_Ref();
++					if (robj != NULL) {
++						Add_RenderObj(robj);
++						robj->Release_Ref();
++					} else {
++						loaded = false;
++					}
++				} else {
++					loaded = false;
+ 				}
+ 				cload.Close_Chunk();
+ 				break;
+@@ -797,11 +809,11 @@
+ 			case CHUNKID_TRANSITION_COMPLETION_DATA:
+ 				WWASSERT( TransitionCompletionData == NULL );
+ 				TransitionCompletionData = new TransitionCompletionDataStruct();
+-				TransitionCompletionData->Load( cload );
++				if (!TransitionCompletionData->Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_SPECIAL_DAMAGE_DAMAGER:
+-				SpecialDamageDamager.Load( cload );
++				if (!SpecialDamageDamager.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -819,7 +831,7 @@
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ //------------------------------------------------------------------------------------
+--- a/vehicle.cpp
++++ b/vehicle.cpp
+@@ -631,12 +631,13 @@
+ bool	VehicleGameObj::Load( ChunkLoadClass &cload )
+ {
+ 	int num_seats = 0;
++	bool loaded = true;
+ 
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				SmartGameObj::Load( cload );
++				if (!SmartGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
+@@ -688,7 +689,7 @@
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void	VehicleGameObj::On_Post_Load( void )

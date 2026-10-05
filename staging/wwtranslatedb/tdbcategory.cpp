@@ -154,22 +154,27 @@ TDBCategoryClass::Save (ChunkSaveClass &csave)
 bool
 TDBCategoryClass::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
+	bool base_seen = false;
+	bool variables_seen = false;
 	while (cload.Open_Chunk ()) {		
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_BASE_CLASS:
-				PersistClass::Load (cload);
+				if (base_seen || !PersistClass::Load (cload)) loaded = false;
+				base_seen = true;
 				break;
 			
 			case CHUNKID_VARIABLES:
-				Load_Variables (cload);
+				if (variables_seen || !Load_Variables (cload)) loaded = false;
+				variables_seen = true;
 				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && base_seen && variables_seen && !Name.Is_Empty() && !cload.Has_Error();
 }
 
 
@@ -195,18 +200,26 @@ TDBCategoryClass::Save_Variables (ChunkSaveClass &csave)
 //	Load_Variables
 //
 /////////////////////////////////////////////////////////////////
-void
+bool
 TDBCategoryClass::Load_Variables (ChunkLoadClass &cload)
 {	
+	unsigned int fields_seen = 0;
+	bool loaded = true;
 	while (cload.Open_Micro_Chunk ()) {
 		switch (cload.Cur_Micro_Chunk_ID ()) {			
 			
-			READ_MICRO_CHUNK					(cload, VARID_ID,		ID);
-			READ_MICRO_CHUNK_WWSTRING		(cload, VARID_NAME,	Name);	
+			case VARID_ID:
+				if ((fields_seen & 0x01U) || cload.Cur_Micro_Chunk_Length() != sizeof(ID) ||
+					cload.Read(&ID, sizeof(ID)) != sizeof(ID)) loaded = false;
+				fields_seen |= 0x01U; break;
+			case VARID_NAME:
+				if ((fields_seen & 0x02U) || cload.Read(Name.Get_Buffer(cload.Cur_Micro_Chunk_Length()),
+					cload.Cur_Micro_Chunk_Length()) != cload.Cur_Micro_Chunk_Length()) loaded = false;
+				fields_seen |= 0x02U; break;
 		}
 
 		cload.Close_Micro_Chunk ();
 	}
 
-	return ;
+	return loaded && fields_seen == 0x03U && !cload.Has_Error();
 }

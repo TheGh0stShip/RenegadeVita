@@ -1,0 +1,20 @@
+--- a/combat.cpp
++++ b/combat.cpp
+@@ -602,6 +602,17 @@ void	CombatManager::Unload_Level( void )
+ 	AssetStatusClass::Peek_Instance()->Enable_Load_On_Demand_Reporting(false);
+ 	WWLOG_INTERMEDIATE("AssetStatusClass::Peek_Instance()->Enable_Load_On_Demand_Reporting(false)");
+ 
++	// A mission may report completion before its final cinematic has delivered
++	// Control_Camera, -1. MainCamera outlives the level, so release any
++	// level-owned host before GameObjManager destroys that object and before the
++	// asset manager frees its RenderObj. Set_Host_Model also clears the global
++	// cinematic-freeze state through the original camera owner.
++	if (MainCamera != NULL) {
++		MainCamera->Set_Host_Model(NULL);
++	}
++	GameObjManager::Activate_Cinematic_Freeze(false);
++	WWLOG_INTERMEDIATE("Release level-owned cinematic camera state");
++
+ 	//
+ 	//	Free the static anim phys object network wrappers
+ 	//

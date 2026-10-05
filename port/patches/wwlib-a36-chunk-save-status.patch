@@ -1,0 +1,82 @@
+--- a/chunkio.h
++++ b/chunkio.h
+@@ -153,6 +153,8 @@
+ 	uint32				Write(const IOVector3Struct & v);
+ 	uint32				Write(const IOVector4Struct & v);
+ 	uint32				Write(const IOQuaternionStruct & q);
++	bool					Has_Error(void) const { return Error; }
++	void					Report_Error(void) { Error = true; }
+ 
+ private:
+ 
+@@ -169,6 +171,7 @@
+ 	bool					InMicroChunk;
+ 	int					MicroChunkPosition;
+ 	MicroChunkHeader	MCHeader;
++	bool					Error;
+ };
+ 
+ 
+--- a/chunkio.cpp
++++ b/chunkio.cpp
+@@ -86,7 +86,8 @@
+ 	File(file),
+ 	StackIndex(0),
+ 	InMicroChunk(false),
+-	MicroChunkPosition(0)
++	MicroChunkPosition(0),
++	Error(false)
+ {
+ 	memset(PositionStack,0,sizeof(PositionStack));
+ 	memset(HeaderStack,0,sizeof(HeaderStack));
+@@ -130,5 +131,6 @@
+ 	// write a temporary chunk header (size = 0)
+ 	if (File->Write(&chunkh,sizeof(chunkh)) != sizeof(chunkh)) {
++		Error = true;
+ 		return false;
+ 	}
+ 	return true;
+@@ -164,5 +166,6 @@
+ 	File->Seek(chunkpos,SEEK_SET);
+ 	if (File->Write(&chunkh,sizeof(chunkh)) != sizeof(chunkh)) {
++		Error = true;
+ 		return false;
+ 	}
+ 
+@@ -175,7 +178,7 @@
+ 	// Go back to the end of the file
+ 	File->Seek(curpos,SEEK_SET);
+ 
+-	return true;
++	return !Error;
+ }
+ 
+ 
+@@ -243,13 +246,14 @@
+ 	// Seek back and write the micro chunk header
+ 	File->Seek(MicroChunkPosition,SEEK_SET);
+ 	if (File->Write(&MCHeader,sizeof(MCHeader)) != sizeof(MCHeader)) {
++		Error = true;
+ 		return false;
+ 	}
+ 
+ 	// Go back to the end of the file
+ 	File->Seek(curpos,SEEK_SET);
+ 	InMicroChunk = false;
+-	return true;
++	return !Error;
+ }
+ 
+ /*********************************************************************************************** 
+@@ -273,7 +277,10 @@
+ 	assert(StackIndex > 0);
+ 
+ 	// write the bytes into the file
+-	if (File->Write(buf,nbytes) != (int)nbytes) return 0;
++	if (File->Write(buf,nbytes) != (int)nbytes) {
++		Error = true;
++		return 0;
++	}
+ 
+ 	// track them in the wrapping chunk
+ 	HeaderStack[StackIndex-1].Add_Size(nbytes);

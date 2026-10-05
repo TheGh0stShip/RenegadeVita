@@ -1,0 +1,10 @@
+--- a/saveload.cpp
++++ b/saveload.cpp
+@@ -105,6 +105,7 @@
+ 		}
+ 		cload.Close_Chunk();
+ 	}
++	ok = !cload.Has_Error() && ok;
+ 
+ 	if (require_player_save_subsystems) {
+ 		for (sys = SubSystemListHead; sys != NULL; sys = sys->NextSubSystem) {

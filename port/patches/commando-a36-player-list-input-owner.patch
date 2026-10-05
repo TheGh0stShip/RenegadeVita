@@ -1,0 +1,35 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -239,3 +239,16 @@
+ }
++
++void CombatGameModeClass::Process_Player_List_Input()
++{
++	if (IS_MISSION) return;
++	bool cycle_list =
++		Input::Get_State(INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE);
++#if defined(__vita__)
++	// Vita Select release already owns CyclePog in missions. In multiplayer
++	// it is otherwise unused, so preserve the original list-format action.
++	cycle_list = cycle_list || Input::Get_State(INPUT_FUNCTION_CYCLE_POG);
++#endif
++	if (cycle_list) MultiHUDClass::Next_Playerlist_Format();
++}
+ 
+ void	CombatGameModeClass::Combat_Keyboard( void )
+@@ -332,4 +345,1 @@
+-	if (!IS_MISSION && Input::Get_State( INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE )) {
+-		//MultiHUDClass::Toggle_Verbose_Lists();
+-		MultiHUDClass::Next_Playerlist_Format();
+-	}
++	Process_Player_List_Input();
+--- a/combatgmode.h
++++ b/combatgmode.h
+@@ -91,6 +91,7 @@
+ 	static	void	Quick_Save( void );
+ 	static	void	Process_Overlay_Update();
+ 	static	void	Render_Overlays();
++	static	void	Process_Player_List_Input();
+ 	static	void	Process_Autosave_Request();
+ 	static	void	Process_Radio_Command_Input();
+ 	static	void	Process_Chat_Input();

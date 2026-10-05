@@ -55,10 +55,7 @@
  		if (	(strnicmp(sub_name,RIGHT_TRACK_NAME0,strlen(RIGHT_TRACK_NAME0)) == 0) ||
  				(strnicmp(sub_name,RIGHT_TRACK_NAME1,strlen(RIGHT_TRACK_NAME1)) == 0) || 
  				(strnicmp(sub_name,RIGHT_TRACK_NAME2,strlen(RIGHT_TRACK_NAME2)) == 0) || 
-@@ -109,7 +134,12 @@
- 			return true;
- 		}
- 	}
+@@ -112 +137,6 @@
 -	return false;
 +	return _has_track_token(name, "TRACK-R") ||
 +		_has_track_token(name, "TREAD-R") ||
@@ -66,4 +63,3 @@
 +		_has_track_token(name, "TREAD_R") ||
 +		_has_track_token(name, "TRACKR") ||
 +		_has_track_token(name, "TREADR");
- }

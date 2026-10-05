@@ -332,7 +332,7 @@
 +	}
 --- a/player.cpp
 +++ b/player.cpp
-@@ -85,2 +85,8 @@
+@@ -85,1 +85,7 @@
 -	//WWDEBUG_SAY(("cPlayer::cPlayer\n"));
 +	// The original constructor routes these through setters, which compare
 +	// the fields first. Initialize the inactive public-service state before

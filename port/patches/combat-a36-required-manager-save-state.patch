@@ -1,0 +1,190 @@
+--- a/conversationmgr.cpp
++++ b/conversationmgr.cpp
+@@ -400,6 +400,9 @@
+ ConversationMgrClass::Load (ChunkLoadClass &cload)
+ {
+ 	int old_style_conv_count = 0;
++	bool loaded_variables = false;
++	bool loaded_category = false;
++	bool loaded = true;
+ 
+ 	//
+ 	//	Remove all currently active conversations
+@@ -415,7 +418,7 @@
+ 				//	Create a new object and its state from the chunk
+ 				//
+ 				ActiveConversationClass *active_conversation = new ActiveConversationClass;
+-				active_conversation->Load (cload);
++				loaded = active_conversation->Load (cload) && loaded;
+ 				
+ 				//
+ 				//	Add this new active conversation to our list
+@@ -426,6 +429,11 @@
+ 
+ 			case CHUNKID_CONVERSATION_CATEGORY:
+ 			{
++				if (loaded_category || old_style_conv_count != 0) {
++					loaded = false;
++					break;
++				}
++				loaded_category = true;
+ 				int category_id = 0;
+ 				if (!Read_Conversation_Category (cload, category_id)) {
+ 					cload.Close_Chunk ();
+@@ -440,12 +448,16 @@
+ 				//
+ 				//	Load all the conversations in this category
+ 				//
+-				Load_Conversations (cload, category_id);
++				loaded = Load_Conversations (cload, category_id) && loaded;
+ 			}
+ 			break;
+ 
+ 			case CHUNKID_OLD_CONVERSATION:
+ 			{
++				if (loaded_category) {
++					loaded = false;
++					break;
++				}
+ 				//
+ 				//	Reset the list of level conversations if this
+ 				// the first one loaded
+@@ -459,7 +471,7 @@
+ 				//	Create a new object and its state from the chunk
+ 				//
+ 				ConversationClass *conversation = new ConversationClass;
+-				conversation->Load (cload);
++				loaded = conversation->Load (cload) && loaded;
+ 				conversation->Set_Category_ID (CATEGORY_LEVEL);
+ 				
+ 				//
+@@ -471,14 +483,19 @@
+ 			break;
+ 
+ 			case CHUNKID_VARIABLES:
+-				Load_Variables (cload);
++				if (loaded_variables) {
++					loaded = false;
++				} else {
++					loaded_variables = true;
++					Load_Variables (cload);
++				}
+ 				break;
+ 		}
+ 
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && loaded_variables && (loaded_category || old_style_conv_count != 0);
+ }
+ 
+ 
+--- a/encyclopediamgr.cpp
++++ b/encyclopediamgr.cpp
+@@ -321,6 +321,8 @@
+ 	Hide_All_Objects ();
+ 
+ 	int type_index = 0;
++	bool loaded_variables = false;
++	bool loaded = true;
+ 
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+@@ -329,11 +331,20 @@
+ 			//	Load all the variables from this chunk
+ 			//
+ 			case CHUNKID_VARIABLES:
+-				Load_Variables (cload);
++				if (loaded_variables) {
++					loaded = false;
++				} else {
++					loaded_variables = true;
++					Load_Variables (cload);
++				}
+ 				break;
+ 
+ 			case CHUNKID_TYPE_DATA:
+ 			{
++				if (type_index >= TYPE_COUNT) {
++					loaded = false;
++					break;
++				}
+ 				//
+ 				//	Read the bit vector from its chunk
+ 				//
+@@ -353,7 +364,7 @@
+ 				//
+ 				const VectorClass<unsigned char> &bit_array = KnownObjectVector[type_index].Get_Bit_Array ();
+ 				if (size > 0) {
+-					cload.Read (const_cast<unsigned char*>(&bit_array[0]), size);
++					loaded = cload.Read (const_cast<unsigned char*>(&bit_array[0]), size) == size && loaded;
+ 				}
+ 
+ 				//
+@@ -367,7 +378,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && loaded_variables && type_index == TYPE_COUNT;
+ }
+ 
+ 
+--- a/mapmgr.cpp
++++ b/mapmgr.cpp
+@@ -196,7 +196,10 @@
+ bool
+ MapMgrClass::Load (ChunkLoadClass &cload)
+ {
+-	
++	bool loaded_variables = false;
++	bool loaded_shroud = false;
++	bool loaded = true;
++
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 			
+@@ -204,18 +207,30 @@
+ 			//	Load all the variables from this chunk
+ 			//
+ 			case CHUNKID_VARIABLES:
+-				Load_Variables (cload);
++				if (loaded_variables) {
++					loaded = false;
++				} else {
++					loaded_variables = true;
++					Load_Variables (cload);
++				}
+ 				break;
+ 
+ 			case CHUNKID_SHROUD:
+ 			{
++				if (loaded_shroud) {
++					loaded = false;
++					break;
++				}
++				loaded_shroud = true;
+ 				//
+ 				//	Read the shroud vector from its chunk
+ 				//
+ 				int size = 0;
+-				cload.Read (&size, sizeof (size));
++				loaded = cload.Read (&size, sizeof (size)) == sizeof (size) && loaded;
+ 				if (size == CLOUD_VECTOR_SIZE) {
+-					cload.Read (CloudVector, sizeof (CloudVector));
++					loaded = cload.Read (CloudVector, sizeof (CloudVector)) == sizeof (CloudVector) && loaded;
++				} else {
++					loaded = false;
+ 				}
+ 				break;
+ 			}
+@@ -224,7 +239,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && loaded_variables && loaded_shroud;
+ }
+ 
+ 

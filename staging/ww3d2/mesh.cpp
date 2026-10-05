@@ -758,8 +758,17 @@ void MeshClass::Render(RenderInfoClass & rinfo)
 					TheDX8MeshRenderer.Add_To_Render_List(DecalMesh);
 				}
 			}
-			if (rinfo.Additional_Pass_Count() > 0) {
-				RenegadeVitaRenderer::Submit_Unsupported(this);
+			for (int i = 0; i < rinfo.Additional_Pass_Count(); ++i) {
+				MaterialPassClass *matpass = rinfo.Peek_Additional_Pass(i);
+				if ((!Is_Translucent()) || matpass->Is_Enabled_On_Translucent_Meshes()) {
+					const bool skin = Model->Get_Flag(MeshGeometryClass::SKIN);
+					const bool delayed = !skin &&
+						(rinfo.Current_Override_Flags() &
+						 RenderInfoClass::RINFO_OVERRIDE_ADDITIONAL_PASSES_ONLY);
+					if (!TheDX8MeshRenderer.Queue_Material_Pass(matpass, this, skin, delayed)) {
+						RenegadeVitaRenderer::Submit_Unsupported(this);
+					}
+				}
 			}
 #else
 			bool rendered_something = false;
@@ -1564,11 +1573,12 @@ DX8FVFCategoryContainer* MeshClass::Peek_FVF_Category_Container()
 
 void MeshClass::Install_User_Lighting_Array(Vector4 * lighting)
 {
-	Get_User_Lighting_Array(true);
 #if defined(RENEGADE_VITA_PORT)
-	// The original renderer had copied these colors at registration.
+	// Invalidate the key that was used for the preceding draw. On first
+	// installation that key contains a null lighting pointer.
 	RenegadeVitaRenderer::Forget_Static_Mesh_User_Lighting(Model, UserLighting);
 #endif
+	Get_User_Lighting_Array(true);
 	
 	for (int vi=0; vi<Model->Get_Vertex_Count(); vi++) {
 		UserLighting[vi] = DX8Wrapper::Convert_Color(lighting[vi]);

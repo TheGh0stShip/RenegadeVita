@@ -76,6 +76,17 @@ struct RenegadeMilesMixSummary {
 	uint32_t stream_peak_abs = 0U;
 };
 
+struct RenegadeMilesPreparedSource {
+	DecodedWave wave;
+	WaveInfo info;
+	std::unique_ptr<RenegadeVitaAudio::MpegPlayback> mpeg;
+	uint64_t source_hash = 0U;
+	size_t source_bytes = 0U;
+	const char *error = nullptr;
+	bool is_mpeg = false;
+	bool cacheable = false;
+};
+
 namespace {
 
 constexpr size_t kOutputFrames = 1024U;
@@ -90,6 +101,7 @@ constexpr size_t kPcmCacheMaximumSourceBytes = 1024U * 1024U;
 
 pthread_once_t g_mutex_once = PTHREAD_ONCE_INIT;
 pthread_mutex_t g_mutex;
+std::atomic<uint32_t> g_output_lock_starvation_buffers{0U};
 #if !defined(RENEGADE_MILES_MANUAL_MIX)
 pthread_t g_output_thread;
 bool g_output_thread_running = false;
@@ -322,6 +334,77 @@ bool Decode_Into_Sample(RenegadeMilesSample *sample, const void *data,
 	sample->wave = Wave_Metadata(pcm->wave);
 	sample->mpeg.reset();
 	sample->encoded_data_bytes = pcm->encoded_data_bytes;
+	sample->cursor = 0.0;
+	sample->playback_rate = static_cast<S32>(sample->wave.sample_rate);
+	sample->playing = false;
+	sample->paused = false;
+	return true;
+}
+
+bool Prepare_Stream_Source(const void *data, size_t bytes,
+	RenegadeMilesPreparedSource *prepared)
+{
+	if (prepared == nullptr || data == nullptr || bytes < 12U ||
+		bytes > kMaximumWaveBytes) {
+		if (prepared != nullptr) prepared->error = "invalid or oversized WAVE image";
+		return false;
+	}
+	const uint8_t *image = static_cast<const uint8_t *>(data);
+	prepared->source_bytes = bytes;
+	prepared->is_mpeg = RenegadeVitaAudio::Is_Mpeg_Media(image, bytes);
+	if (prepared->is_mpeg) {
+		prepared->mpeg = RenegadeVitaAudio::Open_Mpeg_Playback(image, bytes,
+			&prepared->error);
+		return prepared->mpeg != nullptr;
+	}
+	prepared->cacheable = bytes <= kPcmCacheMaximumSourceBytes;
+	prepared->source_hash = prepared->cacheable ? Hash_Image(image, bytes) : 0U;
+	return RenegadeVitaAudio::Decode_Wave_With_Info(image, bytes,
+		&prepared->wave, &prepared->info, &prepared->error);
+}
+
+bool Publish_Stream_Source_Locked(RenegadeMilesSample *sample,
+	RenegadeMilesPreparedSource *prepared)
+{
+	if (sample == nullptr || prepared == nullptr) return false;
+	if (prepared->is_mpeg) {
+		Set_Sample_Pcm(sample, nullptr);
+		sample->wave = {};
+		sample->wave.channels = prepared->mpeg->Channels();
+		sample->wave.sample_rate = prepared->mpeg->Sample_Rate();
+		sample->wave.estimated_sample_frames =
+			sample->wave.untrimmed_sample_frames = static_cast<uint32_t>(
+				std::min<size_t>(prepared->mpeg->Frame_Count(),
+					std::numeric_limits<uint32_t>::max()));
+		sample->mpeg = std::move(prepared->mpeg);
+		sample->encoded_data_bytes = static_cast<U32>(prepared->source_bytes);
+	} else {
+		// Preparation already performed the decode outside the mixer lock. A
+		// concurrently retained cache entry can still win publication here.
+		++g_stats.pcm_decodes;
+		RenegadeMilesPcm *pcm = prepared->cacheable
+			? Find_Cached_Pcm(prepared->source_hash, prepared->source_bytes) : nullptr;
+		if (pcm != nullptr) {
+			++g_stats.pcm_cache_hits;
+		} else {
+			pcm = new (std::nothrow) RenegadeMilesPcm;
+			if (pcm == nullptr) {
+				Set_Error("decoded PCM allocation failed");
+				return false;
+			}
+			pcm->frames = prepared->wave.Frame_Count();
+			pcm->wave = std::move(prepared->wave);
+			pcm->encoded_data_bytes = prepared->info.data_bytes;
+			pcm->source_hash = prepared->source_hash;
+			pcm->source_bytes = prepared->source_bytes;
+			if (prepared->cacheable) Cache_Pcm(pcm);
+		}
+		pcm->last_use = ++g_pcm_cache_clock;
+		Set_Sample_Pcm(sample, pcm);
+		sample->wave = Wave_Metadata(pcm->wave);
+		sample->mpeg.reset();
+		sample->encoded_data_bytes = pcm->encoded_data_bytes;
+	}
 	sample->cursor = 0.0;
 	sample->playback_rate = static_cast<S32>(sample->wave.sample_rate);
 	sample->playing = false;
@@ -718,16 +801,19 @@ void *Output_Thread(void *)
 #endif
 	RenegadeAudioOutputBuffers<kOutputFrames * 2U> buffers;
 	for (;;) {
-		RenegadeMilesMixSummary mix_summary;
+		RenegadeMilesMixSummary mix_summary = {};
 		if (g_output_stop.load(std::memory_order_acquire)) break;
-		if (pthread_mutex_trylock(&g_mutex) != 0) {
-			struct timespec retry = { 0, 1000000L };
-			nanosleep(&retry, nullptr);
-			continue;
-		}
 		auto &output = buffers.Next();
-		Mix_Locked(output.data(), kOutputFrames, &mix_summary);
-		pthread_mutex_unlock(&g_mutex);
+		if (pthread_mutex_trylock(&g_mutex) != 0) {
+			// The hardware deadline still needs a buffer while the game thread is
+			// preparing a stream under the legacy recursive Miles lock. Silence is
+			// deterministic and prevents the previous hardware buffer from repeating.
+			std::fill(output.begin(), output.end(), 0);
+			g_output_lock_starvation_buffers.fetch_add(1U, std::memory_order_relaxed);
+		} else {
+			Mix_Locked(output.data(), kOutputFrames, &mix_summary);
+			pthread_mutex_unlock(&g_mutex);
+		}
 #if defined(__vita__)
 		if (g_audio_port >= 0) {
 			const int result = sceAudioOutOutput(g_audio_port, output.data());
@@ -823,41 +909,42 @@ void Release_Sample(RenegadeMilesSample *sample)
 	delete sample;
 }
 
-bool Read_Stream_Image(const char *name, std::unique_ptr<uint8_t[]> *image,
-	size_t *image_bytes)
+bool Read_Stream_Image(const char *name, AIL_FILE_OPEN_CALLBACK file_open,
+	AIL_FILE_CLOSE_CALLBACK file_close, AIL_FILE_SEEK_CALLBACK file_seek,
+	AIL_FILE_READ_CALLBACK file_read, std::unique_ptr<uint8_t[]> *image,
+	size_t *image_bytes, const char **error)
 {
-	if (name == nullptr || image == nullptr || image_bytes == nullptr || g_file_open == nullptr ||
-		g_file_close == nullptr || g_file_seek == nullptr || g_file_read == nullptr) {
-		Set_Error("stream file callbacks are unavailable");
+	if (name == nullptr || image == nullptr || image_bytes == nullptr || file_open == nullptr ||
+		file_close == nullptr || file_seek == nullptr || file_read == nullptr) {
+		if (error != nullptr) *error = "stream file callbacks are unavailable";
 		return false;
 	}
 	AIL_FILE_HANDLE handle = 0;
-	if (g_file_open(name, &handle) == 0U) {
-		Set_Error("stream source open failed");
+	if (file_open(name, &handle) == 0U) {
+		if (error != nullptr) *error = "stream source open failed";
 		return false;
 	}
-	const S32 file_size = g_file_seek(handle, 0, AIL_FILE_SEEK_END);
+	const S32 file_size = file_seek(handle, 0, AIL_FILE_SEEK_END);
 	if (file_size <= 0 || static_cast<size_t>(file_size) > kMaximumWaveBytes ||
-		g_file_seek(handle, 0, AIL_FILE_SEEK_BEGIN) < 0) {
-		g_file_close(handle);
-		Set_Error("stream source size is invalid");
+		file_seek(handle, 0, AIL_FILE_SEEK_BEGIN) < 0) {
+		file_close(handle);
+		if (error != nullptr) *error = "stream source size is invalid";
 		return false;
 	}
 	std::unique_ptr<uint8_t[]> pending(new (std::nothrow) uint8_t[static_cast<size_t>(file_size)]);
 	if (!pending) {
-		g_file_close(handle);
-		Set_Error("stream image allocation failed");
+		file_close(handle);
+		if (error != nullptr) *error = "stream image allocation failed";
 		return false;
 	}
-	const U32 read = g_file_read(handle, pending.get(), static_cast<U32>(file_size));
-	g_file_close(handle);
+	const U32 read = file_read(handle, pending.get(), static_cast<U32>(file_size));
+	file_close(handle);
 	if (read != static_cast<U32>(file_size)) {
-		Set_Error("stream source read was incomplete");
+		if (error != nullptr) *error = "stream source read was incomplete";
 		return false;
 	}
 	*image = std::move(pending);
 	*image_bytes = static_cast<size_t>(file_size);
-	g_stats.stream_bytes_read += read;
 	return true;
 }
 
@@ -1247,15 +1334,43 @@ void AIL_set_3D_sample_effects_level(H3DSAMPLE, F32) {}
 HSTREAM AIL_open_stream_by_sample(HDIGDRIVER, HSAMPLE sample,
 	const char *name, S32)
 {
+	AIL_FILE_OPEN_CALLBACK file_open = nullptr;
+	AIL_FILE_CLOSE_CALLBACK file_close = nullptr;
+	AIL_FILE_SEEK_CALLBACK file_seek = nullptr;
+	AIL_FILE_READ_CALLBACK file_read = nullptr;
 	AIL_lock();
 	++g_stats.stream_open_attempts;
 	std::snprintf(g_stats.last_stream_name, sizeof(g_stats.last_stream_name), "%s",
 		name != nullptr ? name : "");
+	file_open = g_file_open;
+	file_close = g_file_close;
+	file_seek = g_file_seek;
+	file_read = g_file_read;
+	// Stream handles are pooled by WWAudio. Detach the preceding stream before
+	// the blocking file callbacks so the mixer cannot observe or replay it and
+	// repeated playback does not retain two complete sources.
+	Reset_Sample(sample);
+	AIL_unlock();
+
 	std::unique_ptr<uint8_t[]> image;
 	size_t image_bytes = 0U;
+	const char *read_error = sample != nullptr ? nullptr : "invalid stream sample";
+	const bool image_loaded = sample != nullptr && Read_Stream_Image(name,
+		file_open, file_close, file_seek, file_read, &image, &image_bytes,
+		&read_error);
+	RenegadeMilesPreparedSource prepared;
+	const bool source_prepared = image_loaded && Prepare_Stream_Source(
+		image.get(), image_bytes, &prepared);
+
+	AIL_lock();
 	RenegadeMilesStream *stream = nullptr;
-	if (sample != nullptr && Read_Stream_Image(name, &image, &image_bytes) &&
-		Decode_Into_Sample(sample, image.get(), image_bytes)) {
+	if (!image_loaded) {
+		Set_Error(read_error);
+	} else {
+		g_stats.stream_bytes_read += image_bytes;
+		if (!source_prepared) Set_Error(prepared.error);
+	}
+	if (source_prepared && Publish_Stream_Source_Locked(sample, &prepared)) {
 		stream = new (std::nothrow) RenegadeMilesStream;
 		if (stream != nullptr) {
 			stream->sample = sample;
@@ -1284,8 +1399,13 @@ void AIL_close_stream(HSTREAM stream)
 	if (stream == nullptr) return;
 	AIL_lock();
 	AIL_end_sample(stream->sample);
-	if (stream->sample != nullptr) stream->sample->streaming = false;
-	if (stream->owns_sample) Release_Sample(stream->sample);
+	if (stream->owns_sample) {
+		Release_Sample(stream->sample);
+	} else {
+		// Borrowed 2D samples outlive the stream. Drop MPEG storage now; the next
+		// open has no use for the previous file image or decoder state.
+		Reset_Sample(stream->sample);
+	}
 	delete stream;
 	AIL_unlock();
 }
@@ -1389,6 +1509,7 @@ void Renegade_Miles_Reset_Runtime_Stats()
 {
 	AIL_lock();
 	g_stats = {};
+	g_output_lock_starvation_buffers.store(0U, std::memory_order_relaxed);
 	std::snprintf(g_stats.last_error, sizeof(g_stats.last_error), "%s",
 		g_last_error);
 	AIL_unlock();
@@ -1399,6 +1520,8 @@ void Renegade_Miles_Get_Runtime_Stats(RenegadeMilesRuntimeStats *stats)
 	if (stats == nullptr) return;
 	AIL_lock();
 	*stats = g_stats;
+	stats->output_lock_starvation_buffers =
+		g_output_lock_starvation_buffers.load(std::memory_order_relaxed);
 	stats->allocated_samples = static_cast<uint32_t>(g_samples.size());
 	stats->pcm_cache_entries = 0U;
 	for (const RenegadeMilesPcm *pcm : g_pcm_cache) {

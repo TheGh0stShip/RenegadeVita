@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Queue a one-shot developer save launch; native original code must validate M00."""
+"""Queue a one-shot developer save launch; native original code validates its campaign map."""
 import argparse
 import hashlib
 import json
@@ -48,7 +48,8 @@ def queue_request(user_dir, slot, receipt):
         "save_sha256": digest.hexdigest(), "save_bytes": after.st_size,
         "request": str(request), "request_sha256": hashlib.sha256(payload).hexdigest(),
         "game_stopped": "operator asserted", "save_contents_modified": False,
-        "native_m00_validation": "required at consumption", "reload_proven": False,
+        "native_original_save_validation": "required at consumption",
+        "reload_proven": False,
     }
     receipt.parent.mkdir(parents=True, exist_ok=True)
     with receipt.open("x", encoding="utf-8") as stream:

@@ -261,7 +261,7 @@ bool
 SoundSceneObjClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk (CHUNKID_BASE_CLASS);
-		PersistClass::Save (csave);
+		if (!PersistClass::Save(csave)) csave.Report_Error();
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_VARIABLES);		
@@ -271,7 +271,7 @@ SoundSceneObjClass::Save (ChunkSaveClass &csave)
 		WRITE_MICRO_CHUNK (csave, VARID_USER_OBJ, m_UserObj);
 		WRITE_MICRO_CHUNK (csave, VARID_ID, m_ID);		
 	csave.End_Chunk ();
-	return true;
+	return !csave.Has_Error();
 }
 
 

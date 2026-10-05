@@ -7,6 +7,7 @@
 
 #include "registry.h"
 #include "renegade_mission_ranks.h"
+#include "renegade_movie_unlocks.h"
 #if defined(__vita__)
 #include "a30_vita_runtime.h"
 #endif
@@ -80,6 +81,12 @@ bool Is_Mission_Rank_Key(int key)
 {
 	return key >= 0 && key < g_registry_count &&
 		RenegadeMissionRanks::Matches_Key(g_registry[key].path);
+}
+
+bool Is_Movie_Key(int key)
+{
+	return key >= 0 && key < g_registry_count &&
+		RenegadeMovieUnlocks::Matches_Key(g_registry[key].path);
 }
 
 void Report_Mission_Rank_Write(bool ok)
@@ -231,6 +238,14 @@ char *RegistryClass::Get_String(const char *name, char *value, int value_size,
 	const char *default_string)
 {
 	if (value == NULL || value_size <= 0) return value;
+	if (Is_Movie_Key(Key)) {
+		if (!RenegadeMovieUnlocks::Get(name, value, (size_t)value_size)) {
+			const char *fallback = default_string == NULL ? "" : default_string;
+			strncpy(value, fallback, (size_t)value_size - 1U);
+			value[value_size - 1] = 0;
+		}
+		return value;
+	}
 	RegistryValue *entry = Find_Value(Key, name, false);
 	const char *selected = entry == NULL ? (default_string == NULL ? "" : default_string) : entry->value;
 	strncpy(value, selected, (size_t)value_size - 1U);
@@ -240,6 +255,12 @@ char *RegistryClass::Get_String(const char *name, char *value, int value_size,
 
 void RegistryClass::Get_String(const char *name, StringClass &string, const char *default_string)
 {
+	if (Is_Movie_Key(Key)) {
+		char value[MAX_REGISTRY_VALUE];
+		if (RenegadeMovieUnlocks::Get(name, value, sizeof(value))) string = value;
+		else string = default_string == NULL ? "" : default_string;
+		return;
+	}
 	char value[MAX_REGISTRY_VALUE];
 	Get_String(name, value, sizeof(value), default_string);
 	string = value;
@@ -247,13 +268,20 @@ void RegistryClass::Get_String(const char *name, StringClass &string, const char
 
 void RegistryClass::Set_String(const char *name, const char *value)
 {
-	if (!IsLocked) {
-		RegistryValue *entry = Find_Value(Key, name, true);
-		if (entry != NULL) {
-			strncpy(entry->value, value == NULL ? "" : value, sizeof(entry->value) - 1U);
-			entry->value[sizeof(entry->value) - 1U] = 0;
-		}
+	Set_String_Checked(name, value);
+}
+
+bool RegistryClass::Set_String_Checked(const char *name, const char *value)
+{
+	if (IsLocked || !IsValid || name == NULL || name[0] == 0) return false;
+	if (Is_Movie_Key(Key)) {
+		return RenegadeMovieUnlocks::Set(name, value == NULL ? "" : value);
 	}
+	RegistryValue *entry = Find_Value(Key, name, true);
+	if (entry == NULL) return false;
+	strncpy(entry->value, value == NULL ? "" : value, sizeof(entry->value) - 1U);
+	entry->value[sizeof(entry->value) - 1U] = 0;
+	return true;
 }
 
 void RegistryClass::Get_String(const WCHAR *name, WideStringClass &string,
@@ -314,6 +342,12 @@ void RegistryClass::Get_Value_List(DynamicVectorClass<StringClass> &list)
 			list.Add(StringClass(name));
 		return;
 	}
+	if (Is_Movie_Key(Key)) {
+		char name[RenegadeMovieUnlocks::NameBytes];
+		for (unsigned index = 0; RenegadeMovieUnlocks::Get_Name(index, name, sizeof(name)); ++index)
+			list.Add(StringClass(name));
+		return;
+	}
 	if (Key < 0 || Key >= g_registry_count) return;
 	RegistryStore &store = g_registry[Key];
 	for (int index = 0; index < store.value_count; ++index) {
@@ -326,6 +360,10 @@ void RegistryClass::Delete_Value(const char *name)
 	if (IsLocked || Key < 0 || Key >= g_registry_count || name == NULL) return;
 	if (Is_Mission_Rank_Key(Key)) {
 		Report_Mission_Rank_Write(RenegadeMissionRanks::Delete(name));
+		return;
+	}
+	if (Is_Movie_Key(Key)) {
+		RenegadeMovieUnlocks::Delete(name);
 		return;
 	}
 	RegistryStore &store = g_registry[Key];
@@ -341,6 +379,10 @@ void RegistryClass::Deleta_All_Values(void)
 {
 	if (!IsLocked && Is_Mission_Rank_Key(Key)) {
 		Report_Mission_Rank_Write(RenegadeMissionRanks::Clear());
+		return;
+	}
+	if (!IsLocked && Is_Movie_Key(Key)) {
+		RenegadeMovieUnlocks::Clear();
 		return;
 	}
 	if (!IsLocked && Key >= 0 && Key < g_registry_count) g_registry[Key].value_count = 0;

@@ -1,0 +1,101 @@
+--- a/saveloadsubsystem.h
++++ b/saveloadsubsystem.h
+@@ -78,6 +78,7 @@
+ protected:
+ 
+ 	virtual bool				Contains_Data(void) const						{ return true; }
++	virtual bool				Required_For_Player_Save(void) const			{ return false; }
+ 	virtual bool				Save (ChunkSaveClass &csave) = 0;
+ 	virtual bool				Load (ChunkLoadClass &cload) = 0;
+ 
+@@ -86,6 +87,7 @@
+ private:
+ 
+ 	SaveLoadSubSystemClass *	NextSubSystem;			// managed by SaveLoadSystem
++	bool						PlayerSaveLoadSeen;		// transient validation state
+ 
+ 	friend class SaveLoadSystemClass;
+ };
+--- a/saveloadsubsystem.cpp
++++ b/saveloadsubsystem.cpp
+@@ -40,7 +40,8 @@
+ 
+ 
+ SaveLoadSubSystemClass::SaveLoadSubSystemClass(void) :
+-	NextSubSystem(NULL)
++	NextSubSystem(NULL),
++	PlayerSaveLoadSeen(false)
+ {
+ 	// All Sub-Systems are automatically registered with the SaveLoadSystem
+ 	SaveLoadSystemClass::Register_Sub_System (this);
+--- a/saveload.h
++++ b/saveload.h
+@@ -147,7 +147,8 @@
+ 	** To load a file just open it and pass it to the load method.
+ 	*/
+ 	static bool		Save (ChunkSaveClass &csave, SaveLoadSubSystemClass & subsystem);
+-	static bool		Load (ChunkLoadClass &cload,bool auto_post_load = true);	
++	static bool		Load (ChunkLoadClass &cload,bool auto_post_load = true,
++		bool require_player_save_subsystems = false);
+ 	static bool		Post_Load_Processing (void(*network_callback)(void));
+ 	/*
+ 	** Look up the persist factory for a given chunk id
+--- a/saveload.cpp
++++ b/saveload.cpp
+@@ -70,27 +70,51 @@
+ 	return ok;
+ }
+ 
+-bool SaveLoadSystemClass::Load (ChunkLoadClass &cload,bool auto_post_load)
++bool SaveLoadSystemClass::Load (ChunkLoadClass &cload,bool auto_post_load,
++	bool require_player_save_subsystems)
+ {
+ 	WWLOG_PREPARE_TIME_AND_MEMORY("SaveLoadSystemClass::Load");
+ 	PointerRemapper.Reset();
+ 	WWLOG_INTERMEDIATE("PointerRemapper.Reset()");
+ 	bool ok = true;
++	SaveLoadSubSystemClass *sys = NULL;
++	if (require_player_save_subsystems) {
++		for (sys = SubSystemListHead; sys != NULL; sys = sys->NextSubSystem) {
++			sys->PlayerSaveLoadSeen = false;
++		}
++	}
+ 
+ 	// Load each chunk we encounter and link the manager into the PostLoad list
+ 	while (cload.Open_Chunk ()) {
+ 		SaveLoadStatus::Inc_Status_Count();		// Count the sub systems loaded
+-		SaveLoadSubSystemClass *sys = Find_Sub_System(cload.Cur_Chunk_ID ());
++		sys = Find_Sub_System(cload.Cur_Chunk_ID ());
+ 		WWLOG_INTERMEDIATE("Find_Sub_System");
+ 		if (sys != NULL) {
+ //WWRELEASE_SAY(("			Name: %s\n",sys->Name()));
+-			INIT_SUB_STATUS(sys->Name());
+-			ok &= sys->Load(cload);
+-			WWLOG_INTERMEDIATE(sys->Name());
++			if (require_player_save_subsystems && sys->Required_For_Player_Save() &&
++				sys->PlayerSaveLoadSeen) {
++				ok = false;
++			} else {
++				if (require_player_save_subsystems && sys->Required_For_Player_Save()) {
++					sys->PlayerSaveLoadSeen = true;
++				}
++				INIT_SUB_STATUS(sys->Name());
++				ok &= sys->Load(cload);
++				WWLOG_INTERMEDIATE(sys->Name());
++			}
+ 		}
+ 		cload.Close_Chunk();
+ 	}
+ 
++	if (require_player_save_subsystems) {
++		for (sys = SubSystemListHead; sys != NULL; sys = sys->NextSubSystem) {
++			if (sys->Required_For_Player_Save() && !sys->PlayerSaveLoadSeen) {
++				ok = false;
++			}
++			sys->PlayerSaveLoadSeen = false;
++		}
++	}
++
+ 	// Process all of the pointer remap requests
+ 	PointerRemapper.Process();
+ 	WWLOG_INTERMEDIATE("PointerRemapper.Process()");

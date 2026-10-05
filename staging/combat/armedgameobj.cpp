@@ -121,11 +121,12 @@ bool	ArmedGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	ArmedGameObjDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				PhysicalGameObjDef::Load( cload );
+				if (!PhysicalGameObjDef::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -159,7 +160,7 @@ bool	ArmedGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 /*
@@ -288,7 +289,7 @@ enum	{
 bool	ArmedGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	PhysicalGameObj::Save( csave );
+	if (!PhysicalGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -296,19 +297,20 @@ bool	ArmedGameObj::Save( ChunkSaveClass & csave )
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_WEAPONBAG );
-	WeaponBag->Save( csave );
+	if (WeaponBag == NULL || !WeaponBag->Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	ArmedGameObj::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				PhysicalGameObj::Load( cload );
+				if (!PhysicalGameObj::Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -325,7 +327,7 @@ bool	ArmedGameObj::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_WEAPONBAG:
-			 	WeaponBag->Load( cload );
+				if (WeaponBag == NULL || !WeaponBag->Load(cload)) loaded = false;
 				break;
 
 			default:
@@ -338,7 +340,7 @@ bool	ArmedGameObj::Load( ChunkLoadClass &cload )
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 void	ArmedGameObj::On_Post_Load( void )

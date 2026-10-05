@@ -229,18 +229,21 @@ bool	SoldierGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	SoldierGameObjDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	int dialog_index = 0;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				SmartGameObjDef::Load( cload );
+				if (!SmartGameObjDef::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_DEF_DIALOG_ENTRY:
 				if (dialog_index < DIALOG_MAX) {
-					DialogList[dialog_index++].Load (cload);
+					if (!DialogList[dialog_index++].Load(cload)) loaded = false;
+				} else {
+					loaded = false;
 				}
 				break;
 								
@@ -279,7 +282,7 @@ bool	SoldierGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 const PersistFactoryClass & SoldierGameObjDef::Get_Factory (void) const 
@@ -627,7 +630,7 @@ enum	{
 bool	SoldierGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	SmartGameObj::Save( csave );
+	if (!SmartGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	//
@@ -672,17 +675,17 @@ bool	SoldierGameObj::Save( ChunkSaveClass & csave )
 
 	if ( WeaponAnimControl ) {
 		csave.Begin_Chunk( CHUNKID_WEAPON_ANIM );
-		WeaponAnimControl->Save( csave );
+		if (!WeaponAnimControl->Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
 	csave.Begin_Chunk( CHUNKID_HUMAN_STATE );
-	HumanState.Save( csave );
+	if (!HumanState.Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	if ( TransitionCompletionData ) {
 		csave.Begin_Chunk( CHUNKID_TRANSITION_COMPLETION_DATA );
-		TransitionCompletionData->Save( csave );
+		if (!TransitionCompletionData->Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
@@ -696,11 +699,11 @@ bool	SoldierGameObj::Save( ChunkSaveClass & csave )
 
 	if ( SpecialDamageDamager.Get_Ptr() != NULL ) {
 		csave.Begin_Chunk( CHUNKID_SPECIAL_DAMAGE_DAMAGER );
-		SpecialDamageDamager.Save( csave );
+		if (!SpecialDamageDamager.Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
-	return true;
+	return !csave.Has_Error();
 }
 
 //------------------------------------------------------------------------------------
@@ -708,6 +711,7 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 {
 	char anim_string[80];
 	int dialog_index = 0;
+	bool loaded = true;
 
 	WWASSERT( Vehicle == NULL );
 
@@ -715,12 +719,14 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				SmartGameObj::Load( cload );
+				if (!SmartGameObj::Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_DIALOG_ENTRY:
 				if (dialog_index < DIALOG_MAX) {
-					DialogList[dialog_index++].Load (cload);
+					if (!DialogList[dialog_index++].Load(cload)) loaded = false;
+				} else {
+					loaded = false;
 				}
 				break;
 								
@@ -774,22 +780,31 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 
 			case CHUNKID_WEAPON_ANIM:
 				Set_Weapon_Animation( NULL );	// Get the anim control built
-				WeaponAnimControl->Load( cload );
+				if (WeaponAnimControl == NULL || !WeaponAnimControl->Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_HUMAN_STATE:
-				HumanState.Load( cload );
+				if (!HumanState.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_RENDER_OBJS:
-				cload.Open_Chunk();
+				if (!cload.Open_Chunk()) {
+					loaded = false;
+					break;
+				}
 				PersistFactoryClass * factory;
 				factory = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
 				WWASSERT(factory != NULL);
 				if (factory != NULL) {
 					RenderObjClass * robj = (RenderObjClass *)factory->Load(cload);
-					Add_RenderObj( robj );
-					robj->Release_Ref();
+					if (robj != NULL) {
+						Add_RenderObj(robj);
+						robj->Release_Ref();
+					} else {
+						loaded = false;
+					}
+				} else {
+					loaded = false;
 				}
 				cload.Close_Chunk();
 				break;
@@ -797,11 +812,11 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 			case CHUNKID_TRANSITION_COMPLETION_DATA:
 				WWASSERT( TransitionCompletionData == NULL );
 				TransitionCompletionData = new TransitionCompletionDataStruct();
-				TransitionCompletionData->Load( cload );
+				if (!TransitionCompletionData->Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_SPECIAL_DAMAGE_DAMAGER:
-				SpecialDamageDamager.Load( cload );
+				if (!SpecialDamageDamager.Load(cload)) loaded = false;
 				break;
 
 			default:
@@ -819,7 +834,7 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 //------------------------------------------------------------------------------------

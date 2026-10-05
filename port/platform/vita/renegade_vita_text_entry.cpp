@@ -47,7 +47,8 @@ struct NativeKeyboard {
             }
             config_ready = true;
         }
-        static const uint16_t title[] = {'S','a','v','e',' ','d','e','s','c','r','i','p','t','i','o','n',0};
+        // The same provider serves save names, player names and chat fields.
+        static const uint16_t title[] = {'E','n','t','e','r',' ','t','e','x','t',0};
         SceImeDialogParam param;
         sceImeDialogParamInit(&param);
         // Standard firmware keyboard languages; leave the user's selection

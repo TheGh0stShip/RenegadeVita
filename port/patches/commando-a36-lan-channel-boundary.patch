@@ -1,0 +1,162 @@
+--- a/gamechannel.h
++++ b/gamechannel.h
+@@ -33,9 +33,11 @@
+ 
+ #include "wwdebug.h"
+ #include "always.h"
+-#include <WWOnline\RefPtr.h>
+ #include "refcount.h"
+ 
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
++#include <WWOnline\RefPtr.h>
++
+ namespace WWOnline
+ {
+ class ChannelData;
+@@ -45,6 +47,7 @@
+ {
+ struct Channel;
+ }
++#endif
+ 
+ class cGameData;
+ 
+@@ -55,15 +58,23 @@
+ 
+ 	public:
+ 		cGameData* Get_Game_Data(void) {WWASSERT(PGameData != NULL); return PGameData;}
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 		RefPtr<WWOnline::ChannelData>& Get_Channel(void) {return WolChannel;}
+ 		WOL::Channel* Get_Wol_Channel(void);
++#endif
+ 
+ 	private:
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++		cGameChannel(cGameData * p_game_data);
++#else
+ 		cGameChannel(cGameData * p_game_data, const RefPtr<WWOnline::ChannelData>& channel);
++#endif
+ 		~cGameChannel(void);
+ 
+ 		cGameData* PGameData;
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 		RefPtr<WWOnline::ChannelData> WolChannel;
++#endif
+ };
+ 
+ #endif // GAMECHANNEL_H
+--- a/gamechannel.cpp
++++ b/gamechannel.cpp
+@@ -27,15 +27,25 @@
+ #include "gamedata.h"
+ #include "gamechannel.h"
+ #include "wwdebug.h"
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include <WWOnline\WOLChannel.h>
++#endif
+ 
+ //-----------------------------------------------------------------------------
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++cGameChannel::cGameChannel(cGameData * p_game_data)
++{
++	WWASSERT(p_game_data != NULL);
++	PGameData = p_game_data;
++}
++#else
+ cGameChannel::cGameChannel(cGameData * p_game_data, const RefPtr<WWOnline::ChannelData>& channel)
+ {
+ 	WWASSERT(p_game_data != NULL);
+ 	PGameData = p_game_data;
+ 	WolChannel = channel;
+ }
++#endif
+ 
+ //-----------------------------------------------------------------------------
+ cGameChannel::~cGameChannel(void)
+@@ -43,7 +53,9 @@
+ 	delete PGameData;
+ }
+ 
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ WOL::Channel* cGameChannel::Get_Wol_Channel(void)
+ {
+ 	return &WolChannel->GetData();
+ }
++#endif
+--- a/gamechanlist.h
++++ b/gamechanlist.h
+@@ -33,15 +33,19 @@
+ 
+ #include "always.h"
+ #include "bittype.h"
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include <WWOnline\RefPtr.h>
++#endif
+ 
+ class cGameData;
+ class cGameChannel;
+ 
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ namespace WWOnline
+ {
+ class ChannelData;
+ }
++#endif
+ 
+ #include "slist.h"
+ 
+@@ -51,7 +55,11 @@
+ class cGameChannelList
+ {
+    public:
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++		 static void Add_Channel(cGameData * p_game_data);
++#else
+ 		 static void Add_Channel(cGameData * p_game_data, const RefPtr<WWOnline::ChannelData>& channel = RefPtr<WWOnline::ChannelData>());
++#endif
+ 		static void Remove_Channel(const WideStringClass & owner);
+ 		static void Remove_All(void);
+ 		static cGameChannel * Find_Channel(const WideStringClass & owner);
+--- a/gamechanlist.cpp
++++ b/gamechanlist.cpp
+@@ -28,20 +28,30 @@
+ #include "gamechannel.h"
+ #include "gamechanlist.h"
+ #include "wwdebug.h"
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include <WWOnline\WOLChannel.h>
++#endif
+ //
+ // Class statics
+ //
+ SList<cGameChannel> cGameChannelList::ChanList;
+ 
+ //-----------------------------------------------------------------------------
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++void cGameChannelList::Add_Channel(cGameData * p_game_data)
++#else
+ void cGameChannelList::Add_Channel(cGameData * p_game_data, const RefPtr<WWOnline::ChannelData>& p_channel)
++#endif
+ {
+ 	WWASSERT(p_game_data != NULL);
+ 
+    cGameChannel * p_game_channel = Find_Channel(p_game_data->Get_Owner());
+ 	if (p_game_channel == NULL) {
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++		cGameChannel * p_game_channel = new cGameChannel(p_game_data);
++#else
+ 		cGameChannel * p_game_channel = new cGameChannel(p_game_data, p_channel);
++#endif
+ 		WWASSERT(p_game_channel != NULL);
+ 		ChanList.Add_Tail(p_game_channel);
+    } else {
+@@ -54,7 +64,9 @@
+ 		p_game_channel->Get_Game_Data()->Set_Map_Name(
+ 			p_game_data->Get_Map_Name());
+ 
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 		p_game_channel->WolChannel = p_channel;
++#endif
+ 
+ 		delete p_game_data;
+ 	}

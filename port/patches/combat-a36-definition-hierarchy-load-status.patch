@@ -1,0 +1,1244 @@
+--- a/CNCModeSettings.cpp
++++ b/CNCModeSettings.cpp
+@@ -323,12 +323,13 @@
+ 
+ bool CNCModeSettingsDef::Load(ChunkLoadClass& cload)
+ 	{
++	bool loaded = true;
+ 	while (cload.Open_Chunk())
+ 		{
+ 		switch (cload.Cur_Chunk_ID())
+ 			{
+ 			case CHUNKID_PARENT:
+-				DefinitionClass::Load(cload);
++				if (!DefinitionClass::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -440,7 +441,7 @@
+ 		cload.Close_Chunk();
+ 		}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ 	}
+ 
+ 
+--- a/airstripgameobj.cpp
++++ b/airstripgameobj.cpp
+@@ -192,12 +192,13 @@
+ bool
+ AirStripGameObjDef::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ())
+ 	{
+ 		switch (cload.Cur_Chunk_ID ())
+ 		{
+ 			case CHUNKID_DEF_PARENT:
+-				VehicleFactoryGameObjDef::Load (cload);
++				if (!VehicleFactoryGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -212,7 +213,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/armedgameobj.cpp
++++ b/armedgameobj.cpp
+@@ -121,11 +121,12 @@
+ 
+ bool	ArmedGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				PhysicalGameObjDef::Load( cload );
++				if (!PhysicalGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -159,7 +160,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /*
+--- a/basegameobj.cpp
++++ b/basegameobj.cpp
+@@ -133,11 +133,12 @@
+ 
+ bool	BaseGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	cload.Open_Chunk();
+ 	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_DEF_PARENT );
+-	DefinitionClass::Load( cload );
++	if (!DefinitionClass::Load( cload )) loaded = false;
+ 	cload.Close_Chunk();
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /*
+--- a/beacongameobj.cpp
++++ b/beacongameobj.cpp
+@@ -278,12 +278,13 @@
+ bool
+ BeaconGameObjDef::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ())
+ 	{
+ 		switch (cload.Cur_Chunk_ID ())
+ 		{
+ 			case CHUNKID_DEF_PARENT:
+-				SimpleGameObjDef::Load (cload);
++				if (!SimpleGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -298,7 +299,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/building.cpp
++++ b/building.cpp
+@@ -229,13 +229,14 @@
+ bool
+ BuildingGameObjDef::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	int legacy_team = -1;
+ 
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				DamageableGameObjDef::Load( cload );
++				if (!DamageableGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 	  
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -274,7 +275,7 @@
+ 		}
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/buildingaggregate.cpp
++++ b/buildingaggregate.cpp
+@@ -689,11 +689,12 @@
+  *=============================================================================================*/
+ bool	BuildingAggregateDefClass::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case BAGDEF_CHUNK_STATICANIMPHYS:
+-				StaticAnimPhysDefClass::Load( cload );
++				if (!StaticAnimPhysDefClass::Load( cload )) loaded = false;
+ 				break;
+   
+ 			case BAGDEF_CHUNK_VARIABLES:
+@@ -731,7 +732,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/c4.cpp
++++ b/c4.cpp
+@@ -114,11 +114,12 @@
+ 
+ bool	C4GameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				PhysicalGameObjDef::Load( cload );
++				if (!PhysicalGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -141,7 +142,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ const PersistFactoryClass & C4GameObjDef::Get_Factory (void) const 
+--- a/characterclasssettings.cpp
++++ b/characterclasssettings.cpp
+@@ -451,11 +451,12 @@
+ bool
+ CharacterClassSettingsDefClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				DefinitionClass::Load (cload);
++				if (!DefinitionClass::Load (cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -599,7 +600,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/cinematicgameobj.cpp
++++ b/cinematicgameobj.cpp
+@@ -131,11 +131,12 @@
+ 
+ bool	CinematicGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				ArmedGameObjDef::Load( cload );
++				if (!ArmedGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -162,7 +163,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /*
+--- a/comcentergameobj.cpp
++++ b/comcentergameobj.cpp
+@@ -155,12 +155,13 @@
+ bool
+ ComCenterGameObjDef::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ())
+ 	{
+ 		switch (cload.Cur_Chunk_ID ())
+ 		{
+ 			case CHUNKID_DEF_PARENT:
+-				BuildingGameObjDef::Load (cload);
++				if (!BuildingGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -175,7 +176,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/damage.cpp
++++ b/damage.cpp
+@@ -1267,7 +1267,7 @@
+ 	}
+ 	Skin = ArmorWarheadManager::Find_Armor_Save_ID( skin_save_id );
+ 	ShieldType = ArmorWarheadManager::Find_Armor_Save_ID( shield_save_id );
+-	return true;
++	return !cload.Has_Error();
+ }
+ 
+ 
+--- a/damageablegameobj.cpp
++++ b/damageablegameobj.cpp
+@@ -116,11 +116,12 @@
+ 
+ bool	DamageableGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				ScriptableGameObjDef::Load( cload );
++				if (!ScriptableGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 	
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -143,7 +144,7 @@
+ 				break;
+ 
+ 			case CHUNKID_DEF_DEFENSEOBJECTDEF:
+-				DefenseObjectDef.Load(cload);
++				if (!DefenseObjectDef.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -153,7 +154,7 @@
+ 		}
+ 		cload.Close_Chunk();
+ 	}
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /*
+--- a/damageablestaticphys.cpp
++++ b/damageablestaticphys.cpp
+@@ -182,11 +182,12 @@
+ 
+ bool	DamageableStaticPhysDefClass::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case DAMAGEABLESTATICPHYSDEF_CHUNK_STATICANIMPHYSDEF:
+-				StaticAnimPhysDefClass::Load( cload );
++				if (!StaticAnimPhysDefClass::Load( cload )) loaded = false;
+ 				break;
+   
+ 			case DAMAGEABLESTATICPHYSDEF_CHUNK_VARIABLES:
+@@ -213,7 +214,7 @@
+ 				break;
+ 
+ 			case DAMAGEABLESTATICPHYSDEF_CHUNK_DEFENSEOBJECTDEF:
+-				DefenseObjectDef.Load(cload);
++				if (!DefenseObjectDef.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -224,7 +225,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ const PersistFactoryClass & DamageableStaticPhysDefClass::Get_Factory (void) const 
+--- a/damagezone.cpp
++++ b/damagezone.cpp
+@@ -113,11 +113,12 @@
+ 
+ bool	DamageZoneGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				BaseGameObjDef::Load( cload );
++				if (!BaseGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -141,7 +142,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ const PersistFactoryClass & DamageZoneGameObjDef::Get_Factory (void) const
+--- a/doors.cpp
++++ b/doors.cpp
+@@ -143,15 +143,16 @@
+ 
+ bool	DoorPhysDefClass::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_OLD_PARENT:
+-				StaticAnimPhysDefClass::Load( cload );
++				if (!StaticAnimPhysDefClass::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				AccessiblePhysDefClass::Load( cload );
++				if (!AccessiblePhysDefClass::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -184,7 +185,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ const PersistFactoryClass & DoorPhysDefClass::Get_Factory (void) const
+--- a/elevator.cpp
++++ b/elevator.cpp
+@@ -191,15 +191,16 @@
+ 
+ bool	ElevatorPhysDefClass::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_OLD_PARENT:
+-				StaticAnimPhysDefClass::Load( cload );
++				if (!StaticAnimPhysDefClass::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				AccessiblePhysDefClass::Load( cload );
++				if (!AccessiblePhysDefClass::Load( cload )) loaded = false;
+ 				break;
+   
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -237,7 +238,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ const PersistFactoryClass & ElevatorPhysDefClass::Get_Factory (void) const 
+--- a/evasettings.cpp
++++ b/evasettings.cpp
+@@ -241,11 +241,12 @@
+ bool
+ EvaSettingsDefClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				DefinitionClass::Load (cload);
++				if (!DefinitionClass::Load (cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -296,5 +297,5 @@
+ 		message_window->Set_Window_Dirty (true);		
+ 	}
+ 
+-	return true;
+-}
++	return loaded && !cload.Has_Error();
++}
+--- a/explosion.cpp
++++ b/explosion.cpp
+@@ -155,11 +155,12 @@
+ 
+ bool	ExplosionDefinitionClass::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_EXPLOSION_DEF_PARENT:
+-				DefinitionClass::Load( cload );
++				if (!DefinitionClass::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_EXPLOSION_DEF_VARIABLES:
+@@ -193,7 +194,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void	ExplosionManager::Shutdown( void )
+--- a/globalsettings.cpp
++++ b/globalsettings.cpp
+@@ -237,11 +237,12 @@
+ 
+ bool	GlobalSettingsDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				DefinitionClass::Load( cload );
++				if (!DefinitionClass::Load( cload )) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -296,7 +297,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+@@ -379,11 +380,12 @@
+ 
+ bool	HumanLoiterGlobalSettingsDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_HL_DEF_PARENT:
+-				DefinitionClass::Load( cload );
++				if (!DefinitionClass::Load( cload )) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_HL_DEF_VARIABLES:
+@@ -416,7 +418,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ HumanLoiterGlobalSettingsDef * HumanLoiterGlobalSettingsDef::Get_Default_Loiters( void )
+@@ -992,11 +994,12 @@
+ 
+ bool	HUDGlobalSettingsDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_HL_DEF_PARENT:
+-				DefinitionClass::Load( cload );
++				if (!DefinitionClass::Load( cload )) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_HL_DEF_VARIABLES:
+@@ -1116,7 +1119,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /*
+@@ -1186,11 +1189,12 @@
+ 
+ bool	HumanAnimOverrideDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_HAO_DEF_PARENT:
+-				DefinitionClass::Load( cload );
++				if (!DefinitionClass::Load( cload )) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_HAO_DEF_VARIABLES:
+@@ -1219,6 +1223,5 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+-
+--- a/mendozabossgameobj.cpp
++++ b/mendozabossgameobj.cpp
+@@ -259,11 +259,12 @@
+ bool
+ MendozaBossGameObjDefClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				SoldierGameObjDef::Load (cload);
++				if (!SoldierGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -278,7 +279,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/physicalgameobj.cpp
++++ b/physicalgameobj.cpp
+@@ -195,15 +195,16 @@
+ 
+ bool	PhysicalGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case LEGACY_CHUNKID_DEF_PARENT_OLD:
+-				ScriptableGameObjDef::Load( cload );
++				if (!ScriptableGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_DEF_PARENT:
+-				DamageableGameObjDef::Load( cload );
++				if (!DamageableGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -231,7 +232,7 @@
+ 				break;
+ 			
+ 			case LEGACY_CHUNKID_DEF_DEFENSEOBJECTDEF:
+-				DefenseObjectDef.Load(cload);
++				if (!DefenseObjectDef.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -242,7 +243,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ bool	PhysicalGameObjDef::Is_Valid_Config (StringClass &message)
+--- a/powerplantgameobj.cpp
++++ b/powerplantgameobj.cpp
+@@ -154,12 +154,13 @@
+ bool
+ PowerPlantGameObjDef::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ())
+ 	{
+ 		switch (cload.Cur_Chunk_ID ())
+ 		{
+ 			case CHUNKID_DEF_PARENT:
+-				BuildingGameObjDef::Load (cload);
++				if (!BuildingGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -174,7 +175,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/powerup.cpp
++++ b/powerup.cpp
+@@ -201,11 +201,12 @@
+ 
+ bool	PowerUpGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				SimpleGameObjDef::Load( cload );
++				if (!SimpleGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -247,7 +248,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ const PersistFactoryClass & PowerUpGameObjDef::Get_Factory (void) const
+--- a/purchasesettings.cpp
++++ b/purchasesettings.cpp
+@@ -282,11 +282,12 @@
+ bool
+ PurchaseSettingsDefClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				DefinitionClass::Load (cload);
++				if (!DefinitionClass::Load (cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -302,7 +303,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/raveshawbossgameobj.cpp
++++ b/raveshawbossgameobj.cpp
+@@ -330,11 +330,12 @@
+ bool
+ RaveshawBossGameObjDefClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				SoldierGameObjDef::Load (cload);
++				if (!SoldierGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -349,7 +350,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/refinerygameobj.cpp
++++ b/refinerygameobj.cpp
+@@ -195,12 +195,13 @@
+ bool
+ RefineryGameObjDef::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ())
+ 	{
+ 		switch (cload.Cur_Chunk_ID ())
+ 		{
+ 			case CHUNKID_DEF_PARENT:
+-				BuildingGameObjDef::Load (cload);
++				if (!BuildingGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -215,7 +216,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/repairbaygameobj.cpp
++++ b/repairbaygameobj.cpp
+@@ -206,12 +206,13 @@
+ bool
+ RepairBayGameObjDef::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ())
+ 	{
+ 		switch (cload.Cur_Chunk_ID ())
+ 		{
+ 			case CHUNKID_DEF_PARENT:
+-				BuildingGameObjDef::Load (cload);
++				if (!BuildingGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -226,7 +227,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/sakurabossgameobj.cpp
++++ b/sakurabossgameobj.cpp
+@@ -345,11 +345,12 @@
+ bool
+ SakuraBossGameObjDef::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				VehicleGameObjDef::Load (cload);
++				if (!VehicleGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -357,7 +358,7 @@
+ 				break;
+ 
+ 			case CHUNKID_DEF_ROCKET_DEFENSEOBJ_DEF:
+-				RocketsDefense.Load (cload);
++				if (!RocketsDefense.Load (cload)) loaded = false;
+ 				break;
+ 								
+ 			default:
+@@ -368,7 +369,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/samsite.cpp
++++ b/samsite.cpp
+@@ -90,11 +90,12 @@
+ 
+ bool	SAMSiteGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				SmartGameObjDef::Load( cload );
++				if (!SmartGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 	  
+ 			default:
+@@ -105,7 +106,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ const PersistFactoryClass & SAMSiteGameObjDef::Get_Factory (void) const 
+--- a/scriptablegameobj.cpp
++++ b/scriptablegameobj.cpp
+@@ -103,13 +103,14 @@
+ 
+ bool	ScriptableGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
+ 	StringClass str;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				BaseGameObjDef::Load( cload );
++				if (!BaseGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -142,7 +143,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/scriptzone.cpp
++++ b/scriptzone.cpp
+@@ -151,11 +151,12 @@
+ 
+ bool	ScriptZoneGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				ScriptableGameObjDef::Load( cload );
++				if (!ScriptableGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -183,7 +184,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/simplegameobj.cpp
++++ b/simplegameobj.cpp
+@@ -120,11 +120,12 @@
+ 
+ bool	SimpleGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				PhysicalGameObjDef::Load( cload );
++				if (!PhysicalGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 	  
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -151,7 +152,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ const PersistFactoryClass & SimpleGameObjDef::Get_Factory (void) const 
+--- a/smartgameobj.cpp
++++ b/smartgameobj.cpp
+@@ -125,11 +125,12 @@
+ 
+ bool	SmartGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_ARMEDGAMEOBJ_PARENT:
+-				ArmedGameObjDef::Load( cload );
++				if (!ArmedGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -158,7 +159,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/soldier.cpp
++++ b/soldier.cpp
+@@ -229,13 +229,14 @@
+ 
+ bool	SoldierGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	int dialog_index = 0;
+ 
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				SmartGameObjDef::Load( cload );
++				if (!SmartGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_DIALOG_ENTRY:
+@@ -281,7 +282,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ const PersistFactoryClass & SoldierGameObjDef::Get_Factory (void) const 
+--- a/soldierfactorygameobj.cpp
++++ b/soldierfactorygameobj.cpp
+@@ -154,12 +154,13 @@
+ bool
+ SoldierFactoryGameObjDef::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ())
+ 	{
+ 		switch (cload.Cur_Chunk_ID ())
+ 		{
+ 			case CHUNKID_DEF_PARENT:
+-				BuildingGameObjDef::Load (cload);
++				if (!BuildingGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -174,7 +175,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/spawn.cpp
++++ b/spawn.cpp
+@@ -211,6 +211,7 @@
+ 
+ bool	SpawnerDefClass::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
+ 	WWASSERT( SpawnDefinitionIDList.Count() == 0 );
+ 	StringClass str;
+@@ -219,7 +220,7 @@
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				DefinitionClass::Load( cload );
++				if (!DefinitionClass::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -276,7 +277,7 @@
+ 	}
+ 
+ 	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ const PersistFactoryClass &	SpawnerDefClass::Get_Factory( void ) const
+--- a/specialeffectsgameobj.cpp
++++ b/specialeffectsgameobj.cpp
+@@ -165,11 +165,12 @@
+ bool
+ SpecialEffectsGameObjDef::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				PhysicalGameObjDef::Load (cload);
++				if (!PhysicalGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -185,7 +186,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/teampurchasesettings.cpp
++++ b/teampurchasesettings.cpp
+@@ -271,11 +271,12 @@
+ bool
+ TeamPurchaseSettingsDefClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				DefinitionClass::Load (cload);
++				if (!DefinitionClass::Load (cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -291,7 +292,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/transitiongameobj.cpp
++++ b/transitiongameobj.cpp
+@@ -103,13 +103,14 @@
+ 
+ bool	TransitionGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	Free_Transition_List ();
+ 
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				BaseGameObjDef::Load( cload );
++				if (!BaseGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_TRANSITION:
+@@ -132,7 +133,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /*
+--- a/vehicle.cpp
++++ b/vehicle.cpp
+@@ -336,13 +336,14 @@
+ 
+ bool	VehicleGameObjDef::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	Free_Transition_List ();
+ 
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_DEF_PARENT:
+-				SmartGameObjDef::Load( cload );
++				if (!SmartGameObjDef::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_TRANSITION:
+@@ -397,7 +398,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /*
+--- a/vehiclefactorygameobj.cpp
++++ b/vehiclefactorygameobj.cpp
+@@ -189,12 +189,13 @@
+ bool
+ VehicleFactoryGameObjDef::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ())
+ 	{
+ 		switch (cload.Cur_Chunk_ID ())
+ 		{
+ 			case CHUNKID_DEF_PARENT:
+-				BuildingGameObjDef::Load (cload);
++				if (!BuildingGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -209,7 +210,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/warfactorygameobj.cpp
++++ b/warfactorygameobj.cpp
+@@ -164,12 +164,13 @@
+ bool
+ WarFactoryGameObjDef::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ())
+ 	{
+ 		switch (cload.Cur_Chunk_ID ())
+ 		{
+ 			case CHUNKID_DEF_PARENT:
+-				VehicleFactoryGameObjDef::Load (cload);
++				if (!VehicleFactoryGameObjDef::Load (cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DEF_VARIABLES:
+@@ -184,7 +185,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/weaponmanager.cpp
++++ b/weaponmanager.cpp
+@@ -251,11 +251,12 @@
+ 
+ bool	WeaponDefinitionClass::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_WEAPON_DEF_PARENT:
+-				DefinitionClass::Load( cload );
++				if (!DefinitionClass::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_WEAPON_DEF_VARIABLES:
+@@ -311,7 +312,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /*
+@@ -621,11 +622,12 @@
+ 
+ bool	AmmoDefinitionClass::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_AMMO_DEF_PARENT:
+-				DefinitionClass::Load( cload );
++				if (!DefinitionClass::Load( cload )) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_AMMO_DEF_VARIABLES:
+@@ -715,7 +717,7 @@
+ 		ModelName = "NULL";
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /*
+
+

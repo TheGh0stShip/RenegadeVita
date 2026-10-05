@@ -1,0 +1,40 @@
+--- a/persistfactory.h
++++ b/persistfactory.h
+@@ -152,7 +152,7 @@
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(SIMPLEFACTORY_CHUNKID_OBJDATA);
+-	obj->Save(csave);
++	if (obj == NULL || !obj->Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ }
+ 
+--- a/PersistFactory.h
++++ b/PersistFactory.h
+@@ -136,7 +136,7 @@
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(SIMPLEFACTORY_CHUNKID_OBJDATA);
+-	obj->Save(csave);
++	if (obj == NULL || !obj->Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ }
+ 
+--- a/saveload.cpp
++++ b/saveload.cpp
+@@ -63,12 +63,12 @@
+ 	bool ok = true;
+ 
+ 	if (subsystem.Contains_Data()) {
+-		csave.Begin_Chunk (subsystem.Chunk_ID ());
++		ok = csave.Begin_Chunk (subsystem.Chunk_ID ());
+ 		ok &= subsystem.Save (csave);
+-		csave.End_Chunk ();
++		ok = csave.End_Chunk () && ok;
+ 	}
+ 
+-	return ok;
++	return ok && !csave.Has_Error();
+ }
+ 
+ bool SaveLoadSystemClass::Load (ChunkLoadClass &cload,bool auto_post_load,

@@ -1,0 +1,183 @@
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -102,6 +102,90 @@
+ 	MICROCHUNKID_DESCRIPTION,
+ };
+ 
++#if defined(RENEGADE_VITA_PORT)
++static bool Read_Player_Save_Level_Info(ChunkLoadClass &cload,
++	StringClass &map_filename, WideStringClass &description, int &mission_description)
++{
++	StringClass loaded_map(0, true);
++	WideStringClass loaded_description;
++	int loaded_mission_description = 0;
++	uint32 loaded_values = 0U;
++	bool loaded = true;
++	while (cload.Open_Micro_Chunk()) {
++		const uint32 length = cload.Cur_Micro_Chunk_Length();
++		switch(cload.Cur_Micro_Chunk_ID()) {
++			case MICROCHUNKID_MAP_FILENAME:
++				if ((loaded_values & 1U) != 0U || length == 0U || length > 512U) loaded = false;
++				else {
++					loaded_values |= 1U;
++					loaded = cload.Read(loaded_map.Get_Buffer(length), length) == length && loaded;
++					loaded = static_cast<uint32>(loaded_map.Get_Length() + 1) == length && loaded;
++				}
++				break;
++			case MICROCHUNKID_MISSION_DESCRIPTION:
++				if ((loaded_values & 2U) != 0U || length != sizeof(loaded_mission_description)) loaded = false;
++				else {
++					loaded_values |= 2U;
++					loaded = cload.Read(&loaded_mission_description, sizeof(loaded_mission_description)) ==
++						sizeof(loaded_mission_description) && loaded;
++				}
++				break;
++			case MICROCHUNKID_DESCRIPTION:
++				if ((loaded_values & 4U) != 0U || length < sizeof(WCHAR) ||
++					(length % sizeof(WCHAR)) != 0U || length > 4096U) loaded = false;
++				else {
++					loaded_values |= 4U;
++					loaded = cload.Read(loaded_description.Get_Buffer(length / sizeof(WCHAR)), length) == length && loaded;
++					loaded = static_cast<uint32>((loaded_description.Get_Length() + 1) * sizeof(WCHAR)) == length && loaded;
++				}
++				break;
++			default:
++				break;
++		}
++		cload.Close_Micro_Chunk();
++	}
++
++	const int map_length = loaded_map.Get_Length();
++	loaded = loaded && loaded_values == 7U && map_length > 4 &&
++		::stricmp(&loaded_map[map_length - 4], ".LSD") == 0 && !cload.Has_Error();
++	if (loaded) {
++		map_filename = loaded_map;
++		description = loaded_description;
++		mission_description = loaded_mission_description;
++	}
++	return loaded;
++}
++
++static bool Read_Player_Save_Envelope(ChunkLoadClass &cload,
++	StringClass &map_filename, WideStringClass &description, int &mission_description)
++{
++	bool level_info_seen = false;
++	bool level_data_seen = false;
++	bool loaded = true;
++	while (cload.Open_Chunk()) {
++		switch(cload.Cur_Chunk_ID()) {
++			case CHUNKID_LEVEL_INFO:
++				if (level_info_seen || level_data_seen) loaded = false;
++				else {
++					level_info_seen = true;
++					loaded = Read_Player_Save_Level_Info(cload, map_filename,
++						description, mission_description) && loaded;
++				}
++				break;
++			case CHUNKID_LEVEL_DATA:
++				if (!level_info_seen || level_data_seen) loaded = false;
++				else level_data_seen = true;
++				break;
++			default:
++				loaded = false;
++				break;
++		}
++		cload.Close_Chunk();
++	}
++	return loaded && level_info_seen && level_data_seen && !cload.Has_Error();
++}
++#endif
++
+ /*
+ **
+ */
+@@ -331,49 +415,8 @@
+ 					StringClass loaded_map_filename(0, true);
+ 					WideStringClass loaded_description;
+ 					int loaded_mission_description = 0;
+-					uint32 loaded_values = 0U;
+-					bool loaded = true;
+-					while (cload.Open_Micro_Chunk()) {
+-						switch(cload.Cur_Micro_Chunk_ID()) {
+-							case MICROCHUNKID_MAP_FILENAME:
+-							{
+-								const uint32 length = cload.Cur_Micro_Chunk_Length();
+-								if ((loaded_values & 1U) != 0U || length == 0U) loaded = false;
+-								else {
+-									loaded_values |= 1U;
+-									loaded = cload.Read(loaded_map_filename.Get_Buffer(length), length) == length && loaded;
+-								}
+-							}
+-							break;
+-							case MICROCHUNKID_MISSION_DESCRIPTION:
+-								if ((loaded_values & 2U) != 0U ||
+-									cload.Cur_Micro_Chunk_Length() != sizeof(loaded_mission_description)) loaded = false;
+-								else {
+-									loaded_values |= 2U;
+-									loaded = cload.Read(&loaded_mission_description,
+-										sizeof(loaded_mission_description)) == sizeof(loaded_mission_description) && loaded;
+-								}
+-								break;
+-							case MICROCHUNKID_DESCRIPTION:
+-							{
+-								const uint32 length = cload.Cur_Micro_Chunk_Length();
+-								if ((loaded_values & 4U) != 0U || (length & 1U) != 0U) loaded = false;
+-								else {
+-									loaded_values |= 4U;
+-									loaded = cload.Read(loaded_description.Get_Buffer((length + 1U) / 2U),
+-										length) == length && loaded;
+-								}
+-							}
+-							break;
+-							default:
+-								break;
+-						}
+-						cload.Close_Micro_Chunk();
+-					}
+-					const int map_length = loaded_map_filename.Get_Length();
+-					loaded = loaded && loaded_values == 7U && map_length > 4 &&
+-						::stricmp(&loaded_map_filename[map_length - 4], ".LSD") == 0;
+-					if (!loaded) {
++					if (!Read_Player_Save_Level_Info(cload, loaded_map_filename,
++						loaded_description, loaded_mission_description)) {
+ 						A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_INFO_MISSING);
+ 						break;
+ 					}
+@@ -533,6 +576,9 @@
+ 	int mission_name_id	= 0;
+ 	StringClass map_filename(0,true);
+ 	
++	#if defined(RENEGADE_VITA_PORT)
++	retval = Read_Player_Save_Envelope(cload, map_filename, description, mission_name_id);
++	#else
+ 	//
+ 	//	Loop until we've found the header chunk
+ 	//
+@@ -558,6 +604,7 @@
+ 		}
+ 		cload.Close_Chunk();
+ 	}
++	#endif
+ 
+ 	//
+ 	//	Either load the mission name from the translation database
+@@ -597,6 +644,11 @@
+ 
+ 	bool retval = false;
+ 	
++	#if defined(RENEGADE_VITA_PORT)
++	WideStringClass description;
++	int mission_description = 0;
++	retval = Read_Player_Save_Envelope(cload, map_name, description, mission_description);
++	#else
+ 	//
+ 	//	Loop until we've found the header chunk
+ 	//
+@@ -621,6 +673,7 @@
+ 		}
+ 		cload.Close_Chunk();
+ 	}
++	#endif
+ 
+ 	//
+ 	//	Close the file

@@ -1,0 +1,224 @@
+--- a/DlgMPTeamSelect.h
++++ b/DlgMPTeamSelect.h
+@@ -41,6 +41,7 @@
+ #include <WWUI\MenuDialog.h>
+ #include <WWLib\Notify.h>
+ #include <WWLib\Signaler.h>
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include <WWOnline\RefPtr.h>
+ #include "WOLGameInfo.h"
+ 
+@@ -51,6 +52,7 @@
+ class UserEvent;
+ class GameOptionsMessage;
+ };
++#endif
+ 
+ class cPlayer;
+ 
+@@ -59,9 +61,11 @@
+ class DlgMPTeamSelect :
+ 		public MenuDialogClass,
+ 		protected Signaler<MPChooseTeamSignal>,
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 		protected Observer<WWOnline::ChannelEvent>,
+ 		protected Observer<WWOnline::UserEvent>,
+ 		protected Observer<WWOnline::GameOptionsMessage>,
++#endif
+ 		protected Observer<PlayerMgrEvent>
+ 	{
+ 	public:
+@@ -82,31 +86,35 @@
+ 		void SelectSideChoice(int side);
+ 		int GetSideChoice(void);
+ 
+-		void RequestWOLGameInfo(void);
+-
+ 		void ShowTimeRemaining(float remainingSecond);
+ 		bool FindPlayerInListCtrl(const WCHAR* name, ListCtrlClass*& outList, int& outIndex);
+ 
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
++		void RequestWOLGameInfo(void);
+ 		void HandleNotification(WWOnline::ChannelEvent&);
+ 		void HandleNotification(WWOnline::UserEvent&);
+ 		void HandleNotification(WWOnline::GameOptionsMessage&);
+-		void HandleNotification(PlayerMgrEvent&);
+-
+ 		static void ProcessWOLGameInfo(DlgMPTeamSelect& dialog, const char* data);
+ 		static void ProcessWOLTeamInfo(DlgMPTeamSelect& dialog, const char* data);
+ 		static void ProcessWOLPlayerInfo(DlgMPTeamSelect& dialog, const char* data);
++#endif
++		void HandleNotification(PlayerMgrEvent&);
+ 
+ 		void PopulateWithLANPlayers(void);
+ 		void AddLANPlayerInfo(cPlayer* lanPlayer);
+ 		void RemoveLANPlayerInfo(cPlayer* lanPlayer);
+ 
+ 	protected:
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 		bool mWOLGame;
++#endif
+ 		bool mCanChoose;
+ 		float mTimeRemaining;
+ 
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 		RefPtr<WWOnline::Session> mWOLSession;
+ 		WOLGameInfo mGameInfo;
++#endif
+ 	};
+ 
+ #endif // __DLGMPTEAMSELECT_H__
+--- a/DlgMPTeamSelect.cpp
++++ b/DlgMPTeamSelect.cpp
+@@ -35,14 +35,17 @@
+ ******************************************************************************/
+ 
+ #include "dlgmpteamselect.h"
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include "wolgmode.h"
+-#include "gamedata.h"
+ #include "wolgameinfo.h"
+ #include "wolloginprofile.h"
++#include <wwonline\wolgameoptions.h>
++#endif
++#include "gamedata.h"
++#include "cnetwork.h"
+ #include "dlgmessagebox.h"
+ #include "renegadedialogmgr.h"
+ #include <combat\playertype.h>
+-#include <wwonline\wolgameoptions.h>
+ #include <wwui\listctrl.h>
+ #include <wwui\comboboxctrl.h>
+ #include <wwui\imagectrl.h>
+@@ -53,7 +56,9 @@
+ #include "gameinitmgr.h"
+ 
+ 
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ using namespace WWOnline;
++#endif
+ 
+ 
+ // Player list columns
+@@ -68,6 +73,7 @@
+ 	};
+ 
+ 
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ // Private game options processing dispatching
+ typedef void (*GameOptionsDispatchFunc)(DlgMPTeamSelect&, const char*);
+ 
+@@ -76,6 +82,7 @@
+ #define PARSE_HEXDWORD(s, d, v) {char* ptr = strtok(s, d); if (ptr) {sscanf(ptr, "%08X", &v);}}
+ #define PARSE_HEXBYTE(s, d, v) {char* ptr = strtok(s, d); if (ptr) {sscanf(ptr, "%02X", &v);}}
+ #define PARSE_STRING(s, d, v) {v = strtok(s, d);}
++#endif
+ 
+ 
+ static int CALLBACK ListSortCallback(ListCtrlClass* list, int index1, int index2, uint32 param)
+@@ -137,7 +144,9 @@
+ 
+ DlgMPTeamSelect::DlgMPTeamSelect(void) :
+ 		MenuDialogClass(IDD_MP_TEAM_SELECT),
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 		mWOLGame(true),
++#endif
+ 		mCanChoose(true),
+ 		mTimeRemaining(0.0f)
+ 	{
+@@ -185,6 +194,16 @@
+ 
+ bool DlgMPTeamSelect::FinalizeCreate(void)
+ 	{
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++	if (The_Game() == NULL || !cNetwork::I_Am_Client())
++		{
++		return false;
++		}
++
++	mCanChoose = The_Game()->IsClanGame.Is_False()
++		&& The_Game()->IsTeamChangingAllowed.Is_True();
++	return true;
++#else
+ 	GameModeClass* gameMode = GameModeManager::Find("WOL");
+ 
+ 	if (gameMode && gameMode->Is_Active())
+@@ -231,6 +250,7 @@
+ 	mCanChoose = (!mGameInfo.IsClanGame() && mGameInfo.IsTeamChange());
+ 
+ 	return true;
++#endif
+ 	}
+ 
+ 
+@@ -301,6 +321,32 @@
+ 
+ 	int sidePref = -1;
+ 
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++	sidePref = cNetInterface::Get_Side_Preference();
++
++	// A LAN/direct-IP client is already in the live game.  The released
++	// template hides Start until the WOL information exchange completes; make
++	// that confirmation available for the LAN-owned path instead.
++	DialogControlClass* start = Get_Dlg_Item(IDC_STARTGAME);
++	WWASSERT(start != NULL);
++	if (start != NULL)
++		{
++		start->Show(true);
++		start->Enable(true);
++		}
++
++	// Team selection must be confirmed before returning to gameplay.
++	DialogControlClass* cancel = Get_Dlg_Item(IDCANCEL);
++	WWASSERT(cancel != NULL);
++	if (cancel != NULL)
++		{
++		cancel->Show(false);
++		cancel->Enable(false);
++		}
++
++	cPlayerManager::Add_Event_Observer(*this);
++	PopulateWithLANPlayers();
++#else
+ 	if (mWOLGame)
+ 		{
+ 		// If this is not a clan game then we can use the preference.
+@@ -338,6 +384,7 @@
+ 
+ 		PopulateWithLANPlayers();
+ 		}
++#endif
+ 
+ 	InitSideChoice(sidePref);
+ 
+@@ -441,11 +488,13 @@
+ 
+ void DlgMPTeamSelect::On_Last_Menu_Ending(void)
+ 	{
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 	// If this the WOL screen then return to the menu...
+ 	if (GameInitMgrClass::Is_WOL_Initialized())
+ 		{
+ 		RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOC_INTERNET_GAME_LIST);
+ 		}
++#endif
+ 	}
+ 
+ 
+@@ -545,6 +594,7 @@
+ *
+ ******************************************************************************/
+ 
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ void DlgMPTeamSelect::RequestWOLGameInfo(void)
+ 	{
+ 	WWDEBUG_SAY(("DlgMPTeamSelect requesting game info\n"));
+@@ -1017,6 +1067,7 @@
+ 			}
+ 		}
+ 	}
++#endif
+ 
+ 
+ /******************************************************************************

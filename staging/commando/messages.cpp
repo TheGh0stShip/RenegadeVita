@@ -82,7 +82,11 @@
 #include "clienthintmanager.h"
 #include "packetmgr.h"
 #include "specialbuilds.h"
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "gameinitmgr.h"
+#else
 #include "a31_gameinit_stub.h"
+#endif
 #include "a31_win_screen_stub.h"
 #include "a31_console_stub.h"
 #include "a31_cdkey_auth_stub.h"

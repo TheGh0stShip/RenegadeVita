@@ -49,10 +49,14 @@
 #include "string_ids.h"
 #include "fromaddress.h"
 #include "DlgMPConnect.h"
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "slavemaster.h"
+#endif
 #include "dlgmpchangelannickname.h"
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "gamespyadmin.h"
 #include "demosupport.h"
+#endif
 
 //
 // Class statics
@@ -108,7 +112,11 @@ void cLanChat::Load_Lan_Registry_Keys(void)
 	WideStringClass widename;
 	widename.Convert_From(name);
 
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+	{
+#else
 	if (!cGameSpyAdmin::Is_Gamespy_Game()) {
+#endif
 		if (widename.Is_Empty())
 		{
 			cNetInterface::Set_Random_Nickname();
@@ -134,7 +142,11 @@ void cLanChat::Save_Lan_Registry_Keys(void)
 	WWASSERT(registry);
 	WWASSERT(registry->Is_Valid());
 
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+	{
+#else
 	if (!cGameSpyAdmin::Is_Gamespy_Game()) {
+#endif
 		StringClass string;
 		cNetInterface::Get_Nickname().Convert_To(string);
 		registry->Set_String("MyLanName", string);
@@ -149,9 +161,11 @@ void cLanChat::Save_Lan_Registry_Keys(void)
 void cLanChat::Init_Lan_Protocol_And_Socket(void)
 {
 	WWASSERT(!IS_SOLOPLAY);
-   if (cGameSpyAdmin::Is_Gamespy_Game()) {
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+	if (cGameSpyAdmin::Is_Gamespy_Game()) {
 	   return;
-   }
+	}
+#endif
 
    bool is_internet = false;
    if (!cNetUtil::Protocol_Init(is_internet)) {
@@ -186,10 +200,12 @@ void cLanChat::Refusal_Actions(void)
 //-----------------------------------------------------------------------------
 void cLanChat::Send_Position_Broadcast(void)
 {
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 	//GAMESPY
 	if (cGameSpyAdmin::Is_Gamespy_Game()) {
 		return;
 	}
+#endif
 
    //Debug_Say(("Send_Position_Broadcast\n"));
 	if (TIMEGETTIME() - LastPositionBroadcastTimeMs > LAN_BROADCAST_INTERVAL_MS) {
@@ -286,11 +302,13 @@ void cLanChat::Process_Position_Broadcast(cPacket & packet)
 //-----------------------------------------------------------------------------
 void cLanChat::Lan_Packet_Handler(cPacket & packet)
 {
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 	//GAMESPY
 	if (cGameSpyAdmin::Is_Gamespy_Game()) {
 		packet.Flush();
 		return;
 	}
+#endif
 
 	if (CurrentLocation == LANLOC_EXIT) {
 		//
@@ -333,15 +351,19 @@ void cLanChat::Go_To_Location(ChatLocationEnum location)
 //-----------------------------------------------------------------------------
 void cLanChat::Think(void)
 {
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 	if (cGameSpyAdmin::Is_Gamespy_Game()) {
 		return;
 	}
+#endif
 
    if (CurrentLocation != LANLOC_EXIT) {
 		Send_Position_Broadcast();
 		cNetUtil::Lan_Servicing(Socket, External_Lan_Packet_Handler);
 
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 		DEMO_SECURITY_CHECK;
+#endif
 	}
 }
 

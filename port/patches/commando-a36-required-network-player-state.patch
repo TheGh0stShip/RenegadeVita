@@ -1,0 +1,53 @@
+--- a/cnetwork.cpp
++++ b/cnetwork.cpp
+@@ -802,10 +802,17 @@
+ bool cNetwork::Load(ChunkLoadClass &cload)
+ {
++	bool player_manager_seen = false;
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PLAYERMANAGER:
+-				//cPlayerManager::Remove_All();
+-				cPlayerManager::Load(cload);
++				if (player_manager_seen) {
++					loaded = false;
++				} else {
++					player_manager_seen = true;
++					//cPlayerManager::Remove_All();
++					loaded = cPlayerManager::Load(cload) && loaded;
++				}
+ 				break;
+ 
+@@ -818,5 +825,5 @@
+ 	}
+ 
+-	return true;
++	return loaded && player_manager_seen;
+ }
+ 
+--- a/playermanager.cpp
++++ b/playermanager.cpp
+@@ -1463,6 +1463,13 @@
+ {
++	bool player_list_seen = false;
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PLAYERLIST:
++				if (player_list_seen) {
++					loaded = false;
++					break;
++				}
++				player_list_seen = true;
+ 
+@@ -1511,6 +1519,6 @@
+ 	}
+ 
+-	return true;
++	return loaded && player_list_seen;
+ }
+ 
+ //-----------------------------------------------------------------------------

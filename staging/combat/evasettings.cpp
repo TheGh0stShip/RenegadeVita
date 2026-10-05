@@ -44,6 +44,7 @@
 #include "objectives.h"
 #include "combat.h"
 #include "messagewindow.h"
+#include "saveload.h"
 
 
 DECLARE_FORCE_LINK (EvaSettings)
@@ -124,7 +125,8 @@ EvaSettingsDefClass::EvaSettingsDefClass (void)	:
 	MessagesFadeoutUVRect (DEF_MESSAGESFADEOUTUVRECT),
 	MessagesBackgroundUVRect (DEF_MESSAGESBACKGROUNDUVRECT),
 	MessagesTextureSize (DEF_MESSAGESTEXTURESIZE),
-	MessagesIconPos (DEF_MESSAGESICONPOS)
+	MessagesIconPos (DEF_MESSAGESICONPOS),
+	PreviousSettings (EvaSettings)
 {
 	PARAM_SEPARATOR (EvaSettingsDefClass, "Objectives Viewer");
 	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_RECT, ObjectivesScreenRect, "Screen Rect (normalized pixels)");
@@ -155,8 +157,14 @@ EvaSettingsDefClass::EvaSettingsDefClass (void)	:
 ///////////////////////////////////////////////////////////////////////////////////////////
 EvaSettingsDefClass::~EvaSettingsDefClass (void)
 {
-	EvaSettings = &_DefaultSettings;
+	if (EvaSettings == this) EvaSettings = PreviousSettings;
 	return ;
+}
+
+void
+EvaSettingsDefClass::On_Load_Rejected (void)
+{
+	if (EvaSettings == this) EvaSettings = PreviousSettings;
 }
 
 
@@ -229,7 +237,7 @@ EvaSettingsDefClass::Save (ChunkSaveClass &csave)
 
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 
@@ -241,14 +249,23 @@ EvaSettingsDefClass::Save (ChunkSaveClass &csave)
 bool
 EvaSettingsDefClass::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
+	bool parent_seen = false;
+	bool variables_seen = false;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				DefinitionClass::Load (cload);
+				if (parent_seen || !DefinitionClass::Load (cload)) loaded = false;
+				parent_seen = true;
 				break;
 								
 			case CHUNKID_VARIABLES:
+				if (variables_seen) {
+					loaded = false;
+					break;
+				}
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk ()) {
 					switch(cload.Cur_Micro_Chunk_ID ()) {
 
@@ -284,8 +301,17 @@ EvaSettingsDefClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
+	loaded = loaded && parent_seen && variables_seen && !cload.Has_Error();
+	if (!loaded) return false;
+	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+	return true;
+}
+
+void
+EvaSettingsDefClass::On_Post_Load (void)
+{
 	ObjectiveManager::Reload_Viewer ();
-	
+
 	//
 	//	Ask the message window to recalculate its size...
 	//
@@ -296,5 +322,5 @@ EvaSettingsDefClass::Load (ChunkLoadClass &cload)
 		message_window->Set_Window_Dirty (true);		
 	}
 
-	return true;
+	return;
 }

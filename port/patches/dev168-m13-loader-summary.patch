@@ -59,7 +59,7 @@
  	A35_Vita_Static_Load_Trace_Step("prototype-create-return-depth", current_depth);
 --- a/ww3d2/agg_def.cpp
 +++ b/ww3d2/agg_def.cpp
-@@ -73,5 +73,6 @@ static VitaAggregateTemplateSlot s_vita_m13_templates[] = {
+@@ -73,6 +73,7 @@ static VitaAggregateTemplateSlot s_vita_m13_templates[] = {
  static VitaAggregateTemplateSlot s_vita_m13_templates[] = {
 	{"X00_AG_Explode", NULL, NULL},
 -	{"ag_rocketl", NULL, NULL}

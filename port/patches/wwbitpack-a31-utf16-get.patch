@@ -6,7 +6,7 @@
 @@ -184 +184 @@
 -		Add(string[i]);
 +		Add(static_cast<USHORT>(string[i]));
-@@ -201,9 +201,9 @@
+@@ -201,8 +201,8 @@
 -	WCHAR temp = L'?';
 +	USHORT temp = '?';
  	int i = 0;

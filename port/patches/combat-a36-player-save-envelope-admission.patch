@@ -1,0 +1,107 @@
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -306,6 +306,7 @@
+ 	ChunkLoadClass cload(file);
+ #if defined(__vita__)
+ 	bool level_info_found = false;
++	bool level_info_valid = false;
+ 	bool level_data_found = false;
+ #endif
+ 
+@@ -315,8 +316,67 @@
+ 
+ 			case CHUNKID_LEVEL_INFO:
+ #if defined(__vita__)
++				if (level_info_found || level_data_found) {
++					A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_INFO_MISSING);
++					break;
++				}
+ 				level_info_found = true;
+-#endif
++				{
++					StringClass loaded_map_filename(0, true);
++					WideStringClass loaded_description;
++					int loaded_mission_description = 0;
++					uint32 loaded_values = 0U;
++					bool loaded = true;
++					while (cload.Open_Micro_Chunk()) {
++						switch(cload.Cur_Micro_Chunk_ID()) {
++							case MICROCHUNKID_MAP_FILENAME:
++							{
++								const uint32 length = cload.Cur_Micro_Chunk_Length();
++								if ((loaded_values & 1U) != 0U || length == 0U) loaded = false;
++								else {
++									loaded_values |= 1U;
++									loaded = cload.Read(loaded_map_filename.Get_Buffer(length), length) == length && loaded;
++								}
++							}
++							break;
++							case MICROCHUNKID_MISSION_DESCRIPTION:
++								if ((loaded_values & 2U) != 0U ||
++									cload.Cur_Micro_Chunk_Length() != sizeof(loaded_mission_description)) loaded = false;
++								else {
++									loaded_values |= 2U;
++									loaded = cload.Read(&loaded_mission_description,
++										sizeof(loaded_mission_description)) == sizeof(loaded_mission_description) && loaded;
++								}
++								break;
++							case MICROCHUNKID_DESCRIPTION:
++							{
++								const uint32 length = cload.Cur_Micro_Chunk_Length();
++								if ((loaded_values & 4U) != 0U || (length & 1U) != 0U) loaded = false;
++								else {
++									loaded_values |= 4U;
++									loaded = cload.Read(loaded_description.Get_Buffer((length + 1U) / 2U),
++										length) == length && loaded;
++								}
++							}
++							break;
++							default:
++								break;
++						}
++						cload.Close_Micro_Chunk();
++					}
++					const int map_length = loaded_map_filename.Get_Length();
++					loaded = loaded && loaded_values == 7U && map_length > 4 &&
++						::stricmp(&loaded_map_filename[map_length - 4], ".LSD") == 0;
++					if (!loaded) {
++						A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_INFO_MISSING);
++						break;
++					}
++					MapFilename = loaded_map_filename;
++					Description = loaded_description;
++					MissionDescriptionID = loaded_mission_description;
++					level_info_valid = true;
++				}
++#else
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+ 						
+@@ -330,6 +390,7 @@
+ 					}
+ 					cload.Close_Micro_Chunk();
+ 				}
++#endif
+ 
+ 
+ 				{
+@@ -350,6 +411,10 @@
+ 								
+ 			case CHUNKID_LEVEL_DATA:
+ #if defined(__vita__)
++				if (level_data_found || !level_info_valid) {
++					A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_SUBSYSTEM_FAILED);
++					break;
++				}
+ 				level_data_found = true;
+ #endif
+ 				if (CombatManager::I_Am_Server()) {
+@@ -373,7 +438,7 @@
+ 	}
+ 
+ #if defined(__vita__)
+-	if (!level_info_found) A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_INFO_MISSING);
++	if (!level_info_found || !level_info_valid) A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_INFO_MISSING);
+ 	if (CombatManager::I_Am_Server() && !level_data_found) {
+ 		A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_DATA_MISSING);
+ 	}

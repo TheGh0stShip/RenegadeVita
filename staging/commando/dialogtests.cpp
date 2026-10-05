@@ -47,6 +47,13 @@
 #include "translatedb.h"
 #include "string_ids.h"
 #include "dlgtechoptions.h"
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "combat.h"
+#include "wwaudio.h"
+#endif
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "a4_frontend_lifecycle_boundary.h"
+#endif
 
 #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 #include "tabctrl.h"
@@ -110,9 +117,6 @@ void
 OptionsMenuClass::On_Init_Dialog (void)
 {
 	const int unsupported_options[] = {
-		IDC_MENU_CONTROLS_BUTTON,
-		IDC_MENU_MOVIES_BUTTON,
-		IDC_MENU_CREDITS_BUTTON,
 		IDC_MENU_MULTIPLAY_OPTS_BUTTON
 	};
 	for (unsigned index = 0; index < sizeof(unsupported_options) / sizeof(unsupported_options[0]); ++index) {
@@ -1547,6 +1551,9 @@ DifficultyMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 				CampaignManager::Start_Campaign( difficulty );
 			} else {
 				WWDEBUG_SAY(( "REPLAY %d\n", difficulty ));
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+				if (!A4_Frontend_Latch_Replay_Level(ReplayFilename, difficulty)) return;
+#else
 
 				//
 				//	End the current game before we load the new one	 (CODE REMOVED FROM LOADSPGAME)
@@ -1558,6 +1565,7 @@ DifficultyMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 
 				GameInitMgrClass::Initialize_SP ();
 				CampaignManager::Replay_Level( ReplayFilename, difficulty );
+#endif
 			}
 			break;
 		}
@@ -1567,7 +1575,7 @@ DifficultyMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	return ;
 }
 
-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || (defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO)
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1611,21 +1619,31 @@ DeathOptionsPopupClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	{
 		case IDCANCEL:
 		case IDC_DEATH_OPTION_QUIT:
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+			GameInitMgrClass::Set_Needs_Game_Exit(true);
+#else
 			GameInitMgrClass::Continue_Game();
 			GameInitMgrClass::End_Game ();
 			GameInitMgrClass::Display_End_Game_Menu ();
+#endif
 			End_Dialog ();
 			do_default = false;
 			break;
 
 		case IDC_DEATH_OPTION_RESTART:
 			GameInitMgrClass::Continue_Game();
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+			cGod::Request_Restart();
+#else
 			cGod::Restart();
+#endif
 			End_Dialog();
 			break;
 
 		case IDC_DEATH_OPTION_LOAD:
+#if !defined(RENEGADE_A4_ORIGINAL_FRONTEND) || RENEGADE_VITA_M00_DEMO
 			GameInitMgrClass::Continue_Game();
+#endif
 			cGod::Load_Game();
 			End_Dialog();
 			break;
@@ -1681,12 +1699,18 @@ FailedOptionsPopupClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	{
 		case IDC_FAILED_OPTION_RESTART:
 			GameInitMgrClass::Continue_Game();
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+			cGod::Request_Restart();
+#else
 			cGod::Restart();
+#endif
 			End_Dialog();
 			break;
 
 		case IDC_FAILED_OPTION_LOAD:
+#if !defined(RENEGADE_A4_ORIGINAL_FRONTEND) || RENEGADE_VITA_M00_DEMO
 			GameInitMgrClass::Continue_Game();
+#endif
 			cGod::Load_Game();
 			End_Dialog();
 			break;
@@ -1697,9 +1721,13 @@ FailedOptionsPopupClass::On_Command (int ctrl_id, int message_id, DWORD param)
 
 		case IDC_MENU_MAIN_MENU_BUTTON:
 		{
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+			GameInitMgrClass::Set_Needs_Game_Exit(true);
+#else
 			GameInitMgrClass::Continue_Game();
 			GameInitMgrClass::End_Game();
 			GameInitMgrClass::Display_End_Game_Menu();
+#endif
 
 			//
 			//	Close the dialog
@@ -1718,6 +1746,9 @@ FailedOptionsPopupClass::On_Command (int ctrl_id, int message_id, DWORD param)
 }
 
 
+#endif // original death/failure dialogs
+
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 ////////////////////////////////////////////////////////////////
 //
 //	EditWheeledVehicleDialogClass

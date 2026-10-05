@@ -27,15 +27,25 @@
 #include "gamedata.h"
 #include "gamechannel.h"
 #include "wwdebug.h"
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include <WWOnline\WOLChannel.h>
+#endif
 
 //-----------------------------------------------------------------------------
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+cGameChannel::cGameChannel(cGameData * p_game_data)
+{
+	WWASSERT(p_game_data != NULL);
+	PGameData = p_game_data;
+}
+#else
 cGameChannel::cGameChannel(cGameData * p_game_data, const RefPtr<WWOnline::ChannelData>& channel)
 {
 	WWASSERT(p_game_data != NULL);
 	PGameData = p_game_data;
 	WolChannel = channel;
 }
+#endif
 
 //-----------------------------------------------------------------------------
 cGameChannel::~cGameChannel(void)
@@ -43,7 +53,9 @@ cGameChannel::~cGameChannel(void)
 	delete PGameData;
 }
 
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 WOL::Channel* cGameChannel::Get_Wol_Channel(void)
 {
 	return &WolChannel->GetData();
 }
+#endif

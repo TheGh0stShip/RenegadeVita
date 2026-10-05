@@ -269,6 +269,23 @@ if(RENEGADE_A4_ORIGINAL_FRONTEND)
     ${RENEGADE_STAGE}/commando/dlgsavegame.cpp
     ${RENEGADE_STAGE}/commando/dlghelpscreen.cpp
     ${RENEGADE_STAGE}/commando/dlgtechoptions.cpp
+    ${RENEGADE_STAGE}/commando/dlgcredits.cpp
+    ${RENEGADE_STAGE}/commando/dlgmovieoptions.cpp
+    ${RENEGADE_STAGE}/commando/DlgPasswordPrompt.cpp
+    ${RENEGADE_STAGE}/commando/DlgMPConnect.cpp
+    ${RENEGADE_STAGE}/commando/DlgMPConnectionRefused.cpp
+    ${RENEGADE_STAGE}/commando/DlgMPTeamSelect.cpp
+    ${RENEGADE_STAGE}/commando/dlgmpchangelannickname.cpp
+    ${RENEGADE_ROOT}/port/platform/vita/renegade_vita_direct_ip_dialog.cpp
+    ${RENEGADE_STAGE}/commando/dlgmplangamelist.cpp
+    ${RENEGADE_STAGE}/commando/dlgmplanhostoptions.cpp
+    ${RENEGADE_STAGE}/commando/dlgserversaveload.cpp
+    ${RENEGADE_STAGE}/commando/inputconfig.cpp
+    ${RENEGADE_STAGE}/commando/inputconfigmgr.cpp
+    ${RENEGADE_STAGE}/commando/dlgcontrols.cpp
+    ${RENEGADE_STAGE}/commando/dlgcontroltabs.cpp
+    ${RENEGADE_STAGE}/commando/dlgcontrolslisttab.cpp
+    ${RENEGADE_STAGE}/commando/dlgcontrolsaveload.cpp
     ${RENEGADE_STAGE}/commando/dlgconfigaudiotab.cpp
     ${RENEGADE_STAGE}/commando/dlgconfigvideotab.cpp
     ${RENEGADE_STAGE}/commando/dlgconfigperformancetab.cpp
@@ -321,6 +338,11 @@ set(RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES
 	${RENEGADE_STAGE}/wwui/menubackdrop.cpp
 	${RENEGADE_STAGE}/commando/loadingscreen.cpp
 	${RENEGADE_STAGE}/commando/combatgmode.cpp
+	${RENEGADE_STAGE}/commando/gamechannel.cpp
+	${RENEGADE_STAGE}/commando/gamechanlist.cpp
+	${RENEGADE_STAGE}/commando/nicenum.cpp
+	${RENEGADE_STAGE}/commando/langmode.cpp
+	${RENEGADE_STAGE}/commando/lanchat.cpp
 	${RENEGADE_STAGE}/commando/commandosaveload.cpp
 	${RENEGADE_STAGE}/commando/textdisplay.cpp
   ${RENEGADE_STAGE}/commando/gamedata.cpp ${RENEGADE_STAGE}/commando/gdsingleplayer.cpp ${RENEGADE_STAGE}/commando/gdcnc.cpp ${RENEGADE_STAGE}/commando/campaign.cpp ${RENEGADE_STAGE}/commando/winevent.cpp ${RENEGADE_STAGE}/commando/renegadecheatmgr.cpp ${RENEGADE_STAGE}/commando/player.cpp ${RENEGADE_STAGE}/commando/playermanager.cpp ${RENEGADE_STAGE}/commando/god.cpp ${RENEGADE_STAGE}/commando/team.cpp ${RENEGADE_STAGE}/commando/teammanager.cpp ${RENEGADE_STAGE}/commando/gamedataupdateevent.cpp ${RENEGADE_STAGE}/commando/sctextobj.cpp ${RENEGADE_STAGE}/commando/netinterface.cpp ${RENEGADE_STAGE}/commando/netevent.cpp ${RENEGADE_STAGE}/commando/cnetwork.cpp ${RENEGADE_STAGE}/commando/comnetrcvinst.cpp ${RENEGADE_STAGE}/commando/nethandler.cpp ${RENEGADE_STAGE}/commando/buildnum.cpp ${RENEGADE_STAGE}/commando/gameinitmgr.cpp ${RENEGADE_STAGE}/commando/pkthandlers.cpp ${RENEGADE_STAGE}/commando/apppacketstats.cpp ${RENEGADE_STAGE}/commando/sbbomanager.cpp ${RENEGADE_STAGE}/commando/gameoptionsevent.cpp ${RENEGADE_STAGE}/commando/evictionevent.cpp ${RENEGADE_STAGE}/commando/clientpingmanager.cpp ${RENEGADE_STAGE}/commando/cspingrequestevent.cpp ${RENEGADE_STAGE}/commando/scpingresponseevent.cpp ${RENEGADE_STAGE}/commando/clienthintmanager.cpp ${RENEGADE_STAGE}/commando/cshint.cpp ${RENEGADE_STAGE}/commando/clientgoodbyeevent.cpp ${RENEGADE_STAGE}/commando/playerkill.cpp ${RENEGADE_STAGE}/commando/serverfps.cpp ${RENEGADE_STAGE}/commando/clientfps.cpp ${RENEGADE_STAGE}/commando/priority.cpp ${RENEGADE_STAGE}/commando/regint.cpp ${RENEGADE_STAGE}/commando/regbool.cpp ${RENEGADE_STAGE}/commando/regfloat.cpp
@@ -347,6 +369,13 @@ if(NOT RENEGADE_CAMPAIGN_SCRIPT_SOURCE_COUNT EQUAL 13)
   message(FATAL_ERROR
     "Complete campaign script source inventory changed: ${RENEGADE_CAMPAIGN_SCRIPT_SOURCE_COUNT}")
 endif()
+foreach(campaign_script IN LISTS RENEGADE_CAMPAIGN_SCRIPT_SOURCES)
+  list(FIND RENEGADE_SCRIPT_DSP_SOURCES "${campaign_script}" campaign_script_dsp_index)
+  if(campaign_script_dsp_index EQUAL -1)
+    message(FATAL_ERROR
+      "Campaign script is outside the released Scripts.dsp inventory: ${campaign_script}")
+  endif()
+endforeach()
 if(NOT RENEGADE_VITA_M00_DEMO)
   include(${RENEGADE_ROOT}/cmake/A35MultiplayerBuildingSources.cmake)
   list(APPEND RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCES
@@ -543,6 +572,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
   RENEGADE_VITA_PORT=1
   RENEGADE_VITA_A30=1
   RENEGADE_VITA_A31=1
+  RENEGADE_VITA_LAN_FRONTEND=1
   RENEGADE_A35_ORIGINAL_WWAUDIO=1
   RENEGADE_A35_ORIGINAL_COMBATGMODE=1
   RENEGADE_A4_REAL_STYLEMGR=1

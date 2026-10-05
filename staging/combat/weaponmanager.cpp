@@ -251,11 +251,12 @@ bool	WeaponDefinitionClass::Save( ChunkSaveClass & csave )
 
 bool	WeaponDefinitionClass::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_WEAPON_DEF_PARENT:
-				DefinitionClass::Load( cload );
+				if (!DefinitionClass::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_WEAPON_DEF_VARIABLES:
@@ -311,7 +312,7 @@ bool	WeaponDefinitionClass::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 /*
@@ -621,11 +622,12 @@ bool	AmmoDefinitionClass::Save( ChunkSaveClass & csave )
 
 bool	AmmoDefinitionClass::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_AMMO_DEF_PARENT:
-				DefinitionClass::Load( cload );
+				if (!DefinitionClass::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_AMMO_DEF_VARIABLES:
@@ -715,7 +717,7 @@ bool	AmmoDefinitionClass::Load( ChunkLoadClass &cload )
 		ModelName = "NULL";
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 /*

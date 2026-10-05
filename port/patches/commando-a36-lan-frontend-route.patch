@@ -1,0 +1,102 @@
+--- a/renegadedialogmgr.cpp
++++ b/renegadedialogmgr.cpp
+@@ -64,12 +64,19 @@
+ #include "inputctrl.h"
+ #include "translatedb.h"
+ #include "string_ids.h"
+-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || defined(RENEGADE_VITA_LAN_FRONTEND)
++#include "nicenum.h"
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++#include "cnetwork.h"
++#endif
++#include "dlgmessagebox.h"
+ #include "dlgmplanhostoptions.h"
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "dlginternetoptions.h"
+ #endif
++#endif
+ #include "gamemode.h"
+-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include "dlgmplangamelist.h"
+ #endif
+ #include "directinput.h"
+@@ -378,10 +385,6 @@
+ 			MPWolGameListMenuClass::DoDialog ();
+ 			break;
+ 
+-		case LOC_LAN_MAIN:
+-			MPLanGameListMenuClass::Display ();
+-			break;
+-
+ 		case LOC_ENCYCLOPEDIA:
+ 			EVAEncyclopediaMenuClass::Display ();
+ 			break;
+@@ -407,6 +410,13 @@
+ 			START_DIALOG (GameSpyMainDialogClass);
+ 			break;
+ #endif
++
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || defined(RENEGADE_VITA_LAN_FRONTEND)
++		case LOC_LAN_MAIN:
++			MPLanGameListMenuClass::Display ();
++			break;
++#endif
++
+ 	}
+ 
+ 	//
+--- a/dlgmainmenu.cpp
++++ b/dlgmainmenu.cpp
+@@ -61,10 +61,14 @@
+ #include "dialogtests.h"
+ #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "dlgwolwait.h"
++#endif
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include "nicenum.h"
+ #include "dlgmessagebox.h"
+ #include "translatedb.h"
+ #include "string_ids.h"
++#endif
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "gamespyadmin.h"
+ #endif
+ 
+@@ -477,15 +481,20 @@
+ 			break;
+ 		}
+ 
+-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || defined(RENEGADE_VITA_LAN_FRONTEND)
+ 		case IDC_MENU_MP_LAN_GAME_BUTTON:
+ 			
+ 			//
+ 			// Clear any gamespyadmin flags
+ 			//
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 			cGameSpyAdmin::Reset();
++#endif
+ 
+ 			if (cNicEnum::Get_Num_Nics() > 0) {
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++				cNetwork::Onetime_Init();
++#endif
+ 				GameInitMgrClass::Initialize_LAN ();
+ 			} else {
+ 				DlgMsgBox::DoDialog(
+@@ -495,11 +504,13 @@
+ 			}
+ 			break;
+ 
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 		case IDC_MENU_MP_INTERNET_GAME_BUTTON:
+ 			START_DIALOG (InternetMainDialogClass);
+ 			allow_default = false;
+ 			break;
+ #endif
++#endif
+ 
+ 		default:
+ 			break;

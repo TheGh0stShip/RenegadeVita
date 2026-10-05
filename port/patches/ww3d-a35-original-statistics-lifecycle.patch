@@ -3,7 +3,7 @@
 @@ -851,6 +851,9 @@
  	WWASSERT(!IsRendering);
  	IsRendering = true;
- 	RenegadeVitaRenderer::Begin_Frame(color.X, color.Y, color.Z);
+ 	RenegadeVitaRenderer::Begin_Frame(clear, clearz, color.X, color.Y, color.Z);
 +#if defined(RENEGADE_ORIGINAL_SORTING)
 +	Debug_Statistics::Begin_Statistics();
 +#endif

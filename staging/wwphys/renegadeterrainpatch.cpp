@@ -1835,6 +1835,10 @@ RenegadeTerrainPatchClass::Save (ChunkSaveClass &csave)
 	csave.Begin_Chunk (CHUNKID_MATERIAL_LAYERS);
 
 		for (int index = 0; index < MaterialPassList.Count (); index ++) {
+			if (MaterialPassList[index] == NULL) {
+				csave.Report_Error();
+				continue;
+			}
 			
 			//
 			//	Don't save the material information if there' no material configured...
@@ -1845,14 +1849,14 @@ RenegadeTerrainPatchClass::Save (ChunkSaveClass &csave)
 				//	Save this material layer to its own chunk
 				//
 				csave.Begin_Chunk (CHUNKID_MATERIAL_LAYER);
-					MaterialPassList[index]->Save (csave);
+					if (!MaterialPassList[index]->Save(csave)) csave.Report_Error();
 				csave.End_Chunk ();
 			}
 		}
 				
 	csave.End_Chunk ();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 

@@ -21,20 +21,91 @@
 +		RenegadeVitaRenderer::Forget_Static_Mesh_User_Lighting(Model, UserLighting);
 +	}
 +#endif
- 	REF_PTR_RELEASE(Model);
- 	REF_PTR_RELEASE(DecalMesh);
- 	if (UserLighting != NULL) {
-@@ -1555,6 +1565,10 @@
+	REF_PTR_RELEASE(Model);
+	REF_PTR_RELEASE(DecalMesh);
+	if (UserLighting != NULL) {
+--- a/mesh.cpp
++++ b/mesh.cpp
+@@ -1564,6 +1564,11 @@
+ 
  void MeshClass::Install_User_Lighting_Array(Vector4 * lighting)
  {
- 	Get_User_Lighting_Array(true);
 +#if defined(RENEGADE_VITA_PORT)
-+	// The original renderer had copied these colors at registration.
++	// Invalidate the key that was used for the preceding draw. On first
++	// installation that key contains a null lighting pointer.
 +	RenegadeVitaRenderer::Forget_Static_Mesh_User_Lighting(Model, UserLighting);
 +#endif
+ 	Get_User_Lighting_Array(true);
  	
  	for (int vi=0; vi<Model->Get_Vertex_Count(); vi++) {
- 		UserLighting[vi] = DX8Wrapper::Convert_Color(lighting[vi]);
+--- a/meshmdl.h
++++ b/meshmdl.h
+@@ -130,1 +130,2 @@
++	void							Vita_Invalidate_Static_Cache(void);
+ 	void							Register_For_Rendering();
+@@ -137,1 +138,1 @@
+-	void							Set_Pass_Count(int passes)														{ CurMatDesc->Set_Pass_Count(passes); }
++	void							Set_Pass_Count(int passes)														{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Pass_Count(passes); }
+@@ -147,5 +148,5 @@
+-	unsigned *					Get_Color_Array(int array_index,bool create = true)					{ return CurMatDesc->Get_Color_Array(array_index,create); }
++	unsigned *					Get_Color_Array(int array_index,bool create = true)					{ if (create) Vita_Invalidate_Static_Cache(); return CurMatDesc->Get_Color_Array(array_index,create); }
+ 
+-	void							Set_Single_Material(VertexMaterialClass * vmat,int pass=0)			{ CurMatDesc->Set_Single_Material(vmat,pass); }
+-	void							Set_Single_Texture(TextureClass * tex,int pass=0,int stage=0)		{ CurMatDesc->Set_Single_Texture(tex,pass,stage); }
+-	void							Set_Single_Shader(ShaderClass shader,int pass=0)						{ CurMatDesc->Set_Single_Shader(shader,pass); }
++	void							Set_Single_Material(VertexMaterialClass * vmat,int pass=0)			{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Single_Material(vmat,pass); }
++	void							Set_Single_Texture(TextureClass * tex,int pass=0,int stage=0)		{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Single_Texture(tex,pass,stage); }
++	void							Set_Single_Shader(ShaderClass shader,int pass=0)						{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Single_Shader(shader,pass); }
+@@ -162,3 +163,3 @@
+-	void							Set_Material(int vidx,VertexMaterialClass * vmat,int pass=0)		{ CurMatDesc->Set_Material(vidx,vmat,pass); }
+-	void							Set_Shader(int pidx,ShaderClass shader,int pass=0)						{ CurMatDesc->Set_Shader(pidx,shader,pass); }
+-	void							Set_Texture(int pidx,TextureClass * tex,int pass=0,int stage=0)	{ CurMatDesc->Set_Texture(pidx,tex,pass,stage); }
++	void							Set_Material(int vidx,VertexMaterialClass * vmat,int pass=0)		{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Material(vidx,vmat,pass); }
++	void							Set_Shader(int pidx,ShaderClass shader,int pass=0)						{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Shader(pidx,shader,pass); }
++	void							Set_Texture(int pidx,TextureClass * tex,int pass=0,int stage=0)	{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Texture(pidx,tex,pass,stage); }
+@@ -222,12 +223,15 @@
+ 	TexBufferClass *			Get_Texture_Array(int pass,int stage,bool create = true)
+ 	{
++		if (create) Vita_Invalidate_Static_Cache();
+ 		return CurMatDesc->Get_Texture_Array(pass,stage,create);
+ 	}
+ 	MatBufferClass *			Get_Material_Array(int pass,bool create = true)
+ 	{
++		if (create) Vita_Invalidate_Static_Cache();
+ 		return CurMatDesc->Get_Material_Array(pass,create);
+ 	}
+ 	ShaderClass *				Get_Shader_Array(int pass,bool create = true)
+ 	{
++		if (create) Vita_Invalidate_Static_Cache();
+ 		return CurMatDesc->Get_Shader_Array(pass,create);
+ 	}
+--- a/meshmdl.cpp
++++ b/meshmdl.cpp
+@@ -120,1 +120,8 @@
++void MeshModelClass::Vita_Invalidate_Static_Cache(void)
++{
++#if defined(RENEGADE_VITA_PORT)
++	RenegadeVitaRenderer::Forget_Static_Mesh_Model(this);
++#endif
++}
++
+ MeshModelClass & MeshModelClass::operator = (const MeshModelClass & that)
+@@ -410,2 +417,3 @@
+ {
++	Vita_Invalidate_Static_Cache();
+ 	WWASSERT(Vertex);
+@@ -429,2 +437,3 @@
+ {
++	Vita_Invalidate_Static_Cache();
+ 	CurMatDesc->Make_UV_Array_Unique(pass,stage);
+@@ -434,2 +443,3 @@
+ {
++	Vita_Invalidate_Static_Cache();
+ 	CurMatDesc->Make_Color_Array_Unique(array_index);
+@@ -439,2 +449,3 @@
+ {
++	Vita_Invalidate_Static_Cache();
+ 	if ((onoff == true) && (AlternateMatDesc != NULL)) {
 --- a/meshmdl.cpp
 +++ b/meshmdl.cpp
 @@ -44,6 +44,9 @@

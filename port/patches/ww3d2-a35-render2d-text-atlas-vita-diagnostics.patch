@@ -73,7 +73,7 @@
  		SurfaceClass *texture_surface = new_texture->Get_Surface_Level ();
  
  		//
-@@ -1329,7 +1374,8 @@
+@@ -1329,6 +1374,7 @@
  	//
  	if (needs_new_buffer) {
  		uint16 *new_buffer = new uint16[CHAR_BUFFER_LEN];

@@ -1,0 +1,26 @@
+--- a/rendobj.cpp
++++ b/rendobj.cpp
+@@ -1261,6 +1261,10 @@
+ 
+ void RenderObjPersistFactoryClass::Save(ChunkSaveClass & csave,PersistClass * obj)	const
+ {
++	if (obj == NULL) {
++		csave.Report_Error();
++		return;
++	}
+ 	RenderObjClass * robj = (RenderObjClass *)obj;
+ 	const char * name = robj->Get_Name();
+ 	Matrix3D tm = robj->Get_Transform();
+--- a/dazzle.cpp
++++ b/dazzle.cpp
+@@ -1499,6 +1499,10 @@
+ 
+ void DazzlePersistFactoryClass::Save(ChunkSaveClass & csave,PersistClass * obj)	const
+ {
++	if (obj == NULL) {
++		csave.Report_Error();
++		return;
++	}
+ 	DazzleRenderObjClass * robj = (DazzleRenderObjClass *)obj;
+ 	unsigned int dazzle_type = robj->Get_Dazzle_Type();
+ 	const char * dazzle_type_name = DazzleRenderObjClass::Get_Type_Name(dazzle_type);

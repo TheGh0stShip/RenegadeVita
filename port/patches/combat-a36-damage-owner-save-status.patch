@@ -1,0 +1,29 @@
+--- a/damage.cpp
++++ b/damage.cpp
+@@ -553,10 +553,10 @@
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_OWNER );
+-	Owner.Save( csave );
++	if (!Owner.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	OffenseObjectClass::Load( ChunkLoadClass &cload )
+@@ -626,10 +626,10 @@
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_OWNER );
+-	Owner.Save( csave );
++	if (!Owner.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	DefenseObjectClass::Load( ChunkLoadClass &cload )
+

@@ -64,8 +64,11 @@ public:
 	virtual int Size(void);
 	virtual int Write(void const *buffer, int size);
 	virtual void Close(void);
+	virtual void Error(int error, int canretry = false, char const *filename = NULL);
 
 	const RenegadeResolvedPath &Get_Last_Resolution(void) const { return LastResolution; }
+	bool Has_Write_Failed(void) const { return WriteFailed; }
+	void Abort_Write(void) { WriteFailed = true; }
 
 private:
 	bool Resolve_And_Set_Physical_Name(int rights);
@@ -85,6 +88,10 @@ private:
 	int StagedCapacity;
 	int StagedPosition;
 	bool Staging;
+	bool WriteFailed;
+	bool AtomicWrite;
+	char AtomicTarget[1024];
+	char AtomicTemporary[1024];
 };
 
 class RenegadeRootedFileFactoryClass : public FileFactoryClass

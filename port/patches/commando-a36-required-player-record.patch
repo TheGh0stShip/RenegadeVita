@@ -1,0 +1,73 @@
+--- a/player.cpp
++++ b/player.cpp
+@@ -181,4 +181,13 @@
+ {
+ 	void * old_ptr = NULL;
++	bool parent_seen = false;
++	bool variables_seen = false;
++	bool id_seen = false;
++	bool name_seen = false;
++	bool kills_seen = false;
++	bool deaths_seen = false;
++	bool team_seen = false;
++	bool remap_seen = false;
++	bool loaded = true;
+ 
+ 	while (cload.Open_Chunk()) {
+@@ -186,9 +195,28 @@
+ 
+ 		case CHUNKID_PARENT:
+-				PlayerDataClass::Load( cload );
++				if (parent_seen) {
++					loaded = false;
++				} else {
++					parent_seen = true;
++					loaded = PlayerDataClass::Load( cload ) && loaded;
++				}
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
++				if (variables_seen) {
++					loaded = false;
++					break;
++				}
++				variables_seen = true;
+ 				while (cload.Open_Micro_Chunk()) {
++					switch(cload.Cur_Micro_Chunk_ID()) {
++						case MICROCHUNK_ID: loaded = !id_seen && loaded; id_seen = true; break;
++						case MICROCHUNK_NAME: loaded = !name_seen && loaded; name_seen = true; break;
++						case MICROCHUNK_KILLS: loaded = !kills_seen && loaded; kills_seen = true; break;
++						case MICROCHUNK_DEATHS: loaded = !deaths_seen && loaded; deaths_seen = true; break;
++						case MICROCHUNK_TEAMNUMBER: loaded = !team_seen && loaded; team_seen = true; break;
++						case MICROCHUNK_REMAP_POINTER: loaded = !remap_seen && loaded; remap_seen = true; break;
++						default: break;
++					}
+ 
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+@@ -217,9 +245,11 @@
+ 	}
+ 
+-	if ( old_ptr != NULL ) {
++	loaded = loaded && parent_seen && variables_seen && id_seen && name_seen &&
++		kills_seen && deaths_seen && team_seen && remap_seen && old_ptr != NULL;
++	if (loaded) {
+ 		SaveLoadSystemClass::Register_Pointer(old_ptr, this);
+ 	}
+ 
+-	return true;
++	return loaded;
+ }
+ 
+--- a/playermanager.cpp
++++ b/playermanager.cpp
+@@ -1483,5 +1483,9 @@
+ 							cPlayer * p_player;
+ 							p_player = new cPlayer();
+-							p_player->Load(cload);
++							if (!p_player->Load(cload)) {
++								delete p_player;
++								loaded = false;
++								break;
++							}
+ 
+ 							/*

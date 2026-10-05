@@ -1,0 +1,122 @@
+--- a/commando/player.cpp
++++ b/commando/player.cpp
+@@ -158,7 +158,7 @@
+ bool cPlayer::Save(ChunkSaveClass & csave)
+ {
+ 	csave.Begin_Chunk(CHUNKID_PARENT);
+-	PlayerDataClass::Save( csave );
++	if (!PlayerDataClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(CHUNKID_VARIABLES);
+@@ -173,7 +173,7 @@
+ 
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ //-----------------------------------------------------------------------------
+--- a/wwphys/accessiblephys.cpp
++++ b/wwphys/accessiblephys.cpp
+@@ -127,13 +127,13 @@
+ AccessiblePhysClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		StaticAnimPhysClass::Save (csave);
++		if (!StaticAnimPhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+-		Save_Variables (csave);
++		if (!Save_Variables(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();	
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+@@ -146,7 +146,7 @@
+ AccessiblePhysClass::Save_Variables (ChunkSaveClass &csave)
+ {
+ 	WRITE_MICRO_CHUNK (csave, VARID_LOCKCODE, LockCode);
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/combat/doors.cpp
++++ b/combat/doors.cpp
+@@ -245,7 +245,7 @@
+ bool	DoorPhysClass::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-		AccessiblePhysClass::Save( csave );
++		if (!AccessiblePhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -255,7 +255,7 @@
+ 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_OPEN_REQUEST_PENDING, OpenRequestPending );
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	DoorPhysClass::Load( ChunkLoadClass &cload )
+--- a/combat/elevator.cpp
++++ b/combat/elevator.cpp
+@@ -305,7 +305,7 @@
+ bool	ElevatorPhysClass::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-		AccessiblePhysClass::Save( csave );
++		if (!AccessiblePhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -316,11 +316,11 @@
+ 
+ 	if ( CurrentAIRider != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_RIDER_OBJECT );
+-		CurrentAIRider.Save( csave );
++		if (!CurrentAIRider.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	ElevatorPhysClass::Load( ChunkLoadClass &cload )
+--- a/combat/damageablestaticphys.cpp
++++ b/combat/damageablestaticphys.cpp
+@@ -433,14 +433,14 @@
+ 	** Save the parent class data
+ 	*/
+ 	csave.Begin_Chunk(DAMAGEABLESTATICPHYS_CHUNK_STATICANIMPHYS);
+-		StaticAnimPhysClass::Save( csave );
++		if (!StaticAnimPhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	/*
+ 	** Save the contents of our damage object
+ 	*/
+ 	csave.Begin_Chunk(DAMAGEABLESTATICPHYS_CHUNK_DEFENSEOBJECT);
+-		DefenseObject.Save(csave);
++		if (!DefenseObject.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 	
+ 	/*
+@@ -450,7 +450,7 @@
+ 		WRITE_MICRO_CHUNK(csave, DAMAGEABLESTATICPHYS_VARIABLE_CURSTATE, CurState);
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+

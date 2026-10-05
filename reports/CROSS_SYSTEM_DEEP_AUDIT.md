@@ -112,11 +112,13 @@ other original routes null. The supported Tech Options route now opens
 directly from the Options page. This flag remains enabled even when
 RENEGADE_VITA_M00_DEMO=0.
 
-The relevant omitted original owners include dlgcontrols.cpp,
-dlgcontrolslisttab.cpp, dlgcontroltabs.cpp, dlgcontrolsaveload.cpp,
-inputconfig.cpp, inputconfigmgr.cpp, dlgmovieoptions.cpp and dlgcredits.cpp.
-Restoration must preserve Vita input/platform boundaries rather than import
-DirectInput or Windows process ownership.
+The original Controls, Movies and Credits routes, their managers and dialogs
+are now selected. A later source-selection audit found that
+`inputconfig.cpp` alone was still absent even though the active manager and
+dialog call its out-of-line copy and chunk serialization methods; it is now
+linked with artifact symbol gates. Runtime validation must preserve Vita
+input/platform boundaries rather than import DirectInput or Windows process
+ownership.
 
 The pause menu **does** open TechOptionsMenuClass directly. Its audio/video/
 performance owners and templates are present. Audio and supported performance

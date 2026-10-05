@@ -1,0 +1,24 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -942,10 +942,10 @@
+ 	INIT_STATUS("Post_Load_Processing");
+ 	loading_screen.Render(true);
+    Windows_Message_Handler();
+-	SaveLoadSystemClass::Post_Load_Processing(IS_SOLOPLAY ? NULL : &cNetwork::Update);
+-	NetworkObjectMgrClass::Set_Is_Level_Loading (false);
+ #if defined(__vita__)
+ 	if (A35_Level_Load_Get_Failure() != A35_LOAD_NO_FAILURE) {
++		SaveLoadSystemClass::Discard_Post_Load_Callbacks();
++		NetworkObjectMgrClass::Set_Is_Level_Loading (false);
+ 		g_is_loading = false;
+ 		if (cNetwork::PServerConnection) {
+ 			cNetwork::PServerConnection->Allow_Packet_Processing(true);
+@@ -955,6 +955,8 @@
+ 		return;
+ 	}
+ #endif
++	SaveLoadSystemClass::Post_Load_Processing(IS_SOLOPLAY ? NULL : &cNetwork::Update);
++	NetworkObjectMgrClass::Set_Is_Level_Loading (false);
+ 	WWLOG_INTERMEDIATE("SaveLoadSystemClass::Post_Load_Processing(&cNetwork::Update)");
+ 
+ 	INIT_STATUS("Post_Load_Level");

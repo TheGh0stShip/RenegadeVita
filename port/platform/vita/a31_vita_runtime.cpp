@@ -12,6 +12,7 @@
 #include "a31_development_checkpoint.h"
 #include "a31_client_connect_boundary.h"
 #include "renegade_network_provider.h"
+#include "renegade_vita_direct_ip_dialog.h"
 #include "renegade_client_identity.h"
 #include "packetmgr.h"
 #endif
@@ -19,6 +20,7 @@
 #include "renegade_file_factory.h"
 #include "renegade_find_files.h"
 #include "renegade_mission_ranks.h"
+#include "renegade_movie_unlocks.h"
 #include "renegade_vita_options.h"
 #include "renegade_miles_runtime_stats.h"
 #include "renegade_vita_input_telemetry.h"
@@ -36,11 +38,15 @@
 #include "ringobj.h"
 #include "soundrobj.h"
 #include "campaign.h"
+#include "inputconfigmgr.h"
+#include "bandwidthgraph.h"
+#include "bioevent.h"
 #include "ccamera.h"
 #include "encyclopediamgr.h"
 #include "chunkio.h"
 #include "combat.h"
 #include "combatgmode.h"
+#include "level.h"
 #include "conversationmgr.h"
 #include "consolemode.h"
 #include "cnetwork.h"
@@ -67,6 +73,8 @@
 #include "movie.h"
 #include "renegadedialogmgr.h"
 #if !RENEGADE_VITA_M00_DEMO
+#include "langmode.h"
+#include "nicenum.h"
 #include "scorescreen.h"
 #endif
 #endif
@@ -131,6 +139,7 @@
 #include <math.h>
 #include <new>
 #include <memory>
+#include <utility>
 #include <algorithm>
 #include <atomic>
 #include <stdio.h>
@@ -259,6 +268,52 @@ RenderObjClass *A35_Vita_Take_Prepared_Render_Obj(const char *name)
 }
 
 namespace {
+
+struct A36RoundArchiveSwap {
+	FileFactoryListClass *FactoryList;
+	std::unique_ptr<MixFileFactoryClass> *CurrentFactory;
+	std::unique_ptr<MixFileFactoryClass> *NextFactory;
+	const char *NextArchive;
+	A31ClientConnect *DirectClient;
+	bool SwapArchive;
+	std::unique_ptr<MixFileFactoryClass> *CurrentGlacierSupplement;
+	std::unique_ptr<MixFileFactoryClass> *NextGlacierSupplement;
+	bool SwapGlacierSupplement;
+};
+
+bool Commit_Round_Archive_Swap_After_Core_Shutdown(void *opaque)
+{
+	A36RoundArchiveSwap *swap = static_cast<A36RoundArchiveSwap *>(opaque);
+	if (swap == NULL || swap->FactoryList == NULL || swap->CurrentFactory == NULL ||
+		swap->NextFactory == NULL || swap->NextArchive == NULL ||
+		(swap->SwapGlacierSupplement && (swap->CurrentGlacierSupplement == NULL ||
+		 swap->NextGlacierSupplement == NULL))) {
+		A35_Level_Load_Record_Failure(A35_LOAD_RESOURCE_PROVIDER_FAILED);
+		return false;
+	}
+	if (swap->DirectClient != NULL &&
+		!swap->DirectClient->Commit_Round_Resources_After_Core_Shutdown()) return false;
+	if (swap->SwapArchive) {
+		if (*swap->CurrentFactory) {
+			swap->FactoryList->Remove_FileFactory(swap->CurrentFactory->get());
+		}
+		*swap->CurrentFactory = std::move(*swap->NextFactory);
+		if (*swap->CurrentFactory) {
+			swap->FactoryList->Add_FileFactory(swap->CurrentFactory->get(), swap->NextArchive);
+		}
+	}
+	if (swap->SwapGlacierSupplement) {
+		if (*swap->CurrentGlacierSupplement) {
+			swap->FactoryList->Remove_FileFactory(swap->CurrentGlacierSupplement->get());
+		}
+		*swap->CurrentGlacierSupplement = std::move(*swap->NextGlacierSupplement);
+		if (*swap->CurrentGlacierSupplement) {
+			swap->FactoryList->Add_FileFactory(swap->CurrentGlacierSupplement->get(),
+				"M02.mix Glacier retail texture fallback");
+		}
+	}
+	return true;
+}
 
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 bool g_gameplay_pause_requested = false;
@@ -1461,8 +1516,15 @@ public:
 
 	~A31VitaLoadingPresenter()
 	{
+		Release();
+	}
+
+	void Release()
+	{
 		Commando_Destroy_Original_Loading_Screen(Screen);
 		Screen = NULL;
+		BackdropReady = false;
+		LastMirroredLoadProgress = -1;
 	}
 
 	bool Initialize(const char *mission_archive,
@@ -1569,13 +1631,17 @@ private:
 };
 
 	A31VitaLoadingPresenter *g_active_loading_presenter = NULL;
+#if !RENEGADE_VITA_M00_DEMO
+	void *g_original_reload_loading_screen = NULL;
+#endif
 
 	class A31VitaScopedLoadingPresenterCallback
 	{
 	public:
 		explicit A31VitaScopedLoadingPresenterCallback(
 			A31VitaLoadingPresenter &presenter) :
-			Previous(g_active_loading_presenter)
+			Previous(g_active_loading_presenter),
+			Armed(true)
 		{
 			g_active_loading_presenter = &presenter;
 			A30_Vita_Log("A3.5 loading screen: Vita synchronous-load callback armed presenter=%p previous=%p\n",
@@ -1584,14 +1650,22 @@ private:
 
 		~A31VitaScopedLoadingPresenterCallback()
 		{
+			Disarm();
+		}
+
+		void Disarm()
+		{
+			if (!Armed) return;
 			A30_Vita_Log("A3.5 loading screen: Vita synchronous-load callback disarmed presenter=%p restore=%p\n",
 				static_cast<void *>(g_active_loading_presenter),
 				static_cast<void *>(Previous));
 			g_active_loading_presenter = Previous;
+			Armed = false;
 		}
 
 	private:
 		A31VitaLoadingPresenter *Previous;
+		bool Armed;
 	};
 
 		A31StateSnapshot Make_Interactive_Capture_State(const A31InteractiveRenderTrace &trace,
@@ -2581,11 +2655,11 @@ void Log_Audio_Runtime_Statistics(const char *reason, uint32_t frame)
 	WWAudioClass *audio = WWAudioClass::Get_Instance();
 	const float dialog_volume = audio != NULL ? audio->Get_Dialog_Volume() : -1.0F;
 	const float cinematic_volume = audio != NULL ? audio->Get_Cinematic_Volume() : -1.0F;
-	A30_Vita_Log("A3.5 audio: reason=%s frame=%u output_start=%u/%u/%u output_written/fail=%u/%u output_stream=buffers:%llu frames:%llu nonzero:%llu peak:%u last_output_stream=active/frames/nonzero/peak:%u/%u/%u/%u sample_file=%u/%u/%u sample_3d=%u/%u/%u stream=%u/%u/%u stream_start=%u/%u/%u/%u stream_bytes/frames=%llu/%llu stream_mix=buffers:%llu frames:%llu nonzero:%llu peak:%u last_stream_mix=active/frames/nonzero/peak:%u/%u/%u/%u last_stream=%s frames/fact/estimate/untrimmed/trimmed/rate/vol/pan=%u/%u/%u/%u/%u/%u/%u/%u starts=%u/%u/%u mix=buffers:%llu frames:%llu nonzero:%llu peak:%u pcm=decodes/hits/evictions/entries/bytes:%u/%u/%u/%u/%u allocated/active/streams=%u/%u/%u active_stream=pos/len/cursor/frames/loops/vol/pan=%u/%u/%u/%u/%u/%u/%u volumes_dialog/cinematic=%.3f/%.3f last_error=%s\n",
+	A30_Vita_Log("A3.5 audio: reason=%s frame=%u output_start=%u/%u/%u output_written/fail/starved=%u/%u/%u output_stream=buffers:%llu frames:%llu nonzero:%llu peak:%u last_output_stream=active/frames/nonzero/peak:%u/%u/%u/%u sample_file=%u/%u/%u sample_3d=%u/%u/%u stream=%u/%u/%u stream_start=%u/%u/%u/%u stream_bytes/frames=%llu/%llu stream_mix=buffers:%llu frames:%llu nonzero:%llu peak:%u last_stream_mix=active/frames/nonzero/peak:%u/%u/%u/%u last_stream=%s frames/fact/estimate/untrimmed/trimmed/rate/vol/pan=%u/%u/%u/%u/%u/%u/%u/%u starts=%u/%u/%u mix=buffers:%llu frames:%llu nonzero:%llu peak:%u pcm=decodes/hits/evictions/entries/bytes:%u/%u/%u/%u/%u allocated/active/streams=%u/%u/%u active_stream=pos/len/cursor/frames/loops/vol/pan=%u/%u/%u/%u/%u/%u/%u volumes_dialog/cinematic=%.3f/%.3f last_error=%s\n",
 		reason != NULL ? reason : "unknown", frame,
 		stats.output_start_attempts, stats.output_start_successes,
 		stats.output_start_failures, stats.output_buffers_written,
-		stats.output_write_failures,
+		stats.output_write_failures, stats.output_lock_starvation_buffers,
 		static_cast<unsigned long long>(stats.output_stream_buffers_written),
 		static_cast<unsigned long long>(stats.output_stream_frames_written),
 		static_cast<unsigned long long>(stats.output_stream_nonzero_buffers_written),
@@ -2680,26 +2754,61 @@ bool Is_Start_Pressed()
 #endif
 }
 
+#if !RENEGADE_VITA_M00_DEMO
+void Queue_Local_Load_Failure_Recovery(A31VitaInteractiveResult &result,
+	A35LevelLoadFailure failure, const char *phase, bool return_to_lan_menu = false)
+{
+	// This requests cleanup, not success. The outer application permits menu
+	// re-entry only after the independent failed-load cleanup gate passes.
+	result.level_load_failure = static_cast<uint32_t>(failure);
+	result.return_to_menu_requested = true;
+	result.return_to_lan_menu_requested = return_to_lan_menu;
+	result.start_exit_requested = true;
+	result.clean_exit_requested = true;
+	// A campaign Level directive requests autosave before the native boundary
+	// can validate/open the next source. Do not let an abandoned load apply
+	// that request to a later menu selection or new campaign.
+	if (CombatManager::Is_Autosave_Requested()) {
+		CombatManager::Request_Autosave(false);
+		A30_Vita_Log("A4 load: cleared abandoned campaign autosave request phase=%s\n",
+			phase);
+	}
+	A30_Vita_Log("A4 load: local failure phase=%s code=%u; original session cleanup required\n",
+		phase, result.level_load_failure);
+}
+#endif
+
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 bool Run_Original_Gameplay_Pause_Menu(MenuGameModeClass2 &menu_mode,
 	WWAudioClass *audio, bool &pause_observed,
 	bool &resume_observed, bool death_dialog = false)
 {
+	extern bool g_b_core_restart;
+	extern bool g_client_quit;
 	GameModeClass *combat_mode = GameModeManager::Find("Combat");
 	if (combat_mode == NULL ||
 		(death_dialog ? !combat_mode->Is_Suspended() : !combat_mode->Is_Active())) return true;
+	const bool multiplayer_menu = !death_dialog && !IS_SOLOPLAY;
 	A31VitaScopedFrontendRenderResolution frontend_render_resolution;
-	if (!death_dialog) combat_mode->Suspend();
+	// Released Combat_To_Menu deliberately leaves multiplayer Combat active so
+	// networking and the live match continue behind the C&C reference menu.
+	if (!death_dialog && !multiplayer_menu) combat_mode->Suspend();
 	pause_observed = true;
 	A4_Frontend_Begin_Pause_Loop();
 	Input::Menu_Enable(true);
 	Input::Update();
 	A4_Frontend_Prime_WWUI_Key_Transitions();
 	menu_mode.Activate();
-	if (!death_dialog) EVAEncyclopediaMenuClass::Display();
-	A30_Vita_Log("A4 pause: original %s entered; Combat suspended; retained WWUI owner\n",
-		death_dialog ? "death dialog" : "EVA");
-	while (combat_mode->Is_Suspended() && !A4_Frontend_Exit_Requested() &&
+	if (multiplayer_menu) {
+		RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOC_CNC_REFERENCE);
+	} else if (!death_dialog) {
+		EVAEncyclopediaMenuClass::Display();
+	}
+	A30_Vita_Log("A4 pause: original %s entered; Combat suspended=%d; retained WWUI owner\n",
+		death_dialog ? "death dialog" : (multiplayer_menu ? "C&C reference" : "EVA"),
+		combat_mode->Is_Suspended() ? 1 : 0);
+	while ((multiplayer_menu ? combat_mode->Is_Active() && menu_mode.Is_Active()
+		: combat_mode->Is_Suspended()) && !A4_Frontend_Exit_Requested() &&
 		!A4_Frontend_Get_Trace().reload_requested &&
 		!Renegade_Vita_Input_Route_Replay_Exit_Requested() &&
 		(!death_dialog || DialogMgrClass::Get_Dialog_Count() > 0)) {
@@ -2707,10 +2816,19 @@ bool Run_Original_Gameplay_Pause_Menu(MenuGameModeClass2 &menu_mode,
 		TimeManager::Update();
 		Input::Update();
 		A4_Frontend_Pump_WWUI_Key_Transitions();
-		if (!combat_mode->Is_Suspended() || A4_Frontend_Exit_Requested() ||
+		if ((!multiplayer_menu && !combat_mode->Is_Suspended()) ||
+			(multiplayer_menu && !combat_mode->Is_Active()) ||
+			A4_Frontend_Exit_Requested() ||
 			A4_Frontend_Get_Trace().reload_requested) break;
 		// Do not run desktop Combat::Think or its focus-loss keyboard handler.
 		cNetwork::Update();
+		if (multiplayer_menu && (g_b_core_restart || g_client_quit ||
+			GameInitMgrClass::Has_Pending_Game_Exit())) {
+			A30_Vita_Log("A4 pause: leaving C&C reference for pending round transition restart/quit/exit=%d/%d/%d\n",
+				g_b_core_restart ? 1 : 0, g_client_quit ? 1 : 0,
+				GameInitMgrClass::Has_Pending_Game_Exit() ? 1 : 0);
+			break;
+		}
 		menu_mode.Think();
 		GameModeManager::Safely_Deactivate();
 		if (!menu_mode.Is_Active()) break;
@@ -2722,7 +2840,17 @@ bool Run_Original_Gameplay_Pause_Menu(MenuGameModeClass2 &menu_mode,
 	const bool exit_requested = A4_Frontend_Exit_Requested() ||
 		Renegade_Vita_Input_Route_Replay_Exit_Requested();
 	const bool reload_requested = A4_Frontend_Get_Trace().reload_requested;
-	if (combat_mode->Is_Suspended() && !exit_requested && !reload_requested) {
+#if !RENEGADE_VITA_M00_DEMO
+	if (death_dialog && combat_mode->Is_Suspended() && !exit_requested &&
+		!reload_requested && !cGod::Has_Pending_Restart() &&
+		DialogMgrClass::Get_Dialog_Count() == 0) {
+		// Cancelling the original load menu after death returns to the menu,
+		// rather than resuming the dead world without an options dialog.
+		GameInitMgrClass::Set_Needs_Game_Exit(true);
+	}
+#endif
+	if (!multiplayer_menu && combat_mode->Is_Suspended() &&
+		!exit_requested && !reload_requested) {
 		GameInitMgrClass::Continue_Game();
 	}
 	if (!menu_mode.Is_Inactive()) menu_mode.Deactivate();
@@ -2731,13 +2859,14 @@ bool Run_Original_Gameplay_Pause_Menu(MenuGameModeClass2 &menu_mode,
 	A4_Frontend_End_Menu_Loop();
 	// Consume the menu button's gameplay edge before control generation resumes.
 	Input::Update();
-	A30_Vita_Log("A4 pause: original EVA left; resumed=%d exit=%d\n",
+	A30_Vita_Log("A4 pause: original %s left; resumed=%d exit=%d\n",
+		multiplayer_menu ? "C&C reference" : "EVA",
 		combat_mode->Is_Active() ? 1 : 0, exit_requested ? 1 : 0);
 	resume_observed = resume_observed || combat_mode->Is_Active();
 	return !exit_requested && !reload_requested;
 }
 
-bool Try_Latch_Development_M00_Checkpoint()
+bool Try_Latch_Development_Save()
 {
 #if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 	const char *const request_path =
@@ -2749,10 +2878,23 @@ bool Try_Latch_Development_M00_Checkpoint()
 	const bool read_failed = ferror(file) != 0;
 	const bool close_failed = fclose(file) != 0;
 	char source[96];
+#if !RENEGADE_VITA_M00_DEMO
+	char archive[96];
+	bool is_save = false;
+#endif
+	bool valid_source = false;
+	if (!read_failed && !close_failed &&
+		A31DevelopmentCheckpoint::Parse(request, bytes, source, sizeof(source))) {
+#if RENEGADE_VITA_M00_DEMO
+		valid_source = A4_Frontend_Is_Tutorial_Source(source);
+#else
+		valid_source = A4_Frontend_Resolve_Single_Player_Archive(source,
+			archive, sizeof(archive), &is_save) && is_save;
+#endif
+	}
 	if (read_failed || close_failed ||
-		!A31DevelopmentCheckpoint::Parse(request, bytes, source, sizeof(source)) ||
-		!A4_Frontend_Is_Tutorial_Source(source)) {
-		A30_Vita_Log("A4 checkpoint: developer request rejected; original M00 save required\n");
+		!valid_source) {
+		A30_Vita_Log("A4 checkpoint: developer request rejected; valid original campaign save required\n");
 		return false;
 	}
 	// Consume only validated one-shot launch metadata, never the original save.
@@ -2760,10 +2902,15 @@ bool Try_Latch_Development_M00_Checkpoint()
 		A30_Vita_Log("A4 checkpoint: developer request could not be consumed; launch refused\n");
 		return false;
 	}
-	A4_Frontend_Latch_Start_Game(source, 0, 0UL);
+	A4_Frontend_Latch_Start_Game(source, -1, 0UL);
 	const bool latched = A4_Frontend_Get_Trace().tutorial_start_latched;
-	A30_Vita_Log("A4 checkpoint: developer handoff latched=%d source=%s; original reload unassessed\n",
+#if RENEGADE_VITA_M00_DEMO
+	A30_Vita_Log("A4 checkpoint: developer M00 handoff latched=%d source=%s; original reload unassessed\n",
 		latched ? 1 : 0, source);
+#else
+	A30_Vita_Log("A4 checkpoint: developer campaign-save handoff latched=%d source=%s archive=%s; original reload unassessed\n",
+		latched ? 1 : 0, source, archive);
+#endif
 	return latched;
 #else
 	return false;
@@ -3107,23 +3254,14 @@ void Warm_M13_World_Killed_Explosions(A31VitaLoadingPresenter &presenter)
 }
 
 #if !RENEGADE_VITA_M00_DEMO
-int Try_Begin_Direct_Client(A31ClientConnect &join, bool &network_initialized)
+int Try_Begin_Direct_Client_Text(const char *text, RenegadeNetworkProvider::Port default_port,
+	A31ClientConnect &join,
+	bool &network_initialized)
 {
-	const char *path = "ux0:data/renegade/user/config/direct-ip-launch-v1.txt";
-	FILE *file = fopen(path, "rb");
-	if (!file) return 0;
-	char text[64] = {};
-	size_t bytes = fread(text, 1, sizeof(text), file);
-	const bool failed = ferror(file) != 0;
-	const bool close_failed = fclose(file) != 0;
-	if (failed || close_failed || bytes == sizeof(text) || memchr(text, 0, bytes)) return -1;
-	while (bytes && (text[bytes - 1] == '\r' || text[bytes - 1] == '\n')) text[--bytes] = 0;
 	RenegadeNetworkProvider::Endpoint endpoint;
 	bool tt_client = false;
-	if (!RenegadeNetworkProvider::Parse_Client_Request(text, 0, endpoint, tt_client) || remove(path) != 0)
+	if (!RenegadeNetworkProvider::Parse_Client_Request(text, default_port, endpoint, tt_client))
 		return -1;
-	// Both profiles retain original WWNet ownership; TT is an explicit one-shot
-	// request and reads identity only from the existing private writable config.
 	if (!GameInitMgrClass::Initialize_Direct_IP(false)) return -1;
 	cNetwork::Onetime_Init();
 	network_initialized = true;
@@ -3139,11 +3277,28 @@ int Try_Begin_Direct_Client(A31ClientConnect &join, bool &network_initialized)
 		"ux0:data/renegade/user/config/cacert.pem");
 	return 1;
 }
+
+int Try_Begin_Direct_Client(A31ClientConnect &join, bool &network_initialized)
+{
+	const char *path = "ux0:data/renegade/user/config/direct-ip-launch-v1.txt";
+	FILE *file = fopen(path, "rb");
+	if (!file) return 0;
+	char text[64] = {};
+	size_t bytes = fread(text, 1, sizeof(text), file);
+	const bool failed = ferror(file) != 0;
+	const bool close_failed = fclose(file) != 0;
+	if (failed || close_failed || bytes == sizeof(text) || memchr(text, 0, bytes)) return -1;
+	while (bytes && (text[bytes - 1] == '\r' || text[bytes - 1] == '\n')) text[--bytes] = 0;
+	if (remove(path) != 0) return -1;
+	return Try_Begin_Direct_Client_Text(text, 0, join, network_initialized);
+}
 #endif
 
 bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	MovieGameModeClass &movie_mode, WWAudioClass *audio, bool start_at_main_menu,
-	const char *reload_source, const char *campaign_source,
+	bool start_at_lan_menu,
+	const char *reload_source, const char *campaign_source, int reload_replay_difficulty,
+	const char *deferred_frontend_source, bool deferred_frontend_skirmish,
 	A31ClientConnect &remote_join, bool &remote_network_initialized)
 {
 	A31VitaScopedFrontendRenderResolution frontend_render_resolution;
@@ -3162,14 +3317,23 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	Input::Menu_Enable(true);
 	GameModeManager::Add(&menu_mode);
 	GameModeManager::Add(&movie_mode);
+	if (start_at_main_menu || start_at_lan_menu) {
+		// A control held through session teardown is not a new menu action.
+		Input::Update();
+		A4_Frontend_Prime_WWUI_Key_Transitions();
+	}
 	int direct_request = 0;
 #if !RENEGADE_VITA_M00_DEMO
-	if (!start_at_main_menu && !reload_source && !campaign_source)
+	if (!start_at_main_menu && !start_at_lan_menu && !reload_source && !campaign_source &&
+		!deferred_frontend_source)
 		direct_request = Try_Begin_Direct_Client(remote_join, remote_network_initialized);
 #endif
 	bool direct_failed = direct_request < 0;
-	if (direct_failed) A30_Vita_Log("A4 direct client: invalid request or initialization failure\n");
-	const uint64_t direct_started = sceKernelGetProcessTimeWide();
+	if (direct_failed) {
+		A4_Frontend_Record_Direct_IP_Failure();
+		A30_Vita_Log("A4 direct client: invalid request or initialization failure\n");
+	}
+	uint64_t direct_started = direct_request == 1 ? sceKernelGetProcessTimeWide() : 0U;
 	bool reload_valid = false;
 	if (reload_source != NULL && reload_source[0] != '\0') {
 #if RENEGADE_VITA_M00_DEMO
@@ -3178,19 +3342,42 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 		char reload_archive[96];
 		bool reload_is_save = false;
 		reload_valid = A4_Frontend_Resolve_Single_Player_Archive(reload_source,
-			reload_archive, sizeof(reload_archive), &reload_is_save) && reload_is_save;
+			reload_archive, sizeof(reload_archive), &reload_is_save) &&
+			(reload_replay_difficulty >= 0
+				? !reload_is_save && reload_replay_difficulty <= 3 : reload_is_save);
 		A30_Vita_Log("A4 campaign reload: source=%s archive=%s valid=%d\n",
 			reload_source, reload_valid ? reload_archive : "none", reload_valid ? 1 : 0);
 #endif
 	}
 	if (direct_request != 0) {
 		RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOC_MAIN_MENU);
+	} else if (deferred_frontend_source != NULL && deferred_frontend_source[0] != '\0') {
+		if (deferred_frontend_skirmish) {
+			GameInitMgrClass::Initialize_Skirmish();
+		} else {
+			GameInitMgrClass::Initialize_SP();
+		}
+		A4_Frontend_Latch_Start_Game(deferred_frontend_source, -1, 0);
+		A30_Vita_Log("A4 frontend: restored deferred %s selection source=%s\n",
+			deferred_frontend_skirmish ? "Practice" : "single-player",
+			deferred_frontend_source);
 	} else if (campaign_source != NULL && campaign_source[0] != '\0') {
 		A4_Frontend_Latch_Start_Game(campaign_source, PLAYERTYPE_RENEGADE, 0);
 		A30_Vita_Log("A4 campaign: restored original campaign next source=%s\n", campaign_source);
 	} else if (reload_valid) {
-		A4_Frontend_Latch_Start_Game(reload_source, -1, 0);
-		A30_Vita_Log("A4 load: original save handoff after completed session teardown source=%s\n", reload_source);
+#if !RENEGADE_VITA_M00_DEMO
+		if (reload_replay_difficulty >= 0) {
+			A4_Frontend_Latch_Replay_Level(reload_source, reload_replay_difficulty);
+		} else
+#endif
+		{
+			A4_Frontend_Latch_Start_Game(reload_source, -1, 0);
+		}
+		A30_Vita_Log("A4 load: original source handoff after completed session teardown source=%s replay_difficulty=%d\n",
+			reload_source, reload_replay_difficulty);
+	} else if (start_at_lan_menu) {
+		RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOC_LAN_MAIN);
+		A30_Vita_Log("A4 LAN: returned to original LAN game list after session teardown\n");
 	} else if (start_at_main_menu) {
 		RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOC_MAIN_MENU);
 		A30_Vita_Log("A3.5 demo ending: returned to original main menu; startup movies and developer checkpoint bypassed\n");
@@ -3200,7 +3387,7 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 		A30_Vita_Log("A4 campaign diagnostic: original frontend selected standalone mission\n");
 	}
 #endif
-	else if (!Try_Latch_Development_M00_Checkpoint()) {
+	else if (!Try_Latch_Development_Save()) {
 		movie_mode.Activate();
 		movie_mode.Startup_Movies();
 		A30_Vita_Log("A4 frontend: original MovieGameMode startup sequence entered; Bink provider owns decode or per-movie fail-closed skip\n");
@@ -3209,17 +3396,39 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 
 	unsigned frontend_frame = 0U;
 	while (!direct_failed && !A4_Frontend_Exit_Requested() &&
-		!A4_Frontend_Get_Trace().tutorial_start_latched) {
+		!A4_Frontend_Get_Trace().tutorial_start_latched &&
+		!A4_Frontend_Get_Trace().start_game_rejected) {
 		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop frame entry\n");
 		TimeManager::Update();
 		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after TimeManager::Update\n");
 		Input::Update();
 		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after Input::Update\n");
-		if (direct_request != 1) A4_Frontend_Pump_WWUI_Key_Transitions();
+		// Keep the original connecting popup interactive. Circle dispatches
+		// VK_ESCAPE/IDCANCEL, whose released owner cleans up the client; the
+		// classified join-failure path then returns to a fresh frontend.
+		A4_Frontend_Pump_WWUI_Key_Transitions();
+		if (direct_request == 0) {
+			const A4FrontendTrace direct_trace = A4_Frontend_Get_Trace();
+			if (direct_trace.direct_ip_requested) {
+				direct_request = Try_Begin_Direct_Client_Text(
+					direct_trace.direct_ip_endpoint, 4848, remote_join,
+					remote_network_initialized);
+				direct_failed = direct_request < 0;
+				direct_started = sceKernelGetProcessTimeWide();
+				if (direct_failed) {
+					RenegadeVitaDirectIPDialog::Finish_Connection();
+					A4_Frontend_Record_Direct_IP_Failure();
+					A30_Vita_Log("A4 direct client: menu request rejected endpoint=%s\n",
+						direct_trace.direct_ip_endpoint);
+				}
+			}
+		}
 		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after WWUI key pump\n");
 		GameModeManager::Think();
 		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after GameModeManager::Think\n");
 		if (direct_request == 1) {
+			const bool direct_cancelled =
+				RenegadeVitaDirectIPDialog::Take_Cancel_Request();
 			// Before Scene_Init, service original packets without world Think.
 			cConnection *connection = cNetwork::PClientConnection;
 			if (connection && !connection->Is_Destroy()) {
@@ -3234,14 +3443,23 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 				remote_join.Prepare_Resources(progress);
 			}
 			const A31ClientConnect::State state = remote_join.Poll();
-			if (state == A31ClientConnect::Ready) {
+			if (direct_cancelled) {
+				direct_failed = true;
+			} else if (state == A31ClientConnect::Ready) {
 				direct_failed = !remote_join.Request_Start(-1, 0);
 			} else if ((state != A31ClientConnect::WaitingOptions && state != A31ClientConnect::WaitingResources) ||
 				sceKernelGetProcessTimeWide() - direct_started >= 30000000ULL || Is_Start_Pressed()) {
 				direct_failed = true;
 			}
-			if (direct_failed) A30_Vita_Log("A4 direct client: join stopped state=%d timeout_or_cancel=%d\n",
-				state, state == A31ClientConnect::WaitingOptions);
+			if (direct_failed) {
+				RenegadeVitaDirectIPDialog::Finish_Connection();
+				A4_Frontend_Record_Direct_IP_Failure();
+				A30_Vita_Log("A4 direct client: join stopped state=%d timeout_or_cancel=%d\n",
+					state, state == A31ClientConnect::WaitingOptions);
+			}
+			if (!direct_failed && state == A31ClientConnect::Ready) {
+				RenegadeVitaDirectIPDialog::Finish_Connection();
+			}
 		} else GameInitMgrClass::Think();
 		if (frontend_frame == 0U) A30_Vita_Log("A4 frontend: first menu loop after GameInitMgrClass::Think\n");
 		DialogMgrClass::On_Frame_Update();
@@ -3254,6 +3472,18 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 		sceKernelDelayThread(16667);
 	}
 
+#if !RENEGADE_VITA_M00_DEMO
+	const A4FrontendTrace replay_request = A4_Frontend_Get_Trace();
+	if (replay_request.replay_requested && !replay_request.exit_requested && !direct_failed) {
+		// This startup route owns no loaded world. Pause/death replay requests
+		// reach it only after the outer owner verified the old session teardown.
+		GameInitMgrClass::Initialize_SP();
+		CampaignManager::Replay_Level(replay_request.tutorial_map,
+			replay_request.replay_difficulty);
+		A30_Vita_Log("A4 replay: original CampaignManager started source=%s difficulty=%d after session cleanup\n",
+			replay_request.tutorial_map, replay_request.replay_difficulty);
+	}
+#endif
 	const A4FrontendTrace trace = A4_Frontend_Get_Trace();
 #if RENEGADE_VITA_M00_DEMO
 	const bool tutorial_selected = trace.tutorial_start_latched &&
@@ -3263,7 +3493,8 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 	bool selected_save = false;
 	const bool tutorial_selected = !direct_failed && trace.tutorial_start_latched &&
 		(!trace.client_only_selected || remote_join.Poll() == A31ClientConnect::StartRequested) &&
-		((trace.skirmish_selected || trace.client_only_selected) ?
+		((trace.skirmish_selected || trace.client_only_selected ||
+		  trace.lan_host_selected || trace.lan_client_selected) ?
 		 A4_Frontend_Resolve_Skirmish_Archive(trace.tutorial_map,
 			selected_archive, sizeof(selected_archive)) :
 		 A4_Frontend_Resolve_Single_Player_Archive(trace.tutorial_map,
@@ -3303,12 +3534,29 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 }
 
 #if !RENEGADE_VITA_M00_DEMO
+void Queue_Campaign_Handoff_Failure(A31VitaInteractiveResult &result,
+	A31CampaignHandoffFailure failure, const char *phase)
+{
+	result.campaign_handoff_failure = static_cast<uint32_t>(failure);
+	result.return_to_menu_requested = true;
+	result.start_exit_requested = true;
+	CombatManager::Request_Autosave(false);
+	A30_Vita_Log("A4 campaign: handoff failure phase=%s code=%u; clean session teardown to main menu required\n",
+		phase, result.campaign_handoff_failure);
+}
+
 bool Run_Original_Campaign_Intermission(WWAudioClass *audio,
 	A31VitaInteractiveResult &result)
 {
 	A31VitaScopedFrontendRenderResolution presentation_resolution;
 	A4_Frontend_Begin_Menu_Loop();
 	Input::Menu_Enable(true);
+	// A control held through the mission-complete frame is not a new action on
+	// the original score/movie presentation. Match the main/pause menu handoff
+	// by sampling the current state before CampaignManager creates that UI.
+	Renegade_Vita_Input_Route_Set_Gameplay_Active(false, result.frames);
+	Input::Update();
+	A4_Frontend_Prime_WWUI_Key_Transitions();
 	A30_Vita_Log("A4 campaign: dispatching observed mission success to original CampaignManager\n");
 	CampaignManager::Continue();
 	GameModeClass *combat = GameModeManager::Find("Combat");
@@ -3317,10 +3565,16 @@ bool Run_Original_Campaign_Intermission(WWAudioClass *audio,
 		original_end_game_consumed ? 1 : 0,
 		GameModeManager::Find("ScoreScreen") != NULL &&
 			GameModeManager::Find("ScoreScreen")->Is_Active() ? 1 : 0);
+	if (!original_end_game_consumed) {
+		Queue_Campaign_Handoff_Failure(result,
+			A31_CAMPAIGN_HANDOFF_END_GAME_NOT_CONSUMED, "continue-did-not-end-game");
+	}
 	if (original_end_game_consumed) {
 		unsigned intermission_frames = 0U;
+		unsigned ownerless_frames = 0U;
 		while (!A4_Frontend_Exit_Requested() &&
-			!A4_Frontend_Get_Trace().tutorial_start_latched) {
+			!A4_Frontend_Get_Trace().tutorial_start_latched &&
+			!A4_Frontend_Get_Trace().start_game_rejected) {
 			TimeManager::Update();
 			Input::Update();
 			A4_Frontend_Pump_WWUI_Key_Transitions();
@@ -3330,6 +3584,17 @@ bool Run_Original_Campaign_Intermission(WWAudioClass *audio,
 			GameModeManager::Render();
 			if (audio != NULL) audio->On_Frame_Update(0);
 			++intermission_frames;
+			GameModeClass *movie_mode = GameModeManager::Find("Movie");
+			const bool presentation_owned =
+				DialogMgrClass::Get_Dialog_Count() > 0 ||
+				(movie_mode != NULL && movie_mode->Is_Active());
+			ownerless_frames = presentation_owned ? 0U : ownerless_frames + 1U;
+			if (ownerless_frames >= 120U) {
+				Queue_Campaign_Handoff_Failure(result,
+					A31_CAMPAIGN_HANDOFF_PRESENTATION_OWNER_LOST,
+					"campaign-intermission-owner-lost");
+				break;
+			}
 			if (intermission_frames == 1U || intermission_frames % 600U == 0U) {
 				A30_Vita_Log("A4 campaign: original intermission frame=%u score/movie=%d/%d\n",
 					intermission_frames,
@@ -3341,29 +3606,72 @@ bool Run_Original_Campaign_Intermission(WWAudioClass *audio,
 			sceKernelDelayThread(16667);
 		}
 		const A4FrontendTrace trace = A4_Frontend_Get_Trace();
-		if (trace.tutorial_start_latched) {
+		if (trace.start_game_rejected) {
+			Queue_Campaign_Handoff_Failure(result,
+				A31_CAMPAIGN_HANDOFF_SOURCE_REJECTED, "start-game-request-too-long");
+		} else if (trace.tutorial_start_latched) {
 			char archive[96];
 			bool is_save = false;
-			if (A4_Frontend_Resolve_Single_Player_Archive(trace.tutorial_map,
-				archive, sizeof(archive), &is_save) && !is_save) {
-				RAMFileClass state_file(result.campaign_state,
-					sizeof(result.campaign_state));
-				if (state_file.Open(FileClass::WRITE)) {
-					ChunkSaveClass state_writer(&state_file);
-					const bool saved = CampaignManager::Save(state_writer);
-					const int bytes = state_file.Size();
-					state_file.Close();
-					if (saved && bytes > 0 && bytes <=
-						static_cast<int>(sizeof(result.campaign_state))) {
-						memcpy(result.campaign_next_source, trace.tutorial_map,
-							sizeof(result.campaign_next_source));
-						result.campaign_state_size = static_cast<uint32_t>(bytes);
-						result.campaign_handoff_completed = true;
-						A30_Vita_Log("A4 campaign: original intermission latched next source=%s state_bytes=%u frames=%u\n",
-							result.campaign_next_source, result.campaign_state_size,
-							intermission_frames);
-					}
+			const bool single_player_source = A4_Frontend_Resolve_Single_Player_Archive(
+				trace.tutorial_map, archive, sizeof(archive), &is_save);
+			if (single_player_source && (is_save || trace.replay_requested)) {
+				// The original end-of-campaign/replay menu also exposes Load.
+				// Its selection starts a new load/replay, not a campaign advance.
+				memcpy(result.reload_source, trace.tutorial_map, sizeof(result.reload_source));
+				result.reload_is_replay = trace.replay_requested;
+				result.reload_replay_difficulty = trace.replay_difficulty;
+				result.start_exit_requested = true;
+				A30_Vita_Log("A4 load: original intermission menu selected source=%s replay_difficulty=%d\n",
+					result.reload_source, result.reload_is_replay ? result.reload_replay_difficulty : -1);
+			} else if (!trace.campaign_level_start) {
+				const bool defer_local_selection = trace.skirmish_selected ||
+					(single_player_source && !trace.client_only_selected);
+				if (defer_local_selection) {
+					memcpy(result.frontend_next_source, trace.tutorial_map,
+						sizeof(result.frontend_next_source));
+					result.frontend_next_skirmish = trace.skirmish_selected;
+					result.frontend_selection_deferred = true;
+				} else {
+					result.return_to_menu_requested = true;
+					result.return_to_lan_menu_requested =
+						trace.lan_host_selected || trace.lan_client_selected;
 				}
+				result.start_exit_requested = true;
+				A30_Vita_Log("A4 campaign: non-campaign frontend selection source=%s practice/client/lan=%d/%d/%d deferred=%d; clean session teardown\n",
+					trace.tutorial_map, trace.skirmish_selected ? 1 : 0,
+					trace.client_only_selected ? 1 : 0,
+					result.return_to_lan_menu_requested ? 1 : 0,
+					defer_local_selection ? 1 : 0);
+			} else if (single_player_source) {
+					RAMFileClass state_file(result.campaign_state,
+						sizeof(result.campaign_state));
+					if (state_file.Open(FileClass::WRITE)) {
+						ChunkSaveClass state_writer(&state_file);
+						const bool saved = CampaignManager::Save(state_writer);
+						const int bytes = state_file.Size();
+						state_file.Close();
+						if (saved && bytes > 0 && bytes <=
+							static_cast<int>(sizeof(result.campaign_state))) {
+							memcpy(result.campaign_next_source, trace.tutorial_map,
+								sizeof(result.campaign_next_source));
+							result.campaign_state_size = static_cast<uint32_t>(bytes);
+							result.campaign_handoff_completed = true;
+							A30_Vita_Log("A4 campaign: original intermission latched next source=%s state_bytes=%u frames=%u\n",
+								result.campaign_next_source, result.campaign_state_size,
+								intermission_frames);
+						} else {
+							Queue_Campaign_Handoff_Failure(result,
+								saved ? A31_CAMPAIGN_HANDOFF_STATE_SIZE_INVALID :
+									A31_CAMPAIGN_HANDOFF_STATE_SAVE_FAILED,
+								saved ? "campaign-state-size" : "campaign-state-save");
+						}
+					} else {
+						Queue_Campaign_Handoff_Failure(result,
+							A31_CAMPAIGN_HANDOFF_STATE_OPEN_FAILED, "campaign-state-open");
+					}
+			} else {
+				Queue_Campaign_Handoff_Failure(result,
+					A31_CAMPAIGN_HANDOFF_SOURCE_REJECTED, "next-source-resolution");
 			}
 		}
 		result.frontend_exit_requested = A4_Frontend_Exit_Requested();
@@ -3391,6 +3699,23 @@ void A31_Vita_Render_Demo_Ending_Overlay(void)
 #endif
 }
 
+#if !RENEGADE_VITA_M00_DEMO
+A31VitaScopedOriginalLoadingScreenCallback::A31VitaScopedOriginalLoadingScreenCallback(
+	void *screen) : Previous(g_original_reload_loading_screen)
+{
+	g_original_reload_loading_screen = screen;
+	A30_Vita_Log("A4 loading screen: original reload callback borrowed=%p previous=%p\n",
+		screen, Previous);
+}
+
+A31VitaScopedOriginalLoadingScreenCallback::~A31VitaScopedOriginalLoadingScreenCallback()
+{
+	A30_Vita_Log("A4 loading screen: original reload callback released=%p restore=%p\n",
+		g_original_reload_loading_screen, Previous);
+	g_original_reload_loading_screen = Previous;
+}
+#endif
+
 void A31_Vita_Render_Original_Loading_Callback(const char *phase,
 	int minimum_progress)
 {
@@ -3401,22 +3726,44 @@ void A31_Vita_Render_Original_Loading_Callback(const char *phase,
 	// Keep the original renderer on this thread and never recurse into it.
 	if (rendering) return;
 	if (minimum_progress < 0 && now_us - last_render_us < 50000U) return;
-	if (g_active_loading_presenter == NULL) {
+	if (g_active_loading_presenter == NULL
+#if !RENEGADE_VITA_M00_DEMO
+		&& g_original_reload_loading_screen == NULL
+#endif
+	) {
+#if !RENEGADE_VITA_M00_DEMO
+		// Gameplay save/status changes are not loading-screen requests.
+		// Keep rejected loader milestones visible without logging every chunk.
+		if (minimum_progress >= 0)
+#endif
 		A30_Vita_Log("A3.5 loading screen: synchronous-load callback ignored phase=%s minimum=%d active=0\n",
 			phase != NULL ? phase : "unknown", minimum_progress);
 		return;
 	}
 	rendering = true;
 	last_render_us = now_us;
-	g_active_loading_presenter->Render_Original_Progress(phase, true,
-		minimum_progress);
+#if !RENEGADE_VITA_M00_DEMO
+	if (g_original_reload_loading_screen != NULL) {
+		if (CombatManager::Get_Load_Progress() < minimum_progress) {
+			CombatManager::Set_Load_Progress(minimum_progress);
+		}
+		Apply_Original_Loading_Presentation_Rect("original-reload-callback", false);
+		Commando_Render_Original_Loading_Screen(g_original_reload_loading_screen, true);
+	} else
+#endif
+	{
+		g_active_loading_presenter->Render_Original_Progress(phase, true,
+			minimum_progress);
+	}
 	rendering = false;
 }
 
 A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
-	int startup_screen_result, bool start_at_main_menu, const char *reload_source,
+	int startup_screen_result, bool start_at_main_menu, bool start_at_lan_menu,
+	const char *reload_source,
 	const char *campaign_source, const uint8_t *campaign_state,
-	uint32_t campaign_state_size)
+	uint32_t campaign_state_size, int reload_replay_difficulty,
+	const char *deferred_frontend_source, bool deferred_frontend_skirmish)
 {
 	A31VitaInteractiveResult result = {};
 	result.attempted = true;
@@ -3525,7 +3872,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	bool translatedb_initialized = false;
 	bool global_conversations_initialized = false;
 	bool stylemgr_initialized = false;
+		bool gameplay_text_owners_initialized = false;
 		bool input_initialized = false;
+		bool input_config_initialized = false;
 			bool combat_initialized = false;
 			bool campaign_initialized = false;
 			bool mission_completion_observer_installed = false;
@@ -3533,6 +3882,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			bool text_window_scene_initialized = false;
 		bool radar_initialized = false;
 		bool session_initialized = false;
+		bool server_fps_owned = false;
 		bool remote_network_initialized = false;
 		A31ClientConnect remote_join;
 		bool original_end_game_consumed = false;
@@ -3549,6 +3899,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #if !RENEGADE_VITA_M00_DEMO
 			ScoreScreenGameModeClass frontend_score_mode;
 			bool frontend_score_mode_registered = false;
+			LanGameModeClass frontend_lan_mode;
+			bool frontend_lan_mode_registered = false;
 #endif
 			bool frontend_menu_mode_registered_for_handoff = false;
 			bool frontend_dialog_manager_retained = false;
@@ -3578,6 +3930,15 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 		const RenegadeMissionRanks::Status ranks_status = RenegadeMissionRanks::Get_Status();
 		A30_Vita_Log("A3.5 mission ranks: load=%d entries=%u error=%d user_config=1 original_score_replay_owner=1\n",
 			ranks_loaded ? 1 : 0, ranks_status.count, ranks_status.error);
+		const RenegadeResolvedPath movies_path = Renegade_Resolve_Path(
+			kVitaRoots, "user/config/movie-unlocks-v1.cfg", RENEGADE_PATH_WRITE);
+		const char *movies_key = Build_Registry_Location_String(
+			const_cast<char *>(APP_SUB_KEY), NULL, const_cast<char *>("Movies"));
+		const bool movies_loaded = RenegadeMovieUnlocks::Configure(
+			movies_path.success ? movies_path.physical : NULL, movies_key);
+		const RenegadeMovieUnlocks::Status movies_status = RenegadeMovieUnlocks::Get_Status();
+		A30_Vita_Log("A3.5 movie unlocks: load=%d entries=%u error=%d user_config=1 original_campaign_owner=1\n",
+			movies_loaded ? 1 : 0, movies_status.count, movies_status.error);
 		RenegadeVitaOptions::Apply_Audio(application_audio);
 		A30_Vita_Log("A3.5 options: user preferences load=%d sections=%u native_fixed_provider=1\n",
 			options_loaded ? 1 : 0, RenegadeVitaUserSettings::State().record.value[0]);
@@ -3717,11 +4078,25 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_TXT)),
 					static_cast<void *>(StyleMgrClass::Peek_Font(StyleMgrClass::FONT_INGAME_BIG_TXT)));
 				Input::Init(true);
-				Input::Load_Configuration("DEFAULT_INPUT.CFG");
-				A31_Interactive_Configure_Vita_Controls();
 				input_initialized = true;
+				InputConfigMgrClass::Initialize();
+				input_config_initialized = true;
+				if (!InputConfigMgrClass::Current_Configuration_Is_Custom()) {
+					A31_Interactive_Configure_Vita_Controls();
+				}
 					CampaignManager::Init();
 					campaign_initialized = true;
+					#if !RENEGADE_VITA_M00_DEMO
+					if (!CampaignManager::Is_Catalog_Ready()) {
+						A30_Vita_Log("A4 campaign: retail campaign catalog missing or empty; frontend session rejected\n");
+						if (campaign_source != NULL) {
+							Queue_Campaign_Handoff_Failure(result,
+								A31_CAMPAIGN_HANDOFF_CATALOG_RESTORE_FAILED,
+								"campaign-catalog-restore");
+						}
+						break;
+					}
+					#endif
 					#if !RENEGADE_VITA_M00_DEMO
 					if (campaign_source != NULL) {
 						char archive[96];
@@ -3732,16 +4107,35 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 								archive, sizeof(archive), &is_save) || is_save) {
 							A30_Vita_Log("A4 campaign: rejected invalid session handoff source=%s bytes=%u\n",
 								campaign_source, campaign_state_size);
+							Queue_Campaign_Handoff_Failure(result,
+								A31_CAMPAIGN_HANDOFF_SOURCE_REJECTED,
+								"campaign-restore-source");
 							break;
 						}
 						uint8_t state_bytes[64];
 						memcpy(state_bytes, campaign_state, campaign_state_size);
 						RAMFileClass state_file(state_bytes, campaign_state_size);
-						if (!state_file.Open(FileClass::READ)) break;
+						if (!state_file.Open(FileClass::READ)) {
+							Queue_Campaign_Handoff_Failure(result,
+								A31_CAMPAIGN_HANDOFF_STATE_READ_FAILED,
+								"campaign-state-read-open");
+							break;
+						}
 						ChunkLoadClass state_reader(&state_file);
 						const bool loaded = CampaignManager::Load(state_reader);
 						state_file.Close();
-						if (!loaded) break;
+						if (!loaded) {
+							Queue_Campaign_Handoff_Failure(result,
+								A31_CAMPAIGN_HANDOFF_STATE_LOAD_FAILED,
+								"campaign-state-load");
+							break;
+						}
+						if (!CampaignManager::Current_Level_Matches_Archive(archive)) {
+							Queue_Campaign_Handoff_Failure(result,
+								A31_CAMPAIGN_HANDOFF_STATE_SOURCE_MISMATCH,
+								"campaign-state-source-mismatch");
+							break;
+						}
 						A30_Vita_Log("A4 campaign: restored original CampaignManager chunk bytes=%u source=%s\n",
 							campaign_state_size, campaign_source);
 					}
@@ -3767,6 +4161,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						A30_Vita_Log("A4 frontend: registered original CombatGameMode owner for menu/direct M00 route\n");
 					}
 #if !RENEGADE_VITA_M00_DEMO
+					if (GameModeManager::Find("LAN") == NULL) {
+						cNicEnum::Init();
+						GameModeManager::Add(&frontend_lan_mode);
+						frontend_lan_mode_registered = true;
+						A30_Vita_Log("A4 frontend: registered original LAN mode and enumerated local interfaces\n");
+					}
 					if (GameModeManager::Find("ScoreScreen") == NULL) {
 						GameModeManager::Add(&frontend_score_mode);
 						frontend_score_mode_registered = true;
@@ -3775,9 +4175,15 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					{
 						const bool frontend_tutorial_selected =
 							Run_Original_Frontend_Intro_And_Menu(frontend_menu_mode,
-								frontend_movie_mode, audio, start_at_main_menu, reload_source,
-								campaign_source, remote_join, remote_network_initialized);
+								frontend_movie_mode, audio, start_at_main_menu,
+								start_at_lan_menu, reload_source,
+								campaign_source, reload_replay_difficulty,
+								deferred_frontend_source, deferred_frontend_skirmish, remote_join,
+								remote_network_initialized);
 						if (remote_network_initialized) session_initialized = true;
+						// Original frontend callbacks can initialize SP before selection
+						// validation. Retain that cleanup ownership on rejection too.
+						single_player_transport_initialized = cSinglePlayerData::Is_Single_Player();
 						frontend_menu_mode_registered_for_handoff =
 							frontend_tutorial_selected &&
 							GameModeManager::Find("Menu") == &frontend_menu_mode;
@@ -3786,6 +4192,25 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						if (!frontend_tutorial_selected) {
 							result.clean_exit_requested = A4_Frontend_Exit_Requested();
 							result.frontend_exit_requested = result.clean_exit_requested;
+#if !RENEGADE_VITA_M00_DEMO
+							const A4FrontendTrace rejected_source = A4_Frontend_Get_Trace();
+							if (!result.frontend_exit_requested &&
+								(remote_network_initialized || rejected_source.direct_ip_requested ||
+								 rejected_source.direct_ip_failed)) {
+								const bool failed_lan_join = rejected_source.lan_client_selected ||
+									rejected_source.lan_host_selected;
+								Queue_Local_Load_Failure_Recovery(result,
+									A35_LOAD_NETWORK_JOIN_FAILED,
+									failed_lan_join ? "lan-frontend-join" : "direct-client-frontend-join",
+									failed_lan_join);
+							} else if (!result.frontend_exit_requested && !remote_network_initialized &&
+								(rejected_source.start_game_rejected ||
+								 (rejected_source.tutorial_start_latched && !rejected_source.client_only_selected))) {
+								Queue_Local_Load_Failure_Recovery(result,
+									A35_LOAD_SOURCE_REJECTED, "frontend-source-validation",
+									rejected_source.lan_host_selected || rejected_source.lan_client_selected);
+							}
+#endif
 							A30_Vita_Log("A4 frontend: menu exited without supported tutorial selection; direct M00 route not entered\n");
 							break;
 						}
@@ -3803,6 +4228,19 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					}
 #endif
 				{
+					// Desktop Game_Init creates these process-lifetime render owners
+					// before gameplay. Native startup previously selected their
+					// sources without invoking the corresponding initialization.
+					A31VitaScopedGameplayHUDRender2DResolution manager_text_resolution(
+						"player-team-game-data Onetime_Init");
+					cPlayerManager::Onetime_Init();
+					cTeamManager::Onetime_Init();
+					cGameData::Onetime_Init();
+					cBandwidthGraph::Onetime_Init();
+				}
+				gameplay_text_owners_initialized = true;
+				A30_Vita_Log("A4 gameplay presentation: original player/team/game-data process owners initialized\n");
+				{
 					A31VitaScopedGameplayHUDRender2DResolution text_display_resolution(
 						"TextDisplayGameModeClass::Init");
 					text_display_mode.Init();
@@ -3817,12 +4255,22 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					text_display_initialized ? 1 : 0);
 			A30_Vita_Log("A4 breadcrumb: original GameInitMgr SP initialization entry\n");
 			const A4FrontendTrace selected_source = A4_Frontend_Get_Trace();
-			const bool remote_client = selected_source.client_only_selected;
-			if (!remote_client) cServerFps::Create_Instance();
+			const bool direct_client = selected_source.client_only_selected;
+			const bool lan_client = selected_source.lan_client_selected;
+			const bool lan_host = selected_source.lan_host_selected;
+			const bool multiplayer_client = direct_client || lan_client;
+			const bool lan_session = lan_host || lan_client;
+			if (!multiplayer_client) {
+				cServerFps::Create_Instance();
+				server_fps_owned = true;
+			}
 #if !RENEGADE_VITA_M00_DEMO
-			if (remote_client) {
+			if (direct_client) {
 				if (!remote_network_initialized || !remote_join.Begin_World_Load()) break;
 				A30_Vita_Log("A4 direct client: preserving accepted connection through world load\n");
+			} else if (lan_session) {
+				A30_Vita_Log("A4 LAN: preserving original %s game data through world load\n",
+					lan_host ? "host" : "client");
 			} else if (selected_source.skirmish_selected) {
 				GameInitMgrClass::Initialize_Skirmish();
 				A30_Vita_Log("A4 local session: original skirmish initializer\n");
@@ -3836,8 +4284,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				single_player_transport_initialized ? 1 : 0,
 				static_cast<void *>(PTheGameData));
 			GameModeClass *combat_mode = GameModeManager::Find("Combat");
-			if ((!remote_client && !single_player_transport_initialized) ||
-				(remote_client && (!cNetwork::I_Am_Only_Client() || single_player_transport_initialized)) ||
+			if ((!multiplayer_client && !lan_host && !single_player_transport_initialized) ||
+				(direct_client && (!cNetwork::I_Am_Only_Client() || single_player_transport_initialized)) ||
+				(lan_client && (!cNetwork::I_Am_Client() || single_player_transport_initialized)) ||
+				(lan_host && single_player_transport_initialized) ||
 				PTheGameData == NULL || combat_mode == NULL) {
 				A30_Vita_Log("A3.1 interactive: game-data/mode FAIL\n");
 				break;
@@ -3845,20 +4295,25 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			const char *load_source = selected_source.tutorial_start_latched
 				? selected_source.tutorial_map : "M00_Tutorial.mix";
 #if !RENEGADE_VITA_M00_DEMO
+			StringClass round_load_source(load_source, true);
 			char selected_archive[96];
 			bool loading_checkpoint = false;
-			if (!selected_source.tutorial_start_latched ||
-				!((selected_source.skirmish_selected || remote_client) ?
+				if (!selected_source.tutorial_start_latched ||
+					!((selected_source.skirmish_selected || multiplayer_client || lan_host) ?
 				 A4_Frontend_Resolve_Skirmish_Archive(load_source,
 					selected_archive, sizeof(selected_archive)) :
 				 A4_Frontend_Resolve_Single_Player_Archive(load_source,
 					selected_archive, sizeof(selected_archive), &loading_checkpoint))) {
-				A30_Vita_Log("A4 campaign: unsupported original single-player source=%s\n",
-					load_source);
-				break;
+					A30_Vita_Log("A4 campaign: unsupported original single-player source=%s\n",
+						load_source);
+					if (!direct_client) {
+						Queue_Local_Load_Failure_Recovery(result,
+							A35_LOAD_SOURCE_REJECTED, "selected-source", lan_session);
+					}
+					break;
 			}
 			if (stricmp(selected_archive, "M00_Tutorial.mix") != 0 &&
-				!(remote_client && A31ClientConnect::Is_Prepared_Map(selected_archive))) {
+				!(direct_client && A31ClientConnect::Is_Prepared_Map(selected_archive))) {
 				char archive_path[112];
 				snprintf(archive_path, sizeof(archive_path), "Data\\%s", selected_archive);
 				selected_mission_factory.reset(new MixFileFactoryClass(archive_path,
@@ -3866,6 +4321,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				if (!selected_mission_factory->Is_Valid()) {
 					A30_Vita_Log("A4 campaign: original mission MIX unavailable archive=%s\n",
 						archive_path);
+					if (!direct_client) {
+						Queue_Local_Load_Failure_Recovery(result,
+							A35_LOAD_ARCHIVE_UNAVAILABLE, "selected-archive", lan_session);
+					}
 					break;
 				}
 				factory_list.Add_FileFactory(selected_mission_factory.get(),
@@ -3873,7 +4332,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			}
 			// The server Glacier map references the retail M02 ice texture without
 			// bundling it. Keep this fallback scoped to Glacier and user-owned data.
-			if (remote_client && stricmp(selected_archive,
+			if (direct_client && stricmp(selected_archive,
 				"C&C_Glacier_Flying_U1.mix") == 0) {
 				glacier_retail_texture_factory.reset(new MixFileFactoryClass(
 					"Data\\M02.mix", &root_factory));
@@ -3889,11 +4348,6 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			A30_Vita_Log("A4 campaign: original selection source=%s archive=%s save=%d mix_valid=1\n",
 				load_source, selected_archive, loading_checkpoint ? 1 : 0);
 #endif
-			combat_mode->Activate();
-#if !RENEGADE_VITA_M00_DEMO
-			// Do not evaluate base victory before the skirmish world exists.
-			if (selected_source.skirmish_selected || remote_client) combat_mode->Suspend();
-#endif
 #if RENEGADE_VITA_M00_DEMO
 			StringClass map_name("M00_Tutorial.mix", true);
 #else
@@ -3901,11 +4355,18 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #endif
 			The_Game()->Set_Map_Name(map_name);
 #if !RENEGADE_VITA_M00_DEMO
-			if (selected_source.skirmish_selected) The_Game()->Set_Map_Cycle(0, map_name);
+			if (selected_source.skirmish_selected) {
+				// Match the released Practice command: replace slot zero with the
+				// selected map while retaining the configured cycle entries.
+				The_Game()->Set_Map_Cycle(0, map_name);
+			}
 #endif
 			_Force_Link_Soldier();
-			if (!remote_client) {
-				cNetwork::Onetime_Init();
+			if (!multiplayer_client) {
+				if (!lan_host) cNetwork::Onetime_Init();
+				// Own partial client/server initialization even if a connection
+				// cannot be constructed; original cleanup tolerates null peers.
+				session_initialized = true;
 				cNetwork::Init_Server();
 				cNetwork::Init_Client();
 			}
@@ -3930,6 +4391,13 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					CombatManager::Init(render_hud);
 				}
 			combat_initialized = true;
+			// Original mode shutdown assumes Combat has a scene and camera.
+			// Keep it inactive if connection/setup fails before those owners exist.
+			combat_mode->Activate();
+#if !RENEGADE_VITA_M00_DEMO
+			// Do not evaluate base victory before the skirmish world exists.
+			if (selected_source.skirmish_selected || multiplayer_client || lan_host) combat_mode->Suspend();
+#endif
 			A30_Vita_Log("A3.1 breadcrumb: Combat initialized render_hud=%d\n",
 				render_hud ? 1 : 0);
 
@@ -3958,7 +4426,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					load_source
 #else
 					selected_archive, selected_source.skirmish_selected,
-					remote_client
+					multiplayer_client
 #endif
 				)) {
 					result.render_error = true;
@@ -3991,16 +4459,24 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			** draw could ever reach the platform boundary.  Match the original
 			** non-exclusive CombatGameMode load contract for world rendering. */
 			CombatManager::Pre_Load_Level(true);
+			// Pre-load created level owners even if no level data can be read.
+			// Original Unload_Level must release partial objects/background.
+			level_unload_pending = true;
 			loading_presenter.Render_Original_Progress("after_pre_load");
 			A30_Vita_Log("A3.5 background: original render_available=1\n");
 			NetworkObjectMgrClass::Set_Is_Level_Loading(true);
 			TextureLoader::Suspend_Texture_Load();
 			A30_Vita_Log("A3.5 texture loader: suspended during threaded M00 load\n");
+			A35_Level_Load_Reset_Failure();
 #if !RENEGADE_VITA_M00_DEMO
 			const uint64_t mission_preload_started_us = sceKernelGetProcessTimeWide();
 			A30_Vita_Log("A4 campaign preload: original mission dependency list begin archive=%s\n",
 				selected_archive);
-			AssetDependencyManager::Load_Level_Assets(selected_archive);
+			const AssetDependencyManager::LoadResult dependency_result =
+				AssetDependencyManager::Load_Level_Assets(selected_archive);
+			if (dependency_result == AssetDependencyManager::LOAD_FAILED) {
+				A35_Level_Load_Record_Failure(A35_LOAD_DEPENDENCY_PRELOAD_FAILED);
+			}
 			A30_Vita_Log("A4 campaign preload: original mission dependency list return archive=%s elapsed_ms=%llu\n",
 				selected_archive,
 				static_cast<unsigned long long>((sceKernelGetProcessTimeWide() -
@@ -4011,6 +4487,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			const bool tutorial_source_validated = A4_Frontend_Is_Tutorial_Source(load_source);
 			if (!tutorial_source_validated) {
 				A30_Vita_Log("A3.5 M00 load: rejected incompatible tutorial source\n");
+				NetworkObjectMgrClass::Set_Is_Level_Loading(false);
+				TextureLoader::Continue_Texture_Load();
+				CombatGameModeClass::Vita_Abort_Level_Load();
 				result.render_error = true;
 				break;
 			}
@@ -4019,7 +4498,6 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #endif
 			A30_Vita_Log("A3.5 level load: original source=%s checkpoint=%d preload_always=0 campaign_mission_dep=%d\n",
 				load_source, loading_checkpoint ? 1 : 0, !RENEGADE_VITA_M00_DEMO);
-			A35_Level_Load_Reset_Failure();
 			CombatManager::Load_Level_Threaded(load_source, false);
 			int last_load_progress = -1;
 			int last_load_status_count = -1;
@@ -4068,18 +4546,42 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			loading_presenter.Render_Original_Progress("texture_load_continued");
 			A30_Vita_Log("A3.5 texture loader: continued before post-load processing\n");
 			loading_presenter.Render_Original_Progress("post_load_processing");
-			SaveLoadSystemClass::Post_Load_Processing(NULL);
-			A35_Campaign_Flight_Flush("level-load-post-process");
-			// Preserve original reference relinking before partial-world teardown.
 			const A35LevelLoadFailure load_failure = A35_Level_Load_Get_Failure();
 			if (load_failure != A35_LOAD_NO_FAILURE) {
+				SaveLoadSystemClass::Discard_Post_Load_Callbacks();
 				NetworkObjectMgrClass::Set_Is_Level_Loading(false);
-				result.render_error = true;
+				CombatGameModeClass::Vita_Abort_Level_Load();
+#if !RENEGADE_VITA_M00_DEMO
+				if (!direct_client) {
+					Queue_Local_Load_Failure_Recovery(result, load_failure,
+						"required-level-data", lan_session);
+				} else
+#endif
+				{
+					result.render_error = true;
+				}
 				A30_Vita_Log("A3.5 level load: required load failed code=%u; finalization skipped\n",
 					static_cast<unsigned>(load_failure));
 				A35_Campaign_Flight_Flush("level-load-failed");
 				break;
 			}
+#if !RENEGADE_VITA_M00_DEMO
+			if (loading_checkpoint &&
+				!CampaignManager::Loaded_Save_State_Matches_Archive(selected_archive)) {
+				SaveLoadSystemClass::Discard_Post_Load_Callbacks();
+				NetworkObjectMgrClass::Set_Is_Level_Loading(false);
+				CombatGameModeClass::Vita_Abort_Level_Load();
+				Queue_Local_Load_Failure_Recovery(result,
+					A35_LOAD_SAVE_CAMPAIGN_SOURCE_MISMATCH,
+					"save-campaign-source-mismatch", lan_session);
+				A30_Vita_Log("A4 campaign: rejected save campaign/source mismatch archive=%s\n",
+					selected_archive);
+				A35_Campaign_Flight_Flush("save-campaign-source-mismatch");
+				break;
+			}
+#endif
+			SaveLoadSystemClass::Post_Load_Processing(NULL);
+			A35_Campaign_Flight_Flush("level-load-post-process");
 				NetworkObjectMgrClass::Set_Is_Level_Loading(false);
 				loading_presenter.Render_Original_Progress("post_load_level");
 				CombatManager::Post_Load_Level();
@@ -4091,7 +4593,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				}
 				radar_initialized = true;
 #if !RENEGADE_VITA_M00_DEMO
-				if (selected_source.skirmish_selected || remote_client) combat_mode->Resume();
+				if (selected_source.skirmish_selected || multiplayer_client || lan_host) combat_mode->Resume();
 #endif
 				A30_Vita_Log("A3.5 CombatGameMode: original post-load finalization complete radar_initialized=1\n");
 				Warm_Original_M00_Presentation_Cache(loading_presenter);
@@ -4357,16 +4859,33 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #endif
 			A30_Vita_Log("A3.1 breadcrumb: original M00 level loaded\n");
 
-			WideStringClass local_player_name;
-			local_player_name.Convert_From("Renegade");
-#if !RENEGADE_VITA_M00_DEMO
-			if (selected_source.skirmish_selected) local_player_name.Convert_From("PS Vita");
-#endif
 			cPlayer *local_player = NULL;
 			SoldierGameObj *restored_star = NULL;
-			if (remote_client) {
+			if (!direct_client && !lan_client && !loading_checkpoint) {
+				// GameInitMgr::Start_Game normally owns this post-load Bio event.
+				// The Vita frontend consumes Start_Game before its desktop body, so
+				// restore the same event here. A combined local server runs Act()
+				// synchronously and remains the sole owner of player/star creation.
+				const int team_choice = selected_source.skirmish_selected ? -1 :
+					selected_source.tutorial_team_choice;
+				const unsigned long clan_id = lan_host ?
+					selected_source.tutorial_clan_id : 0;
+				cBioEvent *bio = new cBioEvent;
+				bio->Init(team_choice, clan_id);
+				cNetwork::Flush();
+				NetworkObjectMgrClass::Delete_Pending();
+				A30_Vita_Log("A4 local player: transmitted original player data team=%d clan=%lu mode=%s\n",
+					team_choice, clan_id,
+					lan_host ? "LAN-host" :
+						(selected_source.skirmish_selected ? "Practice" : "campaign"));
+			}
+			if (direct_client) {
 				if (!remote_join.Complete_World_Load(selected_source.tutorial_team_choice,
-					selected_source.tutorial_clan_id)) break;
+					selected_source.tutorial_clan_id)) {
+					Queue_Local_Load_Failure_Recovery(result,
+						A35_LOAD_PLAYER_BINDING_FAILED, "direct-client-player-data");
+					break;
+				}
 				const uint64_t loading_window_us = 1000ULL *
 					(static_cast<uint64_t>(cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT) +
 					 static_cast<uint64_t>(cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT_LOADING_ALLOWANCE));
@@ -4383,10 +4902,51 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						remote_join.Poll(),
 						static_cast<unsigned long long>(loading_window_us / 1000ULL),
 						Is_Start_Pressed() ? 1 : 0);
+					Queue_Local_Load_Failure_Recovery(result,
+						A35_LOAD_PLAYER_BINDING_FAILED, "direct-client-initial-replication");
 					break;
 				}
 				local_player = cNetwork::Get_My_Player_Object();
 				A30_Vita_Log("A4 direct client: replicated player/star ready id=%d map=%s player=PS Vita\n",
+					cNetwork::Get_My_Id(), load_source);
+			} else if (lan_client) {
+				// The native frontend consumes GameInitMgr::Start_Game before its
+				// desktop body reaches Transmit_Player_Data. Reproduce that original
+				// post-load protocol edge here; the server remains the sole creator
+				// of the client's cPlayer and commando.
+				cBioEvent *bio = new cBioEvent;
+				bio->Init(selected_source.tutorial_team_choice,
+					selected_source.tutorial_clan_id);
+				cNetwork::Flush();
+				NetworkObjectMgrClass::Delete_Pending();
+				A30_Vita_Log("A4 LAN client: transmitted original player data team=%d clan=%lu\n",
+					selected_source.tutorial_team_choice,
+					selected_source.tutorial_clan_id);
+				const uint64_t loading_window_us = 1000ULL *
+					(static_cast<uint64_t>(cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT) +
+					 static_cast<uint64_t>(cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT_LOADING_ALLOWANCE));
+				const uint64_t deadline = sceKernelGetProcessTimeWide() + loading_window_us;
+				while (cNetwork::I_Am_Client() &&
+					(cNetwork::Get_My_Player_Object() == NULL ||
+					 CombatManager::Get_The_Star() == NULL ||
+					 cNetwork::Get_My_Player_Object()->Get_GameObj() != CombatManager::Get_The_Star()) &&
+					sceKernelGetProcessTimeWide() < deadline && !Is_Start_Pressed()) {
+					A31_Interactive_Run_Simulation_Frame();
+					loading_presenter.Render_Original_Progress("lan_player_replication");
+					audio->On_Frame_Update(0);
+					sceKernelDelayThread(1000);
+				}
+				local_player = cNetwork::I_Am_Client() ? cNetwork::Get_My_Player_Object() : NULL;
+				if (local_player == NULL || CombatManager::Get_The_Star() == NULL ||
+					local_player->Get_GameObj() != CombatManager::Get_The_Star()) {
+					A30_Vita_Log("A4 LAN client: replicated player/star unavailable loading_window_ms=%llu cancelled=%d\n",
+						static_cast<unsigned long long>(loading_window_us / 1000ULL),
+						Is_Start_Pressed() ? 1 : 0);
+					Queue_Local_Load_Failure_Recovery(result,
+						A35_LOAD_PLAYER_BINDING_FAILED, "LAN-client-initial-replication", true);
+					break;
+				}
+				A30_Vita_Log("A4 LAN client: original replicated player ready id=%d map=%s\n",
 					cNetwork::Get_My_Id(), load_source);
 			} else if (loading_checkpoint) {
 				// WWSaveLoad restores the player/star links, but cPlayer::Save
@@ -4411,6 +4971,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						restored_star->Get_Player_Data() != saved_player ||
 						cPlayerManager::Find_Inactive_Player(saved_player->Get_Name()) != saved_player) {
 						A30_Vita_Log("A3.5 checkpoint: FAIL unique inactive saved-player binding; no session activation attempted\n");
+#if !RENEGADE_VITA_M00_DEMO
+						Queue_Local_Load_Failure_Recovery(result,
+							A35_LOAD_PLAYER_BINDING_FAILED, "saved-inactive-player-binding");
+#endif
 						break;
 					}
 					local_player = cGod::Create_Player(cNetwork::Get_My_Id(),
@@ -4420,6 +4984,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						saved_player->Get_GameObj() != restored_star ||
 						restored_star->Get_Player_Data() != saved_player) {
 						A30_Vita_Log("A3.5 checkpoint: FAIL original inactive-player reuse changed saved identity\n");
+#if !RENEGADE_VITA_M00_DEMO
+						Queue_Local_Load_Failure_Recovery(result,
+							A35_LOAD_PLAYER_BINDING_FAILED, "saved-player-reactivation");
+#endif
 						break;
 					}
 					A30_Vita_Log("A3.5 checkpoint: original inactive player reactivated player=%p star=%p; saved objects preserved\n",
@@ -4429,32 +4997,53 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					restored_star == NULL ||
 					restored_star->Get_Control_Owner() != cNetwork::Get_My_Id()) {
 					A30_Vita_Log("A3.5 checkpoint: FAIL restored local player/star identity; no respawn or rejoin attempted\n");
+#if !RENEGADE_VITA_M00_DEMO
+					Queue_Local_Load_Failure_Recovery(result,
+						A35_LOAD_PLAYER_BINDING_FAILED, "restored-local-player-star");
+#endif
 					break;
 				}
 			} else {
-				local_player = cGod::Create_Player(cNetwork::Get_My_Id(),
-					local_player_name, IS_SKIRMISH ? 1 : -1, 0);
+				local_player = cNetwork::Get_My_Player_Object();
 			}
+			// For combined local campaign/Practice/LAN-host sessions the Bio event
+			// creates cPlayer, then the original God owner creates and binds the
+			// commando. Remote clients must wait only for server replication.
+			if (!multiplayer_client) cGod::Think();
+			SoldierGameObj *initial_star = CombatManager::Get_The_Star();
+			const bool initial_identity_bound = local_player != NULL && initial_star != NULL &&
+				local_player->Get_GameObj() == initial_star &&
+				initial_star->Get_Player_Data() == local_player &&
+				initial_star->Get_Control_Owner() == cNetwork::Get_My_Id();
 			result.player_created = local_player != NULL;
-			result.player_registered = remote_client ?
-				(local_player && cNetwork::Get_My_Player_Object() == local_player) : cPlayerManager::Count() == 1;
+			result.player_registered = initial_identity_bound && (multiplayer_client ?
+				cNetwork::Get_My_Player_Object() == local_player : cPlayerManager::Count() == 1);
 			A30_Vita_Log("A3.1 breadcrumb: original player created=%d registered=%d\n",
 				result.player_created ? 1 : 0, result.player_registered ? 1 : 0);
-			if (!remote_client) cGod::Think();
 			if (loading_checkpoint &&
 				(CombatManager::Get_The_Star() != restored_star ||
 				 local_player->Get_GameObj() != restored_star)) {
 				A30_Vita_Log("A3.5 checkpoint: FAIL original saved-player relink; refusing replacement state\n");
+#if !RENEGADE_VITA_M00_DEMO
+				Queue_Local_Load_Failure_Recovery(result,
+					A35_LOAD_PLAYER_BINDING_FAILED, "saved-player-relink");
+#endif
 				break;
 			}
-			result.commando_created = CombatManager::Get_The_Star() != NULL;
+			result.commando_created = initial_star != NULL;
 			if (!result.player_created || !result.player_registered ||
 				!result.commando_created) {
 				A30_Vita_Log("A3.1 interactive: original player creation FAIL player=%d registered=%d commando=%d\n",
 					result.player_created ? 1 : 0, result.player_registered ? 1 : 0,
 					result.commando_created ? 1 : 0);
+#if !RENEGADE_VITA_M00_DEMO
+				Queue_Local_Load_Failure_Recovery(result,
+					A35_LOAD_PLAYER_BINDING_FAILED, "initial-player-binding", lan_session);
+#endif
 				break;
 			}
+			result.world_generations_started = 1U;
+			result.world_generations_bound = 1U;
 			if (!loading_checkpoint) {
 				CombatManager::Set_First_Person_Default(true);
 				CombatManager::Set_First_Person(true);
@@ -4481,6 +5070,13 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				break;
 			}
 
+#if !RENEGADE_VITA_M00_DEMO
+			// Save/status callbacks during gameplay must not draw the first load
+			// screen. Release its model/font references before any later unload.
+			loading_callback.Disarm();
+			loading_presenter.Release();
+#endif
+
 				result.initialized = true;
 				A30_Vita_Log("A3.1 breadcrumb: original player/session ready; original mission completion or START exits\n");
 				RenegadeVitaRenderer::Reset_Statistics();
@@ -4492,7 +5088,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					"interactive_session_ready", result.frames, sceKernelGetProcessTimeWide(),
 					"original player/session ready; entering campaign frame loop");
 #if !RENEGADE_VITA_M00_DEMO
-				if (remote_client) {
+				if (direct_client) {
 					const char *const terminal_request =
 						"ux0:data/renegade/user/config/dev-tt-purchase-menu-once.flag";
 					FILE *request = fopen(terminal_request, "rb");
@@ -4520,26 +5116,337 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				bool diagnostic_m13_a03_field_pending =
 					Try_Arm_Development_M13_A03_Field(load_source);
 #endif
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+					bool practice_respawn_pending = false;
+					uint64_t practice_respawn_deadline_us = 0U;
+					bool world_first_render_pending = false;
+					A31InteractiveRenderTrace world_render_baseline = {};
+					bool direct_round_restart_pending = false;
+#endif
 #if RENEGADE_VITA_M00_DEMO
 				A31DemoEndingPresenter demo_ending;
 #endif
 			while (true) {
-#if !RENEGADE_VITA_M00_DEMO
-				if (remote_client) {
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+					extern bool g_client_quit;
 					extern bool g_b_core_restart;
-					if (remote_join.Poll() == A31ClientConnect::ConnectionLost ||
-						remote_join.Poll() == A31ClientConnect::ProtocolMismatch || g_b_core_restart) {
+					if (direct_client) {
+						A31ClientConnect::State direct_state = remote_join.Poll();
+						if (direct_state == A31ClientConnect::WaitingRoundResources) {
+							remote_join.Resolve_Round_Source();
+							direct_state = remote_join.Poll();
+						}
+						if (direct_state == A31ClientConnect::WaitingRoundResources &&
+							remote_join.Round_Map()[0] != '\0') {
+							bool stock_base_available = !remote_join.Round_Requires_Stock_Base();
+							if (!stock_base_available) {
+								char resource_path[112];
+								snprintf(resource_path, sizeof(resource_path), "Data\\%s",
+									remote_join.Round_Map());
+								MixFileFactoryClass stock_probe(resource_path, &root_factory);
+								stock_base_available = stock_probe.Is_Valid();
+							}
+							RenegadeTTFS::Progress progress{
+								[](void *) { Input::Update(); return !Is_Start_Pressed(); }, nullptr};
+							remote_join.Prepare_Round_Resources(stock_base_available, progress);
+						}
+						if (g_b_core_restart) {
+							direct_round_restart_pending = true;
+							g_b_core_restart = false;
+						}
+					}
+				if (multiplayer_client && g_client_quit) {
+					// CombatGameModeClass::Think normally consumes this after a broken
+					// server connection. The native loop owns the equivalent frame edge,
+					// but still delegates teardown and return routing to GameInitMgr.
+					g_client_quit = false;
+					GameInitMgrClass::Set_Needs_Game_Exit(true);
+					A30_Vita_Log("A4 %s client: original broken-connection exit queued\n",
+						direct_client ? "direct-IP" : "LAN");
+				}
+				// Original game rules request exit after a map cycle or manual
+				// game end. Let GameInitMgr own teardown before using world state.
+				if (GameInitMgrClass::Has_Pending_Game_Exit()) {
+					// A local client can reject the rotated map in the same frame that
+					// the server-side intermission requests its restart. Preserve the
+					// failure classification before the original exit owner consumes it,
+					// and never carry the superseded process-global request into a later
+					// Practice or LAN session.
+					if (g_b_core_restart &&
+						(selected_source.skirmish_selected || lan_host || lan_client)) {
+						char pending_archive[sizeof(selected_archive)];
+						A35LevelLoadFailure pending_failure = A35_LOAD_NO_FAILURE;
+						if (The_Game() == NULL ||
+							!A4_Frontend_Resolve_Skirmish_Archive(The_Game()->Get_Map_Name(),
+								pending_archive, sizeof(pending_archive))) {
+							pending_failure = A35_LOAD_SOURCE_REJECTED;
+						} else if (stricmp(pending_archive, selected_archive) != 0 &&
+							stricmp(pending_archive, "M00_Tutorial.mix") != 0) {
+							char pending_path[112];
+							snprintf(pending_path, sizeof(pending_path), "Data\\%s", pending_archive);
+							MixFileFactoryClass pending_factory(pending_path, &root_factory);
+							if (!pending_factory.Is_Valid()) {
+								pending_failure = A35_LOAD_ARCHIVE_UNAVAILABLE;
+							}
+						}
+						if (pending_failure != A35_LOAD_NO_FAILURE) {
+							Queue_Local_Load_Failure_Recovery(result, pending_failure,
+								"pending-round-exit", lan_session);
+						}
+					}
+					g_b_core_restart = false;
+					Renegade_Vita_Input_Route_Set_Gameplay_Active(false, result.frames);
+					Input::Flush();
+					DialogMgrClass::Flush_Dialogs();
+					if (text_window_scene_initialized) {
+						TextWindowClass::Shutdown();
+						text_window_scene_initialized = false;
+					}
+					A35_Vita_Clear_Prepared_Render_Objs();
+					A4_Frontend_Begin_Menu_Loop();
+					Input::Menu_Enable(true);
+					GameInitMgrClass::Think();
+					original_end_game_consumed = combat_mode->Is_Inactive();
+					if (original_end_game_consumed) {
+						level_unload_pending = false;
+						radar_initialized = false;
+					} else {
+						result.render_error = true;
+					}
+					// The original full-exit branch calls Stop_Main_Loop. Keep
+					// that separate from its ordinary return-to-menu branch.
+					result.frontend_exit_requested = A4_Frontend_Exit_Requested();
+					result.return_to_menu_requested = !result.frontend_exit_requested;
+					result.return_to_lan_menu_requested =
+						result.return_to_menu_requested && lan_session;
+					result.start_exit_requested = true;
+					last_render_trace = {};
+					mission_progress_recorded = false;
+					if (capture_history != NULL) capture_history->Reset();
+					Input::Menu_Enable(false);
+					A4_Frontend_End_Menu_Loop();
+					A30_Vita_Log("A4 completion: original pending exit consumed=%d full_exit=%d frame=%u\n",
+						original_end_game_consumed ? 1 : 0,
+						result.frontend_exit_requested ? 1 : 0, result.frames);
+					break;
+				}
+				// Original intermission and death UI request their own reload
+				// owners. Consume them between frames before reusing world state.
+				const bool campaign_restart = !multiplayer_client && IS_MISSION &&
+					cGod::Has_Pending_Restart();
+					const bool multiplayer_round_restart =
+						(selected_source.skirmish_selected || lan_host || lan_client ||
+						 (direct_client && remote_join.Round_Ready())) &&
+						(direct_client ? direct_round_restart_pending : g_b_core_restart);
+					if (combat_mode->Is_Active() &&
+						(campaign_restart || multiplayer_round_restart)) {
+						const char *reload_owner = campaign_restart ? "campaign-restart" :
+							(direct_client ? "direct-IP-round" : (lan_host ? "LAN-host-round" :
+							 (lan_client ? "LAN-client-round" : "Practice-round")));
+					char next_archive[sizeof(selected_archive)];
+					bool restart_source_is_save = false;
+						std::unique_ptr<MixFileFactoryClass> next_factory;
+						std::unique_ptr<MixFileFactoryClass> next_glacier_supplement;
+						bool restart_ready = The_Game() != NULL && (direct_client
+							? remote_join.Round_Ready() &&
+							  A4_Frontend_Resolve_Skirmish_Archive(remote_join.Round_Map(),
+								next_archive, sizeof(next_archive))
+							:
+							(campaign_restart
+							? A4_Frontend_Resolve_Single_Player_Archive(selected_archive,
+								next_archive, sizeof(next_archive), &restart_source_is_save) &&
+								!restart_source_is_save
+								: A4_Frontend_Resolve_Skirmish_Archive(The_Game()->Get_Map_Name(),
+									next_archive, sizeof(next_archive))));
+					A35LevelLoadFailure restart_preparation_failure = restart_ready
+						? A35_LOAD_NO_FAILURE : A35_LOAD_SOURCE_REJECTED;
+						const bool map_changed = restart_ready &&
+							stricmp(next_archive, selected_archive) != 0;
+						const bool desired_stock_base = !direct_client ||
+							remote_join.Round_Requires_Stock_Base();
+						const bool archive_provider_change = restart_ready && (direct_client
+							? desired_stock_base != bool(selected_mission_factory) ||
+							  (desired_stock_base && map_changed)
+							: map_changed);
+						const bool wants_glacier_supplement = direct_client && restart_ready &&
+							stricmp(next_archive, "C&C_Glacier_Flying_U1.mix") == 0;
+						const bool glacier_supplement_change = direct_client && restart_ready &&
+							(wants_glacier_supplement != bool(glacier_retail_texture_factory));
+					// cGod death/replay restarts the current mission. A changed archive
+					// belongs to the deferred frontend load route, never this live-world
+					// restart envelope.
+					if (campaign_restart && map_changed) {
+						restart_ready = false;
+						restart_preparation_failure = A35_LOAD_SOURCE_REJECTED;
+					}
+						if (restart_ready && archive_provider_change && desired_stock_base &&
+							stricmp(next_archive, "M00_Tutorial.mix") != 0) {
+						char archive_path[112];
+						snprintf(archive_path, sizeof(archive_path), "Data\\%s", next_archive);
+						next_factory.reset(new MixFileFactoryClass(archive_path, &root_factory));
+						restart_ready = next_factory->Is_Valid();
+							if (!restart_ready) restart_preparation_failure = A35_LOAD_ARCHIVE_UNAVAILABLE;
+						}
+						if (restart_ready && glacier_supplement_change && wants_glacier_supplement) {
+							next_glacier_supplement.reset(new MixFileFactoryClass(
+								"Data\\M02.mix", &root_factory));
+							if (!next_glacier_supplement->Is_Valid()) {
+								next_glacier_supplement.reset();
+								A30_Vita_Log("A4 Glacier: next-round retail M02.mix unavailable; ice texture may be missing\n");
+							}
+						}
+						if (!restart_ready) {
+							g_b_core_restart = false;
+							direct_round_restart_pending = false;
+						Queue_Local_Load_Failure_Recovery(result,
+							restart_preparation_failure, reload_owner, lan_session);
+						A30_Vita_Log("A4 %s: reload rejected; normal session teardown\n", reload_owner);
+						break;
+					}
+					Renegade_Vita_Input_Route_Set_Gameplay_Active(false, result.frames);
+					Input::Flush();
+					DialogMgrClass::Flush_Dialogs();
+					if (text_window_scene_initialized) {
+						TextWindowClass::Shutdown();
+						text_window_scene_initialized = false;
+					}
+					A35_Vita_Clear_Prepared_Render_Objs();
+					// Multiplayer rounds can rotate maps and must wait until Core_Shutdown has
+					// released every object backed by the old MIX factory.
+						A36RoundArchiveSwap round_archive_swap = {
+							&factory_list, &selected_mission_factory, &next_factory, next_archive,
+							direct_client ? &remote_join : NULL, archive_provider_change,
+							&glacier_retail_texture_factory, &next_glacier_supplement,
+							glacier_supplement_change
+					};
+					A30_Vita_Log("A4 %s: original reload begin map=%s frame=%u\n",
+						reload_owner, next_archive, result.frames);
+						{
+						// Original Load_Level constructs and owns its new screen.
+						// Scope its logical layout before construction, then restore
+						// gameplay presentation after all loading draws return.
+						A31VitaScopedLoadingRenderResolution reload_loading_resolution;
+							if (campaign_restart) {
+								cGod::Restart();
+							} else {
+								if (direct_client) g_b_core_restart = true;
+								frontend_combat_mode.Process_Core_Restart_Request(
+									(archive_provider_change || direct_client) ? Commit_Round_Archive_Swap_After_Core_Shutdown : NULL,
+									(archive_provider_change || direct_client) ? &round_archive_swap : NULL);
+								direct_round_restart_pending = false;
+						}
+					}
+					Input::Flush();
+					const A35LevelLoadFailure restart_failure = A35_Level_Load_Get_Failure();
+					if (restart_failure != A35_LOAD_NO_FAILURE) {
+						// Core_Shutdown already released Radar. The required-load
+						// guard skipped new Radar/building/game-begin finalization.
+						radar_initialized = false;
+						result.level_load_failure = static_cast<uint32_t>(restart_failure);
+						result.return_to_menu_requested = true;
+						result.return_to_lan_menu_requested = lan_session;
+						result.start_exit_requested = true;
+						last_render_trace = {};
+						if (capture_history != NULL) capture_history->Reset();
+						A30_Vita_Log("A4 %s: required reload failed code=%u; session cleanup\n",
+							reload_owner, static_cast<unsigned>(restart_failure));
+						break;
+					}
+					// Original Load_Level restarted the installed observation before
+					// object/script creation. Do not erase callbacks produced there.
+					if (CombatManager::Get_Scene() == NULL ||
+						!Apply_Original_Gameplay_Render_Resolution(reload_owner, true)) {
+						result.render_error = true;
+						result.return_to_menu_requested = true;
+						result.return_to_lan_menu_requested = lan_session;
+						break;
+					}
+					A31_Interactive_Apply_Render_Capabilities();
+					if (render_hud && CombatManager::Get_Background_Scene() != NULL) {
+						TextWindowClass::Initialize(CombatManager::Get_Background_Scene());
+						text_window_scene_initialized = true;
+					}
+					memcpy(selected_archive, next_archive, strlen(next_archive) + 1U);
+					round_load_source = The_Game()->Get_Map_Name();
+					load_source = round_load_source.Peek_Buffer();
+						local_player = cNetwork::Get_My_Player_Object();
+						SoldierGameObj *restarted_star = CombatManager::Get_The_Star();
+						if (direct_client && !remote_join.Complete_Round_Load()) {
+							Queue_Local_Load_Failure_Recovery(result,
+								A35_LOAD_RESOURCE_PROVIDER_FAILED,
+								"direct-IP-round-completion");
+							break;
+						}
+					const bool retained_player_ready = local_player != NULL &&
+						local_player->Get_Is_Active().Is_True() &&
+						local_player->Get_Is_In_Game().Is_True();
+					const bool lan_client_identity_absent = lan_client && restarted_star == NULL &&
+						(local_player == NULL ||
+						 (retained_player_ready && local_player->Get_GameObj() == NULL));
+					const bool lan_client_identity_linked = lan_client && retained_player_ready &&
+						restarted_star != NULL && local_player->Get_GameObj() == restarted_star &&
+						restarted_star->Get_Player_Data() == local_player &&
+						restarted_star->Get_Control_Owner() == cNetwork::Get_My_Id();
+						const bool restart_identity_ready = direct_client ||
+						lan_client_identity_absent || lan_client_identity_linked ||
+						(retained_player_ready && (campaign_restart
+							? restarted_star != NULL && local_player->Get_GameObj() == restarted_star &&
+								restarted_star->Get_Player_Data() == local_player
+							: restarted_star == NULL && local_player->Get_GameObj() == NULL));
+					if (!restart_identity_ready) {
+						Queue_Local_Load_Failure_Recovery(result,
+							A35_LOAD_PLAYER_BINDING_FAILED, reload_owner, lan_session);
+						A30_Vita_Log("A4 %s: retained player identity invalid player=%p active=%d in_game=%d star=%p game_obj=%p\n",
+							reload_owner, static_cast<void *>(local_player),
+							local_player != NULL && local_player->Get_Is_Active().Is_True() ? 1 : 0,
+							local_player != NULL && local_player->Get_Is_In_Game().Is_True() ? 1 : 0,
+							static_cast<void *>(restarted_star),
+							local_player != NULL ? static_cast<void *>(local_player->Get_GameObj()) : NULL);
+						break;
+					}
+						practice_respawn_pending = !campaign_restart;
+						practice_respawn_deadline_us = (lan_client || direct_client)
+						? sceKernelGetProcessTimeWide() + 1000ULL *
+							(static_cast<uint64_t>(cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT) +
+							 static_cast<uint64_t>(cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT_LOADING_ALLOWANCE))
+						: 0U;
+					++result.world_generations_started;
+					if (campaign_restart) {
+						++result.world_generations_bound;
+					}
+					{
+						const RenegadeVitaRenderer::Statistics &statistics =
+							RenegadeVitaRenderer::Get_Statistics();
+						world_render_baseline.mesh_submissions = statistics.mesh_submissions;
+						world_render_baseline.vertex_submissions = statistics.vertex_submissions;
+						world_render_baseline.triangle_submissions = statistics.triangle_submissions;
+						world_render_baseline.rejected_submissions =
+							statistics.rejected_indexed_submissions;
+						world_render_baseline.unsupported_submissions =
+							statistics.unsupported_submissions;
+					}
+					world_first_render_pending = true;
+					last_render_trace = {};
+					mission_progress_recorded = false;
+					tutorial_control_ready_observed = false;
+					result.mission_completion_observed = false;
+					result.mission_succeeded = false;
+					result.star_killed_observed = false;
+					if (capture_history != NULL) capture_history->Reset();
+					A30_Vita_Log("A4 %s: original reload returned map=%s; spawn/render unverified\n",
+						reload_owner, load_source);
+					continue;
+				}
+#endif
+#if !RENEGADE_VITA_M00_DEMO
+					if (direct_client) {
+					extern bool g_b_core_restart;
+						if (remote_join.Poll() == A31ClientConnect::ConnectionLost ||
+							remote_join.Poll() == A31ClientConnect::ProtocolMismatch ||
+							remote_join.Poll() == A31ClientConnect::ResourceFailed) {
 						A30_Vita_Log("A4 direct client: leaving remote world state=%d round_restart=%d\n",
 							remote_join.Poll(), g_b_core_restart);
 						g_b_core_restart = false;
-						result.start_exit_requested = true;
-						result.return_to_menu_requested = true;
-						break;
-					}
-					// Until original multiplayer menu/round flow is connected,
-					// START leaves the server; never suspend remote simulation as SP.
-					if (g_gameplay_pause_requested) {
-						g_gameplay_pause_requested = false;
 						result.start_exit_requested = true;
 						result.return_to_menu_requested = true;
 						break;
@@ -4558,16 +5465,27 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 							const A4FrontendTrace request = A4_Frontend_Get_Trace();
 							if (request.reload_requested) {
 								memcpy(result.reload_source, request.tutorial_map, sizeof(result.reload_source));
+								result.reload_is_replay = request.replay_requested;
+								result.reload_replay_difficulty = request.replay_difficulty;
 								A30_Vita_Log("A4 load: pause request queued; original session cleanup required source=%s\n", result.reload_source);
 							} else if (request.exit_requested &&
 								!Renegade_Vita_Input_Route_Replay_Exit_Requested()) {
 								result.return_to_menu_requested = true;
-								A30_Vita_Log("A4 frontend: EVA exit queued; return to main menu after session cleanup\n");
+								result.return_to_lan_menu_requested = lan_session;
+								A30_Vita_Log("A4 frontend: EVA exit queued; return to %s menu after session cleanup\n",
+									lan_session ? "LAN" : "main");
 							}
 							result.start_exit_requested = true;
 							break;
 						}
 					}
+				}
+				// The original C&C reference dialog queues GameInitMgr exit while it
+				// closes. Return to the loop-head transition owner before advancing a
+				// gameplay frame against the world selected for teardown.
+				if (GameInitMgrClass::Has_Pending_Game_Exit() || g_client_quit ||
+					g_b_core_restart) {
+					continue;
 				}
 #endif
 				if (Is_Start_Pressed()) {
@@ -4609,6 +5527,57 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				const bool was_suspended = combat_mode->Is_Suspended();
 				A35_Script_Lookup_Set_Context(A35_LOOKUP_GAMEPLAY, result.frames + 1U);
 				A31_Interactive_Run_Simulation_Frame();
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+				// cNetwork::Update can expire intermission, delete player bodies and
+				// queue exit/restart during this frame. Do not inspect or render that
+				// stale generation; let the existing loop-head owner consume it now.
+				if (GameInitMgrClass::Has_Pending_Game_Exit() || g_client_quit ||
+					g_b_core_restart || (!multiplayer_client && IS_MISSION &&
+						cGod::Has_Pending_Restart())) {
+					continue;
+				}
+#endif
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+				if (practice_respawn_pending) {
+						if (lan_client || direct_client) local_player = cNetwork::Get_My_Player_Object();
+					SoldierGameObj *practice_star = CombatManager::Get_The_Star();
+					const bool practice_spawn_ready = local_player != NULL &&
+						practice_star != NULL && local_player->Get_GameObj() == practice_star &&
+						practice_star->Get_Player_Data() == local_player &&
+						practice_star->Get_Control_Owner() == cNetwork::Get_My_Id();
+					if (!practice_spawn_ready) {
+							const bool waiting_for_lan_replication = (lan_client || direct_client) &&
+							cNetwork::I_Am_Client() &&
+							sceKernelGetProcessTimeWide() < practice_respawn_deadline_us;
+						if (!waiting_for_lan_replication) {
+							Queue_Local_Load_Failure_Recovery(result,
+								A35_LOAD_PLAYER_BINDING_FAILED,
+									direct_client ? "direct-IP-round-replication" :
+									 (lan_client ? "LAN-client-round-replication" : "Practice-round-spawn"),
+								lan_client);
+							A30_Vita_Log("A4 %s: original round spawn invalid player=%p star=%p game_obj=%p owner=%d\n",
+									direct_client ? "direct-IP" : (lan_client ? "LAN-client" : "Practice/host"),
+								static_cast<void *>(local_player), static_cast<void *>(practice_star),
+								local_player != NULL ? static_cast<void *>(local_player->Get_GameObj()) : NULL,
+								practice_star != NULL ? practice_star->Get_Control_Owner() : -1);
+							break;
+						}
+						loading_presenter.Render_Original_Progress(
+								direct_client ? "direct_round_player_replication" :
+								"lan_round_player_replication");
+						audio->On_Frame_Update(0);
+						sceKernelDelayThread(1000);
+						continue;
+					} else {
+						practice_respawn_pending = false;
+						result.commando_created = true;
+						++result.world_generations_bound;
+						A30_Vita_Log("A4 %s: original round respawn bound player=%p star=%p\n",
+								direct_client ? "direct-IP" : (lan_client ? "LAN-client" : "Practice/host"),
+							static_cast<void *>(local_player), static_cast<void *>(practice_star));
+					}
+				}
+#endif
 #if !RENEGADE_VITA_M00_DEMO && RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
 				if (diagnostic_m13_a03_field_pending && result.frames >= 180U) {
 					diagnostic_m13_a03_field_pending = false;
@@ -4679,7 +5648,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						A30_Vita_Log("A3.5 demo ending: rejected non-M00 completion source=%s\n", load_source);
 					}
 #else
-					if (!remote_client && result.mission_succeeded) {
+					if (!multiplayer_client && IS_MISSION && !result.mission_succeeded) {
+						// A callback during reload/start-script creation can precede
+						// cGod's RUNNING state. Its state guard prevents duplicate UI.
+						cGod::Mission_Failed();
+					}
+					if (!multiplayer_client && result.mission_succeeded) {
 						original_end_game_consumed =
 							Run_Original_Campaign_Intermission(audio, result);
 						if (original_end_game_consumed) {
@@ -4698,6 +5672,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						result.frames);
 #if RENEGADE_VITA_M00_DEMO
 					break;
+#else
+					if (!multiplayer_client && IS_MISSION && CombatManager::Get_The_Star() != NULL) {
+						cGod::Star_Killed();
+					}
 #endif
 				}
 				const bool is_suspended = combat_mode->Is_Suspended();
@@ -4725,6 +5703,17 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 							DialogMgrClass::Get_Dialog_Count());
 						if (!Run_Original_Gameplay_Pause_Menu(frontend_menu_mode, audio,
 							result.pause_observed, result.resume_observed, true)) {
+							const A4FrontendTrace request = A4_Frontend_Get_Trace();
+							if (request.reload_requested) {
+								memcpy(result.reload_source, request.tutorial_map, sizeof(result.reload_source));
+								result.reload_is_replay = request.replay_requested;
+								result.reload_replay_difficulty = request.replay_difficulty;
+								A30_Vita_Log("A4 death: original load request queued; session cleanup required source=%s\n",
+									result.reload_source);
+							} else if (request.exit_requested &&
+								!Renegade_Vita_Input_Route_Replay_Exit_Requested()) {
+								result.return_to_menu_requested = true;
+							}
 							A30_Vita_Log("A4 death: original popup requested exit/reload\n");
 							result.start_exit_requested = true;
 							break;
@@ -4733,11 +5722,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 							A30_Vita_Log("A4 death: original popup closed without active Combat; ending session\n");
 							break;
 						}
-						A31_Interactive_Begin_Mission_Completion_Observation();
-						result.mission_completion_observed = false;
-						result.mission_succeeded = false;
-						result.star_killed_observed = false;
-						A30_Vita_Log("A4 death: original restart resumed Combat; mission callback observation reset\n");
+						if (!GameInitMgrClass::Has_Pending_Game_Exit() && !cGod::Has_Pending_Restart()) {
+							// A closed death dialog must not continue a dead world.
+							GameInitMgrClass::Set_Needs_Game_Exit(true);
+						}
+						A30_Vita_Log("A4 death: deferred original exit/restart pending; callback evidence retained until consumption\n");
 						continue;
 					}
 #endif
@@ -4854,6 +5843,49 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						static_cast<unsigned long long>(render_trace.unsupported_submissions));
 					break;
 				}
+				if (world_first_render_pending) {
+					const bool counters_monotonic =
+						render_trace.mesh_submissions >= world_render_baseline.mesh_submissions &&
+						render_trace.vertex_submissions >= world_render_baseline.vertex_submissions &&
+						render_trace.triangle_submissions >= world_render_baseline.triangle_submissions &&
+						render_trace.rejected_submissions >= world_render_baseline.rejected_submissions &&
+						render_trace.unsupported_submissions >= world_render_baseline.unsupported_submissions;
+					const uint64_t generation_meshes = counters_monotonic
+						? render_trace.mesh_submissions - world_render_baseline.mesh_submissions : 0U;
+					const uint64_t generation_vertices = counters_monotonic
+						? render_trace.vertex_submissions - world_render_baseline.vertex_submissions : 0U;
+					const uint64_t generation_triangles = counters_monotonic
+						? render_trace.triangle_submissions - world_render_baseline.triangle_submissions : 0U;
+					const uint64_t generation_rejected = counters_monotonic
+						? render_trace.rejected_submissions - world_render_baseline.rejected_submissions : 1U;
+					const uint64_t generation_unsupported = counters_monotonic
+						? render_trace.unsupported_submissions - world_render_baseline.unsupported_submissions : 1U;
+					const bool world_render_ready = render_trace.scene_available &&
+						render_trace.star_available && render_trace.camera_available &&
+						render_trace.end_render_completed && render_trace.post_render_completed &&
+						counters_monotonic && generation_meshes != 0U &&
+						generation_vertices != 0U && generation_triangles != 0U &&
+						generation_rejected == 0U && generation_unsupported == 0U;
+					if (!world_render_ready) {
+						result.render_error = true;
+						A30_Vita_Log("A4 world generation %u: first render FAIL map=%s scene/star/camera=%d/%d/%d monotonic=%d delta_meshes=%llu delta_vertices=%llu delta_triangles=%llu delta_rejected=%llu delta_unsupported=%llu\n",
+							result.world_generations_started, load_source,
+							render_trace.scene_available ? 1 : 0,
+							render_trace.star_available ? 1 : 0,
+							render_trace.camera_available ? 1 : 0,
+							counters_monotonic ? 1 : 0,
+							static_cast<unsigned long long>(generation_meshes),
+							static_cast<unsigned long long>(generation_vertices),
+							static_cast<unsigned long long>(generation_triangles),
+							static_cast<unsigned long long>(generation_rejected),
+							static_cast<unsigned long long>(generation_unsupported));
+						break;
+					}
+					world_first_render_pending = false;
+					++result.world_generations_rendered;
+					A30_Vita_Log("A4 world generation %u: first render PASS map=%s\n",
+						result.world_generations_rendered, load_source);
+				}
 				++result.frames;
 				Copy_Render_Statistics(result);
 				A31FrameTelemetry capture_frame = {};
@@ -4930,6 +5962,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				if (!result.first_frame_completed) {
 					result.first_frame_completed = true;
 					result.first_frame_geometry = true;
+					result.world_generations_rendered = 1U;
 					A30_Vita_Log("A3.1 breadcrumb: first original render frame PASS meshes=%u vertices=%u triangles=%u\n",
 						result.mesh_submissions, result.vertex_submissions,
 						result.triangle_submissions);
@@ -5031,7 +6064,17 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 				// EVA tabs can retain live world/model pointers. Release them first.
-				if (frontend_dialog_manager_retained) DialogMgrClass::Flush_Dialogs();
+				if (frontend_dialog_manager_retained) {
+#if !RENEGADE_VITA_M00_DEMO
+					// Forced cleanup must not make ScoreScreen::On_Destroy advance
+					// CampaignManager after this session's result has been decided.
+					ScoreScreenDialogClass::Set_Forced_Teardown(true);
+#endif
+					DialogMgrClass::Flush_Dialogs();
+#if !RENEGADE_VITA_M00_DEMO
+					ScoreScreenDialogClass::Set_Forced_Teardown(false);
+#endif
+				}
 				if (frontend_combat_mode_registered) {
 					if (!frontend_combat_mode.Is_Inactive()) {
 						frontend_combat_mode.Deactivate();
@@ -5075,6 +6118,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				if (remote_network_initialized) The_Game()->On_Game_End();
 				else cGod::Exit();
 				CombatManager::Unload_Level();
+				LevelManager::Release_Level();
 				level_unload_pending = false;
 				A30_Vita_Log("A4 breadcrumb: original Combat level unload complete\n");
 			}
@@ -5082,6 +6126,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				RadarManager::Shutdown();
 				A30_Vita_Log("A4 breadcrumb: original RadarManager shutdown complete\n");
 			}
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+		// Round restart is process-global in the released engine. No request may
+		// survive destruction of the session that produced it.
+		extern bool g_b_core_restart;
+		g_b_core_restart = false;
+#endif
 		if (session_initialized && !original_end_game_consumed) {
 			/* Preserve GameInitMgrClass's original session shutdown ordering:
 			 * client-goodbye events are drained by NetworkObjectMgr, then the
@@ -5104,6 +6154,15 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			A30_Vita_Log("A4 frontend: removed original Combat mode after player/session teardown\n");
 		}
 #if !RENEGADE_VITA_M00_DEMO
+		if (frontend_lan_mode_registered) {
+			if (!frontend_lan_mode.Is_Inactive()) {
+				frontend_lan_mode.Deactivate();
+			}
+			GameModeManager::Safely_Deactivate();
+			GameModeManager::Remove(&frontend_lan_mode);
+			frontend_lan_mode_registered = false;
+			A30_Vita_Log("A4 frontend: removed original LAN mode during session teardown\n");
+		}
 		if (frontend_score_mode_registered) {
 			if (!frontend_score_mode.Is_Inactive()) {
 				frontend_score_mode.Deactivate();
@@ -5136,6 +6195,16 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					text_display_initialized = false;
 					A30_Vita_Log("A3.5 text display: original TextDisplayGameMode shutdown complete\n");
 				}
+				if (gameplay_text_owners_initialized) {
+					// Release original text/font references while the asset manager
+					// and StyleMgr font catalog are still alive.
+					cPlayerManager::Onetime_Shutdown();
+					cTeamManager::Onetime_Shutdown();
+					cGameData::Onetime_Shutdown();
+					cBandwidthGraph::Onetime_Shutdown();
+					gameplay_text_owners_initialized = false;
+					A30_Vita_Log("A4 gameplay presentation: original player/team/game-data process owners shut down\n");
+				}
 				if (stylemgr_initialized) {
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 				if (frontend_dialog_manager_retained) {
@@ -5158,14 +6227,17 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				translatedb_initialized = false;
 				A30_Vita_Log("A3.5 loading screen: original TranslateDB shutdown complete\n");
 			}
-			if (session_initialized) {
+		if (session_initialized || single_player_transport_initialized) {
 			GameInitMgrClass::Shutdown();
 			A30_Vita_Log("A4 breadcrumb: original GameInitMgr SP shutdown complete\n");
+		}
+		if (session_initialized) {
 			cNetwork::Onetime_Shutdown();
 			A30_Vita_Log("A3.1 breadcrumb: network shutdown complete\n");
 		}
-		if (session_initialized && !remote_network_initialized && cServerFps::Get_Instance())
+		if (server_fps_owned && cServerFps::Get_Instance())
 			cServerFps::Destroy_Instance();
+		if (input_config_initialized) InputConfigMgrClass::Shutdown();
 		if (input_initialized) Input::Shutdown();
 		}
 		A30_Vita_Log("A3.1 breadcrumb: application audio teardown entry singleton=%p\n",
@@ -5190,6 +6262,25 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	_TheWritingFileFactory = previous_write_factory;
 	result.teardown_completed = !result.render_error && audio_teardown_completed &&
 		WW3DAssetManager::Get_Instance() == NULL && !WW3D::Is_Initted();
+	const bool strong_session_cleanup = result.teardown_completed &&
+			cNetwork::PClientConnection == NULL && cNetwork::PServerConnection == NULL &&
+			cPlayerManager::Get_Player_Object_List()->Head() == NULL &&
+			GameObjManager::Get_Game_Obj_List()->Head() == NULL &&
+			CombatManager::Get_Scene() == NULL && CombatManager::Get_The_Star() == NULL &&
+			CombatManager::Get_Camera() == NULL && GameModeManager::Find("Combat") == NULL &&
+			PTheGameData == NULL && !cSinglePlayerData::Is_Single_Player() &&
+			cServerFps::Get_Instance() == NULL;
+	if (result.level_load_failure != 0U) {
+		result.load_failure_cleanup_completed = strong_session_cleanup;
+		A30_Vita_Log("A4 completion: level_load_failure=%u recovery_cleanup_complete=%d\n",
+			result.level_load_failure, result.load_failure_cleanup_completed ? 1 : 0);
+	}
+	if (result.campaign_handoff_failure != A31_CAMPAIGN_HANDOFF_NO_FAILURE) {
+		result.campaign_handoff_cleanup_completed = strong_session_cleanup;
+		A30_Vita_Log("A4 campaign: handoff_failure=%u recovery_cleanup_complete=%d\n",
+			result.campaign_handoff_failure,
+			result.campaign_handoff_cleanup_completed ? 1 : 0);
+	}
 	A30_Vita_Log("A3.1 interactive: complete ready=%d transport=%d level=%d player=%d commando=%d frames=%u exit=%d render_error=%d teardown=%d pause/resume=%d/%d paused_input_frames=%u start_exit=%d mission_complete/success/star=%d/%d/%d perf_fps=%.3f p50/p95/worst_us=%u/%u/%u\n",
 		result.initialized ? 1 : 0, result.transport_established ? 1 : 0,
 		result.level_loaded ? 1 : 0, result.player_created ? 1 : 0,

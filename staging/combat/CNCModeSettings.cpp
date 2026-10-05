@@ -35,7 +35,8 @@ DECLARE_DEFINITION_FACTORY(CNCModeSettingsDef, CLASSID_GLOBAL_SETTINGS_DEF_CNCMO
 
 
 CNCModeSettingsDef::CNCModeSettingsDef(void) :
-		AnnouncementInterval(30)
+		AnnouncementInterval(30),
+		mPreviousInstance(_mInstance)
 	{
 	//WWASSERT(_mInstance == NULL);
 	_mInstance = this;
@@ -156,7 +157,12 @@ CNCModeSettingsDef::CNCModeSettingsDef(void) :
 
 CNCModeSettingsDef::~CNCModeSettingsDef(void)
 	{
-	_mInstance = NULL;
+	if (_mInstance == this) _mInstance = mPreviousInstance;
+	}
+
+void CNCModeSettingsDef::On_Load_Rejected(void)
+	{
+	if (_mInstance == this) _mInstance = mPreviousInstance;
 	}
 
 
@@ -323,12 +329,13 @@ bool CNCModeSettingsDef::Save(ChunkSaveClass& csave)
 
 bool CNCModeSettingsDef::Load(ChunkLoadClass& cload)
 	{
+	bool loaded = true;
 	while (cload.Open_Chunk())
 		{
 		switch (cload.Cur_Chunk_ID())
 			{
 			case CHUNKID_PARENT:
-				DefinitionClass::Load(cload);
+				if (!DefinitionClass::Load(cload)) loaded = false;
 				break;
 								
 			case CHUNKID_VARIABLES:
@@ -440,7 +447,7 @@ bool CNCModeSettingsDef::Load(ChunkLoadClass& cload)
 		cload.Close_Chunk();
 		}
 
-	return true;
+	return loaded && !cload.Has_Error();
 	}
 
 

@@ -87,8 +87,12 @@
 #include "vehicle.h"
 // WOL game-info declaration is supplied by a31_wol_stub.h.
 #include "spawn.h"
-// Match-result dialog is a desktop presentation boundary.
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "dlgcncwinscreen.h"
+#include "dialogmgr.h"
+#else
 #include "a31_dialogmgr_stub.h"
+#endif
 #include "rawfile.h"
 #include "a31_console_stub.h"
 #include "gamedataupdateevent.h"
@@ -639,6 +643,9 @@ bool cGameData::Is_Map_Valid(char **out_filename)
 			*out_filename = MapName.Peek_Buffer();
 		}
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+		bool round_map_valid = false;
+		if (A31ClientConnect::Round_Map_Validity(MapName, round_map_valid))
+			return round_map_valid;
 		if (A31ClientConnect::Is_Prepared_Map(MapName)) return true;
 #endif
 		map_exists = cMiscUtil::File_Exists (MapName);
@@ -1252,7 +1259,9 @@ void cGameData::Begin_Intermission(void)
 	//	Display a dialog with the win information on it
 	//
 	if (!ConsoleBox.Is_Exclusive()) {
-		// Win-screen presentation is a desktop UI boundary.
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+		START_DIALOG (CNCWinScreenMenuClass);
+#endif
 	}
 	return ;
 }

@@ -12,7 +12,11 @@
 #include "D3dx8core.h"
 #include "formconv.h"
 #include "mapper.h"
+#include "matpass.h"
+#include "mesh.h"
+#include "pot.h"
 #include "render2d.h"
+#include "rinfo.h"
 #include "sortingrenderer.h"
 #include "texture.h"
 #include "texture_upload_contract.h"
@@ -39,20 +43,101 @@ bool DX8Wrapper::_EnableTriangleDraw = true;
 // Original DX8Wrapper state queried by Dazzle. The default framebuffer starts
 // outside texture rendering; native render-target switching remains incomplete.
 bool DX8Wrapper::IsRenderToTexture = false;
-// Native WW3D submits base meshes directly and retains the original decal
-// list owner here, without constructing the desktop category renderer.
+namespace {
+
+struct NativeMaterialPassTask {
+	MaterialPassClass *Pass;
+	MeshClass *Mesh;
+	NativeMaterialPassTask *Next;
+	NativeMaterialPassTask(MaterialPassClass *pass, MeshClass *mesh)
+		: Pass(pass), Mesh(mesh), Next(NULL) {
+		Pass->Add_Ref();
+		Mesh->Add_Ref();
+	}
+	~NativeMaterialPassTask() {
+		Pass->Release_Ref();
+		Mesh->Release_Ref();
+	}
+};
+
+struct NativeMaterialPassQueue {
+	NativeMaterialPassTask *Head = NULL;
+	NativeMaterialPassTask *Tail = NULL;
+};
+
+NativeMaterialPassQueue g_rigid_material_passes;
+NativeMaterialPassQueue g_skin_material_passes;
+NativeMaterialPassQueue g_delayed_rigid_material_passes;
+
+void Drain_Native_Material_Pass_Queue(NativeMaterialPassQueue &queue)
+{
+	while (queue.Head != NULL) {
+		NativeMaterialPassTask *task = queue.Head;
+		queue.Head = task->Next;
+		delete task;
+	}
+	queue.Tail = NULL;
+}
+
+void Render_Native_Material_Pass_Queue(NativeMaterialPassQueue &queue,
+	CameraClass *camera)
+{
+	while (queue.Head != NULL) {
+		NativeMaterialPassTask *task = queue.Head;
+		queue.Head = task->Next;
+		if (camera != NULL) {
+			RenderInfoClass render_info(*camera);
+			render_info.light_environment = task->Mesh->Get_Lighting_Environment();
+			RenegadeVitaRenderer::Submit_Material_Pass(*task->Mesh, *task->Pass,
+				render_info);
+		}
+		delete task;
+	}
+	queue.Tail = NULL;
+}
+
+}
+
+// Native WW3D submits base meshes directly and retains the original decal and
+// procedural-pass owners here, without constructing desktop FVF categories.
 DX8MeshRendererClass TheDX8MeshRenderer;
 
 DX8MeshRendererClass::DX8MeshRendererClass()
 	: enable_lighting(true), camera(NULL),
 	  texture_category_container_list_skin(NULL), visible_decal_meshes(NULL) {}
-DX8MeshRendererClass::~DX8MeshRendererClass() {}
+DX8MeshRendererClass::~DX8MeshRendererClass() { Shutdown(); }
+void DX8MeshRendererClass::Init() {}
+void DX8MeshRendererClass::Shutdown()
+{
+	Drain_Native_Material_Pass_Queue(g_rigid_material_passes);
+	Drain_Native_Material_Pass_Queue(g_skin_material_passes);
+	Drain_Native_Material_Pass_Queue(g_delayed_rigid_material_passes);
+	visible_decal_meshes = NULL;
+	camera = NULL;
+}
 // The original renderer dropped every registered mesh's static buffers here
 // (level load, lighting solve, sorting changes). Do the same for the native
 // cached mesh streams that replace those buffers.
 void DX8MeshRendererClass::Invalidate()
 {
+	Drain_Native_Material_Pass_Queue(g_rigid_material_passes);
+	Drain_Native_Material_Pass_Queue(g_skin_material_passes);
+	Drain_Native_Material_Pass_Queue(g_delayed_rigid_material_passes);
 	RenegadeVitaRenderer::Invalidate_Static_Mesh_Cache();
+}
+
+bool DX8MeshRendererClass::Queue_Material_Pass(MaterialPassClass *pass,
+	MeshClass *mesh, bool skin, bool delayed)
+{
+	if (pass == NULL || mesh == NULL) return false;
+	NativeMaterialPassTask *task = new (std::nothrow) NativeMaterialPassTask(pass, mesh);
+	if (task == NULL) return false;
+	NativeMaterialPassQueue &queue = skin ? g_skin_material_passes :
+		(delayed ? g_delayed_rigid_material_passes : g_rigid_material_passes);
+	if (queue.Tail != NULL) queue.Tail->Next = task;
+	else queue.Head = task;
+	queue.Tail = task;
+	return true;
 }
 
 // Retain the original decal list owner while native base meshes submit directly.
@@ -77,8 +162,17 @@ void DX8MeshRendererClass::Render_Decal_Meshes(void)
 
 void DX8MeshRendererClass::Flush(void)
 {
-	if (!camera) return;
+	if (!camera) {
+		Drain_Native_Material_Pass_Queue(g_rigid_material_passes);
+		Drain_Native_Material_Pass_Queue(g_skin_material_passes);
+		Drain_Native_Material_Pass_Queue(g_delayed_rigid_material_passes);
+		visible_decal_meshes = NULL;
+		return;
+	}
+	Render_Native_Material_Pass_Queue(g_rigid_material_passes, camera);
+	Render_Native_Material_Pass_Queue(g_skin_material_passes, camera);
 	Render_Decal_Meshes();
+	Render_Native_Material_Pass_Queue(g_delayed_rigid_material_passes, camera);
 	DX8Wrapper::Set_Vertex_Buffer(NULL);
 	DX8Wrapper::Set_Index_Buffer(NULL, 0);
 }
@@ -930,6 +1024,52 @@ bool Upload_Texture_Level_From_Surface(IDirect3DTexture8 *texture, UINT level)
 	return true;
 }
 
+bool Create_Native_Render_Target_Owners(IDirect3DTexture8 *texture)
+{
+	if (texture == NULL || texture->NativeTexture == 0U || texture->Width == 0U ||
+		texture->Height == 0U || texture->GetLevelCount() != 1U) return false;
+#if defined(__vita__)
+	GLint previous_framebuffer = 0;
+	GLint previous_renderbuffer = 0;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previous_framebuffer);
+	glGetIntegerv(GL_RENDERBUFFER_BINDING, &previous_renderbuffer);
+	(void)glGetError();
+	GLuint framebuffer = 0U;
+	GLuint depth = 0U;
+	glGenFramebuffers(1, &framebuffer);
+	glGenRenderbuffers(1, &depth);
+	if (framebuffer != 0U && depth != 0U) {
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+			GL_TEXTURE_2D, texture->NativeTexture, 0);
+		glBindRenderbuffer(GL_RENDERBUFFER, depth);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16,
+			static_cast<GLsizei>(texture->Width),
+			static_cast<GLsizei>(texture->Height));
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+			GL_RENDERBUFFER, depth);
+	}
+	const bool complete = framebuffer != 0U && depth != 0U &&
+		glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE &&
+		glGetError() == GL_NO_ERROR;
+	glBindRenderbuffer(GL_RENDERBUFFER, static_cast<GLuint>(previous_renderbuffer));
+	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previous_framebuffer));
+	if (!complete) {
+		if (depth != 0U) glDeleteRenderbuffers(1, &depth);
+		if (framebuffer != 0U) glDeleteFramebuffers(1, &framebuffer);
+		return false;
+	}
+	texture->NativeFramebuffer = framebuffer;
+	texture->NativeDepthRenderbuffer = depth;
+#else
+	texture->NativeFramebuffer = 1U;
+	texture->NativeDepthRenderbuffer = 1U;
+#endif
+	texture->RenderTarget = true;
+	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
+	return true;
+}
+
 bool Attach_Texture_Surface_Copy(IDirect3DTexture8 *texture, UINT level,
 	IDirect3DSurface8 *source)
 {
@@ -1108,10 +1248,10 @@ IDirect3DTexture8 *Create_Checkerboard_Fallback()
 }
 
 #if defined(__vita__)
-// Leading DXT levels that vitaGL can keep compressed: power-of-two, at least
-// one 4x4 block in each dimension, at most ten levels. Sub-block tail mips are
-// dropped (GXM clamps LOD to the levels that exist) instead of expanding the
-// whole texture to linear RGBA8888.
+// DXT levels that vitaGL can keep compressed: power-of-two, at least one 4x4
+// block in each dimension, at most ten levels. The caller accepts this path
+// only when it covers the complete requested chain; otherwise the decoded
+// path preserves the original sub-block tail mips.
 unsigned Native_DXT_Level_Count(DDSFileClass &dds, unsigned mip_count)
 {
 	if (!RenegadeVitaRenderer::Use_Native_DDS_Upload() ||
@@ -1235,7 +1375,7 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 	// inside the gameplay frame that first drew each texture.
 	const unsigned native_levels = Native_DXT_Level_Count(dds, mip_count);
 	const size_t name_length = strlen(filename);
-	char *lazy_source = native_levels != 0U ?
+	char *lazy_source = native_levels == mip_count ?
 		new (std::nothrow) char[name_length + 1U] : NULL;
 	if (lazy_source != NULL) {
 		memcpy(lazy_source, filename, name_length + 1U);
@@ -1275,7 +1415,6 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 					memcpy(&word, blocks + offset, sizeof(word));
 					checksum = Mix_Texture_Checksum(checksum, word);
 				}
-				texture->MipLevels = native_levels;
 				texture->NativeTexture = fast_native;
 				texture->NativeCompressed = true;
 				texture->LazyDDSSource = lazy_source;
@@ -1517,7 +1656,8 @@ void Submit_Bound_Triangles(const RenderStateStruct &state,
 	if (!Is_DX8_Buffer_Type(state.vertex_buffer_type) ||
 		!Is_DX8_Buffer_Type(state.index_buffer_type)) {
 		RenegadeVitaRenderer::Reject_Indexed_Submission(
-			"sorting buffer path is not implemented", state.vertex_buffer->FVF_Info().Get_FVF());
+			"unsupported mixed indexed buffer types",
+			state.vertex_buffer->FVF_Info().Get_FVF());
 		return;
 	}
 
@@ -1871,7 +2011,6 @@ IDirect3DTexture8 *DX8Wrapper::_Create_DX8_Texture(unsigned int width,
 	bool rendertarget)
 {
 	(void)pool;
-	(void)rendertarget;
 	if (width == 0U || height == 0U) {
 		RenegadeVitaRenderer::Record_Texture_Invalid_Data();
 		return NULL;
@@ -1892,6 +2031,7 @@ IDirect3DTexture8 *DX8Wrapper::_Create_DX8_Texture(unsigned int width,
 	texture->Height = height;
 	texture->MipLevels = Calculate_Texture_Mip_Count(width, height,
 		mip_level_count);
+	if (rendertarget) texture->MipLevels = 1U;
 	texture->SourceFormat = d3d_format;
 	texture->ResidentBytes = Calculate_Texture_Resident_Bytes(width, height,
 		texture->MipLevels);
@@ -1928,6 +2068,13 @@ IDirect3DTexture8 *DX8Wrapper::_Create_DX8_Texture(unsigned int width,
 			RenegadeVitaRenderer::Record_Texture_Upload_Failure();
 			return NULL;
 		}
+	}
+	if (rendertarget && !Create_Native_Render_Target_Owners(texture)) {
+		Destroy_Texture_Surface_Levels(texture);
+		RenegadeVitaRenderer::Release_Texture(texture->NativeTexture);
+		delete texture;
+		RenegadeVitaRenderer::Record_Texture_Upload_Failure();
+		return NULL;
 	}
 	RenegadeVitaRenderer::Record_Texture_Upload(texture->ResidentBytes);
 	return texture;
@@ -1967,6 +2114,18 @@ ULONG IDirect3DBaseTexture8::Release()
 		Destroy_Texture_Surface_Levels(static_cast<IDirect3DTexture8 *>(this));
 		delete [] LazyDDSSource;
 		LazyDDSSource = NULL;
+#if defined(__vita__)
+		if (NativeDepthRenderbuffer != 0U) {
+			const GLuint depth = NativeDepthRenderbuffer;
+			glDeleteRenderbuffers(1, &depth);
+			NativeDepthRenderbuffer = 0U;
+		}
+		if (NativeFramebuffer != 0U) {
+			const GLuint framebuffer = NativeFramebuffer;
+			glDeleteFramebuffers(1, &framebuffer);
+			NativeFramebuffer = 0U;
+		}
+#endif
 		RenegadeVitaRenderer::Release_Texture(NativeTexture);
 		RenegadeVitaRenderer::Record_Texture_Release(ResidentBytes);
 		delete static_cast<IDirect3DTexture8 *>(this);
@@ -2003,7 +2162,10 @@ HRESULT IDirect3DTexture8::GetSurfaceLevel(UINT level, IDirect3DSurface8 **surfa
 		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	}
 #if defined(__vita__)
-	(void)Materialize_Lazy_DDS_Surface_Levels(this);
+	if (LazyDDSSource != NULL && !Materialize_Lazy_DDS_Surface_Levels(this)) {
+		RenegadeVitaRenderer::Record_Texture_Decode_Failure();
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
 #endif
 	if (SurfaceLevels != NULL && SurfaceLevels[level] != NULL) {
 		SurfaceLevels[level]->AddRef();
@@ -2029,7 +2191,10 @@ HRESULT IDirect3DTexture8::LockRect(UINT level, D3DLOCKED_RECT *locked,
 	const RECT *rectangle, DWORD flags)
 {
 #if defined(__vita__)
-	(void)Materialize_Lazy_DDS_Surface_Levels(this);
+	if (LazyDDSSource != NULL && !Materialize_Lazy_DDS_Surface_Levels(this)) {
+		RenegadeVitaRenderer::Record_Texture_Decode_Failure();
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
 #endif
 	if (locked == NULL || level >= GetLevelCount() ||
 		SurfaceLevels == NULL || SurfaceLevels[level] == NULL ||
@@ -2129,10 +2294,16 @@ HRESULT IDirect3DSurface8::GetDesc(D3DSURFACE_DESC *description)
 	return D3D_OK;
 }
 
+bool Readback_Render_Target_Surface(IDirect3DSurface8 *surface);
+
 HRESULT IDirect3DSurface8::LockRect(D3DLOCKED_RECT *locked,
 	const RECT *rectangle, DWORD flags)
 {
 	if (locked == NULL || Storage == NULL || Locked) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	if ((flags & D3DLOCK_DISCARD) == 0U &&
+		!Readback_Render_Target_Surface(this)) {
 		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	}
 	UINT left = 0U;
@@ -2183,6 +2354,45 @@ HRESULT IDirect3DSurface8::Upload_Texture_Owner()
 	return D3D_OK;
 }
 
+bool Readback_Render_Target_Surface(IDirect3DSurface8 *surface)
+{
+	if (surface == NULL) return false;
+	IDirect3DTexture8 *texture = surface->Get_Texture_Owner();
+	if (texture == NULL || !texture->RenderTarget ||
+		surface->Get_Texture_Owner_Level() != 0U ||
+		texture->NativeFramebuffer == 0U) return true;
+	D3DSURFACE_DESC description = {};
+	const unsigned bytes_per_pixel = surface->GetDesc(&description) == D3D_OK
+		? Surface_Bytes_Per_Pixel(description.Format) : 0U;
+	if (bytes_per_pixel == 0U || surface->Get_Data() == NULL) return false;
+#if defined(__vita__)
+	std::vector<unsigned char> rgba(
+		static_cast<size_t>(description.Width) * description.Height * 4U);
+	GLint previous_framebuffer = 0;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previous_framebuffer);
+	(void)glGetError();
+	glBindFramebuffer(GL_FRAMEBUFFER, texture->NativeFramebuffer);
+	glReadPixels(0, 0, static_cast<GLsizei>(description.Width),
+		static_cast<GLsizei>(description.Height), GL_RGBA, GL_UNSIGNED_BYTE,
+		rgba.data());
+	const bool read_ok = glGetError() == GL_NO_ERROR;
+	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previous_framebuffer));
+	if (!read_ok) return false;
+	for (unsigned y = 0U; y < description.Height; ++y) {
+		const unsigned char *source_row = rgba.data() +
+			static_cast<size_t>(description.Height - 1U - y) * description.Width * 4U;
+		unsigned char *destination_row = surface->Get_Data() +
+			static_cast<size_t>(y) * surface->Get_Pitch();
+		for (unsigned x = 0U; x < description.Width; ++x) {
+			if (!Write_RGBA_To_Surface_Pixel(description.Format,
+				source_row + static_cast<size_t>(x) * 4U,
+				destination_row + static_cast<size_t>(x) * bytes_per_pixel)) return false;
+		}
+	}
+#endif
+	return true;
+}
+
 HRESULT IDirect3DDevice8::CopyRects(IDirect3DSurface8 *source,
 	const RECT *source_rects, UINT count, IDirect3DSurface8 *destination,
 	const POINT *destination_points)
@@ -2190,6 +2400,9 @@ HRESULT IDirect3DDevice8::CopyRects(IDirect3DSurface8 *source,
 	if (source == NULL || destination == NULL || source->Get_Data() == NULL ||
 		destination->Get_Data() == NULL ||
 		(source_rects == NULL && count != 0U)) {
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
+	if (!Readback_Render_Target_Surface(source)) {
 		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	}
 	D3DSURFACE_DESC source_description = {};
@@ -2484,9 +2697,16 @@ void DX8Wrapper::Get_Device_Resolution(int &width, int &height, int &bits,
 void DX8Wrapper::Get_Render_Target_Resolution(int &width, int &height,
 	int &bits, bool &windowed)
 {
-	// Non-default render targets are not mapped yet. The active A3 world path
-	// renders to the immutable native display target, so retain its exact
-	// dimensions under the original query.
+	uint32_t target_width = 0U;
+	uint32_t target_height = 0U;
+	if (RenegadeVitaRenderer::Get_Active_Render_Target_Size(&target_width,
+		&target_height)) {
+		width = static_cast<int>(target_width);
+		height = static_cast<int>(target_height);
+		bits = 32;
+		windowed = false;
+		return;
+	}
 	Get_Device_Resolution(width, height, bits, windowed);
 }
 
@@ -2548,26 +2768,32 @@ bool DX8Wrapper::Set_Device_Resolution(int width, int height, int bits,
 TextureClass *DX8Wrapper::Create_Render_Target(int width, int height,
 	WW3DFormat format)
 {
-	// Original Create_Projector_Render_Target tries UNKNOWN even when no
-	// explicit format is supported. Its callers handle NULL without submitting
-	// an offscreen draw. This allocation probe is not a rejected indexed draw:
-	// counting it as one incorrectly aborts the first ordinary gameplay frame.
-	// Keep capabilities false and the original NULL fallback. Actual attempts
-	// to bind non-default render targets still fail their submission checks.
-#if defined(__vita__)
-	static bool logged_unavailable = false;
-	if (!logged_unavailable) {
-		Vita_Append_A22_Runtime_Breadcrumb("render-capability",
-			"render-to-texture creation is unsupported: size=%dx%d format=%u result=NULL original_projector_fallback=1 draw_submitted=0",
-			width, height, static_cast<unsigned>(format));
-		logged_unavailable = true;
+	if (width <= 0 || height <= 0) return NULL;
+	if (format == WW3D_FORMAT_UNKNOWN) format = WW3D_FORMAT_A8R8G8B8;
+	const D3DFORMAT d3d_format = WW3DFormat_To_D3DFormat(format);
+	if (d3d_format == D3DFMT_UNKNOWN ||
+		!Surface_Format_Can_Convert_To_RGBA(d3d_format)) return NULL;
+	int target_size = Find_POT(width < height ? width : height);
+	if (target_size > 2048) target_size = 2048;
+	TextureClass *texture = NEW_REF(TextureClass,(target_size, target_size,
+		format, TextureClass::MIP_LEVELS_1, TextureClass::POOL_DEFAULT, true));
+	if (texture == NULL || texture->Peek_DX8_Texture() == NULL ||
+		!texture->Peek_DX8_Texture()->RenderTarget) {
+		REF_PTR_RELEASE(texture);
+		return NULL;
 	}
-#else
-	(void)width;
-	(void)height;
-	(void)format;
+#if defined(__vita__)
+	static bool logged_available = false;
+	if (!logged_available) {
+		Vita_Append_A22_Runtime_Breadcrumb("render-capability",
+			"render-to-texture created: requested=%dx%d allocated=%dx%d format=%u framebuffer=%u depth=%u",
+			width, height, target_size, target_size, static_cast<unsigned>(format),
+			texture->Peek_DX8_Texture()->NativeFramebuffer,
+			texture->Peek_DX8_Texture()->NativeDepthRenderbuffer);
+		logged_available = true;
+	}
 #endif
-	return NULL;
+	return texture;
 }
 
 void DX8Wrapper::Set_Viewport(const D3DVIEWPORT8 *viewport)
@@ -2705,6 +2931,71 @@ void DX8Wrapper::Set_Index_Buffer(const DynamicIBAccessClass &access_const,
 	render_state_changed |= INDEX_BUFFER_CHANGED;
 }
 
+void DX8Wrapper::Draw_Sorting_IB_VB(unsigned primitive_type,
+	unsigned short start_index, unsigned short polygon_count,
+	unsigned short min_vertex_index, unsigned short vertex_count)
+{
+	WWASSERT(render_state.vertex_buffer_type == BUFFER_TYPE_SORTING ||
+		render_state.vertex_buffer_type == BUFFER_TYPE_DYNAMIC_SORTING);
+	WWASSERT(render_state.index_buffer_type == BUFFER_TYPE_SORTING ||
+		render_state.index_buffer_type == BUFFER_TYPE_DYNAMIC_SORTING);
+	if (render_state.vertex_buffer == NULL || render_state.index_buffer == NULL ||
+		vertex_count == 0U || polygon_count == 0U) return;
+
+	DynamicVBAccessClass dynamic_vertices(BUFFER_TYPE_DYNAMIC_DX8,
+		dynamic_fvf_type, vertex_count);
+	{
+		DynamicVBAccessClass::WriteLockClass lock(&dynamic_vertices);
+		VertexFormatXYZNDUV2 *destination = lock.Get_Formatted_Vertex_Array();
+		const VertexFormatXYZNDUV2 *source =
+			static_cast<SortingVertexBufferClass *>(render_state.vertex_buffer)->VertexBuffer;
+		source += render_state.vba_offset + render_state.index_base_offset +
+			min_vertex_index;
+		memcpy(destination, source,
+			static_cast<size_t>(vertex_count) * sizeof(VertexFormatXYZNDUV2));
+	}
+
+	unsigned index_count = 0U;
+	switch (primitive_type) {
+		case D3DPT_TRIANGLELIST: index_count = polygon_count * 3U; break;
+		case D3DPT_TRIANGLESTRIP:
+		case D3DPT_TRIANGLEFAN: index_count = polygon_count + 2U; break;
+		default:
+			RenegadeVitaRenderer::Reject_Indexed_Submission(
+				"unsupported sorting primitive", dynamic_fvf_type);
+			return;
+	}
+	if (index_count > 65535U) {
+		RenegadeVitaRenderer::Reject_Indexed_Submission(
+			"sorting index count exceeds 16-bit buffer capacity", dynamic_fvf_type);
+		return;
+	}
+	DynamicIBAccessClass dynamic_indices(BUFFER_TYPE_DYNAMIC_DX8, index_count);
+	{
+		DynamicIBAccessClass::WriteLockClass lock(&dynamic_indices);
+		unsigned short *destination = lock.Get_Index_Array();
+		const unsigned short *source =
+			static_cast<SortingIndexBufferClass *>(render_state.index_buffer)->index_buffer;
+		source += render_state.iba_offset + start_index;
+		for (unsigned i = 0U; i < index_count; ++i) {
+			const unsigned short source_index = source[i];
+			if (source_index < min_vertex_index ||
+				static_cast<unsigned>(source_index - min_vertex_index) >= vertex_count) {
+				RenegadeVitaRenderer::Reject_Indexed_Submission(
+					"sorting index outside declared vertex range", dynamic_fvf_type);
+				return;
+			}
+			destination[i] = static_cast<unsigned short>(source_index - min_vertex_index);
+		}
+	}
+
+	Set_Vertex_Buffer(dynamic_vertices);
+	Set_Index_Buffer(dynamic_indices, 0U);
+	Apply_Render_State_Changes();
+	Submit_Bound_Triangles(render_state, 0U, polygon_count, 0U, vertex_count,
+		primitive_type != D3DPT_TRIANGLELIST);
+}
+
 void DX8Wrapper::Draw_Triangles(unsigned buffer_type,
 	unsigned short start_index, unsigned short polygon_count,
 	unsigned short min_vertex_index, unsigned short vertex_count)
@@ -2735,6 +3026,14 @@ void DX8Wrapper::Draw_Triangles(unsigned short start_index,
 	unsigned short polygon_count, unsigned short min_vertex_index,
 	unsigned short vertex_count)
 {
+	if ((render_state.vertex_buffer_type == BUFFER_TYPE_SORTING ||
+		render_state.vertex_buffer_type == BUFFER_TYPE_DYNAMIC_SORTING) &&
+		(render_state.index_buffer_type == BUFFER_TYPE_SORTING ||
+		render_state.index_buffer_type == BUFFER_TYPE_DYNAMIC_SORTING)) {
+		Draw_Sorting_IB_VB(D3DPT_TRIANGLELIST, start_index, polygon_count,
+			min_vertex_index, vertex_count);
+		return;
+	}
 	Apply_Render_State_Changes();
 	Submit_Bound_Triangles(render_state, start_index, polygon_count,
 		min_vertex_index, vertex_count);
@@ -2744,6 +3043,14 @@ void DX8Wrapper::Draw_Strip(unsigned short start_index,
 	unsigned short polygon_count, unsigned short min_vertex_index,
 	unsigned short vertex_count)
 {
+	if ((render_state.vertex_buffer_type == BUFFER_TYPE_SORTING ||
+		render_state.vertex_buffer_type == BUFFER_TYPE_DYNAMIC_SORTING) &&
+		(render_state.index_buffer_type == BUFFER_TYPE_SORTING ||
+		render_state.index_buffer_type == BUFFER_TYPE_DYNAMIC_SORTING)) {
+		Draw_Sorting_IB_VB(D3DPT_TRIANGLESTRIP, start_index, polygon_count,
+			min_vertex_index, vertex_count);
+		return;
+	}
 	Apply_Render_State_Changes();
 	Submit_Bound_Triangles(render_state, start_index, polygon_count,
 		min_vertex_index, vertex_count, true);

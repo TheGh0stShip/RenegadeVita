@@ -1,0 +1,301 @@
+--- a/simplegameobj.cpp
++++ b/simplegameobj.cpp
+@@ -238,11 +238,12 @@
+ 
+ bool	SimpleGameObj::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				PhysicalGameObj::Load( cload );
++				if (!PhysicalGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -255,7 +256,7 @@
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void	SimpleGameObj::On_Post_Load( void )
+--- a/powerup.cpp
++++ b/powerup.cpp
+@@ -573,11 +573,12 @@
+ 
+ bool	PowerUpGameObj::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				SimpleGameObj::Load( cload );
++				if (!SimpleGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
+@@ -599,7 +600,7 @@
+ 			case CHUNKID_WEAPONBAG:
+ 				WWASSERT( WeaponBag == NULL );
+ 				WeaponBag = new WeaponBagClass( NULL );
+-			 	WeaponBag->Load( cload );
++				if (WeaponBag == NULL || !WeaponBag->Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -611,7 +612,7 @@
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);		// MOVED
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void	PowerUpGameObj::On_Post_Load( void )
+--- a/c4.cpp
++++ b/c4.cpp
+@@ -444,6 +444,7 @@
+ 
+ bool	C4GameObj::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	REF_PTR_RELEASE(StuckStaticAnimObj);
+ 	uint32 static_anim_obj_id = 0xFFFFFFFF;
+ 
+@@ -451,7 +452,7 @@
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				SimpleGameObj::Load( cload );
++				if (!SimpleGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -485,11 +486,11 @@
+ 			}	
+ 
+ 			case CHUNKID_OWNER:
+-				Owner.Load( cload );
++				if (!Owner.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_STUCK_OBJECT:
+-				StuckObject.Load( cload );
++				if (!StuckObject.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -508,7 +509,7 @@
+ 		REF_PTR_RELEASE(pobj);
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void C4GameObj::Think( void )
+--- a/beacongameobj.cpp
++++ b/beacongameobj.cpp
+@@ -534,11 +534,12 @@
+ bool
+ BeaconGameObj::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				SimpleGameObj::Load (cload);
++				if (!SimpleGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
+@@ -546,11 +547,11 @@
+ 				break;
+ 
+ 			case CHUNKID_OWNER:
+-				Owner.Load (cload);
++				if (!Owner.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_CINEMATIC:
+-				CinematicObject.Load (cload);
++				if (!CinematicObject.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -561,7 +562,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/cinematicgameobj.cpp
++++ b/cinematicgameobj.cpp
+@@ -250,11 +250,12 @@
+ 
+ bool	CinematicGameObj::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				ArmedGameObj::Load( cload );
++				if (!ArmedGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -266,7 +267,7 @@
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void	CinematicGameObj::On_Post_Load( void )
+--- a/specialeffectsgameobj.cpp
++++ b/specialeffectsgameobj.cpp
+@@ -357,11 +357,12 @@
+ bool
+ SpecialEffectsGameObj::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				PhysicalGameObj::Load (cload);
++				if (!PhysicalGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
+@@ -377,7 +378,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/samsite.cpp
++++ b/samsite.cpp
+@@ -211,11 +211,12 @@
+ 
+ bool	SAMSiteGameObj::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				SmartGameObj::Load( cload );
++				if (!SmartGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -242,7 +243,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /*
+--- a/damagezone.cpp
++++ b/damagezone.cpp
+@@ -201,11 +201,12 @@
+ 
+ bool	DamageZoneGameObj::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				BaseGameObj::Load( cload );
++				if (!BaseGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
+@@ -228,7 +229,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ SimplePersistFactoryClass<DamageZoneGameObj, CHUNKID_GAME_OBJECT_DAMAGE_ZONE>	_DamageZonePersistFactory;
+--- a/scriptzone.cpp
++++ b/scriptzone.cpp
+@@ -282,11 +282,12 @@
+ 
+ bool	ScriptZoneGameObj::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				ScriptableGameObj::Load( cload );
++				if (!ScriptableGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -307,7 +308,7 @@
+ 				while (cload.Open_Chunk()) {
+ 					WWASSERT(  cload.Cur_Chunk_ID() == CHUNKID_INSIDE_LIST_ENTRY );
+ 					GameObjReference * ref = new GameObjReference;
+-					ref->Load( cload );
++					if (!ref->Load(cload)) loaded = false;
+ 					InsideList.Add_Head( ref );
+ 					cload.Close_Chunk();
+ 				}
+@@ -329,7 +330,7 @@
+ 		case 5: PlayerType = PLAYERTYPE_GDI; break;		// Remap GDI
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /*
+--- a/transitiongameobj.cpp
++++ b/transitiongameobj.cpp
+@@ -228,11 +228,12 @@
+ 
+ bool	TransitionGameObj::Load( ChunkLoadClass &cload )
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_PARENT:
+-				BaseGameObj::Load( cload );
++				if (!BaseGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
+@@ -260,7 +261,7 @@
+ 	}
+ 	
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void	TransitionGameObj::On_Post_Load( void )
+
+

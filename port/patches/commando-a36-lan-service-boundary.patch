@@ -1,0 +1,181 @@
+--- a/lanchat.cpp
++++ b/lanchat.cpp
+@@ -49,10 +49,14 @@
+ #include "string_ids.h"
+ #include "fromaddress.h"
+ #include "DlgMPConnect.h"
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include "slavemaster.h"
++#endif
+ #include "dlgmpchangelannickname.h"
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include "gamespyadmin.h"
+ #include "demosupport.h"
++#endif
+ 
+ //
+ // Class statics
+@@ -108,7 +112,11 @@
+ 	WideStringClass widename;
+ 	widename.Convert_From(name);
+ 
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++	{
++#else
+ 	if (!cGameSpyAdmin::Is_Gamespy_Game()) {
++#endif
+ 		if (widename.Is_Empty())
+ 		{
+ 			cNetInterface::Set_Random_Nickname();
+@@ -134,7 +142,11 @@
+ 	WWASSERT(registry);
+ 	WWASSERT(registry->Is_Valid());
+ 
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++	{
++#else
+ 	if (!cGameSpyAdmin::Is_Gamespy_Game()) {
++#endif
+ 		StringClass string;
+ 		cNetInterface::Get_Nickname().Convert_To(string);
+ 		registry->Set_String("MyLanName", string);
+@@ -149,9 +161,11 @@
+ void cLanChat::Init_Lan_Protocol_And_Socket(void)
+ {
+ 	WWASSERT(!IS_SOLOPLAY);
+-   if (cGameSpyAdmin::Is_Gamespy_Game()) {
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
++	if (cGameSpyAdmin::Is_Gamespy_Game()) {
+ 	   return;
+-   }
++	}
++#endif
+ 
+    bool is_internet = false;
+    if (!cNetUtil::Protocol_Init(is_internet)) {
+@@ -186,10 +200,12 @@
+ //-----------------------------------------------------------------------------
+ void cLanChat::Send_Position_Broadcast(void)
+ {
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 	//GAMESPY
+ 	if (cGameSpyAdmin::Is_Gamespy_Game()) {
+ 		return;
+ 	}
++#endif
+ 
+    //Debug_Say(("Send_Position_Broadcast\n"));
+ 	if (TIMEGETTIME() - LastPositionBroadcastTimeMs > LAN_BROADCAST_INTERVAL_MS) {
+@@ -286,11 +302,13 @@
+ //-----------------------------------------------------------------------------
+ void cLanChat::Lan_Packet_Handler(cPacket & packet)
+ {
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 	//GAMESPY
+ 	if (cGameSpyAdmin::Is_Gamespy_Game()) {
+ 		packet.Flush();
+ 		return;
+ 	}
++#endif
+ 
+ 	if (CurrentLocation == LANLOC_EXIT) {
+ 		//
+@@ -333,15 +351,19 @@
+ //-----------------------------------------------------------------------------
+ void cLanChat::Think(void)
+ {
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 	if (cGameSpyAdmin::Is_Gamespy_Game()) {
+ 		return;
+ 	}
++#endif
+ 
+    if (CurrentLocation != LANLOC_EXIT) {
+ 		Send_Position_Broadcast();
+ 		cNetUtil::Lan_Servicing(Socket, External_Lan_Packet_Handler);
+ 
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 		DEMO_SECURITY_CHECK;
++#endif
+ 	}
+ }
+ 
+--- a/DlgMPConnect.cpp
++++ b/DlgMPConnect.cpp
+@@ -42,13 +42,17 @@
+ #include "resource.h"
+ #include <wwdebug\wwdebug.h>
+ #include "dlgmainmenu.h"
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include "gamespyadmin.h"
++#endif
+ #include "specialbuilds.h"
+ #include "dialogtests.h"
+ #include "dialogmgr.h"
+ #include "gamemode.h"
+ #include "langmode.h"
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include "wolgmode.h"
++#endif
+ 
+ /******************************************************************************
+ *
+@@ -198,12 +202,15 @@
+ 			{
+ 			cNetwork::Cleanup_Client();
+ 			}
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 		if (cGameSpyAdmin::Get_Is_Launched_From_Gamespy()) 
+ 			{
+ 			extern void Stop_Main_Loop (int);
+ 			Stop_Main_Loop(EXIT_SUCCESS);
+ 			}
+-		else if (DialogMgrClass::Get_Dialog_Count () == 1)
++		else
++#endif
++		if (DialogMgrClass::Get_Dialog_Count () == 1)
+ 			{
+ 			START_DIALOG (MainMenuDialogClass);
+ 			}
+@@ -272,7 +279,8 @@
+ 			// Remove the dialog from menuing system
+ 			End_Dialog();
+ 
+-			if (GameModeManager::Find("LAN")->Is_Active())
++			GameModeClass *lan_mode = GameModeManager::Find("LAN");
++			if (lan_mode != NULL && lan_mode->Is_Active())
+ 				{
+       		PLC->Refusal_Actions();
+    			}
+--- a/DlgMPConnectionRefused.cpp
++++ b/DlgMPConnectionRefused.cpp
+@@ -30,7 +30,9 @@
+ #include "resource.h"
+ #include <wwdebug\wwdebug.h>
+ #include "dlgmainmenu.h"
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include "gamespyadmin.h"
++#endif
+ #include "specialbuilds.h"
+ #include "dialogtests.h"
+ #include "dialogmgr.h"
+@@ -164,6 +166,7 @@
+ 			{
+ 			cNetwork::Cleanup_Client();
+ 			}
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 		if (cGameSpyAdmin::Get_Is_Launched_From_Gamespy()) 
+ 			{
+ 
+@@ -184,8 +187,9 @@
+ 			Stop_Main_Loop(EXIT_SUCCESS);
+ #endif // MULTIPLAYERDEMO
+ 			}
+-
+-		else if (DialogMgrClass::Get_Dialog_Count () == 1)
++		else
++#endif
++		if (DialogMgrClass::Get_Dialog_Count () == 1)
+ 			{
+ 			START_DIALOG (MainMenuDialogClass);
+ 			}

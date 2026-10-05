@@ -1,0 +1,36 @@
+--- a/backgroundmgr.cpp
++++ b/backgroundmgr.cpp
+@@ -3943,17 +3943,22 @@
+ 	WWMEMLOG (MEM_GAMEDATA);
+ 
+ 	bool retval = true;
++	bool dynamic_seen = false;
+ 
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_DYNAMIC_MICRO_CHUNKS:
+-				retval &= Load_Dynamic_Micro_Chunks (cload);
++				if (dynamic_seen) retval = false;
++				else {
++					dynamic_seen = true;
++					retval = Load_Dynamic_Micro_Chunks(cload) && retval;
++				}
+ 				break;
+ 		}
+ 		cload.Close_Chunk ();
+ 	}
+-	return (retval);
++	return (retval && dynamic_seen && !cload.Has_Error());
+ }
+ 
+ 
+@@ -3994,7 +3999,7 @@
+ 		cload.Close_Micro_Chunk ();
+ 	}
+ 
+-	return (true);
++	return (!cload.Has_Error());
+ }
+ 
+ 

@@ -1,0 +1,78 @@
+--- a/god.h
++++ b/god.h
+@@ -55,6 +55,7 @@
+ 		static void					Mission_Failed( void );
+ 		static void					Exit( void );
+ 
++		static bool					Can_Save_Current_State( void );
+ 		static	bool				Save(ChunkSaveClass & csave);
+ 		static	bool				Load(ChunkLoadClass & cload);
+ 
+--- a/god.cpp
++++ b/god.cpp
+@@ -72,6 +72,16 @@
+ };
+ 
+ //-----------------------------------------------------------------------------
++bool cGod::Can_Save_Current_State( void )
++{
++	// SINGLE_DEAD represents both player death and mission failure in the
++	// original runtime. Neither terminal popup state has enough serialized
++	// identity to be reconstructed faithfully, so admit saves only while the
++	// original single-player simulation is running.
++	return State == GOD_STATE_SINGLE_RUNNING;
++}
++
++//-----------------------------------------------------------------------------
+ bool cGod::Save(ChunkSaveClass & csave)
+ {
+ 	csave.Begin_Chunk(CHUNKID_VARIABLES);
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -1562,6 +1562,10 @@
+ void CombatGameModeClass::Process_Autosave_Request()
+ {
+ 	if (!CombatManager::Is_Autosave_Requested()) return;
++	if (!cGod::Can_Save_Current_State()) {
++		Debug_Say(( "Autosave deferred until the single-player simulation is running\n" ));
++		return;
++	}
+ 	WWPROFILE( "Autosaving" );
+ 	Debug_Say(( "Autosaving\n" ));
+ 	int time=TIMEGETTIME();
+@@ -1682,6 +1686,11 @@
+ */
+ void	CombatGameModeClass::Quick_Save( void )
+ {
++	if (!cGod::Can_Save_Current_State()) {
++		Debug_Say(( "Quicksave rejected outside the running single-player state\n" ));
++		return;
++	}
++
+ 	bool	saveA = true;
+ 
+ 	RegistryClass * registry = new RegistryClass( APPLICATION_SUB_KEY_NAME_OPTIONS );
+--- a/dlgsavegame.cpp
++++ b/dlgsavegame.cpp
+@@ -42,5 +42,6 @@
+ #include "string_ids.h"
+ #include "editctrl.h"
++#include "god.h"
+ 
+ #if defined(RENEGADE_VITA_PORT)
+ static void Vita_Report_Manual_Save_Failure(const WCHAR *message)
+@@ -274,6 +275,14 @@
+ void
+ SaveGameMenuClass::Save_Game (bool prompt)
+ {
++#if defined(RENEGADE_VITA_PORT)
++	if (!cGod::Can_Save_Current_State()) {
++		Vita_Report_Manual_Save_Failure(
++			L"The game cannot be saved during a death or mission transition.");
++		return;
++	}
++#endif
++
+ 	//
+ 	//	Get a pointer to the list control
+ 	//

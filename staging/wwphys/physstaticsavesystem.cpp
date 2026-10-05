@@ -71,9 +71,9 @@ bool PhysStaticDataSaveSystemClass::Save(ChunkSaveClass &csave)
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(PSDSSC_CHUNKID_PATHFIND);
-	PathfindClass::Get_Instance()->Save(csave);
+	if (!PathfindClass::Get_Instance()->Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
-	return true;
+	return !csave.Has_Error();
 }
 
 bool PhysStaticDataSaveSystemClass::Load(ChunkLoadClass &cload)

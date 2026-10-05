@@ -51,11 +51,7 @@
  ////////////////////////////////////////////////////////////////
 --- a/dialogtests.h
 +++ b/dialogtests.h
-@@ -346,6 +346,9 @@
- public:
- 	OptionsMenuClass (void)	:
- 		MenuDialogClass (IDD_MENU_OPTIONS)	{}
+@@ -348,0 +349,3 @@
 +
 +	void	On_Init_Dialog (void);
 +	void	On_Command (int ctrl_id, int message_id, DWORD param);
- };

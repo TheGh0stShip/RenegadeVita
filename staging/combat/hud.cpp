@@ -3412,13 +3412,26 @@ bool	HUDClass::Save( ChunkSaveClass &csave )
 
 bool	HUDClass::Load( ChunkLoadClass &cload )
 {
+	bool variables_seen = false;
+	bool enabled_seen = false;
+	bool loaded = true;
+	bool hud_enabled = false;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
+				if (variables_seen) {
+					loaded = false;
+					break;
+				}
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_ENABLED,	_HUDEnabled );
+						case MICROCHUNKID_ENABLED:
+							if (enabled_seen || cload.Cur_Micro_Chunk_Length() != sizeof(hud_enabled) ||
+								cload.Read(&hud_enabled, sizeof(hud_enabled)) != sizeof(hud_enabled)) loaded = false;
+							else enabled_seen = true;
+							break;
 						default:
 							Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 							break;
@@ -3434,5 +3447,7 @@ bool	HUDClass::Load( ChunkLoadClass &cload )
 		}
 		cload.Close_Chunk();
 	}
-	return true;
+	loaded = loaded && variables_seen && enabled_seen && !cload.Has_Error();
+	if (loaded) _HUDEnabled = hud_enabled;
+	return loaded;
 }

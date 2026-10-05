@@ -1,0 +1,44 @@
+--- a/AudioSaveLoad.cpp
++++ b/AudioSaveLoad.cpp
+@@ -233,11 +233,18 @@
+ DynamicAudioSaveLoadClass::Load (ChunkLoadClass &cload)
+ {
+ 	bool retval = true;
++	bool loaded_variables = false;
++	bool loaded_scene = false;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_DYNAMIC_VARIABLES:
+ 			{
++				if (loaded_variables) {
++					retval = false;
++					break;
++				}
++				loaded_variables = true;
+ 				//
+ 				//	Read all the variables from their micro-chunks
+ 				//
+@@ -278,6 +285,11 @@
+ 			//
+ 			case CHUNKID_DYNAMIC_SCENE:
+ 			{
++				if (loaded_scene) {
++					retval = false;
++					break;
++				}
++				loaded_scene = true;
+ 				SoundSceneClass *scene = WWAudioClass::Get_Instance ()->Get_Sound_Scene ();
+ 				if (scene != NULL) {
+ 					scene->Load_Dynamic (cload);
+@@ -289,5 +301,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return retval;
+-}
+\ No newline at end of file
++	// The writer emits either both children when a sound scene exists or an
++	// intentionally empty subsystem when it does not.
++	return retval && loaded_variables == loaded_scene;
++}

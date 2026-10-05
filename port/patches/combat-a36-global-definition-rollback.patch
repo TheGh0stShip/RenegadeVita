@@ -1,0 +1,187 @@
+--- a/globalsettings.h
++++ b/globalsettings.h
+@@ -62,6 +62,7 @@
+ 	virtual PersistClass *					Create( void ) const ;
+ 	virtual bool								Save( ChunkSaveClass &csave );
+ 	virtual bool								Load( ChunkLoadClass &cload );
++	virtual void								On_Load_Rejected (void);
+ 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
+ 
+ 	DECLARE_EDITABLE( GlobalSettingsDef, DefinitionClass );
+@@ -143,6 +144,7 @@
+ 	float									MPStealthDistanceVehicle;
+ 
+ 	static GlobalSettingsDef *		GlobalSettings;
++	GlobalSettingsDef *				PreviousGlobalSettings;
+ };
+ 
+ /*
+@@ -192,6 +194,7 @@
+ 	virtual PersistClass *					Create( void ) const ;
+ 	virtual bool								Save( ChunkSaveClass &csave );
+ 	virtual bool								Load( ChunkLoadClass &cload );
++	virtual void								On_Load_Rejected (void);
+ 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
+ 
+ 	DECLARE_EDITABLE( HUDGlobalSettingsDef, DefinitionClass );
+@@ -320,6 +323,7 @@
+ 	RectClass	DamageDiagIndicatorUV;
+ 
+ 	static		HUDGlobalSettingsDef *	Instance;
++	HUDGlobalSettingsDef *				PreviousInstance;
+ };
+ 
+ /*
+--- a/globalsettings.cpp
++++ b/globalsettings.cpp
+@@ -75,7 +75,8 @@
+ 	StealthDistanceHuman( 15.0f ),
+ 	StealthDistanceVehicle( 25.0f ),
+ 	MPStealthDistanceHuman( 15.0f ),
+-	MPStealthDistanceVehicle( 25.0f )
++	MPStealthDistanceVehicle( 25.0f ),
++	PreviousGlobalSettings( GlobalSettings )
+ 
+ {
+ 	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_SOUNDDEFINITIONID, DeathSoundID);
+@@ -129,10 +130,15 @@
+ 
+ GlobalSettingsDef::~GlobalSettingsDef( void )
+ {
+-	GlobalSettings = NULL;
++	if (GlobalSettings == this) GlobalSettings = PreviousGlobalSettings;
+ 	return ;
+ }
+ 
++void GlobalSettingsDef::On_Load_Rejected (void)
++{
++	if (GlobalSettings == this) GlobalSettings = PreviousGlobalSettings;
++}
++
+ 
+ uint32	GlobalSettingsDef::Get_Class_ID (void) const	
+ {	
+@@ -648,9 +654,9 @@
+ 	SniperZoomGraph(SNIPER_ZOOM_GRAPH),
+ 	SniperZoomGraphUV(SNIPER_ZOOM_GRAPH_UV),
+ 	DamageIndicatorUV(DAMAGE_INDICATOR_UV),
+-	DamageDiagIndicatorUV(DAMAGE_DIAG_INDICATOR_UV)
++	DamageDiagIndicatorUV(DAMAGE_DIAG_INDICATOR_UV),
++	PreviousInstance(Instance)
+ {
+-	WWASSERT( Instance == NULL );	 // Pat, you can remove this if needed 
+ 	Instance = this;
+ 
+ 	PARAM_SEPARATOR( HUDGlobalSettingsDef, "Colors" );
+@@ -763,8 +769,12 @@
+ 
+ HUDGlobalSettingsDef::~HUDGlobalSettingsDef( void )
+ {
+-	WWASSERT( Instance == this );
+-	Instance = NULL;
++	if (Instance == this) Instance = PreviousInstance;
++}
++
++void HUDGlobalSettingsDef::On_Load_Rejected (void)
++{
++	if (Instance == this) Instance = PreviousInstance;
+ }
+ 
+ uint32	HUDGlobalSettingsDef::Get_Class_ID (void) const	
+--- a/characterclasssettings.h
++++ b/characterclasssettings.h
+@@ -98,6 +98,7 @@
+ 	virtual PersistClass *					Create (void) const ;
+ 	virtual bool								Save (ChunkSaveClass &csave);
+ 	virtual bool								Load (ChunkLoadClass &cload);
++	virtual void								On_Load_Rejected (void);
+ 	virtual const PersistFactoryClass &	Get_Factory (void) const;	
+ 
+ 	static CharacterClassSettingsDefClass *			Get_Instance (void)	{ return GlobalInstance; }	
+@@ -124,6 +125,7 @@
+ 	int					DefinitionTable[CLASS_COUNT][RANK_COUNT][TEAM_COUNT];
+ 
+ 	static CharacterClassSettingsDefClass *			GlobalInstance;
++	CharacterClassSettingsDefClass *				PreviousInstance;
+ };
+ 
+ 
+--- a/characterclasssettings.cpp
++++ b/characterclasssettings.cpp
+@@ -202,7 +202,8 @@
+ //	CharacterClassSettingsDefClass
+ //
+ ///////////////////////////////////////////////////////////////////////////////////////////
+-CharacterClassSettingsDefClass::CharacterClassSettingsDefClass (void)
++CharacterClassSettingsDefClass::CharacterClassSettingsDefClass (void) :
++	PreviousInstance (GlobalInstance)
+ {
+ 	//
+ 	//	Initialize the cost and definition tables
+@@ -255,10 +256,15 @@
+ ///////////////////////////////////////////////////////////////////////////////////////////
+ CharacterClassSettingsDefClass::~CharacterClassSettingsDefClass (void)
+ {
+-	GlobalInstance = NULL;
++	if (GlobalInstance == this) GlobalInstance = PreviousInstance;
+ 	return ;
+ }
+ 
++void CharacterClassSettingsDefClass::On_Load_Rejected (void)
++{
++	if (GlobalInstance == this) GlobalInstance = PreviousInstance;
++}
++
+ 
+ ///////////////////////////////////////////////////////////////////////////////////////////
+ //
+@@ -660,4 +666,3 @@
+ 
+ 	return definition_id;
+ }
+-
+--- a/CNCModeSettings.h
++++ b/CNCModeSettings.h
+@@ -55,6 +55,7 @@
+ 		
+ 		virtual bool Save(ChunkSaveClass& csave);
+ 		virtual bool Load(ChunkLoadClass& cload);
++		virtual void On_Load_Rejected(void);
+ 
+ 		virtual const PersistFactoryClass& Get_Factory(void) const;	
+ 
+@@ -86,6 +87,7 @@
+ 
+ 	protected:
+ 		static CNCModeSettingsDef* _mInstance;
++		CNCModeSettingsDef* mPreviousInstance;
+ 
+ 		int AnnouncementInterval;
+ 
+--- a/CNCModeSettings.cpp
++++ b/CNCModeSettings.cpp
+@@ -35,7 +35,8 @@
+ 
+ 
+ CNCModeSettingsDef::CNCModeSettingsDef(void) :
+-		AnnouncementInterval(30)
++		AnnouncementInterval(30),
++		mPreviousInstance(_mInstance)
+ 	{
+ 	//WWASSERT(_mInstance == NULL);
+ 	_mInstance = this;
+@@ -156,7 +157,12 @@
+ 
+ CNCModeSettingsDef::~CNCModeSettingsDef(void)
+ 	{
+-	_mInstance = NULL;
++	if (_mInstance == this) _mInstance = mPreviousInstance;
++	}
++
++void CNCModeSettingsDef::On_Load_Rejected(void)
++	{
++	if (_mInstance == this) _mInstance = mPreviousInstance;
+ 	}
+ 
+ 
+

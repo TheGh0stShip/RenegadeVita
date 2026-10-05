@@ -76,6 +76,7 @@
 #include "wwmath.h"
 #include "assetmgr.h"
 #include "wwstring.h"
+#include <string.h>
 #include "camera.h"
 #include "statistics.h"
 #include "dx8wrapper.h"
@@ -1013,7 +1014,10 @@ void SphereRenderObjClass::animate (void)
 PrototypeClass * SphereLoaderClass::Load_W3D(ChunkLoadClass & cload)
 {
 	SpherePrototypeClass *prototype = new SpherePrototypeClass;
-	prototype->Load (cload);
+	if (prototype == NULL || !prototype->Load(cload)) {
+		delete prototype;
+		return NULL;
+	}
 	return prototype;
 }
 
@@ -1087,6 +1091,12 @@ enum
 
 bool SpherePrototypeClass::Load (ChunkLoadClass &cload)
 {
+	bool definition_seen = false;
+	bool color_seen = false;
+	bool alpha_seen = false;
+	bool scale_seen = false;
+	bool vector_seen = false;
+	bool loaded = true;
 	ColorChannel.Reset ();
 	AlphaChannel.Reset ();
 	ScaleChannel.Reset ();
@@ -1096,30 +1106,58 @@ bool SpherePrototypeClass::Load (ChunkLoadClass &cload)
 		switch (cload.Cur_Chunk_ID ()) {
 			
 			case CHUNKID_SPHERE_DEF:
-				cload.Read (&Definition, sizeof (Definition));
+				if (definition_seen || cload.Cur_Chunk_Length() != sizeof(Definition)) {
+					loaded = false;
+				} else {
+					definition_seen = true;
+					loaded = cload.Read(&Definition, sizeof(Definition)) ==
+						sizeof(Definition) && loaded;
+				}
 				break;
 
 			case CHUNKID_COLOR_CHANNEL:
-				ColorChannel.Load (cload);
+				if (color_seen) loaded = false;
+				else {
+					color_seen = true;
+					ColorChannel.Load(cload);
+					loaded = !cload.Has_Error() && loaded;
+				}
 				break;
 
 			case CHUNKID_ALPHA_CHANNEL:
-				AlphaChannel.Load (cload);
+				if (alpha_seen) loaded = false;
+				else {
+					alpha_seen = true;
+					AlphaChannel.Load(cload);
+					loaded = !cload.Has_Error() && loaded;
+				}
 				break;
 
 			case CHUNKID_SCALE_CHANNEL:
-				ScaleChannel.Load (cload);
+				if (scale_seen) loaded = false;
+				else {
+					scale_seen = true;
+					ScaleChannel.Load(cload);
+					loaded = !cload.Has_Error() && loaded;
+				}
 				break;
 
 			case CHUNKID_VECTOR_CHANNEL:
-				VectorChannel.Load (cload);
+				if (vector_seen) loaded = false;
+				else {
+					vector_seen = true;
+					VectorChannel.Load(cload);
+					loaded = !cload.Has_Error() && loaded;
+				}
 				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error() && definition_seen &&
+		Definition.Name[0] != '\0' &&
+		::memchr(Definition.Name, '\0', sizeof(Definition.Name)) != NULL;
 }
 
 bool SpherePrototypeClass::Save (ChunkSaveClass &csave)
@@ -1614,4 +1652,3 @@ void SphereMeshClass::Free(void)
 }
 
 // EOF - sphereobj.cpp
-

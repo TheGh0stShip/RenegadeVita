@@ -1,0 +1,241 @@
+--- a/combat/screenfademanager.cpp
++++ b/combat/screenfademanager.cpp
+@@ -275,26 +275,26 @@
+ bool	ScreenFadeManager::Save( ChunkSaveClass &csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_LETTERBOX_FRACTION );
+-		_LetterboxFraction.Save( csave );
++		if (!_LetterboxFraction.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_OVERLAY_OPACITY );
+-		_OverlayOpacity.Save( csave );
++		if (!_OverlayOpacity.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_OVERLAY_RED );
+-		_OverlayRed.Save( csave );
++		if (!_OverlayRed.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_OVERLAY_GREEN );
+-		_OverlayGreen.Save( csave );
++		if (!_OverlayGreen.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_OVERLAY_BLUE );
+-		_OverlayBlue.Save( csave );
++		if (!_OverlayBlue.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	ScreenFadeManager::Load( ChunkLoadClass &cload )
+--- a/combat/radar.cpp
++++ b/combat/radar.cpp
+@@ -254,11 +254,11 @@
+ 
+ 	for ( int i = 0; i < Markers.Count(); i++ ) {
+ 		csave.Begin_Chunk( CHUNKID_MARKER_ENTRY );
+-			Markers[i].Save( csave );
++			if (!Markers[i].Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	RadarManager::Load( ChunkLoadClass &cload )
+--- a/combat/combat.cpp
++++ b/combat/combat.cpp
+@@ -893,7 +893,7 @@
+ bool	CombatManager::Save( ChunkSaveClass &csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_THE_STAR );
+-	TheStar.Save( csave );
++	if (!TheStar.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -917,11 +917,11 @@
+ 
+ 	if ( COMBAT_CAMERA != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_CCAMERA );
+-			COMBAT_CAMERA->Save( csave );
++			if (!COMBAT_CAMERA->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	CombatManager::Load( ChunkLoadClass &cload )
+--- a/wwphys/physstaticsavesystem.cpp
++++ b/wwphys/physstaticsavesystem.cpp
+@@ -71,9 +71,9 @@
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(PSDSSC_CHUNKID_PATHFIND);
+-	PathfindClass::Get_Instance()->Save(csave);
++	if (!PathfindClass::Get_Instance()->Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool PhysStaticDataSaveSystemClass::Load(ChunkLoadClass &cload)
+--- a/wwphys/PathfindPortal.cpp
++++ b/wwphys/PathfindPortal.cpp
+@@ -193,7 +193,7 @@
+ 	//	Save the parent to its own chunk
+ 	//
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		PathfindPortalClass::Save (csave);
++		if (!PathfindPortalClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	//
+@@ -207,7 +207,7 @@
+ 		WRITE_MICRO_CHUNK (csave, ACTION_VARID_ENTER_PORTAL,	enter_portal_token);
+ 	csave.End_Chunk ();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+@@ -317,7 +317,7 @@
+ 	//	Save the parent to its own chunk
+ 	//
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		PathfindPortalClass::Save (csave);
++		if (!PathfindPortalClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	//
+@@ -327,7 +327,7 @@
+ 		WRITE_MICRO_CHUNK (csave, WPATH_VARID_WAYPATH_POS,	WaypathPos);
+ 	csave.End_Chunk ();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/wwphys/PathfindSector.cpp
++++ b/wwphys/PathfindSector.cpp
+@@ -251,14 +251,14 @@
+ PathfindWaypathSectorClass::Save (ChunkSaveClass &csave)
+ {	
+ 	csave.Begin_Chunk (CHUNKID_WP_PARENT);
+-		PathfindSectorClass::Save (csave);
++		if (!PathfindSectorClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_WP_VARIABLES);		
+ 		WRITE_MICRO_CHUNK (csave, VARID_WAYPATH_ID, WaypathID);
+ 	csave.End_Chunk ();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/wwphys/shakeablestaticphys.cpp
++++ b/wwphys/shakeablestaticphys.cpp
+@@ -193,10 +193,10 @@
+ 	** Save the parent class data
+ 	*/
+ 	csave.Begin_Chunk(SHAKEABLESTATICPHYS_CHUNK_STATICANIMPHYS);
+-		StaticAnimPhysClass::Save( csave );
++		if (!StaticAnimPhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool ShakeableStaticPhysClass::Load(ChunkLoadClass & cload)
+--- a/wwphys/lightphys.cpp
++++ b/wwphys/lightphys.cpp
+@@ -109,7 +109,7 @@
+ bool LightPhysClass::Save (ChunkSaveClass &csave)
+ {
+ 	csave.Begin_Chunk(LIGHTPHYS_CHUNK_DECOPHYS);
+-	DecorationPhysClass::Save(csave);
++	if (!DecorationPhysClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk(LIGHTPHYS_CHUNK_VARIABLES);
+@@ -117,7 +117,7 @@
+ 	WRITE_MICRO_CHUNK(csave,LIGHTPHYS_VARIABLE_GROUPID,GroupID);
+ 	csave.End_Chunk();
+ 	
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool LightPhysClass::Load (ChunkLoadClass &cload)
+--- a/wwphys/renegadeterrainmaterialpass.cpp
++++ b/wwphys/renegadeterrainmaterialpass.cpp
+@@ -223,9 +223,13 @@
+ 	//
+ 	//	Save the material
+ 	//
+-	csave.Begin_Chunk (CHUNKID_MATERIAL);
+-		Material->Save (csave);
+-	csave.End_Chunk ();
++	if (Material != NULL) {
++		csave.Begin_Chunk (CHUNKID_MATERIAL);
++			if (!Material->Save(csave)) csave.Report_Error();
++		csave.End_Chunk ();
++	} else {
++		csave.Report_Error();
++	}
+ 
+ 	//
+ 	//	Save the per-pass lists
+@@ -259,7 +263,7 @@
+ 		csave.End_Chunk ();		
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/wwphys/renegadeterrainpatch.cpp
++++ b/wwphys/renegadeterrainpatch.cpp
+@@ -1835,6 +1835,10 @@
+ 	csave.Begin_Chunk (CHUNKID_MATERIAL_LAYERS);
+ 
+ 		for (int index = 0; index < MaterialPassList.Count (); index ++) {
++			if (MaterialPassList[index] == NULL) {
++				csave.Report_Error();
++				continue;
++			}
+ 			
+ 			//
+ 			//	Don't save the material information if there' no material configured...
+@@ -1845,14 +1849,14 @@
+ 				//	Save this material layer to its own chunk
+ 				//
+ 				csave.Begin_Chunk (CHUNKID_MATERIAL_LAYER);
+-					MaterialPassList[index]->Save (csave);
++					if (!MaterialPassList[index]->Save(csave)) csave.Report_Error();
+ 				csave.End_Chunk ();
+ 			}
+ 		}
+ 				
+ 	csave.End_Chunk ();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+

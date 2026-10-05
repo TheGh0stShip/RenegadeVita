@@ -1,0 +1,46 @@
+--- a/movie.h
++++ b/movie.h
+@@ -85,6 +85,7 @@
+ 	StringClass			PendingMovieFilename;
+ 	bool					IsPending;
+ 	bool					IsPlaying;
++	bool					WasLeavePressed;
+ };
+ 
+ #endif //	MOVIE_H
+--- a/movie.cpp
++++ b/movie.cpp
+@@ -71,6 +71,7 @@
+ 	BINKMovie::Init();
+ 	IsPending = false;
+ 	IsPlaying = false;
++	WasLeavePressed = Input::Get_State(INPUT_FUNCTION_MENU_TOGGLE);
+ 
+ 	RegistryClass registry( APPLICATION_SUB_KEY_NAME_OPTIONS );
+ 	if ( registry.Is_Valid() ) {
+@@ -108,12 +109,11 @@
+ 		}
+ 
+ 		bool	leave = Input::Get_State(INPUT_FUNCTION_MENU_TOGGLE);
+-		static bool was_leave = true;
+-		if ( leave && !was_leave ) {
+-			was_leave = leave;		// Weird.  Double looping calls
++		if ( leave && !WasLeavePressed ) {
++			WasLeavePressed = leave;		// Weird.  Double looping calls
+ 			Movie_Done();
+ 		}
+-		was_leave = leave;
++		WasLeavePressed = leave;
+ 	}
+ }
+ 
+@@ -135,6 +135,9 @@
+ void	MovieGameModeClass::Start_Movie( const char * filename )
+ {
+ 	WWMEMLOG(MEM_BINK);
++	// A held control from the score/menu transition is baseline state for this
++	// movie. Require a release and a new edge before the outer movie owner skips.
++	WasLeavePressed = Input::Get_State(INPUT_FUNCTION_MENU_TOGGLE);
+ 	
+ 	//
+ 	//	Check to see if we should enforce the CD or not...

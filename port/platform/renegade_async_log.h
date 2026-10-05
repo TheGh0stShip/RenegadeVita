@@ -29,7 +29,7 @@ public:
 
 	RenegadeAsyncLogRing() : write_(NULL), sync_(NULL), context_(NULL),
 		enqueued_(0U), written_(0U), synced_(0U), flush_target_(0U),
-		dropped_(0U), dropped_reported_(0U), stop_(false), running_(false) {
+		dropped_(0U), dropped_reported_(0U), stop_(false), running_(false), failed_(false) {
 		pthread_mutex_init(&mutex_, NULL);
 		pthread_cond_init(&data_, NULL);
 		pthread_cond_init(&drained_, NULL);
@@ -44,7 +44,7 @@ public:
 	// Called by the owner after starting the writer thread successfully.
 	void Mark_Running() {
 		pthread_mutex_lock(&mutex_);
-		running_ = true;
+		running_ = !failed_;
 		pthread_mutex_unlock(&mutex_);
 	}
 	bool Running() {
@@ -53,12 +53,22 @@ public:
 		pthread_mutex_unlock(&mutex_);
 		return running;
 	}
+	bool Failed() {
+		pthread_mutex_lock(&mutex_);
+		const bool failed = failed_;
+		pthread_mutex_unlock(&mutex_);
+		return failed;
+	}
 
 	// Copies one complete line. Never blocks on I/O. A line that does not fit
 	// is counted and reported in order once space is available again.
 	bool Enqueue(const char *data, unsigned length) {
 		if (length == 0U) return true;
 		pthread_mutex_lock(&mutex_);
+		if (failed_) {
+			pthread_mutex_unlock(&mutex_);
+			return false;
+		}
 		const uint64_t used = enqueued_ - written_;
 		if (length > Capacity || used + length > Capacity) {
 			++dropped_;
@@ -95,6 +105,20 @@ public:
 		uint64_t last_sync_ms = Now_Ms();
 		pthread_mutex_lock(&mutex_);
 		while (!stop_) {
+			// Producers may keep the ring nonempty indefinitely. Check durability
+			// before draining another span, not only after the ring becomes empty.
+			if (synced_ < written_ &&
+				(flush_target_ > synced_ || Now_Ms() - last_sync_ms >= sync_interval_ms)) {
+				const uint64_t target = written_;
+				pthread_mutex_unlock(&mutex_);
+				const bool ok = sync_ != NULL && sync_(context_);
+				last_sync_ms = Now_Ms();
+				pthread_mutex_lock(&mutex_);
+				if (!ok) { failed_ = true; break; }
+				if (target > synced_) synced_ = target;
+				pthread_cond_broadcast(&drained_);
+				continue;
+			}
 			// Report drops ahead of later lines, preserving the gap's position.
 			if (dropped_reported_ != dropped_) {
 				const uint64_t dropped = dropped_ - dropped_reported_;
@@ -102,8 +126,10 @@ public:
 				pthread_mutex_unlock(&mutex_);
 				char note[96];
 				const int count = Format_Drop_Note(note, sizeof(note), dropped);
-				if (count > 0 && write_ != NULL) write_(context_, note, static_cast<unsigned>(count));
+				const bool ok = count > 0 && write_ != NULL &&
+					write_(context_, note, static_cast<unsigned>(count));
 				pthread_mutex_lock(&mutex_);
+				if (!ok) { failed_ = true; break; }
 				continue;
 			}
 			if (written_ != enqueued_) {
@@ -114,8 +140,9 @@ public:
 				uint32_t length = available < Capacity - start ?
 					static_cast<uint32_t>(available) : Capacity - start;
 				pthread_mutex_unlock(&mutex_);
-				if (write_ != NULL) write_(context_, ring_ + start, length);
+				const bool ok = write_ != NULL && write_(context_, ring_ + start, length);
 				pthread_mutex_lock(&mutex_);
+				if (!ok) { failed_ = true; break; }
 				written_ += length;
 				continue;
 			}
@@ -128,9 +155,10 @@ public:
 				}
 				const uint64_t target = written_;
 				pthread_mutex_unlock(&mutex_);
-				if (sync_ != NULL) sync_(context_);
+				const bool ok = sync_ != NULL && sync_(context_);
 				last_sync_ms = Now_Ms();
 				pthread_mutex_lock(&mutex_);
+				if (!ok) { failed_ = true; break; }
 				if (target > synced_) synced_ = target;
 				pthread_cond_broadcast(&drained_);
 				continue;
@@ -206,6 +234,7 @@ private:
 	uint64_t dropped_reported_;
 	bool stop_;
 	bool running_;
+	bool failed_;
 	char ring_[Capacity];
 };
 

@@ -284,10 +284,11 @@ PathMgrClass::Save (ChunkSaveClass &csave)
 //	Load
 //
 ////////////////////////////////////////////////////////////////////////////////////////////
-void
+bool
 PathMgrClass::Load (ChunkLoadClass &cload)
 {
 	Free_Objects ();
+	bool loaded = true;
 
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
@@ -298,8 +299,12 @@ PathMgrClass::Load (ChunkLoadClass &cload)
 				//	Allocate the path object, load its state, and add it to our list
 				//
 				PathSolveClass *path_object = new PathSolveClass;
-				path_object->Load (cload);
-				UsedPathList.Add (path_object);
+				if (path_object->Load (cload)) {
+					UsedPathList.Add (path_object);
+				} else {
+					loaded = false;
+					path_object->Release_Ref ();
+				}
 			}
 			break;
 		}
@@ -307,7 +312,10 @@ PathMgrClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return ;
+	if (cload.Has_Error ()) {
+		loaded = false;
+	}
+	return loaded;
 }
 
 
@@ -358,7 +366,11 @@ PathMgrClass::Resolve_Paths (const Vector3 &camera_pos, uint32 milliseconds)
 			//
 			//	Let this path think for (up to) the remainder of our timeslice
 			//
-			uint32 time_slice = uint32((end_time - Get_Time ()) / TicksPerMilliSec);
+			const __int64 now = Get_Time ();
+			if (now >= end_time) {
+				break;
+			}
+			uint32 time_slice = uint32((end_time - now) / TicksPerMilliSec);
 			PathSolveClass::STATE_DESC result = ActivePath->Timestep (time_slice);
 
 			//

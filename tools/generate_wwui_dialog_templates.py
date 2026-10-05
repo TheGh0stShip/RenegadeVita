@@ -5,9 +5,133 @@ from pathlib import Path
 
 # Original EVA shell and all seven child tabs must travel together.
 IDS = {128,130,131,145,169,209,210,211,231,232,233,243,255,256} | set(range(146,154))
-CAMPAIGN_IDS = IDS | {135,196,197,239}
-# Purchase catalog, terminal, chat popup/child, and access-denied dialog.
-MULTIPLAYER_IDS = {220,221,229,230,236}
+CAMPAIGN_IDS = IDS | {135,136,137,139,140,141,143,170,172,196,197,216,239}
+# Purchase catalog, terminal, chat popup/child, access-denied dialog, original
+# live C&C reference menu, and round-results screen used by Practice/network play.
+MULTIPLAYER_IDS = {160,174,176,177,178,179,180,181,188,220,221,229,230,236,240,242,245,246,248,249,250,252,257}
+REQUIRED_DIALOG_CONTROLS = {
+ 'IDD_CHAT_MODULE': {'IDC_TYPE_STATIC','IDC_MESSAGE_EDIT','IDC_SEND'},
+ 'IDD_HELP_SCREEN': {
+  'IDC_HELP_KEY_FORWARD','IDC_HELP_KEY_BACKWARD','IDC_HELP_KEY_LEFT',
+  'IDC_HELP_KEY_RIGHT','IDC_HELP_KEY_JUMP','IDC_HELP_KEY_CROUCH',
+  'IDC_HELP_KEY_WALK','IDC_HELP_KEY_ACTION','IDC_HELP_KEY_NEXT_WEAPON',
+  'IDC_HELP_KEY_OBJECTIVES','IDC_HELP_KEY_CYCLE_POGS','IDC_HELP_KEY_RETURN',
+  'IDC_HELP_KEY_WEAPON1','IDC_HELP_KEY_WEAPON2','IDC_HELP_KEY_WEAPON3',
+  'IDC_HELP_KEY_WEAPON4','IDC_HELP_KEY_WEAPON5'
+ },
+ 'IDD_OPTIONS_TECH': {'IDC_TABCTRL'},
+ 'IDD_CONFIG_AUDIO': {
+  'IDC_SOUND_EFFECTS_CHECK','IDC_SOUND_EFFECTS_SLIDER','IDC_MUSIC_CHECK',
+  'IDC_MUSIC_SLIDER','IDC_DIALOG_CHECK','IDC_DIALOG_SLIDER',
+  'IDC_CINEMATIC_CHECK','IDC_CINEMATIC_SLIDER','IDC_DRIVER_LIST',
+  'IDC_QUALITY_COMBO','IDC_RATE_COMBO','IDC_SPEAKER_SETUP_COMBO',
+  'IDC_STEREO_CHECK','IDC_DEFAULTS_BUTTON'
+ },
+ 'IDD_CONFIG_VIDEO': {
+  'IDC_DISPLAY_DRIVER','IDC_RESOLUTION','IDC_BIT_DEPTH','IDC_GAMMA_SLIDER',
+  'IDC_BRIGHTNESS_SLIDER','IDC_CONTRAST_SLIDER','IDC_GAMMA_SETTING',
+  'IDC_BRIGHTNESS_SETTING','IDC_CONTRAST_SETTING'
+ },
+ 'IDD_CONFIG_PERFORMANCE': {
+  'IDC_PERFORMANCE_SLIDER','IDC_EXPERT_CHECK','IDC_GEOMETRY_DETAIL_SLIDER',
+  'IDC_CHAR_SHADOWS_SLIDER','IDC_TEXTURE_DETAIL_SLIDER',
+  'IDC_SURFACE_DETAIL_SLIDER','IDC_PARTICLE_DETAIL_SLIDER',
+  'IDC_TERRAIN_SHADOW_CHECK','IDC_NPATCH_CHECK','IDC_LIGHTING_MODE',
+  'IDC_TEXTURE_FILTER'
+ },
+ 'IDD_CONTROLS_BASIC_MOVMENT_TAB': {
+  'IDC_HOTKEY1','IDC_HOTKEY2','IDC_HOTKEY3','IDC_HOTKEY4','IDC_HOTKEY5',
+  'IDC_HOTKEY6','IDC_HOTKEY7','IDC_HOTKEY8','IDC_HOTKEY9','IDC_HOTKEY10',
+  'IDC_HOTKEY11','IDC_HOTKEY13','IDC_HOTKEY14','IDC_HOTKEY15',
+  'IDC_HOTKEY16','IDC_HOTKEY17','IDC_HOTKEY18','IDC_HOTKEY19',
+  'IDC_HOTKEY20','IDC_HOTKEY21','IDC_HOTKEY22','IDC_HOTKEY23'
+ },
+ 'IDD_CONTROLS_ATTACK_TAB': {
+  'IDC_HOTKEY1','IDC_HOTKEY2','IDC_HOTKEY3','IDC_HOTKEY4','IDC_HOTKEY5',
+  'IDC_HOTKEY6','IDC_HOTKEY7','IDC_HOTKEY13','IDC_HOTKEY14','IDC_HOTKEY15',
+  'IDC_HOTKEY16','IDC_HOTKEY17','IDC_HOTKEY18','IDC_HOTKEY19',
+  'IDC_DAMAGE_INDICATOR_CHECK'
+ },
+ 'IDD_CONTROLS_WEAPONS_TAB': {
+  'IDC_HOTKEY1','IDC_HOTKEY2','IDC_HOTKEY3','IDC_HOTKEY4','IDC_HOTKEY5',
+  'IDC_HOTKEY6','IDC_HOTKEY7','IDC_HOTKEY8','IDC_HOTKEY9','IDC_HOTKEY10',
+  'IDC_HOTKEY13','IDC_HOTKEY14','IDC_HOTKEY15','IDC_HOTKEY16',
+  'IDC_HOTKEY17','IDC_HOTKEY18','IDC_HOTKEY19','IDC_HOTKEY20',
+  'IDC_HOTKEY21','IDC_HOTKEY22'
+ },
+ 'IDD_CONTROLS_LOOK_TAB': {
+  'IDC_HOTKEY1','IDC_HOTKEY2','IDC_HOTKEY13','IDC_HOTKEY14',
+  'IDC_MOUSE_SENSITIVITY_SLIDER','IDC_INVERT_MOUSE_CHECK',
+  'IDC_INVERT_CURSOR_TARGETTING_CHECK','IDC_LOCK_CAMERA_TO_TURRET_CHECK'
+ },
+ 'IDD_CONTROLS_MULTIPLAYER_TAB': {
+  'IDC_HOTKEY1','IDC_HOTKEY2','IDC_HOTKEY3','IDC_HOTKEY4','IDC_HOTKEY5',
+  'IDC_HOTKEY6','IDC_HOTKEY13','IDC_HOTKEY14','IDC_HOTKEY15',
+  'IDC_HOTKEY16','IDC_HOTKEY17','IDC_HOTKEY18'
+ },
+ 'IDD_MENU_CONTROLS': {'IDC_CONTROL_TABCTRL','IDC_DEFAULTS_BUTTON','IDC_SAVELOAD_BUTTON'},
+ 'IDD_MENU_CONTROL_SAVELOAD': {'IDC_LIST_CTRL','IDC_NAME_EDIT','IDC_SAVE_BUTTON','IDC_LOAD_BUTTON'},
+ 'IDD_OPTIONS_MOVIES': {'IDC_LIST_CTRL','IDC_MENU_PLAY_MOVIE_BUTTON'},
+ 'IDD_OPTIONS_CREDITS': {'IDC_CREDITS_EDIT'},
+ 'IDD_CNC_WINSCREEN': {
+  'IDC_TITLE_TEXT_1','IDC_TITLE_TEXT_2','IDC_WIN1_LIST_CTRL','IDC_LOSE1_LIST_CTRL',
+  'IDC_WINNER_TEAM_SCORE_TEXT','IDC_LOSER_TEAM_SCORE_TEXT','IDC_MVP_TEXT',
+  'IDC_TIME_TEXT','IDC_MENU_TEXT_NEXT_MAP'
+ },
+ 'IDD_MENU_CNC_REFERENCE': {
+  'IDC_HELP_BUTTON','IDC_MENU_MAIN_MENU_BUTTON','IDC_MENU_BACK_BUTTON',
+  'IDC_OPTIONS_MULTIPLAY_SUICIDE','IDC_OPTIONS_MULTIPLAY_CHANGE_TEAMS',
+  'IDC_STATIC_TEXT_01','IDC_STATIC_TEXT_02','IDC_STATIC_TEXT_03','IDC_STATIC_TEXT_04',
+  'IDC_STATIC_TEXT_05','IDC_STATIC_TEXT_06','IDC_STATIC_TEXT_07','IDC_STATIC_TEXT_08',
+  'IDC_STATIC_TEXT_09','IDC_STATIC_TEXT_10','IDC_STATIC_TEXT_11','IDC_STATIC_TEXT_12',
+  'IDC_STATIC_TEXT_13','IDC_STATIC_TEXT_14','IDC_STATIC_TEXT_15','IDC_STATIC_TEXT_16',
+  'IDC_STATIC_TEXT_17','IDC_STATIC_TEXT_18','IDC_STATIC_TEXT_19','IDC_STATIC_TEXT_20',
+  'IDC_KEY_NAME_01','IDC_KEY_NAME_02','IDC_KEY_NAME_03',
+  'IDC_KEY_NAME_04','IDC_KEY_NAME_05','IDC_KEY_NAME_06'
+ },
+ 'IDD_CNC_TEAM_INFO': {
+  'IDC_LIST_CTRL','IDC_TEAM_ICON',
+  'IDC_BUILDING01_ICON','IDC_BUILDING02_ICON','IDC_BUILDING03_ICON',
+  'IDC_BUILDING04_ICON','IDC_BUILDING05_ICON',
+  'IDC_BUILDING01_HEALTHBAR','IDC_BUILDING02_HEALTHBAR','IDC_BUILDING03_HEALTHBAR',
+  'IDC_BUILDING04_HEALTHBAR','IDC_BUILDING05_HEALTHBAR'
+ },
+ 'IDD_CNC_BATTLE_INFO': {
+  'IDC_GDI_LIST_CTRL','IDC_NOD_LIST_CTRL','IDC_GDI_TEAM_ICON','IDC_NOD_TEAM_ICON',
+  'IDC_GDI_BUILDING01_ICON','IDC_GDI_BUILDING02_ICON','IDC_GDI_BUILDING03_ICON',
+  'IDC_GDI_BUILDING04_ICON','IDC_GDI_BUILDING05_ICON','IDC_GDI_BUILDING06_ICON',
+  'IDC_GDI_BUILDING01_HEALTHBAR','IDC_GDI_BUILDING02_HEALTHBAR',
+  'IDC_GDI_BUILDING03_HEALTHBAR','IDC_GDI_BUILDING04_HEALTHBAR',
+  'IDC_GDI_BUILDING05_HEALTHBAR','IDC_GDI_BUILDING06_HEALTHBAR',
+  'IDC_NOD_BUILDING01_ICON','IDC_NOD_BUILDING02_ICON','IDC_NOD_BUILDING03_ICON',
+  'IDC_NOD_BUILDING04_ICON','IDC_NOD_BUILDING05_ICON','IDC_NOD_BUILDING06_ICON',
+  'IDC_NOD_BUILDING01_HEALTHBAR','IDC_NOD_BUILDING02_HEALTHBAR',
+  'IDC_NOD_BUILDING03_HEALTHBAR','IDC_NOD_BUILDING04_HEALTHBAR',
+  'IDC_NOD_BUILDING05_HEALTHBAR','IDC_NOD_BUILDING06_HEALTHBAR'
+ },
+ 'IDD_CNC_SERVER_INFO': {'IDC_LIST_CTRL'},
+ 'IDD_MP_TEAM_SELECT': {
+  'IDC_GDI_TEAM_ICON','IDC_NOD_TEAM_ICON','IDC_GDI_LIST_CTRL','IDC_NOD_LIST_CTRL',
+  'IDCANCEL','IDC_STARTGAME','IDC_TEAM_GDI_CHECK','IDC_TEAM_AUTO_CHECK',
+  'IDC_TEAM_NOD_CHECK','IDC_TIME_REMAINING_TEXT','IDC_MAPNAME_TEXT',
+  'IDC_GDI_SCORE','IDC_NOD_SCORE'
+ },
+ 'IDD_MULTIPLAY_CONNECTING': {'IDCANCEL'},
+ 'IDD_MP_LAN_GAME_LIST': {
+  'IDC_GAME_LIST_CTRL','IDC_NICKNAME_EDIT','IDC_JOIN_GAME_BUTTON',
+  'IDC_MENU_MP_LAN_HOST_BUTTON'
+ },
+ 'IDD_MP_LAN_HOST_OPTIONS': {
+  'IDC_TABCTRL','IDC_MENU_MP_LAN_START_BUTTON','IDC_SAVELOAD_BUTTON'
+ },
+ 'IDD_MENU_SERVER_SETTINGS_SAVELOAD': {
+  'IDC_NAME_EDIT','IDC_LIST_CTRL','IDC_MENU_BACK_BUTTON','IDC_DELETE_BUTTON',
+  'IDC_SAVE_BUTTON','IDC_LOAD_BUTTON'
+ },
+ 'IDD_MP_JOIN_PASSWORD': {'IDC_PASSWORD_EDIT','IDC_JOIN_GAME_BUTTON'},
+ 'IDD_MP_CHANGE_LAN_NICKNAME': {'IDOK','IDC_NICKNAME_EDIT'},
+ 'IDD_MULTIPLAY_CONNECTION_REFUSED': {'IDOK','IDC_REFUSAL_TEXT'}
+}
 FLAGS = {'DS_MODALFRAME':0x80,'DS_SETFONT':0x40,'WS_POPUP':0x80000000,'WS_CAPTION':0x00C00000,'WS_GROUP':0x20000,'WS_TABSTOP':0x10000,
  'BS_PUSHBUTTON':0,'BS_DEFPUSHBUTTON':1,'BS_CHECKBOX':2,'BS_AUTOCHECKBOX':3,'BS_OWNERDRAW':0xB,'BS_LEFT':0x100,'BS_CENTER':0x300,'BS_FLAT':0x8000,
  'SS_LEFT':0,'SS_CENTER':1,'SS_RIGHT':2,'SS_BITMAP':0xE,'ES_MULTILINE':4,'ES_AUTOVSCROLL':0x40,'LBS_NOTIFY':1}
@@ -83,12 +207,15 @@ def control(parts,d):
  else:
   title=text(parts[1]) if len(parts)>1 else ''; ident=val(parts[2],d); coords=[val(x,d) for x in parts[3:7]]; style=val(','.join(parts[7:]),d,defaults); cfield=ordinal(cls)
  return align(struct.pack('<IIhhhhH',style,0,*coords,ident & 0xffff)+cfield+field(title)+struct.pack('<H',0),4)
+def control_ident(parts,d):
+ head=parts[0].split(None,1); kind=head[0].upper(); parts=[kind]+(head[1:])+parts[1:]
+ return val(parts[2] if kind=='CONTROL' or kind not in CAPTIONLESS else parts[1],d)
 def parse(rc,d,selected_ids=IDS):
- lines=Path(rc).read_text(encoding='latin1').splitlines(); got={}; i=0
+ lines=Path(rc).read_text(encoding='latin1').splitlines(); got={}; controls={}; i=0
  while i<len(lines):
   m=re.match(r'\s*(\w+)\s+DIALOG(?:EX)?\s+DISCARDABLE\s+(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)',lines[i])
   if not m:i+=1;continue
-  name=m.group(1); ident=val(name,d); i+=1; style=0; title=''; body=[]; font_size=0; font_face=''
+  name=m.group(1); ident=val(name,d); i+=1; style=0; title=''; body=[]; control_ids=set(); font_size=0; font_face=''
   while i<len(lines) and lines[i].strip()!='BEGIN':
    s=lines[i].strip()
    if s.startswith('STYLE '): style=val(s[6:],d)
@@ -105,14 +232,20 @@ def parse(rc,d,selected_ids=IDS):
    stmt+=((' ' if stmt else '')+s)
    if s.endswith(',') or s.endswith('|'):continue
    p=split(stmt); stmt=''
-   if ident in selected_ids and p and (p[0].split(None,1)[0].upper() in CLASS or p[0].split(None,1)[0].upper()=='CONTROL'): body.append(control(p,d))
+   if ident in selected_ids and p and (p[0].split(None,1)[0].upper() in CLASS or p[0].split(None,1)[0].upper()=='CONTROL'):
+    body.append(control(p,d)); control_ids.add(control_ident(p,d))
   if ident in selected_ids:
    font=struct.pack('<H',font_size)+field(font_face) if style & d['DS_SETFONT'] else b''
    header=struct.pack('<IIHhhhh',style,0,len(body),0,0,int(m.group(4)),int(m.group(5)))+field('')+field('')+field(title)+font
-   got[ident]=align(header,4)+b''.join(body)
+   got[ident]=align(header,4)+b''.join(body); controls[ident]=control_ids
   i+=1
  missing=selected_ids-set(got)
  if missing: raise SystemExit('missing original dialogs: '+','.join(map(str,sorted(missing))))
+ for dialog_name,control_names in REQUIRED_DIALOG_CONTROLS.items():
+  dialog_id=d.get(dialog_name,0)
+  if dialog_id not in selected_ids: continue
+  missing_controls={d.get(name,0) for name in control_names}-controls.get(dialog_id,set())
+  if missing_controls: raise SystemExit('missing required controls for original dialog %s: %s'%(dialog_name,','.join(map(str,sorted(missing_controls)))))
  return got
 def main():
  a=argparse.ArgumentParser();a.add_argument('--rc',required=True);a.add_argument('--resource-h',required=True);a.add_argument('--dialog-resource-h',required=True);a.add_argument('--out',required=True);a.add_argument('--campaign-dialogs',action='store_true');a.add_argument('--multiplayer-dialogs',action='store_true');q=a.parse_args()

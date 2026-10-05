@@ -1,0 +1,415 @@
+--- a/vehiclephys.cpp
++++ b/vehiclephys.cpp
+@@ -718,12 +718,13 @@
+ 
+ bool VehiclePhysClass::Load(ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case VEHICLEPHYS_CHUNK_RIGIDBODY:
+-				RigidBodyClass::Load(cload);
++				if (!RigidBodyClass::Load(cload)) loaded = false;
+ 				break;
+ 				
+ 			case VEHICLEPHYS_CHUNK_VARIABLES:
+@@ -743,7 +744,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;	
++	return loaded && !cload.Has_Error();
+ }
+  
+  
+--- a/motorvehicle.cpp
++++ b/motorvehicle.cpp
+@@ -247,16 +247,17 @@
+ 
+ bool MotorVehicleClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case MOTO_CHUNK_RIGIDBODY:				// used to be derived directly from RigidBody... Obsolete now
+-				RigidBodyClass::Load(cload);
++				if (!RigidBodyClass::Load(cload)) loaded = false;
+ 				break;
+ 				
+ 			case MOTO_CHUNK_VEHICLEPHYS:
+-				VehiclePhysClass::Load(cload);
++				if (!VehiclePhysClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case MOTO_CHUNK_VARIABLES:
+@@ -278,7 +279,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /***********************************************************************************************
+--- a/wheelvehicle.cpp
++++ b/wheelvehicle.cpp
+@@ -211,12 +211,13 @@
+ 
+ bool WheeledVehicleClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case WHEELEDVEHICLE_CHUNK_MOTORVEHICLE:
+-				MotorVehicleClass::Load(cload);
++				if (!MotorVehicleClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case WHEELEDVEHICLE_CHUNK_VARIABLES:
+@@ -240,7 +241,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/trackedvehicle.cpp
++++ b/trackedvehicle.cpp
+@@ -437,12 +437,13 @@
+ 
+ bool TrackedVehicleClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case TRACKEDVEHICLE_CHUNK_VEHICLEPHYS:
+-				VehiclePhysClass::Load(cload);
++				if (!VehiclePhysClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -453,7 +454,7 @@
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void TrackedVehicleClass::On_Post_Load (void)
+--- a/vtolvehicle.cpp
++++ b/vtolvehicle.cpp
+@@ -407,12 +407,13 @@
+ 
+ bool VTOLVehicleClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case VTOLVEHICLE_CHUNK_VEHICLEPHYS:
+-				VehiclePhysClass::Load(cload);
++				if (!VehiclePhysClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -423,7 +424,7 @@
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void VTOLVehicleClass::On_Post_Load (void)
+--- a/phys3.cpp
++++ b/phys3.cpp
+@@ -2504,12 +2504,13 @@
+ 
+ bool Phys3Class::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case PHYS3_CHUNK_MOVEABLEPHYS:
+-				MoveablePhysClass::Load(cload);
++				if (!MoveablePhysClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case PHYS3_CHUNK_VARIABLES:
+@@ -2541,7 +2542,7 @@
+ 
+ 	Invalidate_Ground_State();
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void Phys3Class::On_Post_Load (void)
+--- a/humanphys.cpp
++++ b/humanphys.cpp
+@@ -567,12 +567,13 @@
+  *=============================================================================================*/
+ bool HumanPhysClass::Load(ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case HUMANPHYS_CHUNK_PHYS3:
+-				Phys3Class::Load(cload);
++				if (!Phys3Class::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case HUMANPHYS_CHUNK_VARIABLES:
+@@ -592,7 +593,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 		
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/projectile.cpp
++++ b/projectile.cpp
+@@ -470,12 +470,13 @@
+ 
+ bool ProjectileClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case PROJECTILE_CHUNK_MOVEABLEPHYS:
+-				MoveablePhysClass::Load(cload);
++				if (!MoveablePhysClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case PROJECTILE_CHUNK_VARIABLES:
+@@ -501,7 +502,7 @@
+ 		
+ 		cload.Close_Chunk();
+ 	}
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/decophys.cpp
++++ b/decophys.cpp
+@@ -201,16 +201,17 @@
+ 
+ bool DecorationPhysClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case DECOPHYS_CHUNK_PHYS:
+-				PhysClass::Load(cload);
++				if (!PhysClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case DECOPHYS_CHUNK_DYNAMICPHYS:
+-				DynamicPhysClass::Load(cload);
++				if (!DynamicPhysClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -221,7 +222,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void DecorationPhysClass::On_Post_Load(void)
+--- a/renderobjphys.cpp
++++ b/renderobjphys.cpp
+@@ -171,16 +171,17 @@
+ 
+ bool RenderObjPhysClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case RENDEROBJPHYS_CHUNK_PHYS:
+-				PhysClass::Load(cload);		// note, legacy loading here... file must be old.
++				if (!PhysClass::Load(cload)) loaded = false;		// note, legacy loading here... file must be old.
+ 				break;
+ 			
+ 			case RENDEROBJPHYS_CHUNK_DYNAMICPHYS:
+-				DynamicPhysClass::Load(cload);
++				if (!DynamicPhysClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -191,7 +192,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void RenderObjPhysClass::On_Post_Load (void)
+--- a/timeddecophys.cpp
++++ b/timeddecophys.cpp
+@@ -136,12 +136,13 @@
+ 
+ bool TimedDecorationPhysClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case TIMEDDECOPHYS_CHUNK_DECOPHYS:
+-				DecorationPhysClass::Load(cload);
++				if (!DecorationPhysClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case TIMEDDECOPHYS_CHUNK_VARIABLES:
+@@ -160,7 +161,7 @@
+ 		
+ 		cload.Close_Chunk();
+ 	}
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ /****************************************************************************************************
+--- a/dynamicanimphys.cpp
++++ b/dynamicanimphys.cpp
+@@ -174,6 +174,7 @@
+ 
+ bool DynamicAnimPhysClass::Load(ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	/*
+ 	** Read in the chunks from the file
+ 	*/
+@@ -182,11 +183,11 @@
+ 		switch(cload.Cur_Chunk_ID()) 
+ 		{
+ 			case DYNAMICANIMPHYS_CHUNK_DECOPHYS:
+-				DecorationPhysClass::Load(cload);
++				if (!DecorationPhysClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case DYNAMICANIMPHYS_CHUNK_ANIMMANAGER:
+-				AnimManager.Load(cload);
++				if (!AnimManager.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -198,7 +199,7 @@
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void DynamicAnimPhysClass::On_Post_Load(void)
+--- a/accessiblephys.cpp
++++ b/accessiblephys.cpp
+@@ -158,16 +158,17 @@
+ bool
+ AccessiblePhysClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		
+ 		switch(cload.Cur_Chunk_ID ()) 
+ 		{
+ 			case CHUNKID_PARENT:
+-				StaticAnimPhysClass::Load (cload);
++				if (!StaticAnimPhysClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
+-				Load_Variables (cload);
++				if (!Load_Variables(cload)) loaded = false;
+ 				break;
+ 				
+ 			default:
+@@ -178,7 +179,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/lightphys.cpp
++++ b/lightphys.cpp
+@@ -122,11 +122,12 @@
+ 
+ bool LightPhysClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case LIGHTPHYS_CHUNK_DECOPHYS:
+-				DecorationPhysClass::Load(cload);
++				if (!DecorationPhysClass::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case LIGHTPHYS_CHUNK_VARIABLES:
+@@ -150,7 +151,7 @@
+ 	Set_Disabled(false);
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ void LightPhysClass::On_Post_Load(void)
+--- a/shakeablestaticphys.cpp
++++ b/shakeablestaticphys.cpp
+@@ -200,11 +200,12 @@
+ 
+ bool ShakeableStaticPhysClass::Load(ChunkLoadClass & cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case SHAKEABLESTATICPHYS_CHUNK_STATICANIMPHYS:
+-				StaticAnimPhysClass::Load( cload );
++				if (!StaticAnimPhysClass::Load(cload)) loaded = false;
+ 				break;
+ 		
+ 			default:
+@@ -215,7 +216,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 

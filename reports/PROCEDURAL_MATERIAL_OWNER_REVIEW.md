@@ -47,3 +47,85 @@ or an unregistered polygon-renderer call.
 
 Evidence is source inspection only. No correction or native acceptance is
 claimed in this review, and no build or launch was performed.
+
+## 2026-10-05 rejected direct-queue approach
+
+A first implementation attempted to register only meshes carrying additional
+passes and reuse the released FVF/material queues. Link-graph inspection then
+showed that native targets select `port/renderer/vita/ww3d_dx8_boundary.cpp`,
+whose reduced `DX8MeshRendererClass` implements only the native decal lifecycle.
+The desktop `dx8renderer.cpp` definitions for `Register_Mesh_Type`, FVF
+containers, material queues and visible skins are excluded. The approach would
+therefore produce unresolved native symbols; its source and staging selection
+were removed, and the existing transition-effect guard was restored.
+
+The viable choices remain a native material-pass task layer that retains the
+original queue and draw semantics, or replacing the reduced mesh boundary with
+the complete original renderer while resolving duplicate definitions and
+proving its buffer path. No fallback base rendering or forced visibility was
+introduced. Projector render-target creation remains separate. No staging,
+build, test or runtime operation was performed.
+## Native retained-pass implementation
+
+The current local source now factors `Submit_Mesh` through an internal optional
+`MaterialPassClass` override while existing base callers still pass null. The
+override selects its uniform material, shader and textures, draws one pass,
+reuses model pass-zero UV/DCG streams, bypasses the static base cache, and keeps
+the textured-skin white passthrough disabled so animated emissive intensity is
+not erased.
+
+The reduced native `DX8MeshRendererClass` now owns refcounted FIFO tasks for
+ordinary rigid, ordinary skinned and delayed rigid passes. It reconstructs a
+short-lived RenderInfo from the renderer camera and the retained Mesh's original
+lighting environment, drains ordinary rigid then skinned work, renders decals,
+then drains delayed rigid work. Invalidation, shutdown and a flush without a
+camera release every retained owner. Static-sort levels install their camera and
+flush their own queued passes. `TransitionEffectClass` again uses the original
+Push/Pop owner, so transition and stealth passes with null cull volumes reach the
+native emitter.
+
+This remains source-only and unvalidated. The native queues preserve the
+original broad class ordering, but they do not reproduce desktop FVF-category
+interleaving because the native base renderer submits geometry directly. Rigid
+passes with a non-null cull volume now reproduce the original orthogonal inverse
+world-to-model box transform, view-direction derivation, cull-tree or backface
+APT generation, and returned triangle order. Skinned procedural passes continue
+to draw the complete deformed mesh, matching the original branch that precedes
+per-polygon culling. Projector pixels, texture mapper state and repeat lifecycle
+still require compile and runtime evidence before generic projector effects can
+be claimed.
+
+The native emitter now includes the `SimpleDynVecClass` declaration explicitly
+and validates the complete generated rigid APT before drawing. An out-of-range
+polygon ID rejects the procedural submission, increments the backend error
+count, and emits one bounded native breadcrumb. It is no longer silently
+deleted from the list, which could turn corrupt culling output into a plausible
+but incorrect partial effect. This remains source-inspection evidence only.
+
+The native DX8 boundary also restores the released sorting-buffer conversion:
+when both retained buffers are sorting buffers, it copies the declared vertex
+window and rebased indices into the original dynamic DX8-shaped buffers before
+calling the established indexed submitter. Range validation rejects malformed
+indices rather than underflowing during rebasing. `SortingRendererClass` keeps
+ownership of insertion, global depth order and flush timing; the boundary only
+replaces the released Direct3D upload/draw edge. This is uncompiled source
+evidence and does not establish transparent rendering correctness.
+
+## Original projector enablement ownership
+
+The full native gameplay boundary previously disabled both static and dynamic
+projectors and forced `SHADOW_MODE_NONE` on every scene after original settings
+had initialized it. That removed authored projectors with existing textures as
+well as render-target shadows, even though the retained material-pass queue can
+now submit the former. The blanket override is removed. Original scene and
+system-setting state again decide whether each projector list runs, while the
+still-unsupported render-target allocation fails explicitly through
+`DX8Wrapper::Create_Render_Target` and the original null/fallback handling.
+
+This does not claim generated shadow-map support. Static/dynamic authored
+projectors, culling, projected UVs, null render-target fallback, frame cost and
+repeat lifecycle remain uncompiled and physically unverified.
+
+The complete allocation/bind/restore ownership requirements and the finding
+that the adjacent D3D Vita tree also defers this boundary are recorded in
+`NATIVE_RENDER_TARGET_BOUNDARY.md`.

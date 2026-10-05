@@ -278,7 +278,10 @@ TranslateDBClass::Load (ChunkLoadClass &cload)
 	Free_Objects ();
 	Free_Categories ();
 
-	bool retval = true;	
+	bool retval = true;
+	bool variables_seen = false;
+	bool objects_seen = false;
+	bool categories_seen = false;
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 			
@@ -286,22 +289,41 @@ TranslateDBClass::Load (ChunkLoadClass &cload)
 			//	Load all the presets from this chunk
 			//
 			case CHUNKID_VARIABLES:
-				retval &= Load_Variables (cload);
+				if (variables_seen) retval = false;
+				else {
+					variables_seen = true;
+					retval &= Load_Variables (cload);
+				}
 				break;
 
 			case CHUNKID_OBJECTS:
-				retval &= Load_Objects (cload);
+				if (objects_seen) retval = false;
+				else {
+					objects_seen = true;
+					retval &= Load_Objects (cload);
+				}
 				break;
 
 			case CHUNKID_CATEGORIES:
-				retval &= Load_Categories (cload);
+				if (categories_seen) retval = false;
+				else {
+					categories_seen = true;
+					retval &= Load_Categories (cload);
+				}
 				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	Validate_Data ();
+	retval = retval && variables_seen && objects_seen && categories_seen &&
+		!cload.Has_Error() && !SaveLoadSystemClass::Has_Reported_Load_Failure();
+	if (retval) {
+		Validate_Data ();
+	} else {
+		Free_Objects ();
+		Free_Categories ();
+	}
 	return retval;
 }
 
@@ -325,14 +347,18 @@ TranslateDBClass::Load_Categories (ChunkLoadClass &cload)
 		if (factory != NULL) {
 			TDBCategoryClass *category = (TDBCategoryClass *)factory->Load (cload);
 			if (category != NULL) {
-				Add_Category (category, false);
+				retval &= Add_Category (category, false);
+			} else {
+				retval = false;
 			}
+		} else {
+			retval = false;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return retval;
+	return retval && !cload.Has_Error() && !SaveLoadSystemClass::Has_Reported_Load_Failure();
 }
 
 
@@ -355,14 +381,18 @@ TranslateDBClass::Load_Objects (ChunkLoadClass &cload)
 		if (factory != NULL) {
 			TDBObjClass *translate_obj = (TDBObjClass *)factory->Load (cload);
 			if (translate_obj != NULL) {
-				Add_Object (translate_obj);
+				retval &= Add_Object (translate_obj);
+			} else {
+				retval = false;
 			}
+		} else {
+			retval = false;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return retval;
+	return retval && !cload.Has_Error() && !SaveLoadSystemClass::Has_Reported_Load_Failure();
 }
 
 
@@ -375,18 +405,27 @@ bool
 TranslateDBClass::Load_Variables (ChunkLoadClass &cload)
 {
 	bool retval = true;
+	unsigned int fields_seen = 0;
 
 	while (cload.Open_Micro_Chunk ()) {
 		switch (cload.Cur_Micro_Chunk_ID ()) {
 
-			READ_MICRO_CHUNK (cload, VARID_VERSION_NUMBER,	m_VersionNumber);
-			READ_MICRO_CHUNK (cload, VARID_LANGUAGE_ID,		m_LanguageID);
+			case VARID_VERSION_NUMBER:
+				if ((fields_seen & 0x01U) || cload.Cur_Micro_Chunk_Length() != sizeof(m_VersionNumber) ||
+					cload.Read(&m_VersionNumber, sizeof(m_VersionNumber)) != sizeof(m_VersionNumber)) retval = false;
+				fields_seen |= 0x01U;
+				break;
+			case VARID_LANGUAGE_ID:
+				if ((fields_seen & 0x02U) || cload.Cur_Micro_Chunk_Length() != sizeof(m_LanguageID) ||
+					cload.Read(&m_LanguageID, sizeof(m_LanguageID)) != sizeof(m_LanguageID)) retval = false;
+				fields_seen |= 0x02U;
+				break;
 		}
 			
 		cload.Close_Micro_Chunk ();
 	}
 
-	return retval;
+	return retval && fields_seen == 0x03U && !cload.Has_Error();
 }
 
 
@@ -800,7 +839,6 @@ TranslateDBClass::Add_Category (TDBCategoryClass *new_category, bool assign_id)
 
 	WWASSERT (new_category != NULL);
 	if (new_category != NULL) {
-
 		//
 		//	Assign this category an ID (if necessary)
 		//
@@ -811,6 +849,10 @@ TranslateDBClass::Add_Category (TDBCategoryClass *new_category, bool assign_id)
 				new_id = max (curr_id + 1, new_id);
 			}
 			new_category->Set_ID (new_id);
+		}
+		if (Find_Category(new_category->Get_ID()) != NULL ||
+			Find_Category(new_category->Get_Name()) != NULL) {
+			return false;
 		}
 
 		//
@@ -889,6 +931,12 @@ TranslateDBClass::Add_Object (TDBObjClass *new_obj)
 		//		
 		if (new_obj->Get_ID () < ID_MIN) {
 			new_obj->Set_ID (Find_Unique_ID ());
+		}
+		if (new_obj->Get_ID() < ID_MIN || new_obj->Get_ID() > ID_MAX ||
+			new_obj->Get_ID_Desc().Is_Empty() ||
+			Find_Object(new_obj->Get_ID()) != NULL ||
+			Find_Object(new_obj->Get_ID_Desc()) != NULL) {
+			return false;
 		}
 
 		//

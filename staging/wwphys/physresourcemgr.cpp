@@ -62,6 +62,7 @@ void PhysResourceMgrClass::Shutdown(void)
 	REF_PTR_RELEASE(_ShadowBlobTexture);
 	REF_PTR_RELEASE(_HighlightMaterialPass);
 	REF_PTR_RELEASE(_StealthTexture);
+	REF_PTR_RELEASE(_GridTexture);
 }
 
 bool PhysResourceMgrClass::Set_Shadow_Blob_Texture(const char * texname)

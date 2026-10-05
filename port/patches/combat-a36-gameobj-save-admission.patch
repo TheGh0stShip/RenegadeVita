@@ -1,0 +1,93 @@
+--- a/gameobjmanager.cpp
++++ b/gameobjmanager.cpp
+@@ -217,34 +217,57 @@
+ bool	GameObjManager::Load( ChunkLoadClass &cload )
+ {
+ 	float sight_scale = 1.0f;
++	bool cinematic_freeze = false;
++	int next_id = NETID_DYNAMIC_OBJECT_MIN;
++	bool objects_seen = false;
++	bool variables_seen = false;
++	uint32 values_seen = 0U;
++	bool loaded = true;
+ 
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_OBJECTS:
++				if (objects_seen) loaded = false;
++				objects_seen = true;
+ 				while (cload.Open_Chunk()) {
+ 					PersistFactoryClass * factory = SaveLoadSystemClass::Find_Persist_Factory( cload.Cur_Chunk_ID() );
+-					if ( factory ) {
+-						factory->Load( cload );
+-					}
++					if (factory == NULL || factory->Load(cload) == NULL) loaded = false;
+ 					cload.Close_Chunk();
+ 				}
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
++				if (variables_seen) loaded = false;
++				variables_seen = true;
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+-						
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_GLOBAL_SIGHT_RANGE_SCALE, sight_scale );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_CINEMATIC_FREEZE, CinematicFreezeActive );
++						case MICROCHUNKID_GLOBAL_SIGHT_RANGE_SCALE:
++							if ((values_seen & 2U) != 0U ||
++								cload.Cur_Micro_Chunk_Length() != sizeof(sight_scale)) loaded = false;
++							else {
++								values_seen |= 2U;
++								loaded = cload.Read(&sight_scale, sizeof(sight_scale)) ==
++									sizeof(sight_scale) && loaded;
++							}
++							break;
++						case MICROCHUNKID_CINEMATIC_FREEZE:
++							if ((values_seen & 4U) != 0U ||
++								cload.Cur_Micro_Chunk_Length() != sizeof(cinematic_freeze)) loaded = false;
++							else {
++								values_seen |= 4U;
++								loaded = cload.Read(&cinematic_freeze, sizeof(cinematic_freeze)) ==
++									sizeof(cinematic_freeze) && loaded;
++							}
++							break;
+ 						case MICROCHUNKID_GENERATED_ID:
+ 						{
+-							/*TSS091001*/
+-							int next_id = NETID_DYNAMIC_OBJECT_MIN;
+-							LOAD_MICRO_CHUNK( cload, next_id )
+-							NetworkObjectMgrClass::Set_New_Dynamic_ID( next_id );
+-							Debug_Say(( "NetworkObjectMgrClass::Set_New_Dynamic_ID to %d\n", next_id ));
+-							/**/
++							if ((values_seen & 1U) != 0U ||
++								cload.Cur_Micro_Chunk_Length() != sizeof(next_id)) loaded = false;
++							else {
++								values_seen |= 1U;
++								loaded = cload.Read(&next_id, sizeof(next_id)) == sizeof(next_id) && loaded;
++							}
+ 							break;
+ 						}
+ 
+@@ -264,12 +287,18 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	SmartGameObj::Set_Global_Sight_Range_Scale( sight_scale );
++	loaded = loaded && !cload.Has_Error() && objects_seen && variables_seen && values_seen == 7U;
++	if (loaded) {
++		NetworkObjectMgrClass::Set_New_Dynamic_ID(next_id);
++		CinematicFreezeActive = cinematic_freeze;
++		SmartGameObj::Set_Global_Sight_Range_Scale(sight_scale);
++		Debug_Say(( "NetworkObjectMgrClass::Set_New_Dynamic_ID to %d\n", next_id ));
++	}
+ #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+ 	Vita_Log_GameObj_Load_Summary("GameObjManager::Load");
+ #endif
+ 
+-	return true;
++	return loaded;
+ }
+ 
+ 

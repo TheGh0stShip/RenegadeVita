@@ -97,6 +97,14 @@ The software Miles replacement mixes up to 32 voices at 48 kHz on its own
 thread, but it holds the provider lock that every game-thread audio call
 takes, and it decoded every sound effect in full on each play.
 
+The current source also removes stream file open/seek/allocation/read and MPEG
+or WAVE preparation from that provider lock. Callback identity and pooled-sample
+detachment are captured under the lock; a detached prepared source owns the
+decoder or PCM until errors, accounting, shared-cache mutation and final sample
+publication return to the lock. Whole-image memory use, deadline behavior and
+concurrent-open lifetime assumptions still require runtime measurement. This
+follow-up is source-inspection evidence only.
+
 - **Mixer.** Each voice now runs a loop specialised for mono or stereo PCM,
   stream or not, with the per-frame function calls, frame-count divisions
   and channel selection hoisted out. Voices with zero gain (silent volume,

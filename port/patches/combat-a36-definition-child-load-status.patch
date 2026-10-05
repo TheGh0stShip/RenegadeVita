@@ -1,0 +1,233 @@
+--- a/dialogue.h
++++ b/dialogue.h
+@@ -131,14 +131,14 @@
+ 	//	Save/load
+ 	//
+ 	void			Save (ChunkSaveClass &csave);
+-	void			Load (ChunkLoadClass &cload);
++	bool			Load (ChunkLoadClass &cload);
+ 
+ protected:
+ 
+ 	////////////////////////////////////////////////////////////////
+ 	//	Protected methods
+ 	////////////////////////////////////////////////////////////////
+-	void			Load_Variables (ChunkLoadClass &cload);
++	bool			Load_Variables (ChunkLoadClass &cload);
+ 
+ 	////////////////////////////////////////////////////////////////
+ 	//	Protected member data
+@@ -191,14 +191,14 @@
+ 	//	Save/load
+ 	//
+ 	void							Save (ChunkSaveClass &csave);
+-	void							Load (ChunkLoadClass &cload);
++	bool							Load (ChunkLoadClass &cload);
+ 
+ protected:
+ 
+ 	////////////////////////////////////////////////////////////////
+ 	//	Protected methods
+ 	////////////////////////////////////////////////////////////////
+-	void							Load_Variables (ChunkLoadClass &cload);	
++	bool							Load_Variables (ChunkLoadClass &cload);
+ 
+ 	////////////////////////////////////////////////////////////////
+ 	//	Protected member data
+--- a/dialogue.cpp
++++ b/dialogue.cpp
+@@ -159,21 +159,22 @@
+ //	Load
+ //
+ ////////////////////////////////////////////////////////////////
+-void
++bool
+ DialogueOptionClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {		
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_OPTION_VARIABLES:
+-				Load_Variables (cload);
++				if (!Load_Variables(cload)) loaded = false;
+ 				break;
+ 		}
+ 
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return ;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+@@ -182,7 +183,7 @@
+ //	Load_Variables
+ //
+ ///////////////////////////////////////////////////////////////////////
+-void
++bool
+ DialogueOptionClass::Load_Variables (ChunkLoadClass &cload)
+ {
+ 	//
+@@ -198,7 +199,7 @@
+ 		cload.Close_Micro_Chunk ();
+ 	}
+ 
+-	return ;
++	return !cload.Has_Error();
+ }
+ 
+ 
+@@ -298,16 +299,17 @@
+ //	Load
+ //
+ ////////////////////////////////////////////////////////////////
+-void
++bool
+ DialogueClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	Free_Options ();
+ 
+ 	while (cload.Open_Chunk ()) {		
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_DIALOGUE_VARIABLES:
+-				Load_Variables (cload);
++				if (!Load_Variables(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_DIALOGUE_OPTION:
+@@ -316,8 +318,12 @@
+ 				//	Create a new option object and add it to the list
+ 				//
+ 				DialogueOptionClass *option = new DialogueOptionClass;
+-				option->Load (cload);
+-				OptionList.Add (option);
++				if (option->Load(cload)) {
++					OptionList.Add(option);
++				} else {
++					delete option;
++					loaded = false;
++				}
+ 			}
+ 			break;
+ 		}
+@@ -325,7 +331,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return ;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+@@ -334,7 +340,7 @@
+ //	Load_Variables
+ //
+ ///////////////////////////////////////////////////////////////////////
+-void
++bool
+ DialogueClass::Load_Variables (ChunkLoadClass &cload)
+ {
+ 	//
+@@ -349,7 +355,7 @@
+ 		cload.Close_Micro_Chunk ();
+ 	}
+ 
+-	return ;
++	return !cload.Has_Error();
+ }
+ 
+ 
+--- a/soldier.cpp
++++ b/soldier.cpp
+@@ -241,7 +241,9 @@
+ 
+ 			case CHUNKID_DEF_DIALOG_ENTRY:
+ 				if (dialog_index < DIALOG_MAX) {
+-					DialogList[dialog_index++].Load (cload);
++					if (!DialogList[dialog_index++].Load(cload)) loaded = false;
++				} else {
++					loaded = false;
+ 				}
+ 				break;
+ 								
+--- a/transition.cpp
++++ b/transition.cpp
+@@ -134,7 +134,7 @@
+ 		WRITE_MICRO_CHUNK_WWSTRING( csave, MICROCHUNKID_ANIMATION_NAME, AnimationName );
+ 		
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ /*
+@@ -184,7 +184,7 @@
+ 			break;
+ 	}
+ 
+-	return true;
++	return !cload.Has_Error();
+ }
+ 
+ /*
+--- a/transitiongameobj.cpp
++++ b/transitiongameobj.cpp
+@@ -116,8 +116,12 @@
+ 			case CHUNKID_DEF_TRANSITION:
+ 			{
+ 				TransitionDataClass *transition = new TransitionDataClass;
+-				transition->Load( cload );
+-				Transitions.Add( transition );
++				if (transition->Load(cload)) {
++					Transitions.Add(transition);
++				} else {
++					delete transition;
++					loaded = false;
++				}
+ 			}
+ 			break;
+ 								
+--- a/vehicle.cpp
++++ b/vehicle.cpp
+@@ -349,8 +349,12 @@
+ 			case CHUNKID_DEF_TRANSITION:
+ 			{
+ 				TransitionDataClass *transition = new TransitionDataClass;
+-				transition->Load( cload );
+-				Transitions.Add( transition );
++				if (transition->Load(cload)) {
++					Transitions.Add(transition);
++				} else {
++					delete transition;
++					loaded = false;
++				}
+ 			}
+ 			break;
+ 
+--- a/buildingaggregate.cpp
++++ b/buildingaggregate.cpp
+@@ -720,7 +720,8 @@
+ 			case BAGDEF_CHUNK_HEALTH50_POWEROFF_VARIABLES:
+ 			case BAGDEF_CHUNK_HEALTH25_POWEROFF_VARIABLES:
+ 			case BAGDEF_CHUNK_DESTROYED_POWEROFF_VARIABLES:
+-				Load_State_Animation_Data(cload,cload.Cur_Chunk_ID() - BAGDEF_CHUNK_HEALTH100_POWERON_VARIABLES);
++				if (!Load_State_Animation_Data(cload,
++					cload.Cur_Chunk_ID() - BAGDEF_CHUNK_HEALTH100_POWERON_VARIABLES)) loaded = false;
+ 				break;
+ 
+ 			default:
+@@ -763,6 +764,5 @@
+ 		}
+ 		cload.Close_Micro_Chunk();
+ 	}
+-	return true;
++	return !cload.Has_Error();
+ }
+-
+
+

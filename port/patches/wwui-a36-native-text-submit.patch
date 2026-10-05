@@ -1,0 +1,15 @@
+--- a/dialogbase.cpp
++++ b/dialogbase.cpp
+@@ -1050,3 +1050,12 @@
+ #if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && defined(__vita__)
++		// Square submits a focused edit through its original Enter handler;
++		// Cross still opens the keyboard. No network/save callback is invented.
++		if (key_id == VK_F6 && input->As_EditCtrlClass() != NULL &&
++			input->Is_Enabled() && (input->Get_Style() & ES_READONLY) == 0) {
++			handled = input->On_Key_Down(VK_RETURN, key_data);
++			Release_Ref();
++			return handled;
++		}
++
+ 		// Cross on an edit field opens the system keyboard. Even an IME
+ 		// initialization failure must not fall through and activate Save.

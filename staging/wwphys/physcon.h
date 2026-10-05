@@ -93,7 +93,7 @@ public:
 	** Save/Load support.
 	*/
 	static void		Save(ChunkSaveClass & csave);
-	static void		Load(ChunkLoadClass & cload);
+	static bool		Load(ChunkLoadClass & cload);
 
 public:
 

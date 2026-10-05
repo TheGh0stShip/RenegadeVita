@@ -1,0 +1,58 @@
+--- a/gameinitmgr.cpp
++++ b/gameinitmgr.cpp
+@@ -97,6 +97,15 @@ static void _reload_game_configuration_files(void);
+ #define PRE_SERVICE_TIME	1500 // Time in milliseconds.
+ #define POST_SERVICE_TIME	 250 // Time in milliseconds.
+ 
++static inline void Yield_Audio_Service_Loop(void)
++{
++#if defined(__vita__)
++	// Preserve the released elapsed service windows without monopolizing the
++	// Cortex-A9 core that services the native audio/output threads.
++	Sleep(1);
++#endif
++}
++
+ 
+ ////////////////////////////////////////////////////////////////
+ //	Static member initialization
+@@ -151,6 +160,7 @@ GameInitMgrClass::Start_Game (const char *map_name, int teamChoice, unsigned lon
+ 		time = TIMEGETTIME();
+ 		while (TIMEGETTIME() - time < PRE_SERVICE_TIME) {
+ 			WWAudioClass::Get_Instance ()->On_Frame_Update (0);
++			Yield_Audio_Service_Loop();
+ 		}
+ 		
+  		// IML: Ensure that there are no sound effects lingering on any playlist. 
+@@ -160,6 +170,7 @@ GameInitMgrClass::Start_Game (const char *map_name, int teamChoice, unsigned lon
+ 		time = TIMEGETTIME();
+ 		while (TIMEGETTIME() - time < POST_SERVICE_TIME) {
+ 			WWAudioClass::Get_Instance ()->On_Frame_Update (0);
++			Yield_Audio_Service_Loop();
+ 		}
+ 	}
+ 
+@@ -310,6 +321,7 @@ GameInitMgrClass::End_Game (void)
+ 		time = TIMEGETTIME();
+ 		while (TIMEGETTIME() - time < PRE_SERVICE_TIME) {
+ 			WWAudioClass::Get_Instance ()->On_Frame_Update (0);
++			Yield_Audio_Service_Loop();
+ 		}
+ 
+ 		// IML: Ensure that there are no sound effects lingering on any playlist. 
+@@ -319,6 +331,7 @@ GameInitMgrClass::End_Game (void)
+ 		time = TIMEGETTIME();
+ 		while (TIMEGETTIME() - time < POST_SERVICE_TIME) {
+ 			WWAudioClass::Get_Instance ()->On_Frame_Update (0);
++			Yield_Audio_Service_Loop();
+ 		}
+ 	}
+ 
+@@ -463,6 +476,7 @@ GameInitMgrClass::Continue_Game(void)
+ 		time = TIMEGETTIME();
+ 		while (TIMEGETTIME() - time < PRE_SERVICE_TIME) {
+ 			WWAudioClass::Get_Instance ()->On_Frame_Update (0);
++			Yield_Audio_Service_Loop();
+ 		}
+ 	}
+ 

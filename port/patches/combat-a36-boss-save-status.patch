@@ -1,0 +1,166 @@
+--- a/mendozabossgameobj.cpp
++++ b/mendozabossgameobj.cpp
+@@ -238,15 +238,16 @@
+ bool
+ MendozaBossGameObjDefClass::Save (ChunkSaveClass &csave)
+ {
++	bool saved = true;
+ 	csave.Begin_Chunk (CHUNKID_DEF_PARENT);
+-		SoldierGameObjDef::Save (csave);
++		saved = SoldierGameObjDef::Save(csave) && saved;
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_DEF_VARIABLES);
+ 		Save_Variables (csave);
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return saved && !csave.Has_Error();
+ }
+ 
+ 
+@@ -534,8 +535,9 @@
+ bool
+ MendozaBossGameObjClass::Save (ChunkSaveClass & csave)
+ {
++	bool saved = true;
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		SoldierGameObj::Save (csave);
++		saved = SoldierGameObj::Save(csave) && saved;
+ 	csave.End_Chunk ();
+ 
+ 	//
+@@ -579,7 +581,7 @@
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+ 		Save_Variables (csave);
+ 	csave.End_Chunk ();
+-	return true;
++	return saved && !csave.Has_Error();
+ }
+ 
+ 
+--- a/sakurabossgameobj.cpp
++++ b/sakurabossgameobj.cpp
+@@ -320,8 +320,9 @@
+ bool
+ SakuraBossGameObjDef::Save (ChunkSaveClass &csave)
+ {
++	bool saved = true;
+ 	csave.Begin_Chunk (CHUNKID_DEF_PARENT);
+-		VehicleGameObjDef::Save (csave);
++		saved = VehicleGameObjDef::Save(csave) && saved;
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_DEF_VARIABLES);
+@@ -329,10 +330,10 @@
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk (CHUNKID_DEF_ROCKET_DEFENSEOBJ_DEF);
+-		RocketsDefense.Save (csave);
++		saved = RocketsDefense.Save(csave) && saved;
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return saved && !csave.Has_Error();
+ }
+ 
+ 
+@@ -604,24 +605,25 @@
+ bool
+ SakuraBossGameObj::Save (ChunkSaveClass & csave)
+ {
++	bool saved = true;
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		VehicleGameObj::Save (csave);
++		saved = VehicleGameObj::Save(csave) && saved;
+ 	csave.End_Chunk ();	
+ 
+ 	csave.Begin_Chunk (CHUNKID_ROCKETL_DEFENSE_OBJ);
+-		LeftRocketDefenseObject.Save (csave);
++		saved = LeftRocketDefenseObject.Save(csave) && saved;
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_ROCKETR_DEFENSE_OBJ);
+-		RightRocketDefenseObject.Save (csave);
++		saved = RightRocketDefenseObject.Save(csave) && saved;
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_LAST_DAMAGER);
+-		LastDamager.Save (csave);
++		saved = LastDamager.Save(csave) && saved;
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_CURR_TARGET);
+-		CurrentTarget.Save (csave);
++		saved = CurrentTarget.Save(csave) && saved;
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_PILOT);
+@@ -638,7 +640,7 @@
+ 		csave.End_Chunk();
+ 	}
+ 
+-	return true;
++	return saved && !csave.Has_Error();
+ }
+ 
+ 
+--- a/raveshawbossgameobj.cpp
++++ b/raveshawbossgameobj.cpp
+@@ -309,15 +309,16 @@
+ bool
+ RaveshawBossGameObjDefClass::Save (ChunkSaveClass &csave)
+ {
++	bool saved = true;
+ 	csave.Begin_Chunk (CHUNKID_DEF_PARENT);
+-		SoldierGameObjDef::Save (csave);
++		saved = SoldierGameObjDef::Save(csave) && saved;
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_DEF_VARIABLES);
+ 		Save_Variables (csave);
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return saved && !csave.Has_Error();
+ }
+ 
+ 
+@@ -676,22 +677,24 @@
+ bool
+ RaveshawBossGameObjClass::Save (ChunkSaveClass & csave)
+ {
++	bool saved = true;
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+-		SoldierGameObj::Save (csave);
++		saved = SoldierGameObj::Save(csave) && saved;
+ 	csave.End_Chunk ();	
+ 
+ 	//
+ 	//	Save the tiberium effect to its own chunk
+ 	//
+ 	csave.Begin_Chunk (CHUNKID_STEALTH_SOLDIER);
+-		StealthSoldier.Save (csave);
++		saved = StealthSoldier.Save(csave) && saved;
+ 	csave.End_Chunk ();
+ 	
+ 	//
+ 	//	Save the tiberium effect to its own chunk
+ 	//
+ 	csave.Begin_Chunk (CHUNKID_TIBERIUM_EFFECT);
+-		TiberiumEffect->Save (csave);
++		if (TiberiumEffect == NULL) csave.Report_Error();
++		else saved = TiberiumEffect->Save(csave) && saved;
+ 	csave.End_Chunk ();
+ 
+ 	//
+@@ -739,7 +742,7 @@
+ 	csave.Begin_Chunk (CHUNKID_VARIABLES);
+ 		Save_Variables (csave);
+ 	csave.End_Chunk ();
+-	return true;
++	return saved && !csave.Has_Error();
+ }
+ 
+ 
+

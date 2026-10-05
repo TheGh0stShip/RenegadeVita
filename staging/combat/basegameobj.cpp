@@ -128,16 +128,17 @@ bool	BaseGameObjDef::Save( ChunkSaveClass & csave )
 	csave.Begin_Chunk( CHUNKID_DEF_PARENT );
 		DefinitionClass::Save( csave );
 	csave.End_Chunk();
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	BaseGameObjDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	cload.Open_Chunk();
 	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_DEF_PARENT );
-	DefinitionClass::Load( cload );
+	if (!DefinitionClass::Load( cload )) loaded = false;
 	cload.Close_Chunk();
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 /*
@@ -203,7 +204,7 @@ bool	BaseGameObj::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_ENABLE_CINEMATIC_FREEZE, EnableCinematicFreeze );
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	BaseGameObj::Load( ChunkLoadClass &cload )

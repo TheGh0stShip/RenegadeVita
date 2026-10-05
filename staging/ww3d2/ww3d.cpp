@@ -849,12 +849,10 @@ WW3DErrorType WW3D::Begin_Render(bool clear,bool clearz,const Vector3 & color, v
 	WWASSERT(IsInitted);
 
 #if defined(RENEGADE_VITA_PORT)
-	(void)clear;
-	(void)clearz;
 	(void)network_callback;
 	WWASSERT(!IsRendering);
 	IsRendering = true;
-	RenegadeVitaRenderer::Begin_Frame(color.X, color.Y, color.Z);
+	RenegadeVitaRenderer::Begin_Frame(clear, clearz, color.X, color.Y, color.Z);
 #if defined(RENEGADE_ORIGINAL_SORTING)
 	Debug_Statistics::Begin_Statistics();
 #endif
@@ -2003,9 +2001,8 @@ void WW3D::Render_And_Clear_Static_Sort_Lists(RenderInfoClass & rinfo)
 			render=true;
 		}
 		if (render) {
-#if !defined(RENEGADE_VITA_PORT)
+			TheDX8MeshRenderer.Set_Camera(&rinfo.Camera);
 			TheDX8MeshRenderer.Flush();
-#endif
 		}
 	}
 	AreStaticSortListsEnabled = old_enable;

@@ -199,22 +199,33 @@ int main()
 	** WWAudio there, after the chain exists but before engine/world setup. */
 	A31VitaInteractiveResult interactive = {};
 	bool start_at_main_menu = false;
+	bool start_at_lan_menu = false;
 	char pending_reload[96] = {};
+	int pending_replay_difficulty = -1;
 	char pending_campaign_source[96] = {};
 	uint8_t pending_campaign_state[64] = {};
 	uint32_t pending_campaign_state_size = 0;
+	char pending_frontend_source[96] = {};
+	bool pending_frontend_skirmish = false;
 	bool runtime_ok = false;
+	unsigned recovered_load_failures = 0U;
 	// Re-enter the original frontend only after the prior engine session has
 	// completed its owned cleanup. No world, player or save state is reused.
 	for (;;) {
 	interactive = A31_Vita_Run_Interactive_Runtime(screen_result, start_at_main_menu,
+		start_at_lan_menu,
 		pending_reload[0] != '\0' ? pending_reload : nullptr,
 		pending_campaign_source[0] != '\0' ? pending_campaign_source : nullptr,
 		pending_campaign_state_size != 0 ? pending_campaign_state : nullptr,
-		pending_campaign_state_size);
+		pending_campaign_state_size, pending_replay_difficulty,
+		pending_frontend_source[0] != '\0' ? pending_frontend_source : nullptr,
+		pending_frontend_skirmish);
 	pending_reload[0] = '\0';
+	pending_replay_difficulty = -1;
 	pending_campaign_source[0] = '\0';
 	pending_campaign_state_size = 0;
+	pending_frontend_source[0] = '\0';
+	pending_frontend_skirmish = false;
 	const bool audio_teardown_completed = WWAudioClass::Get_Instance() == NULL;
 	A30_Vita_Log("A3.1 breadcrumb: application audio teardown singleton=%p\n",
 		static_cast<void *>(WWAudioClass::Get_Instance()));
@@ -239,26 +250,84 @@ int main()
 		interactive.median_frame_us, interactive.p95_frame_us,
 		interactive.worst_frame_us, interactive.average_sync_us,
 		interactive.average_simulation_us, interactive.average_render_us);
+	A30_Vita_Log("A4 world generations: started/bound/rendered=%u/%u/%u\n",
+		interactive.world_generations_started, interactive.world_generations_bound,
+		interactive.world_generations_rendered);
 	A30_Vita_Log("A3.5 original Combat pause: suspend/resume=%d/%d paused_input_frames=%u\n",
 		interactive.pause_observed ? 1 : 0,
 		interactive.resume_observed ? 1 : 0,
 		interactive.paused_input_frames);
+	if (interactive.campaign_handoff_failure != A31_CAMPAIGN_HANDOFF_NO_FAILURE) {
+		A30_Vita_Log("A4 campaign: controlled handoff recovery code=%u return_to_menu=%d\n",
+			interactive.campaign_handoff_failure,
+			interactive.return_to_menu_requested ? 1 : 0);
+	}
 	const bool gameplay_ok = interactive.attempted && interactive.initialized &&
 		interactive.transport_established && interactive.level_loaded &&
 		interactive.player_created && interactive.player_registered &&
 		interactive.commando_created && interactive.first_frame_completed &&
 		interactive.first_frame_geometry && interactive.clean_exit_requested &&
-		!interactive.render_error && interactive.teardown_completed &&
+		interactive.world_generations_started != 0U &&
+		interactive.world_generations_started == interactive.world_generations_bound &&
+		interactive.world_generations_started == interactive.world_generations_rendered &&
+		!interactive.render_error && interactive.level_load_failure == 0U &&
+		interactive.campaign_handoff_failure == A31_CAMPAIGN_HANDOFF_NO_FAILURE &&
+		interactive.teardown_completed &&
 		audio_teardown_completed;
 	runtime_ok = gameplay_ok || (interactive.frontend_exit_requested &&
 		interactive.clean_exit_requested && !interactive.render_error &&
-		interactive.teardown_completed && audio_teardown_completed);
+		interactive.level_load_failure == 0U &&
+		interactive.campaign_handoff_failure == A31_CAMPAIGN_HANDOFF_NO_FAILURE &&
+		interactive.teardown_completed &&
+		audio_teardown_completed);
+	const bool load_recovery_ready = interactive.level_load_failure != 0U &&
+		interactive.load_failure_cleanup_completed && interactive.clean_exit_requested &&
+		interactive.return_to_menu_requested && !interactive.frontend_exit_requested &&
+		!interactive.render_error && interactive.teardown_completed && audio_teardown_completed;
+	const bool campaign_recovery_ready =
+		interactive.campaign_handoff_failure != A31_CAMPAIGN_HANDOFF_NO_FAILURE &&
+		interactive.campaign_handoff_cleanup_completed && interactive.clean_exit_requested &&
+		interactive.return_to_menu_requested && !interactive.frontend_exit_requested &&
+		!interactive.render_error && interactive.teardown_completed && audio_teardown_completed;
 	A30_Vita_Log("A3.1 breadcrumb: runtime teardown complete result=%s\n",
-		runtime_ok ? "PASS" : "FAIL");
+		runtime_ok ? "PASS" : (load_recovery_ready ? "LOAD_FAILURE_RECOVERY" :
+			(campaign_recovery_ready ? "CAMPAIGN_HANDOFF_RECOVERY" : "FAIL")));
+	if (load_recovery_ready) {
+		++recovered_load_failures;
+		start_at_lan_menu = interactive.return_to_lan_menu_requested;
+		start_at_main_menu = !start_at_lan_menu;
+		A30_Vita_Log("A4 completion: failed level code=%u cleanup complete; reopening original %s menu recovery=%u\n",
+			interactive.level_load_failure, start_at_lan_menu ? "LAN" : "main",
+			recovered_load_failures);
+		continue;
+	}
+	if (campaign_recovery_ready) {
+		start_at_lan_menu = false;
+		start_at_main_menu = true;
+		A30_Vita_Log("A4 campaign: failed handoff code=%u cleanup complete; reopening original main menu\n",
+			interactive.campaign_handoff_failure);
+		continue;
+	}
 	if (runtime_ok && interactive.reload_source[0] != '\0') {
 		memcpy(pending_reload, interactive.reload_source, sizeof(pending_reload));
-		A30_Vita_Log("A4 load: clean session released; entering original save source=%s\n", pending_reload);
+		pending_replay_difficulty = interactive.reload_is_replay
+			? interactive.reload_replay_difficulty : -1;
+		A30_Vita_Log("A4 load: clean session released; entering original source=%s replay_difficulty=%d\n",
+			pending_reload, pending_replay_difficulty);
 		start_at_main_menu = true;
+		start_at_lan_menu = false;
+		continue;
+	}
+	if (runtime_ok && interactive.frontend_selection_deferred &&
+		interactive.frontend_next_source[0] != '\0') {
+		memcpy(pending_frontend_source, interactive.frontend_next_source,
+			sizeof(pending_frontend_source));
+		pending_frontend_skirmish = interactive.frontend_next_skirmish;
+		start_at_main_menu = false;
+		start_at_lan_menu = false;
+		A30_Vita_Log("A4 frontend: clean session released; resuming deferred %s source=%s\n",
+			pending_frontend_skirmish ? "Practice" : "single-player",
+			pending_frontend_source);
 		continue;
 	}
 #if !RENEGADE_VITA_M00_DEMO
@@ -273,19 +342,23 @@ int main()
 		A30_Vita_Log("A4 campaign: clean session released; entering original next source=%s state_bytes=%u\n",
 			pending_campaign_source, pending_campaign_state_size);
 		start_at_main_menu = false;
+		start_at_lan_menu = false;
 		continue;
 	}
 #endif
 	if (runtime_ok && interactive.return_to_menu_requested) {
-		A30_Vita_Log("A3.5 demo ending: clean session released; reopening original frontend\n");
-		start_at_main_menu = true;
+		start_at_lan_menu = interactive.return_to_lan_menu_requested;
+		start_at_main_menu = !start_at_lan_menu;
+		A30_Vita_Log("A4 frontend: clean session released; reopening original %s menu\n",
+			start_at_lan_menu ? "LAN" : "main");
 		continue;
 	}
 	break;
 	}
 	if (runtime_ok) {
-		A30_Vita_Log("[LIFECYCLE] END status=clean candidate=%s\n",
-			RENEGADE_BUILD_CANDIDATE_LABEL);
+		A30_Vita_Log("[LIFECYCLE] END status=%s candidate=%s recovered_load_failures=%u\n",
+			recovered_load_failures == 0U ? "clean" : "clean-with-recovered-load-failure",
+			RENEGADE_BUILD_CANDIDATE_LABEL, recovered_load_failures);
 	} else {
 		A30_Vita_Log("[LIFECYCLE] END status=controlled-failure phase=interactive-runtime candidate=%s\n",
 			RENEGADE_BUILD_CANDIDATE_LABEL);

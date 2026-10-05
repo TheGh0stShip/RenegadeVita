@@ -706,24 +706,25 @@ bool	VehiclePhysClass::Is_In_Contact(void)
 bool VehiclePhysClass::Save(ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(VEHICLEPHYS_CHUNK_RIGIDBODY);
-	RigidBodyClass::Save(csave);
+	if (!RigidBodyClass::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(VEHICLEPHYS_CHUNK_VARIABLES);
 	WRITE_MICRO_CHUNK(csave,VEHICLEPHYS_VARIABLE_ISENGINEON,IsEngineOn);
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool VehiclePhysClass::Load(ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case VEHICLEPHYS_CHUNK_RIGIDBODY:
-				RigidBodyClass::Load(cload);
+				if (!RigidBodyClass::Load(cload)) loaded = false;
 				break;
 				
 			case VEHICLEPHYS_CHUNK_VARIABLES:
@@ -743,7 +744,7 @@ bool VehiclePhysClass::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;	
+	return loaded && !cload.Has_Error();
 }
  
  
@@ -833,12 +834,13 @@ bool VehiclePhysDefClass::Save(ChunkSaveClass &csave)
 
 bool VehiclePhysDefClass::Load(ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case VEHICLEPHYSDEF_CHUNK_RIGIDBODYDEF:
-				RigidBodyDefClass::Load(cload);
+				if (!RigidBodyDefClass::Load(cload)) loaded = false;
 				break;
 
 			case VEHICLEPHYSDEF_CHUNK_VARIABLES:
@@ -865,7 +867,7 @@ bool VehiclePhysDefClass::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 bool VehiclePhysDefClass::Is_Type(const char * type_name)

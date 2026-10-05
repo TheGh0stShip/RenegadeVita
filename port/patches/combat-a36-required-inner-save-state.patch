@@ -1,0 +1,110 @@
+--- a/combatsaveload.cpp
++++ b/combatsaveload.cpp
+@@ -156,4 +156,16 @@
+ {
+ 	WWMEMLOG(MEM_GAMEDATA);
++	uint32 loaded_chunks = 0U;
++	bool loaded = true;
++	#define LOAD_REQUIRED_COMBAT_CHUNK(bit, expression) \
++		do { \
++			const uint32 chunk_bit = 1U << (bit); \
++			if ((loaded_chunks & chunk_bit) != 0U) { \
++				loaded = false; \
++			} else { \
++				loaded_chunks |= chunk_bit; \
++				loaded = (expression) && loaded; \
++			} \
++		} while (0)
+ 
+ 	while (cload.Open_Chunk()) {
+@@ -161,61 +173,61 @@
+ 
+ 			case CHUNKID_GAMEOBJMANAGER:
+-				GameObjManager::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(0, GameObjManager::Load( cload ));
+ 				break;
+ 
+ 			case CHUNKID_COMBAT_GAME_MODE:
+-				CombatManager::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(1, CombatManager::Load( cload ));
+ 				break;
+ 
+ 			case CHUNKID_SPAWNERS:
+-				SpawnManager::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(2, SpawnManager::Load( cload ));
+ 				break;
+ 
+ 			case CHUNKID_SCRIPTS:
+-				ScriptManager::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(3, ScriptManager::Load( cload ));
+ 				break;
+ 
+ 			case CHUNKID_PERSISTENT_GAME_OBJ_OBSERVERS:
+-				PersistentGameObjObserverManager::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(4, PersistentGameObjObserverManager::Load( cload ));
+ 				break;
+ 
+ 			case CHUNKID_COVER:
+-				CoverManager::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(5, CoverManager::Load( cload ));
+ 				break;
+ 
+ 			case CHUNKID_OBJECTIVES:
+-				ObjectiveManager::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(6, ObjectiveManager::Load( cload ));
+ 				break;
+ 
+ 			case CHUNKID_RADAR:
+-				RadarManager::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(7, RadarManager::Load( cload ));
+ 				break;
+ 			
+ 			case CHUNKID_GAME_OBJ_OBSERVERS:
+-				GameObjObserverManager::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(8, GameObjObserverManager::Load( cload ));
+ 				break;
+ 
+ 			case CHUNKID_BULLETS:
+-				BulletManager::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(9, BulletManager::Load( cload ));
+ 				break;
+ 
+ 			case CHUNKID_WEAPON_VIEW:
+-				WeaponViewClass::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(10, WeaponViewClass::Load( cload ));
+ 				break;
+ 
+ 			case CHUNKID_DYNAMIC_BACKGROUND:
+-				BackgroundMgrClass::Load_Dynamic( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(11, BackgroundMgrClass::Load_Dynamic( cload ));
+ 				break;
+ 
+ 			case CHUNKID_DYNAMIC_WEATHER:
+-				WeatherMgrClass::Load_Dynamic( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(12, WeatherMgrClass::Load_Dynamic( cload ));
+ 				break;
+ 
+ 			case CHUNKID_HUD:
+-				HUDClass::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(13, HUDClass::Load( cload ));
+ 				break;
+ 
+ 			case CHUNKID_SCREEN_FADE:
+-				ScreenFadeManager::Load( cload );
++				LOAD_REQUIRED_COMBAT_CHUNK(14, ScreenFadeManager::Load( cload ));
+ 				break;
+ 
+@@ -228,7 +240,11 @@
+ 	}
+ 
+-	SaveLoadSystemClass::Register_Post_Load_Callback(this);
++	#undef LOAD_REQUIRED_COMBAT_CHUNK
++	loaded = loaded && loaded_chunks == ((1U << 15) - 1U);
++	if (loaded) {
++		SaveLoadSystemClass::Register_Post_Load_Callback(this);
++	}
+ 
+-	return true;
++	return loaded;
+ }
+ 

@@ -162,14 +162,6 @@ void TransitionEffectClass::Timestep(float dt)
 
 void TransitionEffectClass::Render_Push(RenderInfoClass & rinfo,PhysClass * obj)
 {
-#if defined(RENEGADE_VITA_PORT)
-	/* Legacy transition effects require procedural material passes. Preserve the
-	** owning Phys/Combat render traversal while selecting the established
-	** no-procedural-material capability boundary for this renderer. */
-	(void)rinfo;
-	(void)obj;
-	return;
-#else
 	if (RenderTransitionMaterial) {
 		
 		/*
@@ -191,22 +183,16 @@ void TransitionEffectClass::Render_Push(RenderInfoClass & rinfo,PhysClass * obj)
 	if (RenderBaseMaterial == false) {
 		rinfo.Push_Override_Flags(RenderInfoClass::RINFO_OVERRIDE_ADDITIONAL_PASSES_ONLY);
 	}
-#endif
 }
 
 void TransitionEffectClass::Render_Pop(RenderInfoClass & rinfo)
 {
-#if defined(RENEGADE_VITA_PORT)
-	(void)rinfo;
-	return;
-#else
 	if (RenderBaseMaterial == false) {
 		rinfo.Pop_Override_Flags();
 	}
 	if (RenderTransitionMaterial) {
 		rinfo.Pop_Material_Pass();
 	}
-#endif
 }
 
 

@@ -1,0 +1,13 @@
+--- a/gameinitmgr.h
++++ b/gameinitmgr.h
+@@ -70,6 +70,10 @@ public:
+ 	//
+ 	static void		Set_Is_Client_Required (bool onoff)	{ IsClientRequired = onoff; }
+ 	static void		Set_Is_Server_Required (bool onoff)	{ IsServerRequired = onoff; }
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++	static bool		Is_Client_Required (void)			{return IsClientRequired;}
++	static bool		Is_Server_Required (void)			{return IsServerRequired;}
++#endif
+ 
+ 	//
+ 	//	Interface type init

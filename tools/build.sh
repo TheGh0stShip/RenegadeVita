@@ -378,7 +378,7 @@ python3 "$rv_root/tools/check_m13_script_coverage.py" --root "$rv_root" --symbol
 while IFS= read -r rv_symbol; do
 	require_linked_symbol "$rv_symbol"
 done <<'EOF'
-A31_Vita_Run_Interactive_Runtime(int, bool, char const*, char const*, unsigned char const*, unsigned int)
+A31_Vita_Run_Interactive_Runtime(int, bool, bool, char const*, char const*, unsigned char const*, unsigned int, int)
 EncyclopediaMgrClass::Initialize()
 EncyclopediaMgrClass::Shutdown()
 RenegadeVitaAudio::Open_Mpeg_Playback
@@ -393,6 +393,10 @@ SaveGameManager::Load_Game(char const*)
 RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOCATION)
 MainMenuDialogClass::Display()
 StartSPGameDialogClass::On_Command(int, int, unsigned long)
+DlgMPTeamSelect::DoDialog(
+ServerSaveLoadMenuClass::On_Init_Dialog()
+InputConfigClass::Save(ChunkSaveClass&)
+InputConfigClass::Load(ChunkLoadClass&)
 MenuGameModeClass2::Init()
 MovieGameModeClass::Startup_Movies()
 MovieGameModeClass::Start_Movie(char const*)
@@ -405,6 +409,8 @@ WW3DAssetManager::Load_3D_Assets(FileClass&)
 PhysicsSceneClass::Load_Level
 WW3D::Render(SceneClass*
 MeshClass::Render(RenderInfoClass&)
+MeshLoaderClass::Load_W3D(ChunkLoadClass&)
+MeshModelClass::Load_W3D(ChunkLoadClass&)
 DX8Wrapper::Create_Render_Target(int, int, WW3DFormat)
 RenegadeVitaRenderer::Submit_Mesh(MeshClass&, RenderInfoClass&)
 A31_Write_Capture_Bundle(A31CaptureBundleInput const&)

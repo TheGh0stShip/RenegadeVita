@@ -1,0 +1,30 @@
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -429,8 +429,11 @@ bool SaveGameManager::Peek_Description
+ 	//	Open the file as a chunk
+ 	//
+ 	FileClass * file = _TheFileFactory->Get_File(filename);
+-	WWASSERT(file != NULL);
+-	file->Open(FileClass::READ);
++	if (file == NULL) return false;
++	if (!file->Open(FileClass::READ)) {
++		_TheFileFactory->Return_File(file);
++		return false;
++	}
+ 	ChunkLoadClass cload(file);
+ 
+ 	bool retval			= false;
+@@ -492,8 +495,11 @@ bool SaveGameManager::Peek_Map_Name( const char * filename, StringClass &map_name )
+ 	//	Open the file as a chunk
+ 	//
+ 	FileClass * file = _TheFileFactory->Get_File(filename);
+-	WWASSERT(file != NULL);
+-	file->Open(FileClass::READ);
++	if (file == NULL) return false;
++	if (!file->Open(FileClass::READ)) {
++		_TheFileFactory->Return_File(file);
++		return false;
++	}
+ 	ChunkLoadClass cload(file);
+ 
+ 	bool retval = false;

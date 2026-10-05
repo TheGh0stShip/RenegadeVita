@@ -96,6 +96,8 @@ int main() {
             original = save.read_bytes()
             record = queue_request(root, save.name, root / "receipt.json")
             self.assertFalse(record["reload_proven"])
+            self.assertEqual(record["native_original_save_validation"],
+                             "required at consumption")
             self.assertEqual(save.read_bytes(), original)
             request = root / "config/dev-checkpoint-launch-v1.txt"
             self.assertEqual(request.read_bytes(), b"RVCP1 quicksave.sav\n")

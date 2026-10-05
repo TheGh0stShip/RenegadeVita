@@ -2481,7 +2481,7 @@ const PersistFactoryClass & Phys3Class::Get_Factory (void) const
 bool Phys3Class::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(PHYS3_CHUNK_MOVEABLEPHYS);
-	MoveablePhysClass::Save(csave);
+	if (!MoveablePhysClass::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(PHYS3_CHUNK_VARIABLES);
@@ -2499,17 +2499,18 @@ bool Phys3Class::Save (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK(csave,PHYS3_VARIABLE_VELOCITY,State.Velocity);
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool Phys3Class::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case PHYS3_CHUNK_MOVEABLEPHYS:
-				MoveablePhysClass::Load(cload);
+				if (!MoveablePhysClass::Load(cload)) loaded = false;
 				break;
 
 			case PHYS3_CHUNK_VARIABLES:
@@ -2541,7 +2542,7 @@ bool Phys3Class::Load (ChunkLoadClass &cload)
 
 	Invalidate_Ground_State();
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 void Phys3Class::On_Post_Load (void)
@@ -2709,12 +2710,13 @@ bool Phys3DefClass::Save(ChunkSaveClass &csave)
 
 bool Phys3DefClass::Load(ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case PHYS3DEF_CHUNK_MOVEABLEPHYSDEF:
-				MoveablePhysDefClass::Load(cload);
+				if (!MoveablePhysDefClass::Load(cload)) loaded = false;
 				break;
 
 			case PHYS3DEF_CHUNK_VARIABLES:
@@ -2735,7 +2737,7 @@ bool Phys3DefClass::Load(ChunkLoadClass &cload)
 
 		cload.Close_Chunk();
 	}
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 bool Phys3DefClass::Is_Type(const char * type_name)

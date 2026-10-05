@@ -1,0 +1,45 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -1475,1 +1475,18 @@
++void CombatGameModeClass::Process_Overlay_Update()
++{
++	MultiHUDClass::Think();
++	cPlayerManager::Think();
++	cTeamManager::Think();
++}
++
++void CombatGameModeClass::Render_Overlays()
++{
++	MultiHUDClass::Render();
++	cBandwidthGraph::Render();
++	cPlayerManager::Render();
++	cTeamManager::Render();
++	WWASSERT(PTheGameData != NULL);
++	The_Game()->Render();
++}
++
+ void 	CombatGameModeClass::Think()
+@@ -1532,3 +1549,1 @@
+-	MultiHUDClass::Think();
+-	cPlayerManager::Think();
+-	cTeamManager::Think();
++	Process_Overlay_Update();
+@@ -1635,6 +1650,1 @@
+-	MultiHUDClass::Render();
+-	cBandwidthGraph::Render();
+-	cPlayerManager::Render();
+-	cTeamManager::Render();
+-	WWASSERT(PTheGameData != NULL);
+-	The_Game()->Render();
++	Render_Overlays();
+--- a/combatgmode.h
++++ b/combatgmode.h
+@@ -89,6 +89,8 @@
+ 	static	AudibleSoundClass	* BackgroundMusic;
+ 
+ 	static	void	Quick_Save( void );
++	static	void	Process_Overlay_Update();
++	static	void	Render_Overlays();
+ 	static	void	Process_Autosave_Request();
+ 	static	void	Process_Radio_Command_Input();
+ 	static	void	Process_Chat_Input();

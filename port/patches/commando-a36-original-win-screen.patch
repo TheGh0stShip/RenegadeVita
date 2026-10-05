@@ -1,0 +1,63 @@
+--- a/gamedata.cpp
++++ b/gamedata.cpp
+@@ -90,2 +90,6 @@
+-// Match-result dialog is a desktop presentation boundary.
+-#include "a31_dialogmgr_stub.h"
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "dlgcncwinscreen.h"
++#include "dialogmgr.h"
++#else
++#include "a31_dialogmgr_stub.h"
++#endif
+@@ -1255,1 +1259,3 @@
+-		// Win-screen presentation is a desktop UI boundary.
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++		START_DIALOG (CNCWinScreenMenuClass);
++#endif
+--- a/messages.cpp
++++ b/messages.cpp
+@@ -85,1 +85,5 @@
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "gameinitmgr.h"
++#else
+ #include "a31_gameinit_stub.h"
++#endif
+--- a/dlgcncwinscreen.cpp
++++ b/dlgcncwinscreen.cpp
+@@ -41,2 +41,5 @@
+ #include "combat.h"
++#include "soldier.h"
++#include "playermanager.h"
++#include "timemgr.h"
+ #include "gamedata.h"
+@@ -49,1 +52,1 @@
+-#include "wolgmode.h"
++#include "renegade_optional_network_modes.h"
+@@ -54,3 +57,5 @@
+-#include "gamespyadmin.h"
++#include "renegade_network_provider.h"
+ #include "specialbuilds.h"
++#ifdef MULTIPLAYERDEMO
+ #include "dialogtests.h"
++#endif
+@@ -111,3 +116,2 @@
+-	WWASSERT(GameModeManager::Find("WOL") != NULL);
+ 	WWASSERT(The_Game() != NULL);
+-	if (GameModeManager::Find("WOL")->Is_Active() && The_Game()->IsLaddered.Is_True()) {
++	if (Renegade_Network_Mode_Active("WOL") && The_Game()->IsLaddered.Is_True()) {
+@@ -396,1 +400,1 @@
+-	if (ActiveMenu == this) {
++	if (ActiveMenu == this && BackDrop != NULL) {
+@@ -436,1 +440,6 @@
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && !RENEGADE_VITA_M00_DEMO
++			// The native frame still owns world/render references. Let the
++			// between-frame GameInitMgr handoff consume original teardown.
++			GameInitMgrClass::Set_Needs_Game_Exit (true);
++#else
+ 			GameInitMgrClass::End_Game ();
+@@ -447,4 +456,5 @@
+ 				GameInitMgrClass::Display_End_Game_Menu ();
+ 			}
++#endif
+ 			break;
+ 

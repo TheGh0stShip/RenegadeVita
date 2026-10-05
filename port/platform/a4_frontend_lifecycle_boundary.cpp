@@ -19,6 +19,7 @@
 #include "scorescreen.h"
 #include "savegame.h"
 #include "gametype.h"
+#include "gameinitmgr.h"
 #include "systemsettings.h"
 #include "textureloader.h"
 #include "wwuiinput.h"
@@ -33,6 +34,7 @@ namespace {
 
 A4FrontendTrace g_frontend_trace = {};
 bool g_frontend_previous_keys[256] = {};
+bool g_next_start_game_is_campaign_level = false;
 
 class A4FrontendKeyDispatchInput final : public WWUIInputClass
 {
@@ -198,6 +200,7 @@ void A4_Frontend_Reset_Trace(void)
 {
 	::memset(&g_frontend_trace, 0, sizeof(g_frontend_trace));
 	::memset(g_frontend_previous_keys, 0, sizeof(g_frontend_previous_keys));
+	g_next_start_game_is_campaign_level = false;
 }
 
 void A4_Frontend_Begin_Menu_Loop(void)
@@ -206,9 +209,16 @@ void A4_Frontend_Begin_Menu_Loop(void)
 	g_frontend_trace.pause_loop_active = false;
 	g_frontend_trace.reload_requested = false;
 	g_frontend_trace.exit_requested = false;
+	g_frontend_trace.replay_requested = false;
+	g_frontend_trace.replay_difficulty = -1;
 	g_frontend_trace.exit_code = 0;
 	g_frontend_trace.tutorial_start_latched = false;
+	g_frontend_trace.campaign_level_start = false;
+	g_frontend_trace.start_game_rejected = false;
 	g_frontend_trace.skirmish_selected = false;
+	g_frontend_trace.client_only_selected = false;
+	g_frontend_trace.lan_host_selected = false;
+	g_frontend_trace.lan_client_selected = false;
 	g_frontend_trace.tutorial_map[0] = '\0';
 	g_frontend_trace.tutorial_team_choice = 0;
 	g_frontend_trace.tutorial_clan_id = 0;
@@ -228,6 +238,8 @@ void A4_Frontend_Begin_Pause_Loop(void)
 	g_frontend_trace.menu_loop_active = true;
 	g_frontend_trace.pause_loop_active = true;
 	g_frontend_trace.reload_requested = false;
+	g_frontend_trace.replay_requested = false;
+	g_frontend_trace.replay_difficulty = -1;
 }
 
 void A4_Frontend_Prime_WWUI_Key_Transitions(void)
@@ -246,6 +258,27 @@ bool A4_Frontend_Is_Menu_Loop_Active(void)
 bool A4_Frontend_Exit_Requested(void)
 {
 	return g_frontend_trace.exit_requested;
+}
+
+bool A4_Frontend_Latch_Direct_IP(const char *endpoint)
+{
+	if (!g_frontend_trace.menu_loop_active || g_frontend_trace.pause_loop_active ||
+		endpoint == NULL) return false;
+	const size_t length = ::strlen(endpoint);
+	if (length == 0U || length >= sizeof(g_frontend_trace.direct_ip_endpoint)) return false;
+	for (size_t index = 0; index < length; ++index) {
+		const unsigned char value = static_cast<unsigned char>(endpoint[index]);
+		if (value <= 0x20U || value >= 0x7fU) return false;
+	}
+	Copy_Text(g_frontend_trace.direct_ip_endpoint,
+		sizeof(g_frontend_trace.direct_ip_endpoint), endpoint);
+	g_frontend_trace.direct_ip_requested = true;
+	return true;
+}
+
+void A4_Frontend_Record_Direct_IP_Failure(void)
+{
+	g_frontend_trace.direct_ip_failed = true;
 }
 
 int A4_Frontend_Exit_Code(void)
@@ -318,9 +351,7 @@ bool A4_Frontend_Resolve_Skirmish_Archive(const char *source,
 	if (source == NULL || archive == NULL) return false;
 	const size_t length = strlen(source);
 	if (length <= 4U || length >= archive_size ||
-		stricmp(source + length - 4U, ".mix") != 0 ||
-		(strnicmp(source, "C&C_", 4U) != 0 &&
-		 strnicmp(source, "Skirmish", 8U) != 0)) return false;
+		stricmp(source + length - 4U, ".mix") != 0) return false;
 	for (size_t i = 0; i < length; ++i) {
 		const unsigned char c = static_cast<unsigned char>(source[i]);
 		if (c < 32U || c == '/' || c == '\\' || c == ':' || c == 127U) return false;
@@ -333,6 +364,9 @@ bool A4_Frontend_Resolve_Skirmish_Archive(const char *source,
 bool A4_Frontend_Latch_Start_Game(const char *map_name, int teamChoice,
 	unsigned long clanID)
 {
+	const bool campaign_level_start = g_next_start_game_is_campaign_level;
+	g_next_start_game_is_campaign_level = false;
+	g_frontend_trace.campaign_level_start = false;
 	StringClass source(map_name != NULL ? map_name : "");
 	const size_t source_length = strlen(source.Peek_Buffer());
 	// Original LoadSPGameMenu passes a basename; preserve its save directory.
@@ -347,11 +381,25 @@ bool A4_Frontend_Latch_Start_Game(const char *map_name, int teamChoice,
 	if (!g_frontend_trace.menu_loop_active || !A4_Frontend_Is_Tutorial_Source(source.Peek_Buffer())) return true;
 #endif
 	if (!g_frontend_trace.menu_loop_active || map_name == NULL) return false;
-	if (strlen(source.Peek_Buffer()) >= sizeof(g_frontend_trace.tutorial_map)) return true;
+	if (strlen(source.Peek_Buffer()) >= sizeof(g_frontend_trace.tutorial_map)) {
+		// Consume the request so the unavailable desktop Start_Game path is never
+		// entered, but expose a terminal edge to the native menu/intermission pump.
+		g_frontend_trace.start_game_rejected = true;
+		return true;
+	}
 	g_frontend_trace.tutorial_start_latched = true;
+	g_frontend_trace.campaign_level_start = campaign_level_start;
+	g_frontend_trace.replay_requested = false;
+	g_frontend_trace.replay_difficulty = -1;
 #if !RENEGADE_VITA_M00_DEMO
 	g_frontend_trace.skirmish_selected = cGameType::Get_Game_Type() == GAMETYPE_SKIRMISH;
-	g_frontend_trace.client_only_selected = cGameType::Get_Game_Type() == GAMETYPE_MULTIPLAY;
+	if (cGameType::Get_Game_Type() == GAMETYPE_MULTIPLAY) {
+		g_frontend_trace.lan_host_selected = GameInitMgrClass::Is_Server_Required();
+		g_frontend_trace.lan_client_selected = !g_frontend_trace.lan_host_selected &&
+			GameInitMgrClass::Is_Client_Required();
+		g_frontend_trace.client_only_selected = !g_frontend_trace.lan_host_selected &&
+			!g_frontend_trace.lan_client_selected;
+	}
 #endif
 	Copy_Text(g_frontend_trace.tutorial_map,
 		sizeof(g_frontend_trace.tutorial_map), source.Peek_Buffer());
@@ -361,10 +409,36 @@ bool A4_Frontend_Latch_Start_Game(const char *map_name, int teamChoice,
 	return true;
 }
 
+void A4_Frontend_Mark_Next_Start_Game_As_Campaign_Level(void)
+{
+	g_next_start_game_is_campaign_level = true;
+}
+
 A4FrontendTrace A4_Frontend_Get_Trace(void)
 {
 	return g_frontend_trace;
 }
+
+#if !RENEGADE_VITA_M00_DEMO
+bool A4_Frontend_Latch_Replay_Level(const char *source, int difficulty)
+{
+	// Retain a UI request only. CampaignManager remains the replay owner;
+	// it runs after any suspended session has completed original cleanup.
+	char archive[sizeof(g_frontend_trace.tutorial_map)];
+	bool is_save = false;
+	if (!g_frontend_trace.menu_loop_active || difficulty < 0 || difficulty > 3 ||
+		!A4_Frontend_Resolve_Single_Player_Archive(source, archive,
+			sizeof(archive), &is_save) || is_save) return false;
+	if (!A4_Frontend_Latch_Start_Game(archive, -1, 0)) return false;
+	g_frontend_trace.skirmish_selected = false;
+	g_frontend_trace.client_only_selected = false;
+	g_frontend_trace.lan_host_selected = false;
+	g_frontend_trace.lan_client_selected = false;
+	g_frontend_trace.replay_requested = true;
+	g_frontend_trace.replay_difficulty = difficulty;
+	return true;
+}
+#endif
 
 void A4_Frontend_Record_Bink_Init(bool initialized)
 {
@@ -389,7 +463,7 @@ void A4_Frontend_Pump_WWUI_Key_Transitions(void)
 {
 	static const int keys[] = {
 		VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT, VK_RETURN, VK_SPACE,
-		VK_ESCAPE, VK_TAB
+		VK_ESCAPE, VK_TAB, VK_F6
 	};
 
 	for (unsigned index = 0U; index < sizeof(keys) / sizeof(keys[0]); ++index) {

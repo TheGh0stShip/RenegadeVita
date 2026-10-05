@@ -68,6 +68,10 @@ public:
 
 	// LDD Access - Editor only calls Save_Game, App calls both
 	static void _cdecl Save_Game( const char * filename, ... );
+#if defined(RENEGADE_VITA_PORT)
+	static bool Last_Save_Write_Succeeded(void) { return LastSaveWriteSucceeded; }
+	static bool LastSaveWriteSucceeded;
+#endif
 	static void	Load_Game( const char * filename );
 	static void	Pre_Load_Game( const char * filename, StringClass &filename_to_load, StringClass &lsd_filename );
 	static const char * Get_Current_Game_Filename( void )	{ return CurrentGameFilename; }
@@ -78,10 +82,10 @@ public:
 
 	// DDB Access - Editor only calls Save_Level, App only calls Load_Level
 	static void	Save_Definitions( const char * filename = DefaultDefinitionFilename );
-	static void	Load_Definitions( const char * filename = DefaultDefinitionFilename );
+	static bool	Load_Definitions( const char * filename = DefaultDefinitionFilename, bool required_file = true );
 
 	// Generic SaveLoadSubSystem Access
-	static void	Load_Save_Load_System( const char * filename, bool auto_post_load, bool required_level = false );
+	static bool	Load_Save_Load_System( const char * filename, bool auto_post_load, bool required_file = false );
 	static void _cdecl Save_Save_Load_System( const char * filename, ... );
 
 protected:

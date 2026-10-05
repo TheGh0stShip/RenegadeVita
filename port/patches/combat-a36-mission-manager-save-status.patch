@@ -1,0 +1,297 @@
+--- a/animcontrol.cpp
++++ b/animcontrol.cpp
+@@ -341,11 +341,11 @@
+ bool 	BlendableAnimChannelClass::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_NEW );
+-	NewChannel.Save( csave );
++	if (!NewChannel.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_OLD );
+-	OldChannel.Save( csave );
++	if (!OldChannel.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -353,7 +353,7 @@
+ 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_BLEND_TOTAL, BlendTotal );
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	BlendableAnimChannelClass::Load( ChunkLoadClass &cload )
+@@ -612,13 +612,13 @@
+ bool 	SimpleAnimControlClass::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-	AnimControlClass::Save( csave );
++	if (!AnimControlClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_CHANNEL );
+-	Channel.Save( csave );
++	if (!Channel.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	SimpleAnimControlClass::Load( ChunkLoadClass &cload )
+@@ -683,7 +683,7 @@
+ bool 	HumanAnimControlClass::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-	AnimControlClass::Save( csave );
++	if (!AnimControlClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -692,16 +692,16 @@
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_CHANNEL1 );
+-	Channel1.Save( csave );
++	if (!Channel1.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_CHANNEL2 );
+-	Channel2.Save( csave );
++	if (!Channel2.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ //	Don't need to save the animcombo
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	HumanAnimControlClass::Load( ChunkLoadClass &cload )
+--- a/conversation.cpp
++++ b/conversation.cpp
+@@ -298,7 +298,7 @@
+ 		//	Save this orator to its own chunk
+ 		//
+ 		csave.Begin_Chunk (CHUNKID_ORATOR);
+-			orator.Save (csave);
++			if (!orator.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk ();		
+ 	}
+ 
+@@ -312,11 +312,11 @@
+ 		//	Save this remark to its own chunk
+ 		//
+ 		csave.Begin_Chunk (CHUNKID_REMARK);
+-			remark.Save (csave);
++			if (!remark.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk ();		
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/orator.cpp
++++ b/orator.cpp
+@@ -211,10 +211,10 @@
+ 	csave.End_Chunk ();
+ 
+ 	csave.Begin_Chunk (CHUNKID_GAMEOBJ);
+-		GameObj.Save (csave);
++		if (!GameObj.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk ();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/activeconversation.cpp
++++ b/activeconversation.cpp
+@@ -696,12 +696,16 @@
+ 	//	Save each of the orators
+ 	//
+ 	for (int index = 0; index < OratorList.Count (); index ++) {
++		if (OratorList[index] == NULL) {
++			csave.Report_Error();
++			continue;
++		}
+ 		csave.Begin_Chunk (CHUNKID_ORATOR);
+-			OratorList[index]->Save (csave);
++			if (!OratorList[index]->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk ();
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/gameobjmanager.cpp
++++ b/gameobjmanager.cpp
+@@ -194,6 +194,10 @@
+ 	SLNode<BaseGameObj> *objnode;
+ 	for (	objnode = GameObjManager::Get_Game_Obj_List()->Head(); objnode; objnode = objnode->Next()) {
+ 		BaseGameObj * obj = objnode->Data();
++		if (obj == NULL) {
++			csave.Report_Error();
++			continue;
++		}
+ 		csave.Begin_Chunk( obj->Get_Factory().Chunk_ID() );
+ 		obj->Get_Factory().Save( csave, obj );
+ 		csave.End_Chunk();
+@@ -211,7 +215,7 @@
+ 
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	GameObjManager::Load( ChunkLoadClass &cload )
+--- a/objectives.cpp
++++ b/objectives.cpp
+@@ -246,11 +246,11 @@
+ 
+ 	if ( Object.Get_Ptr() != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_OBJECT );
+-		Object.Save( csave );
++		if (!Object.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	Objective::Load( ChunkLoadClass &cload )
+@@ -402,8 +402,12 @@
+ bool	ObjectiveManager::Save( ChunkSaveClass &csave )
+ {
+ 	for ( int i = 0; i < ObjectiveList.Count(); i++ ) {
++		if (ObjectiveList[i] == NULL) {
++			csave.Report_Error();
++			continue;
++		}
+ 		csave.Begin_Chunk( CHUNKID_OBJECTIVE_ENTRY );
+-			ObjectiveList[i]->Save( csave );
++			if (!ObjectiveList[i]->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+@@ -411,7 +415,7 @@
+ 		WRITE_MICRO_CHUNK( csave, 	MICROCHUNKID_NUM_SPECIFIED_TERTIARY_OBJECTIVES,	NumSpecifiedTertiaryObjectives );
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	ObjectiveManager::Load( ChunkLoadClass &cload )
+--- a/cover.cpp
++++ b/cover.cpp
+@@ -67,12 +67,16 @@
+ bool	CoverManager::Save( ChunkSaveClass & csave )
+ {
+ 	for ( int index = 0; index < CoverPositions.Count(); index++ ) {
++		if (CoverPositions[index] == NULL) {
++			csave.Report_Error();
++			continue;
++		}
+ 		csave.Begin_Chunk( CHUNKID_COVER_ENTRY );
+-		CoverPositions[index]->Save( csave );
++		if (!CoverPositions[index]->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	CoverManager::Load( ChunkLoadClass & cload )
+--- a/persistentgameobjobserver.cpp
++++ b/persistentgameobjobserver.cpp
+@@ -64,7 +64,7 @@
+ bool	PersistentGameObjObserverClass::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-	PersistClass::Save( csave );
++	if (!PersistClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -73,7 +73,7 @@
+ 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_OBSERVER_ID, ID );
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	PersistentGameObjObserverClass::Load( ChunkLoadClass &cload )
+@@ -147,12 +147,16 @@
+ 	csave.Begin_Chunk( CHUNKID_OBSERVERS );
+ 	// Allow each object in the master list to save
+ 	for ( int i = 0; i < ObserverList.Count(); i++ ) {
++		if (ObserverList[i] == NULL) {
++			csave.Report_Error();
++			continue;
++		}
+ 		csave.Begin_Chunk( ObserverList[i]->Get_Factory().Chunk_ID() );
+ 		ObserverList[i]->Get_Factory().Save( csave, ObserverList[i] );
+ 		csave.End_Chunk();
+ 	}
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	PersistentGameObjObserverManager::Load( ChunkLoadClass & cload )
+--- a/spawn.cpp
++++ b/spawn.cpp
+@@ -340,7 +340,7 @@
+ bool	SpawnerClass::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-		PersistClass::Save( csave );
++		if (!PersistClass::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -367,12 +367,12 @@
+ 
+ 	if ( LastSpawn.Get_Ptr() != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_LAST_SPAWN );
+-			LastSpawn.Save( csave );
++			if (!LastSpawn.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	SpawnerClass::Load( ChunkLoadClass & cload )
+@@ -825,11 +825,15 @@
+ 	csave.End_Chunk();
+ 
+ 	for ( int i = 0; i < SpawnerList.Count(); i++ ) {
++		if (SpawnerList[i] == NULL) {
++			csave.Report_Error();
++			continue;
++		}
+ 		csave.Begin_Chunk( CHUNKID_SPAWNER_DATA );
+-			SpawnerList[i]->Save( csave );
++			if (!SpawnerList[i]->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	SpawnManager::Load( ChunkLoadClass &cload )
+

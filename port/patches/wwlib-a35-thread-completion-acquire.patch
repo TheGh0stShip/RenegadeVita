@@ -68,10 +68,7 @@
 \ No newline at end of file
 --- a/thread.h
 +++ b/thread.h
-@@ -88,6 +88,16 @@
- 	virtual void Thread_Function() = 0;
- 	volatile bool running;
- 
+@@ -90,0 +91,10 @@
 +	// Cooperative cancellation; the POSIX worker reads the parent's release.
 +	bool Should_Run() const
 +	{
@@ -82,5 +79,3 @@
 +#endif
 +	}
 +
- 	// Name of thread.
- 	char ThreadName[64];

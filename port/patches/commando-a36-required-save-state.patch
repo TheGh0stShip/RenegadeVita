@@ -1,0 +1,86 @@
+--- a/commandosaveload.h
++++ b/commandosaveload.h
+@@ -63,2 +63,3 @@
+ protected:
++	virtual bool	Required_For_Player_Save(void) const { return true; }
+ 	virtual bool	Save( ChunkSaveClass &csave );
+--- a/commandosaveload.cpp
++++ b/commandosaveload.cpp
+@@ -81,2 +81,5 @@
+ 	bool loaded = true;
++	bool network_seen = false;
++	bool god_seen = false;
++	bool campaign_seen = false;
+ 
+@@ -86,3 +89,8 @@
+ 			case CHUNKID_NETWORK:
+-				loaded = cNetwork::Load( cload ) && loaded;
++				if (network_seen) {
++					loaded = false;
++				} else {
++					network_seen = true;
++					loaded = cNetwork::Load( cload ) && loaded;
++				}
+ 				break;
+@@ -90,3 +98,8 @@
+ 			case CHUNKID_GOD:
+-				loaded = cGod::Load( cload ) && loaded;
++				if (god_seen) {
++					loaded = false;
++				} else {
++					god_seen = true;
++					loaded = cGod::Load( cload ) && loaded;
++				}
+ 				break;
+@@ -94,3 +107,8 @@
+ 			case CHUNKID_CAMPAIGN:
+-				loaded = CampaignManager::Load( cload ) && loaded;
++				if (campaign_seen) {
++					loaded = false;
++				} else {
++					campaign_seen = true;
++					loaded = CampaignManager::Load( cload ) && loaded;
++				}
+ 				break;
+@@ -104,3 +122,3 @@
+ 	}
+-	return loaded;
++	return loaded && network_seen && god_seen && campaign_seen;
+ }
+--- a/god.cpp
++++ b/god.cpp
+@@ -107,2 +107,7 @@
+ {
++	int loaded_state = GOD_STATE_UNINITIALIZED;
++	bool variables_seen = false;
++	bool state_seen = false;
++	bool loaded = true;
++
+ 	while (cload.Open_Chunk()) {
+@@ -111,5 +116,16 @@
+ 			case CHUNKID_VARIABLES:
++				if (variables_seen) {
++					loaded = false;
++				}
++				variables_seen = true;
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+-						READ_MICRO_CHUNK(cload, MICROCHUNK_STATE, State);
++						case MICROCHUNK_STATE:
++							if (state_seen) {
++								loaded = false;
++							} else {
++								state_seen = true;
++								READ_MICRO_CHUNK(cload, MICROCHUNK_STATE, loaded_state);
++							}
++							break;
+ 						default:
+@@ -129,2 +145,8 @@
+ 
++	if (!loaded || !variables_seen || !state_seen ||
++		loaded_state < GOD_STATE_UNINITIALIZED || loaded_state > GOD_STATE_SINGLE_DEAD) {
++		return false;
++	}
++
++	State = loaded_state;
+ 	return true;

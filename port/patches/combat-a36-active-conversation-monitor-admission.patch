@@ -1,0 +1,69 @@
+--- a/activeconversation.cpp
++++ b/activeconversation.cpp
+@@ -715,12 +715,18 @@
+ {
+ 	Free_Orator_List ();
+ 	int monitor_index = 0;
++	bool variables_seen = false;
++	bool loaded = true;
+ 
+ 	while (cload.Open_Chunk ()) {		
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_VARIABLES:
+-				Load_Variables (cload);
++				if (variables_seen) loaded = false;
++				else {
++					variables_seen = true;
++					Load_Variables (cload);
++				}
+ 				break;
+ 
+ 			case CHUNKID_ORATOR:
+@@ -743,15 +749,23 @@
+ 				//
+ 				//	Load the monitor's reference from the chunk
+ 				//
+-				MonitorArray[monitor_index++].Load (cload);
++				if (monitor_index >= MAX_MONITORS) {
++					loaded = false;
++				} else {
++					loaded = MonitorArray[monitor_index++].Load(cload) && loaded;
++				}
+ 			}
+ 			break;
++
++			default:
++				loaded = false;
++				break;
+ 		}
+ 
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && variables_seen && !cload.Has_Error();
+ }
+ 
+ 
+--- a/conversationmgr.cpp
++++ b/conversationmgr.cpp
+@@ -429,13 +429,15 @@
+ 				const bool active_loaded = active_conversation->Load (cload);
+ 				
+ 				//
+-				//	Publish only a complete active conversation.
++				//	Keep rejected pointer-bearing conversations alive until the
++				// outer load failure discards remaps/callbacks and tears down the
++				// manager. Releasing here would leave queued references dangling.
+ 				//
+ 				if (active_loaded && !cload.Has_Error ()) {
+ 					ActiveConversationList.Add (active_conversation);
+ 				} else {
+ 					loaded = false;
+-					active_conversation->Release_Ref ();
++					ActiveConversationList.Add (active_conversation);
+ 				}
+ 			}
+ 			break;
+

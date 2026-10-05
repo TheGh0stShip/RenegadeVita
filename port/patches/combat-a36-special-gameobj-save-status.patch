@@ -1,0 +1,92 @@
+--- a/simplegameobj.cpp
++++ b/simplegameobj.cpp
+@@ -230,10 +230,10 @@
+ bool	SimpleGameObj::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-		PhysicalGameObj::Save( csave );
++		if (!PhysicalGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	SimpleGameObj::Load( ChunkLoadClass &cload )
+--- a/powerup.cpp
++++ b/powerup.cpp
+@@ -552,7 +552,7 @@
+ bool	PowerUpGameObj::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-		SimpleGameObj::Save( csave );
++		if (!SimpleGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -562,13 +562,13 @@
+ 
+ 	if ( WeaponBag != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_WEAPONBAG );
+-		WeaponBag->Save( csave );
++		if (!WeaponBag->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+ // We don't save IdleSoundObj
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	PowerUpGameObj::Load( ChunkLoadClass &cload )
+--- a/c4.cpp
++++ b/c4.cpp
+@@ -407,7 +407,7 @@
+ bool	C4GameObj::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-	SimpleGameObj::Save( csave );
++	if (!SimpleGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -429,17 +429,17 @@
+ 
+ 	if ( Owner != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_OWNER );
+-		Owner.Save( csave );
++		if (!Owner.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+ 	if ( StuckObject != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_STUCK_OBJECT );
+-		StuckObject.Save( csave );
++		if (!StuckObject.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	C4GameObj::Load( ChunkLoadClass &cload )
+--- a/cinematicgameobj.cpp
++++ b/cinematicgameobj.cpp
+@@ -240,12 +240,12 @@
+ bool	CinematicGameObj::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-	ArmedGameObj::Save( csave );
++	if (!ArmedGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	// We don't need to save the sound
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	CinematicGameObj::Load( ChunkLoadClass &cload )
+

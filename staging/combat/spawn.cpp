@@ -211,6 +211,7 @@ bool	SpawnerDefClass::Save( ChunkSaveClass &csave )
 
 bool	SpawnerDefClass::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 	WWASSERT( SpawnDefinitionIDList.Count() == 0 );
 	StringClass str;
@@ -219,7 +220,7 @@ bool	SpawnerDefClass::Load( ChunkLoadClass &cload )
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				DefinitionClass::Load( cload );
+				if (!DefinitionClass::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -276,7 +277,7 @@ bool	SpawnerDefClass::Load( ChunkLoadClass &cload )
 	}
 
 	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 const PersistFactoryClass &	SpawnerDefClass::Get_Factory( void ) const
@@ -339,7 +340,7 @@ enum	{
 bool	SpawnerClass::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-		PersistClass::Save( csave );
+		if (!PersistClass::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -366,18 +367,25 @@ bool	SpawnerClass::Save( ChunkSaveClass & csave )
 
 	if ( LastSpawn.Get_Ptr() != NULL ) {
 		csave.Begin_Chunk( CHUNKID_LAST_SPAWN );
-			LastSpawn.Save( csave );
+			if (!LastSpawn.Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	SpawnerClass::Load( ChunkLoadClass & cload )
 {
 	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 	StringClass str;
+	bool parent_seen = false;
+	bool variables_seen = false;
+	bool last_spawn_seen = false;
+	bool loaded = true;
+	uint32 loaded_values = 0;
+	const uint32 required_values = (1U << 7) - 1U;
+	bool expect_script_name = true;
 
 	Matrix3D tm;
 	WWASSERT( SpawnPointList.Length() == 0 );
@@ -386,41 +394,70 @@ bool	SpawnerClass::Load( ChunkLoadClass & cload )
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				PersistClass::Load( cload );
+				if (parent_seen) loaded = false;
+				else {
+					parent_seen = true;
+					loaded = PersistClass::Load(cload) && loaded;
+				}
 				break;
 
 			case CHUNKID_VARIABLES:
+				if (variables_seen) {
+					loaded = false;
+					break;
+				}
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_ID,  ID );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_TM,  TM );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_SPAWN_COUNT, SpawnCount );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_SPAWN_DELAY_TIMER, SpawnDelayTimer );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_ENABLED, Enabled );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_SPAWN_TM, SpawnTM );
+#define READ_REQUIRED_SPAWNER_VALUE(id, value, bit) \
+						case (id): \
+							if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
+								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
+							else loaded_values |= (bit); \
+							break
+						READ_REQUIRED_SPAWNER_VALUE(MICROCHUNKID_ID, ID, 1U << 0);
+						READ_REQUIRED_SPAWNER_VALUE(MICROCHUNKID_TM, TM, 1U << 1);
+						READ_REQUIRED_SPAWNER_VALUE(MICROCHUNKID_SPAWN_COUNT, SpawnCount, 1U << 3);
+						READ_REQUIRED_SPAWNER_VALUE(MICROCHUNKID_SPAWN_DELAY_TIMER, SpawnDelayTimer, 1U << 4);
+						READ_REQUIRED_SPAWNER_VALUE(MICROCHUNKID_ENABLED, Enabled, 1U << 5);
+						READ_REQUIRED_SPAWNER_VALUE(MICROCHUNKID_SPAWN_TM, SpawnTM, 1U << 6);
 
 						case	MICROCHUNKID_DEFINITION_ID:
-							int definition_id;
-							LOAD_MICRO_CHUNK( cload, definition_id );
-							WWASSERT( Definition == NULL );
-							Definition = (const SpawnerDefClass *)DefinitionMgrClass::Find_Definition( definition_id );
-							WWASSERT( Definition != NULL );
+							if ((loaded_values & (1U << 2)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(int)) {
+								loaded = false;
+							} else {
+								int definition_id = 0;
+								if (cload.Read(&definition_id, sizeof(definition_id)) != sizeof(definition_id)) loaded = false;
+								else {
+									Definition = (const SpawnerDefClass *)DefinitionMgrClass::Find_Definition(definition_id);
+									if (Definition == NULL) loaded = false;
+									else loaded_values |= 1U << 2;
+								}
+							}
 							break;
 
 						case	MICROCHUNKID_SPAWN_POINT_ENTRY:
-							LOAD_MICRO_CHUNK( cload, tm );
-							SpawnPointList.Add( tm );
+							if (cload.Cur_Micro_Chunk_Length() != sizeof(tm) || cload.Read(&tm, sizeof(tm)) != sizeof(tm)) loaded = false;
+							else SpawnPointList.Add(tm);
 							break;
 
 						case MICROCHUNKID_SCRIPT_NAME:
-							LOAD_MICRO_CHUNK_WWSTRING( cload, str );
-							ScriptNameList.Add( str );
-							break;
-
 						case MICROCHUNKID_SCRIPT_PARAMETERS:
-							LOAD_MICRO_CHUNK_WWSTRING( cload, str );
-							ScriptParameterList.Add( str );
+						{
+							const bool is_name = cload.Cur_Micro_Chunk_ID() == MICROCHUNKID_SCRIPT_NAME;
+							const uint32 length = cload.Cur_Micro_Chunk_Length();
+							char value[256];
+							if (is_name != expect_script_name || length == 0U || length > sizeof(value) ||
+								cload.Read(value, length) != length || value[length - 1U] != '\0') {
+								loaded = false;
+							} else {
+								str = value;
+								if (is_name) ScriptNameList.Add(str);
+								else ScriptParameterList.Add(str);
+								expect_script_name = !expect_script_name;
+							}
 							break;
+						}
 
 						default:
 							Debug_Say(("Unhandled Micro Chunk:%d File:%s Line:%d\r\n",cload.Cur_Micro_Chunk_ID(),__FILE__,__LINE__));
@@ -429,10 +466,15 @@ bool	SpawnerClass::Load( ChunkLoadClass & cload )
 					}
 					cload.Close_Micro_Chunk();
 				}
+#undef READ_REQUIRED_SPAWNER_VALUE
 				break;
 
 			case CHUNKID_LAST_SPAWN:
-				LastSpawn.Load( cload );
+				if (last_spawn_seen) loaded = false;
+				else {
+					last_spawn_seen = true;
+					loaded = LastSpawn.Load(cload) && loaded;
+				}
 				break;
 
 			default:
@@ -444,7 +486,9 @@ bool	SpawnerClass::Load( ChunkLoadClass & cload )
 	}
 
 	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
-	return true;
+	return loaded && parent_seen && variables_seen && loaded_values == required_values &&
+		Definition != NULL && expect_script_name && ScriptNameList.Count() == ScriptParameterList.Count() &&
+		!cload.Has_Error();
 }
 
 
@@ -781,24 +825,41 @@ bool	SpawnManager::Save( ChunkSaveClass &csave )
 	csave.End_Chunk();
 
 	for ( int i = 0; i < SpawnerList.Count(); i++ ) {
+		if (SpawnerList[i] == NULL) {
+			csave.Report_Error();
+			continue;
+		}
 		csave.Begin_Chunk( CHUNKID_SPAWNER_DATA );
-			SpawnerList[i]->Save( csave );
+			if (!SpawnerList[i]->Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	SpawnManager::Load( ChunkLoadClass &cload )
 {
    Remove_All_Spawners();
+	bool variables_seen = false;
+	bool timer_seen = false;
+	bool loaded = true;
+	float auto_spawn_timer = AUTO_SPAWN_CHECK_DELAY;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_SPAWNER_VARIABLES:
+				if (variables_seen) {
+					loaded = false;
+					break;
+				}
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_SPAWNER_AUTO_SPAWN_TIMER, AutoSpawnTimer );
+						case MICROCHUNKID_SPAWNER_AUTO_SPAWN_TIMER:
+							if (timer_seen || cload.Cur_Micro_Chunk_Length() != sizeof(auto_spawn_timer) ||
+								cload.Read(&auto_spawn_timer, sizeof(auto_spawn_timer)) != sizeof(auto_spawn_timer)) loaded = false;
+							else timer_seen = true;
+							break;
 
 						default:
 							Debug_Say(("Unhandled Micro Chunk:%d File:%s Line:%d\r\n",cload.Cur_Micro_Chunk_ID(),__FILE__,__LINE__));
@@ -812,7 +873,9 @@ bool	SpawnManager::Load( ChunkLoadClass &cload )
 			case CHUNKID_SPAWNER_DATA:
 			{
 				SpawnerClass * spawner = new SpawnerClass();
-				spawner->Load( cload );
+				if (!spawner->Load(cload)) {
+					loaded = false;
+				}
 				break;
 			}
 
@@ -823,8 +886,9 @@ bool	SpawnManager::Load( ChunkLoadClass &cload )
 		}
 		cload.Close_Chunk();
 	}
-
-   return true;
+	loaded = loaded && variables_seen && timer_seen && !cload.Has_Error();
+	if (loaded) AutoSpawnTimer = auto_spawn_timer;
+	return loaded;
 }
 
 /*
@@ -1083,8 +1147,6 @@ SpawnManager::~SpawnManager(void)
 {
 	Remove_All_Spawners();
 }
-
-
 
 
 

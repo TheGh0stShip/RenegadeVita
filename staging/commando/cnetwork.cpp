@@ -45,7 +45,11 @@
 
 #include "specialbuilds.h"
 
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+#include "langmode.h"
+#else
 #include "a31_lanmode_stub.h"
+#endif
 #include "a31_wol_stub.h"
 #include "playermanager.h"
 #include "textdisplay.h"
@@ -91,10 +95,17 @@
 #include "renegade_client_identity.h"
 // Demo playback is outside the Vita runtime boundary.
 #include "a31_serversettings_stub.h"
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+#include "DlgMPConnectionRefused.h"
+#include <WWUI\DialogMgr.h>
+#else
 #include "a31_network_dialog_stub.h"
+#endif
 
 #include "Resource.h"
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 // DialogMgrClass is supplied by a31_network_dialog_stub.h.
+#endif
 #include "ffactory.h"
 #include "realcrc.h"
 
@@ -600,6 +611,11 @@ void cNetwork::Onetime_Init(void)
 	WWMEMLOG(MEM_NETWORK);
    WWDEBUG_SAY(("cNetwork::Onetime_Init\n"));
 
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+	// The Vita LAN route initializes networking lazily and can be re-entered.
+	if (NetworkReceiver != NULL) return;
+#endif
+
 	Compute_Exe_Key();
 
    NetworkReceiver = new CombatNetworkReceiverInstanceClass;
@@ -617,6 +633,9 @@ void cNetwork::Onetime_Shutdown(void)
 
    Set_Receiver(NULL);
 	delete NetworkReceiver;
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+	NetworkReceiver = NULL;
+#endif
 
 #if 0
 	UINT comp_bytes	= cConnection::Get_Total_Compressed_Bytes_Sent();
@@ -772,22 +791,29 @@ enum {
 //-----------------------------------------------------------------------------
 bool cNetwork::Save(ChunkSaveClass & csave)
 {
-	csave.Begin_Chunk(CHUNKID_PLAYERMANAGER);
-	cPlayerManager::Save(csave);
-	csave.End_Chunk();
+	bool saved = csave.Begin_Chunk(CHUNKID_PLAYERMANAGER);
+	saved = cPlayerManager::Save(csave) && saved;
+	saved = csave.End_Chunk() && saved;
 
-	return true;
+	return saved && !csave.Has_Error();
 }
 
 //-----------------------------------------------------------------------------
 bool cNetwork::Load(ChunkLoadClass &cload)
 {
+	bool player_manager_seen = false;
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PLAYERMANAGER:
-				//cPlayerManager::Remove_All();
-				cPlayerManager::Load(cload);
+				if (player_manager_seen) {
+					loaded = false;
+				} else {
+					player_manager_seen = true;
+					//cPlayerManager::Remove_All();
+					loaded = cPlayerManager::Load(cload) && loaded;
+				}
 				break;
 
 			default:
@@ -798,7 +824,7 @@ bool cNetwork::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && player_manager_seen;
 }
 
 //-----------------------------------------------------------------------------

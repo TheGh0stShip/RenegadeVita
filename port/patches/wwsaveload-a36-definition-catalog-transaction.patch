@@ -1,0 +1,148 @@
+--- a/saveload.h
++++ b/saveload.h
+@@ -153,6 +153,7 @@
+ 	static void		Discard_Post_Load_Callbacks (void);
+ 	static void		Report_Load_Failure (void);
+ 	static bool		Has_Reported_Load_Failure (void);
++	static void		Retain_Rejected_Object_Until_Next_Load (PersistClass *object);
+ 	/*
+ 	** Look up the persist factory for a given chunk id
+ 	*/
+@@ -201,6 +202,7 @@
+ 	static PersistFactoryClass *			FactoryListHead;
+ 	static PointerRemapClass				PointerRemapper;
+ 	static SList<PostLoadableClass>		PostLoadList;
++	static SList<PersistClass>			RejectedLoadList;
+ 	static bool							ReportedLoadFailure;
+ 
+ 	/*
+@@ -225,4 +227,3 @@
+ 
+ 
+ #endif //SAVELOAD_H
+-
+--- a/saveload.cpp
++++ b/saveload.cpp
+@@ -53,6 +53,7 @@
+ SaveLoadSubSystemClass *		SaveLoadSystemClass::SubSystemListHead = NULL;
+ PersistFactoryClass *			SaveLoadSystemClass::FactoryListHead = NULL;
+ SList<PostLoadableClass>		SaveLoadSystemClass::PostLoadList;
++SList<PersistClass>			SaveLoadSystemClass::RejectedLoadList;
+ PointerRemapClass					SaveLoadSystemClass::PointerRemapper;
+ bool								SaveLoadSystemClass::ReportedLoadFailure = false;
+ 
+@@ -77,6 +78,13 @@
+ 	WWLOG_PREPARE_TIME_AND_MEMORY("SaveLoadSystemClass::Load");
+ 	PointerRemapper.Reset();
+ 	ReportedLoadFailure = false;
++	// Rejected objects outlive the failed Load return so the caller can unwind
++	// partially loaded owners that may have remapped pointers to them.
++	PersistClass *retired_object = RejectedLoadList.Remove_Head();
++	while (retired_object != NULL) {
++		delete retired_object;
++		retired_object = RejectedLoadList.Remove_Head();
++	}
+ 	WWLOG_INTERMEDIATE("PointerRemapper.Reset()");
+ 	bool ok = true;
+ 	SaveLoadSubSystemClass *sys = NULL;
+@@ -148,6 +156,13 @@
+ 	return ReportedLoadFailure;
+ }
+ 
++void SaveLoadSystemClass::Retain_Rejected_Object_Until_Next_Load (PersistClass *object)
++{
++	if (object != NULL && RejectedLoadList.Find_Node(object) == NULL) {
++		RejectedLoadList.Add_Tail(object);
++	}
++}
++
+ // Nework update macro for post loader.
+ #define UPDATE_NETWORK 											\
+ 	if (network_callback) {                            \
+@@ -355,4 +370,4 @@
+ {
+ 	FORCE_LINK( Twiddler );
+ 	return ;
+-}
+\ No newline at end of file
++}
+--- a/definitionmgr.cpp
++++ b/definitionmgr.cpp
+@@ -803,6 +803,7 @@
+ DefinitionMgrClass::Load_Objects (ChunkLoadClass &cload)
+ {
+ 	bool retval = true;
++	DynamicVectorClass<DefinitionClass *> pending_definitions;
+ 
+ 	while (cload.Open_Chunk ()) {
+ 
+@@ -814,12 +815,7 @@
+ 			
+ 			DefinitionClass *definition = (DefinitionClass *)factory->Load (cload);
+ 			if (definition != NULL) {
+-
+-				//
+-				//	Add this definition to our array
+-				//				
+-				Prepare_Definition_Array ();
+-				_SortedDefinitionArray[_DefinitionCount ++] = definition;				
++				pending_definitions.Add(definition);
+ 			} else {
+ 				retval = false;
+ 			}
+@@ -830,26 +826,39 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	//
+-	//	Sort the definitions
+-	//
+-	if (_DefinitionCount > 0) {
+-		::qsort (_SortedDefinitionArray, _DefinitionCount, sizeof (DefinitionClass *), fnCompareDefinitionsCallback);
++	retval = retval && !cload.Has_Error() && !SaveLoadSystemClass::Has_Reported_Load_Failure();
++	if (pending_definitions.Count() > 1) {
++		::qsort(&pending_definitions[0], pending_definitions.Count(),
++			sizeof(DefinitionClass *), fnCompareDefinitionsCallback);
+ 	}
+-
+-	//
+-	//	Assign a mgr link to each definition
+-	//
+-	for (int index = 0; index < _DefinitionCount; index ++) {
+-		_SortedDefinitionArray[index]->m_DefinitionMgrLink = index;
+-		if (_SortedDefinitionArray[index]->Get_ID() == 0 ||
+-			(index > 0 && _SortedDefinitionArray[index - 1]->Get_ID() ==
+-				_SortedDefinitionArray[index]->Get_ID())) {
++	for (int index = 0; index < pending_definitions.Count(); ++index) {
++		DefinitionClass *definition = pending_definitions[index];
++		if (definition->Get_ID() == 0 ||
++			(index > 0 && pending_definitions[index - 1]->Get_ID() == definition->Get_ID()) ||
++			Find_Definition(definition->Get_ID(), false) != NULL) {
+ 			retval = false;
+ 		}
+ 	}
+ 
+-	return retval && !cload.Has_Error();
++	if (retval) {
++		for (int index = 0; index < pending_definitions.Count(); ++index) {
++			Prepare_Definition_Array();
++			_SortedDefinitionArray[_DefinitionCount++] = pending_definitions[index];
++		}
++		if (_DefinitionCount > 1) {
++			::qsort(_SortedDefinitionArray, _DefinitionCount,
++				sizeof(DefinitionClass *), fnCompareDefinitionsCallback);
++		}
++		for (int index = 0; index < _DefinitionCount; ++index) {
++			_SortedDefinitionArray[index]->m_DefinitionMgrLink = index;
++		}
++	} else {
++		for (int index = 0; index < pending_definitions.Count(); ++index) {
++			SaveLoadSystemClass::Retain_Rejected_Object_Until_Next_Load(pending_definitions[index]);
++		}
++	}
++
++	return retval;
+ }
+ 
+ 
+

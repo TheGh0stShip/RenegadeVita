@@ -1,0 +1,73 @@
+--- a/movie.h
++++ b/movie.h
+@@ -79,6 +79,7 @@
+ 
+ protected:
+ 	void	Play_Movie( const char * filename );
++	void	Stop_Current_Movie( void );
+ 
+ 	CDVerifyClass		CDVerifier;
+ 	StringClass			PendingMovieFilename;
+--- a/movie.cpp
++++ b/movie.cpp
+@@ -83,9 +83,9 @@
+ 
+ void 	MovieGameModeClass::Shutdown()
+ {
++	Stop_Current_Movie();
+ 	BINKMovie::Shutdown();
+ 	IsPending = false;
+-	IsPlaying = false;
+ }
+ 
+ /*
+@@ -126,9 +126,7 @@
+ 			if (BINKMovie::Is_Complete () == false) {
+ 				BINKMovie::Render ();
+ 			} else {
+-				WWAudioClass::Get_Instance ()->Temp_Disable_Audio (false);
+-				BINKMovie::Stop ();
+-				IsPlaying = false;
++				Stop_Current_Movie();
+ 			}
+ 		}
+ 	}
+@@ -220,6 +218,17 @@
+ 	return ;
+ }
+ 
++void MovieGameModeClass::Stop_Current_Movie( void )
++{
++	if (!IsPlaying) return;
++	// Balance the audio state exactly once on completion, skip, deactivation,
++	// frontend flush, or application teardown.
++	WWAudioClass *audio = WWAudioClass::Get_Instance ();
++	if (audio != NULL) audio->Temp_Disable_Audio (false);
++	BINKMovie::Stop ();
++	IsPlaying = false;
++}
++
+ void	MovieGameModeClass::HandleNotification (CDVerifyEvent &event)
+ {
+ 	if ( event.Event() == CDVerifyEvent::VERIFIED ) {
+@@ -278,18 +287,8 @@
+ 		MovieStartupMode, IsPlaying ? 1 : 0, IsPending ? 1 : 0,
+ 		BINKMovie::Is_Complete() ? 1 : 0);
+ 
+-	if (IsPlaying) {
+-		WWAudioClass *audio = WWAudioClass::Get_Instance ();
+-		A4_MOVIE_TRACE("A4 MovieGameMode: stopping current movie audio=%p\n", audio);
+-		if (audio != NULL) {
+-			audio->Temp_Disable_Audio (false);
+-		} else {
+-			A4_MOVIE_TRACE("A4 MovieGameMode: audio singleton unavailable during movie stop\n");
+-		}
+-		BINKMovie::Stop ();
+-		A4_MOVIE_TRACE("A4 MovieGameMode: BINKMovie::Stop returned\n");
+-		IsPlaying = false;
+-	}
++	if (IsPlaying) A4_MOVIE_TRACE("A4 MovieGameMode: stopping current movie\n");
++	Stop_Current_Movie();
+ 
+ 	if ( MovieStartupMode == STARTUP_MOVIE_EA ) {
+ 		MovieStartupMode = STARTUP_MOVIE_INTRO;

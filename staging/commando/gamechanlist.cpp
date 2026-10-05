@@ -28,20 +28,30 @@
 #include "gamechannel.h"
 #include "gamechanlist.h"
 #include "wwdebug.h"
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include <WWOnline\WOLChannel.h>
+#endif
 //
 // Class statics
 //
 SList<cGameChannel> cGameChannelList::ChanList;
 
 //-----------------------------------------------------------------------------
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+void cGameChannelList::Add_Channel(cGameData * p_game_data)
+#else
 void cGameChannelList::Add_Channel(cGameData * p_game_data, const RefPtr<WWOnline::ChannelData>& p_channel)
+#endif
 {
 	WWASSERT(p_game_data != NULL);
 
    cGameChannel * p_game_channel = Find_Channel(p_game_data->Get_Owner());
 	if (p_game_channel == NULL) {
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+		cGameChannel * p_game_channel = new cGameChannel(p_game_data);
+#else
 		cGameChannel * p_game_channel = new cGameChannel(p_game_data, p_channel);
+#endif
 		WWASSERT(p_game_channel != NULL);
 		ChanList.Add_Tail(p_game_channel);
    } else {
@@ -54,7 +64,9 @@ void cGameChannelList::Add_Channel(cGameData * p_game_data, const RefPtr<WWOnlin
 		p_game_channel->Get_Game_Data()->Set_Map_Name(
 			p_game_data->Get_Map_Name());
 
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 		p_game_channel->WolChannel = p_channel;
+#endif
 
 		delete p_game_data;
 	}

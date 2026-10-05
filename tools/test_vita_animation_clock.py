@@ -22,7 +22,7 @@ class AnimationClock(unittest.TestCase):
     def test_native_gameplay_and_pause_have_one_original_clock_owner(self):
         text = (ROOT / 'port/platform/vita/a31_vita_runtime.cpp').read_text()
         pause = text.split('bool Run_Original_Gameplay_Pause_Menu(', 1)[1].split(
-            'bool Try_Latch_Development_M00_Checkpoint()', 1)[0]
+            'bool Try_Latch_Development_Save()', 1)[0]
         self.assertNotIn('WW3D::Sync(', pause)
         self.assertIn('TimeManager::Update();', pause)
         loop = text.split('const uint64_t frame_begin = sceKernelGetProcessTimeWide();', 1)[1].split(

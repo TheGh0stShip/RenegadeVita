@@ -1,0 +1,89 @@
+--- a/conversationmgr.cpp
++++ b/conversationmgr.cpp
+@@ -326,6 +326,8 @@
+ bool
+ ConversationMgrClass::Load_Conversations (ChunkLoadClass &cload, int category_id)
+ {
++	bool loaded = true;
++
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+@@ -336,7 +338,7 @@
+ 				//
+ 				ConversationClass *conversation = new ConversationClass;
+ 				SET_REF_OWNER( conversation );
+-				conversation->Load (cload);
++				const bool conversation_loaded = conversation->Load (cload);
+ 				
+ 				//
+ 				//	Debug check to ensure we've got the correct cateogry
+@@ -344,9 +346,15 @@
+ 				WWASSERT (conversation->Get_Category_ID () == category_id);
+ 				
+ 				//
+-				//	Add this conversation to our list
++				//	Add only a complete conversation from the enclosing category.
+ 				//
+-				Add_Conversation (conversation);
++				const int conversation_category = conversation->Get_Category_ID ();
++				if (conversation_loaded && conversation_category == category_id &&
++					conversation_category >= 0 && conversation_category < CATEGORY_MAX) {
++					Add_Conversation (conversation);
++				} else {
++					loaded = false;
++				}
+ 				REF_PTR_RELEASE (conversation);
+ 			}
+ 			break;
+@@ -355,7 +363,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error ();
+ }
+ 
+ 
+@@ -418,12 +426,17 @@
+ 				//	Create a new object and its state from the chunk
+ 				//
+ 				ActiveConversationClass *active_conversation = new ActiveConversationClass;
+-				loaded = active_conversation->Load (cload) && loaded;
++				const bool active_loaded = active_conversation->Load (cload);
+ 				
+ 				//
+-				//	Add this new active conversation to our list
++				//	Publish only a complete active conversation.
+ 				//
+-				ActiveConversationList.Add (active_conversation);
++				if (active_loaded && !cload.Has_Error ()) {
++					ActiveConversationList.Add (active_conversation);
++				} else {
++					loaded = false;
++					active_conversation->Release_Ref ();
++				}
+ 			}
+ 			break;
+ 
+@@ -1222,6 +1235,11 @@
+ 	if (conversation == NULL) {
+ 		return ;
+ 	}
++	const int category_id = conversation->Get_Category_ID ();
++	WWASSERT (category_id >= 0 && category_id < CATEGORY_MAX);
++	if (category_id < 0 || category_id >= CATEGORY_MAX) {
++		return ;
++	}
+ 
+ 	//
+ 	//	Assign this conversation an ID (if necessary)
+@@ -1239,7 +1257,7 @@
+ 	//	Add a reference to the converation, then add it to our list
+ 	//
+ 	conversation->Add_Ref ();
+-	ConversationList[conversation->Get_Category_ID ()].Add (conversation);
++	ConversationList[category_id].Add (conversation);
+ 	return ;
+ }
+ 

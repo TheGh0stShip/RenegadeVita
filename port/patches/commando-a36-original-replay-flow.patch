@@ -1,0 +1,43 @@
+--- a/dlgloadspgame.cpp
++++ b/dlgloadspgame.cpp
+@@ -546,2 +546,3 @@
+ 		StringClass *filename	= static_cast<StringClass *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index, 2)) );
++		if (filename == NULL) return;
+ 		StringClass save_name(filename->Peek_Buffer(),true);
+@@ -548,1 +549,1 @@
+-#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && RENEGADE_VITA_M00_DEMO
+@@ -575,6 +576,7 @@
+ 			//
+ 			//	End the current game before we load the new one
+ 			//
++#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ 			if (GameModeManager::Find ("Combat")->Is_Suspended ()) {
+ 				GameInitMgrClass::End_Game();
+ 				GameModeManager::Safely_Deactivate ();
+@@ -584,6 +586,7 @@
+ 			//	Load the map
+ 			//
+ 			GameInitMgrClass::Initialize_SP ();
++#endif
+ 			GameInitMgrClass::Start_Game (save_name, -1, 0);
+ 		}
+ 	}
+--- a/dialogtests.cpp
++++ b/dialogtests.cpp
+@@ -53,2 +53,5 @@
+ #endif
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++#include "a4_frontend_lifecycle_boundary.h"
++#endif
+ 
+@@ -1553,2 +1556,5 @@
+ 				WWDEBUG_SAY(( "REPLAY %d\n", difficulty ));
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
++				if (!A4_Frontend_Latch_Replay_Level(ReplayFilename, difficulty)) return;
++#else
+ 
+@@ -1564,2 +1570,3 @@
+ 				CampaignManager::Replay_Level( ReplayFilename, difficulty );
++#endif
+ 			}

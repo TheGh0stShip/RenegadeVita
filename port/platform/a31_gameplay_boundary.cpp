@@ -18,6 +18,10 @@
 #endif
 #if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_GAMEMODE)
 #include "combatgmode.h"
+#include "sbbomanager.h"
+#if !RENEGADE_VITA_M00_DEMO
+#include "radiocommanddisplay.h"
+#endif
 #include "gametype.h"
 #include "vita_runtime_log.h"
 #endif
@@ -428,6 +432,7 @@ public:
 };
 
 A31VitaCombatMiscHandler g_vita_combat_misc_handler;
+bool g_mission_completion_observation_active = false;
 
 }
 
@@ -488,11 +493,11 @@ void A31_Interactive_Apply_Render_Capabilities()
 {
 	PhysicsSceneClass *scene = CombatManager::Get_Scene();
 	if (scene != NULL) {
-		/* This is the original no-projector setting exposed by Commando's
-		** performance controls, not a replacement renderer or scene. */
-		scene->Enable_Static_Projectors(false);
-		scene->Enable_Dynamic_Projectors(false);
-		scene->Set_Shadow_Mode(PhysicsSceneClass::SHADOW_MODE_NONE);
+		/* Original system settings and the scene own projector enablement and
+		** shadow mode. The native material-pass path can render projectors that
+		** already own textures; suppressing both lists here also removed authored
+		** non-render-target effects. Unsupported render-target allocation remains
+		** explicit at DX8Wrapper::Create_Render_Target. */
 		RenegadeVitaOptions::Apply_Performance(*scene);
 	}
 }
@@ -504,6 +509,29 @@ void A31_Interactive_Configure_Vita_Controls()
 	// DirectInput boundary.  The named sensitivity participates in original
 	// Input::Update_Sliders and CCamera integration; it is not a Vita camera.
 	Input::Set_Mouse_Sensitivity(RenegadeVitaInput::DEFAULT_CAMERA_SENSITIVITY);
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE, DIK_T);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_BEGIN_TEAM_MESSAGE, DIK_Y);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_BEGIN_TEAM_MESSAGE, 0);
+	// The original C&C information presenters remain visible only while their
+	// bound key is held.  DirectInput maps Vita multiplayer chords onto these
+	// otherwise-unused logical keys for the complete hold/release lifetime.
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_TEAM_INFO_TOGGLE, DIK_F7);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_TEAM_INFO_TOGGLE, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_BATTLE_INFO_TOGGLE, DIK_F8);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_BATTLE_INFO_TOGGLE, 0);
+	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_SERVER_INFO_TOGGLE, DIK_F9);
+	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_SERVER_INFO_TOGGLE, 0);
+	static const int radio_keys[10] = {
+		DIK_1, DIK_2, DIK_3, DIK_4, DIK_5, DIK_6, DIK_7, DIK_8, DIK_9, DIK_0
+	};
+	for (int command = 0; command < 30; ++command) {
+		const InputFunction function = static_cast<InputFunction>(INPUT_FUNCTION_RADIO_CMD_01 + command);
+		Input::Set_Primary_Key_For_Function(function, radio_keys[command % 10]);
+		Input::Set_Secondary_Key_For_Function(function, 0);
+	}
+#endif
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_QUICKSAVE, DIK_F5);
 	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_QUICKSAVE, 0);
 	Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_CYCLE_POG, DIK_BACK);
@@ -571,8 +599,17 @@ void A31_Interactive_Configure_Vita_Controls()
 
 void A31_Interactive_Begin_Mission_Completion_Observation()
 {
+	g_mission_completion_observation_active = true;
 	g_mission_completion_latch.Reset();
 	CombatManager::Set_Combat_Misc_Handler(&g_vita_combat_misc_handler);
+}
+
+bool A31_Interactive_Restart_Mission_Completion_Observation()
+{
+	if (!g_mission_completion_observation_active) return false;
+	g_mission_completion_latch.Reset();
+	CombatManager::Set_Combat_Misc_Handler(&g_vita_combat_misc_handler);
+	return true;
 }
 
 A31MissionCompletionState A31_Interactive_Get_Mission_Completion_State()
@@ -582,6 +619,7 @@ A31MissionCompletionState A31_Interactive_Get_Mission_Completion_State()
 
 void A31_Interactive_End_Mission_Completion_Observation()
 {
+	g_mission_completion_observation_active = false;
 	CombatManager::Set_Combat_Misc_Handler(NULL);
 }
 
@@ -712,6 +750,12 @@ void A31_Interactive_Run_Simulation_Frame()
 		return;
 	}
 #if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_GAMEMODE)
+#if !RENEGADE_VITA_M00_DEMO
+	CombatGameModeClass::Process_Radio_Command_Input();
+	CombatGameModeClass::Process_Chat_Input();
+	CombatGameModeClass::Process_Player_List_Input();
+	CombatGameModeClass::Process_Multiplayer_Info_Input();
+#endif
 	if (IS_MISSION && Input::Get_State(INPUT_FUNCTION_QUICKSAVE)) {
 		Vita_Append_A22_Runtime_Breadcrumb("save", "original quicksave requested; file and reload success unassessed");
 		CombatGameModeClass::Quick_Save();
@@ -735,6 +779,29 @@ void A31_Interactive_Run_Simulation_Frame()
 	const uint64_t network_end_us = sceKernelGetProcessTimeWide();
 #endif
 	CombatManager::Think();
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_GAMEMODE) && !RENEGADE_VITA_M00_DEMO
+	if (cNetwork::I_Am_Server()) {
+		// Restore the original server bandwidth-budget owner with the same
+		// network/Combat intervals already measured around these calls.
+		cSbboManager::Increment_Accum_Time_S_Net_Update(
+			static_cast<float>(network_end_us - control_end_us) / 1000000.0f);
+		cSbboManager::Increment_Accum_Time_S_Combat_Think(
+			static_cast<float>(sceKernelGetProcessTimeWide() - network_end_us) /
+			1000000.0f);
+		cSbboManager::Think();
+	}
+	{
+		// Keep original multiplayer name/list geometry in gameplay HUD space.
+		// Original CombatGameMode and the native frame share these owners.
+		A31ScopedGameplayHUDRender2DResolution overlay_update_resolution;
+		CombatGameModeClass::Process_Overlay_Update();
+	}
+#endif
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_GAMEMODE) && !RENEGADE_VITA_M00_DEMO
+	// Consume the original campaign/checkpoint request after simulation,
+	// matching CombatGameModeClass::Think rather than inventing a save owner.
+	CombatGameModeClass::Process_Autosave_Request();
+#endif
 #if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
 	DialogMgrClass::On_Frame_Update();
 #endif
@@ -928,6 +995,16 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present)
 		CombatManager::Render();
 		trace.combat_render_called = true;
 		A31ScopedGameplayHUDRender2DResolution hud_render_resolution;
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_GAMEMODE) && !RENEGADE_VITA_M00_DEMO
+		// Preserve original names, player/team lists and game-limit presentation.
+		// This native entry also serves loading/prewarm frames. Match the
+		// original Combat renderer's active-mode guard for its overlays while
+		// leaving the separate world prewarm available.
+		GameModeClass *combat_mode = GameModeManager::Find("Combat");
+		if (combat_mode != NULL && combat_mode->Is_Active()) {
+			CombatGameModeClass::Render_Overlays();
+		}
+#endif
 		MessageWindowClass *message_window =
 			CombatManager::Get_Message_Window();
 		trace.message_window_available = message_window != NULL;
@@ -937,6 +1014,9 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present)
 		}
 		ObjectiveManager::Render_Viewer();
 		trace.objective_viewer_render_called = true;
+#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_GAMEMODE) && !RENEGADE_VITA_M00_DEMO
+		RadioCommandDisplayClass::Render();
+#endif
 #if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
 		DialogMgrClass::Render();
 #endif
@@ -1461,6 +1541,19 @@ FontCharsClass *StyleMgrClass::Fonts[StyleMgrClass::FONT_MAX] = {};
 
 #if !defined(RENEGADE_HOST_ABI_TEST)
 
+namespace {
+IDirect3DSurface8 *g_current_render_target_surface = NULL;
+IDirect3DTexture8 *g_current_render_target_texture = NULL;
+}
+
+void RenegadeVita_Release_DX8_Render_Target()
+{
+	// WW3D logical shutdown can run after an interrupted projector pass. Restore
+	// the process-owned default framebuffer before releasing the retained DX8
+	// surface/texture pair so a later logical session cannot inherit either.
+	DX8Wrapper::Set_Render_Target(static_cast<IDirect3DSurface8 *>(NULL));
+}
+
 unsigned int DX8Wrapper::Convert_Color_Clamp(const Vector4 &color)
 {
 	Vector4 clamped(color);
@@ -1476,18 +1569,70 @@ unsigned int DX8Wrapper::Convert_Color_Clamp(const Vector4 &color)
 
 void DX8Wrapper::Set_Render_Target(TextureClass *texture)
 {
-	if (texture != NULL) {
-		RenegadeVitaRenderer::Reject_Indexed_Submission(
-			"non-default TextureClass render target is deferred", 0U);
+	if (texture == NULL) {
+		Set_Render_Target(static_cast<IDirect3DSurface8 *>(NULL));
+		return;
 	}
+	IDirect3DSurface8 *surface = texture->Get_D3D_Surface_Level();
+	if (surface == NULL) {
+		RenegadeVitaRenderer::Reject_Indexed_Submission(
+			"render-target texture has no level-zero surface", 0U);
+		return;
+	}
+	Set_Render_Target(surface);
+	surface->Release();
 }
 
 void DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *surface, bool)
 {
-	if (surface != NULL) {
-		RenegadeVitaRenderer::Reject_Indexed_Submission(
-			"non-default surface render target is deferred", 0U);
+	if (surface == NULL) {
+		if (RenegadeVitaRenderer::Restore_Default_Render_Target()) {
+			int width = 0;
+			int height = 0;
+			int bits = 0;
+			bool windowed = false;
+			Get_Device_Resolution(width, height, bits, windowed);
+			RenegadeVitaRenderer::Apply_Viewport(0U, 0U,
+				static_cast<uint32_t>(width), static_cast<uint32_t>(height),
+				0.0F, 1.0F, static_cast<uint32_t>(width),
+				static_cast<uint32_t>(height));
+		}
+		if (g_current_render_target_surface != NULL) {
+			g_current_render_target_surface->Release();
+			g_current_render_target_surface = NULL;
+		}
+		if (g_current_render_target_texture != NULL) {
+			g_current_render_target_texture->Release();
+			g_current_render_target_texture = NULL;
+		}
+		IsRenderToTexture = false;
+		return;
 	}
+	IDirect3DTexture8 *texture = surface->Get_Texture_Owner();
+	if (texture == NULL || surface->Get_Texture_Owner_Level() != 0U ||
+		!texture->RenderTarget || texture->NativeFramebuffer == 0U) {
+		RenegadeVitaRenderer::Reject_Indexed_Submission(
+			"surface is not a native level-zero render target", 0U);
+		return;
+	}
+	if (surface == g_current_render_target_surface) return;
+	if (!RenegadeVitaRenderer::Bind_Offscreen_Render_Target(
+		texture->NativeFramebuffer, texture->Width, texture->Height)) {
+		RenegadeVitaRenderer::Reject_Indexed_Submission(
+			"native render-target bind failed", 0U);
+		return;
+	}
+	surface->AddRef();
+	texture->AddRef();
+	if (g_current_render_target_surface != NULL) {
+		g_current_render_target_surface->Release();
+	}
+	if (g_current_render_target_texture != NULL) {
+		g_current_render_target_texture->Release();
+	}
+	g_current_render_target_surface = surface;
+	g_current_render_target_texture = texture;
+	IsRenderToTexture = true;
 }
 
 #include "original_dx8_light_environment.inc"

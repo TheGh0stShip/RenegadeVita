@@ -1,0 +1,30 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -130,6 +130,7 @@
+ extern bool g_is_loading;
+ bool g_b_core_restart;//TSS081401
+ bool g_client_quit = false;
++static bool CoreShutdownComplete = true;
+ 
+ AudibleSoundClass	*	CombatGameModeClass::BackgroundMusic	= NULL;
+ int						CombatGameModeClass::IsHudShown			= true;
+@@ -835,6 +836,9 @@
+ */
+ void CombatGameModeClass::Load_Level( void )
+ {
++	// A failed load still owns a partially initialized core which must be
++	// released exactly once by the normal shutdown path.
++	CoreShutdownComplete = false;
+ #if defined(__vita__)
+ 	A35_Level_Load_Reset_Failure();
+ #endif
+@@ -1111,6 +1115,8 @@
+ void 	CombatGameModeClass::Core_Shutdown()
+ {
+ 	Debug_Say(("CombatGameModeClass::Core_Shutdown\n"));
++	if (CoreShutdownComplete) return;
++	CoreShutdownComplete = true;
+ 
+ 	//
+ 	// Switch to the in-game sound page to ensure all those sounds get freed
+

@@ -1,0 +1,40 @@
+--- a/campaign.cpp
++++ b/campaign.cpp
+@@ -126,0 +127,33 @@
++bool CampaignManager::Is_Catalog_Ready(void)
++{
++	// Campaign order remains data-owned. Admit only the directive forms that
++	// Continue can parse; malformed data must not reach progression indexing.
++	if (CampaignFlowDescriptions.Count() <= 0 || BackdropDescriptions.Count() <= 0) {
++		return false;
++	}
++	for (int index = 0; index < CampaignFlowDescriptions.Count(); ++index) {
++		const char *description = CampaignFlowDescriptions[index];
++		if (description == NULL || description[0] == '\0') return false;
++		if (::strncmp(description, "Message ", 8) == 0) {
++			if (description[8] == '\0') return false;
++		} else if (::strncmp(description, "Score", 5) == 0) {
++			// Continue intentionally accepts the released Score prefix.
++		} else if (::strncmp(description, "Level ", 6) == 0) {
++			char map[96] = {};
++			char trailing = '\0';
++			if (::sscanf(description + 6, "%95s %c", map, &trailing) != 1 ||
++				map[0] == '\0' || ::strchr(map, '.') == NULL) return false;
++		} else if (::strncmp(description, "Movie ", 6) == 0) {
++			char movie[96] = {};
++			char unlock[96] = {};
++			if (::sscanf(description + 6, "%95s %95s", movie, unlock) != 2 ||
++				movie[0] == '\0' || unlock[0] == '\0') return false;
++		} else {
++			return false;
++		}
++	}
++	for (int index = 0; index < BackdropDescriptions.Count(); ++index) {
++		if (BackdropDescriptions[index].Lines.Count() <= 0) return false;
++	}
++	return true;
++}
+--- a/campaign.h
++++ b/campaign.h
+@@ -55,0 +56,1 @@
++	static	bool	Is_Catalog_Ready( void );

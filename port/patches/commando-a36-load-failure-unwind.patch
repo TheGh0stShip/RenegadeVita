@@ -1,0 +1,20 @@
+--- a/combatgmode.h
++++ b/combatgmode.h
+@@ -79,2 +79,3 @@
+ 	static	void	Vita_Begin_Level_Load(void *loading_screen, bool update_network);
++	static	void	Vita_Abort_Level_Load(void);
+ 	static	void	Vita_Finalize_Loaded_Level(void *loading_screen, bool update_network);
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -708,1 +708,11 @@
++void CombatGameModeClass::Vita_Abort_Level_Load(void)
++{
++	// No loader remains active; any queued post-load references are resolved.
++	// Release loading-only gates before original partial-level teardown.
++	g_is_loading = false;
++	if (cNetwork::PServerConnection) {
++		cNetwork::PServerConnection->Allow_Packet_Processing(true);
++	}
++}
++
+ void CombatGameModeClass::Vita_Finalize_Loaded_Level(void *loading_screen,

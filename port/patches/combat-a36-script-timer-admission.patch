@@ -1,0 +1,119 @@
+--- a/scriptablegameobj.cpp
++++ b/scriptablegameobj.cpp
+@@ -189,23 +189,36 @@
+ 
+ bool	GameObjObserverTimerClass::Load( ChunkLoadClass & cload )
+ {
+-	cload.Open_Chunk();
+-	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_TIMER_VARIABLES );
+-
+-	while (cload.Open_Micro_Chunk()) {
+-		switch(cload.Cur_Micro_Chunk_ID()) {
+-			READ_MICRO_CHUNK( cload, MICROCHUNKID_REMAINING_TIME, RemainingTime );
+-			READ_MICRO_CHUNK( cload, MICROCHUNKID_TIMER_ID, TimerID );
+-			READ_MICRO_CHUNK( cload, MICROCHUNKID_OBSERVER_ID, ObserverID );
+-
+-			default:
+-				Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Micro_Chunk_ID(),__FILE__,__LINE__));
+-				break;
++	bool variables_seen = false;
++	bool loaded = true;
++	uint32 loaded_values = 0;
++	while (cload.Open_Chunk()) {
++		if (cload.Cur_Chunk_ID() != CHUNKID_TIMER_VARIABLES || variables_seen) {
++			loaded = false;
++		} else {
++			variables_seen = true;
++			while (cload.Open_Micro_Chunk()) {
++				switch(cload.Cur_Micro_Chunk_ID()) {
++#define READ_REQUIRED_OBSERVER_TIMER_VALUE(id, value, bit) \
++					case (id): \
++						if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
++							cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
++						else loaded_values |= (bit); \
++						break
++					READ_REQUIRED_OBSERVER_TIMER_VALUE(MICROCHUNKID_REMAINING_TIME, RemainingTime, 1U << 0);
++					READ_REQUIRED_OBSERVER_TIMER_VALUE(MICROCHUNKID_TIMER_ID, TimerID, 1U << 1);
++					READ_REQUIRED_OBSERVER_TIMER_VALUE(MICROCHUNKID_OBSERVER_ID, ObserverID, 1U << 2);
++#undef READ_REQUIRED_OBSERVER_TIMER_VALUE
++					default:
++						loaded = false;
++						break;
++				}
++				cload.Close_Micro_Chunk();
++			}
+ 		}
+-		cload.Close_Micro_Chunk();
++		cload.Close_Chunk();
+ 	}
+-	cload.Close_Chunk();
+-	return true;
++	return loaded && variables_seen && loaded_values == 7U && ObserverID > 0 && !cload.Has_Error();
+ }
+ 
+ 
+@@ -249,18 +262,34 @@
+ 
+ bool	GameObjCustomTimerClass::Load( ChunkLoadClass & cload )
+ {
++	bool variables_seen = false;
++	bool sender_seen = false;
++	bool loaded = true;
++	uint32 loaded_values = 0;
+ 	while (cload.Open_Chunk()) {
+ 		switch(cload.Cur_Chunk_ID()) {
+ 
+ 			case CHUNKID_TIMER_VARIABLES:
++				if (variables_seen) {
++					loaded = false;
++					break;
++				}
++				variables_seen = true;
+ 				while (cload.Open_Micro_Chunk()) {
+ 					switch(cload.Cur_Micro_Chunk_ID()) {
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_REMAINING_TIME, RemainingTime );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_TYPE, Type );
+-						READ_MICRO_CHUNK( cload, MICROCHUNKID_PARAM, Param );
++#define READ_REQUIRED_CUSTOM_TIMER_VALUE(id, value, bit) \
++						case (id): \
++							if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
++								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
++							else loaded_values |= (bit); \
++							break
++						READ_REQUIRED_CUSTOM_TIMER_VALUE(MICROCHUNKID_REMAINING_TIME, RemainingTime, 1U << 0);
++						READ_REQUIRED_CUSTOM_TIMER_VALUE(MICROCHUNKID_TYPE, Type, 1U << 1);
++						READ_REQUIRED_CUSTOM_TIMER_VALUE(MICROCHUNKID_PARAM, Param, 1U << 2);
++#undef READ_REQUIRED_CUSTOM_TIMER_VALUE
+ 
+ 						default:
+-							Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Micro_Chunk_ID(),__FILE__,__LINE__));
++							loaded = false;
+ 							break;
+ 					}
+ 					cload.Close_Micro_Chunk();
+@@ -268,18 +297,22 @@
+ 				break;
+ 
+ 			case CHUNKID_TIMER_SENDER:
+-				Sender.Load( cload );
++				if (sender_seen) loaded = false;
++				else {
++					sender_seen = true;
++					loaded = Sender.Load(cload) && loaded;
++				}
+ 				break;
+ 
+ 			default:
+-				Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
++				loaded = false;
+ 				break;
+ 
+ 		}
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && variables_seen && loaded_values == 7U && !cload.Has_Error();
+ }
+ 
+ 

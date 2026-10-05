@@ -1,0 +1,16 @@
+--- a/campaign.cpp
++++ b/campaign.cpp
+@@ -87,6 +87,13 @@
+ */
+ void	CampaignManager::Init( void )
+ {
++	// Init can be reached again after frontend recovery without a process
++	// restart. These catalogs are process globals, so rebuilding them on top
++	// of an earlier generation would duplicate the retail campaign sequence
++	// and its backdrop records. Treat each Init as a fresh parse while leaving
++	// campaign.ini as the sole owner of ordering and content.
++	CampaignFlowDescriptions.Clear();
++	BackdropDescriptions.Clear();
+ 	State = NOT_IN_CAMPAIGN_STATE;
+ 	BackdropIndex = 0;
+ 

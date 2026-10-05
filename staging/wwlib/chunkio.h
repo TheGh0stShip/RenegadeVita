@@ -153,6 +153,8 @@ public:
 	uint32				Write(const IOVector3Struct & v);
 	uint32				Write(const IOVector4Struct & v);
 	uint32				Write(const IOQuaternionStruct & q);
+	bool					Has_Error(void) const { return Error; }
+	void					Report_Error(void) { Error = true; }
 
 private:
 
@@ -169,6 +171,7 @@ private:
 	bool					InMicroChunk;
 	int					MicroChunkPosition;
 	MicroChunkHeader	MCHeader;
+	bool					Error;
 };
 
 
@@ -212,6 +215,8 @@ public:
 	// Sneak peek at the next chunk that will be opened.  Beware, if you need
 	// this, then you are probably hacking so be careful!
 	bool					Peek_Next_Chunk(uint32 * set_id,uint32 * set_size);
+	bool					Has_Error(void) const { return Error; }
+	void					Report_Error(void) { Error = true; }
 
 private:
 
@@ -228,6 +233,7 @@ private:
 	bool					InMicroChunk;
 	int					MicroChunkPosition;
 	MicroChunkHeader	MCHeader;
+	bool					Error;
 
 };
 

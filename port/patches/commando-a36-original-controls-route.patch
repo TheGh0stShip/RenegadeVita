@@ -1,0 +1,165 @@
+--- a/renegadedialogmgr.cpp
++++ b/renegadedialogmgr.cpp
+@@ -58,6 +58,9 @@
+ #if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+ #include "dlgmovieoptions.h"
+ #endif
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
++#include "dlgcontrols.h"
++#endif
+ #include "inputctrl.h"
+ #include "translatedb.h"
+ #include "string_ids.h"
+@@ -127,7 +130,7 @@
+ 	NULL,
+ 	NULL,
+ 	NULL,
+-	NULL,
++	new DialogFactoryClass<ControlsMenuClass>,
+ 	NULL,
+ 	NULL,
+ 	NULL,
+@@ -279,6 +282,8 @@
+ 		FactoryArray[IDC_MENU_START_CAMPAIGN_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<DifficultyMenuClass>;
+ 	if (FactoryArray[IDC_MENU_LOAD_SP_GAME_BUTTON - DIALOG_LINK_FIRST] == NULL)
+ 		FactoryArray[IDC_MENU_LOAD_SP_GAME_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<LoadSPGameMenuClass>;
++	if (FactoryArray[IDC_MENU_CONTROLS_BUTTON - DIALOG_LINK_FIRST] == NULL)
++		FactoryArray[IDC_MENU_CONTROLS_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<ControlsMenuClass>;
+ 	if (FactoryArray[IDC_MENU_MOVIES_BUTTON - DIALOG_LINK_FIRST] == NULL)
+ 		FactoryArray[IDC_MENU_MOVIES_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<MovieOptionsMenuClass>;
+ 	if (FactoryArray[IDC_MENU_CREDITS_BUTTON - DIALOG_LINK_FIRST] == NULL)
+--- a/dialogtests.cpp
++++ b/dialogtests.cpp
+@@ -117,7 +117,6 @@
+ OptionsMenuClass::On_Init_Dialog (void)
+ {
+ 	const int unsupported_options[] = {
+-		IDC_MENU_CONTROLS_BUTTON,
+ 		IDC_MENU_MULTIPLAY_OPTS_BUTTON
+ 	};
+ 	for (unsigned index = 0; index < sizeof(unsupported_options) / sizeof(unsupported_options[0]); ++index) {
+--- a/dlgcontrols.cpp
++++ b/dlgcontrols.cpp
+@@ -42,6 +42,9 @@
+ #include "tabctrl.h"
+ #include "dialogresource.h"
+ #include "inputconfigmgr.h"
++#if defined(RENEGADE_VITA_PORT)
++#include "a31_interactive_runtime_policy.h"
++#endif
+ 
+ 
+ ////////////////////////////////////////////////////////////////
+@@ -118,6 +121,10 @@
+ 
+ 		case IDC_DEFAULTS_BUTTON:
+ 			InputConfigMgrClass::Load_Default_Configuration ();
++#if defined(RENEGADE_VITA_PORT)
++			A31_Interactive_Configure_Vita_Controls();
++			Reload();
++#endif
+ 			break;
+ 
+ 		case IDC_SAVELOAD_BUTTON:
+--- a/dlgcontrolsaveload.cpp
++++ b/dlgcontrolsaveload.cpp
+@@ -42,6 +42,7 @@
+ #include "inputconfigmgr.h"
+ #include "string_ids.h"
+ #include "translatedb.h"
++#include "renegade_ui_pointer_tokens.h"
+ 
+ ////////////////////////////////////////////////////////////////
+ //	Local constants
+@@ -163,7 +164,8 @@
+ 		//
+ 		//	Get the configuration object associated with this entry
+ 		//
+-		InputConfigClass *config = (InputConfigClass *)list_ctrl->Get_Entry_Data (curr_sel, 0);
++		InputConfigClass *config = static_cast<InputConfigClass *>(
++			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (curr_sel, 0)));
+ 		if (config != NULL) {
+ 
+ 			//
+@@ -218,7 +220,8 @@
+ 					//
+ 					//	Get the configuration object associated with this entry
+ 					//
+-					InputConfigClass *config = (InputConfigClass *)list_ctrl->Get_Entry_Data (curr_sel, 0);
++					InputConfigClass *config = static_cast<InputConfigClass *>(
++						Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (curr_sel, 0)));
+ 					if (config != NULL) {
+ 						InputConfigMgrClass::Delete_Configuration (config->Get_Filename ());
+ 						list_ctrl->Delete_Entry (curr_sel);
+@@ -263,7 +266,8 @@
+ 		//
+ 		//	Get the configuration object associated with this entry
+ 		//
+-		InputConfigClass *config = (InputConfigClass *)list_ctrl->Get_Entry_Data (curr_sel, 0);
++		InputConfigClass *config = static_cast<InputConfigClass *>(
++			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (curr_sel, 0)));
+ 		if (config != NULL) {
+ 			
+ 			//
+@@ -300,7 +304,8 @@
+ 		//
+ 		//	Get the configuration object associated with this entry
+ 		//
+-		InputConfigClass *config = (InputConfigClass *)list_ctrl->Get_Entry_Data (curr_sel, 0);
++		InputConfigClass *config = static_cast<InputConfigClass *>(
++			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (curr_sel, 0)));
+ 		if (config != NULL) {
+ 			
+ 			//
+@@ -393,8 +398,9 @@
+ 	//
+ 	//	Remove the data we associated with this entry
+ 	//
+-	InputConfigClass *config = (InputConfigClass *)list_ctrl->Get_Entry_Data (item_index, 0);
+-	list_ctrl->Set_Entry_Data (item_index, 0, NULL);
++	InputConfigClass *config = static_cast<InputConfigClass *>(
++		Renegade_Ui_Take_Pointer_Token(list_ctrl->Get_Entry_Data (item_index, 0)));
++	list_ctrl->Set_Entry_Data (item_index, 0, 0U);
+ 
+ 	//
+ 	//	Free the config object
+@@ -430,7 +436,7 @@
+ 		//	Make a copy of the config object and store it with the entry
+ 		//
+ 		InputConfigClass *local_copy = new InputConfigClass (config);
+-		list_ctrl->Set_Entry_Data (item_index, 0, (DWORD)local_copy);
++		list_ctrl->Set_Entry_Data (item_index, 0, Renegade_Ui_Pointer_To_Token(local_copy));
+ 
+ 		//
+ 		//	Change the color of this configuration if the user cannot edit it
+@@ -463,7 +469,8 @@
+ 	//
+ 	//	Remove the data we associated with this entry
+ 	//
+-	InputConfigClass *config = (InputConfigClass *)list_ctrl->Get_Entry_Data (new_index, 0);
++	InputConfigClass *config = static_cast<InputConfigClass *>(
++		Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (new_index, 0)));
+ 	if (config != NULL) {
+ 		
+ 		//
+@@ -509,14 +516,16 @@
+ {
+ 	int retval = 0;
+ 
+-	if (list_ctrl->Get_Entry_Data (item_index1, 0) == NULL) {
++	if (list_ctrl->Get_Entry_Data (item_index1, 0) == 0U) {
+ 		retval = 1;
+-	} else if (list_ctrl->Get_Entry_Data (item_index2, 0) == NULL) {
++	} else if (list_ctrl->Get_Entry_Data (item_index2, 0) == 0U) {
+ 		retval = -1;
+ 	} else {
+ 
+-		InputConfigClass *config1 = (InputConfigClass *)list_ctrl->Get_Entry_Data (item_index1, 0);
+-		InputConfigClass *config2 = (InputConfigClass *)list_ctrl->Get_Entry_Data (item_index2, 0);
++		InputConfigClass *config1 = static_cast<InputConfigClass *>(
++			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index1, 0)));
++		InputConfigClass *config2 = static_cast<InputConfigClass *>(
++			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index2, 0)));
+ 
+ 		//
+ 		//	Sort based on the type of configuration

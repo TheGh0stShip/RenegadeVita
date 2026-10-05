@@ -29,3 +29,4 @@
 +#include "render2dsentence.h"
  #include "wwmemlog.h"
  #include "consolemode.h"
+ 

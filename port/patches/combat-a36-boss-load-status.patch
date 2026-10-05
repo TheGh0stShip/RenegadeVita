@@ -1,0 +1,226 @@
+--- a/mendozabossgameobj.cpp
++++ b/mendozabossgameobj.cpp
+@@ -593,59 +593,60 @@
+ bool
+ MendozaBossGameObjClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				SoldierGameObj::Load (cload);
++				if (!SoldierGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_OVERALL_STATE_MACHINE:
+-				OverallState.Load (cload);
++				if (!OverallState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_MENDOZA_STATE_MACHINE:
+-				MendozaState.Load (cload);
++				if (!MendozaState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_SYDNEY_STATE_MACHINE:
+-				SydneyState.Load (cload);
++				if (!SydneyState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_MOVE_STATE_MACHINE:
+-				MoveState.Load (cload);
++				if (!MoveState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_HEAD_STATE_MACHINE:
+-				HeadState.Load (cload);
++				if (!HeadState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_CAMERA_STATE_MACHINE:
+-				CameraState.Load (cload);
++				if (!CameraState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_ATTACK_STATE_MACHINE:
+-				AttackState.Load (cload);		
++				if (!AttackState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			//
+ 			//	Load the state machines from their chunk
+ 			//
+ 			case CHUNKID_STATE_MACHINES:
+-				OverallState.Load (cload);
+-				MendozaState.Load (cload);
+-				SydneyState.Load (cload);
+-				MoveState.Load (cload);
+-				HeadState.Load (cload);
+-				CameraState.Load (cload);
+-				AttackState.Load (cload);		
++				if (!OverallState.Load(cload)) loaded = false;
++				if (!MendozaState.Load(cload)) loaded = false;
++				if (!SydneyState.Load(cload)) loaded = false;
++				if (!MoveState.Load(cload)) loaded = false;
++				if (!HeadState.Load(cload)) loaded = false;
++				if (!CameraState.Load(cload)) loaded = false;
++				if (!AttackState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			//
+ 			//	Load the camera spline
+ 			//
+ 			case CHUNKID_CAMERA_SPLINE:
+-				CameraSpline.Load (cload);
++				if (!CameraSpline.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
+@@ -662,7 +663,7 @@
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback (this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/sakurabossgameobj.cpp
++++ b/sakurabossgameobj.cpp
+@@ -652,37 +652,39 @@
+ bool
+ SakuraBossGameObj::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				VehicleGameObj::Load (cload);
++				if (!VehicleGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_ROCKETL_DEFENSE_OBJ:
+-				LeftRocketDefenseObject.Load (cload);
++				if (!LeftRocketDefenseObject.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_ROCKETR_DEFENSE_OBJ:
+-				RightRocketDefenseObject.Load (cload);
++				if (!RightRocketDefenseObject.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_LAST_DAMAGER:
+-				LastDamager.Load (cload);
++				if (!LastDamager.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_CURR_TARGET:
+-				CurrentTarget.Load (cload);
++				if (!CurrentTarget.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_PILOT:
+-				Pilot.Load (cload);
++				if (!Pilot.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_PATH:
+ 			{
++				delete Path;
+ 				Path = new PathClass;
+-				Path->Load (cload);
++				if (Path == NULL || !Path->Load(cload)) loaded = false;
+ 			}
+ 			break;
+ 
+@@ -700,7 +702,7 @@
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback (this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/raveshawbossgameobj.cpp
++++ b/raveshawbossgameobj.cpp
+@@ -754,55 +754,56 @@
+ bool
+ RaveshawBossGameObjClass::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				SoldierGameObj::Load (cload);
++				if (!SoldierGameObj::Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_STEALTH_SOLDIER:
+-				StealthSoldier.Load (cload);
++				if (!StealthSoldier.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_TIBERIUM_EFFECT:
+-				TiberiumEffect->Load (cload);
++				if (TiberiumEffect == NULL || !TiberiumEffect->Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_OVERALL_STATE_MACHINE:
+-				OverallState.Load (cload);
++				if (!OverallState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_RAVESHAW_STATE_MACHINE:
+-				RaveshawState.Load (cload);
++				if (!RaveshawState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_ENGORGED_STATE_MACHINE:
+-				EngorgedState.Load (cload);
++				if (!EngorgedState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_MOVE_STATE_MACHINE:
+-				MoveState.Load (cload);
++				if (!MoveState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_STEALTH_SOLDIER_STATE_MACHINE:
+-				StealthSoldierState.Load (cload);
++				if (!StealthSoldierState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_HAVOC_STATE_MACHINE:
+-				HavocState.Load (cload);
++				if (!HavocState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_THROWN_OBJ_STATE_MACHINE:
+-				ThrownObjectState.Load (cload);
++				if (!ThrownObjectState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_JUMP_STATE_MACHINE:
+-				JumpState.Load (cload);		
++				if (!JumpState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_LIGHTNING_ROD_STATE_MACHINE:
+-				LightningRodState.Load (cload);		
++				if (!LightningRodState.Load(cload)) loaded = false;
+ 				break;
+ 
+ 			case CHUNKID_VARIABLES:
+@@ -819,7 +820,7 @@
+ 	}
+ 
+ 	SaveLoadSystemClass::Register_Post_Load_Callback (this);
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 

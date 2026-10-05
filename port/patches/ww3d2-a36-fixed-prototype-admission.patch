@@ -1,0 +1,43 @@
+--- a/boxrobj.cpp
++++ b/boxrobj.cpp
+@@ -104,6 +104,7 @@
+ #include "sortingrenderer.h"
+ #include "visrasterizer.h"
+ #include "meshgeometry.h"
++#include <string.h>
+ #if defined(RENEGADE_VITA_PORT)
+ #include "ww3d_vita_renderer.h"
+ #endif
+@@ -1365,7 +1366,13 @@
+ PrototypeClass * BoxLoaderClass::Load_W3D(ChunkLoadClass & cload)
+ {
+ 	W3dBoxStruct box;
+-	cload.Read(&box,sizeof(box));
++	if (cload.Cur_Chunk_Length() != sizeof(box) ||
++		cload.Read(&box, sizeof(box)) != sizeof(box) ||
++		cload.Has_Error() ||
++		::memchr(box.Name, '\0', sizeof(box.Name)) == NULL ||
++		box.Name[0] == '\0') {
++		return NULL;
++	}
+ 	return new BoxPrototypeClass(box);
+ }
+ 
+--- a/nullrobj.cpp
++++ b/nullrobj.cpp
+@@ -113,6 +113,12 @@
+ PrototypeClass * NullLoaderClass::Load_W3D (ChunkLoadClass &cload)
+ {
+ 	W3dNullObjectStruct null;
+-	cload.Read(&null,sizeof(null));
++	if (cload.Cur_Chunk_Length() != sizeof(null) ||
++		cload.Read(&null, sizeof(null)) != sizeof(null) ||
++		cload.Has_Error() ||
++		::memchr(null.Name, '\0', sizeof(null.Name)) == NULL ||
++		null.Name[0] == '\0') {
++		return NULL;
++	}
+ 	return new NullPrototypeClass(null);
+-}
+\ No newline at end of file
++}

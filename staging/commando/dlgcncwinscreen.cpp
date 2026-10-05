@@ -39,6 +39,9 @@
 #include "rendobj.h"
 #include "pscene.h"
 #include "combat.h"
+#include "soldier.h"
+#include "playermanager.h"
+#include "timemgr.h"
 #include "gamedata.h"
 #include "playertype.h"
 #include "assetmgr.h"
@@ -46,14 +49,16 @@
 #include "menubackdrop.h"
 #include "listctrl.h"
 #include "gamemode.h"
-#include "wolgmode.h"
+#include "renegade_optional_network_modes.h"
 #include "translatedb.h"
 #include "string_ids.h"
 #include "cnetwork.h"
 #include "gameinitmgr.h"
-#include "gamespyadmin.h"
+#include "renegade_network_provider.h"
 #include "specialbuilds.h"
+#ifdef MULTIPLAYERDEMO
 #include "dialogtests.h"
+#endif
 #include "dialogmgr.h"
 
 
@@ -108,9 +113,8 @@ CNCWinScreenMenuClass::CNCWinScreenMenuClass (void)	:
 	//
 	// Should we show ladder points?
 	//
-	WWASSERT(GameModeManager::Find("WOL") != NULL);
 	WWASSERT(The_Game() != NULL);
-	if (GameModeManager::Find("WOL")->Is_Active() && The_Game()->IsLaddered.Is_True()) {
+	if (Renegade_Network_Mode_Active("WOL") && The_Game()->IsLaddered.Is_True()) {
 		ShowLadderPoints = true;
 	}
 
@@ -393,7 +397,7 @@ CNCWinScreenMenuClass::Render (void)
 	//
 	//	Don't render if we aren't the active menu
 	//
-	if (ActiveMenu == this) {
+	if (ActiveMenu == this && BackDrop != NULL) {
 
 		//
 		//	Render the background scene first
@@ -433,6 +437,11 @@ CNCWinScreenMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 			//
 			//	End the game
 			//
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && !RENEGADE_VITA_M00_DEMO
+			// The native frame still owns world/render references. Let the
+			// between-frame GameInitMgr handoff consume original teardown.
+			GameInitMgrClass::Set_Needs_Game_Exit (true);
+#else
 			GameInitMgrClass::End_Game ();
 
 			if (cGameSpyAdmin::Get_Is_Launched_From_Gamespy()) {
@@ -446,6 +455,7 @@ CNCWinScreenMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 			} else {
 				GameInitMgrClass::Display_End_Game_Menu ();
 			}
+#endif
 			break;
 
 		default:

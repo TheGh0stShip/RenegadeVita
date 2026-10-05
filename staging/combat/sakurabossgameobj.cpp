@@ -320,8 +320,9 @@ SakuraBossGameObjDef::Create (void) const
 bool
 SakuraBossGameObjDef::Save (ChunkSaveClass &csave)
 {
+	bool saved = true;
 	csave.Begin_Chunk (CHUNKID_DEF_PARENT);
-		VehicleGameObjDef::Save (csave);
+		saved = VehicleGameObjDef::Save(csave) && saved;
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_DEF_VARIABLES);
@@ -329,10 +330,10 @@ SakuraBossGameObjDef::Save (ChunkSaveClass &csave)
 	csave.End_Chunk();
 
 	csave.Begin_Chunk (CHUNKID_DEF_ROCKET_DEFENSEOBJ_DEF);
-		RocketsDefense.Save (csave);
+		saved = RocketsDefense.Save(csave) && saved;
 	csave.End_Chunk();
 
-	return true;
+	return saved && !csave.Has_Error();
 }
 
 
@@ -344,11 +345,12 @@ SakuraBossGameObjDef::Save (ChunkSaveClass &csave)
 bool
 SakuraBossGameObjDef::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_DEF_PARENT:
-				VehicleGameObjDef::Load (cload);
+				if (!VehicleGameObjDef::Load (cload)) loaded = false;
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -356,7 +358,7 @@ SakuraBossGameObjDef::Load (ChunkLoadClass &cload)
 				break;
 
 			case CHUNKID_DEF_ROCKET_DEFENSEOBJ_DEF:
-				RocketsDefense.Load (cload);
+				if (!RocketsDefense.Load (cload)) loaded = false;
 				break;
 								
 			default:
@@ -367,7 +369,7 @@ SakuraBossGameObjDef::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -604,24 +606,25 @@ SakuraBossGameObj::Get_Definition (void) const
 bool
 SakuraBossGameObj::Save (ChunkSaveClass & csave)
 {
+	bool saved = true;
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		VehicleGameObj::Save (csave);
+		saved = VehicleGameObj::Save(csave) && saved;
 	csave.End_Chunk ();	
 
 	csave.Begin_Chunk (CHUNKID_ROCKETL_DEFENSE_OBJ);
-		LeftRocketDefenseObject.Save (csave);
+		saved = LeftRocketDefenseObject.Save(csave) && saved;
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_ROCKETR_DEFENSE_OBJ);
-		RightRocketDefenseObject.Save (csave);
+		saved = RightRocketDefenseObject.Save(csave) && saved;
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_LAST_DAMAGER);
-		LastDamager.Save (csave);
+		saved = LastDamager.Save(csave) && saved;
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_CURR_TARGET);
-		CurrentTarget.Save (csave);
+		saved = CurrentTarget.Save(csave) && saved;
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_PILOT);
@@ -638,7 +641,7 @@ SakuraBossGameObj::Save (ChunkSaveClass & csave)
 		csave.End_Chunk();
 	}
 
-	return true;
+	return saved && !csave.Has_Error();
 }
 
 
@@ -650,37 +653,39 @@ SakuraBossGameObj::Save (ChunkSaveClass & csave)
 bool
 SakuraBossGameObj::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				VehicleGameObj::Load (cload);
+				if (!VehicleGameObj::Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_ROCKETL_DEFENSE_OBJ:
-				LeftRocketDefenseObject.Load (cload);
+				if (!LeftRocketDefenseObject.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_ROCKETR_DEFENSE_OBJ:
-				RightRocketDefenseObject.Load (cload);
+				if (!RightRocketDefenseObject.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_LAST_DAMAGER:
-				LastDamager.Load (cload);
+				if (!LastDamager.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_CURR_TARGET:
-				CurrentTarget.Load (cload);
+				if (!CurrentTarget.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_PILOT:
-				Pilot.Load (cload);
+				if (!Pilot.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_PATH:
 			{
+				delete Path;
 				Path = new PathClass;
-				Path->Load (cload);
+				if (Path == NULL || !Path->Load(cload)) loaded = false;
 			}
 			break;
 
@@ -698,7 +703,7 @@ SakuraBossGameObj::Load (ChunkLoadClass &cload)
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback (this);
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 

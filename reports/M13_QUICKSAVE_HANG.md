@@ -1,5 +1,31 @@
 # Dev236 quicksave freeze and finale observation
 
+## Armed-beacon post-load audio ownership
+
+Source review found three independent omissions in the released beacon save
+state. The live `ArmedSound` scene object is intentionally not serialized, but
+there was no post-load reconstruction. `WarningTimer` was not saved, so warning
+cadence restarted from constructor state. `WeaponDefinition` was also not saved,
+even though the arming-state `Think()` path dereferences it; a checkpoint made
+while the ion beacon was still arming could therefore resume through a null
+definition.
+
+`BeaconGameObj` now saves and restores `WarningTimer` and the stable weapon
+definition ID, restores its owner before resolving legacy state, and recreates
+only a missing armed continuous sound through an idempotent helper. Legacy saves
+derive an arming weapon only when exactly one owner-bag weapon references the
+loaded beacon definition. An unresolved legacy arming beacon is deleted safely
+instead of dereferencing a null definition. Legacy armed saves reconstruct the
+warning timer from elapsed detonation time. Calling
+`Set_State(STATE_ARMED)` remains avoided because it would reset detonation and
+weather state.
+
+The two deterministic staging patches now replay from pristine EA source with
+zero fuzz and reproduce the active `beacongameobj.h/.cpp` byte for byte. This
+closes source and staging-receipt gaps only. It does not establish Vita save
+return, reload correctness, finale completion, or physical stability; those
+remain under the active validation hold.
+
 On physical Vita dev236 the user confirms combat no longer runs underneath
 the opening cinematic. This is user visual/audio evidence for the original
 dispatch restoration, not full cinematic or mission acceptance.
@@ -29,6 +55,18 @@ stack snapshot and register-read capabilities are absent. Cleanup owns no
 stopped target or attachment. Candidate ELF also lacks an embedded VDB build
 fingerprint; independently verified installed hashes remain the identity evidence.
 No inferred stack or fabricated register observation is used.
+
+Source follow-up after dev236: commit `522dabb` stages ChunkSave header
+back-patching in memory and writes the completed stream once at Close, directly
+removing the thousands of card seeks present in dev236. The partial file therefore
+does not establish a remaining infinite ConversationMgr loop in current source.
+The rooted writer now also targets a same-directory `.pending` sibling and
+renames it over the destination only after staged flush and native close succeed.
+A failed/interrupted serialization or close preserves the previous visible slot;
+rename/close failure is retained by the existing write-status route. Save bytes,
+chunk ordering and the synchronous original serializer remain unchanged. This
+follow-up is local, uncommitted and unvalidated; it is not evidence that quicksave
+now returns on Vita.
 
 Original `staging/scripts/Test_DLS.cpp` starts the ion sequence, schedules
 white fade 22 seconds later and finale 25 seconds later. The beacon actor uses

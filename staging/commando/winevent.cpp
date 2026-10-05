@@ -52,6 +52,9 @@
 #include "apppackettypes.h"
 #include "specialbuilds.h"
 #include "modpackagemgr.h"
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "a31_client_connect_boundary.h"
+#endif
 
 
 DECLARE_NETWORKOBJECT_FACTORY(cWinEvent, NETCLASSID_WIN);
@@ -230,9 +233,23 @@ cWinEvent::Import_Creation(BitStreamClass & packet)
 	//
 	StringClass mod_name(0, true);
 	StringClass map_name(0, true);
-	ModPackageMgrClass::Get_Mod_Map_Name_From_CRC (mod_name_crc, map_name_crc, &mod_name, &map_name);
-	The_Game()->Set_Mod_Name(mod_name);
-	The_Game()->Set_Map_Name(map_name);
+	const bool stock_resolved = ModPackageMgrClass::Get_Mod_Map_Name_From_CRC (
+		mod_name_crc, map_name_crc, &mod_name, &map_name);
+	(void)stock_resolved;
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	StringClass selected_map(0, true);
+	if (A31ClientConnect::Observe_Round_Identity(The_Game(), map_name_crc,
+		mod_name_crc, The_Game()->Get_Hosted_Game_Number(), IsMapCycleOver,
+		stock_resolved,
+		map_name.Peek_Buffer(), selected_map)) {
+		The_Game()->Set_Mod_Name("");
+		The_Game()->Set_Map_Name(selected_map);
+	} else
+#endif
+	{
+		The_Game()->Set_Mod_Name(mod_name);
+		The_Game()->Set_Map_Name(map_name);
+	}
 
 
 #endif // MULTIPLAYERDEMO

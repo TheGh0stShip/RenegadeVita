@@ -88,21 +88,28 @@ bool	WeaponBagClass::Save( ChunkSaveClass & csave )
 	csave.Begin_Chunk( CHUNKID_WEAPON_LIST );
 	for( i = 1; i < WeaponList.Count(); i++ ) {
 		csave.Begin_Chunk( CHUNKID_WEAPON_ENTRY );
-		WeaponList[i]->Save( csave );
+		if (WeaponList[i] == NULL || !WeaponList[i]->Save(csave)) {
+			csave.Report_Error();
+		}
 		csave.End_Chunk();
 	}
 	csave.End_Chunk();
 
 	// Don't need to save Owner or IsChanged;
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	WeaponBagClass::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
+	bool variables_seen = false;
+	bool weapon_list_seen = false;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
+				if (variables_seen) loaded = false;
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_WEAPON_INDEX, WeaponIndex );
@@ -115,12 +122,17 @@ bool	WeaponBagClass::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_WEAPON_LIST:
-				WWASSERT( WeaponList.Count() == 1 );
+				if (weapon_list_seen || WeaponList.Count() != 1) loaded = false;
+				weapon_list_seen = true;
 				while (cload.Open_Chunk()) {
 					WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_WEAPON_ENTRY );
 					WeaponClass *weapon = new WeaponClass;
-					weapon->Load( cload );
-					WeaponList.Add( weapon );
+					if (weapon->Load(cload)) {
+						WeaponList.Add(weapon);
+					} else {
+						delete weapon;
+						loaded = false;
+					}
 					cload.Close_Chunk();
 				}
 				break;
@@ -135,7 +147,8 @@ bool	WeaponBagClass::Load( ChunkLoadClass &cload )
 
 	IsChanged = true;
 	HUDIsChanged = true;
-	return true;
+	if (WeaponIndex < 0 || WeaponIndex >= WeaponList.Count()) loaded = false;
+	return loaded && variables_seen && weapon_list_seen && !cload.Has_Error();
 }
 
 

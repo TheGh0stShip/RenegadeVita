@@ -114,11 +114,12 @@ bool	C4GameObjDef::Save( ChunkSaveClass & csave )
 
 bool	C4GameObjDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				PhysicalGameObjDef::Load( cload );
+				if (!PhysicalGameObjDef::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -141,7 +142,7 @@ bool	C4GameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 const PersistFactoryClass & C4GameObjDef::Get_Factory (void) const 
@@ -406,7 +407,7 @@ enum	{
 bool	C4GameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	SimpleGameObj::Save( csave );
+	if (!SimpleGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -428,21 +429,22 @@ bool	C4GameObj::Save( ChunkSaveClass & csave )
 
 	if ( Owner != NULL ) {
 		csave.Begin_Chunk( CHUNKID_OWNER );
-		Owner.Save( csave );
+		if (!Owner.Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
 	if ( StuckObject != NULL ) {
 		csave.Begin_Chunk( CHUNKID_STUCK_OBJECT );
-		StuckObject.Save( csave );
+		if (!StuckObject.Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	C4GameObj::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	REF_PTR_RELEASE(StuckStaticAnimObj);
 	uint32 static_anim_obj_id = 0xFFFFFFFF;
 
@@ -450,7 +452,7 @@ bool	C4GameObj::Load( ChunkLoadClass &cload )
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				SimpleGameObj::Load( cload );
+				if (!SimpleGameObj::Load(cload)) loaded = false;
 				break;
 								
 			case CHUNKID_VARIABLES:
@@ -484,11 +486,11 @@ bool	C4GameObj::Load( ChunkLoadClass &cload )
 			}	
 
 			case CHUNKID_OWNER:
-				Owner.Load( cload );
+				if (!Owner.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_STUCK_OBJECT:
-				StuckObject.Load( cload );
+				if (!StuckObject.Load(cload)) loaded = false;
 				break;
 
 			default:
@@ -507,7 +509,7 @@ bool	C4GameObj::Load( ChunkLoadClass &cload )
 		REF_PTR_RELEASE(pobj);
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 void C4GameObj::Think( void )

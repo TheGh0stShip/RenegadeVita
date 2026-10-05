@@ -1,0 +1,40 @@
+--- a/inputconfigmgr.cpp
++++ b/inputconfigmgr.cpp
+@@ -113,9 +113,13 @@
+ 	//
+ 	//	Save our current configuration list
+ 	//
++#if defined(RENEGADE_VITA_PORT)
++	Save ();
++#else
+ 	if (!SlaveMaster.Am_I_Slave()) {
+ 		Save ();
+ 	}
++#endif
+ 
+ 	//
+ 	//	Reset our data
+@@ -258,6 +262,15 @@
+ 	//
+ 	//	Get the local path of the configuration files
+ 	//
++#if defined(RENEGADE_VITA_PORT)
++	StringClass full_path;
++	full_path.Format("user/config/%s", ConfigList[index].Get_Filename());
++	FileClass *file = _TheWritingFileFactory->Get_File(full_path);
++	if (file != NULL) {
++		file->Delete();
++		_TheWritingFileFactory->Return_File(file);
++	}
++#else
+ 	StringClass config_path;
+ 	Get_Config_Path (config_path);
+ 
+@@ -268,6 +281,7 @@
+ 	//	Delete the configuration file
+ 	//
+ 	::DeleteFile (full_path);
++#endif
+ 
+ 	//
+ 	//	Now remove this entry from the list

@@ -1,0 +1,39 @@
+diff --git a/commando/campaign.h b/commando/campaign.h
+--- a/commando/campaign.h
++++ b/commando/campaign.h
+@@ -55,6 +55,7 @@ public:
+ 	static	void	Shutdown( void );
+ 	static	bool	Is_Catalog_Ready( void );
+ 	static	bool	Current_Level_Matches_Archive( const char *archive );
++	static	bool	Loaded_Save_State_Matches_Archive( const char *archive );
+ 
+ 	static	bool	Save(ChunkSaveClass & csave);
+ 	static	bool	Load(ChunkLoadClass &cload);
+diff --git a/commando/campaign.cpp b/commando/campaign.cpp
+--- a/commando/campaign.cpp
++++ b/commando/campaign.cpp
+@@ -186,6 +186,24 @@ bool CampaignManager::Current_Level_Matches_Archive(const char *archive)
+ 	return ::stricmp(map, archive) == 0;
+ }
+ 
++bool CampaignManager::Loaded_Save_State_Matches_Archive(const char *archive)
++{
++	if (archive == NULL || archive[0] == '\0') return false;
++	if (State == NOT_IN_CAMPAIGN_STATE) {
++		// The original Tutorial is outside campaign.ini but may be saved.
++		return ::stricmp(archive, "M00_Tutorial.mix") == 0;
++	}
++	if (State == REPLAY_LEVEL) {
++		// Replay has no campaign-flow index; the save header owns its map.
++		return true;
++	}
++	if (State == REPLAY_SCORE) {
++		// This intermission-only state cannot own a gameplay save.
++		return false;
++	}
++	return Current_Level_Matches_Archive(archive);
++}
++
+ /*
+ **
+ */

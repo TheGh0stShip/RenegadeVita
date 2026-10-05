@@ -43,7 +43,13 @@
 #include "gamemode.h"
 #include "cnetwork.h"
 #include "gametype.h"
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+#include "DlgMPConnect.h"
+#include "DlgMPConnectionRefused.h"
+#include <WWUI\DialogMgr.h>
+#else
 #include "a31_network_dialog_stub.h"
+#endif
 #include "apppackettypes.h"
 #include "modpackagemgr.h"
 #include "specialbuilds.h"

@@ -1,0 +1,18 @@
+--- a/campaign.cpp
++++ b/campaign.cpp
+@@ -55,4 +55,7 @@
+ #include "dlgloadspgame.h"
+ #include "ccamera.h"
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
++#include "a4_frontend_lifecycle_boundary.h"
++#endif
+ 
+ /*
+@@ -350,4 +353,7 @@
+ 		int mission = cGameData::Get_Mission_Number_From_Map_Name( state_description );
+ 		Select_Backdrop_Number( mission );
++#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
++		A4_Frontend_Mark_Next_Start_Game_As_Campaign_Level();
++#endif
+ 		GameInitMgrClass::Start_Game ( state_description, PLAYERTYPE_RENEGADE, 0 );
+ 

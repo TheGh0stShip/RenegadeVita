@@ -1,0 +1,35 @@
+--- a/assetdep.cpp
++++ b/assetdep.cpp
+@@ -254,10 +254,12 @@
+ {
+ 	WWLOG_PREPARE_TIME_AND_MEMORY("AssetDependencyManager::Load_Assets (ChunkLoadClass &cload)");
+ 	bool loaded = true;
+-	if (!cload.Open_Chunk() || cload.Cur_Chunk_ID() != CHUNKID_FILE_LIST) {
+-		if (cload.Cur_Chunk_ID() != CHUNKID_FILE_LIST) {
+-			WWDEBUG_SAY(("Unexpected dependency root chunk %d.\n", cload.Cur_Chunk_ID()));
+-		}
++	if (!cload.Open_Chunk()) {
++		return false;
++	}
++	if (cload.Cur_Chunk_ID() != CHUNKID_FILE_LIST) {
++		WWDEBUG_SAY(("Unexpected dependency root chunk %d.\n", cload.Cur_Chunk_ID()));
++		cload.Close_Chunk();
+ 		return false;
+ 	}
+ 
+@@ -306,12 +308,12 @@
+ 					break;
+ 			}
+ 
+-			cload.Close_Micro_Chunk ();
++			loaded = cload.Close_Micro_Chunk() && loaded;
+ 		}
+-	cload.Close_Chunk ();
++	loaded = cload.Close_Chunk() && loaded;
+ 	if (cload.Open_Chunk()) {
+ 		loaded = false;
+-		cload.Close_Chunk();
++		loaded = cload.Close_Chunk() && loaded;
+ 	}
+ 	return loaded && !cload.Has_Error();
+ }

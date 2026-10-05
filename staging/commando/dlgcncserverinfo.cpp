@@ -53,8 +53,6 @@
 #include "damage.h"
 #include "vehicle.h"
 #include "resource.h"
-#include "WOLGMode.h"
-#include <WWOnline\WOLUser.h>
 #include "translatedb.h"
 #include "string_ids.h"
 #include "mousemgr.h"

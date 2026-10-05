@@ -1,0 +1,31 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -106,3 +106,6 @@
+ #include "hudinfo.h"
++#if defined(__vita__)
++#include "a35_level_load_status.h"
++#endif
+ #include "string_ids.h"
+ #include "radiocommanddisplay.h"
+@@ -780,2 +783,5 @@
+ {
++#if defined(__vita__)
++	A35_Level_Load_Reset_Failure();
++#endif
+ 	WWLOG_PREPARE_TIME_AND_MEMORY("CombatGameModeClass::Load_Level");
+@@ -873,4 +879,15 @@
+ 	SaveLoadSystemClass::Post_Load_Processing(IS_SOLOPLAY ? NULL : &cNetwork::Update);
+ 	NetworkObjectMgrClass::Set_Is_Level_Loading (false);
++#if defined(__vita__)
++	if (A35_Level_Load_Get_Failure() != A35_LOAD_NO_FAILURE) {
++		g_is_loading = false;
++		if (cNetwork::PServerConnection) {
++			cNetwork::PServerConnection->Allow_Packet_Processing(true);
++		}
++		Debug_Say(("Required level reload failed code=%u; finalization skipped\n",
++			static_cast<unsigned>(A35_Level_Load_Get_Failure())));
++		return;
++	}
++#endif
+ 	WWLOG_INTERMEDIATE("SaveLoadSystemClass::Post_Load_Processing(&cNetwork::Update)");
+ 

@@ -79,20 +79,26 @@ DefinitionClass::Save (ChunkSaveClass &csave)
 bool
 DefinitionClass::Load (ChunkLoadClass &cload)
 {
-	bool retval = true;
+	bool loaded = true;
+	bool variables_seen = false;
 
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 			
 			case CHUNKID_VARIABLES:
-				Load_Variables (cload);
+				if (variables_seen) {
+					loaded = false;
+				} else {
+					variables_seen = true;
+					if (!Load_Variables(cload)) loaded = false;
+				}
 				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return retval;
+	return loaded && variables_seen && !cload.Has_Error();
 }
 
 
@@ -120,7 +126,10 @@ DefinitionClass::Save_Variables (ChunkSaveClass &csave)
 bool
 DefinitionClass::Load_Variables (ChunkLoadClass &cload)
 {
-	bool retval = true;
+	uint32 loaded_id = 0;
+	StringClass loaded_name;
+	unsigned int fields_seen = 0;
+	bool loaded = true;
 
 	//
 	//	Loop through all the microchunks that define the variables
@@ -128,14 +137,34 @@ DefinitionClass::Load_Variables (ChunkLoadClass &cload)
 	while (cload.Open_Micro_Chunk ()) {
 		switch (cload.Cur_Micro_Chunk_ID ()) {
 			
-			READ_MICRO_CHUNK (cload, VARID_INSTANCEID, m_ID)
-			READ_MICRO_CHUNK_WWSTRING (cload, VARID_NAME, m_Name)
+			case VARID_INSTANCEID:
+				if ((fields_seen & 0x01U) != 0 ||
+					cload.Cur_Micro_Chunk_Length() != sizeof(loaded_id) ||
+					cload.Read(&loaded_id, sizeof(loaded_id)) != sizeof(loaded_id)) {
+					loaded = false;
+				}
+				fields_seen |= 0x01U;
+				break;
+
+			case VARID_NAME:
+				if ((fields_seen & 0x02U) != 0 ||
+					cload.Read(loaded_name.Get_Buffer(cload.Cur_Micro_Chunk_Length()),
+						cload.Cur_Micro_Chunk_Length()) != cload.Cur_Micro_Chunk_Length()) {
+					loaded = false;
+				}
+				fields_seen |= 0x02U;
+				break;
 		}
 
 		cload.Close_Micro_Chunk ();
 	}
 
-	return retval;
+	loaded = loaded && fields_seen == 0x03U && loaded_id != 0 && !cload.Has_Error();
+	if (loaded) {
+		m_ID = loaded_id;
+		m_Name = loaded_name;
+	}
+	return loaded;
 }
 
 

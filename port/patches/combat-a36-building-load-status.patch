@@ -1,0 +1,225 @@
+--- a/building.cpp
++++ b/building.cpp
+@@ -460,11 +460,12 @@
+ bool
+ BuildingGameObj::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				DamageableGameObj::Load (cload);
++				if (!DamageableGameObj::Load(cload)) loaded = false;
+ 				break;
+ 	  
+ 			case CHUNKID_VARIABLES:
+@@ -503,7 +504,7 @@
+ 		CollectionSphere.Center = Position;
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/powerplantgameobj.cpp
++++ b/powerplantgameobj.cpp
+@@ -309,11 +309,12 @@
+ bool
+ PowerPlantGameObj::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				BuildingGameObj::Load (cload);
++				if (!BuildingGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -328,7 +329,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/comcentergameobj.cpp
++++ b/comcentergameobj.cpp
+@@ -310,11 +310,12 @@
+ bool
+ ComCenterGameObj::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				BuildingGameObj::Load (cload);
++				if (!BuildingGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -329,7 +330,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/refinerygameobj.cpp
++++ b/refinerygameobj.cpp
+@@ -384,11 +384,12 @@
+ bool
+ RefineryGameObj::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				BuildingGameObj::Load (cload);
++				if (!BuildingGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -403,7 +404,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/vehiclefactorygameobj.cpp
++++ b/vehiclefactorygameobj.cpp
+@@ -361,11 +361,12 @@
+ bool
+ VehicleFactoryGameObj::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				BuildingGameObj::Load (cload);
++				if (!BuildingGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -380,7 +381,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/airstripgameobj.cpp
++++ b/airstripgameobj.cpp
+@@ -357,11 +357,12 @@
+ bool
+ AirStripGameObj::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				VehicleFactoryGameObj::Load (cload);
++				if (!VehicleFactoryGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -376,7 +377,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/warfactorygameobj.cpp
++++ b/warfactorygameobj.cpp
+@@ -321,11 +321,12 @@
+ bool
+ WarFactoryGameObj::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				VehicleFactoryGameObj::Load (cload);
++				if (!VehicleFactoryGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -340,7 +341,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/soldierfactorygameobj.cpp
++++ b/soldierfactorygameobj.cpp
+@@ -311,11 +311,12 @@
+ bool
+ SoldierFactoryGameObj::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				BuildingGameObj::Load (cload);
++				if (!BuildingGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -330,7 +331,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 
+--- a/repairbaygameobj.cpp
++++ b/repairbaygameobj.cpp
+@@ -377,11 +377,12 @@
+ bool
+ RepairBayGameObj::Load (ChunkLoadClass &cload)
+ {
++	bool loaded = true;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				BuildingGameObj::Load (cload);
++				if (!BuildingGameObj::Load(cload)) loaded = false;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+@@ -396,7 +397,7 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return true;
++	return loaded && !cload.Has_Error();
+ }
+ 
+ 

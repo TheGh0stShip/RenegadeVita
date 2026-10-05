@@ -289,7 +289,7 @@ ConversationMgrClass::Save (ChunkSaveClass &csave)
                     Vita_Append_A22_Runtime_Breadcrumb("save", "conversation begin index=%d count=%d", index, count);
                 }
 #endif
-					conversation->Save (csave);
+					if (!conversation->Save(csave)) csave.Report_Error();
 #if defined(__vita__)
                 if (index % 16 == 0 || index == count - 1) {
                     Vita_Append_A22_Runtime_Breadcrumb("save", "conversation end index=%d count=%d", index, count);
@@ -309,12 +309,12 @@ ConversationMgrClass::Save (ChunkSaveClass &csave)
 		ActiveConversationClass *active_conversation = ActiveConversationList[index];
 		if (active_conversation != NULL) {
 			csave.Begin_Chunk (CHUNKID_ACTIVE_CONVERSATION);
-				active_conversation->Save (csave);
+				if (!active_conversation->Save(csave)) csave.Report_Error();
 			csave.End_Chunk ();
 		}
 	}
 
-	return true;
+	return !csave.Has_Error();
 }
 
 
@@ -326,6 +326,8 @@ ConversationMgrClass::Save (ChunkSaveClass &csave)
 bool
 ConversationMgrClass::Load_Conversations (ChunkLoadClass &cload, int category_id)
 {
+	bool loaded = true;
+
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
@@ -336,7 +338,7 @@ ConversationMgrClass::Load_Conversations (ChunkLoadClass &cload, int category_id
 				//
 				ConversationClass *conversation = new ConversationClass;
 				SET_REF_OWNER( conversation );
-				conversation->Load (cload);
+				const bool conversation_loaded = conversation->Load (cload);
 				
 				//
 				//	Debug check to ensure we've got the correct cateogry
@@ -344,9 +346,15 @@ ConversationMgrClass::Load_Conversations (ChunkLoadClass &cload, int category_id
 				WWASSERT (conversation->Get_Category_ID () == category_id);
 				
 				//
-				//	Add this conversation to our list
+				//	Add only a complete conversation from the enclosing category.
 				//
-				Add_Conversation (conversation);
+				const int conversation_category = conversation->Get_Category_ID ();
+				if (conversation_loaded && conversation_category == category_id &&
+					conversation_category >= 0 && conversation_category < CATEGORY_MAX) {
+					Add_Conversation (conversation);
+				} else {
+					loaded = false;
+				}
 				REF_PTR_RELEASE (conversation);
 			}
 			break;
@@ -355,7 +363,7 @@ ConversationMgrClass::Load_Conversations (ChunkLoadClass &cload, int category_id
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error ();
 }
 
 
@@ -400,6 +408,9 @@ bool
 ConversationMgrClass::Load (ChunkLoadClass &cload)
 {
 	int old_style_conv_count = 0;
+	bool loaded_variables = false;
+	bool loaded_category = false;
+	bool loaded = true;
 
 	//
 	//	Remove all currently active conversations
@@ -415,17 +426,29 @@ ConversationMgrClass::Load (ChunkLoadClass &cload)
 				//	Create a new object and its state from the chunk
 				//
 				ActiveConversationClass *active_conversation = new ActiveConversationClass;
-				active_conversation->Load (cload);
+				const bool active_loaded = active_conversation->Load (cload);
 				
 				//
-				//	Add this new active conversation to our list
+				//	Keep rejected pointer-bearing conversations alive until the
+				// outer load failure discards remaps/callbacks and tears down the
+				// manager. Releasing here would leave queued references dangling.
 				//
-				ActiveConversationList.Add (active_conversation);
+				if (active_loaded && !cload.Has_Error ()) {
+					ActiveConversationList.Add (active_conversation);
+				} else {
+					loaded = false;
+					ActiveConversationList.Add (active_conversation);
+				}
 			}
 			break;
 
 			case CHUNKID_CONVERSATION_CATEGORY:
 			{
+				if (loaded_category || old_style_conv_count != 0) {
+					loaded = false;
+					break;
+				}
+				loaded_category = true;
 				int category_id = 0;
 				if (!Read_Conversation_Category (cload, category_id)) {
 					cload.Close_Chunk ();
@@ -440,12 +463,16 @@ ConversationMgrClass::Load (ChunkLoadClass &cload)
 				//
 				//	Load all the conversations in this category
 				//
-				Load_Conversations (cload, category_id);
+				loaded = Load_Conversations (cload, category_id) && loaded;
 			}
 			break;
 
 			case CHUNKID_OLD_CONVERSATION:
 			{
+				if (loaded_category) {
+					loaded = false;
+					break;
+				}
 				//
 				//	Reset the list of level conversations if this
 				// the first one loaded
@@ -459,7 +486,7 @@ ConversationMgrClass::Load (ChunkLoadClass &cload)
 				//	Create a new object and its state from the chunk
 				//
 				ConversationClass *conversation = new ConversationClass;
-				conversation->Load (cload);
+				loaded = conversation->Load (cload) && loaded;
 				conversation->Set_Category_ID (CATEGORY_LEVEL);
 				
 				//
@@ -471,14 +498,19 @@ ConversationMgrClass::Load (ChunkLoadClass &cload)
 			break;
 
 			case CHUNKID_VARIABLES:
-				Load_Variables (cload);
+				if (loaded_variables) {
+					loaded = false;
+				} else {
+					loaded_variables = true;
+					Load_Variables (cload);
+				}
 				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && loaded_variables && (loaded_category || old_style_conv_count != 0);
 }
 
 
@@ -1205,6 +1237,11 @@ ConversationMgrClass::Add_Conversation (ConversationClass *conversation)
 	if (conversation == NULL) {
 		return ;
 	}
+	const int category_id = conversation->Get_Category_ID ();
+	WWASSERT (category_id >= 0 && category_id < CATEGORY_MAX);
+	if (category_id < 0 || category_id >= CATEGORY_MAX) {
+		return ;
+	}
 
 	//
 	//	Assign this conversation an ID (if necessary)
@@ -1222,7 +1259,7 @@ ConversationMgrClass::Add_Conversation (ConversationClass *conversation)
 	//	Add a reference to the converation, then add it to our list
 	//
 	conversation->Add_Ref ();
-	ConversationList[conversation->Get_Category_ID ()].Add (conversation);
+	ConversationList[category_id].Add (conversation);
 	return ;
 }
 

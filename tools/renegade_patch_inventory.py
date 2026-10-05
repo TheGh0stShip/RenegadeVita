@@ -12,16 +12,80 @@ import shlex
 # Retained historical evidence, deliberately excluded from native staging.
 RETIRED = {"wwnet-a31-network-posix.patch",
            "combat-a35-weaponview-reload-motion.patch",
-           "combat-a35-weaponview-reload-visible-fallback.patch"}
+           "combat-a35-weaponview-reload-visible-fallback.patch",
+           "wwphys-a31-vita-material-effect-boundary.patch",
+           "wwphys-a31-vita-material-effect-close.patch"}
 RECEIPT = "staging/PATCH_INVENTORY.json"
 REQUIRED_FLAGS = {"--batch", "--forward", "--fuzz=0", "--no-backup-if-mismatch", "-p1"}
 MANUAL_COUNT = re.compile(
     r'EXPECTED_PATCH_COUNT\s*=\s*[0-9]+|patch_count["\']?\s*[:=]\s*[0-9]+'
 )
+HUNK_HEADER = re.compile(
+    r"^@@ -[0-9]+(?:,(?P<old>[0-9]+))? \+[0-9]+(?:,(?P<new>[0-9]+))? @@"
+)
 
 
 def digest(data):
     return hashlib.sha256(data).hexdigest()
+
+
+def validate_unified_diff(payload, path):
+    """Reject malformed hunk sizes that POSIX patch may otherwise truncate."""
+    lines = payload.decode("utf-8").splitlines()
+    hunk_count = 0
+    index = 0
+    while index < len(lines):
+        match = HUNK_HEADER.match(lines[index])
+        if match is None:
+            index += 1
+            continue
+        hunk_count += 1
+        hunk_line = index + 1
+        expected_old = int(match.group("old") or "1")
+        expected_new = int(match.group("new") or "1")
+        actual_old = 0
+        actual_new = 0
+        index += 1
+        while index < len(lines):
+            line = lines[index]
+            if HUNK_HEADER.match(line) or line.startswith("--- ") or line.startswith("diff --git "):
+                break
+            if line == "":
+                # Several retained historical patches omit the mandatory
+                # single-space marker on blank context lines. GNU patch accepts
+                # that form. Count it only while the declared hunk still needs
+                # context; a blank after a complete hunk remains a separator.
+                if actual_old < expected_old or actual_new < expected_new:
+                    actual_old += 1
+                    actual_new += 1
+                    index += 1
+                    continue
+                break
+            if line.startswith("\\ No newline at end of file"):
+                index += 1
+                continue
+            if line[0] not in " +-":
+                # GNU patch also accepts historical context lines whose single
+                # marker column was omitted. They still contribute to both
+                # sides of the declared hunk.
+                actual_old += 1
+                actual_new += 1
+                index += 1
+                continue
+            if line[0] in " -":
+                actual_old += 1
+            if line[0] in " +":
+                actual_new += 1
+            index += 1
+        if (actual_old, actual_new) != (expected_old, expected_new):
+            raise ValueError(
+                f"Unified-diff hunk count mismatch in {path}: "
+                f"line {hunk_line}, "
+                f"expected old/new {expected_old}/{expected_new}, "
+                f"found {actual_old}/{actual_new}"
+            )
+    if hunk_count == 0:
+        raise ValueError(f"Patch lacks a unified-diff hunk: {path}")
 
 
 def parse_applications(source):
@@ -105,6 +169,7 @@ def load_inventory(root):
         payload = path.read_bytes()
         if not payload or b"--- " not in payload or b"+++ " not in payload:
             raise ValueError(f"Patch lacks a unified-diff file header: {path}")
+        validate_unified_diff(payload, path)
         entries.append({"path": match["path"],
                         "stage_directory": (match["directory"] or "").lstrip("/"),
                         "sha256": digest(payload)})

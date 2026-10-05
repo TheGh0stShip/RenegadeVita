@@ -1,0 +1,44 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -1528,12 +1528,1 @@
+-	// Autosave, after one run throught main loop
+-	if ( CombatManager::Is_Autosave_Requested() ) {
+-		WWPROFILE( "Autosaving" );
+-		Debug_Say(( "Autosaving\n" ));
+-		int time=TIMEGETTIME();
+-		CombatManager::Request_Autosave( false );
+-		SaveGameManager::Set_Description( TRANSLATE( IDS_SAVE_AUTOSAVE ) );
+-		SaveGameManager::Save_Game( "save\\autosave.sav", &_CommandoSaveLoad, NULL );
+-		time=TIMEGETTIME()-time;
+-		Debug_Say(( "Autosaving Complete, took %d.%2.2d seconds\n",time/1000,(time/10)%100 ));
+-	}
+-
++	Process_Autosave_Request();
+@@ -1571,1 +1560,20 @@
++void CombatGameModeClass::Process_Autosave_Request()
++{
++	if (!CombatManager::Is_Autosave_Requested()) return;
++	WWPROFILE( "Autosaving" );
++	Debug_Say(( "Autosaving\n" ));
++	int time=TIMEGETTIME();
++	CombatManager::Request_Autosave( false );
++	SaveGameManager::Set_Description( TRANSLATE( IDS_SAVE_AUTOSAVE ) );
++	SaveGameManager::Save_Game( "save\\autosave.sav", &_CommandoSaveLoad, NULL );
++#if defined(RENEGADE_VITA_PORT)
++	if (!SaveGameManager::Last_Save_Write_Succeeded()) {
++		Debug_Say(( "Autosaving failed; recovery file unverified\n" ));
++		return;
++	}
++#endif
++	time=TIMEGETTIME()-time;
++	Debug_Say(( "Autosaving Complete, took %d.%2.2d seconds\n",time/1000,(time/10)%100 ));
++}
++
+ void 	CombatGameModeClass::Render()
+--- a/combatgmode.h
++++ b/combatgmode.h
+@@ -86,3 +86,4 @@
+ 	static	void	Quick_Save( void );
++	static	void	Process_Autosave_Request();
+ 	static	void	Process_Radio_Command_Input();
+ 	static	void	Process_Chat_Input();

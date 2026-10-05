@@ -257,7 +257,7 @@ python3 "$rv_root/tools/check_m13_script_coverage.py" --root "$rv_root" --symbol
 while IFS= read -r rv_symbol; do
 	require_linked_symbol "$rv_symbol"
 done <<'EOF'
-A31_Vita_Run_Interactive_Runtime(int, bool, char const*, char const*, unsigned char const*, unsigned int)
+A31_Vita_Run_Interactive_Runtime(int, bool, bool, char const*, char const*, unsigned char const*, unsigned int, int)
 EncyclopediaMgrClass::Initialize()
 EncyclopediaMgrClass::Shutdown()
 RenegadeVitaAudio::Open_Mpeg_Playback
@@ -267,6 +267,10 @@ CombatGameModeClass::Vita_Finalize_Loaded_Level(void*, bool)
 RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOCATION)
 MainMenuDialogClass::Display()
 StartSPGameDialogClass::On_Command(int, int, unsigned long)
+DlgMPTeamSelect::DoDialog(
+ServerSaveLoadMenuClass::On_Init_Dialog()
+InputConfigClass::Save(ChunkSaveClass&)
+InputConfigClass::Load(ChunkLoadClass&)
 MenuGameModeClass2::Init()
 MovieGameModeClass::Startup_Movies()
 vglRenegadeEndIndexed
@@ -277,6 +281,8 @@ A4_Frontend_Latch_Start_Game(char const*, int, unsigned long)
 A4_Frontend_Pump_WWUI_Key_Transitions()
 WW3D::Render(SceneClass*
 MeshClass::Render(RenderInfoClass&)
+MeshLoaderClass::Load_W3D(ChunkLoadClass&)
+MeshModelClass::Load_W3D(ChunkLoadClass&)
 RenegadeVitaRenderer::Submit_Mesh(MeshClass&, RenderInfoClass&)
 MenuBackDropClass::Render()
 CampaignManager::Select_Backdrop_Number(int)

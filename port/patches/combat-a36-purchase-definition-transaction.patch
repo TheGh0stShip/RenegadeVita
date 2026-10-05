@@ -1,0 +1,278 @@
+--- a/purchasesettings.h
++++ b/purchasesettings.h
+@@ -122,6 +122,7 @@
+ 	virtual PersistClass *					Create (void) const ;
+ 	virtual bool								Save (ChunkSaveClass &csave);
+ 	virtual bool								Load (ChunkLoadClass &cload);
++	virtual void								On_Load_Rejected (void);
+ 	virtual const PersistFactoryClass &	Get_Factory (void) const;	
+ 
+ 	//
+@@ -163,7 +164,7 @@
+ 	//////////////////////////////////////////////////////////////////////////
+ 	//	Protected methods
+ 	//////////////////////////////////////////////////////////////////////////
+-	void				Load_Variables (ChunkLoadClass &cload);
++	bool				Load_Variables (ChunkLoadClass &cload);
+ 
+ 	//////////////////////////////////////////////////////////////////////////
+ 	//	Protected constants
+@@ -191,6 +192,9 @@
+ 	StringClass			AlternateTextureList[MAX_ENTRIES][MAX_ALTERNATES];
+ 	
+ 	static PurchaseSettingsDefClass *	DefinitionArray[TYPE_COUNT][TEAM_COUNT];
++	int					PublishedType;
++	int					PublishedTeam;
++	PurchaseSettingsDefClass *	PreviousDefinition;
+     bool Hidden[MAX_ENTRIES] = {};
+     bool Disabled[MAX_ENTRIES] = {};
+     bool Busy[MAX_ENTRIES] = {};
+--- a/purchasesettings.cpp
++++ b/purchasesettings.cpp
+@@ -96,7 +96,10 @@
+     NetworkObjectClass(false),
+ #endif
+ 	Team (TEAM_GDI),
+-	Type (TYPE_CLASSES)
++	Type (TYPE_CLASSES),
++	PublishedType (-1),
++	PublishedTeam (-1),
++	PreviousDefinition (NULL)
+ {
+ 	//
+ 	//	Initialize the cost and definition lists
+@@ -186,13 +189,21 @@
+ 	//
+ 	//	Remove this entry from the static array
+ 	//
+-	if (Type >= 0 && Type < TYPE_COUNT && Team >= 0 && Team < TEAM_COUNT &&
+-        DefinitionArray[Type][Team] == this) {
+-		DefinitionArray[Type][Team] = NULL;
++	if (PublishedType >= 0 && PublishedType < TYPE_COUNT && PublishedTeam >= 0 &&
++		PublishedTeam < TEAM_COUNT && DefinitionArray[PublishedType][PublishedTeam] == this) {
++		DefinitionArray[PublishedType][PublishedTeam] = PreviousDefinition;
+ 	}
+ 	return ;
+ }
+ 
++void PurchaseSettingsDefClass::On_Load_Rejected (void)
++{
++	if (PublishedType >= 0 && PublishedType < TYPE_COUNT && PublishedTeam >= 0 &&
++		PublishedTeam < TEAM_COUNT && DefinitionArray[PublishedType][PublishedTeam] == this) {
++		DefinitionArray[PublishedType][PublishedTeam] = PreviousDefinition;
++	}
++}
++
+ 
+ ///////////////////////////////////////////////////////////////////////////////////////////
+ //
+@@ -270,7 +281,7 @@
+ 
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+@@ -283,15 +294,19 @@
+ PurchaseSettingsDefClass::Load (ChunkLoadClass &cload)
+ {
+ 	bool loaded = true;
++	bool parent_seen = false;
++	bool variables_seen = false;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				if (!DefinitionClass::Load (cload)) loaded = false;
++				if (parent_seen || !DefinitionClass::Load (cload)) loaded = false;
++				parent_seen = true;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+-				Load_Variables (cload);
++				if (variables_seen || !Load_Variables (cload)) loaded = false;
++				variables_seen = true;
+ 				break;
+ 
+ 			default:
+@@ -303,7 +318,15 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return loaded && !cload.Has_Error();
++	loaded = loaded && parent_seen && variables_seen && !cload.Has_Error() &&
++		Type >= 0 && Type < TYPE_COUNT && Team >= 0 && Team < TEAM_COUNT;
++	if (loaded) {
++		PublishedType = Type;
++		PublishedTeam = Team;
++		PreviousDefinition = DefinitionArray[PublishedType][PublishedTeam];
++		DefinitionArray[PublishedType][PublishedTeam] = this;
++	}
++	return loaded;
+ }
+ 
+ 
+@@ -312,7 +335,7 @@
+ //	Load_Variables
+ //
+ ///////////////////////////////////////////////////////////////////////////////////////////
+-void
++bool
+ PurchaseSettingsDefClass::Load_Variables (ChunkLoadClass &cload)
+ {
+ 	int entry_index	= 0;
+@@ -377,13 +400,7 @@
+ 		cload.Close_Micro_Chunk();
+ 	}
+ 
+-	//
+-	//	Add this definition to the static array
+-	//
+-	if (Type >= 0 && Type < TYPE_COUNT && Team >= 0 && Team < TEAM_COUNT) {
+-		DefinitionArray[Type][Team] = this;
+-	}
+-	return ;
++	return !cload.Has_Error();
+ }
+ 
+ 
+--- a/teampurchasesettings.h
++++ b/teampurchasesettings.h
+@@ -102,6 +102,7 @@
+ 	virtual PersistClass *					Create (void) const ;
+ 	virtual bool								Save (ChunkSaveClass &csave);
+ 	virtual bool								Load (ChunkLoadClass &cload);
++	virtual void								On_Load_Rejected (void);
+ 	virtual const PersistFactoryClass &	Get_Factory (void) const;	
+ 
+ 	//
+@@ -137,7 +138,7 @@
+ 	//////////////////////////////////////////////////////////////////////
+ 	//	Protected methods
+ 	//////////////////////////////////////////////////////////////////////
+-	void				Load_Variables (ChunkLoadClass &cload);
++	bool				Load_Variables (ChunkLoadClass &cload);
+ 
+ 	//////////////////////////////////////////////////////////////////////
+ 	//	Protected constants
+@@ -174,6 +175,8 @@
+ 	StringClass			SupplyTextureName;
+ 	
+ 	static TeamPurchaseSettingsDefClass *	DefinitionArray[TEAM_COUNT];
++	int					PublishedTeam;
++	TeamPurchaseSettingsDefClass *	PreviousDefinition;
+     bool Hidden[MAX_ENTRIES] = {};
+     bool Disabled[MAX_ENTRIES] = {};
+     bool Busy[MAX_ENTRIES] = {};
+--- a/teampurchasesettings.cpp
++++ b/teampurchasesettings.cpp
+@@ -97,7 +97,9 @@
+ 	BeaconNameID (0),
+ 	BeaconDefinitionID (0),
+ 	BeaconCost (0),
+-	SupplyNameID (0)
++	SupplyNameID (0),
++	PublishedTeam (-1),
++	PreviousDefinition (NULL)
+ {
+ 	//
+ 	//	Initialize the lists
+@@ -177,13 +179,22 @@
+ 	//
+ 	//	Remove this entry from the static array
+ 	//
+-	if (Team >= 0 && Team < TEAM_COUNT && DefinitionArray[Team] == this) {
+-		DefinitionArray[Team] = NULL;
++	if (PublishedTeam >= 0 && PublishedTeam < TEAM_COUNT &&
++		DefinitionArray[PublishedTeam] == this) {
++		DefinitionArray[PublishedTeam] = PreviousDefinition;
+ 	}
+ 
+ 	return ;
+ }
+ 
++void TeamPurchaseSettingsDefClass::On_Load_Rejected (void)
++{
++	if (PublishedTeam >= 0 && PublishedTeam < TEAM_COUNT &&
++		DefinitionArray[PublishedTeam] == this) {
++		DefinitionArray[PublishedTeam] = PreviousDefinition;
++	}
++}
++
+ 
+ ///////////////////////////////////////////////////////////////////////////////////////////
+ //
+@@ -259,7 +270,7 @@
+ 
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+@@ -272,15 +283,19 @@
+ TeamPurchaseSettingsDefClass::Load (ChunkLoadClass &cload)
+ {
+ 	bool loaded = true;
++	bool parent_seen = false;
++	bool variables_seen = false;
+ 	while (cload.Open_Chunk ()) {
+ 		switch(cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_PARENT:
+-				if (!DefinitionClass::Load (cload)) loaded = false;
++				if (parent_seen || !DefinitionClass::Load (cload)) loaded = false;
++				parent_seen = true;
+ 				break;
+ 								
+ 			case CHUNKID_VARIABLES:
+-				Load_Variables (cload);
++				if (variables_seen || !Load_Variables (cload)) loaded = false;
++				variables_seen = true;
+ 				break;
+ 
+ 			default:
+@@ -292,7 +307,14 @@
+ 		cload.Close_Chunk();
+ 	}
+ 
+-	return loaded && !cload.Has_Error();
++	loaded = loaded && parent_seen && variables_seen && !cload.Has_Error() &&
++		Team >= 0 && Team < TEAM_COUNT;
++	if (loaded) {
++		PublishedTeam = Team;
++		PreviousDefinition = DefinitionArray[PublishedTeam];
++		DefinitionArray[PublishedTeam] = this;
++	}
++	return loaded;
+ }
+ 
+ 
+@@ -301,7 +323,7 @@
+ //	Load_Variables
+ //
+ ///////////////////////////////////////////////////////////////////////////////////////////
+-void
++bool
+ TeamPurchaseSettingsDefClass::Load_Variables (ChunkLoadClass &cload)
+ {
+ 	int entry_index = 0;
+@@ -351,13 +373,7 @@
+ 		cload.Close_Micro_Chunk();
+ 	}
+ 
+-	//
+-	//	Add this definition to the static array
+-	//
+-	if (Team >= 0 && Team < TEAM_COUNT) {
+-		DefinitionArray[Team] = this;
+-	}
+-	return ;
++	return !cload.Has_Error();
+ }
+ 
+ 
+

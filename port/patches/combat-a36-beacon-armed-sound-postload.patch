@@ -1,0 +1,87 @@
+--- a/beacongameobj.h
++++ b/beacongameobj.h
+@@ -161,6 +161,7 @@ public:
+ 	//
+ 	bool				Save (ChunkSaveClass & csave);
+ 	bool				Load (ChunkLoadClass & cload);
++	virtual void	On_Post_Load (void);
+ 	const				PersistFactoryClass & Get_Factory (void) const;
+ 
+ 	//
+@@ -196,6 +197,7 @@ private:
+ 	////////////////////////////////////////////////////////////////
+ 	void							Load_Variables (ChunkLoadClass &cload);
+ 	void							Stop_Armed_Sound (void);
++	void							Start_Armed_Sound (void);
+ 	void							Stop_Current_Message_Sound (void);
+ 	void							Display_Message (int text_id);
+ 	void							Start_Owner_Animation (void);
+--- a/beacongameobj.cpp
++++ b/beacongameobj.cpp
+@@ -548,6 +548,21 @@ BeaconGameObj::Load (ChunkLoadClass &cload)
+ }
+ 
+ 
++////////////////////////////////////////////////////////////////
++//
++//	On_Post_Load
++//
++////////////////////////////////////////////////////////////////
++void
++BeaconGameObj::On_Post_Load (void)
++{
++	SimpleGameObj::On_Post_Load ();
++	if (IsArmed && ArmedSound == NULL) {
++		Start_Armed_Sound ();
++	}
++}
++
++
+ ////////////////////////////////////////////////////////////////
+ //
+ //	Load_Variables
+@@ -710,6 +724,27 @@ BeaconGameObj::Stop_Armed_Sound (void)
+ }
+ 
+ 
++////////////////////////////////////////////////////////////////
++//
++//	Start_Armed_Sound
++//
++////////////////////////////////////////////////////////////////
++void
++BeaconGameObj::Start_Armed_Sound (void)
++{
++	if (ArmedSound != NULL || WWAudioClass::Get_Instance () == NULL) {
++		return;
++	}
++
++	ArmedSound = WWAudioClass::Get_Instance ()->Create_Continuous_Sound (
++		Get_Definition ().ArmedSoundDefID);
++	if (ArmedSound != NULL) {
++		ArmedSound->Set_Transform (Get_Transform ());
++		ArmedSound->Add_To_Scene ();
++	}
++}
++
++
+ ////////////////////////////////////////////////////////////////
+ //
+ //	Set_State
+@@ -759,15 +794,7 @@ BeaconGameObj::Set_State (int state)
+ 				//
+ 				//	Create the "armed" sound
+ 				//
+-				ArmedSound = WWAudioClass::Get_Instance ()->Create_Continuous_Sound (Get_Definition ().ArmedSoundDefID);
+-				if (ArmedSound != NULL) {
+-
+-					//
+-					//	Insert the sound object into the world
+-					//
+-					ArmedSound->Set_Transform (Get_Transform ());
+-					ArmedSound->Add_To_Scene ();
+-				}
++				Start_Armed_Sound ();
+ 
+ 				// Only on Server
+ 				if ( CombatManager::I_Am_Server() ) {

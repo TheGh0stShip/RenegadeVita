@@ -115,9 +115,26 @@ class MissionCompletionContractTests(unittest.TestCase):
             "(result.mission_completion_observed && !result.mission_succeeded)",
             runtime,
         )
+        self.assertIn("bool restart_source_is_save = false;", runtime)
+        self.assertIn("&restart_source_is_save", runtime)
+        self.assertIn("!restart_source_is_save", runtime)
+
+    def test_reload_preserves_native_completion_observer_through_level_start(self) -> None:
+        combat_mode = (ROOT / "staging/commando/combatgmode.cpp").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('#include "a31_interactive_runtime_policy.h"', combat_mode)
+        pre_load = combat_mode.index("CombatManager::Pre_Load_Level")
+        restart_observer = combat_mode.index(
+            "A31_Interactive_Restart_Mission_Completion_Observation()", pre_load
+        )
+        threaded_load = combat_mode.index("Load_Level_Threaded", restart_observer)
+        self.assertLess(pre_load, restart_observer)
+        self.assertLess(restart_observer, threaded_load)
+        guarded_block = combat_mode[restart_observer:threaded_load]
         self.assertIn(
-            "A4 death: original restart resumed Combat; mission callback observation reset",
-            runtime,
+            "CombatManager::Set_Combat_Misc_Handler( &GameMiscHandler )",
+            guarded_block,
         )
 
     def test_process_success_requires_orderly_original_runtime_exit(self) -> None:

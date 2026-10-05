@@ -13,7 +13,7 @@
  	LogoModel			= WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("IF_RENLOGO");
  	TitleTransModel	= WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("IF_TITLETRANS");
  	GizmoModel			= WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("IF_EVAGIZMO");
-@@ -124,6 +130,9 @@
+@@ -124,5 +130,8 @@
  MainMenuDialogClass::~MainMenuDialogClass (void)
  {
 +	if (_TheInstance == this) {

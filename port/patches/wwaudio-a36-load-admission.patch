@@ -1,0 +1,193 @@
+--- a/AudibleSound.cpp
++++ b/AudibleSound.cpp
+@@ -1710,23 +1710,33 @@
+ {
+ 	using namespace AUDIBLE_SOUND_DEF_SAVELOAD;
+ 	bool retval = true;
++	bool variables_seen = false;
++	bool base_seen = false;
+ 
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+ 			case CHUNKID_VARIABLES:
+-				retval &= Load_Variables (cload);
++				if (variables_seen) retval = false;
++				else {
++					variables_seen = true;
++					retval &= Load_Variables (cload);
++				}
+ 				break;
+ 
+ 			case CHUNKID_BASE_CLASS:
+-				retval &= DefinitionClass::Load (cload);
++				if (base_seen) retval = false;
++				else {
++					base_seen = true;
++					retval &= DefinitionClass::Load (cload);
++				}
+ 				break;
+ 		}
+ 
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return retval;
++	return retval && variables_seen && base_seen && !cload.Has_Error();
+ }
+ 
+ 
+@@ -1767,7 +1777,7 @@
+ 	WRITE_MICRO_CHUNK (csave, VARID_CREATE_LOGICAL,				m_CreateLogical)
+ 	WRITE_MICRO_CHUNK (csave, VARID_LOGICAL_DROP_OFF,			m_LogicalDropOffRadius)
+ 	WRITE_MICRO_CHUNK (csave, VARID_SPHERE_COLOR,				m_AttenuationSphereColor)
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+@@ -1812,7 +1822,7 @@
+ 		cload.Close_Micro_Chunk ();
+ 	}
+ 
+-	return true;
++	return !cload.Has_Error();
+ }
+ 
+ 
+@@ -2061,4 +2071,4 @@
+ 	}
+ 
+ 	return true;
+-}
+\ No newline at end of file
++}
+--- a/AudioSaveLoad.cpp
++++ b/AudioSaveLoad.cpp
+@@ -116,11 +116,11 @@
+ 	SoundSceneClass *scene = WWAudioClass::Get_Instance ()->Get_Sound_Scene ();
+ 	if (scene != NULL) {
+ 		csave.Begin_Chunk (CHUNKID_STATIC_SCENE);
+-			scene->Save_Static (csave);
++			retval &= scene->Save_Static (csave);
+ 		csave.End_Chunk ();
+ 	}
+ 
+-	return retval;
++	return retval && !csave.Has_Error();
+ }
+ 
+ 
+@@ -135,6 +135,7 @@
+ 	WWMEMLOG(MEM_SOUND);
+ 
+ 	bool retval = true;
++	bool scene_seen = false;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+@@ -143,11 +144,16 @@
+ 			//
+ 			case CHUNKID_STATIC_SCENE:
+ 			{
++				if (scene_seen) {
++					retval = false;
++					break;
++				}
++				scene_seen = true;
+ 				A31_Audio_Save_Load_Breadcrumb("static-audio SaveLoad entry");
+ 				SoundSceneClass *scene = WWAudioClass::Get_Instance ()->Get_Sound_Scene ();
+ 				if (scene != NULL) {
+-					scene->Load_Static (cload);
+-				}
++					retval &= scene->Load_Static (cload);
++				} else retval = false;
+ 			}
+ 			break;
+ 		}
+@@ -155,7 +161,7 @@
+ 		cload.Close_Chunk ();
+ 	}
+ 
+-	return retval;
++	return retval && !cload.Has_Error();
+ }
+ 
+ 
+@@ -216,11 +222,11 @@
+ 		csave.End_Chunk ();
+ 		
+ 		csave.Begin_Chunk (CHUNKID_DYNAMIC_SCENE);
+-			scene->Save_Dynamic (csave);
++			retval &= scene->Save_Dynamic (csave);
+ 		csave.End_Chunk ();
+ 	}
+ 
+-	return retval;
++	return retval && !csave.Has_Error();
+ }
+ 
+ 
+@@ -235,6 +241,10 @@
+ 	bool retval = true;
+ 	bool loaded_variables = false;
+ 	bool loaded_scene = false;
++	bool scale_seen = false;
++	bool music_seen = false;
++	float loaded_global_scale = 1.0F;
++	StringClass loaded_music_name;
+ 	while (cload.Open_Chunk ()) {
+ 		switch (cload.Cur_Chunk_ID ()) {
+ 
+@@ -256,9 +266,9 @@
+ 						//
+ 						case VARID_LOGICAL_LISTENER_GLOBAL_SCALE:
+ 						{
+-							float global_scale = 1.0F;
+-							LOAD_MICRO_CHUNK (cload, global_scale);
+-							LogicalListenerClass::Set_Global_Scale (global_scale);
++							if (scale_seen || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_global_scale) ||
++								cload.Read(&loaded_global_scale, sizeof(loaded_global_scale)) != sizeof(loaded_global_scale)) retval = false;
++							scale_seen = true;
+ 							break;
+ 						}						
+ 
+@@ -267,9 +277,9 @@
+ 						//
+ 						case VARID_BACKGROUND_MUSIC_NAME:
+ 						{
+-							StringClass filename;
+-							LOAD_MICRO_CHUNK_WWSTRING (cload, filename);
+-							WWAudioClass::Get_Instance ()->Set_Background_Music (filename);
++							if (music_seen || cload.Read(loaded_music_name.Get_Buffer(cload.Cur_Micro_Chunk_Length()),
++								cload.Cur_Micro_Chunk_Length()) != cload.Cur_Micro_Chunk_Length()) retval = false;
++							music_seen = true;
+ 							break;
+ 						}						
+ 
+@@ -291,9 +301,8 @@
+ 				}
+ 				loaded_scene = true;
+ 				SoundSceneClass *scene = WWAudioClass::Get_Instance ()->Get_Sound_Scene ();
+-				if (scene != NULL) {
+-					scene->Load_Dynamic (cload);
+-				}
++				if (scene != NULL) retval &= scene->Load_Dynamic (cload);
++				else retval = false;
+ 			}
+ 			break;
+ 		}
+@@ -303,5 +312,11 @@
+ 
+ 	// The writer emits either both children when a sound scene exists or an
+ 	// intentionally empty subsystem when it does not.
+-	return retval && loaded_variables == loaded_scene;
++	retval = retval && loaded_variables == loaded_scene && !cload.Has_Error();
++	if (loaded_variables) retval = retval && scale_seen && music_seen;
++	if (retval && loaded_variables) {
++		LogicalListenerClass::Set_Global_Scale (loaded_global_scale);
++		WWAudioClass::Get_Instance ()->Set_Background_Music (loaded_music_name);
++	}
++	return retval;
+ }
+

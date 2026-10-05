@@ -1,0 +1,12 @@
+--- a/campaign.cpp
++++ b/campaign.cpp
+@@ -190,7 +190,7 @@
+ 		WRITE_MICRO_CHUNK(csave, MICROCHUNK_STATE, State);
+ 		WRITE_MICRO_CHUNK(csave, MICROCHUNK_BACKDROP_INDEX, BackdropIndex);
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ //-----------------------------------------------------------------------------
+

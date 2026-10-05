@@ -525,13 +525,17 @@ bool PhysClass::Save (ChunkSaveClass &csave)
 	}
 	csave.End_Chunk();
 	
-	csave.Begin_Chunk(PHYS_CHUNK_MODEL);
-	csave.Begin_Chunk(Model->Get_Factory().Chunk_ID());
-	Model->Get_Factory().Save(csave,Model);
-	csave.End_Chunk();
-	csave.End_Chunk();
+	if (Model != NULL) {
+		csave.Begin_Chunk(PHYS_CHUNK_MODEL);
+		csave.Begin_Chunk(Model->Get_Factory().Chunk_ID());
+		Model->Get_Factory().Save(csave,Model);
+		csave.End_Chunk();
+		csave.End_Chunk();
+	} else {
+		csave.Report_Error();
+	}
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool PhysClass::Load (ChunkLoadClass &cload)
@@ -544,6 +548,7 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 	char tmpstring[256];
 	tmpstring[0] = 0;
 	RenderObjClass * render_model = NULL;
+	bool loaded = true;
 #if defined(__vita__)
 	A35_Vita_Static_Load_Trace_Step("phys-load-entry", 0U);
 #endif
@@ -575,7 +580,10 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 				break;
 
 			case PHYS_CHUNK_MODEL:
-				cload.Open_Chunk();
+				if (!cload.Open_Chunk()) {
+					loaded = false;
+					break;
+				}
 #if defined(__vita__)
 				A35_Vita_Static_Load_Trace_Step("render-factory-lookup", cload.Cur_Chunk_ID());
 #endif
@@ -590,6 +598,9 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 					A35_Vita_Static_Load_Trace_Step("render-factory-load-return", cload.Cur_Chunk_ID());
 #endif
 					SET_REF_OWNER(render_model);
+					if (render_model == NULL) loaded = false;
+				} else {
+					loaded = false;
 				}
 				cload.Close_Chunk();
 				break;
@@ -676,7 +687,7 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 #if defined(__vita__)
 	A35_Vita_Static_Load_Trace_Step("phys-load-return", 0U);
 #endif
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -840,12 +851,13 @@ bool PhysDefClass::Save(ChunkSaveClass &csave)
 
 bool PhysDefClass::Load(ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {			
 
 			case PHYSDEF_CHUNK_DEFINITION:
-				DefinitionClass::Load(cload);
+				if (!DefinitionClass::Load(cload)) loaded = false;
 				break;
 
 			case PHYSDEF_CHUNK_VARIABLES:
@@ -863,7 +875,7 @@ bool PhysDefClass::Load(ChunkLoadClass &cload)
 
 		cload.Close_Chunk();
 	}
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 bool PhysDefClass::Is_Type(const char * type_name)

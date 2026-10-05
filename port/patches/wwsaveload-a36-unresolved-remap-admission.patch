@@ -1,0 +1,104 @@
+--- a/pointerremap.h
++++ b/pointerremap.h
+@@ -61,7 +61,7 @@
+ 		~PointerRemapClass(void);
+ 
+ 		void		Reset(void);
+-		void		Process(void);
++		bool		Process(void);
+ 
+ 		void		Register_Pointer (void *old_pointer, void *new_pointer);
+ 
+@@ -99,7 +99,7 @@
+ #endif
+ 		};
+ 
+-		void		Process_Request_Table(DynamicVectorClass<PtrRemapStruct> & request_table,bool refcount);
++		bool		Process_Request_Table(DynamicVectorClass<PtrRemapStruct> & request_table,bool refcount);
+ 		static int __cdecl ptr_pair_compare_function(void const * ptr1, void const * ptr2);
+ 		static int __cdecl ptr_request_compare_function(void const * ptr1, void const * ptr2);
+ 
+--- a/pointerremap.cpp
++++ b/pointerremap.cpp
+@@ -61,28 +61,29 @@
+ 	RefCountRequestTable.Delete_All();
+ }
+ 
+-void PointerRemapClass::Process(void)
++bool PointerRemapClass::Process(void)
+ {
++	bool remapped = true;
+ 	if ( PointerPairTable.Count() > 0 ) {
+ 		qsort(&PointerPairTable[0], PointerPairTable.Count(), sizeof(PointerPairTable[0]), ptr_pair_compare_function);
+ 	}
+ 
+ 	if ( PointerRequestTable.Count() > 0 ) {
+-		WWASSERT( PointerPairTable.Count() > 0 );
+ 		qsort(&PointerRequestTable[0],PointerRequestTable.Count(), sizeof(PointerRequestTable[0]), ptr_request_compare_function);
+-		Process_Request_Table(PointerRequestTable,false);
++		remapped = Process_Request_Table(PointerRequestTable,false) && remapped;
+ 	}
+ 
+ 	// remap the ref-counted pointers
+ 	if ( RefCountRequestTable.Count() > 0 ) {
+-		WWASSERT( PointerPairTable.Count() > 0 );
+ 		qsort(&RefCountRequestTable[0],RefCountRequestTable.Count(), sizeof(RefCountRequestTable[0]), ptr_request_compare_function);
+-		Process_Request_Table(RefCountRequestTable,true);
++		remapped = Process_Request_Table(RefCountRequestTable,true) && remapped;
+ 	}
++	return remapped;
+ }
+ 
+-void PointerRemapClass::Process_Request_Table(DynamicVectorClass<PtrRemapStruct> & request_table,bool refcount)
++bool PointerRemapClass::Process_Request_Table(DynamicVectorClass<PtrRemapStruct> & request_table,bool refcount)
+ {
++	bool remapped = true;
+ 	// Remap the pointers
+ 	int pointer_index = 0;
+ 	int pair_index = 0;
+@@ -99,12 +100,15 @@
+ 			pair_index++;
+ 		}
+ 	
+-		if ((pair_index < PointerPairTable.Count()) && (PointerPairTable[pair_index].OldPointer == pointer_to_remap)) {
++		if (pointer_to_remap == NULL) {
++			// Serialized null is already resolved and needs no pair-table entry.
++			*request_table[pointer_index].PointerToRemap = NULL;
++		} else if ((pair_index < PointerPairTable.Count()) && (PointerPairTable[pair_index].OldPointer == pointer_to_remap)) {
+ 
+ 			// we found the match, plug in the new pointer and add a ref if needed.
+ 			*request_table[pointer_index].PointerToRemap = PointerPairTable[pair_index].NewPointer;
+ 
+-			if (refcount) {
++			if (refcount && *request_table[pointer_index].PointerToRemap != NULL) {
+ 				RefCountClass * refptr = (RefCountClass *)(*request_table[pointer_index].PointerToRemap);
+ 				refptr->Add_Ref();
+ 			}
+@@ -116,14 +120,16 @@
+ 			// If this happens, things could be going very wrong.  (find out why its happening!)
+ 			pair_index = pre_search_index;
+ 			*request_table[pointer_index].PointerToRemap = NULL;
++			remapped = false;
+ #ifdef WWDEBUG			
+ 			const char * file = request_table[pointer_index].File;
+ 			int line = request_table[pointer_index].Line;
+ 			WWDEBUG_SAY(("Warning! Failed to re-map pointer! old_ptr = 0x%X  file = %s  line = %d\r\n",(unsigned int)pointer_to_remap,file,line));
+ 			WWASSERT( 0 );
+ #endif
+ 		}
+ 	}
++	return remapped;
+ }
+ 
+ void PointerRemapClass::Register_Pointer (void *old_pointer, void *new_pointer)
+--- a/saveload.cpp
++++ b/saveload.cpp
+@@ -117,7 +117,7 @@
+ 	}
+ 
+ 	// Process all of the pointer remap requests
+-	PointerRemapper.Process();
++	ok = PointerRemapper.Process() && ok;
+ 	WWLOG_INTERMEDIATE("PointerRemapper.Process()");
+ 	PointerRemapper.Reset();
+ 	WWLOG_INTERMEDIATE("PointerRemapper.Reset()");

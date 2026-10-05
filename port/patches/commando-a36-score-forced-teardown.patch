@@ -1,0 +1,41 @@
+--- a/scorescreen.h
++++ b/scorescreen.h
+@@ -80,9 +80,11 @@ public:
+ 	void			On_Init_Dialog (void);
+ 	void			On_Destroy (void);
+ 	void			On_Command (int ctrl_id, int mesage_id, DWORD param);
++	static void	Set_Forced_Teardown (bool active);
+ 
+ private:
+ 	bool			ScoreScreenActive;
++	static bool	ForcedTeardown;
+ 
+ 	int				Get_Time_To_Finish_Stars( void );
+ 	int				Get_Level_Of_Play_Stars( void );
+--- a/scorescreen.cpp
++++ b/scorescreen.cpp
+@@ -148,6 +148,13 @@ void ScoreScreenGameModeClass::Save_Stats( void )
+ //	ScoreScreenDialogClass
+ //
+ ////////////////////////////////////////////////////////////////
++bool ScoreScreenDialogClass::ForcedTeardown = false;
++
++void ScoreScreenDialogClass::Set_Forced_Teardown(bool active)
++{
++	ForcedTeardown = active;
++}
++
+ ScoreScreenDialogClass::ScoreScreenDialogClass (void)	:
+ 	MenuDialogClass (IDD_SCORE_SCREEN)
+ {
+@@ -326,7 +333,9 @@ ScoreScreenDialogClass::On_Destroy (void)
+ 	MenuDialogClass::On_Destroy ();
+ 	if ( ScoreScreenActive ) {
+ 		ScoreScreenActive = false;
+-		CampaignManager::Continue();
++		if (!ForcedTeardown) {
++			CampaignManager::Continue();
++		}
+ 	}
+ 	return ;
+ }

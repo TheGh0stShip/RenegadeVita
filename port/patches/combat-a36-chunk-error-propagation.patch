@@ -1,0 +1,10 @@
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -438,6 +438,7 @@
+ 	}
+ 
+ #if defined(__vita__)
++	if (cload.Has_Error()) A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_SUBSYSTEM_FAILED);
+ 	if (!level_info_found || !level_info_valid) A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_INFO_MISSING);
+ 	if (CombatManager::I_Am_Server() && !level_data_found) {
+ 		A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_DATA_MISSING);

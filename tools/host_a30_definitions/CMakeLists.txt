@@ -732,6 +732,13 @@ set(RV_A4_FRONTEND_RUNTIME_LINK_SOURCES
   ${RV_STAGE}/commando/dlgsavegame.cpp
   ${RV_STAGE}/commando/dlghelpscreen.cpp
   ${RV_STAGE}/commando/dlgtechoptions.cpp
+  ${RV_STAGE}/commando/dlgcredits.cpp
+  ${RV_STAGE}/commando/dlgmovieoptions.cpp
+  ${RV_STAGE}/commando/inputconfigmgr.cpp
+  ${RV_STAGE}/commando/dlgcontrols.cpp
+  ${RV_STAGE}/commando/dlgcontroltabs.cpp
+  ${RV_STAGE}/commando/dlgcontrolslisttab.cpp
+  ${RV_STAGE}/commando/dlgcontrolsaveload.cpp
   ${RV_STAGE}/commando/dlgconfigaudiotab.cpp
   ${RV_STAGE}/commando/dlgconfigvideotab.cpp
   ${RV_STAGE}/commando/dlgconfigperformancetab.cpp
@@ -899,6 +906,7 @@ add_executable(a31_interactive_runtime
   ${RV_ROOT}/port/platform/a31_client_identity_boundary.cpp
   ${RV_ROOT}/port/platform/renegade_client_identity.cpp
   ${RV_ROOT}/port/platform/a31_gameplay_boundary.cpp
+  ${RV_ROOT}/port/platform/vita/a35_level_load_status.cpp
   ${RV_ROOT}/port/platform/a31_miscutil_boundary.cpp
   ${RV_ROOT}/port/platform/renegade_script_static_provider.cpp
   ${RV_ROOT}/port/developer/a35_script_lookup_telemetry.cpp
@@ -1176,6 +1184,13 @@ add_library(a4_wwui_frontend_probe OBJECT
   ${RV_STAGE}/commando/dlgsavegame.cpp
   ${RV_STAGE}/commando/dlghelpscreen.cpp
   ${RV_STAGE}/commando/dlgtechoptions.cpp
+  ${RV_STAGE}/commando/dlgcredits.cpp
+  ${RV_STAGE}/commando/dlgmovieoptions.cpp
+  ${RV_STAGE}/commando/inputconfigmgr.cpp
+  ${RV_STAGE}/commando/dlgcontrols.cpp
+  ${RV_STAGE}/commando/dlgcontroltabs.cpp
+  ${RV_STAGE}/commando/dlgcontrolslisttab.cpp
+  ${RV_STAGE}/commando/dlgcontrolsaveload.cpp
   ${RV_STAGE}/commando/dlgconfigaudiotab.cpp
   ${RV_STAGE}/commando/dlgconfigvideotab.cpp
   ${RV_STAGE}/commando/dlgconfigperformancetab.cpp

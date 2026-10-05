@@ -1,0 +1,110 @@
+--- a/savegame.h
++++ b/savegame.h
+@@ -82,10 +82,10 @@
+ 
+ 	// DDB Access - Editor only calls Save_Level, App only calls Load_Level
+ 	static void	Save_Definitions( const char * filename = DefaultDefinitionFilename );
+-	static void	Load_Definitions( const char * filename = DefaultDefinitionFilename );
++	static bool	Load_Definitions( const char * filename = DefaultDefinitionFilename, bool required_file = true );
+ 
+ 	// Generic SaveLoadSubSystem Access
+-	static void	Load_Save_Load_System( const char * filename, bool auto_post_load, bool required_level = false );
++	static bool	Load_Save_Load_System( const char * filename, bool auto_post_load, bool required_file = false );
+ 	static void _cdecl Save_Save_Load_System( const char * filename, ... );
+ 
+ protected:
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -448,7 +448,13 @@
+ 				WWASSERT( temp_ddb.Get_Length() > 4 );
+ 				temp_ddb.Erase( MapFilename.Get_Length()-4, 4 );
+ 				temp_ddb	+= ".ddb";
+-				Load_Definitions(temp_ddb);
++				if (!Load_Definitions(temp_ddb, false)) {
++#if defined(__vita__)
++					DefinitionMgrClass::Free_Definitions();
++					A35_Level_Load_Record_Failure(A35_LOAD_STATIC_SUBSYSTEM_FAILED);
++					break;
++#endif
++				}
+ 				}
+ 				WWLOG_INTERMEDIATE("Load_Definitions");
+ 
+@@ -715,11 +721,11 @@
+ 	Save_Save_Load_System( filename, &_TheDefinitionMgr, NULL );
+ }
+ 
+-void	SaveGameManager::Load_Definitions( const char * filename )
++bool	SaveGameManager::Load_Definitions( const char * filename, bool required_file )
+ {
+ 	WWMEMLOG(MEM_GAMEDATA);
+ 	Debug_Say(( "Load Definitions %s\n", filename ));
+-	Load_Save_Load_System( filename, true );	// true = automatic post load processing
++	return Load_Save_Load_System(filename, true, required_file);
+ }
+ 
+ /*
+@@ -755,34 +761,36 @@
+ 	_TheWritingFileFactory->Return_File(file);
+ }
+ 
+-void	SaveGameManager::Load_Save_Load_System( const char * filename, bool auto_post_load, bool required_level )
++bool	SaveGameManager::Load_Save_Load_System( const char * filename, bool auto_post_load, bool required_file )
+ {
++	bool load_succeeded = !required_file;
+ 	FileClass * file = _TheFileFactory->Get_File( filename );
+ 	if ( file != NULL ) {
+ #if defined(__vita__)
+ 		if (!file->Open(FileClass::READ)) {
+-			if (required_level) A35_Level_Load_Record_Failure(A35_LOAD_STATIC_OPEN_FAILED);
++			if (required_file) A35_Level_Load_Record_Failure(A35_LOAD_STATIC_OPEN_FAILED);
+ 			file->Close();
+ 			_TheFileFactory->Return_File(file);
+-			return;
++			return !required_file;
+ 		}
+ 		ChunkLoadClass cload(file);
+-		if (!SaveLoadSystemClass::Load(cload, auto_post_load) && required_level) {
++		load_succeeded = SaveLoadSystemClass::Load(cload, auto_post_load);
++		if (!load_succeeded && required_file) {
+ 			A35_Level_Load_Record_Failure(A35_LOAD_STATIC_SUBSYSTEM_FAILED);
+ 		}
+ #else
+ 		file->Open( FileClass::READ );
+ 		ChunkLoadClass cload(file);
+-		SaveLoadSystemClass::Load( cload, auto_post_load );
++		load_succeeded = SaveLoadSystemClass::Load( cload, auto_post_load );
+ #endif
+ 		file->Close();
+ 		_TheFileFactory->Return_File(file);
+ 	} else {
+ #if defined(__vita__)
+-		if (required_level) A35_Level_Load_Record_Failure(A35_LOAD_STATIC_UNAVAILABLE);
++		if (required_file) A35_Level_Load_Record_Failure(A35_LOAD_STATIC_UNAVAILABLE);
+ #endif
+ 		Debug_Say(( "Failed to load file %s\n", filename ));
+ //		WWASSERT( file );
+ 	}
++	return load_succeeded;
+ }
+-
+--- a/combat.cpp
++++ b/combat.cpp
+@@ -402,7 +402,14 @@
+ 		INIT_STATUS("Load definition databases");
+ 		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-entry\n");
+ 		VITA_LEVEL_LOAD_PRESENT("load-definitions-entry", 1);
+-		SaveGameManager::Load_Definitions();
++		if (!SaveGameManager::Load_Definitions()) {
++#if defined(__vita__)
++			DefinitionMgrClass::Free_Definitions();
++			A35_Level_Load_Record_Failure(A35_LOAD_STATIC_SUBSYSTEM_FAILED);
++			VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-failed\n");
++			return;
++#endif
++		}
+ 		WWLOG_INTERMEDIATE("Load definitions");
+ 		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-return\n");
+ 
+
+

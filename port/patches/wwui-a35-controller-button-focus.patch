@@ -52,9 +52,7 @@
  	DialogControlClass *retval = NULL;
  
  	//
-@@ -1176,6 +1205,7 @@
- 	}
- 
+@@ -1178,2 +1207,3 @@
  	return retval;
 +#endif
  }

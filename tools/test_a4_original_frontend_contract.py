@@ -407,7 +407,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         lifecycle = (ROOT / "port/platform/a4_frontend_lifecycle_boundary.cpp").read_text()
         patch = (ROOT / "port/patches/commando-a35-eva-native-dependencies.patch").read_text()
         pause = runtime[runtime.index("bool Run_Original_Gameplay_Pause_Menu("):
-                        runtime.index("bool Try_Latch_Development_M00_Checkpoint()")]
+                        runtime.index("bool Try_Latch_Development_Save()")]
         for token in (
             "combat_mode->Suspend();", "A4_Frontend_Begin_Pause_Loop();",
             "A31VitaScopedFrontendRenderResolution frontend_render_resolution;",
@@ -442,15 +442,16 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
         cmake = (ROOT / "CMakeLists.txt").read_text()
         build = (ROOT / "tools/build.sh").read_text()
-        checkpoint = runtime[runtime.index("bool Try_Latch_Development_M00_Checkpoint()"):
+        checkpoint = runtime[runtime.index("bool Try_Latch_Development_Save()"):
                              runtime.index("bool Run_Original_Frontend_Intro_And_Menu(")]
         self.assertIn('"Enable one-shot diagnostic save/mission launch requests; keep OFF for public packages" OFF)', cmake)
         self.assertIn("rv_development_checkpoint=${RENEGADE_DEVELOPMENT_CHECKPOINT:-0}", build)
         self.assertIn("#if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT", checkpoint)
         self.assertIn("A31DevelopmentCheckpoint::Parse", checkpoint)
-        self.assertIn("A4_Frontend_Is_Tutorial_Source(source)", checkpoint)
-        self.assertIn("A4_Frontend_Latch_Start_Game(source, 0, 0UL);", checkpoint)
-        self.assertLess(checkpoint.index("A4_Frontend_Is_Tutorial_Source(source)"),
+        self.assertIn("A4_Frontend_Resolve_Single_Player_Archive(source", checkpoint)
+        self.assertIn("&& is_save", checkpoint)
+        self.assertIn("A4_Frontend_Latch_Start_Game(source, -1, 0UL);", checkpoint)
+        self.assertLess(checkpoint.index("A4_Frontend_Resolve_Single_Player_Archive(source"),
                         checkpoint.index("remove(request_path)"))
         self.assertNotIn("remove(source)", checkpoint)
         self.assertNotIn("CombatManager::Load", checkpoint)

@@ -1,0 +1,23 @@
+--- a/combatgmode.cpp
++++ b/combatgmode.cpp
+@@ -120,6 +120,9 @@
+ #include "dialogtests.h"
+ #include "dialogmgr.h"
+ #include "a4_gameinit_online_boundary.h"
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++#include "a31_vita_runtime.h"
++#endif
+ 
+ /*
+ **
+@@ -818,6 +821,10 @@
+ 
+ 	CombatManager::Set_Load_Progress(0);
+ 	LoadingScreenClass loading_screen;	// Try moving this to very start of loading
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++	A31VitaScopedOriginalLoadingScreenCallback reload_loading_callback(
++		&loading_screen);
++#endif
+ 	loading_screen.Render(true);
+ 
+ 	// Hack load reg for default first person.  Is dont again later.

@@ -1,0 +1,16 @@
+--- a/DlgMPConnect.cpp
++++ b/DlgMPConnect.cpp
+@@ -284,5 +284,6 @@
+       		PLC->Refusal_Actions();
+    			}
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ 			else
+ 				{
+ 		 		GameModeClass* gameMode = GameModeManager::Find("WOL");
+@@ -296,5 +297,6 @@
+ 		 			}
+ 				}
++#endif
+ 
+ 			Release_Ref();
+ 			}

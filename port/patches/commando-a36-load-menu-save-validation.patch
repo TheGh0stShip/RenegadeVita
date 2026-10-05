@@ -1,0 +1,25 @@
+--- a/dlgloadspgame.cpp
++++ b/dlgloadspgame.cpp
+@@ -52,4 +52,5 @@
+ #include "god.h"
+ #include "registry.h"
++#include "debug.h"
+ #include "_globals.h"
+ #include "dialogtests.h"
+@@ -182,7 +183,15 @@
+ 			//
+ 			WideStringClass description;
+ 			WideStringClass map_name;
+-			SaveGameManager::Smart_Peek_Description (find_info.cFileName, description, map_name);
++			bool description_valid = SaveGameManager::Smart_Peek_Description (
++				find_info.cFileName, description, map_name);
++			int filename_length = ::strlen(find_info.cFileName);
++			bool is_save_file = filename_length > 4 &&
++				::stricmp(find_info.cFileName + filename_length - 4, ".SAV") == 0;
++			if (is_save_file && !description_valid) {
++				Debug_Say(( "Skipping unreadable save file %s\n", find_info.cFileName ));
++				continue;
++			}
+ 
+ 			//
+ 			//	Default to the map name if we don't have a description

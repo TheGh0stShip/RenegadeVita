@@ -1,0 +1,214 @@
+--- a/basegameobj.cpp
++++ b/basegameobj.cpp
+@@ -128,7 +128,7 @@
+ 	csave.Begin_Chunk( CHUNKID_DEF_PARENT );
+ 		DefinitionClass::Save( csave );
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	BaseGameObjDef::Load( ChunkLoadClass &cload )
+@@ -204,7 +204,7 @@
+ 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_ENABLE_CINEMATIC_FREEZE, EnableCinematicFreeze );
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	BaseGameObj::Load( ChunkLoadClass &cload )
+--- a/damageablegameobj.cpp
++++ b/damageablegameobj.cpp
+@@ -246,7 +246,7 @@
+ bool	DamageableGameObj::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-		ScriptableGameObj::Save( csave );
++		if (!ScriptableGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -255,10 +255,10 @@
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_DEFENSEOBJECT );
+-		DefenseObject.Save(csave);
++		if (!DefenseObject.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	DamageableGameObj::Load( ChunkLoadClass &cload )
+--- a/physicalgameobj.cpp
++++ b/physicalgameobj.cpp
+@@ -435,7 +435,7 @@
+ bool	PhysicalGameObj::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-		DamageableGameObj::Save( csave );
++		if (!DamageableGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -456,13 +456,13 @@
+ 
+ 	if ( AnimControl ) {
+ 		csave.Begin_Chunk( CHUNKID_ANIM_CONTROL );
+-		AnimControl->Save( csave );
++		if (!AnimControl->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+    if ( HostGameObj.Get_Ptr() != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_HOST_GAME_OBJ );
+-		HostGameObj.Save( csave );
++		if (!HostGameObj.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+@@ -480,7 +480,7 @@
+ 	Vector3					TintColor;
+ */
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	PhysicalGameObj::Load( ChunkLoadClass &cload )
+--- a/armedgameobj.cpp
++++ b/armedgameobj.cpp
+@@ -289,7 +289,7 @@
+ bool	ArmedGameObj::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-	PhysicalGameObj::Save( csave );
++	if (!PhysicalGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -297,10 +297,10 @@
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_WEAPONBAG );
+-	WeaponBag->Save( csave );
++	if (WeaponBag == NULL || !WeaponBag->Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	ArmedGameObj::Load( ChunkLoadClass &cload )
+--- a/smartgameobj.cpp
++++ b/smartgameobj.cpp
+@@ -301,7 +301,7 @@
+ bool	SmartGameObj::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_ARMEDGAMEOBJ_PARENT );
+-	ArmedGameObj::Save( csave );
++	if (!ArmedGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -321,26 +321,26 @@
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_CONTROL );
+-	Control.Save( csave );
++	if (!Control.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_CONTROLLER );
+-	Controller.Save( csave );
++	if (!Controller.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_ACTION );
+-	Action.Save( csave );
++	if (!Action.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	if (StealthEffect != NULL) {
+ 		csave.Begin_Chunk(CHUNKID_STEALTH_EFFECT);
+-		StealthEffect->Save(csave);
++		if (!StealthEffect->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+ //	Don't need to save Listener
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	SmartGameObj::Load( ChunkLoadClass &cload )
+--- a/soldier.cpp
++++ b/soldier.cpp
+@@ -630,7 +630,7 @@
+ bool	SoldierGameObj::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-	SmartGameObj::Save( csave );
++	if (!SmartGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	//
+@@ -675,17 +675,17 @@
+ 
+ 	if ( WeaponAnimControl ) {
+ 		csave.Begin_Chunk( CHUNKID_WEAPON_ANIM );
+-		WeaponAnimControl->Save( csave );
++		if (!WeaponAnimControl->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+ 	csave.Begin_Chunk( CHUNKID_HUMAN_STATE );
+-	HumanState.Save( csave );
++	if (!HumanState.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	if ( TransitionCompletionData ) {
+ 		csave.Begin_Chunk( CHUNKID_TRANSITION_COMPLETION_DATA );
+-		TransitionCompletionData->Save( csave );
++		if (!TransitionCompletionData->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+@@ -699,11 +699,11 @@
+ 
+ 	if ( SpecialDamageDamager.Get_Ptr() != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_SPECIAL_DAMAGE_DAMAGER );
+-		SpecialDamageDamager.Save( csave );
++		if (!SpecialDamageDamager.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ //------------------------------------------------------------------------------------
+--- a/vehicle.cpp
++++ b/vehicle.cpp
+@@ -610,7 +610,7 @@
+ 	Destroy_Transitions();
+ 
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-	SmartGameObj::Save( csave );
++	if (!SmartGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -630,7 +630,7 @@
+ 
+ 	Create_And_Destroy_Transitions();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	VehicleGameObj::Load( ChunkLoadClass &cload )
+

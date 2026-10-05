@@ -309,15 +309,16 @@ RaveshawBossGameObjDefClass::Create (void) const
 bool
 RaveshawBossGameObjDefClass::Save (ChunkSaveClass &csave)
 {
+	bool saved = true;
 	csave.Begin_Chunk (CHUNKID_DEF_PARENT);
-		SoldierGameObjDef::Save (csave);
+		saved = SoldierGameObjDef::Save(csave) && saved;
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_DEF_VARIABLES);
 		Save_Variables (csave);
 	csave.End_Chunk();
 
-	return true;
+	return saved && !csave.Has_Error();
 }
 
 
@@ -329,11 +330,12 @@ RaveshawBossGameObjDefClass::Save (ChunkSaveClass &csave)
 bool
 RaveshawBossGameObjDefClass::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_DEF_PARENT:
-				SoldierGameObjDef::Load (cload);
+				if (!SoldierGameObjDef::Load (cload)) loaded = false;
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -348,7 +350,7 @@ RaveshawBossGameObjDefClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -676,22 +678,24 @@ RaveshawBossGameObjClass::Get_Definition (void) const
 bool
 RaveshawBossGameObjClass::Save (ChunkSaveClass & csave)
 {
+	bool saved = true;
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		SoldierGameObj::Save (csave);
+		saved = SoldierGameObj::Save(csave) && saved;
 	csave.End_Chunk ();	
 
 	//
 	//	Save the tiberium effect to its own chunk
 	//
 	csave.Begin_Chunk (CHUNKID_STEALTH_SOLDIER);
-		StealthSoldier.Save (csave);
+		saved = StealthSoldier.Save(csave) && saved;
 	csave.End_Chunk ();
 	
 	//
 	//	Save the tiberium effect to its own chunk
 	//
 	csave.Begin_Chunk (CHUNKID_TIBERIUM_EFFECT);
-		TiberiumEffect->Save (csave);
+		if (TiberiumEffect == NULL) csave.Report_Error();
+		else saved = TiberiumEffect->Save(csave) && saved;
 	csave.End_Chunk ();
 
 	//
@@ -739,7 +743,7 @@ RaveshawBossGameObjClass::Save (ChunkSaveClass & csave)
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
 		Save_Variables (csave);
 	csave.End_Chunk ();
-	return true;
+	return saved && !csave.Has_Error();
 }
 
 
@@ -751,55 +755,56 @@ RaveshawBossGameObjClass::Save (ChunkSaveClass & csave)
 bool
 RaveshawBossGameObjClass::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				SoldierGameObj::Load (cload);
+				if (!SoldierGameObj::Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_STEALTH_SOLDIER:
-				StealthSoldier.Load (cload);
+				if (!StealthSoldier.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_TIBERIUM_EFFECT:
-				TiberiumEffect->Load (cload);
+				if (TiberiumEffect == NULL || !TiberiumEffect->Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_OVERALL_STATE_MACHINE:
-				OverallState.Load (cload);
+				if (!OverallState.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_RAVESHAW_STATE_MACHINE:
-				RaveshawState.Load (cload);
+				if (!RaveshawState.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_ENGORGED_STATE_MACHINE:
-				EngorgedState.Load (cload);
+				if (!EngorgedState.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_MOVE_STATE_MACHINE:
-				MoveState.Load (cload);
+				if (!MoveState.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_STEALTH_SOLDIER_STATE_MACHINE:
-				StealthSoldierState.Load (cload);
+				if (!StealthSoldierState.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_HAVOC_STATE_MACHINE:
-				HavocState.Load (cload);
+				if (!HavocState.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_THROWN_OBJ_STATE_MACHINE:
-				ThrownObjectState.Load (cload);
+				if (!ThrownObjectState.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_JUMP_STATE_MACHINE:
-				JumpState.Load (cload);		
+				if (!JumpState.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_LIGHTNING_ROD_STATE_MACHINE:
-				LightningRodState.Load (cload);		
+				if (!LightningRodState.Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -816,7 +821,7 @@ RaveshawBossGameObjClass::Load (ChunkLoadClass &cload)
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback (this);
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 

@@ -1,0 +1,178 @@
+--- a/reflist.cpp
++++ b/reflist.cpp
+@@ -48,7 +48,7 @@
+ 	csave.Begin_Chunk( CHUNKID_REF_VARIABLES );
+ 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_TARGET, target_token );
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ 
+--- a/reflist.h
++++ b/reflist.h
+@@ -158,7 +158,7 @@
+ 	csave.Begin_Chunk( CHUNKID_REF_VARIABLES );
+ 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_PTR, ptr_token );
+ 	csave.End_Chunk();
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ template<class T>
+--- a/weapons.cpp
++++ b/weapons.cpp
+@@ -266,13 +266,13 @@
+ 
+ 	if ( Owner != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_OWNER_REF );
+-		Owner.Save( csave );
++		if (!Owner.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+ 	if ( TargetObject != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_TARGET_OBJECT );
+-		TargetObject.Save( csave );
++		if (!TargetObject.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+@@ -283,7 +283,7 @@
+ 	// Don't need to save FiringSound;
+ 	// Dont need to save BulletBumpTime
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	WeaponClass::Load( ChunkLoadClass &cload )
+--- a/weaponbag.cpp
++++ b/weaponbag.cpp
+@@ -88,13 +88,15 @@
+ 	csave.Begin_Chunk( CHUNKID_WEAPON_LIST );
+ 	for( i = 1; i < WeaponList.Count(); i++ ) {
+ 		csave.Begin_Chunk( CHUNKID_WEAPON_ENTRY );
+-		WeaponList[i]->Save( csave );
++		if (WeaponList[i] == NULL || !WeaponList[i]->Save(csave)) {
++			csave.Report_Error();
++		}
+ 		csave.End_Chunk();
+ 	}
+ 	csave.End_Chunk();
+ 
+ 	// Don't need to save Owner or IsChanged;
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	WeaponBagClass::Load( ChunkLoadClass &cload )
+--- a/action.cpp
++++ b/action.cpp
+@@ -3067,23 +3067,23 @@
+ 
+ 	if ( MoveObjectRef != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_MOVE_OBJECT );
+-		MoveObjectRef.Save( csave );
++		if (!MoveObjectRef.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+ 	if ( AttackObjectRef != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_ATTACK_OBJECT );
+-		AttackObjectRef.Save( csave );
++		if (!AttackObjectRef.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+ 	if ( LookObjectRef != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_LOOK_OBJECT );
+-		LookObjectRef.Save( csave );
++		if (!LookObjectRef.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	SafeActionParamsStruct::Load( ChunkLoadClass &cload )
+@@ -3423,13 +3423,13 @@
+ 	}
+ 
+ 	csave.Begin_Chunk( CHUNKID_PARAMETERS );
+-		Parameters.Save( csave );
++		if (!Parameters.Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ // Don't need to save ActionObj because it is set on ActionClass Constructor
+ // Don't need to save ActCount because it is diagnostic
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	ActionClass::Load( ChunkLoadClass &cload )
+--- a/scriptablegameobj.cpp
++++ b/scriptablegameobj.cpp
+@@ -184,7 +184,7 @@
+ 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_OBSERVER_ID, ObserverID );
+ 	csave.End_Chunk();
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	GameObjObserverTimerClass::Load( ChunkLoadClass & cload )
+@@ -253,11 +253,11 @@
+ 
+ 	if ( Sender != NULL ) {
+ 		csave.Begin_Chunk( CHUNKID_TIMER_SENDER );
+-		Sender.Save( csave );
++		if (!Sender.Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	GameObjCustomTimerClass::Load( ChunkLoadClass & cload )
+@@ -464,11 +464,11 @@
+ bool	ScriptableGameObj::Save( ChunkSaveClass & csave )
+ {
+ 	csave.Begin_Chunk( CHUNKID_PARENT );
+-		BaseGameObj::Save( csave );
++		if (!BaseGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_REFERENCEABLE );
+-		ReferenceableGameObj::Save( csave );
++		if (!ReferenceableGameObj::Save(csave)) csave.Report_Error();
+ 	csave.End_Chunk();
+ 
+ 	csave.Begin_Chunk( CHUNKID_VARIABLES );
+@@ -487,17 +487,19 @@
+ 	int i;
+ 	for ( i = 0; i < ObserverTimerList.Count(); i++ ) {
+ 		csave.Begin_Chunk( CHUNKID_OBSERVER_TIMER );
+-			ObserverTimerList[i]->Save( csave );
++			if (ObserverTimerList[i] == NULL ||
++				!ObserverTimerList[i]->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+ 	for ( i = 0; i < CustomTimerList.Count(); i++ ) {
+ 		csave.Begin_Chunk( CHUNKID_CUSTOM_TIMER );
+-			CustomTimerList[i]->Save( csave );
++			if (CustomTimerList[i] == NULL ||
++				!CustomTimerList[i]->Save(csave)) csave.Report_Error();
+ 		csave.End_Chunk();
+ 	}
+ 
+-	return true;
++	return !csave.Has_Error();
+ }
+ 
+ bool	ScriptableGameObj::Load( ChunkLoadClass &cload )
+

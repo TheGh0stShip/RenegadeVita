@@ -16,7 +16,10 @@ class AnimationActionCompletionContract(unittest.TestCase):
     def test_non_looping_action_animation_has_bounded_vita_escape(self):
         action = (ROOT / "staging/combat/action.cpp").read_text()
         self.assertIn("!Action->Get_Parameters().AnimationLooping", action)
-        self.assertIn("elapsed_frames > 1800 || StalledFrames > 300", action)
+        self.assertIn("StalledSeconds >= 5.0f", action)
+        self.assertIn("TimeManager::Get_Frame_Seconds()", action)
+        self.assertIn("GameObjManager::Is_Cinematic_Freeze_Active()", action)
+        self.assertNotIn("elapsed_frames > 1800 || StalledFrames > 300", action)
         self.assertIn("A4 animation action forced complete", action)
         self.assertIn("Action->Done( ACTION_COMPLETE_NORMAL );", action)
 

@@ -696,12 +696,16 @@ ActiveConversationClass::Save (ChunkSaveClass &csave)
 	//	Save each of the orators
 	//
 	for (int index = 0; index < OratorList.Count (); index ++) {
+		if (OratorList[index] == NULL) {
+			csave.Report_Error();
+			continue;
+		}
 		csave.Begin_Chunk (CHUNKID_ORATOR);
-			OratorList[index]->Save (csave);
+			if (!OratorList[index]->Save(csave)) csave.Report_Error();
 		csave.End_Chunk ();
 	}
 
-	return true;
+	return !csave.Has_Error();
 }
 
 
@@ -715,12 +719,18 @@ ActiveConversationClass::Load (ChunkLoadClass &cload)
 {
 	Free_Orator_List ();
 	int monitor_index = 0;
+	bool variables_seen = false;
+	bool loaded = true;
 
 	while (cload.Open_Chunk ()) {		
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_VARIABLES:
-				Load_Variables (cload);
+				if (variables_seen) loaded = false;
+				else {
+					variables_seen = true;
+					Load_Variables (cload);
+				}
 				break;
 
 			case CHUNKID_ORATOR:
@@ -743,15 +753,23 @@ ActiveConversationClass::Load (ChunkLoadClass &cload)
 				//
 				//	Load the monitor's reference from the chunk
 				//
-				MonitorArray[monitor_index++].Load (cload);
+				if (monitor_index >= MAX_MONITORS) {
+					loaded = false;
+				} else {
+					loaded = MonitorArray[monitor_index++].Load(cload) && loaded;
+				}
 			}
 			break;
+
+			default:
+				loaded = false;
+				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && variables_seen && !cload.Has_Error();
 }
 
 

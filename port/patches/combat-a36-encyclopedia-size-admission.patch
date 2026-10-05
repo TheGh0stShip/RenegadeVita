@@ -1,0 +1,26 @@
+--- a/encyclopediamgr.cpp
++++ b/encyclopediamgr.cpp
+@@ -348,15 +348,19 @@
+ 				//
+ 				//	Read the bit vector from its chunk
+ 				//
+-				int size = cload.Cur_Chunk_Length ();
+-				
+-				int vector_size = max (size, KnownObjectVector[type_index].Get_Bit_Array().Length ());
++				const uint32 size = cload.Cur_Chunk_Length ();
++				const int vector_size = KnownObjectVector[type_index].Get_Bit_Array().Length ();
++				if (vector_size < 0 || vector_size > 0x0FFFFFFF ||
++					size > static_cast<uint32>(vector_size)) {
++					loaded = false;
++					break;
++				}
+ 				//unsigned char *bit_vector = new unsigned char[vector_size];
+ 
+ 				//
+ 				//	Initialize the known object array from the saved bit vector
+ 				//
+-				int bitcount = vector_size * 8;
++				const int bitcount = vector_size * 8;
+ 				KnownObjectVector[type_index].Init (bitcount);
+ 
+ 				//

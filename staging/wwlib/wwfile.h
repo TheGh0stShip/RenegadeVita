@@ -91,6 +91,13 @@ class FileClass
 		virtual unsigned long Get_Date_Time(void) {return(0);}
 		virtual bool Set_Date_Time(unsigned long ) {return(false);}
 		virtual void Error(int error, int canretry = false, char const * filename=NULL) = 0;
+#if defined(RENEGADE_VITA_PORT)
+		// Native providers may defer writing until Close. Query before returning
+		// the file to its factory; the original void Close interface is retained.
+		virtual bool Has_Write_Failed(void) const { return false; }
+		// Reject a logically incomplete staged stream before Close can publish it.
+		virtual void Abort_Write(void) {}
+#endif
 		virtual void * Get_File_Handle(void) { return reinterpret_cast<void *>(-1); } 
 		virtual void Bias(int start, int length=-1) = 0;
 

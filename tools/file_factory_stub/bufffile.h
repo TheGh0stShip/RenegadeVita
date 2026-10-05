@@ -44,6 +44,7 @@ public:
 	virtual int Seek(int, int = 1) { return 0; }
 	virtual int Size(void) { return 0; }
 	virtual void Close(void) {}
+	virtual void Error(int, int = false, char const * = NULL) {}
 
 private:
 	char Name[1024] = {};

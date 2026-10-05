@@ -575,17 +575,15 @@
  }
  
  
-@@ -785,6 +817,16 @@
+@@ -785,6 +817,14 @@
  	WWPROFILE("WW3D::Begin_Render");
  	WWASSERT(IsInitted);
  
 +#if defined(RENEGADE_VITA_PORT)
-+	(void)clear;
-+	(void)clearz;
 +	(void)network_callback;
 +	WWASSERT(!IsRendering);
 +	IsRendering = true;
-+	RenegadeVitaRenderer::Begin_Frame(color.X, color.Y, color.Z);
++	RenegadeVitaRenderer::Begin_Frame(clear, clearz, color.X, color.Y, color.Z);
 +	return WW3D_ERROR_OK;
 +#else
 +

@@ -125,11 +125,12 @@ bool	SmartGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	SmartGameObjDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_ARMEDGAMEOBJ_PARENT:
-				ArmedGameObjDef::Load( cload );
+				if (!ArmedGameObjDef::Load( cload )) loaded = false;
 				break;
 								
 			case CHUNKID_DEF_VARIABLES:
@@ -158,7 +159,7 @@ bool	SmartGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -300,7 +301,7 @@ enum	{
 bool	SmartGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_ARMEDGAMEOBJ_PARENT );
-	ArmedGameObj::Save( csave );
+	if (!ArmedGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -320,26 +321,26 @@ bool	SmartGameObj::Save( ChunkSaveClass & csave )
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_CONTROL );
-	Control.Save( csave );
+	if (!Control.Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_CONTROLLER );
-	Controller.Save( csave );
+	if (!Controller.Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_ACTION );
-	Action.Save( csave );
+	if (!Action.Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	if (StealthEffect != NULL) {
 		csave.Begin_Chunk(CHUNKID_STEALTH_EFFECT);
-		StealthEffect->Save(csave);
+		if (!StealthEffect->Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
 //	Don't need to save Listener
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	SmartGameObj::Load( ChunkLoadClass &cload )
@@ -347,17 +348,18 @@ bool	SmartGameObj::Load( ChunkLoadClass &cload )
 	WWASSERT( PlayerData == NULL );
 
 	int new_control_owner = 0;
+	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case OLD_CHUNKID_PHYSICALGAMEOBJ_PARENT:
 				Debug_Say(( "Loading old SmartGameObj format\n" ));
-				PhysicalGameObj::Load( cload );
+				if (!PhysicalGameObj::Load(cload)) loaded = false;
 				break;
 								
 			case CHUNKID_ARMEDGAMEOBJ_PARENT:
-				ArmedGameObj::Load( cload );
+				if (!ArmedGameObj::Load(cload)) loaded = false;
 				break;
 								
 			case CHUNKID_VARIABLES:
@@ -392,20 +394,20 @@ bool	SmartGameObj::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_CONTROL:
-				Control.Load( cload );
+				if (!Control.Load(cload)) loaded = false;
 				break;
 								
 			case CHUNKID_CONTROLLER:
-				Controller.Load( cload );
+				if (!Controller.Load(cload)) loaded = false;
 				break;
 								
 			case CHUNKID_ACTION:
-				Action.Load( cload );
+				if (!Action.Load(cload)) loaded = false;
 				break;
 								
 			case CHUNKID_STEALTH_EFFECT:
 				Alloc_Stealth_Effect();
-				StealthEffect->Load(cload);
+				if (StealthEffect == NULL || !StealthEffect->Load(cload)) loaded = false;
 				break;
 			
 			default:
@@ -423,7 +425,7 @@ bool	SmartGameObj::Load( ChunkLoadClass &cload )
 	Set_Control_Owner( new_control_owner );	// Be sure soldier virtual function calls
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 

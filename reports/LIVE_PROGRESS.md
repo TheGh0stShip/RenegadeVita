@@ -1,5 +1,29 @@
 # Live engineering progress
 
+# Cinematic first-spawn spikes: level preset model warm-up — 2026-10-05
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: dev236 physical M13 slow-command records show the first
+`Create_Real_Object` of each new soldier preset in authored cinematics costing
+0.20-0.59 s (`Nod_minigunner_2sf`, `gdi_rocketsoldier_0`, `GDI_Engineer_0`,
+`GDI_Engineer_0_B`, `Nod_FlameThrower_0`, `MX0_Area4_GDI_Reinforcement`),
+while later instances of the same preset were not slow. The hand-maintained
+M13 list warmed vehicles and trajectories but no soldier models. The loading
+screen now reads the level archive's own cinematic scripts, collects every
+`Create_Real_Object` preset, and creates/releases the physics model of each
+soldier or vehicle preset once. Applies to every non-tutorial level (M13 has
+27 such presets, M01 16). No game objects are created; script and timing
+behaviour are unchanged.
+
+Evidence: dev236 runtime log and retail script inspection. Source only; not
+compiled. Expected runtime receipt: `A4 cinematic preset preparation:`.
+
+Next: on the next candidate compare the `A4 slow campaign cinematic command`
+records and loading time against dev236. Weapon models of armed presets are
+not yet warmed (their definition IDs are protected).
+
 # Application memory budget: newlib heap and extended user memory — 2026-10-05
 
 Renegade Vita — v3.5 active

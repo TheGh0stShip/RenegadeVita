@@ -68,6 +68,8 @@
 #include "gamemode.h"
 #include "gameobjmanager.h"
 #include "physicalgameobj.h"
+#include "phys.h"
+#include "combatchunkid.h"
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 #include "dialogmgr.h"
 #include "dlgevaencyclopedia.h"
@@ -3222,6 +3224,100 @@ bool Prepare_Explosion_Definition(const char *name)
 		DefinitionMgrClass::Find_Named_Definition(name, false), name, 0U);
 }
 
+// Dev236 physical M13: the first Create_Real_Object of each new soldier
+// preset in an authored cinematic cost 0.2-0.6 s inside one frame (for
+// example Nod_minigunner_2sf, gdi_rocketsoldier_0, GDI_Engineer_0,
+// Nod_FlameThrower_0), while later instances of the same preset were not
+// slow. That is the first on-demand load of the preset's model prototype.
+// The level archive's own cinematic scripts name every such preset, so the
+// loading screen creates and releases each referenced soldier/vehicle
+// model once. The asset manager keeps the prototype; game objects are not
+// created, and script, timing and spawn behaviour are unchanged.
+void Warm_Level_Cinematic_Preset_Models(A31VitaLoadingPresenter &presenter,
+	const char *archive, FileFactoryClass &root_factory)
+{
+	char path[112];
+	snprintf(path, sizeof(path), "Data\\%s", archive);
+	MixFileFactoryClass level_factory(path, &root_factory);
+	DynamicVectorClass<StringClass> names;
+	if (!level_factory.Is_Valid() || !level_factory.Build_Filename_List(names)) {
+		A30_Vita_Log("A4 cinematic preset preparation: archive=%s listed=0\n", archive);
+		return;
+	}
+	const uint64_t started_us = sceKernelGetProcessTimeWide();
+	std::vector<std::string> presets;
+	unsigned scripts = 0U;
+	for (int index = 0; index < names.Count(); ++index) {
+		const char *name = names[index];
+		const size_t length = strlen(name);
+		if (length < 4U || strcasecmp(name + length - 4U, ".txt") != 0) continue;
+		FileClass *file = level_factory.Get_File(name);
+		if (file == NULL) continue;
+		std::string text;
+		if (file->Open()) {
+			const int size = file->Size();
+			if (size > 0 && size <= 1024 * 1024) {
+				text.resize(static_cast<size_t>(size));
+				if (file->Read(&text[0], size) != size) text.clear();
+			}
+			file->Close();
+		}
+		level_factory.Return_File(file);
+		if (text.empty()) continue;
+		++scripts;
+		// Authored lines: "<frame>\tCreate_Real_Object,\t<id>, \"<preset>\", ...".
+		// Lines starting with ';' are comments.
+		size_t line_start = 0U;
+		while (line_start < text.size()) {
+			size_t line_end = text.find('\n', line_start);
+			if (line_end == std::string::npos) line_end = text.size();
+			const std::string line = text.substr(line_start, line_end - line_start);
+			line_start = line_end + 1U;
+			const size_t first = line.find_first_not_of(" \t");
+			if (first == std::string::npos || line[first] == ';') continue;
+			const char *command = strcasestr(line.c_str(), "Create_Real_Object");
+			if (command == NULL) continue;
+			const char *open_quote = strchr(command, '"');
+			const char *close_quote = open_quote != NULL ? strchr(open_quote + 1, '"') : NULL;
+			if (close_quote == NULL || close_quote == open_quote + 1) continue;
+			std::string preset(open_quote + 1, close_quote);
+			bool seen = false;
+			for (const std::string &existing : presets) {
+				if (strcasecmp(existing.c_str(), preset.c_str()) == 0) { seen = true; break; }
+			}
+			if (!seen) presets.push_back(preset);
+		}
+	}
+	unsigned warmed = 0U;
+	for (const std::string &preset : presets) {
+		DefinitionClass *definition =
+			DefinitionMgrClass::Find_Named_Definition(preset.c_str(), false);
+		const uint32 class_id = definition != NULL ? definition->Get_Class_ID() : 0U;
+		if (class_id != CLASSID_GAME_OBJECT_DEF_SOLDIER &&
+			class_id != CLASSID_GAME_OBJECT_DEF_VEHICLE) {
+			A30_Vita_Log("A4 cinematic preset preparation: preset=%s class_id=%u skipped=1\n",
+				preset.c_str(), static_cast<unsigned>(class_id));
+			continue;
+		}
+		const PhysicalGameObjDef *object_definition =
+			static_cast<const PhysicalGameObjDef *>(definition);
+		DefinitionClass *phys_definition = DefinitionMgrClass::Find_Definition(
+			object_definition->Get_Phys_Def_ID(), false);
+		if (phys_definition == NULL ||
+			SuperClassID_From_ClassID(phys_definition->Get_Class_ID()) != CLASSID_PHYSICS) {
+			continue;
+		}
+		const StringClass &model =
+			static_cast<PhysDefClass *>(phys_definition)->Get_Model_Name();
+		if (model.Is_Empty()) continue;
+		if (A35_Vita_Warm_Render_Obj(model.Peek_Buffer())) ++warmed;
+		presenter.Render_Original_Progress("after_cinematic_preset_prepare");
+	}
+	A30_Vita_Log("A4 cinematic preset preparation: archive=%s scripts=%u presets=%u warmed=%u elapsed_us=%llu\n",
+		archive, scripts, static_cast<unsigned>(presets.size()), warmed,
+		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - started_us));
+}
+
 void Warm_M13_World_Killed_Explosions(A31VitaLoadingPresenter &presenter)
 {
 	int explosion_ids[64] = {};
@@ -4681,6 +4777,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				break;
 			}
 #if !RENEGADE_VITA_M00_DEMO
+			Warm_Level_Cinematic_Preset_Models(loading_presenter, selected_archive, root_factory);
 			if (stricmp(selected_archive, "M13.mix") == 0) {
 				A35_Vita_Clear_Prepared_Render_Objs();
 				struct A35PreparedMissionModel {

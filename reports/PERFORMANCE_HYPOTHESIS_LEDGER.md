@@ -1367,3 +1367,13 @@ claim: the Dev201 live server had rotated to Skatepark, and its 150-second
 runner timed out. The UTF-16 player-name formatting change is correctness work,
 not an optimization. Re-run fixed Glacier camera/content before comparing
 frame-time median/p95/p99/worst or adopting performance conclusions.
+
+## Cinematic preset model warm-up (2026-10-05, source only)
+
+Hypothesis: the dev236 physical 0.20-0.59 s cinematic `Create_Real_Object`
+spikes are first on-demand model prototype loads, since repeat instances of
+the same preset are not slow. Change: warm each soldier/vehicle preset model
+named by the level archive's cinematic scripts on the loading screen. Risk:
+longer loading and resident prototype memory. Before: six slow commands and
+three slow frames over 0.5 s in dev236 M13. After: unmeasured. Decision:
+deferred until a physical M13 run with matching artifacts.

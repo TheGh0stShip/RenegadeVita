@@ -50,13 +50,25 @@ The variant installs as its own title (`RVDX00001`) next to the default build
 and uses the same retail data under `ux0:data/renegade/retail/`. Like
 VitaD3D, it requires the user-supplied `ur0:data/libshacccg.suprx`.
 
+## Hardware status (PSTV, RVDX00001, A3.5-dev1-d3dvita)
+
+Verified on the PSTV through VitaD3D, from the runtime log under
+`ux0:data/renegade/user-d3dvita/logs/` and front-buffer captures:
+
+- Device creation, the 800x600 frontend and the 640x480 loading screens,
+  letterboxed 4:3 into the 960x544 display through VitaD3D's scaled
+  back-buffer presentation. Art, textures and fonts render correctly; lines
+  in the loading screen's red text block overlap (open).
+- Movies play through the D3D8 texture path at the current back-buffer size.
+- The M00 tutorial loads and gameplay starts (mission script and conversation
+  active). In-game rendering is not yet correct and frames take 0.7-1.9 s
+  during the first minutes (runtime shader compilation); both are being
+  diagnosed with VitaD3D's `draw.fail` markers and the automatic gameplay
+  captures written to `user-d3dvita/captures/d3dvita-gameplay-f*.bmp`.
+
 ## Known gaps
 
-- Logical 640x480 loading/frontend resolutions use VitaD3D's scaled
-  back-buffer presentation (letterboxed into the display); this has not yet
-  been verified on hardware.
 - Render-to-texture targets (shadows, projectors) are not available in VitaD3D
   yet; those draws fail as they do in the default build.
-- Developer frame capture (`Capture_Resolved_Frame_RGBA`) and backend memory
-  queries report unavailable.
-- No hardware evidence exists for this variant yet.
+- Backend memory queries report unavailable.
+- In-game rendering correctness and frame time (see above).

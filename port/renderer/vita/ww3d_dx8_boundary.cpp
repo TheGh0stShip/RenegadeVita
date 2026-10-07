@@ -25,6 +25,7 @@
 #include "targa.h"
 #include "vertmaterial.h"
 #include "ww3dformat.h"
+#include "renegade_vita_frame_alloc.h"
 
 #include <new>
 #include <memory>
@@ -359,7 +360,8 @@ bool g_applied_texture_transform_valid[MAX_TEXTURE_STAGES] = {};
 // one WW3D session. Its capacity is the largest surface level or strip seen,
 // so it is released at WW3D shutdown (RenegadeVita_Release_DX8_Scratch);
 // otherwise one level's high-water (up to 4 MiB RGBA) would stay allocated
-// through every later campaign mission in the same process.
+// through every later campaign mission in the same process. Texture creation
+// also converts into it (RVAL1 bit 0), growing it only up to 256 KiB.
 thread_local std::vector<unsigned char> g_surface_upload_rgba;
 std::unique_ptr<uint16_t[]> g_strip_expanded_indices;
 size_t g_strip_expanded_capacity = 0U;
@@ -1210,8 +1212,18 @@ IDirect3DTexture8 *Create_Texture_From_Surface(IDirect3DSurface8 *surface,
 		return Create_Checkerboard_Fallback();
 	}
 	const unsigned bytes_per_pixel = Surface_Bytes_Per_Pixel(description.Format);
-	std::vector<unsigned char> rgba(static_cast<size_t>(description.Width) *
-		description.Height * 4U);
+	const size_t rgba_bytes = static_cast<size_t>(description.Width) *
+		description.Height * 4U;
+	// RVAL1 bit 0: Render2DSentence text atlases (rebuilt on every subtitle,
+	// target-name or objective-range change) and other small creations convert
+	// into the retained upload scratch instead of a fresh zero-filled heap
+	// vector. Every successful pixel conversion below writes all four bytes
+	// before the checksum or upload reads them, and a failed one returns the
+	// fallback, so stale scratch bytes are never observable.
+	std::vector<unsigned char> transient_rgba;
+	std::vector<unsigned char> &rgba = RenegadeVitaFrameAlloc::Use_Texture_Scratch(
+		rgba_bytes, g_surface_upload_rgba.capacity()) ? g_surface_upload_rgba : transient_rgba;
+	rgba.resize(rgba_bytes);
 	uint32_t checksum = 2166136261U;
 	for (unsigned y = 0U; y < description.Height; ++y) {
 		const unsigned char *source_row = surface->Get_Data() +

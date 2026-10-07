@@ -25,6 +25,7 @@
 #include "vertmaterial.h"
 #include "ww3d_vita_render_state_contract.h"
 #include "internal_resolution.h"
+#include "renegade_vita_frame_alloc.h"
 
 // The per-index geometry checksum hashes every referenced vertex of every
 // indexed draw (HUD, text, particles, sorted geometry). It is a host/test
@@ -3854,6 +3855,13 @@ bool Initialize()
 	Read_Skin_Deform_Cache_Mode();
 	Read_Vertex_Array_Mode();
 #endif
+	// Reads frame-alloc-v1.flag once here, before any per-frame user.
+	Vita_Append_A22_Runtime_Breadcrumb("frame-alloc",
+		"version=1 mode=%u texture_rgba_scratch=%d hud_target_name_temp=%d default=%u acceptance=unassessed",
+		RenegadeVitaFrameAlloc::Mode(),
+		RenegadeVitaFrameAlloc::Enabled(RenegadeVitaFrameAlloc::TEXTURE_RGBA_SCRATCH) ? 1 : 0,
+		RenegadeVitaFrameAlloc::Enabled(RenegadeVitaFrameAlloc::HUD_TARGET_NAME_TEMP) ? 1 : 0,
+		static_cast<unsigned>(RenegadeVitaFrameAlloc::DEFAULT_MODE));
 	Invalidate_Native_State_Cache();
 
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "vglInit entry");

@@ -1,7 +1,11 @@
 #pragma once
 
 #include "renegade_ttfs_factory.h"
+#include "renegade_tt_resources.h"
 #include <memory>
+#include <stdint.h>
+#include <string>
+#include <vector>
 
 class cGameData;
 class cConnection;

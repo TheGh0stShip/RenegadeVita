@@ -15,6 +15,7 @@
 #include "a4_frontend_lifecycle_boundary.h"
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 #include "dialogmgr.h"
+#include "gamedata.h"
 #include "gametype.h"
 #endif
 #endif

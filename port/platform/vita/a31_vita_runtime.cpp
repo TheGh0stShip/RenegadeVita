@@ -277,6 +277,18 @@ RenderObjClass *A35_Vita_Take_Prepared_Render_Obj(const char *name)
 
 namespace {
 
+// newlib declares strcasestr only when __GNU_VISIBLE is set, which this
+// bare-metal Vita target does not enable, so keep a local equivalent.
+const char *Find_Substring_Ignore_Case(const char *haystack, const char *needle)
+{
+	const size_t needle_length = strlen(needle);
+	if (needle_length == 0U) return haystack;
+	for (; *haystack != '\0'; ++haystack) {
+		if (strncasecmp(haystack, needle, needle_length) == 0) return haystack;
+	}
+	return NULL;
+}
+
 struct A36RoundArchiveSwap {
 	FileFactoryListClass *FactoryList;
 	std::unique_ptr<MixFileFactoryClass> *CurrentFactory;
@@ -3642,7 +3654,7 @@ void Warm_Level_Cinematic_Preset_Models(A31VitaLoadingPresenter &presenter,
 				if (!seen) animations.push_back(animation);
 				continue;
 			}
-			const char *command = strcasestr(line.c_str(), "Create_Real_Object");
+			const char *command = Find_Substring_Ignore_Case(line.c_str(), "Create_Real_Object");
 			if (command == NULL) continue;
 			const char *open_quote = strchr(command, '"');
 			const char *close_quote = open_quote != NULL ? strchr(open_quote + 1, '"') : NULL;

@@ -112,11 +112,16 @@ Why the exchanges are safe on Vita:
    - The constants `UPDATE`, `BASE`, `INLET`, `BEACH` and `ENTERED` are all in
      the 40000 range and cannot alias 3000/5000/6300.
 4. **The 3000 escort exchange (:3586-3593 → `M03_Commando_Script` :3094) is
-   unreachable in the retail game.** Neither `M03_Commando_Script` nor
-   `M03_Chinook_Spawned_Soldier_GDI` is bound in `m03.ldd`/`m03.lsd`/
-   `objects.ddb`, or attached by Mission03.cpp or the troop-drop cinematics. The
-   other 3000 senders (:1015-1021, :3559) carry `3000,3000` to receivers that
-   only compare values (:3406, :4012).
+   unreachable in the retail game.** Correction (2026-10-07 full audit):
+   `M03_Commando_Script` *is* live. `M03_Initial_Powerups` on 1100004
+   attaches it to the star (:3049). The sender, `M03_Chinook_Spawned_Soldier_GDI`,
+   is the dead side. Only `M03_Chinook_Drop_Soldiers_GDI` attaches it, on a
+   type >4000 custom. That script is not bound anywhere, and
+   `X3I_TroopDrop1.txt` sends its `4001` events to 1140011, which does not
+   exist in M03. No other M03 sender targets the star with type 3000. The
+   other 3000 senders (:1015-1021 → 1000001..3, absent; :3559; the
+   `RMV_Trigger_Zone`/`RMV_Trigger_Poked` level bindings → 1122334/1141141)
+   reach receivers that only compare or range-check values (:3406, :4012).
 
 ## Defects found and fixed
 
@@ -164,3 +169,117 @@ Earlier selected fixes that touch M03-adjacent code remain in place:
    mission-complete screen and continuation to M04.
 8. Return the runtime logs, the flight recorder, any `psp2core` dump, and a
    frame-time sample from the volcano phase.
+
+## Full audit (2026-10-07)
+
+Scope: M03 scripts in `staging/scripts/Mission03.cpp`, excluding `M10_*`, plus
+the shared helpers and commands they reach. Inputs were the unchanged Vita3K
+retail data, a fresh `tools/audit_mission_content_bindings.py --map M03.mix`
+receipt (private `build/`), the retained `live_script_bindings.json`,
+`live_script_parameters.json` and `script_parameter_reads.json`, and an ARM
+`-fsyntax-only` pass of the patched file. Nothing was built, launched or run.
+Line numbers refer to staged lines after all patches.
+
+### Results by area
+
+1. **Bindings and parameters.** 549/549 bindings are registered:
+   81 definition, 438 persisted, 30 spawner, 0 unknown. 313 have an equal
+   parameter count. 235 are one empty value against a `""` descriptor, which
+   is benign. The single short binding is the known `M03_Killed_Sound` (`"0,0"`
+   against 2 descriptors on most bindings). `Get_Parameter` returns `""` for
+   index -1 or an out-of-range index (scripts.cpp:444-450), so the absent-name
+   reads are safe: `Killable_ByNotStar` in `M00_Damage_Modifier_DME` and
+   `Offset` in `M00_Play_Sound_Object_Bone_DAY`. Both behave as on retail PC.
+2. **Events, timers and IDs.** Of 134 literal `Find_Object` IDs, 114 are
+   serialized in `m03.ldd`/`m03.lsd`. The misses are all NULL-safe no-ops and
+   match retail:
+   - 600042/600056-600065 and 600067-600071 are `Destroy_Object` targets in
+     the announce controllers.
+   - 1141168 is the `M03_Commando_Script` tailgun hack.
+   - 2016365 is a `Join_Conversation` participant.
+   - 1000001-1000003 are gunboat 3000 sends.
+   - 1140011 is the `X3I_TroopDrop1.txt` `Send_Custom` target.
+
+   The 100018 (M06) and 2000010 (M09) hits are comments or guarded code.
+   Spawners 2018880 and 2018881 are present. Every progression custom has a
+   bound receiver:
+   - intro `300,3`/`301,3`
+   - big guns `306,1`
+   - hovercraft `600` → 1212283/1212284
+   - crash `500,500` → 1001001
+   - `310,3`
+   - the `COMM_KILLED`/`MCT_ACCESSED` and 2009818 pair
+
+   Timer IDs are self-scoped and checked.
+3. **Retail names.** No new progression miss. New retail-identical misses:
+   `M03_Initial_Powerups` gives "Shotgun/Sniper/Remote Mine Weapon 1 Clip PU",
+   and none of the three exists in `objects.ddb` or the M03 overlays. The
+   original `Give_PowerUp` logs and skips them (scriptcommands.cpp:1985-1990).
+   The paradrop models and animations (X5D_Chinookfly, X5D_Parachute,
+   X5D_Box01-03, H_A_X5D_ParaT_*) are present in always.dat, and `cave_lift`
+   is present in M03.mix. Global weapon eject and muzzle-flash definition IDs
+   2163-3413 are not located. They are shared by every map and not M03-owned.
+4. **Crash review.** Mission03 dereferences no raw pointers outside the three
+   pointer exchanges. Every other access goes through `Commands->`. All but
+   five commands null-check their `GameObject*` arguments. The five unchecked
+   ones are `Create_3D_Sound_At_Bone`, `Create_3D_WAV_Sound_At_Bone`,
+   `Monitor_Sound`, `Create_Sound` (the creator is optional) and
+   `Innate_Disable`/`Enable` (these delegate to a checked function). The M03
+   calls to the unchecked ones pass the callback owner, or the result of
+   creating a present preset.
+
+   Bounds checked:
+   - SAM ignore list (<10)
+   - lava-ball switch (clamped to 19)
+   - `exploc[Get_Int_Random(0,15)]` (the helper clamps to the maximum)
+   - flyovers[17]
+   - announce controllers: every branch that sends `play_klaxon` sets
+     `klaxon`, and `sound` indices are within 19/28/15
+   - `M03_Beach_Radio` conv[3]
+   - Reinforce_Area 8000 params (0..2 from the level)
+
+   The `% target_count` divisor is ≥3 or set to 1000, never 0. The 5000/6300
+   receivers in `M03_Reinforce_Area` write through the parameter without a
+   NULL check. Only same-object synchronous sends reach them. The only other
+   5000 senders target 1100004, which compares values, and 1141168, which is
+   absent.
+5. **Objective chain.** The chain is unchanged and intact. Exit zone 2000817
+   runs `M03_Mission_Complete_Zone` → `Mission_Complete(true)`. 1100004
+   carries the controller, tracker and initial power-ups. The terminal
+   1100009 carries `M03_Mct_Poke`, `RMV_M03_Comm_Center_Terminal` and
+   `RMV_Trigger_Poked`. 1150002 carries `M03_Comm_Killed`. Volcano 1001001,
+   Sakura `Boss` → crash controller, `DLS_Volcano_Active` 1300001.
+6. **Port patches on Mission03.** Three patches touch the file:
+   - `scripts-a35-host-m03-pointer-exchange.patch` is host-only under
+     `RENEGADE_HOST_ABI_TEST`. The ARM build keeps the original `(int)&`.
+   - `scripts-a36-m03-save-variable-ids.patch` (count2 ID 2→3) is correct.
+   - `scripts-a36-m03-paradrop-param-buffer.patch` is new.
+
+### Defect fixed
+
+- **Mission03.cpp:4712-4713 (`M03_Chinook_ParaDrop::Created`)**, high
+  severity (stack overflow on the beach/inlet path).
+  `char params[10]; sprintf(params,"%d",Get_ID(obj))`. The owner is always a
+  runtime-created `Invisible_Object` from `M03_Beach_Reinforce` (2018061) or
+  `M03_Inlet_Nod_Reinforcements` (1141180), so its ID is a dynamic ID
+  (≥1500000000, networkobjectmgr.h:58). Formatting it writes 11 bytes into a
+  10-byte buffer. Fix: `port/patches/scripts-a36-m03-paradrop-param-buffer.patch`
+  (16 bytes, `snprintf`), registered after the M03 save-ID patch. It applies
+  at zero fuzz, staging exited 0 with 526 patches, and ARM `-fsyntax-only`
+  exits 0. Output text is unchanged.
+
+### Deferred or open (no change)
+
+- **Announce controllers.** The three announce controllers on
+  1100009/1150003/1144606 dispatch on `param` only, not on `type`. `sound` and
+  `klaxon` are uninitialized until the first `pick_sound`. Any external custom
+  event with param 23 or 24 that arrives before then would index with garbage.
+  No such sender was found in M03. This is original behavior and is left
+  as-is.
+- **Re-attached commando script.** `M03_Commando_Script::Destroyed` →
+  `12176` re-arms `M03_Initial_Powerups`, which re-attaches the script and
+  re-grants keys. This is original behavior. Save/load and respawn interaction
+  is unmeasured.
+- **Runtime evidence.** The paradrop, the `Create_3D_Sound_At_Bone` lifetime
+  and the conversation callbacks still need Vita3K and physical runs. Nothing
+  here proves runtime or visual correctness.

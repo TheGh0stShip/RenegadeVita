@@ -20,6 +20,20 @@ Completed (host Python over the unchanged retail archives; nothing built, linked
 - Not applied: a lowest-priority M08.mix supplement for M01/M04 (needs the factory-swap change in
   a31_vita_runtime.cpp and a compile); recorded in KNOWN_GAPS.md.
 
+# Campaign script binding closure — 2026-10-07
+
+Static evidence only (nothing built, linked, emulated or run). New deterministic
+`tools/audit_campaign_script_closure.py` (+ 8-case unittest) joins M00/M01..M11/M13 level
+data, all objects.ddb presets and every always.dat/Always2.dat/mission cinematic
+`Attach_Script` against the CMake-selected Vita script units: 7,667 authored bindings, 1,636
+compiled registrations (no case-insensitive name collisions), 44 selected units. All 21
+unresolved names (M01 HON-escort evac cinematic x3, M11 fodder spawners x3, 7 unplaced presets,
+8 shared-cinematic attachments) are absent from the retail Scripts2.dll/scripts.dll while all
+1,636 compiled names are recognised there, so they are retail-identical; zero block completion
+and no CMake gap exists (the 3 unselected registrations are not in Scripts.dsp or the retail
+DLLs). Custom-event closure: staging event surface equals upstream, no sender lacks a receiver.
+See [campaign/SCRIPT_BINDING_CLOSURE.md](campaign/SCRIPT_BINDING_CLOSURE.md).
+
 # Campaign development push 2 — 2026-10-07
 
 Renegade Vita — v3.5 active

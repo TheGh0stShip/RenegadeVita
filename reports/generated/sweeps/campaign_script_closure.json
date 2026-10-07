@@ -1,0 +1,860 @@
+{
+  "binding_finding_totals": {
+    "excess_supplied_values [retail-identical]": 4450,
+    "fewer_supplied_values [retail-identical]": 14,
+    "read_beyond_supplied_values [retail-identical]": 14,
+    "read_name_absent_from_descriptor [retail-identical]": 616,
+    "unregistered_script [retail-identical]": 21
+  },
+  "custom_event_summary": {
+    "cross_unit_constant_name_reuse": [
+      "ACTIVATE",
+      "COUNTER",
+      "ENTERED",
+      "FLYOVER",
+      "REMOVE_SECONDARY_POG"
+    ],
+    "per_unit": {
+      "Group.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 0,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 1,
+        "senders_literal": 0
+      },
+      "Mission00.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 105,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 143
+      },
+      "Mission01.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 541,
+        "receiver_values_without_literal_sender": 3,
+        "senders_computed": 0,
+        "senders_literal": 746
+      },
+      "Mission02.cpp": {
+        "range_receivers": 1,
+        "receiver_values": 45,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 3,
+        "senders_literal": 369
+      },
+      "Mission03.cpp": {
+        "range_receivers": 2,
+        "receiver_values": 92,
+        "receiver_values_without_literal_sender": 2,
+        "senders_computed": 2,
+        "senders_literal": 186
+      },
+      "Mission04.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 187,
+        "receiver_values_without_literal_sender": 6,
+        "senders_computed": 0,
+        "senders_literal": 301
+      },
+      "Mission05.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 86,
+        "receiver_values_without_literal_sender": 2,
+        "senders_computed": 0,
+        "senders_literal": 96
+      },
+      "Mission06.cpp": {
+        "range_receivers": 1,
+        "receiver_values": 99,
+        "receiver_values_without_literal_sender": 6,
+        "senders_computed": 0,
+        "senders_literal": 121
+      },
+      "Mission07.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 103,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 125
+      },
+      "Mission09.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 86,
+        "receiver_values_without_literal_sender": 8,
+        "senders_computed": 0,
+        "senders_literal": 93
+      },
+      "Mission10.cpp": {
+        "range_receivers": 1,
+        "receiver_values": 68,
+        "receiver_values_without_literal_sender": 3,
+        "senders_computed": 0,
+        "senders_literal": 160
+      },
+      "Mission11.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 279,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 453
+      },
+      "MissionDemo.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 27,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 13
+      },
+      "MissionX0.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 95,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 2,
+        "senders_literal": 89
+      },
+      "Test_Cinematic.cpp": {
+        "range_receivers": 1,
+        "receiver_values": 1,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 1,
+        "senders_literal": 3
+      },
+      "Test_DAK.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 3,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 4
+      },
+      "Test_DAY.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 2,
+        "receiver_values_without_literal_sender": 1,
+        "senders_computed": 0,
+        "senders_literal": 5
+      },
+      "Test_DLS.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 53,
+        "receiver_values_without_literal_sender": 1,
+        "senders_computed": 0,
+        "senders_literal": 42
+      },
+      "Test_DME.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 9,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 12
+      },
+      "Test_GTH.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 3,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 8,
+        "senders_literal": 0
+      },
+      "Test_PDS.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 6,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 0
+      },
+      "Test_RAD.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 106,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 102
+      },
+      "Test_RMV.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 1,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 2,
+        "senders_literal": 2
+      },
+      "Test_RMV_Toolkit.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 5,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 7,
+        "senders_literal": 6
+      },
+      "Toolkit.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 24,
+        "receiver_values_without_literal_sender": 2,
+        "senders_computed": 13,
+        "senders_literal": 36
+      },
+      "Toolkit_Actions.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 0,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 0
+      },
+      "Toolkit_Animations.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 4,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 1
+      },
+      "Toolkit_Broadcaster.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 6,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 5,
+        "senders_literal": 4
+      },
+      "Toolkit_Explosions.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 6,
+        "receiver_values_without_literal_sender": 1,
+        "senders_computed": 0,
+        "senders_literal": 3
+      },
+      "Toolkit_Objectives.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 13,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 0
+      },
+      "Toolkit_Objects.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 1,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 3
+      },
+      "Toolkit_Powerup.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 1,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 1
+      },
+      "Toolkit_Siege.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 8,
+        "receiver_values_without_literal_sender": 2,
+        "senders_computed": 0,
+        "senders_literal": 6
+      },
+      "Toolkit_Sounds.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 7,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 1,
+        "senders_literal": 5
+      },
+      "Toolkit_Spawners.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 1,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 0
+      },
+      "Toolkit_Triggers.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 20,
+        "receiver_values_without_literal_sender": 20,
+        "senders_computed": 5,
+        "senders_literal": 0
+      },
+      "mission08.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 103,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 109
+      },
+      "unitcombat.cpp": {
+        "range_receivers": 0,
+        "receiver_values": 0,
+        "receiver_values_without_literal_sender": 0,
+        "senders_computed": 0,
+        "senders_literal": 10
+      }
+    },
+    "staging_matches_upstream_event_surface": true
+  },
+  "dll": {
+    "compiled_source_names": 1636,
+    "compiled_source_names_found": 1636,
+    "files": {
+      "Scripts2.dll": "a0439b3bfe6cb497f402291548a312a9f43c0d38bdaf26c83e21dbd3f4d55702",
+      "scripts.dll": "65ed3a90adb147d161b229b91915c519d41ad7949ed89bbb9a950f3813461666"
+    },
+    "tokens": 17186
+  },
+  "evidence_class": "static_authored_metadata_and_cmake_selection",
+  "findings": [
+    {
+      "kind": "literal_attach_unregistered",
+      "owner": "Mission04.cpp",
+      "scope": "source",
+      "script": "M04_BH_MessHall_Guy_JDG",
+      "severity": "retail-identical",
+      "target": "M04_ForeDeck_Reinforcement_03_JDG"
+    },
+    {
+      "kind": "literal_attach_unregistered",
+      "owner": "Mission09.cpp",
+      "scope": "source",
+      "script": "M09_Entrance_Zone",
+      "severity": "retail-identical",
+      "target": "M09_Nod_Damage_Mod_1"
+    }
+  ],
+  "limits": [
+    "Static joins only: authored bindings do not prove instantiation, zone entry or callback execution.",
+    "Parameter reads resolve literal names/indices only; computed reads are not judged.",
+    "Custom-event pairing is value-level across scripts (senders target dynamic objects); receiver ranges are approximate.",
+    "Preset placement uses typed definition references from level-placed objects; script-created presets are not inferred.",
+    "Retail Scripts2.dll membership is a printable-token match, not a registry dump.",
+    "Host/static evidence is not Vita3K or physical acceptance."
+  ],
+  "maps": {
+    "M00_Tutorial.mix": {
+      "archive_sha256": "84f14f6267dd8a88563b3d31540bf857df0b8e111144944cb582edd246f2d438",
+      "bindings": 67,
+      "by_source": {
+        "level:combat_start_script": 1,
+        "level:persisted_script": 60,
+        "preset": 6
+      },
+      "definitions": 15146,
+      "distinct_scripts": 8,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 62
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 178,
+      "unresolved": []
+    },
+    "M01.mix": {
+      "archive_sha256": "3d814a11fb306b425da74d40648f17053644e6a58ce521182d7c178683b354eb",
+      "bindings": 585,
+      "by_source": {
+        "cinematic": 34,
+        "level:persisted_script": 525,
+        "level:spawner_script": 3,
+        "preset": 23
+      },
+      "definitions": 15146,
+      "distinct_scripts": 232,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 521,
+        "read_name_absent_from_descriptor [retail-identical]": 23,
+        "unregistered_script [retail-identical]": 3
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 369,
+      "unresolved": [
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "M01.mix:xg_m01_honescort_evacanim.txt:45",
+          "name": "M01_HONEscort_Air_Evac_Chopper_JDG",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "cinematic"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "M01.mix:xg_m01_honescort_evacanim.txt:52",
+          "name": "M01_HONEscort_Air_Evac_Rope_JDG",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "cinematic"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "M01.mix:xg_m01_honescort_evacanim.txt:37",
+          "name": "M01_HONEscort_Air_Evac_Waypath_JDG",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "cinematic"
+        }
+      ]
+    },
+    "M02.mix": {
+      "archive_sha256": "f098e9190802dba8c9b453e479cb393a0e4777c5f5b038c3bb0376010d64b3a1",
+      "bindings": 838,
+      "by_source": {
+        "cinematic": 114,
+        "level:combat_start_script": 1,
+        "level:persisted_script": 684,
+        "preset": 39
+      },
+      "definitions": 15146,
+      "distinct_scripts": 35,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 414,
+        "fewer_supplied_values [retail-identical]": 3,
+        "read_beyond_supplied_values [retail-identical]": 3,
+        "read_name_absent_from_descriptor [retail-identical]": 18
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 411,
+      "unresolved": []
+    },
+    "M03.mix": {
+      "archive_sha256": "e49d5a6233635228ad91c73cd2614f3f33e09cbc37d0650eb79683f35aa47d79",
+      "bindings": 512,
+      "by_source": {
+        "level:persisted_script": 438,
+        "level:spawner_script": 30,
+        "preset": 44
+      },
+      "definitions": 15146,
+      "distinct_scripts": 89,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 225,
+        "fewer_supplied_values [retail-identical]": 1,
+        "read_beyond_supplied_values [retail-identical]": 1,
+        "read_name_absent_from_descriptor [retail-identical]": 24
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 391,
+      "unresolved": []
+    },
+    "M04.mix": {
+      "archive_sha256": "1d084c9088474c6664dcb30eb08cd7fc86a265e200fbfcebb606ac56e9530ffa",
+      "bindings": 316,
+      "by_source": {
+        "cinematic": 6,
+        "level:persisted_script": 295,
+        "level:spawner_script": 2,
+        "preset": 13
+      },
+      "definitions": 15146,
+      "distinct_scripts": 98,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 279,
+        "read_name_absent_from_descriptor [retail-identical]": 11
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 302,
+      "unresolved": []
+    },
+    "M05.mix": {
+      "archive_sha256": "d3b38752890e0d2102a5ba8f57d10c832b8b60749afc4d0512333ca3f64446ca",
+      "bindings": 464,
+      "by_source": {
+        "cinematic": 12,
+        "level:combat_start_script": 1,
+        "level:persisted_script": 362,
+        "level:spawner_script": 56,
+        "preset": 33
+      },
+      "definitions": 15146,
+      "distinct_scripts": 105,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 289,
+        "read_name_absent_from_descriptor [retail-identical]": 57
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 358,
+      "unresolved": []
+    },
+    "M06.mix": {
+      "archive_sha256": "cf98d879ac8cf23e60589407b61eb4c2a43c238c979b54485a25938f7679573a",
+      "bindings": 651,
+      "by_source": {
+        "cinematic": 17,
+        "level:combat_start_script": 1,
+        "level:persisted_script": 546,
+        "level:spawner_script": 60,
+        "preset": 27
+      },
+      "definitions": 15146,
+      "distinct_scripts": 90,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 370,
+        "read_name_absent_from_descriptor [retail-identical]": 110
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 302,
+      "unresolved": []
+    },
+    "M07.mix": {
+      "archive_sha256": "479f72c76ec145c0289f331a856201d0f4249fa86854a5d664c6e8d4edc08664",
+      "bindings": 558,
+      "by_source": {
+        "level:combat_start_script": 1,
+        "level:persisted_script": 438,
+        "level:spawner_script": 83,
+        "preset": 36
+      },
+      "definitions": 15146,
+      "distinct_scripts": 104,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 322,
+        "read_name_absent_from_descriptor [retail-identical]": 57
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 444,
+      "unresolved": []
+    },
+    "M08.mix": {
+      "archive_sha256": "b95c738add5ce7887ec386d839838d595986a05c2f5240b90fe2cebaa7075429",
+      "bindings": 766,
+      "by_source": {
+        "cinematic": 10,
+        "level:combat_start_script": 1,
+        "level:persisted_script": 627,
+        "level:spawner_script": 86,
+        "preset": 42
+      },
+      "definitions": 15146,
+      "distinct_scripts": 81,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 412,
+        "read_name_absent_from_descriptor [retail-identical]": 98
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 484,
+      "unresolved": []
+    },
+    "M09.mix": {
+      "archive_sha256": "059fc7de0c06c31e2aa69e1ab7768de81f3377e18c971ba8f98f41e15f1705c1",
+      "bindings": 559,
+      "by_source": {
+        "level:persisted_script": 521,
+        "level:spawner_script": 2,
+        "preset": 36
+      },
+      "definitions": 15146,
+      "distinct_scripts": 55,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 324,
+        "read_name_absent_from_descriptor [retail-identical]": 33
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 359,
+      "unresolved": []
+    },
+    "M10.mix": {
+      "archive_sha256": "c9bdaa94686f29a69a16c148671c7a6c05c617f61694fb4aec01185e4c3720ec",
+      "bindings": 680,
+      "by_source": {
+        "level:persisted_script": 600,
+        "level:spawner_script": 28,
+        "preset": 52
+      },
+      "definitions": 15146,
+      "distinct_scripts": 70,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 323,
+        "read_name_absent_from_descriptor [retail-identical]": 99
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 527,
+      "unresolved": []
+    },
+    "M11.mix": {
+      "archive_sha256": "f29a8a4bf4e94d928b8e49c0d4eecade0d35f54ff683ec0fd5b2e4bedbac80eb",
+      "bindings": 532,
+      "by_source": {
+        "cinematic": 19,
+        "level:persisted_script": 465,
+        "level:spawner_script": 8,
+        "preset": 40
+      },
+      "definitions": 15146,
+      "distinct_scripts": 151,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 443,
+        "read_name_absent_from_descriptor [retail-identical]": 44,
+        "unregistered_script [retail-identical]": 3
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 414,
+      "unresolved": [
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "m11.ldd@650090",
+          "name": "M11_ObeliskWall_FodderGuy01_JDG",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "level:spawner_script"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "m11.ldd@650279",
+          "name": "M11_ObeliskWall_FodderGuy02_JDG",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "level:spawner_script"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "m11.ldd@650468",
+          "name": "M11_TempleRoof_FodderGuy02_JDG",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "level:spawner_script"
+        }
+      ]
+    },
+    "M13.mix": {
+      "archive_sha256": "54d41ea011bf7c4d273064422de961af76ccc38f32dd9b5368ebfbca365bbfc4",
+      "bindings": 221,
+      "by_source": {
+        "cinematic": 107,
+        "level:persisted_script": 94,
+        "level:spawner_script": 6,
+        "preset": 14
+      },
+      "definitions": 15146,
+      "distinct_scripts": 47,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 62,
+        "read_name_absent_from_descriptor [retail-identical]": 21
+      },
+      "overlay_definitions": 0,
+      "placed_definitions": 184,
+      "unresolved": []
+    },
+    "always.dat+Always2.dat": {
+      "archive_sha256": {
+        "Always2.dat": "6cec7388c51b5b8591d8aa0cce974243621701990576574eda28dcd03c5e1611",
+        "always.dat": "f1fa13ed10d0b09fea999660cff71dc784a01a22cdc3e4f0041720ca67dfa29a"
+      },
+      "bindings": 387,
+      "by_source": {
+        "cinematic": 387
+      },
+      "distinct_scripts": 72,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 147,
+        "fewer_supplied_values [retail-identical]": 7,
+        "read_beyond_supplied_values [retail-identical]": 7,
+        "read_name_absent_from_descriptor [retail-identical]": 4,
+        "unregistered_script [retail-identical]": 8
+      },
+      "unresolved": [
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "always.dat:m05_xg_vehicledrop3.txt:58",
+          "name": "M05_Cache_Tank",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "cinematic"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "always.dat:x5d_chtroopdrop5.txt:72",
+          "name": "M05_Inn_Reinforcements",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "cinematic"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "always.dat:x5d_chtroopdrop5.txt:79",
+          "name": "M05_Inn_Reinforcements",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "cinematic"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "always.dat:x5d_chtroopdrop6.txt:72",
+          "name": "M05_Inn_Reinforcements",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "cinematic"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "always.dat:x5d_chtroopdrop6.txt:79",
+          "name": "M05_Inn_Reinforcements",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "cinematic"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "always.dat:x5d_c130troopdrop7.txt:71",
+          "name": "M05_Park_Unit",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "cinematic"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "always.dat:x5d_c130troopdrop7.txt:78",
+          "name": "M05_Park_Unit",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "cinematic"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "always.dat:x7c_wintroops01.txt:50",
+          "name": "M07_Nod_Window_Unit",
+          "owners": [],
+          "placed": true,
+          "severity": "retail-identical",
+          "source": "cinematic"
+        }
+      ]
+    },
+    "objects.ddb (all presets)": {
+      "archive_sha256": "4ba605de546505f42c7db04be64cfdd46251511fe1318d6f2fd343204575ff1b",
+      "bindings": 531,
+      "by_source": {
+        "preset": 531
+      },
+      "definitions": 15146,
+      "distinct_scripts": 54,
+      "finding_counts": {
+        "excess_supplied_values [retail-identical]": 257,
+        "fewer_supplied_values [retail-identical]": 3,
+        "read_beyond_supplied_values [retail-identical]": 3,
+        "read_name_absent_from_descriptor [retail-identical]": 17,
+        "unregistered_script [retail-identical]": 7
+      },
+      "placed_definitions": 1559,
+      "unresolved": [
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "definition 82060001 (LandMineZone)",
+          "name": "M00_LandMine_DLS",
+          "owners": [],
+          "placed": false,
+          "severity": "retail-identical",
+          "source": "preset"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "definition 1075 (Level01_Outro)",
+          "name": "M01_Outro",
+          "owners": [],
+          "placed": false,
+          "severity": "retail-identical",
+          "source": "preset"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "definition 81960078 (M08_Alarm_Switch)",
+          "name": "M08_Alarm_Switch",
+          "owners": [],
+          "placed": false,
+          "severity": "retail-identical",
+          "source": "preset"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "definition 2068 (Apache Dogfight)",
+          "name": "MPR_A02_Apache_Dogfight",
+          "owners": [],
+          "placed": false,
+          "severity": "retail-identical",
+          "source": "preset"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "definition 2066 (Orca Dogfight)",
+          "name": "MPR_A02_Orca_Dogfight_RMV",
+          "owners": [],
+          "placed": false,
+          "severity": "retail-identical",
+          "source": "preset"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "definition 1986 (A-10 with bomb dropper)",
+          "name": "MPR_A05_A10_Air_Strike_RMV",
+          "owners": [],
+          "placed": false,
+          "severity": "retail-identical",
+          "source": "preset"
+        },
+        {
+          "in_retail_dll": false,
+          "kind": "unregistered_script",
+          "location": "definition 1078 (MissionFailureObject)",
+          "name": "ScriptCommandoFailure",
+          "owners": [],
+          "placed": false,
+          "severity": "retail-identical",
+          "source": "preset"
+        }
+      ]
+    }
+  },
+  "registrations": {
+    "compiled": 1636,
+    "compiled_units": 44,
+    "total": 1639,
+    "uncompiled_units": [
+      "GroupScript.cpp",
+      "MissionS04.cpp",
+      "unitcombat.cpp"
+    ]
+  },
+  "runtime_or_physical_acceptance": false,
+  "schema_version": 1,
+  "severity_totals": {
+    "retail-identical": 23
+  },
+  "tool_sha256": "5837d52349f8c14ed53c43e6fe5792eaa6ae355ad5e0ea55936fa70ae10e0f49",
+  "uncompiled_registrations": [
+    {
+      "in_retail_dll": false,
+      "name": "MXX_Group_Member_DEL",
+      "owner": "GroupScript.cpp"
+    },
+    {
+      "in_retail_dll": false,
+      "name": "MS04_Gunboat_Waypath_Movement",
+      "owner": "MissionS04.cpp"
+    },
+    {
+      "in_retail_dll": false,
+      "name": "Unit_Combat",
+      "owner": "unitcombat.cpp"
+    }
+  ]
+}

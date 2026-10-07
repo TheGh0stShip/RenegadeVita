@@ -4014,16 +4014,16 @@ bool Initialize()
 	// Boot loading time: load previously seen FFP GXPs before any gameplay draw.
 	RenegadeVitaFfpProgramWarm::Prewarm_From_Record("renderer-init");
 	Log_VitaGL_Memory();
+#if !RENEGADE_VITA_M00_DEMO
 	{
 		const bool vsync_enabled = Read_Vsync_Enabled();
 		vglWaitVblankStart(vsync_enabled ? GL_TRUE : GL_FALSE);
 		Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 			"vsync: version=1 enabled=%d source=%s", vsync_enabled ? 1 : 0,
 			vsync_enabled ? "default-or-flag" : "vsync-v1.flag");
-#if !RENEGADE_VITA_M00_DEMO
 		Read_Frame_Pacing_Mode(vsync_enabled);
-#endif
 	}
+#endif
 #if RENEGADE_VITA_M00_DEMO
 	Log_VitaGL_Effective_Sizing(Default_VitaGL_Sizing());
 #else

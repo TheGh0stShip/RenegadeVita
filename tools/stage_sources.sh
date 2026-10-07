@@ -1163,6 +1163,11 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m02-objective-controller-speech-save.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m02-respawn-area-bounds.patch"
+# M02 follow-up: latch the midtro zone 400193 once, drop Mendoza's extra
+# never-started taunt conversation that piled up in the active list every 7 s,
+# and save the Obelisk/Power Plant one-time repair-announcement latches.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m02-followup-midtro-mendoza-repair-latch.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-mx0-save-variable-ids.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -1660,6 +1665,14 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m01-pct-unlock-watchdog.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m01-open-gate-objective-fallback.patch"
+# M01 follow-up: save the turret-beach engineer's last_health and the medium
+# tank reminder's conversation ID (both read after a load), and give the non-key
+# "Add_Turrets_Objective" conversation the same 30 s fallback, latched once.
+# Anchored to the final Mission01.cpp so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/scripts/Mission01.cpp" | cut -d' ' -f1)" = \
+	"c05156b10f2437d81df908bf70659d96666a740e9d926850a01ef906a558fff5"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m01-followup-save-and-turrets-fallback.patch"
 # Script-supplied overlay opacity was the only unclamped overlay target; clamp
 # it like the color setters (retail scripts only use 0 and 1).
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \

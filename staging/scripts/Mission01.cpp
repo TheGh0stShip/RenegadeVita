@@ -47,6 +47,8 @@ extern int A30_Vita_Log(const char *format, ...);
 #define M01_A38_PCT_UNLOCK_WATCHDOG_JDG			438001
 // Fallback for the "Open the gate" objective (see its controller case).
 #define M01_A38_OPEN_GATE_OBJECTIVE_FALLBACK_JDG	438002
+// Fallback for the turrets secondary objective (see its controller case).
+#define M01_A38_TURRETS_OBJECTIVE_FALLBACK_JDG		438003
 
 DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 {
@@ -165,6 +167,7 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 	bool civs_scattered;
 	bool commcenter_sam_destroyed;
 	bool open_gate_objective_added;
+	bool turrets_objective_added;
 
 	M01_Building_State hand_of_nod_state, comm_center_state;
 	M01_Location players_location;
@@ -269,6 +272,7 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 		SAVE_VARIABLE(civs_scattered, 88);
 		SAVE_VARIABLE(commcenter_sam_destroyed, 89);
 		SAVE_VARIABLE(open_gate_objective_added, 90);
+		SAVE_VARIABLE(turrets_objective_added, 91);
 	}
 
 	// Vita port: "Open the gate" objective, shared by the conversation-end
@@ -381,6 +385,7 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 		civs_scattered = false;
 		commcenter_sam_destroyed = false;
 		open_gate_objective_added = false;
+		turrets_objective_added = false;
 
 		m01_hon_chinook_guys_killed = 0;
 		m01_hon_spawners_tally = 0;
@@ -2026,11 +2031,33 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 						Commands->Start_Conversation( turrets_conv,  turrets_conv );
 
 						Commands->Monitor_Conversation( obj, turrets_conv );
+						// Vita port: this non-key conversation is stopped before the monitor
+						// exists if a key one is playing, so no end callback adds the turrets
+						// objective (and its C4 drop). Add it later if the callback has not.
+						Commands->Send_Custom_Event( obj, obj, 0, M01_A38_TURRETS_OBJECTIVE_FALLBACK_JDG, 30 );
+					}
+					break;
+
+				case M01_A38_TURRETS_OBJECTIVE_FALLBACK_JDG:
+					{
+						if (turrets_objective_added == false)
+						{
+							A30_Vita_Log("A4 M01 turrets objective fallback: announce conversation gave no end callback\n");
+							Commands->Send_Custom_Event( obj, obj, 0, M01_ADD_TURRETS_OBJECTIVE_JDG, 0 );
+						}
 					}
 					break;
 
 				case M01_ADD_TURRETS_OBJECTIVE_JDG:
 					{
+						// Vita port: reached from the conversation-end callback or its
+						// fallback; add the objective and send the C4 drop only once.
+						if (turrets_objective_added == true)
+						{
+							break;
+						}
+						turrets_objective_added = true;
+
 						Commands->Add_Objective( M01_TURRETS_OBJECTIVE_JDG, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Secondary_M01_02, NULL, IDS_Enc_Obj_Secondary_M01_02 );
 
 						GameObject * pogController = Commands->Find_Object ( M01_MISSION_POG_CONTROLLER_JDG );
@@ -15933,6 +15960,9 @@ DECLARE_SCRIPT(M01_TurretBeach_Engineer_JDG, "")//this guys ID is M01_TURRETBEAC
 		SAVE_VARIABLE(killedYet, 3);
 		SAVE_VARIABLE(turret01_dead, 4);
 		SAVE_VARIABLE(turret02_dead, 5);
+		// Vita port: Damaged() restores this value when the gunboat hits; a
+		// loaded script never re-runs Created(), so save it.
+		SAVE_VARIABLE(last_health, 6);
 	}
 
 	void Created( GameObject * obj ) 
@@ -19385,6 +19415,9 @@ DECLARE_SCRIPT(M01_MediumTank_ReminderZone_JDG, "")//122848
 		SAVE_VARIABLE(player_in_tank, 2);
 		SAVE_VARIABLE(tank_id, 3);
 		SAVE_VARIABLE(reminders, 4);
+		// Vita port: Action_Complete() matches the reminder's end callback
+		// against this ID to re-arm the next reminder, so save it.
+		SAVE_VARIABLE(reminderConv, 5);
 	}
 
 	void Created( GameObject * obj ) 
@@ -19392,6 +19425,7 @@ DECLARE_SCRIPT(M01_MediumTank_ReminderZone_JDG, "")//122848
 		commandClearance = false;
 		player_in_tank = false;
 		reminders = 0;
+		reminderConv = 0;
 	}
 
 	void Entered( GameObject * obj, GameObject * enterer ) 

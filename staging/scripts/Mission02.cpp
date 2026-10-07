@@ -839,9 +839,17 @@ DECLARE_SCRIPT(M02_Objective_Zone, "")
 				}
 			case (400193):
 				{
+					// Vita port: no latch here originally. Re-entering during the 1 s
+					// before timer 9 destroys the zone started a second X2K midtro and
+					// a second delayed keycard grant. Run once (was_entered is saved).
+					if (was_entered)
+					{
+						break;
+					}
 					GameObject * object = Commands->Create_Object("Invisible_Object", Vector3(0,0,0));
 					if (object)
 					{
+						was_entered = true;
 						Commands->Control_Enable (STAR, false);
 						Commands->Start_Timer (obj, this, 1.0f, 9);
 						GameObject * controller = Commands->Find_Object (M02_OBJCONTROLLER);
@@ -3896,6 +3904,13 @@ DECLARE_SCRIPT(M02_Obelisk, "")
 {
 	bool info_given;
 
+	// Vita port: the one-time repair announcement latch was not saved, so a
+	// loaded script read an indeterminate value. Save it.
+	REGISTER_VARIABLES()
+	{
+		SAVE_VARIABLE (info_given, 1);
+	}
+
 	void Created(GameObject*obj)
 	{
 		info_given = false;
@@ -3971,6 +3986,13 @@ DECLARE_SCRIPT(M02_Obelisk, "")
 DECLARE_SCRIPT (M02_Power_Plant, "")
 {
 	bool info_given;
+
+	// Vita port: the one-time repair announcement latch was not saved, so a
+	// loaded script read an indeterminate value. Save it.
+	REGISTER_VARIABLES()
+	{
+		SAVE_VARIABLE (info_given, 1);
+	}
 
 	void Created(GameObject*obj)
 	{
@@ -5152,7 +5174,11 @@ DECLARE_SCRIPT (M02_Mendoza, "")
 	{
 		if ((timer_id == 1) && (!calling_extraction))
 		{
-			int id = Commands->Create_Conversation ("MX2DSGN_DSGN0019", 100, 300, true);
+			// Vita port: this used to create an extra MX2DSGN_DSGN0019 that was
+			// never joined or started; the switch below always assigns id. Each
+			// one stayed in the active list (INITIALIZING times out after 60000 s)
+			// and in saves, one per 7 s for as long as Mendoza fought.
+			int id = -1;
 
 			counter++;
 			if (counter > 6)

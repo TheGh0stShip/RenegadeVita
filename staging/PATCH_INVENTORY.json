@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "753d4bad8c29c838e80e1f1311de1813dfd1bad835820e47ce9b1f7465f85cda",
-  "patch_count": 513,
+  "stage_script_sha256": "bbcb79fff00c47a79cf2315c8d313cd8b987eb9f3b0705721c9ca317522c8f9c",
+  "patch_count": 516,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1680,6 +1680,21 @@
       "sha256": "e5c6f8fde4b5325ebf559015fb593cc1feec2fdd4605c417dae835e817b6cf8a"
     },
     {
+      "path": "port/patches/scripts-a36-m05-apc-deploy-param-buffer.patch",
+      "stage_directory": "scripts",
+      "sha256": "8c14d72b4fd282fdb905846d49c71db9b895995f76620d548b65292589362db1"
+    },
+    {
+      "path": "port/patches/scripts-a36-m09-objective-controller-objective-save.patch",
+      "stage_directory": "scripts",
+      "sha256": "c0e04e05df40b80dfddb8a7ebdbcbe9e6da5b9f75e85ce419c7c22b204d6a23f"
+    },
+    {
+      "path": "port/patches/scripts-a36-m02-objective-controller-speech-save.patch",
+      "stage_directory": "scripts",
+      "sha256": "96e0c369aa693e5c91118f63802233f9adbc1d5c6c8371419d58c811bc1d937b"
+    },
+    {
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
       "stage_directory": "combat",
       "sha256": "0698dde47d7dcf9d381f46134f90fdf878d997026d668ce3c574d32d613b1f2e"
@@ -2570,5 +2585,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "4cd72808296071a10b919d4aa978e98b14950518a563ec07c2f4475f376ba6ee"
+  "registry_sha256": "d6bdc92bb5438c733c64d4eef1b02ed98c0803c8999687c898bab2a9e4a89ce1"
 }

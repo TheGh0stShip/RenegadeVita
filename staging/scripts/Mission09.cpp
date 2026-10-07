@@ -60,6 +60,8 @@ DECLARE_SCRIPT(M09_Objective_Controller, "") // Object Controller id: 2000071
 		SAVE_VARIABLE( block2, 3 );
 		SAVE_VARIABLE( block3, 4 );
 		SAVE_VARIABLE( block4, 5 );
+		// Vita save/load: set in Custom(); read back by the Mobius Killed() "check" event.
+		SAVE_VARIABLE( objective, 6 );
 	}
 
 	void Created(GameObject * obj)

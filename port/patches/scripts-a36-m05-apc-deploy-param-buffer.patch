@@ -1,0 +1,19 @@
+M05_APC_Deploy::Timer_Expired formatted the APC object id into char param1[10]
+with sprintf. A 10-digit dynamic object id plus the terminator needs 11 bytes
+(a negative id needs 12), so the stack buffer could overflow. Enlarge it to 16
+bytes and use snprintf so the write is bounded. Output is unchanged for every
+id that previously fit (all M05 owners are placed 6-digit ids).
+
+--- a/Mission05.cpp
++++ b/Mission05.cpp
+@@ -7569,8 +7569,8 @@
+
+ 	void Timer_Expired(GameObject * obj, int timer_id )
+ 	{
+-		char param1[10];
+-		sprintf(param1, "%d", Commands->Get_ID(obj));
++		char param1[16];
++		snprintf(param1, sizeof(param1), "%d", Commands->Get_ID(obj));
+ 		const char * preset = Get_Parameter("Preset");
+
+ 		if(timer_id == DEPLOY_SOLDIER1)

@@ -54,6 +54,8 @@ DECLARE_SCRIPT(M02_Objective_Controller, "")
 		SAVE_VARIABLE (convoy_trucks, 1);
 		SAVE_VARIABLE (count_dead, 2);
 		SAVE_VARIABLE (count_dead_09, 3);
+		// Vita save/load: one-shot M02_MORE_ROCKET_SOLDIERS conversation latch, set in Custom().
+		SAVE_VARIABLE (rocket_soldier_speech, 4);
 	}
 
 	void Created(GameObject * obj)

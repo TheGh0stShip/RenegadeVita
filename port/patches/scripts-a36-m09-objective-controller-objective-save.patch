@@ -1,0 +1,18 @@
+M09_Objective_Controller::objective[3] records which primary objectives were
+accomplished (set in Custom) and is reported back through the "check" event when
+Mobius is killed, to decide which objective pog to fail. It was not saved, so
+after a load the failed objective came from indeterminate memory. Register it
+with the unused id 6 (ids 1-5 are spawn_loc/block1-4). Saves without id 6 still
+load (unknown/missing ids are ignored by the original loader).
+
+--- a/Mission09.cpp
++++ b/Mission09.cpp
+@@ -60,6 +60,8 @@
+ 		SAVE_VARIABLE( block2, 3 );
+ 		SAVE_VARIABLE( block3, 4 );
+ 		SAVE_VARIABLE( block4, 5 );
++		// Vita save/load: set in Custom(); read back by the Mobius Killed() "check" event.
++		SAVE_VARIABLE( objective, 6 );
+ 	}
+
+ 	void Created(GameObject * obj)

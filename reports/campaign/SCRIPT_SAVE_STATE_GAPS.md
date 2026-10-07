@@ -195,6 +195,13 @@ skip, or a garbage value fed to the engine. **L** = cosmetic or AI only.
    `scripts-a36-m05-dead6-help-failed-text-save.patch` (id 4, zeroed in
    `Created`). They are host syntax-checked only and have no save/load
    repro or Vita evidence yet. The dupe-id fixes are not adopted.
+
+   **Also adopted (2026-10-07):** `scripts-a36-m09-objective-controller-objective-save.patch`
+   (`M09_Objective_Controller::objective[3]`, id 6) and
+   `scripts-a36-m02-objective-controller-speech-save.patch`
+   (`M02_Objective_Controller::rocket_soldier_speech`, id 4). Host
+   syntax-checked only. The M05 `M05_APC_Deploy` 10-byte buffer is hardened by
+   `scripts-a36-m05-apc-deploy-param-buffer.patch` (16 bytes plus `snprintf`).
 3. Heuristic limits: method-local shadowing (M08 `controller_id`) and
    objective links made through custom events are not fully resolved. Treat
    tool scores as triage only.

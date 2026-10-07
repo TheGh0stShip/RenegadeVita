@@ -7569,8 +7569,8 @@ DECLARE_SCRIPT(M05_APC_Deploy, "Preset:string, Soldier_Qty=0:int, Fire_Gun=1:int
 
 	void Timer_Expired(GameObject * obj, int timer_id )
 	{
-		char param1[10];
-		sprintf(param1, "%d", Commands->Get_ID(obj));
+		char param1[16];
+		snprintf(param1, sizeof(param1), "%d", Commands->Get_ID(obj));
 		const char * preset = Get_Parameter("Preset");
 
 		if(timer_id == DEPLOY_SOLDIER1)

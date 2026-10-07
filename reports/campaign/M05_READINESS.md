@@ -126,10 +126,11 @@ git-ignored `build/m05-readiness/m05-bindings.json` and is not committed.
   `Mission_Complete(false)` → `cGod::Mission_Failed` while
   `PendingCampaignContinue` is set. The precedence is handled by the generic
   campaign handoff and is not M05-specific.
-- `M05_APC_Deploy` formats object IDs into `char param1[10]` (`:7569`). This
+- `M05_APC_Deploy` formatted object IDs into `char param1[10]` (`:7569`). This
   overflows only for dynamic IDs (10 digits). Every M05 owner is a placed
   6-digit object (100144/100247/100248/100256/100608), so it is not reachable
-  in M05.
+  in M05. Hardened anyway by `scripts-a36-m05-apc-deploy-param-buffer.patch`
+  (`char param1[16]` plus `snprintf`); host syntax-checked only.
 
 ## Physical test route
 

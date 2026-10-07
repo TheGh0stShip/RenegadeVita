@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "c701689bace2fbd07a45f0fa896798d71925457c137724751f256f2e3c569d8c",
-  "patch_count": 511,
+  "stage_script_sha256": "31872092e4eac06b0d325d525d4c9ca2dff1fb14e29e45fbd34d9314c67d2c9b",
+  "patch_count": 512,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1625,6 +1625,11 @@
       "sha256": "5c31179abe21e31fe2ed953a340b1b59beb741ddef0bf06b5dcccb0819c52c76"
     },
     {
+      "path": "port/patches/ww3d2-a37-prim-anim-set-time-return.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "089654f9b5721d88f3b2194ff5202d06ed0a574c5ea721c52c7be5026e046c13"
+    },
+    {
       "path": "port/patches/ww3d2-a35-dx8renderer-gcc-syntax.patch",
       "stage_directory": "ww3d2",
       "sha256": "027962c92ac86bce20036a7cfeedfb58dc85f795c955a5296bb6d31e93a9d7e0"
@@ -2560,5 +2565,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "4a25507a97ed3747fd690084f9bb5a23bf378365cf97dd6ec814566aa831402d"
+  "registry_sha256": "758cdd84583d7e711463c1112794253f06e0e844a9c196999dd63f305fb0d08a"
 }

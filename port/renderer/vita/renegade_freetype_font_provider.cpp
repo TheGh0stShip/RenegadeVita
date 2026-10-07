@@ -31,6 +31,9 @@ struct FontCandidateList {
 
 FT_Library g_library = nullptr;
 std::vector<FontFace> g_faces;
+// Canonical keys whose every candidate failed; avoids re-probing the file
+// factory on each measure/rasterize call when an optional font is absent.
+std::vector<const char *> g_missing_faces;
 constexpr FT_Int32 kVitaFontGlyphLoadFlags =
 	FT_LOAD_NO_HINTING | FT_LOAD_NO_AUTOHINT;
 
@@ -118,6 +121,9 @@ FontFace *Find_Face(const char *family)
 	for (FontFace &entry : g_faces) {
 		if (Equal_No_Case(entry.family, face_key)) return &entry;
 	}
+	for (const char *missing : g_missing_faces) {
+		if (Equal_No_Case(missing, face_key)) return nullptr;
+	}
 	if (g_library == nullptr && FT_Init_FreeType(&g_library) != 0) return nullptr;
 	FontFace entry;
 	bool loaded = false;
@@ -135,11 +141,13 @@ FontFace *Find_Face(const char *family)
 		}
 	}
 	if (!loaded) {
+		g_missing_faces.push_back(face_key);
 		return nullptr;
 	}
 	if (FT_Select_Charmap(entry.face, FT_ENCODING_UNICODE) != 0 &&
 		entry.face->charmap == nullptr) {
 		FT_Done_Face(entry.face);
+		g_missing_faces.push_back(face_key);
 		return nullptr;
 	}
 	std::strncpy(entry.family, face_key, sizeof(entry.family) - 1);
@@ -275,6 +283,7 @@ void RenegadeVita_Font_Shutdown(void)
 		if (entry.face != nullptr) FT_Done_Face(entry.face);
 	}
 	g_faces.clear();
+	g_missing_faces.clear();
 	if (g_library != nullptr) FT_Done_FreeType(g_library);
 	g_library = nullptr;
 }

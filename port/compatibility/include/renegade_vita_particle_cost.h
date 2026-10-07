@@ -27,7 +27,7 @@
 #include <string.h>
 
 #ifndef RENEGADE_VITA_PARTICLE_COST_DEFAULT
-#define RENEGADE_VITA_PARTICLE_COST_DEFAULT 5U
+#define RENEGADE_VITA_PARTICLE_COST_DEFAULT 4U
 #endif
 
 namespace RenegadeVitaParticleCost {

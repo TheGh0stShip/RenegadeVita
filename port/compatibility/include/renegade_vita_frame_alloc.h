@@ -32,7 +32,7 @@ namespace RenegadeVitaFrameAlloc {
 enum : unsigned {
 	TEXTURE_RGBA_SCRATCH = 1U,
 	HUD_TARGET_NAME_TEMP = 2U,
-	DEFAULT_MODE = 3U,
+	DEFAULT_MODE = 0U,
 	MAX_SCRATCH_GROWTH_BYTES = 256U * 1024U
 };
 

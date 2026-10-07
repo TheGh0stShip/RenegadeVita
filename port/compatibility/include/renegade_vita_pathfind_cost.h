@@ -31,7 +31,7 @@ int A30_Vita_Log(const char *format, ...) __attribute__((format(printf, 1, 2)));
 enum {
 	RENEGADE_VITA_PATHFIND_COST_SKIP_UNGHOSTED_PROBE = 1U,
 	RENEGADE_VITA_PATHFIND_COST_KNOWN_BITS = 1U,
-	RENEGADE_VITA_PATHFIND_COST_DEFAULT = 1U
+	RENEGADE_VITA_PATHFIND_COST_DEFAULT = 0U
 };
 
 static const unsigned kRenegadeVitaPathfindCostCensusPeriod = 16384U;

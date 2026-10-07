@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "63322b3c14a61a061dc3a6775987f85371469216154be6aab6cc847cb13495cc",
-  "patch_count": 528,
+  "stage_script_sha256": "062d540a98ede6df44d975371f610159186e45b940d6161103891eca3306a83f",
+  "patch_count": 526,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -2625,25 +2625,15 @@
       "sha256": "71433b8b6e1764ad0707ba04f95022a43fa54fb1dd0d0156a0c538cfdc324301"
     },
     {
-      "path": "port/patches/combat-a36-raveshaw-star-dist-modulo-guard.patch",
+      "path": "port/patches/combat-a36-smart-control-disabled-weapon-guard.patch",
       "stage_directory": "combat",
-      "sha256": "8db90499831ea7491c2e6486d4094ccda4c5774ed04d7582149e83b58038e73b"
-    },
-    {
-      "path": "port/patches/combat-a36-raveshaw-stealth-soldier-create-guard.patch",
-      "stage_directory": "combat",
-      "sha256": "8696762046ee73979d8e8f279e5cef0b9071054cdbd288251690c96dc935d890"
+      "sha256": "82e2110a38e9fdb81c97af66939a407ffe223a8fa3102fa5f38099afafe318d3"
     },
     {
       "path": "port/patches/scripts-a36-m01-intro-command-breadcrumbs.patch",
       "stage_directory": "scripts",
       "sha256": "30f0ad3ed7b87ca32095d32d6f800ae73043544a75cd96a5d2d0272cba7c3f73"
-    },
-    {
-      "path": "port/patches/combat-a36-scriptcommands-null-guards.patch",
-      "stage_directory": "combat",
-      "sha256": "d41a91caa9052ce951998d269fbc92bbfe1b0b3ac9e9a7ce449bed502118cef5"
     }
   ],
-  "registry_sha256": "e53235ff46991f0c4dfedac56493acbaff641782f60d4f412ed45593dd2cb37d"
+  "registry_sha256": "d3c37a3df3addedd805ff64847ed8e015ade88a75939b3e8ae9f00eb14cd6e1b"
 }

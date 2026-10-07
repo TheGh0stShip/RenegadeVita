@@ -716,7 +716,10 @@ void SmartGameObj::Apply_Control( void )
 				StealthFiringTimer = STEALTH_FIRING_TIME;
 			}
 		}
-	} else {
+	} else if ( Get_Weapon() != NULL ) {
+		// VehicleGameObj::Think calls Apply_Control unconditionally, so this
+		// branch runs for a control-disabled vehicle that has no weapon (for
+		// example a transport or truck).  There is nothing to untrigger then.
 		Get_Weapon()->Set_Primary_Triggered( false );
 		Get_Weapon()->Set_Secondary_Triggered( false );
 	}

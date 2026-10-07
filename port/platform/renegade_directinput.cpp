@@ -177,19 +177,37 @@ VitaTouchSample Sample_Touch_Port(int port, bool &sampling_initialized)
 	SceTouchData touch = {};
 	VitaTouchSample result = {};
 	const int samples = sceTouchPeek(port, &touch, 1);
+	// Multi-touch: keep following the finger that began the press so a second
+	// finger landing or the first lifting cannot teleport the held cursor.
+	static int tracked_id[2] = {-1, -1};
+	int &tracked = tracked_id[port == SCE_TOUCH_PORT_FRONT ? 0 : 1];
 	if (samples > 0 && touch.reportNum > 0U) {
 		result.down = true;
+		unsigned int chosen = 0U;
+		bool found = false;
+		const unsigned int count = touch.reportNum < SCE_TOUCH_MAX_REPORT ?
+			touch.reportNum : SCE_TOUCH_MAX_REPORT;
+		for (unsigned int index = 0U; index < count; ++index) {
+			if (static_cast<int>(touch.report[index].id) == tracked) {
+				chosen = index;
+				found = true;
+				break;
+			}
+		}
+		if (!found) tracked = static_cast<int>(touch.report[0].id);
 		if (port == SCE_TOUCH_PORT_FRONT) {
 			const RectClass &logical = Render2DClass::Get_Screen_Resolution();
-			const float x = Clamp_Float(static_cast<float>(touch.report[0].x) *
+			const float x = Clamp_Float(static_cast<float>(touch.report[chosen].x) *
 				RenegadeVitaRenderer::DISPLAY_WIDTH / kVitaTouchRawWidth,
 				0.0f, RenegadeVitaRenderer::DISPLAY_WIDTH - 1.0f);
-			const float y = Clamp_Float(static_cast<float>(touch.report[0].y) *
+			const float y = Clamp_Float(static_cast<float>(touch.report[chosen].y) *
 				RenegadeVitaRenderer::DISPLAY_HEIGHT / kVitaTouchRawHeight,
 				0.0f, RenegadeVitaRenderer::DISPLAY_HEIGHT - 1.0f);
 			result.down = RenegadeVitaRenderer::Map_Native_Pixel_To_Logical(
 				x, y, logical.Width(), logical.Height(), result.x, result.y);
 		}
+	} else {
+		tracked = -1;
 	}
 	return result;
 }

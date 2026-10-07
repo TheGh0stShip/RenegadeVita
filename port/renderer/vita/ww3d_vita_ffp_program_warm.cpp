@@ -54,7 +54,7 @@ bool Read_Prewarm_Enabled()
 		const size_t size = fread(value, 1U, sizeof(value), file);
 		const bool read_ok = !ferror(file);
 		fclose(file);
-		if (read_ok && size == 8U && memcmp(value, "RVFP1 ", 6U) == 0 &&
+		if (read_ok && size == 8U && memcmp(value, "RVPW1 ", 6U) == 0 &&
 			value[7] == '\n' && (value[6] == '0' || value[6] == '1')) {
 			enabled = value[6] == '1';
 		}

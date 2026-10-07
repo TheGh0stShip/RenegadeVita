@@ -80,7 +80,7 @@ program selection is already cheap, so it is instrumented rather than changed.
      `window:`. A `window:` line appears whenever a window had a compile or disk
      load, and on every 10th window; at most 600 lines.
    - Off switch: `ux0:data/renegade/user/config/ffp-prewarm-v1.flag`
-     containing `RVFP1 0\n` disables pre-warm. Recording and telemetry stay on.
+     containing `RVPW1 0\n` disables pre-warm. Recording and telemetry stay on.
    - CMakeLists.txt adds the new TU.
 - Path note: the brief said `user/cache/`. AGENTS.md defines the cache root as
   `ux0:data/renegade/cache/` (a sibling of `user/`), and the port already uses
@@ -149,7 +149,7 @@ hitches; average FPS is not expected to change.
    `keys`, `rejects=0`, plus `bytes` and `elapsed_us` (the boot cost).
 2. During campaign play, `window:` lines should show `compiles=0/0` and
    `disk_loads=0/0` except for variants new to this run. Compare frame-vblank
-   `max_delta` with a run that has `ffp-prewarm-v1.flag` set to `RVFP1 0`.
+   `max_delta` with a run that has `ffp-prewarm-v1.flag` set to `RVPW1 0`.
 3. Steady-state `window:` lines give `mask_changes` and `repatches` per 120
    frames. If re-patches reach the hundreds per frame, do (b) next: a vitaGL
    patched-fragment memo keyed by (program id, vertex program, blend), flushed

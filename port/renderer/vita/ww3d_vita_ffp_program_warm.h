@@ -33,7 +33,7 @@ enum Stat {
 #if defined(__vita__)
 // Once, after vglInit: load the GXPs of every recorded key into vitaGL's RAM
 // program cache. Disabled by ux0:data/renegade/user/config/ffp-prewarm-v1.flag
-// containing "RVFP1 0\n" (recording and telemetry continue).
+// containing "RVPW1 0\n" (recording and telemetry continue).
 void Prewarm_From_Record(const char *owner);
 // On loading screens and shutdown: add the keys now resident in vitaGL to
 // the persistent record (written only when it grew).

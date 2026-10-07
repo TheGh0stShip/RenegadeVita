@@ -411,6 +411,13 @@ void TextureClass::Apply_For_Platform_Boundary(unsigned stage)
 	Record("texture " + std::to_string(stage) + " " + std::to_string(id));
 }
 
+// TextureClass::Apply sampler batching (texture-state-dedupe) only coalesces
+// GL sampler calls; the recorded binding is the same, so bind directly.
+void Apply_Platform_Texture_Stage(TextureClass &texture, unsigned stage)
+{
+	texture.Apply_For_Platform_Boundary(stage);
+}
+
 void Bind_Texture(unsigned stage, bool valid)
 {
 	CHECK(stage == 0U && !valid);

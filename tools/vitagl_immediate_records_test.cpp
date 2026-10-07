@@ -25,6 +25,7 @@ using GLfloat = float;
 using GLsizei = int;
 using GLboolean = bool;
 using GLenum = unsigned;
+using GLint = int;
 using GLubyte = uint8_t;
 using GLushort = uint16_t;
 enum { GL_TEXTURE0 = 0x84C0, GL_TEXTURE1 = 0x84C1, GL_INVALID_ENUM = 0x0500,

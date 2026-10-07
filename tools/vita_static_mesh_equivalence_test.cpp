@@ -25,6 +25,7 @@
 
 #include "ww3d_vita_indexed_mesh_batch.h"
 #include "ww3d_vita_static_mesh_cache.h"
+#include "ww3d_vita_vertex_array_batch.h"
 
 using namespace RenegadeVitaRenderer;
 
@@ -546,6 +547,27 @@ void vglRenegadeEndIndexed(int, const uint16_t *)
 
 // Profiling scopes are timing only.
 #define RENEGADE_FRAME_PROFILE(name) ((void)0)
+// vertex-array-v1 stays off: these fixtures compare the immediate per-corner
+// stream with the static mesh cache. The vertex-array path has its own
+// equivalence test (tools/test_vita_vertex_array_submission.py).
+VitaVertexArrayBatch g_vertex_array_batch;
+bool g_vertex_array_enabled = false;
+uint64_t g_vertex_array_batches = 0, g_vertex_array_corners = 0;
+bool Vertex_Array_Batch_Eligible(const OriginalTextureCoordinateState *, bool, bool,
+	const Vector2 *const *)
+{
+	return false;
+}
+void Draw_Vertex_Array_Batch(VitaVertexArrayBatch &, bool, bool, const char *, bool)
+{
+	CHECK(false && "vertex-array batches are disabled in this harness");
+}
+// TextureClass::Apply sampler batching is a GL-call optimisation; the
+// recorded binding is the same, so bind directly.
+void Apply_Platform_Texture_Stage(TextureClass &texture, unsigned stage)
+{
+	texture.Apply_For_Platform_Boundary(stage);
+}
 StaticMeshStreamBuilder g_static_mesh_builder;
 #include "static-mesh-helpers.inc"
 #include "static-mesh-build.inc"

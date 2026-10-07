@@ -49,11 +49,13 @@ class IndexedVertexRecordsTest(unittest.TestCase):
         script, variables, order = _ordered_vitagl_patches()
         self.assertEqual(variables.get('records_patch'),
                          'port/renderer/vita/dependency-patches/vitagl-immediate-vertex-records.patch')
-        self.assertEqual(order[-1], 'records_patch')
+        # Records follows the six earlier dependency patches; later patches
+        # (the FFP program cache) may follow it.
+        self.assertEqual(order.index('records_patch'), order.index('attribute_patch') + 1)
         self.assertEqual(sorted(order), sorted(variables))
         identity = next(line for line in script.splitlines() if line.startswith('identity='))
         self.assertIn('"$records_patch"', identity)
-        self.assertIn('"$attribute_patch" "$records_patch" "$work/source/source/ffp.c"', script)
+        self.assertIn('"$attribute_patch" "$records_patch"', script)
 
     def test_production_indexed_records_stream(self):
         source = (VITA / 'ww3d_vita_renderer.cpp').read_text()

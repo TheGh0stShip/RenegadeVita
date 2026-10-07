@@ -198,7 +198,13 @@ class VitaGxmTuningTests(unittest.TestCase):
         # Sizes are requested before vglInitExtended and reported after it.
         self.assertLess(init.index('Apply_VitaGL_Sizing(vitagl_sizing);'),
                         init.index('vglInitExtended('))
-        self.assertIn('static_cast<int>(vitagl_sizing.immediate_pool_bytes), 960, 544,', init)
+        # The display size comes from the internal-resolution scan-out level
+        # (960x544 unless internal-resolution-v1.flag selects a smaller one).
+        call = init[init.index('vglInitExtended('):]
+        call = call[:call.index(';')]
+        self.assertIn('static_cast<int>(vitagl_sizing.immediate_pool_bytes),', call)
+        self.assertIn('static_cast<int>(g_physical_display_width),', call)
+        self.assertIn('static_cast<int>(g_physical_display_height),', call)
         self.assertIn('static_cast<int>(vitagl_sizing.ram_reserve_bytes), campaign_msaa);', init)
         self.assertLess(init.index('vglInitExtended('),
                         init.index('Log_VitaGL_Effective_Sizing(vitagl_sizing);'))

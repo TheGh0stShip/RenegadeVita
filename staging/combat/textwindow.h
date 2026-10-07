@@ -150,6 +150,11 @@ private:
 
 	void				Update_Row (int item_index, float y_pos, float *row_height);
 
+#if defined(RENEGADE_VITA_PORT)
+	bool				Can_Keep_Measured_Build (void);
+	void				Forget_Measured_Build (void)	{ MeasuredBuildValid = false; }
+#endif
+
 	////////////////////////////////////////////////////////////////
 	//	Private data types
 	////////////////////////////////////////////////////////////////
@@ -183,6 +188,22 @@ private:
 
 	StringClass					HeadingFontName;
 	StringClass					TextFontName;
+
+#if defined(RENEGADE_VITA_PORT)
+	//
+	//	What the renderers hold after a height-only Update_View (hud-cost
+	//	bit 0): the rows it built and every input those rows depend on.
+	//
+	bool							MeasuredBuildValid;
+	int							MeasuredFirstLineIndex;
+	int							MeasuredRowCount;
+	bool							MeasuredHasInnerRows;
+	float							MeasuredInnerRowBottom;
+	RectClass					MeasuredTextRect;
+	bool							MeasuredColumnsDisplayed;
+	RectClass					MeasuredResolution;
+	bool							MeasuredUVBias;
+#endif
 };
 
 

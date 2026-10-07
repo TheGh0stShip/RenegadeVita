@@ -1715,6 +1715,11 @@ test "$(sha256sum "$rv_stage/combat/action.cpp" | cut -d' ' -f1)" = \
 	"f90761922d80e0795ed3d99f9ce7545561f144d3dbfc52c735c1d1eb4f46edbb"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-face-action-stale-end-time-clamp.patch"
+# Message window text: a height measurement builds every row right before the
+# view update that rebuilds the same rows; hud-cost-v1.flag ("RVHD1 1") keeps
+# the measured build when nothing it depends on changed. Default off.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-tut1-textwindow-measured-build.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

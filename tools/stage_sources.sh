@@ -1612,6 +1612,13 @@ test "$(sha256sum "$rv_stage/combat/pathaction.cpp" | cut -d' ' -f1)" = \
 	"aef6e04af1d4ef8099a84e75ac72642f3eb0e1e68856dddcf7548efa3ac1c99f"
 test "$(sha256sum "$rv_stage/combat/pathaction.h" | cut -d' ' -f1)" = \
 	"3b994bd202bec41945900168ceff9f588eaf699bed808a5b43d2874aef09d044"
+# Script zones sample star positions once per Think; at Vita frame rates a
+# star (or star vehicle) can cross a zone thinner than one frame's move without
+# a sample inside.  Fire Entered for a straight crossing between consecutive
+# Thinks only when the move exceeds the zone's thinnest side (unchanged at high
+# frame rates).  See reports/campaign/SCRIPT_ZONE_TUNNELLING.md.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-scriptzone-swept-entry.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

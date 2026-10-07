@@ -161,6 +161,18 @@ protected:
 	bool		In_List( SmartGameObj * obj );
 	bool		Inside_Me( const SmartGameObj * obj );
 
+	// Vita port: swept-entry fallback for star (and star vehicle) moves longer
+	// than the zone's thinnest side between two consecutive Thinks. Not saved.
+	enum { SWEEP_SAMPLE_COUNT = 4 };
+	struct SweepSampleStruct {
+		int				ObjID;
+		unsigned int	SyncTime;
+		int				FrameTicks;
+		Vector3			Position;
+	};
+	SweepSampleStruct	SweepSamples[SWEEP_SAMPLE_COUNT];
+	bool		Update_Sweep_Sample( const SmartGameObj * obj );
+
 };
 
 #endif

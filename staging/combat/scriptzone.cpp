@@ -51,6 +51,10 @@
 #include "pscene.h"
 #include "phys.h"
 #include "soldier.h"
+#include "vehicle.h"
+#include "lineseg.h"
+#include "timemgr.h"
+#include "ww3d.h"
 
 /*
 ** ScriptZoneGameObjDef
@@ -202,6 +206,12 @@ SimplePersistFactoryClass<ScriptZoneGameObj, CHUNKID_GAME_OBJECT_SCRIPT_ZONE>	_S
 ScriptZoneGameObj::ScriptZoneGameObj( void ) :
 	PlayerType( PLAYERTYPE_NEUTRAL )
 {
+	for ( int index = 0; index < SWEEP_SAMPLE_COUNT; index++ ) {
+		SweepSamples[index].ObjID = 0;
+		SweepSamples[index].SyncTime = 0;
+		SweepSamples[index].FrameTicks = 0;
+		SweepSamples[index].Position.Set( 0, 0, 0 );
+	}
 }
 
 ScriptZoneGameObj::~ScriptZoneGameObj( void )
@@ -384,7 +394,8 @@ void	ScriptZoneGameObj::Think()
 		SLNode<SoldierGameObj> *objnode;
 		for (	objnode = GameObjManager::Get_Star_Game_Obj_List()->Head(); objnode; objnode = objnode->Next()) {
 			SoldierGameObj * obj = objnode->Data();
-			if ( obj && Inside_Me( obj ) && !In_List( obj ) ) {
+			bool swept = Update_Sweep_Sample( obj );
+			if ( obj && ( Inside_Me( obj ) || swept ) && !In_List( obj ) ) {
 				Entered( obj );
 			}
 		}
@@ -405,8 +416,92 @@ void	ScriptZoneGameObj::Think()
 				}
 			}
 		}
+
+		// Vita port: stars and their vehicles that crossed the whole zone
+		// between two Thinks do not overlap it now, so Collect_Objects cannot
+		// return them.  Admit them only while they are in the physics scene.
+		SLNode<SoldierGameObj> *objnode;
+		for (	objnode = GameObjManager::Get_Star_Game_Obj_List()->Head(); objnode; objnode = objnode->Next()) {
+			SmartGameObj * candidates[2] = { objnode->Data(), NULL };
+			if ( objnode->Data() != NULL ) {
+				candidates[1] = objnode->Data()->Get_Vehicle();
+			}
+			for ( int index = 0; index < 2; index++ ) {
+				SmartGameObj * obj = candidates[index];
+				if ( Update_Sweep_Sample( obj ) &&
+					  obj->Peek_Physical_Object()->Get_Culling_System() != NULL &&
+					  obj->Peek_Physical_Object()->Get_Observer() != NULL && !In_List( obj ) ) {
+					Entered( obj );
+				}
+			}
+		}
 	}
 
+}
+
+/*
+** Vita port: record this Think's position of a star (or star vehicle) and
+** report whether the straight move since this zone's previous Think crossed
+** the zone while both samples lie outside it.  Only consulted when that move
+** is longer than the zone's thinnest side; shorter moves always leave a
+** sample inside for a straight crossing, so the original point test alone
+** decides at high frame rates.  Moves faster than SWEEP_MAX_SPEED (teleports)
+** and non-consecutive Thinks (no observers, hibernation, cinematic freeze,
+** load) never sweep.
+*/
+bool	ScriptZoneGameObj::Update_Sweep_Sample( const SmartGameObj * obj )
+{
+	static const float SWEEP_MAX_SPEED = 50.0f;	// m/s, above any campaign vehicle
+
+	if ( obj == NULL || obj->Peek_Physical_Object() == NULL ) {
+		return false;
+	}
+
+	const unsigned int now = WW3D::Get_Sync_Time();
+	const int ticks = TimeManager::Get_Frame_Ticks();
+	const int id = obj->Get_ID();
+	Vector3 pos;
+	obj->Get_Position( &pos );
+
+	SweepSampleStruct * sample = NULL;
+	for ( int index = 0; index < SWEEP_SAMPLE_COUNT && sample == NULL; index++ ) {
+		if ( SweepSamples[index].ObjID == id ) {
+			sample = &SweepSamples[index];
+		}
+	}
+
+	bool crossed = false;
+	if ( sample != NULL ) {
+		float dist = (pos - sample->Position).Length();
+		float thinnest = 2.0f * WWMath::Min( BoundingBox.Extent.X,
+			WWMath::Min( BoundingBox.Extent.Y, BoundingBox.Extent.Z ) );
+		if ( ticks > 0 && sample->FrameTicks > 0 && sample->SyncTime + (unsigned int)ticks == now &&
+			  dist > thinnest &&
+			  dist <= SWEEP_MAX_SPEED * (float)ticks / (float)TICKS_PER_SECOND &&
+			  CollisionMath::Overlap_Test( BoundingBox, sample->Position ) == CollisionMath::OUTSIDE &&
+			  CollisionMath::Overlap_Test( BoundingBox, pos ) == CollisionMath::OUTSIDE &&
+			  CollisionMath::Overlap_Test( BoundingBox, LineSegClass( sample->Position, pos ) ) != CollisionMath::OUTSIDE ) {
+			crossed = true;
+			Debug_Say(( "ScriptZone %d swept entry by %d (%.2f m)\n", Get_ID(), id, dist ));
+		}
+	} else {
+		// Reuse a slot not refreshed by this Think; beyond SWEEP_SAMPLE_COUNT
+		// candidates the original point test alone applies.
+		for ( int index = 0; index < SWEEP_SAMPLE_COUNT && sample == NULL; index++ ) {
+			if ( SweepSamples[index].ObjID == 0 || SweepSamples[index].SyncTime != now ) {
+				sample = &SweepSamples[index];
+			}
+		}
+		if ( sample == NULL ) {
+			return false;
+		}
+	}
+
+	sample->ObjID = id;
+	sample->SyncTime = now;
+	sample->FrameTicks = ticks;
+	sample->Position = pos;
+	return crossed;
 }
 
 /*

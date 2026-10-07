@@ -5559,6 +5559,22 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						reload_owner, load_source);
 					continue;
 				}
+				// The guard below re-enters this loop head while either process-global
+				// request is set. A request with no owner in this session (a campaign
+				// mission has no core-restart owner; a non-client has no broken-
+				// connection owner) would otherwise spin without input, START, or
+				// original shutdown. Drop it here, once, with evidence.
+				if (g_b_core_restart && !direct_client &&
+					!(selected_source.skirmish_selected || lan_host || lan_client)) {
+					A30_Vita_Log("A4 round: unowned core restart request dropped frame=%u\n",
+						result.frames);
+					g_b_core_restart = false;
+				}
+				if (g_client_quit && !multiplayer_client) {
+					A30_Vita_Log("A4 round: unowned client quit request dropped frame=%u\n",
+						result.frames);
+					g_client_quit = false;
+				}
 #endif
 #if !RENEGADE_VITA_M00_DEMO
 					if (direct_client) {

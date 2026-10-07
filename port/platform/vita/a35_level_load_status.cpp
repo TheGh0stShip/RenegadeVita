@@ -1,3 +1,4 @@
+extern int A30_Vita_Log(const char *format, ...) __attribute__((weak));
 #include "a35_level_load_status.h"
 
 #include <atomic>
@@ -15,6 +16,10 @@ void A35_Level_Load_Reset_Failure()
 void A35_Level_Load_Record_Failure(A35LevelLoadFailure failure)
 {
     if (failure == A35_LOAD_NO_FAILURE) return;
+    // Every gate is logged; only the first is kept as the load result.
+    if (A30_Vita_Log != nullptr) A30_Vita_Log("A3.9 level load: failure recorded code=%u first=%u\n",
+        static_cast<unsigned>(failure),
+        static_cast<unsigned>(first_failure.load(std::memory_order_acquire)));
     uint32_t expected = A35_LOAD_NO_FAILURE;
     first_failure.compare_exchange_strong(expected, static_cast<uint32_t>(failure),
                                          std::memory_order_release,

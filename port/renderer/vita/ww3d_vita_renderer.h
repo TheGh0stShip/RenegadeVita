@@ -176,6 +176,17 @@ bool Submit_Material_Pass(MeshClass &mesh, MaterialPassClass &material_pass,
 void Invalidate_Static_Mesh_Cache();
 void Forget_Static_Mesh_Model(const void *model);
 void Forget_Static_Mesh_User_Lighting(const void *model, const void *user_lighting);
+// Loading-screen pre-staging of one rigid mesh's static cache entry: builds
+// and uploads the same streams its first draw would, without drawing. Only
+// unlit, not-yet-known meshes are staged; anything else is left to the
+// first draw. bytes receives the uploaded size.
+enum StaticMeshPrebuildResult {
+	STATIC_MESH_PREBUILD_SKIPPED,
+	STATIC_MESH_PREBUILD_BUILT,
+	STATIC_MESH_PREBUILD_BUDGET_FULL
+};
+StaticMeshPrebuildResult Prebuild_Static_Mesh(MeshClass &mesh, RenderInfoClass &render_info,
+	uint32_t &bytes);
 // Dynamic DX8 submissions (including original Render2D glyph quads) retain
 // ShaderClass as the owner of both blend/depth state and the per-stage texture
 // combiner contract.  The texture-presence arguments make that complete state

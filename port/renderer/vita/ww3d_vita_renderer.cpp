@@ -5983,4 +5983,73 @@ void Forget_Static_Mesh_User_Lighting(const void *model, const void *user_lighti
 #endif
 }
 
+// Same eligibility, streams and upload as Submit_Static_Mesh_Cache's first
+// build. Unlit colours are a pure function of the model, its user lighting
+// array and material state, which the first draw re-validates through
+// Static_Mesh_Entry_Current; lit meshes depend on the draw-time light
+// environment and are left to the first draw. Ineligible results record
+// nothing, so the first draw reaches the same verdict itself. Staging stops
+// at three quarters of the cache budget so gameplay-first meshes never
+// trigger an eviction of staged entries before they are drawn.
+StaticMeshPrebuildResult Prebuild_Static_Mesh(MeshClass &mesh, RenderInfoClass &render_info,
+	uint32_t &bytes)
+{
+	bytes = 0U;
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	MeshModelClass *model = mesh.Peek_Model();
+	if (!g_statistics.initialized || !g_static_mesh_cache_enabled || model == NULL ||
+		model->Get_Flag(MeshGeometryClass::SKIN)) return STATIC_MESH_PREBUILD_SKIPPED;
+	const int vertex_count = model->Get_Vertex_Count();
+	const int triangle_count = model->Get_Polygon_Count();
+	const Vector3 *vertices = model->Get_Vertex_Array();
+	const Vector3 *normals = model->Get_Vertex_Normal_Array();
+	const TriIndex *triangles = model->Get_Polygon_Array();
+	if (vertices == NULL || triangles == NULL || vertex_count <= 0 || triangle_count <= 0)
+		return STATIC_MESH_PREBUILD_SKIPPED;
+	const void *user_lighting = mesh.Get_User_Lighting_Array(false);
+	if (g_static_mesh_cache.Find(model, user_lighting) != NULL) return STATIC_MESH_PREBUILD_SKIPPED;
+	if (g_static_mesh_cache.Bytes() >= (STATIC_MESH_CACHE_BUDGET_BYTES / 4U) * 3U)
+		return STATIC_MESH_PREBUILD_BUDGET_FULL;
+	const int model_pass_count = model->Get_Pass_Count();
+	const int base_pass_count = model_pass_count > 0 ? model_pass_count : 1;
+	const Matrix3D &world_transform = mesh.Get_Transform();
+	bool uses_lighting = false;
+	const bool built = Build_Static_Mesh_Streams(mesh, model, render_info, vertices, normals,
+		triangles, vertex_count, triangle_count, base_pass_count, world_transform, uses_lighting);
+	// The build applied material texture-coordinate state outside a draw;
+	// leave the default pass-through stage state for the loading screen.
+	Apply_Original_Texture_Coordinate_State(NULL);
+	for (unsigned stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage)
+		Reset_Texture_Matrix_Stage(stage);
+	if (!built || uses_lighting) return STATIC_MESH_PREBUILD_SKIPPED;
+	const uint32_t staged_bytes = g_static_mesh_builder.Vertices().Count() *
+		STATIC_MESH_VERTEX_STRIDE + g_static_mesh_builder.Indices().Count() * sizeof(uint16_t);
+	if (g_static_mesh_cache.Bytes() + staged_bytes > (STATIC_MESH_CACHE_BUDGET_BYTES / 4U) * 3U)
+		return STATIC_MESH_PREBUILD_BUDGET_FULL;
+	const uint32_t frame = g_statistics.frames;
+	StaticMeshEntry *entry = g_static_mesh_cache.Insert(model, user_lighting);
+	if (entry == NULL) return STATIC_MESH_PREBUILD_BUDGET_FULL;
+	entry->vertex_count = static_cast<uint32_t>(vertex_count);
+	entry->triangle_count = static_cast<uint32_t>(triangle_count);
+	entry->pass_count = static_cast<uint32_t>(base_pass_count);
+	entry->alternate_materials = model->Is_Alternate_Material_Description_Enabled();
+	entry->last_used_frame = frame;
+	if (!Upload_Static_Mesh_Entry(*entry, frame)) {
+		g_static_mesh_cache.Remove(*entry);
+		return STATIC_MESH_PREBUILD_BUDGET_FULL;
+	}
+	entry->state = STATIC_MESH_ENTRY_READY;
+	entry->built_frame = frame;
+	++g_static_mesh_statistics.builds;
+	g_static_mesh_statistics.cached_batches += entry->batch_count;
+	g_static_mesh_statistics.cached_triangles += g_static_mesh_builder.Indices().Count() / 3U;
+	bytes = entry->bytes;
+	return STATIC_MESH_PREBUILD_BUILT;
+#else
+	(void)mesh;
+	(void)render_info;
+	return STATIC_MESH_PREBUILD_SKIPPED;
+#endif
+}
+
 } // namespace RenegadeVitaRenderer

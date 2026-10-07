@@ -1721,6 +1721,58 @@ bool Renegade_Miles_Mix_For_Test(int16_t *stereo_output, size_t frames)
 	return true;
 }
 
+int Renegade_Miles_Prewarm_Pcm(const void *data, size_t bytes, size_t *retained_bytes)
+{
+	if (retained_bytes != nullptr) *retained_bytes = 0U;
+	if (data == nullptr || bytes < 12U || bytes > kPcmCacheMaximumSourceBytes)
+		return RENEGADE_MILES_PREWARM_SKIPPED;
+	const uint8_t *image = static_cast<const uint8_t *>(data);
+	if (RenegadeVitaAudio::Is_Mpeg_Media(image, bytes)) return RENEGADE_MILES_PREWARM_SKIPPED;
+	// Same key as Decode_Into_Sample; a later play of these bytes hits.
+	const uint64_t hash = Hash_Image(image, bytes);
+	AIL_lock();
+	const bool present = Find_Cached_Pcm(hash, bytes) != nullptr;
+	AIL_unlock();
+	if (present) return RENEGADE_MILES_PREWARM_PRESENT;
+	// Decode outside the mixer lock so loading-screen audio keeps running.
+	DecodedWave decoded;
+	WaveInfo info;
+	const char *error = nullptr;
+	if (!RenegadeVitaAudio::Decode_Wave_With_Info(image, bytes, &decoded, &info, &error))
+		return RENEGADE_MILES_PREWARM_SKIPPED;
+	RenegadeMilesPcm *pcm = new (std::nothrow) RenegadeMilesPcm;
+	if (pcm == nullptr) return RENEGADE_MILES_PREWARM_SKIPPED;
+	pcm->frames = decoded.Frame_Count();
+	pcm->wave = std::move(decoded);
+	pcm->encoded_data_bytes = info.data_bytes;
+	pcm->source_hash = hash;
+	pcm->source_bytes = bytes;
+	const size_t pcm_bytes = Pcm_Bytes(pcm);
+	int result = RENEGADE_MILES_PREWARM_FULL;
+	AIL_lock();
+	if (Find_Cached_Pcm(hash, bytes) != nullptr) {
+		result = RENEGADE_MILES_PREWARM_PRESENT;
+	} else if (pcm_bytes > kPcmCacheBudgetBytes / 4U) {
+		result = RENEGADE_MILES_PREWARM_SKIPPED;
+	} else if (g_pcm_cache_bytes + pcm_bytes <= kPcmCacheBudgetBytes) {
+		// Never evict: Cache_Pcm only fills a free slot when it already fits.
+		bool free_slot = false;
+		for (const RenegadeMilesPcm *slot : g_pcm_cache) {
+			if (slot == nullptr) { free_slot = true; break; }
+		}
+		if (free_slot) {
+			Track_New_Pcm(pcm);
+			pcm->last_use = ++g_pcm_cache_clock;
+			Cache_Pcm(pcm);
+			result = RENEGADE_MILES_PREWARM_CACHED;
+			if (retained_bytes != nullptr) *retained_bytes = pcm_bytes;
+		}
+	}
+	AIL_unlock();
+	if (result != RENEGADE_MILES_PREWARM_CACHED) delete pcm;
+	return result;
+}
+
 void Renegade_Miles_Reset_Runtime_Stats()
 {
 	AIL_lock();

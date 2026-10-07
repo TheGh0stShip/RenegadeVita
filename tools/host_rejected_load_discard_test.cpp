@@ -109,7 +109,8 @@ bool Round_Trip(bool reject)
 	bool ok;
 	{
 		ChunkLoadClass cload(&ram);
-		ok = SaveLoadSystemClass::Load(cload, true);
+		// Player-save (strict) mode: retail level data is advisory by design.
+		ok = SaveLoadSystemClass::Load(cload, true, true);
 	}
 	ram.Close();
 	return ok;

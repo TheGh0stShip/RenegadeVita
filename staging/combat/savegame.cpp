@@ -398,6 +398,10 @@ void	SaveGameManager::Load_Game( const char * filename )
 	bool level_info_found = false;
 	bool level_info_valid = false;
 	bool level_data_found = false;
+	// Player-save admission applies to player saves only; retail level data
+	// (.ldd) is loaded with original release semantics.
+	const char *rv_ext = (filename != NULL) ? ::strrchr(filename, '.') : NULL;
+	const bool rv_player_save = rv_ext != NULL && ::strcmpi(rv_ext, ".sav") == 0;
 #endif
 
 	WWLOG_INTERMEDIATE("Open file");
@@ -476,7 +480,7 @@ void	SaveGameManager::Load_Game( const char * filename )
 #endif
 				if (CombatManager::I_Am_Server()) {
 #if defined(__vita__)
-					if (!SaveLoadSystemClass::Load(cload, false, true)) {
+					if (!SaveLoadSystemClass::Load(cload, false, rv_player_save)) {
 						A35_Level_Load_Record_Failure(A35_LOAD_DYNAMIC_SUBSYSTEM_FAILED);
 					}
 #else

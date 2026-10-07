@@ -1,0 +1,52 @@
+--- a/bullet.cpp
++++ b/bullet.cpp
+@@ -748,7 +748,8 @@
+ 	}
+ 
+ 	loaded = loaded && variables_seen && !cload.Has_Error();
+-	if (loaded) SaveLoadSystemClass::Register_Post_Load_Callback(this);
++	// Register unconditionally (original): a rejected load discards all callbacks.
++	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+ 	return loaded;
+ }
+ 
+--- a/combatsaveload.cpp
++++ b/combatsaveload.cpp
+@@ -207,9 +207,8 @@
+ 
+ 	#undef LOAD_REQUIRED_COMBAT_CHUNK
+ 	loaded = loaded && loaded_chunks == ((1U << 15) - 1U);
+-	if (loaded) {
+-		SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	}
++	// Register unconditionally (original): a rejected load discards all callbacks.
++	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+ 
+ 	return loaded;
+ }
+--- a/evasettings.cpp
++++ b/evasettings.cpp
+@@ -302,9 +302,9 @@
+ 	}
+ 
+ 	loaded = loaded && parent_seen && variables_seen && !cload.Has_Error();
+-	if (!loaded) return false;
++	// Register unconditionally (original): a rejected load discards all callbacks.
+ 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	return true;
++	return loaded;
+ }
+ 
+ void
+--- a/scriptablegameobj.cpp
++++ b/scriptablegameobj.cpp
+@@ -615,7 +615,8 @@
+ 
+ 	loaded = loaded && parent_seen && referenceable_seen && variables_seen && pending_seen &&
+ 		!cload.Has_Error();
+-	if (loaded) SaveLoadSystemClass::Register_Post_Load_Callback(this);
++	// Register unconditionally (original): a rejected load discards all callbacks.
++	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+ 
+ 	return loaded;
+ }

@@ -207,9 +207,8 @@ bool	CombatSaveLoadClass::Load( ChunkLoadClass &cload )
 
 	#undef LOAD_REQUIRED_COMBAT_CHUNK
 	loaded = loaded && loaded_chunks == ((1U << 15) - 1U);
-	if (loaded) {
-		SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	}
+	// Register unconditionally (original): a rejected load discards all callbacks.
+	SaveLoadSystemClass::Register_Post_Load_Callback(this);
 
 	return loaded;
 }

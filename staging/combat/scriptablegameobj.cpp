@@ -615,7 +615,8 @@ bool	ScriptableGameObj::Load( ChunkLoadClass &cload )
 
 	loaded = loaded && parent_seen && referenceable_seen && variables_seen && pending_seen &&
 		!cload.Has_Error();
-	if (loaded) SaveLoadSystemClass::Register_Post_Load_Callback(this);
+	// Register unconditionally (original): a rejected load discards all callbacks.
+	SaveLoadSystemClass::Register_Post_Load_Callback(this);
 
 	return loaded;
 }

@@ -748,7 +748,8 @@ bool	BulletClass::Load( ChunkLoadClass & cload )
 	}
 
 	loaded = loaded && variables_seen && !cload.Has_Error();
-	if (loaded) SaveLoadSystemClass::Register_Post_Load_Callback(this);
+	// Register unconditionally (original): a rejected load discards all callbacks.
+	SaveLoadSystemClass::Register_Post_Load_Callback(this);
 	return loaded;
 }
 

@@ -1,5 +1,11 @@
 # Content coverage audit index
 
+Campaign asset closure: [M13 and M01-M11 resolved through the Vita and PC lookup orders](campaign/ASSET_CLOSURE.md)
+covers preload lists, HLOD children, textures (DDS then TGA), animations, level and preset sounds,
+conversation text/voice and movies. One port-side texture gap (`lv8_hbag.tga`, M01/M04); all other misses
+are retail-data defects the PC shares and every miss class degrades without a crash. Host-only metadata; no
+build, launch or physical result.
+
 Zone ownership: [original membership and callbacks](SCRIPT_ZONE_OWNER_REVIEW.md)
 traces point-in-oriented-box checks, star/all-smart gathering, callback ordering
 and saved membership. Disappearing actors do not receive guaranteed Exited;

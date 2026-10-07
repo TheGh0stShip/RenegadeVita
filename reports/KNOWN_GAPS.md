@@ -2,6 +2,13 @@
 
 ## 2026-10-05/06 consolidated (all source-only unless stated)
 
+- **Campaign cross-mission texture gap (open, cosmetic).** `lv8_hbag.tga` (prop `DSP_H-BAG`, preloaded by
+  the M01 and M04 `.dep`) exists only in `M08.mix`. The PC mounts every `data\*.mix`, so it resolves there;
+  the Vita mounts M00 plus the selected mission MIX, so M01/M04 draw the MissingTexture placeholder. No other
+  campaign name behaves this way. Suggested follow-up: mount `M08.mix` as a lowest-priority supplement for
+  those two missions through the existing Glacier supplement slot (needs a compile and a Vita3K check).
+  See [asset closure](campaign/ASSET_CLOSURE.md).
+
 Evidence class: nothing below has a physical Vita result yet. Host tests and
 reviews are noted where they exist.
 

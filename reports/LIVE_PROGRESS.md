@@ -1,5 +1,25 @@
 # Live engineering progress
 
+# Campaign asset closure audit — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Completed (host Python over the unchanged retail archives; nothing built, linked, emulated or run on hardware):
+- `tools/audit_campaign_asset_closure.py` (+13-case unittest) resolves M13 and M01–M11 the way the Vita
+  FileFactoryList does (loose, Always2.dat, always.dbs, always.dat, M00, mission MIX; M09 first) and, side by
+  side, the PC order (every `data\*.mix` mounted). Covers always.dep + mission .dep preload lists, mission W3D
+  members, HLOD/aggregate children, hierarchy names, mesh/emitter textures under the Vita DDS-then-TGA rule,
+  cinematic models/animations/audio, level static sounds and music, reachable sound presets, conversation
+  text/voice and the 12 campaign movies. Report: reports/campaign/ASSET_CLOSURE.md.
+- Result: 470 distinct unresolved name/category pairs (2,811 mission-level occurrences), all retail-data
+  defects the PC game shares except one port-side gap: `lv8_hbag.tga` (prop `DSP_H-BAG`, preloaded by M01 and
+  M04) ships only in M08.mix, which the PC mounts and the Vita does not for those missions. Every miss class
+  degrades without a crash on the Vita code path. Static sounds, music, conversation text/voice, always.dep
+  records, mission members, hierarchy names and all 12 movies resolve; no unresolved name has a case or
+  mangling look-alike. The preload is not needed for resolution (0 preload-dependent prototypes).
+- Not applied: a lowest-priority M08.mix supplement for M01/M04 (needs the factory-swap change in
+  a31_vita_runtime.cpp and a compile); recorded in KNOWN_GAPS.md.
+
 # Campaign development push 2 — 2026-10-07
 
 Renegade Vita — v3.5 active

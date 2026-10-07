@@ -176,6 +176,12 @@ bool Submit_Material_Pass(MeshClass &mesh, MaterialPassClass &material_pass,
 void Invalidate_Static_Mesh_Cache();
 void Forget_Static_Mesh_Model(const void *model);
 void Forget_Static_Mesh_User_Lighting(const void *model, const void *user_lighting);
+// render-sort-v1 (render-sort-v1.flag, RVSO1, default off): while open,
+// eligible static-cache replays are queued and drawn pass-major at the next
+// barrier (any other draw or state entry point) or at End. Called around
+// PhysicsSceneClass's world-space-mesh loop only.
+void Begin_Opaque_Sort_Window();
+void End_Opaque_Sort_Window();
 // Loading-screen pre-staging of one rigid mesh's static cache entry: builds
 // and uploads the same streams its first draw would, without drawing. Only
 // unlit, not-yet-known meshes are staged; anything else is left to the

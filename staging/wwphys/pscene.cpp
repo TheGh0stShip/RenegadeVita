@@ -87,6 +87,9 @@
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
 #include "renegade_client_effects.h"
 #endif
+#if defined(RENEGADE_VITA_PORT)
+#include "ww3d_vita_renderer.h"
+#endif
 #include "rinfo.h"
 #include "light.h"
 #include "wwdebug.h"
@@ -1434,9 +1437,17 @@ void PhysicsSceneClass::Render_Objects(
 			{
 				WWPROFILE("world-space meshes");
 
+#if defined(RENEGADE_VITA_PORT)
+				// render-sort-v1: these identity-transform meshes may be drawn
+				// pass-major, as the original DX8 rigid container drew them.
+				RenegadeVitaRenderer::Begin_Opaque_Sort_Window();
+#endif
 				for (it.First(static_ws_list); !it.Is_Done(); it.Next()) {
 					Render_Object(rinfo,it.Peek_Obj());
 				}
+#if defined(RENEGADE_VITA_PORT)
+				RenegadeVitaRenderer::End_Opaque_Sort_Window();
+#endif
 			}
 
 			// render the other static objects

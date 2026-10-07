@@ -1772,6 +1772,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 # arms it for one simulation frame.
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-tut1-bench-camera.patch"
+# render-sort-v1 (RVSO1, default off): open the Vita renderer's pass-major
+# replay window around the world-space-mesh loop of Render_Objects only.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-tut1-render-sort.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

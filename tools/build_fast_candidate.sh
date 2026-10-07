@@ -92,7 +92,9 @@ for rv_sdk_path in \
 	}
 done
 export VITASDK="$rv_vitasdk"
-export CCACHE_DIR="$rv_root/build/ccache"
+# Opt-in shared compiler cache (cmake/RenegadeCcache.cmake); default per tree.
+rv_ccache_dir=${RENEGADE_CCACHE_DIR:-"$rv_root/build/ccache"}
+export CCACHE_DIR="$rv_ccache_dir"
 export CCACHE_BASEDIR="$rv_root"
 
 echo "Verifying the pinned Bink-enabled Vita FFmpeg dependency..."
@@ -221,7 +223,7 @@ cmake -S "$rv_root" -B "$rv_build" -G Ninja \
 	-DRENEGADE_VITA_M00_DEMO="$rv_m00_demo" \
 	-DRENEGADE_VITA_DEVELOPMENT_CHECKPOINT="$rv_development_checkpoint" \
 	-DRENEGADE_VITA_CONTENT_ID="$rv_vpk_content_id"
-grep -Fq "CCACHE_DIR=$rv_root/build/ccache" "$rv_build/build.ninja"
+grep -Fq "CCACHE_DIR=$rv_ccache_dir" "$rv_build/build.ninja"
 
 if [[ "$rv_fast_scope" == "compile" ]]; then
 	echo "Building Vita ELF target incrementally; SELF/VPK packaging is skipped."

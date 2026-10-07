@@ -20,6 +20,20 @@ static inline DWORD timeGetTime(void)
 	DWORD replay_time;
 	if (Renegade_Host_Audio_Clock(&replay_time)) return replay_time;
 #endif
+#if defined(__vita__)
+	// Win32 timeGetTime is monotonic and TimeManager::Update derives every
+	// simulated frame step from it (elevator/door timers, animation targets,
+	// conversation timers). VitaSDK gettimeofday and CLOCK_REALTIME read the
+	// RTC, which can step backward on a user or network clock change and would
+	// make one frame step hugely negative (TimeManager only clamps the upper
+	// bound). CLOCK_MONOTONIC is sceKernelGetProcessTimeWide in VitaSDK newlib.
+	struct timespec monotonic_now = {};
+	if (clock_gettime(CLOCK_MONOTONIC, &monotonic_now) == 0) {
+		const uint64_t monotonic_ms = (uint64_t)monotonic_now.tv_sec * 1000ULL +
+			(uint64_t)monotonic_now.tv_nsec / 1000000ULL;
+		return (DWORD)(monotonic_ms & UINT64_C(0xffffffff));
+	}
+#endif
 	struct timeval now = {};
 	gettimeofday(&now, NULL);
 	const uint64_t milliseconds = (uint64_t)now.tv_sec * 1000ULL +

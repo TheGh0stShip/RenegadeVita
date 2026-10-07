@@ -1,0 +1,38 @@
+{
+ "schema": 1,
+ "note": "Pre-existing host test failures that are not regressions of the change under test. tools/run_host_tests.py marks matching problems KNOWN; --allow-known-failures exits 0 only when every problem is listed. Use a full test id (tools.test_x.Class.method) or a module (tools.test_x); remove an entry once its test is fixed.",
+ "known_failures": [
+  {
+   "id": "tools.test_action_observer_miss_telemetry.ActionObserverMissTests.test_zero_fuzz_hook_only_when_no_callback_matched",
+   "reason": "Stale action.cpp input pin in tools/original_owner_source_replay.py (reports/FIX_LEDGER_INTEGRITY_2026-10-07.md section 4). Reproduced in the pure lane at 45c6cf5."
+  },
+  {
+   "id": "tools.test_original_dazzle_lifecycle",
+   "reason": "Stale ww3d.cpp input pin in tools/original_effect_source_replay.py (FIX_LEDGER_INTEGRITY_2026-10-07 section 4). Both tests error. Reproduced in the pure lane at 45c6cf5."
+  },
+  {
+   "id": "tools.test_original_decal_submission",
+   "reason": "Same stale ww3d.cpp pin as test_original_dazzle_lifecycle. Reproduced in the pure lane at 45c6cf5."
+  },
+  {
+   "id": "tools.test_cinematic_filename_diagnostics.CinematicFilenameDiagnosticsTests.test_primary_callback_buffer_covers_signed_32_bit_ids",
+   "reason": "The test's own replay of the owner chain yields a stale Test_Cinematic.cpp hash (FIX_LEDGER_INTEGRITY_2026-10-07 section 4). Reproduced in the pure lane at 45c6cf5."
+  },
+  {
+   "id": "tools.test_cinematic_filename_diagnostics.CinematicFilenameDiagnosticsTests.test_replay_removes_unused_bounded_path_without_changing_parser",
+   "reason": "Same stale replay input as the test above. Reproduced in the pure lane at 45c6cf5."
+  },
+  {
+   "id": "tools.test_campaign_flight_recorder_contract.test_campaign_flight_checkpoints_append_deltas_not_full_snapshots",
+   "reason": "Pytest-style module that no unittest run executed before (python3 file only defined the functions). Its first real execution shows 'persisted_frame_sequence / kFlightFrameCapacity' is no longer in the flush code. Reproduced at 45c6cf5."
+  },
+  {
+   "id": "tools.test_vita_m13_cinematic_preparation.RuntimeInstrumentationContracts.test_m01_referenced_textures_prepare_before_first_world_frame",
+   "reason": "Reported pre-existing by the Tutorial Round 1 coordinator. Compiled lane (g++); not run by TUT-R1-20, so unverified at 45c6cf5."
+  },
+  {
+   "id": "tools.test_vita_skin_submission_contract.VitaSkinSubmissionContractTests.test_vita_boundary_uses_original_material_color_with_textured_skin_passthrough",
+   "reason": "Reported flaky/pre-existing by the Tutorial Round 1 coordinator. Passed in every TUT-R1-20 pure-lane run at 45c6cf5."
+  }
+ ]
+}

@@ -207,6 +207,73 @@ class VitaTextureSurfaceContractTests(unittest.TestCase):
         self.assertIn("texture->SurfaceLevels[level] = surface;", method)
         self.assertIn("Destroy_Texture_Surface_Levels(texture);", method)
 
+    def test_archive_targa_textures_drop_cpu_copy_and_materialize_lazily(self):
+        header = (ROOT / "port/renderer/vita/d3d8.h").read_text(encoding="utf-8")
+        boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("char *LazyTargaSource;", header)
+
+        # Only the archive TGA loader opts out of the retained copy; every other
+        # Create_Texture_From_Surface caller keeps the default (retain).
+        create = boundary[
+            boundary.index("IDirect3DTexture8 *Create_Texture_From_Surface("):
+            boundary.index("IDirect3DTexture8 *Create_Checkerboard_Fallback()\n{")
+        ]
+        self.assertIn("bool retain_surface_copy = true)", create)
+        self.assertIn(
+            "if (retain_surface_copy) (void)Attach_Texture_Surface_Copy(texture, 0U, surface);",
+            create,
+        )
+        self.assertIn(
+            "return Create_Texture_From_Surface(surface, mip_level_count);", boundary
+        )
+
+        targa = boundary[
+            boundary.index("IDirect3DTexture8 *Load_Targa_Texture"):
+            boundary.index("int Get_Indexed_Material_UV_Source")
+        ]
+        self.assertIn("Create_Texture_From_Surface(surface,\n\t\tmip_level_count, lazy_source == NULL);", targa)
+        self.assertIn("texture->LazyTargaSource = lazy_source;", targa)
+        # The name is attached only to a real texture, never the shared fallback.
+        self.assertLess(
+            targa.index("if (texture != NULL && !texture->DiagnosticFallback)"),
+            targa.index("texture->LazyTargaSource = lazy_source;"),
+        )
+        self.assertIn("delete [] lazy_source;", targa)
+
+        materialize = boundary[
+            boundary.index("bool Materialize_Lazy_Targa_Surface_Levels"):
+            boundary.index("bool Materialize_Lazy_Texture_Surfaces")
+        ]
+        # Same original decode as the load path, validated against the upload.
+        self.assertIn("DX8Wrapper::_Create_DX8_Surface(texture->LazyTargaSource)", materialize)
+        self.assertIn("description.Width != texture->Width", materialize)
+        self.assertIn("description.Height != texture->Height", materialize)
+        self.assertIn("static_cast<D3DFORMAT>(texture->SourceFormat)", materialize)
+        self.assertIn("surface->Set_Texture_Owner(texture, 0U);", materialize)
+        self.assertIn("texture->SurfaceLevels[0] = surface;", materialize)
+        self.assertIn("surface->Release();", materialize)
+
+        for start, end in (
+            ("HRESULT IDirect3DTexture8::GetSurfaceLevel", "HRESULT IDirect3DTexture8::LockRect"),
+            ("HRESULT IDirect3DTexture8::LockRect", "HRESULT IDirect3DTexture8::UnlockRect"),
+        ):
+            method = boundary[boundary.index(start):boundary.index(end)]
+            lazy = method.index("LazyTargaSource != NULL && !Materialize_Lazy_Targa_Surface_Levels(this)")
+            self.assertLess(lazy, method.index("SurfaceLevels"))
+        filter_method = boundary[
+            boundary.index("HRESULT D3DXFilterTexture"):
+            boundary.index("void RenegadeVita_Release_DX8_Bound_Textures")
+        ]
+        self.assertIn("!Materialize_Lazy_Texture_Surfaces(texture) || texture->SurfaceLevels == NULL", filter_method)
+
+        release = boundary[
+            boundary.index("ULONG IDirect3DBaseTexture8::Release()"):
+            boundary.index("UINT IDirect3DTexture8::GetLevelCount()")
+        ]
+        self.assertIn("delete [] LazyTargaSource;", release)
+
     def test_direct_texture_uploads_invalidate_renderer_bind_cache(self):
         header = (ROOT / "port/renderer/vita/ww3d_vita_renderer.h").read_text(
             encoding="utf-8"

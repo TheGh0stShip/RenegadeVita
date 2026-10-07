@@ -219,6 +219,10 @@ struct IDirect3DBaseTexture8 {
 	// Archive name of a natively uploaded DDS whose CPU SurfaceLevels were not
 	// decoded at load. The first GetSurfaceLevel/LockRect decodes them.
 	char *LazyDDSSource;
+	// Archive name of a TGA whose level-0 source-format CPU surface was dropped
+	// after the RGBA8888 GPU upload. The first GetSurfaceLevel/LockRect/
+	// D3DXFilterTexture re-decodes it through the original Targa path.
+	char *LazyTargaSource;
 	ULONG AddRef();
 	ULONG Release();
 };

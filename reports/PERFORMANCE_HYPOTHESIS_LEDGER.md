@@ -1440,3 +1440,41 @@ M13/M01. Hypothesis: removes first-use HAnim/explosion stalls in M02..M11
 and after restart. Risk: longer load and higher prototype residency; the
 floor bounds it. Before/after: unmeasured. Decision: deferred pending a fixed
 route with load time and first-event frame times measured.
+## 2026-10-07 Archive TGA CPU surface drop (memory, unmeasured)
+
+Hypothesis: `Load_Targa_Texture` kept a source-format level-0 CPU copy of
+every archive TGA after its RGBA8888 GPU upload. The static estimate in
+`reports/campaign/MISSION_MEMORY_ESTIMATES.md` puts that at about 26.7 MiB
+of heap for M08 (209 local 256x256 TGA16 lightmaps) and 16.5 MiB for M09,
+against 0.02 MiB for M13. The loader now uploads and drops the copy
+(`Create_Texture_From_Surface(..., retain_surface_copy=false)`). It records
+the archive name in `LazyTargaSource`, and the first
+GetSurfaceLevel/LockRect/D3DXFilterTexture re-decodes the same member through
+the same `_Create_DX8_Surface(filename)` path. It checks width, height and
+format against the uploaded texture. Expected: about 26 MiB less steady heap
+in M08 and 16 MiB less in M09. The GPU bytes, uploaded pixels, checksum and
+transient decode peak (Targa buffer + surface + RGBA scratch) do not change.
+Non-archive `_Create_DX8_Texture(surface)` callers still retain their copy.
+Source audit: no compiled caller locks or reads back an archive texture.
+TextureClass::Init uses GetLevelDesc only. Metal maps, projector and
+render targets and the Render2D atlas are procedural.
+
+Risk: a later lock re-reads the archive. If the member is gone or changed
+(MIX unmounted while the texture lives), it returns D3DERR_INVALIDCALL,
+which matches the existing lazy DDS contract. Before/after: unmeasured; host
+contract test plus ARM `-fsyntax-only` only. Decision: adopted pending a
+physical M08 heap high-water comparison.
+
+Rejected: a 16-bit GL upload for TGA16 (A1R5G5B5 is the only 16-bit TGA
+format WW3D produces). vitaGL stores 16-bit natively only for
+GL_RGB/GL_UNSIGNED_SHORT_5_6_5, GL_RGBA/GL_UNSIGNED_SHORT_5_5_5_1 and
+GL_RGBA/GL_UNSIGNED_SHORT_4_4_4_4. GL_UNSIGNED_SHORT_1_5_5_5_REV goes
+through a read callback into U8U8U8U8 storage, so it saves nothing. A U5
+texel samples as v/31. The current expansion stores floor(v*255/31)/255,
+so the sampled value differs for 30 of the 31 nonzero 5-bit levels. Rounded
+straight to 8 bits, 15 of 32 levels (3, 4, 7, 8, ...) still change by 1 LSB.
+That is not bit-identical, so it was skipped. 4444 (x17 expansion) is
+value-exact, but no TGA produces it, and Vita filtering precision for U4
+compared with U8 is unproven. A 16-bit path would be closer to PC DX8, which
+sampled A1R5G5B5 natively. It is a separate fidelity decision that needs
+capture comparison.

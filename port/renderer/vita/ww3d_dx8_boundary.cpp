@@ -1146,8 +1146,11 @@ bool Attach_Texture_Surface_Copy(IDirect3DTexture8 *texture, UINT level,
 	return true;
 }
 
+// retain_surface_copy=false is only for sources that can be re-decoded on
+// demand (archive TGAs, see Load_Targa_Texture); every other caller passes a
+// surface it may not be able to reproduce, so its copy stays resident.
 IDirect3DTexture8 *Create_Texture_From_Surface(IDirect3DSurface8 *surface,
-	TextureClass::MipCountType mip_level_count)
+	TextureClass::MipCountType mip_level_count, bool retain_surface_copy = true)
 {
 	if (surface == NULL) {
 		RenegadeVitaRenderer::Record_Texture_Invalid_Data();
@@ -1233,7 +1236,7 @@ IDirect3DTexture8 *Create_Texture_From_Surface(IDirect3DSurface8 *surface,
 	texture->Uploaded = true;
 	RenegadeVitaRenderer::Record_Texture_Decode();
 	RenegadeVitaRenderer::Record_Texture_Upload(texture->ResidentBytes);
-	(void)Attach_Texture_Surface_Copy(texture, 0U, surface);
+	if (retain_surface_copy) (void)Attach_Texture_Surface_Copy(texture, 0U, surface);
 	return texture;
 }
 
@@ -1372,6 +1375,46 @@ bool Materialize_Lazy_DDS_Surface_Levels(IDirect3DTexture8 *texture)
 	return true;
 }
 #endif
+
+// Restores the level-0 source-format CPU surface of an archive TGA on first
+// CPU access. Load_Targa_Texture uploads RGBA8888 and drops the decoded copy;
+// this re-runs the same original Targa decode on the same archive member, so
+// the bytes equal the copy Create_Texture_From_Surface used to retain. No
+// compiled caller locks or reads back archive textures today.
+bool Materialize_Lazy_Targa_Surface_Levels(IDirect3DTexture8 *texture)
+{
+	if (texture == NULL) return false;
+	if (texture->LazyTargaSource == NULL ||
+		(texture->SurfaceLevels != NULL && texture->SurfaceLevels[0] != NULL)) {
+		return true;
+	}
+	IDirect3DSurface8 *surface =
+		DX8Wrapper::_Create_DX8_Surface(texture->LazyTargaSource);
+	if (surface == NULL) return false;
+	D3DSURFACE_DESC description = {};
+	if (surface->GetDesc(&description) != D3D_OK ||
+		description.Width != texture->Width ||
+		description.Height != texture->Height ||
+		description.Format != static_cast<D3DFORMAT>(texture->SourceFormat) ||
+		!Allocate_Texture_Surface_Levels(texture)) {
+		surface->Release();
+		return false;
+	}
+	// The texture takes over the creation reference, as Attach_Texture_Surface_Copy did.
+	surface->Set_Texture_Owner(texture, 0U);
+	texture->SurfaceLevels[0] = surface;
+	return true;
+}
+
+bool Materialize_Lazy_Texture_Surfaces(IDirect3DTexture8 *texture)
+{
+	if (texture == NULL) return false;
+#if defined(__vita__)
+	if (texture->LazyDDSSource != NULL &&
+		!Materialize_Lazy_DDS_Surface_Levels(texture)) return false;
+#endif
+	return Materialize_Lazy_Targa_Surface_Levels(texture);
+}
 
 // The original DDSFileClass derives every level offset/size from the header's
 // MipMapCount and dimensions, then Load() allocates only what the file holds.
@@ -1675,13 +1718,25 @@ IDirect3DTexture8 *Load_Targa_Texture(const char *filename,
 		Log_Texture_Fallback("tga-source-or-decode", filename);
 		return Create_Checkerboard_Fallback();
 	}
-	IDirect3DTexture8 *texture = DX8Wrapper::_Create_DX8_Texture(surface,
-		mip_level_count);
+	// The archive member can be decoded again, so the RGBA8888 GPU image is the
+	// only resident form; the source-format CPU surface is rebuilt on the first
+	// GetSurfaceLevel/LockRect (Materialize_Lazy_Targa_Surface_Levels). If the
+	// name cannot be kept, retain the copy exactly as before.
+	const size_t name_length = strlen(filename);
+	char *lazy_source = new (std::nothrow) char[name_length + 1U];
+	IDirect3DTexture8 *texture = Create_Texture_From_Surface(surface,
+		mip_level_count, lazy_source == NULL);
 	surface->Release();
 	if (texture != NULL && !texture->DiagnosticFallback) {
+		if (lazy_source != NULL) {
+			memcpy(lazy_source, filename, name_length + 1U);
+			texture->LazyTargaSource = lazy_source;
+			lazy_source = NULL;
+		}
 		RenegadeVitaRenderer::Record_Texture_Targa_Load();
 		Log_Texture_Load("tga", filename, texture);
 	}
+	delete [] lazy_source;
 	return texture;
 }
 
@@ -2201,6 +2256,8 @@ ULONG IDirect3DBaseTexture8::Release()
 		Destroy_Texture_Surface_Levels(static_cast<IDirect3DTexture8 *>(this));
 		delete [] LazyDDSSource;
 		LazyDDSSource = NULL;
+		delete [] LazyTargaSource;
+		LazyTargaSource = NULL;
 #if defined(__vita__)
 		if (NativeDepthRenderbuffer != 0U) {
 			const GLuint depth = NativeDepthRenderbuffer;
@@ -2254,6 +2311,10 @@ HRESULT IDirect3DTexture8::GetSurfaceLevel(UINT level, IDirect3DSurface8 **surfa
 		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	}
 #endif
+	if (LazyTargaSource != NULL && !Materialize_Lazy_Targa_Surface_Levels(this)) {
+		RenegadeVitaRenderer::Record_Texture_Decode_Failure();
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
 	if (SurfaceLevels != NULL && SurfaceLevels[level] != NULL) {
 		SurfaceLevels[level]->AddRef();
 		*surface = SurfaceLevels[level];
@@ -2283,6 +2344,10 @@ HRESULT IDirect3DTexture8::LockRect(UINT level, D3DLOCKED_RECT *locked,
 		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	}
 #endif
+	if (LazyTargaSource != NULL && !Materialize_Lazy_Targa_Surface_Levels(this)) {
+		RenegadeVitaRenderer::Record_Texture_Decode_Failure();
+		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
+	}
 	if (locked == NULL || level >= GetLevelCount() ||
 		SurfaceLevels == NULL || SurfaceLevels[level] == NULL ||
 		SurfaceLocked == NULL || SurfaceLockFlags == NULL ||
@@ -2587,7 +2652,7 @@ HRESULT D3DXFilterTexture(IDirect3DTexture8 *texture, const void *palette,
 	UINT source_level, DWORD filter)
 {
 	if (texture == NULL || palette != NULL || source_level >= texture->GetLevelCount() ||
-		texture->SurfaceLevels == NULL) {
+		!Materialize_Lazy_Texture_Surfaces(texture) || texture->SurfaceLevels == NULL) {
 		return static_cast<HRESULT>(D3DERR_INVALIDCALL);
 	}
 	const UINT level_count = texture->GetLevelCount();

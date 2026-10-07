@@ -520,7 +520,9 @@ class VitaLoadingScreenContractTests(unittest.TestCase):
         self.assertIn("Load_DDS_Texture(filename, mip_level_count,", boundary)
         self.assertIn("return Load_Targa_Texture(filename, mip_level_count);", boundary)
         self.assertIn("IDirect3DSurface8 *surface = DX8Wrapper::_Create_DX8_Surface(filename);", boundary)
-        self.assertIn("IDirect3DTexture8 *texture = DX8Wrapper::_Create_DX8_Texture(surface,", boundary)
+        # Archive TGAs build their texture straight from the decoded surface;
+        # the lazy-surface variant drops the retained CPU copy.
+        self.assertIn("IDirect3DTexture8 *texture = Create_Texture_From_Surface(surface,", boundary)
         self.assertIn("if (texture != NULL || dds_available) return texture;", boundary)
         self.assertIn("texture->SourceFormat = WW3DFormat_To_D3DFormat(dds.Get_Format());", boundary)
         self.assertNotIn("texture->SourceFormat = static_cast<uint32_t>(dds.Get_Format());", boundary)

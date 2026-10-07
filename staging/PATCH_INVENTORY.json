@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "a6b8a127bccedcacb3fb0bd4cafd20f0bcee6bce6e8092fd27231aab52cb268c",
-  "patch_count": 572,
+  "stage_script_sha256": "0c5df9396e2fbbd7674f4c70d01c88df784de5a06921c791f4b6ef826f26182e",
+  "patch_count": 582,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1700,6 +1700,11 @@
       "sha256": "67b439e68bf42f766741f8983ea2a895390509f0710785bab8f376642dee67f3"
     },
     {
+      "path": "port/patches/scripts-a38-m06-conversation-preempt-rearm.patch",
+      "stage_directory": "scripts",
+      "sha256": "6855d02838ee11cbee87a5308c8cfba94639a88e3ed0f06eea38d6ccdb2a50a1"
+    },
+    {
       "path": "port/patches/scripts-a36-m05-dead6-help-failed-text-save.patch",
       "stage_directory": "scripts",
       "sha256": "e5c6f8fde4b5325ebf559015fb593cc1feec2fdd4605c417dae835e817b6cf8a"
@@ -1848,6 +1853,11 @@
       "path": "port/patches/scripts-a38-m07-hotwire-path-failure-fallback.patch",
       "stage_directory": "scripts",
       "sha256": "52ad8739d4d43d04d37087b30b3734d01fa9822427cd00a771e31543182d1122"
+    },
+    {
+      "path": "port/patches/scripts-a38-m07-followup-climb-briefing-evac-paradrop.patch",
+      "stage_directory": "scripts",
+      "sha256": "ceb14b7f194d1c7931618439891462827bd345d883f6ae55a5dcc0b120525808"
     },
     {
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
@@ -2755,6 +2765,11 @@
       "sha256": "71433b8b6e1764ad0707ba04f95022a43fa54fb1dd0d0156a0c538cfdc324301"
     },
     {
+      "path": "port/patches/combat-a38-mendoza-end-position-timeout.patch",
+      "stage_directory": "combat",
+      "sha256": "6dbf6aef73a3fc58b4335484670e6514660bff040630fd2d8be688927dc38fe1"
+    },
+    {
       "path": "port/patches/combat-a36-raveshaw-star-dist-modulo-guard.patch",
       "stage_directory": "combat",
       "sha256": "8db90499831ea7491c2e6486d4094ccda4c5774ed04d7582149e83b58038e73b"
@@ -2835,6 +2850,21 @@
       "sha256": "c336c47ccb99cb526384a9db2ff94f82429deea43ee1ff520fcfedfe6d8e039d"
     },
     {
+      "path": "port/patches/scripts-a39-m09-one-way-lift-mobius-recovery.patch",
+      "stage_directory": "scripts",
+      "sha256": "c0998f4467c85e162077b351acaf29f1dcdbb50a2f47e1557784ba62605e9e14"
+    },
+    {
+      "path": "port/patches/scripts-a39-m09-catchup-timer-restart.patch",
+      "stage_directory": "scripts",
+      "sha256": "60de143423b3a0fbcf2092b99248c63f4c1810ea21692be546e7f63588daa4db"
+    },
+    {
+      "path": "port/patches/scripts-a39-m09-midtro-reposition-fallback.patch",
+      "stage_directory": "scripts",
+      "sha256": "f5e37c991c91fc8e0df8c3c71a4d66510edeab15cbb7503c9c995ea795cbb5be"
+    },
+    {
       "path": "port/patches/combat-a37-hud-objective-index-bounds.patch",
       "stage_directory": "combat",
       "sha256": "ae406f0dd7173d744a1d84105b2b6518b88c1446a0ebf9260b23ecaf8363805f"
@@ -2855,6 +2885,26 @@
       "sha256": "fc6b37a6f0f9ef5136fbe67e950835ee8b2084fb57f42d6611599f96636e3a56"
     },
     {
+      "path": "port/patches/wwsaveload-a37-pointer-remap-release-capacity.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "69a26e968797d5ea204f0d2dc4efafb955a89712c9d3288f66e8e5080c8f07c4"
+    },
+    {
+      "path": "port/patches/ww3d2-a37-asset-status-release-elision.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "655052350331b17f714876c89289f7e9dae41cfc40d5f57181f80375664f62fa"
+    },
+    {
+      "path": "port/patches/wwphys-a38-missing-model-keeps-current.patch",
+      "stage_directory": "wwphys",
+      "sha256": "fb1dd060778e70425eec1c39bcb02809b7935d39d3a8e65b3ff57d1eb5d87321"
+    },
+    {
+      "path": "port/patches/combat-a38-modelless-animation-guard.patch",
+      "stage_directory": "combat",
+      "sha256": "a845fe32df7c8572e9005febeac42eac90b7c441de2c218c5c17a71cdf6f2168"
+    },
+    {
       "path": "port/patches/combat-a38-timemgr-resume-real-step-cap.patch",
       "stage_directory": "combat",
       "sha256": "cc9c9c8fa88706e46c191b8e6a1285d3ace37634c967460f0bce1d77ec7e6121"
@@ -2865,5 +2915,5 @@
       "sha256": "32096c4e60c57860bbf0a18b88ccd29dfc265cef4cfeec8931287af74bac1e08"
     }
   ],
-  "registry_sha256": "0094ae91443ec1dd25dc52fe9845210074da6bea3def5f57d683f05a4ae9fd5a"
+  "registry_sha256": "69c3e90cbecbc24808bcf66bf58d586114d3397930e184478be9e914b1aee513"
 }

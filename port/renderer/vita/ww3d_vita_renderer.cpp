@@ -66,6 +66,25 @@ extern "C" void vglRenegadeEndIndexed(GLsizei count, const GLushort *indices);
 extern "C" void vglRenegadeBeginProjective(GLenum mode);
 extern "C" void vglRenegadeTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat q);
 extern "C" void vglRenegadeInvalidateVertexAttributes(void);
+#include <psp2/kernel/threadmgr.h>
+#include "ww3d_vita_gxm_tuning.h"
+// Read-only views of pinned vitaGL (6e7fe40) internals for the init sizing
+// log and the per-frame transient pool peaks (gxm.c, vgl.c, ffp.c,
+// utils/mem_utils.c). Never written by the port.
+extern "C" {
+extern int legacy_pool_size;
+extern float *legacy_pool_ptr;
+extern float *legacy_pool_end;
+extern uint32_t circular_data_pool_size;
+extern uint8_t *circular_data_pool[];
+extern uint8_t *circular_data_pool_ptr[];
+extern uint8_t *circular_data_pool_limit[];
+extern int vgl_circular_idx;
+extern uint8_t gxm_display_buffer_count;
+extern uint32_t gxm_param_buf_size;
+extern uint32_t vsync_interval;
+extern GLboolean has_cached_mem;
+}
 #endif
 
 namespace RenegadeVitaRenderer {
@@ -1782,6 +1801,66 @@ void Log_VitaGL_Memory()
 		(&_newlib_heap_size_user != NULL ? _newlib_heap_size_user : 0U), static_cast<unsigned>(heap.arena),
 		static_cast<unsigned>(heap.uordblks), static_cast<unsigned>(heap.fordblks));
 }
+
+// One line of the sizes vitaGL actually adopted. The fourth vglInitExtended
+// argument is the user RAM left outside vitaGL's RAM pool, not the sceGxm
+// parameter buffer; the ring sizes are static in vitaGL, so they are the
+// values requested before vglInit.
+void Log_VitaGL_Effective_Sizing(const VitaGLSizing &requested)
+{
+	const uint32_t slice = gxm_display_buffer_count != 0U ?
+		VitaGL_Span_Bytes(circular_data_pool[0], circular_data_pool_limit[0]) : 0U;
+	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
+		"vitagl-effective: version=1 source=%s overridden=%03X immediate_pool=%d circular_pool=%u circular_slice=%u display_buffers=%u parameter_buffer=%u vdm_ring=%u vertex_ring=%u fragment_ring=%u fragment_usse_ring=%u ram_reserve=%u vsync_interval=%u cached_mem=%u",
+		requested.overridden != 0U ? "vitagl-sizing-v1.flag" : "default",
+		requested.overridden, legacy_pool_size, circular_data_pool_size, slice,
+		static_cast<unsigned>(gxm_display_buffer_count), gxm_param_buf_size,
+		requested.vdm_ring_bytes, requested.vertex_ring_bytes,
+		requested.fragment_ring_bytes, requested.fragment_usse_ring_bytes,
+		requested.ram_reserve_bytes, vsync_interval,
+		static_cast<unsigned>(has_cached_mem));
+	SceKernelThreadInfo info;
+	memset(&info, 0, sizeof(info));
+	info.size = sizeof(info);
+	const int info_result = sceKernelGetThreadInfo(sceKernelGetThreadId(), &info);
+	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
+		"game-thread: info_rc=%08X priority=%08X init_priority=%08X affinity=%08X cpu=%d",
+		static_cast<unsigned>(info_result),
+		static_cast<unsigned>(info_result >= 0 ? info.currentPriority : 0),
+		static_cast<unsigned>(info_result >= 0 ? info.initPriority : 0),
+		static_cast<unsigned>(sceKernelGetThreadCpuAffinityMask(sceKernelGetThreadId())),
+		sceKernelGetCpuId());
+}
+
+// Called once per presented frame before vglSwapBuffers, while the frame's
+// circular slice and immediate pool cursors are still current.
+void Sample_VitaGL_Transient_Pools(uint32_t frame)
+{
+	static VitaGLPoolWindow window = {};
+	const uint32_t capacity = legacy_pool_size > 0 ?
+		static_cast<uint32_t>(legacy_pool_size) : 0U;
+	uint32_t immediate_used = 0U;
+	if (legacy_pool_end != NULL && capacity != 0U) {
+		const uint8_t *base =
+			reinterpret_cast<const uint8_t *>(legacy_pool_end) - capacity;
+		immediate_used = VitaGL_Span_Bytes(base, legacy_pool_ptr);
+	}
+	const int index = vgl_circular_idx;
+	const bool index_valid = index >= 0 &&
+		index < static_cast<int>(gxm_display_buffer_count);
+	window.Record(immediate_used, capacity,
+		index_valid ? VitaGL_Span_Bytes(circular_data_pool[index], circular_data_pool_ptr[index]) : 0U,
+		index_valid ? VitaGL_Span_Bytes(circular_data_pool[index], circular_data_pool_limit[index]) : 0U);
+	if (window.frames < 120U) return;
+	Vita_Append_A22_Runtime_Breadcrumb("vitagl-pools",
+		"version=1 frame=%u frames=%u immediate_peak=%u immediate_avg=%u immediate_capacity=%u immediate_overruns=%u circular_peak=%u circular_slice=%u circular_overruns=%u cpu=%d",
+		frame, window.frames, window.immediate_peak_bytes,
+		window.Immediate_Average_Bytes(), window.immediate_capacity_bytes,
+		window.immediate_overrun_frames, window.circular_peak_bytes,
+		window.circular_slice_bytes, window.circular_overrun_frames,
+		sceKernelGetCpuId());
+	window.Reset();
+}
 #endif
 
 bool Reactivate_Native_Backend_State()
@@ -1972,6 +2051,38 @@ bool Read_Vsync_Enabled()
 		}
 	}
 	return enabled;
+}
+
+// Defaults reproduce the shipped vitaGL/sceGxm sizes; an exactly valid
+// vitagl-sizing-v1.flag (see ww3d_vita_gxm_tuning.h) overrides named fields.
+VitaGLSizing Read_VitaGL_Sizing()
+{
+	VitaGLSizing sizing = Default_VitaGL_Sizing();
+	FILE *file = fopen("ux0:data/renegade/user/config/vitagl-sizing-v1.flag", "rb");
+	if (file != NULL) {
+		char text[161] = {};
+		const size_t size = fread(text, 1U, sizeof(text), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (!read_ok || size >= sizeof(text) || !Parse_VitaGL_Sizing_Flag(text, size, &sizing)) {
+			Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
+				"vitagl-sizing-v1.flag rejected: read_ok=%d size=%u; defaults kept",
+				read_ok ? 1 : 0, static_cast<unsigned>(size));
+		}
+	}
+	return sizing;
+}
+
+// Overridden fields only: without the flag the vglInit sequence is unchanged.
+void Apply_VitaGL_Sizing(const VitaGLSizing &sizing)
+{
+	if (sizing.overridden & VitaGLSizing::CIRCULAR) vglSetCircularPoolSize(sizing.circular_pool_bytes);
+	if (sizing.overridden & VitaGLSizing::BUFFERS) vglSetDisplayBufferCount(static_cast<int>(sizing.display_buffers));
+	if (sizing.overridden & VitaGLSizing::VDM) vglSetVDMBufferSize(sizing.vdm_ring_bytes);
+	if (sizing.overridden & VitaGLSizing::VERTEX) vglSetVertexBufferSize(sizing.vertex_ring_bytes);
+	if (sizing.overridden & VitaGLSizing::FRAGMENT) vglSetFragmentBufferSize(sizing.fragment_ring_bytes);
+	if (sizing.overridden & VitaGLSizing::USSE) vglSetUSSEBufferSize(sizing.fragment_usse_ring_bytes);
+	if (sizing.overridden & VitaGLSizing::PARAMETER) vglSetParamBufferSize(sizing.parameter_buffer_bytes);
 }
 
 StaticMeshMaterialSnapshot Snapshot_Static_Mesh_Material(VertexMaterialClass *material)
@@ -2963,8 +3074,12 @@ bool Initialize()
 		campaign_msaa_samples == 2U ? SCE_GXM_MULTISAMPLE_2X : SCE_GXM_MULTISAMPLE_NONE;
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "campaign framebuffer msaa=%ux",
 		campaign_msaa_samples);
+	// Defaults: 4 MiB immediate pool and 0x1000000 (16 MiB) user RAM reserve.
+	const VitaGLSizing vitagl_sizing = Read_VitaGL_Sizing();
+	Apply_VitaGL_Sizing(vitagl_sizing);
 	const GLboolean resolution_fallback = vglInitExtended(
-		4 * 1024 * 1024, 960, 544, 0x1000000, campaign_msaa);
+		static_cast<int>(vitagl_sizing.immediate_pool_bytes), 960, 544,
+		static_cast<int>(vitagl_sizing.ram_reserve_bytes), campaign_msaa);
 #endif
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 		"vglInit return: raw=%d semantic=resolution_fallback call_completed=1",
@@ -2980,6 +3095,11 @@ bool Initialize()
 			"vsync: version=1 enabled=%d source=%s", vsync_enabled ? 1 : 0,
 			vsync_enabled ? "default-or-flag" : "vsync-v1.flag");
 	}
+#if RENEGADE_VITA_M00_DEMO
+	Log_VitaGL_Effective_Sizing(Default_VitaGL_Sizing());
+#else
+	Log_VitaGL_Effective_Sizing(vitagl_sizing);
+#endif
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 		"shader compiler init summary: calls=%u last_rc=%08X available=%d",
 		g_shader_init_calls, static_cast<unsigned>(g_shader_init_last_result),
@@ -3156,6 +3276,7 @@ void End_Frame(bool present)
 			Vita_Append_A22_Runtime_Breadcrumb("render-frame",
 				"WW3D first End_Frame present entry: frame_before=%u", vglGetFrameNumber());
 		}
+		Sample_VitaGL_Transient_Pools(g_statistics.frames);
 		{
 			// Includes vitaGL scene submission and any wait for a free buffer.
 			RENEGADE_FRAME_PROFILE("Vita Swap Buffers");

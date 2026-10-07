@@ -4680,6 +4680,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #if !RENEGADE_VITA_M00_DEMO
 	std::unique_ptr<MixFileFactoryClass> selected_mission_factory;
 	std::unique_ptr<MixFileFactoryClass> glacier_retail_texture_factory;
+	std::unique_ptr<MixFileFactoryClass> campaign_texture_supplement_factory;
 #endif
 	Draw_Engine_Setup_Screen(startup_screen_result,
 		"Preparing original FileFactoryList route",
@@ -5221,6 +5222,26 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				} else {
 					A30_Vita_Log("A4 Glacier: retail M02.mix unavailable; ice texture may be missing\n");
 					glacier_retail_texture_factory.reset();
+				}
+			}
+			// Retail PC mounts every Data\*.mix; the Vita mounts only the selected
+			// mission. The M01 and M04 preload lists place prop DSP_H-BAG, whose
+			// texture lv8_hbag.tga ships only in M08.mix, so it fell back to
+			// MissingTexture here. Mount M08.mix as the lowest-priority fallback for
+			// those two maps only (reports/campaign/ASSET_CLOSURE.md).
+			if (!direct_client && (stricmp(selected_archive, "M01.mix") == 0 ||
+				stricmp(selected_archive, "M04.mix") == 0)) {
+				campaign_texture_supplement_factory.reset(new MixFileFactoryClass(
+					"Data\\M08.mix", &root_factory));
+				if (campaign_texture_supplement_factory->Is_Valid()) {
+					factory_list.Add_FileFactory(campaign_texture_supplement_factory.get(),
+						"M08.mix campaign texture fallback");
+					A30_Vita_Log("A4 campaign: retail M08 texture fallback mounted archive=%s for lv8_hbag.tga\n",
+						selected_archive);
+				} else {
+					A30_Vita_Log("A4 campaign: retail M08.mix unavailable archive=%s; lv8_hbag.tga may be missing\n",
+						selected_archive);
+					campaign_texture_supplement_factory.reset();
 				}
 			}
 			A30_Vita_Log("A4 campaign: original selection source=%s archive=%s save=%d mix_valid=1\n",

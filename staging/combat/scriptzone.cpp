@@ -55,6 +55,9 @@
 #include "lineseg.h"
 #include "timemgr.h"
 #include "ww3d.h"
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include "a30_vita_runtime.h"
+#endif
 
 /*
 ** ScriptZoneGameObjDef
@@ -483,6 +486,15 @@ bool	ScriptZoneGameObj::Update_Sweep_Sample( const SmartGameObj * obj )
 			  CollisionMath::Overlap_Test( BoundingBox, LineSegClass( sample->Position, pos ) ) != CollisionMath::OUTSIDE ) {
 			crossed = true;
 			Debug_Say(( "ScriptZone %d swept entry by %d (%.2f m)\n", Get_ID(), id, dist ));
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+			// Debug_Say is compiled out of Vita builds; keep a bounded runtime record
+			// so a hardware log shows when the sweep supplied an entry.
+			static unsigned vita_swept_reports = 0U;
+			if ( vita_swept_reports < 32U ) {
+				vita_swept_reports++;
+				A30_Vita_Log( "A4 script zone swept entry v1: zone=%d obj=%d dist=%.2f\n", Get_ID(), id, dist );
+			}
+#endif
 		}
 	} else {
 		// Reuse a slot not refreshed by this Think; beyond SWEEP_SAMPLE_COUNT

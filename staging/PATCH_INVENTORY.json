@@ -2917,7 +2917,7 @@
     {
       "path": "port/patches/combat-a37-scriptzone-swept-entry.patch",
       "stage_directory": "combat",
-      "sha256": "fb83f93007291c4e539c4ecbfcb1857d537732802cddd0330f86a499e13ea332"
+      "sha256": "86db0e212e93def155f5637d9c3a305950fb795e5b90e4c94d70ba5418a3c813"
     },
     {
       "path": "port/patches/scripts-a38-m09-keycard-zone-distance-recheck.patch",
@@ -3015,5 +3015,5 @@
       "sha256": "eea439cd189d569c5fc40c8cf902765d74c471376b7929812c7d6b742b1d4fe6"
     }
   ],
-  "registry_sha256": "04f1a41508c7a415fca1782dd7bb39f16367fbeede0c211974a97c05e59c0726"
+  "registry_sha256": "8660ad7a7ec55a0fa0a28412d6a12bc312bdba17e7adcd1274c88e4386530bb3"
 }

@@ -882,6 +882,13 @@ void	PhysicalGameObj::Reset_Radar_Blip_Color_Type( void )
 */
 void	PhysicalGameObj::Set_Animation( const char *animation_name, bool looping, float frame_offset )
 {
+	// A model-less object cannot be animated: the bare-name prefix reads the
+	// model name and SimpleAnimControlClass::Update drives the model.
+	if ( Peek_Model() == NULL ) {
+		Debug_Say(( "Set_Animation %s on object %d without a model\n", animation_name ? animation_name : "(null)", Get_ID() ));
+		return;
+	}
+
 	if ( AnimControl == NULL ) {
 		Set_Anim_Control( new SimpleAnimControlClass );		// be sure we have a anim control
 	}
@@ -914,6 +921,12 @@ void	PhysicalGameObj::Set_Animation( const char *animation_name, bool looping, f
 */
 void	PhysicalGameObj::Set_Animation_Frame ( const char *animation_name, int frame )
 {
+	// Same as Set_Animation: skip the step when there is no model to pose.
+	if ( Peek_Model() == NULL ) {
+		Debug_Say(( "Set_Animation_Frame %s on object %d without a model\n", animation_name ? animation_name : "(null)", Get_ID() ));
+		return;
+	}
+
 	if ( AnimControl == NULL ) {
 		Set_Anim_Control( new SimpleAnimControlClass );		// be sure we have a anim control
 	}

@@ -1724,6 +1724,24 @@ test "$(sha256sum "$rv_stage/ww3d2/assetstatus.cpp" | cut -d' ' -f1)" = \
 	"a9ce9600b8f24589eb029554951d40cb8f08d4f5c762ca11d4b7323ce1e535d1"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a37-asset-status-release-elision.patch"
+# Model-less objects: retail cinematics Create_Object 13 models that exist in
+# no archive.  A failed Set_Model_By_Name keeps the current model (the builtin
+# "null" for Generic_Cinematic) instead of leaving Model NULL for the
+# DecorationPhysClass transform/bounds/collision and animation paths, and
+# PhysicalGameObj::Set_Animation{,_Frame} skip a model-less object.  Anchored
+# to the final phys.cpp/physicalgameobj.cpp so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/wwphys/phys.cpp" | cut -d' ' -f1)" = \
+	"3c7b92743af398ceeff3b2a672d98f9edb2ed277d38e3d6e407131b136a0d6f2"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a38-missing-model-keeps-current.patch"
+test "$(sha256sum "$rv_stage/wwphys/phys.cpp" | cut -d' ' -f1)" = \
+	"5c83199af37bce1b0fc3e37d5d54326842a739cc6fab2e4981bdc44527ae4aa4"
+test "$(sha256sum "$rv_stage/combat/physicalgameobj.cpp" | cut -d' ' -f1)" = \
+	"6fbbc0883b9afd30dd809e989dfce6ca4b9c529cbd39acfb1cb8f95a3725b3dd"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a38-modelless-animation-guard.patch"
+test "$(sha256sum "$rv_stage/combat/physicalgameobj.cpp" | cut -d' ' -f1)" = \
+	"ef50f3295e1fb74fe71f9a46f3502cfcdab4d611813314cfd40ad366d43fc5ad"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

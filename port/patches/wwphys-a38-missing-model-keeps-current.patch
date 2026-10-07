@@ -1,0 +1,28 @@
+--- a/phys.cpp
++++ b/phys.cpp
+@@ -225,6 +225,25 @@
+ 	}
+ 	WWASSERT(model);		// As above, PhysClasses cannot survive without a model...
+ 
++	/*
++	** A replacement name with no prototype (retail cinematics name 13 such
++	** models) would leave a model-less object: DecorationPhysClass transform,
++	** bounds and collision, AnimCollisionManagerClass::Timestep, the save
++	** model chunk and the muzzle setup all dereference Model.  Keep the
++	** current model instead (Generic_Cinematic holds the builtin "null").
++	*/
++	if (model == NULL && Model != NULL) {
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++		static unsigned vita_missing_model_reports = 0U;
++		if (vita_missing_model_reports++ < 16U) {
++			A30_Vita_Log("A4 Phys Set_Model_By_Name missing model kept current: model=%s current=%s\n",
++				model_type_name != NULL ? model_type_name : "(null)",
++				Model->Get_Name() != NULL ? Model->Get_Name() : "(null)");
++		}
++#endif
++		return;
++	}
++
+ 	Set_Model(model);
+ #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+ 	const uint64_t vita_install_end_us = sceKernelGetProcessTimeWide();

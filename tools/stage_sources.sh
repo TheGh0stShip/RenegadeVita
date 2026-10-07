@@ -1918,6 +1918,15 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 # replay window around the world-space-mesh loop of Render_Objects only.
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-tut1-render-sort.patch"
+# Peek_Next_Chunk is speculative (upstream never set Error there). The
+# structural-admission patch made an implausible peeked header poison the
+# whole load, so ConversationMgr's legacy one-byte category probe rejected the
+# retail CONV10.CDB and the runtime stopped before the frontend. Anchored to
+# the final staged chunkio.cpp so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/wwlib/chunkio.cpp" | cut -d' ' -f1)" = \
+	"f46db2e3834aa7db01b6dcb7573bf63f0de26e80c3ee41021daf994460a610ae"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a39-peek-next-chunk-speculative.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

@@ -4,23 +4,23 @@
  "regenerate": "python3 tools/run_host_tests.py --write-manifest",
  "note": "Static classification only; lanes: pure, retail, artifact, compiled, sanitizer, device.",
  "counts": {
-  "modules": 282,
+  "modules": 283,
   "lanes": {
    "pure": 176,
    "retail": 3,
    "artifact": 6,
    "compiled": 39,
-   "sanitizer": 58,
+   "sanitizer": 59,
    "device": 0
   },
   "kinds": {
    "cli-driver": 3,
    "functions": 2,
    "script": 1,
-   "unittest": 276
+   "unittest": 277
   },
   "tags": {
-   "compiles-host-c++": 97,
+   "compiles-host-c++": 98,
    "compiles-vita-arm": 6,
    "kind:cli-driver": 3,
    "kind:functions": 2,
@@ -28,11 +28,11 @@
    "needs-build-artifact": 10,
    "needs-module:yaml": 1,
    "needs-retail-data": 4,
-   "needs-upstream": 38,
+   "needs-upstream": 39,
    "optional-build-artifact": 3,
    "override": 3,
    "pure-python": 176,
-   "sanitizer": 58,
+   "sanitizer": 59,
    "sanitizer-optional": 12,
    "skips-without-retail": 4,
    "tsan": 4,
@@ -609,6 +609,21 @@
    ],
    "reasons": [
     "compiler: /usr/local/vitasdk/bin/arm-vita-eabi-g++, g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_chunk_peek_speculative.py": {
+   "module": "tools.test_chunk_peek_speculative",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
     "-fsanitize always on"
    ]
   },

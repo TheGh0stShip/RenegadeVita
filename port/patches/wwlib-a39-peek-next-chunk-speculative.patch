@@ -1,0 +1,28 @@
+--- a/chunkio.cpp
++++ b/chunkio.cpp
+@@ -523,7 +523,10 @@
+ 		available = static_cast<uint32>(file_size - file_position);
+ 	}
+ 	if (available == 0U) return false;
+-	if (available < sizeof(ChunkHeader)) { Error = true; return false; }
++	// A peek is speculative (original semantics never set Error here): a
++	// header that cannot fit the remaining bytes is "no chunk", not a fault.
++	// Open_Chunk still rejects the same structure if a caller opens it.
++	if (available < sizeof(ChunkHeader)) return false;
+ 
+ 	// peek at the next chunk header, return false if the read fails
+ 	ChunkHeader temp_header;
+@@ -535,11 +538,11 @@
+ 	const int header_end = File->Tell();
+ 	if (header_end < static_cast<int>(sizeof(ChunkHeader)) ||
+ 		File->Seek(-static_cast<int>(sizeof(ChunkHeader)),SEEK_CUR) !=
+-			header_end - static_cast<int>(sizeof(ChunkHeader)) ||
+-		temp_header.Get_Size() > available - sizeof(ChunkHeader)) {
++			header_end - static_cast<int>(sizeof(ChunkHeader))) {
+ 		Error = true;
+ 		return false;
+ 	}
++	if (temp_header.Get_Size() > available - sizeof(ChunkHeader)) return false;
+ 	
+ 	if (set_id != NULL) {
+ 		*set_id = temp_header.Get_Type();

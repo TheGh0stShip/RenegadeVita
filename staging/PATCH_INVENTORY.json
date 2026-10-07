@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "75f0c57ee6c8542afd73f11cd74f7baa7dbbdfca0dd5ef504993671f606588fc",
-  "patch_count": 623,
+  "stage_script_sha256": "054c8509df5ee1dd9bb45f86e5282b0e341d45f05e35412cb12a5ed10ba8170a",
+  "patch_count": 624,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -3118,7 +3118,12 @@
       "path": "port/patches/wwphys-tut1-render-sort.patch",
       "stage_directory": "wwphys",
       "sha256": "27f05e1a2c8f8779dcf94b140e9d91bcaff4da6a53d3a07e416fa3978fb99291"
+    },
+    {
+      "path": "port/patches/wwlib-a39-peek-next-chunk-speculative.patch",
+      "stage_directory": "wwlib",
+      "sha256": "060a957c7fbacfec20c8e8f90107589710f2e6ffb2b4b3436b94027f3a8b6c3a"
     }
   ],
-  "registry_sha256": "6328c0eebc27b943488b1eaf4c0d5dc41f52694de78adb7e6078726b4f850a32"
+  "registry_sha256": "c80ee9f7cc1236d7276309d0e47b40fc85f303629b9036c45f17d0db553283ab"
 }

@@ -24,11 +24,11 @@ class StaticMeshCacheTests(unittest.TestCase):
 
     def test_rigid_meshes_only_and_skin_keeps_immediate_path(self):
         source = RENDERER.read_text()
-        submit = source[source.index('void Submit_Mesh(MeshClass &mesh'):
+        submit = source[source.index('static void Submit_Mesh_Internal(MeshClass &mesh'):
                         source.index('IndexedSubmissionResult Submit_Indexed_Triangles')]
-        self.assertIn('if (!is_skin && Submit_Static_Mesh_Cache(', submit)
+        self.assertIn('if (!procedural_pass && !is_skin && Submit_Static_Mesh_Cache(', submit)
         # The per-frame path remains the fallback for every ineligible mesh.
-        self.assertIn('\t} else\n#endif\n\tfor (int pass = 0; pass < base_pass_count;', submit)
+        self.assertIn('\t} else\n#endif\n\tfor (int pass = 0; pass < draw_pass_count;', submit)
 
     def test_eligibility_excludes_frame_dependent_inputs(self):
         source = RENDERER.read_text()

@@ -211,8 +211,22 @@ int main()
 		CHECK(stat((user + "/save/slot.sav.previous").c_str(), &status) != 0);
 	}
 
+	// A crash mid-write leaves a stale, longer "<slot>.pending"; the next
+	// write-only session truncates and overwrites it, then replaces the slot.
+	{
+		FILE *stale = std::fopen((user + "/save/slot.sav.pending").c_str(), "wb");
+		CHECK(stale != NULL && std::fputs("stale-partial-save", stale) >= 0 && std::fclose(stale) == 0);
+		RenegadeRootedFileClass writer(roots, "slot.sav");
+		CHECK(writer.Open(FileClass::WRITE));
+		CHECK(writer.Write("ok", 2) == 2);
+		writer.Close();
+		CHECK(Read_All(user + "/save/slot.sav") == "ok");
+		struct stat status;
+		CHECK(stat((user + "/save/slot.sav.pending").c_str(), &status) != 0);
+	}
+
 	const RenegadeFileFactoryStatistics statistics = Renegade_File_Factory_Get_Statistics();
-	CHECK(statistics.staged_write_files == 600U + 40U + 3U + 2U);
+	CHECK(statistics.staged_write_files == 600U + 40U + 3U + 3U);
 	CHECK(statistics.staged_write_fallbacks == 0U && statistics.staged_write_bytes != 0U);
 	std::printf("rooted file factory write staging PASS files=%u bytes=%u\n",
 		statistics.staged_write_files, statistics.staged_write_bytes);

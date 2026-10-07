@@ -5999,7 +5999,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					// the retained templates were cleared before it. Its own loading
 					// screen is gone, so repeat the initial-load per-level preparation
 					// under a fresh original loading screen before gameplay resumes.
-					if (CombatManager::Get_Scene() != NULL) {
+					// Campaign restarts only: multiplayer/Practice round reloads keep
+					// their previous timing so remote clients are not delayed.
+					if (CombatManager::Get_Scene() != NULL && IS_MISSION && !multiplayer_client) {
 						A31VitaScopedLoadingRenderResolution reload_prepare_resolution;
 						A31VitaLoadingPresenter reload_prepare_presenter;
 						const bool reload_prepare_presenter_ready =

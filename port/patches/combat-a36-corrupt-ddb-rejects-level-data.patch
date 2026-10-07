@@ -1,0 +1,11 @@
+--- a/savegame.cpp
++++ b/savegame.cpp
+@@ -451,6 +451,8 @@ void	SaveGameManager::Load_Game( const char * filename )
+ 				if (!Load_Definitions(temp_ddb, false)) {
+ #if defined(__vita__)
+ 					DefinitionMgrClass::Free_Definitions();
++					// Freed definitions cannot back a later CHUNKID_LEVEL_DATA.
++					level_info_valid = false;
+ 					A35_Level_Load_Record_Failure(A35_LOAD_STATIC_SUBSYSTEM_FAILED);
+ 					break;
+ #endif

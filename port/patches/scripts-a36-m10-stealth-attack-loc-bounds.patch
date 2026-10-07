@@ -1,0 +1,33 @@
+M10_Stealth_Attack_01/02 bounds. Created() sets loc = 100 and enables
+Enemy_Seen; only the first GOTO_LOC timer (1.0 s / 0.25 s later) picks a
+valid attack_loc[0..12] index. An Enemy_Seen in that window read
+attack_loc[100] past the 13-entry array. Skip Enemy_Seen while loc is out of
+range. Behaviour is otherwise unchanged: Modify_Action only applies to
+action 10, which exists only after GOTO_LOC has set a valid loc.
+
+--- a/Mission10.cpp
++++ b/Mission10.cpp
+@@ -3051,6 +3051,11 @@
+
+ 	void Enemy_Seen(GameObject * obj, GameObject *enemy )
+ 	{
++		// Vita bounds: loc stays 100 until the first GOTO_LOC timer picks a node.
++		if (loc < 0 || loc > 12)
++		{
++			return;
++		}
+ 		ActionParamsStruct params;
+
+ 		params.Set_Basic( this, INNATE_PRIORITY_ENEMY_SEEN +5, 10 );
+@@ -3191,6 +3196,11 @@
+
+ 	void Enemy_Seen(GameObject * obj, GameObject *enemy )
+ 	{
++		// Vita bounds: loc stays 100 until the first GOTO_LOC timer picks a node.
++		if (loc < 0 || loc > 12)
++		{
++			return;
++		}
+ 		ActionParamsStruct params;
+
+ 		params.Set_Basic( this, INNATE_PRIORITY_ENEMY_SEEN +5, 10 );

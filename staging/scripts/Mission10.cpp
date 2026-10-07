@@ -3051,6 +3051,11 @@ DECLARE_SCRIPT (M10_Stealth_Attack_01, "")
 
 	void Enemy_Seen(GameObject * obj, GameObject *enemy )
 	{
+		// Vita bounds: loc stays 100 until the first GOTO_LOC timer picks a node.
+		if (loc < 0 || loc > 12)
+		{
+			return;
+		}
 		ActionParamsStruct params;
 
 		params.Set_Basic( this, INNATE_PRIORITY_ENEMY_SEEN +5, 10 );
@@ -3191,6 +3196,11 @@ DECLARE_SCRIPT (M10_Stealth_Attack_02, "")
 
 	void Enemy_Seen(GameObject * obj, GameObject *enemy )
 	{
+		// Vita bounds: loc stays 100 until the first GOTO_LOC timer picks a node.
+		if (loc < 0 || loc > 12)
+		{
+			return;
+		}
 		ActionParamsStruct params;
 
 		params.Set_Basic( this, INNATE_PRIORITY_ENEMY_SEEN +5, 10 );

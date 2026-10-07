@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "05e7b973317a60f0a044fb69421422453e74afba416708119ef680923d51cbb2",
-  "patch_count": 525,
+  "stage_script_sha256": "c7e514cf26c36bdc2c5449e965656395fc25a5d6a2b6a7be9c4b28ca5117ca21",
+  "patch_count": 526,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1675,6 +1675,11 @@
       "sha256": "1fc7a1a73aa2f64fee5a052d48483c3b66c4ee13528b376533a0e460b879d18f"
     },
     {
+      "path": "port/patches/scripts-a36-m10-stealth-attack-loc-bounds.patch",
+      "stage_directory": "scripts",
+      "sha256": "6f5ce27389199ad1fdc6b5e67781b493a8bc1e2c405cfc71ce331a2733d0c77c"
+    },
+    {
       "path": "port/patches/scripts-a36-m05-dead6-help-failed-text-save.patch",
       "stage_directory": "scripts",
       "sha256": "e5c6f8fde4b5325ebf559015fb593cc1feec2fdd4605c417dae835e817b6cf8a"
@@ -2582,7 +2587,7 @@
     {
       "path": "port/patches/commando-a36-lan-team-selection.patch",
       "stage_directory": "commando",
-      "sha256": "b94b1b1d2c72084bc6696ede2e8700e445308daae54aa9f4dd6485099b2f3384"
+      "sha256": "99f64a56c995fc2f4ead39cdf48154cc15258dc6c57ac1b3397e8697d8d93783"
     },
     {
       "path": "port/patches/commando-a36-lan-server-presets.patch",
@@ -2630,5 +2635,5 @@
       "sha256": "30f0ad3ed7b87ca32095d32d6f800ae73043544a75cd96a5d2d0272cba7c3f73"
     }
   ],
-  "registry_sha256": "abc82f5392735b6d46a8404b7929c9fd2e6a9cd9911eb6bfc9918eb1b712a457"
+  "registry_sha256": "42fa68e4856c1e6d8619689f239ee7e8c03caa118fded9df44c08577de7e3216"
 }

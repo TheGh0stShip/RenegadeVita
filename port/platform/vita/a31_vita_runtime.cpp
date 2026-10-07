@@ -3362,7 +3362,18 @@ void Warm_Level_Cinematic_Preset_Models(A31VitaLoadingPresenter &presenter,
 		}
 	}
 	unsigned warmed = 0U;
+	// Warmed prototypes stay resident until LevelManager::Release_Level's
+	// original Free_Assets. Keep the same vitaGL free-memory floor as texture
+	// prepare so optional warming never starves the first spawned frames.
+	const uint64_t free_memory_floor = 24ULL * 1024ULL * 1024ULL;
+	bool memory_floor_reached = false;
 	for (const std::string &preset : presets) {
+		RenegadeVitaRenderer::BackendMemoryStatistics memory = {};
+		if (RenegadeVitaRenderer::Query_Backend_Memory(memory) &&
+			memory.all_free < free_memory_floor) {
+			memory_floor_reached = true;
+			break;
+		}
 		DefinitionClass *definition =
 			DefinitionMgrClass::Find_Named_Definition(preset.c_str(), false);
 		const uint32 class_id = definition != NULL ? definition->Get_Class_ID() : 0U;
@@ -3396,8 +3407,9 @@ void Warm_Level_Cinematic_Preset_Models(A31VitaLoadingPresenter &presenter,
 		}
 		presenter.Render_Original_Progress("after_cinematic_preset_prepare");
 	}
-	A30_Vita_Log("A4 cinematic preset preparation: archive=%s scripts=%u presets=%u warmed=%u elapsed_us=%llu\n",
+	A30_Vita_Log("A4 cinematic preset preparation: archive=%s scripts=%u presets=%u warmed=%u memory_floor=%u elapsed_us=%llu\n",
 		archive, scripts, static_cast<unsigned>(presets.size()), warmed,
+		memory_floor_reached ? 1U : 0U,
 		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - started_us));
 }
 

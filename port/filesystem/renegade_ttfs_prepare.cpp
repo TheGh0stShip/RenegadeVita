@@ -1,5 +1,7 @@
 #include "renegade_ttfs.h"
 #include <curl/curl.h>
+#include <dirent.h>
+#include <unistd.h>
 #include <errno.h>
 #include <set>
 #include <stdio.h>
@@ -21,6 +23,24 @@ struct Preparation {
         return Seconds() < self.deadline && self.parent.Continue();
     }
 };
+// A download interrupted by crash/power loss leaves payloads with no
+// committed manifest.tpi. Remove only that uncommitted flat directory so it
+// can be fetched again; committed caches are never deleted here.
+bool Discard_Uncommitted(const std::string &directory) {
+    DIR *dir = opendir(directory.c_str());
+    if (!dir) return false;
+    bool ok = true;
+    while (dirent *entry = readdir(dir)) {
+        std::string name = entry->d_name;
+        if (name == "." || name == "..") continue;
+        std::string path = directory + "/" + name;
+        struct stat info{};
+        if (lstat(path.c_str(), &info) != 0 || !S_ISREG(info.st_mode) ||
+            unlink(path.c_str()) != 0) ok = false;
+    }
+    closedir(dir);
+    return ok && rmdir(directory.c_str()) == 0;
+}
 struct CurlScope {
     CURLcode result = curl_global_init(CURL_GLOBAL_DEFAULT);
     ~CurlScope() { if (result == CURLE_OK) curl_global_cleanup(); }
@@ -56,6 +76,16 @@ bool Prepare(const std::string &repository, const std::vector<uint32_t> &ids,
         char name[9];
         snprintf(name, sizeof(name), "%08x", unsigned(id));
         std::string directory = root + "/" + name;
+        if (lstat(directory.c_str(), &info) == 0 && S_ISDIR(info.st_mode)) {
+            struct stat committed{};
+            const std::string manifest_path = directory + "/manifest.tpi";
+            if (lstat(manifest_path.c_str(), &committed) != 0) {
+                if (errno != ENOENT) { error = "package manifest stat failed"; return false; }
+                if (!Discard_Uncommitted(directory)) {
+                    error = "uncommitted package cache cleanup failed"; return false;
+                }
+            }
+        }
         if (lstat(directory.c_str(), &info) != 0) {
             if (errno != ENOENT) { error = "package cache stat failed"; return false; }
             uint64_t now = Seconds();

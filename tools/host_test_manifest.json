@@ -4,37 +4,37 @@
  "regenerate": "python3 tools/run_host_tests.py --write-manifest",
  "note": "Static classification only; lanes: pure, retail, artifact, compiled, sanitizer, device.",
  "counts": {
-  "modules": 255,
+  "modules": 277,
   "lanes": {
-   "pure": 157,
-   "retail": 0,
+   "pure": 174,
+   "retail": 3,
    "artifact": 6,
-   "compiled": 37,
-   "sanitizer": 55,
+   "compiled": 38,
+   "sanitizer": 56,
    "device": 0
   },
   "kinds": {
    "cli-driver": 3,
    "functions": 2,
    "script": 1,
-   "unittest": 249
+   "unittest": 271
   },
   "tags": {
-   "compiles-host-c++": 92,
+   "compiles-host-c++": 94,
    "compiles-vita-arm": 6,
    "kind:cli-driver": 3,
    "kind:functions": 2,
    "kind:script": 1,
    "needs-build-artifact": 10,
    "needs-module:yaml": 1,
-   "needs-retail-data": 1,
-   "needs-upstream": 35,
+   "needs-retail-data": 4,
+   "needs-upstream": 36,
    "optional-build-artifact": 3,
    "override": 3,
-   "pure-python": 157,
-   "sanitizer": 55,
-   "sanitizer-optional": 11,
-   "skips-without-retail": 1,
+   "pure-python": 174,
+   "sanitizer": 56,
+   "sanitizer-optional": 12,
+   "skips-without-retail": 4,
    "tsan": 4,
    "uses-repo-build-dir": 1
   }
@@ -522,6 +522,16 @@
    ],
    "reasons": []
   },
+  "tools/test_build_cache_opt_in_contract.py": {
+   "module": "tools.test_build_cache_opt_in_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
   "tools/test_build_stamp.py": {
    "module": "tools.test_build_stamp",
    "kind": "unittest",
@@ -839,6 +849,16 @@
    ],
    "reasons": []
   },
+  "tools/test_dependency_cache.py": {
+   "module": "tools.test_dependency_cache",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
   "tools/test_development_checkpoint.py": {
    "module": "tools.test_development_checkpoint",
    "kind": "unittest",
@@ -895,6 +915,16 @@
   },
   "tools/test_fast_candidate_build_contract.py": {
    "module": "tools.test_fast_candidate_build_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_frame_allocation_guard.py": {
+   "module": "tools.test_frame_allocation_guard",
    "kind": "unittest",
    "run": "module",
    "lane": "pure",
@@ -976,6 +1006,16 @@
     "reads: build/host-test-manifest-cache.json",
     "override: the build/ path it reaches is the runner's optional classification cache, which is rebuilt when absent"
    ]
+  },
+  "tools/test_hud_cost_textwindow.py": {
+   "module": "tools.test_hud_cost_textwindow",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
   },
   "tools/test_hud_powerup_text_once.py": {
    "module": "tools.test_hud_powerup_text_once",
@@ -1280,6 +1320,16 @@
     "-fsanitize always on"
    ]
   },
+  "tools/test_ninja_log_report.py": {
+   "module": "tools.test_ninja_log_report",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
   "tools/test_npc_path_frame.py": {
    "module": "tools.test_npc_path_frame",
    "kind": "unittest",
@@ -1399,6 +1449,26 @@
   },
   "tools/test_parse_psp2_core.py": {
    "module": "tools.test_parse_psp2_core",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_pathfind_cost_contract.py": {
+   "module": "tools.test_pathfind_cost_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_physics_cost_tooling.py": {
+   "module": "tools.test_physics_cost_tooling",
    "kind": "unittest",
    "run": "module",
    "lane": "pure",
@@ -1890,6 +1960,16 @@
    ],
    "reasons": []
   },
+  "tools/test_staging_fingerprint.py": {
+   "module": "tools.test_staging_fingerprint",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
   "tools/test_sweep_cpp_functions.py": {
    "module": "tools.test_sweep_cpp_functions",
    "kind": "unittest",
@@ -2087,8 +2167,62 @@
     "-fsanitize always on"
    ]
   },
+  "tools/test_tut1_script_think_cost.py": {
+   "module": "tools.test_tut1_script_think_cost",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_tutorial_bench.py": {
+   "module": "tools.test_tutorial_bench",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
   "tools/test_tutorial_checkpoints.py": {
    "module": "tools.test_tutorial_checkpoints",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_tutorial_perf_report.py": {
+   "module": "tools.test_tutorial_perf_report",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_tutorial_prewarm_list.py": {
+   "module": "tools.test_tutorial_prewarm_list",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "retail",
+   "tags": [
+    "needs-retail-data",
+    "skips-without-retail"
+   ],
+   "reasons": [
+    "retail: RENEGADE_RETAIL_DATA"
+   ]
+  },
+  "tools/test_tutorial_texture_budget.py": {
+   "module": "tools.test_tutorial_texture_budget",
    "kind": "unittest",
    "run": "module",
    "lane": "pure",
@@ -2233,6 +2367,33 @@
     "-fsanitize always on"
    ]
   },
+  "tools/test_vita_audio_cost_contract.py": {
+   "module": "tools.test_vita_audio_cost_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "retail",
+   "tags": [
+    "needs-retail-data",
+    "skips-without-retail"
+   ],
+   "reasons": [
+    "retail: RENEGADE_RETAIL_DATA, retail-pc/Data"
+   ]
+  },
+  "tools/test_vita_audio_cost_equivalence.py": {
+   "module": "tools.test_vita_audio_cost_equivalence",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
   "tools/test_vita_audio_deferred_position.py": {
    "module": "tools.test_vita_audio_deferred_position",
    "kind": "unittest",
@@ -2329,6 +2490,16 @@
     "-fsanitize always on"
    ]
   },
+  "tools/test_vita_clocks_threads.py": {
+   "module": "tools.test_vita_clocks_threads",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
   "tools/test_vita_codegen_flags.py": {
    "module": "tools.test_vita_codegen_flags",
    "kind": "unittest",
@@ -2392,6 +2563,16 @@
     "-fsanitize always on",
     "reads when present (module uses skips): build/deps/vitagl-demo/source.tar.gz"
    ]
+  },
+  "tools/test_vita_frame_pacing.py": {
+   "module": "tools.test_vita_frame_pacing",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
   },
   "tools/test_vita_gxm_tuning.py": {
    "module": "tools.test_vita_gxm_tuning",
@@ -2473,6 +2654,19 @@
     "-fsanitize always on"
    ]
   },
+  "tools/test_vita_load_io.py": {
+   "module": "tools.test_vita_load_io",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "retail",
+   "tags": [
+    "needs-retail-data",
+    "skips-without-retail"
+   ],
+   "reasons": [
+    "retail: <absolute>/Data"
+   ]
+  },
   "tools/test_vita_loading_screen_contract.py": {
    "module": "tools.test_vita_loading_screen_contract",
    "kind": "unittest",
@@ -2551,6 +2745,30 @@
     "-fsanitize behind a condition or in an invoked script"
    ]
   },
+  "tools/test_vita_opaque_sort.py": {
+   "module": "tools.test_vita_opaque_sort",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_opaque_sort_native.py": {
+   "module": "tools.test_vita_opaque_sort_native",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize behind a condition or in an invoked script"
+   ]
+  },
   "tools/test_vita_open_source_references.py": {
    "module": "tools.test_vita_open_source_references",
    "kind": "unittest",
@@ -2565,6 +2783,16 @@
     "device: Vita3K.exe (via tools/run_vita3k_candidate.py)",
     "override: runs tools/run_vita3k_candidate.py only with --dry-run, which writes a receipt and returns before Vita3K is launched"
    ]
+  },
+  "tools/test_vita_particle_cost.py": {
+   "module": "tools.test_vita_particle_cost",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
   },
   "tools/test_vita_particle_keyframe_guard.py": {
    "module": "tools.test_vita_particle_keyframe_guard",
@@ -2802,6 +3030,16 @@
     "compiler: g++",
     "-fsanitize always on"
    ]
+  },
+  "tools/test_vita_texture_packing_contract.py": {
+   "module": "tools.test_vita_texture_packing_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
   },
   "tools/test_vita_texture_provenance_contract.py": {
    "module": "tools.test_vita_texture_provenance_contract",

@@ -9,6 +9,7 @@
 #include "a35_campaign_flight_recorder.h"
 #include "a35_script_lookup_telemetry.h"
 #include "a35_level_load_status.h"
+#include "a35_tutorial_prewarm.h"
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 #include "a4_frontend_lifecycle_boundary.h"
 #include "a31_development_checkpoint.h"
@@ -75,6 +76,8 @@
 #include "combatchunkid.h"
 #include "armedgameobj.h"
 #include "weaponmanager.h"
+#include "powerup.h"
+#include "globalsettings.h"
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 #include "dialogmgr.h"
 #include "dlgevaencyclopedia.h"
@@ -4138,7 +4141,10 @@ static void Add_Level_Preload_Reference(std::vector<std::pair<int, unsigned> > &
 // gameplay frame. Load the common set for the hold styles of this level's
 // soldiers through the same Get_HAnim; HAnimManager keeps hits and records
 // misses exactly as first use would. Animation selection is unchanged.
-static void Warm_Level_Soldier_Animations(A31VitaLoadingPresenter &presenter, const char *label)
+// extra_style_mask (bit n = hold style n) adds styles of weapons that no
+// placed soldier carries yet, such as RVTP1 tutorial grants; 0 = level only.
+static void Warm_Level_Soldier_Animations(A31VitaLoadingPresenter &presenter, const char *label,
+	unsigned extra_style_mask = 0U)
 {
 	static const char *const torso_names[NUM_WEAPON_HOLD_STYLES] = {
 		"A0", "A0", "C2", "D2", "E2", "F2", "A0", "A0", "B0", "A0"
@@ -4172,6 +4178,9 @@ static void Warm_Level_Soldier_Animations(A31VitaLoadingPresenter &presenter, co
 				styles[weapon->Style] = true;
 		}
 	}
+	for (int style = 0; style < NUM_WEAPON_HOLD_STYLES; ++style) {
+		if ((extra_style_mask & (1U << style)) != 0U) styles[style] = true;
+	}
 	std::vector<std::string> names;
 	const auto add_name = [&names](const std::string &name) {
 		for (const std::string &existing : names) {
@@ -4198,7 +4207,7 @@ static void Warm_Level_Soldier_Animations(A31VitaLoadingPresenter &presenter, co
 			}
 		}
 	};
-	if (soldiers != 0U) {
+	if (soldiers != 0U || extra_style_mask != 0U) {
 		add_legs(primary_legs, sizeof(primary_legs) / sizeof(primary_legs[0]));
 		for (const char *wound : wound_names) add_name(wound);
 		add_legs(secondary_legs, sizeof(secondary_legs) / sizeof(secondary_legs[0]));
@@ -4229,6 +4238,62 @@ static void Warm_Level_Soldier_Animations(A31VitaLoadingPresenter &presenter, co
 		static_cast<unsigned>(names.size()), attempted, loaded, missing,
 		memory_floor ? 1U : 0U, time_limit ? 1U : 0U,
 		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - started_us));
+}
+
+enum LevelSoundPrewarmOutcome {
+	LEVEL_SOUND_NOT_ATTEMPTED,	// not a sound definition, or no file name
+	LEVEL_SOUND_MISSING,		// absent, unreadable, or outside 12 bytes..1 MiB
+	LEVEL_SOUND_CACHED,
+	LEVEL_SOUND_PRESENT,
+	LEVEL_SOUND_FULL,
+	LEVEL_SOUND_SKIPPED
+};
+
+// One sound definition's WAVE image, read through the original file factory
+// and handed to the provider's content-keyed decoded-PCM cache. Shared by the
+// RVPL1 level sound warm-up and the RVTP1 tutorial warm-up.
+static LevelSoundPrewarmOutcome Prewarm_Level_Sound_Definition(int sound_def_id,
+	uint64_t &read_bytes, uint64_t &retained_bytes)
+{
+	DefinitionClass *definition = DefinitionMgrClass::Find_Definition(sound_def_id, false);
+	if (definition == NULL || definition->Get_Class_ID() != CLASSID_SOUND) {
+		return LEVEL_SOUND_NOT_ATTEMPTED;
+	}
+	const StringClass &filename =
+		static_cast<AudibleSoundDefinitionClass *>(definition)->Get_Filename();
+	if (filename.Is_Empty()) return LEVEL_SOUND_NOT_ATTEMPTED;
+	// AudibleSoundDefinitionClass::Create_Sound strips relative paths.
+	const char *name = filename.Peek_Buffer();
+	const char *delimiter = strrchr(name, '\\');
+	if (delimiter != NULL && filename.Get_Length() > 2 && name[1] != ':') name = delimiter + 1;
+	FileClass *file = _TheFileFactory != NULL ? _TheFileFactory->Get_File(name) : NULL;
+	if (file == NULL) return LEVEL_SOUND_MISSING;
+	unsigned char *image = NULL;
+	int size = 0;
+	if (file->Is_Available() && file->Open()) {
+		size = file->Size();
+		if (size >= 12 && size <= 1024 * 1024) {
+			image = static_cast<unsigned char *>(malloc(static_cast<size_t>(size)));
+			if (image != NULL && file->Read(image, size) != size) {
+				free(image);
+				image = NULL;
+			}
+		}
+		file->Close();
+	}
+	_TheFileFactory->Return_File(file);
+	if (image == NULL) return LEVEL_SOUND_MISSING;
+	read_bytes += static_cast<uint64_t>(size);
+	size_t retained = 0U;
+	const int result = Renegade_Miles_Prewarm_Pcm(image, static_cast<size_t>(size), &retained);
+	free(image);
+	if (result == RENEGADE_MILES_PREWARM_CACHED) {
+		retained_bytes += retained;
+		return LEVEL_SOUND_CACHED;
+	}
+	if (result == RENEGADE_MILES_PREWARM_PRESENT) return LEVEL_SOUND_PRESENT;
+	if (result == RENEGADE_MILES_PREWARM_FULL) return LEVEL_SOUND_FULL;
+	return LEVEL_SOUND_SKIPPED;
 }
 
 // Weapon fire/reload/empty and explosion sound definitions referenced by this
@@ -4286,40 +4351,14 @@ static void Warm_Level_Sound_Pcm(A31VitaLoadingPresenter &presenter, const char 
 	uint64_t read_bytes = 0U, retained_bytes = 0U;
 	for (size_t index = 0U; index < sound_ids.size() && attempted < max_sounds; ++index) {
 		if (sceKernelGetProcessTimeWide() - started_us > time_limit_us) { time_limit = true; break; }
-		DefinitionClass *definition = DefinitionMgrClass::Find_Definition(sound_ids[index].first, false);
-		if (definition == NULL || definition->Get_Class_ID() != CLASSID_SOUND) continue;
-		const StringClass &filename =
-			static_cast<AudibleSoundDefinitionClass *>(definition)->Get_Filename();
-		if (filename.Is_Empty()) continue;
-		// AudibleSoundDefinitionClass::Create_Sound strips relative paths.
-		const char *name = filename.Peek_Buffer();
-		const char *delimiter = strrchr(name, '\\');
-		if (delimiter != NULL && filename.Get_Length() > 2 && name[1] != ':') name = delimiter + 1;
+		const LevelSoundPrewarmOutcome outcome =
+			Prewarm_Level_Sound_Definition(sound_ids[index].first, read_bytes, retained_bytes);
+		if (outcome == LEVEL_SOUND_NOT_ATTEMPTED) continue;
 		++attempted;
-		FileClass *file = _TheFileFactory != NULL ? _TheFileFactory->Get_File(name) : NULL;
-		if (file == NULL) { ++missing; continue; }
-		unsigned char *image = NULL;
-		int size = 0;
-		if (file->Is_Available() && file->Open()) {
-			size = file->Size();
-			if (size >= 12 && size <= 1024 * 1024) {
-				image = static_cast<unsigned char *>(malloc(static_cast<size_t>(size)));
-				if (image != NULL && file->Read(image, size) != size) {
-					free(image);
-					image = NULL;
-				}
-			}
-			file->Close();
-		}
-		_TheFileFactory->Return_File(file);
-		if (image == NULL) { ++missing; continue; }
-		read_bytes += static_cast<uint64_t>(size);
-		size_t retained = 0U;
-		const int result = Renegade_Miles_Prewarm_Pcm(image, static_cast<size_t>(size), &retained);
-		free(image);
-		if (result == RENEGADE_MILES_PREWARM_CACHED) { ++cached; retained_bytes += retained; }
-		else if (result == RENEGADE_MILES_PREWARM_PRESENT) ++present;
-		else if (result == RENEGADE_MILES_PREWARM_FULL) { cache_full = true; break; }
+		if (outcome == LEVEL_SOUND_MISSING) { ++missing; continue; }
+		if (outcome == LEVEL_SOUND_CACHED) ++cached;
+		else if (outcome == LEVEL_SOUND_PRESENT) ++present;
+		else if (outcome == LEVEL_SOUND_FULL) { cache_full = true; break; }
 		else ++skipped;
 		if (attempted % 8U == 0U) presenter.Render_Original_Progress("after_sound_pcm_prepare");
 	}
@@ -4330,6 +4369,8 @@ static void Warm_Level_Sound_Pcm(A31VitaLoadingPresenter &presenter, const char 
 		time_limit ? 1U : 0U,
 		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - started_us));
 }
+
+#include "a35_tutorial_prewarm.inc"
 
 struct LevelGeometryPrebuildState {
 	RenderInfoClass *render_info;
@@ -4627,11 +4668,32 @@ void Prepare_Original_Level_Loading_Resources(A31VitaLoadingPresenter &presenter
 		label, preload_mode, preload_mode & LEVEL_PRELOAD_ANIMATIONS ? 1U : 0U,
 		preload_mode & LEVEL_PRELOAD_SOUNDS ? 1U : 0U,
 		preload_mode & LEVEL_PRELOAD_GEOMETRY ? 1U : 0U);
+	// RVTP1: tutorial first-use preparation, default off. The plan is a
+	// definition walk; its hold styles join the RVPL1 animation set and its
+	// assets load after the RVPL1 sounds, before the M00 texture prewarm,
+	// which then also prepares the textures of the newly loaded models.
+	const bool tutorial = stricmp(archive, "M00_Tutorial.mix") == 0;
+	const unsigned tutorial_mode = tutorial ? Read_Tutorial_Prewarm_Mode() : 0U;
+	TutorialPrewarmPlan tutorial_plan = {};
+	if (tutorial) {
+		A30_Vita_Log("A4 %s RVTP1 tutorial prewarm: mode=%u weapons=%u presets=%u sounds=%u hold_styles=%u flag=tutorial-prewarm-v1.flag\n",
+			label, tutorial_mode, tutorial_mode & TUTORIAL_PREWARM_WEAPONS ? 1U : 0U,
+			tutorial_mode & TUTORIAL_PREWARM_PRESETS ? 1U : 0U,
+			tutorial_mode & TUTORIAL_PREWARM_SOUNDS ? 1U : 0U,
+			tutorial_mode & TUTORIAL_PREWARM_HOLD_STYLES ? 1U : 0U);
+	}
+	if (tutorial_mode != 0U) {
+		Build_Tutorial_Prewarm_Plan(tutorial_plan);
+	}
 	if ((preload_mode & LEVEL_PRELOAD_ANIMATIONS) != 0U) {
-		Warm_Level_Soldier_Animations(presenter, label);
+		Warm_Level_Soldier_Animations(presenter, label,
+			(tutorial_mode & TUTORIAL_PREWARM_HOLD_STYLES) != 0U ? tutorial_plan.style_mask : 0U);
 	}
 	if ((preload_mode & LEVEL_PRELOAD_SOUNDS) != 0U) {
 		Warm_Level_Sound_Pcm(presenter, label);
+	}
+	if (tutorial_mode != 0U) {
+		Warm_Tutorial_First_Use_Resources(presenter, label, tutorial_mode, tutorial_plan);
 	}
 	// The original loader initialized every foreground texture on the
 	// loading screen (TextureLoader Init_Textures). Without that, each

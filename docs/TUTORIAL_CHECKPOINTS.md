@@ -41,3 +41,37 @@ Gunner weapons; Hotwire vehicle training; final objective before original
 mission completion. These are a plan, not completed gates. Keep one fresh
 start-to-finish M00 run for final acceptance; resumed segments and recorded-input
 replays reduce iteration time but cannot substitute for that full run.
+
+## Catalogue and boot straight into a segment
+
+`catalog` reads only what the original save serializes: the level-info map,
+description ("Quicksave A/B" for F5 saves) and the six Mission00 objectives
+(status and game-time age) from the Combat objective chunk. The segment name
+is derived from the youngest visible objective (for example `to-gunner`,
+`gunner-range`, `mobius-refinery`); `logan-course` means every objective is
+still hidden. It is a label, not proof of position or lesson completion.
+Rows marked `REJECTED` would also be refused by the native envelope check.
+
+```bash
+python3 tools/tutorial_checkpoints.py catalog                      # vault masters
+python3 tools/tutorial_checkpoints.py catalog --user-dir /pulled/user \
+  --log /pulled/user/logs/<candidate runtime log>                   # live slots
+python3 tools/tutorial_checkpoints.py launch --segment gunner-range \
+  --user-dir /staging/user --content-id "$RETAIL_CONTENT_SHA256" --offline [--sticky]
+python3 tools/tutorial_checkpoints.py verify-log --id <checkpoint-id> \
+  --log /pulled/user/logs/<candidate runtime log>
+```
+
+`launch` restores the master into `user/save/rv_cp_<id>.sav` (reusing a
+byte-identical slot, refusing a different one) and queues either the one-shot
+`user/config/dev-checkpoint-launch-v1.txt` (`RVCP1 <slot>`) or, with
+`--sticky`, the retained `user/config/tutorial-checkpoint-v1.flag`
+(`RVTC1 <slot>`). Copy those two files to the same paths under
+`ux0:data/renegade/user/`. Only `RENEGADE_DEVELOPMENT_CHECKPOINT=1` builds read
+them; public packages ignore both. A one-shot request wins over the sticky flag;
+the sticky flag is honoured at the first frontend entry of each process, so
+quitting to the menu stays there. Delete the flag (or run
+`request_tutorial_checkpoint.py --user-dir ... --offline --clear-sticky`) to
+restore normal startup. `verify-log` passes only when the first
+`A3.5 mission progress` line after the handoff shows the save's objective
+vector; it does not prove full world or script restoration.

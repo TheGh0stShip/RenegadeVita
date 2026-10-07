@@ -12,12 +12,14 @@ inline bool Alphanumeric(char value)
 		(value >= 'A' && value <= 'Z') || (value >= '0' && value <= '9');
 }
 
-inline bool Parse(const char *data, size_t bytes, char *source, size_t capacity)
+// "<prefix><slot>.sav\n" where prefix is six bytes such as "RVCP1 ".
+inline bool Parse_Save_Slot_Request(const char *prefix, const char *data,
+	size_t bytes, char *source, size_t capacity)
 {
 	if (source == NULL || capacity == 0U) return false;
 	source[0] = '\0';
-	if (data == NULL || bytes < 12U || bytes > 76U ||
-		memcmp(data, "RVCP1 ", 6U) != 0 || data[bytes - 1U] != '\n') return false;
+	if (prefix == NULL || data == NULL || bytes < 12U || bytes > 76U ||
+		memcmp(data, prefix, 6U) != 0 || data[bytes - 1U] != '\n') return false;
 	size_t end = bytes - 1U;
 	if (data[end - 1U] == '\r') --end;
 	const size_t length = end - 6U;
@@ -35,6 +37,19 @@ inline bool Parse(const char *data, size_t bytes, char *source, size_t capacity)
 	memcpy(source + 5U, data + 6U, length);
 	source[5U + length] = '\0';
 	return true;
+}
+
+// One-shot request (dev-checkpoint-launch-v1.txt), consumed at startup.
+inline bool Parse(const char *data, size_t bytes, char *source, size_t capacity)
+{
+	return Parse_Save_Slot_Request("RVCP1 ", data, bytes, source, capacity);
+}
+
+// Sticky tutorial request (tutorial-checkpoint-v1.flag), retained on disk.
+inline bool Parse_Tutorial_Sticky(const char *data, size_t bytes, char *source,
+	size_t capacity)
+{
+	return Parse_Save_Slot_Request("RVTC1 ", data, bytes, source, capacity);
 }
 
 inline bool Parse_Mission(const char *data, size_t bytes, char *source,

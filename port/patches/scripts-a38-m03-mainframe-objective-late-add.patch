@@ -1,0 +1,70 @@
+M03 soft-lock: primary objective 1008 ("access the Comm Center mainframe")
+can stay pending forever. 1008 is added by 308,3 from a base-entry zone; the
+terminal 1100009 (RMV_M03_Comm_Center_Terminal) sends 308,1 when poked. After
+a west-elevator entry the conversation-zone callbacks that would send 308,3
+are lost (zones 1144502/1100005 destroy themselves through RMV_Trigger_Zone
+on the same entry, which nulls the conversation monitor), so 308,3 comes only
+from con-yard zone 1144636. A player who pokes the terminal first and crosses
+that zone afterwards gets 308,1 before 308,3: the completion is dropped and
+1008 is added as pending.
+
+Remember the poke in a saved flag (new id 10) and credit it once when 1008 is
+added. In the normal order (add, then poke) the flag is never consulted.
+Saves without id 10 load with the flag clear, which is the original behaviour.
+
+--- a/Mission03.cpp
++++ b/Mission03.cpp
+@@ -57,6 +57,8 @@
+ 	int sender1;
+ 	// Vita port: bit 0 = objective 1007 added, bit 1 = keycard picked up.
+ 	int keycard_objective_flags;
++	// Vita port: bit 0 = objective 1008 added, bit 1 = mainframe poked.
++	int mainframe_objective_flags;
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+@@ -69,6 +71,7 @@
+ 		SAVE_VARIABLE(gunboat2, 7);
+ 		SAVE_VARIABLE(gunboat3, 8);
+ 		SAVE_VARIABLE(keycard_objective_flags, 9);
++		SAVE_VARIABLE(mainframe_objective_flags, 10);
+ 	}
+ 
+ 	void Created(GameObject * obj)
+@@ -82,6 +85,7 @@
+ 		gunboat_triggered = gunboat1 = gunboat2 = gunboat3 = false;
+ 		rain = true;
+ 		keycard_objective_flags = 0;
++		mainframe_objective_flags = 0;
+ 	//	Commands->Add_Objective(1006, OBJECTIVE_TYPE_TERTIARY, OBJECTIVE_STATUS_HIDDEN, 1008, IDS_Enc_ObjTitle_Hidden_M03_02, NULL, IDS_Enc_Obj_Hidden_M03_02);
+ 	//	Commands->Add_Objective(1007, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_HIDDEN, 1009);
+ 	//	Commands->Add_Objective(1008, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_HIDDEN, 1010);
+@@ -445,6 +449,16 @@
+ 		case 1008:
+ 			{
+ 				Commands->Add_Objective(id, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M03_03, NULL, IDS_Enc_Obj_Primary_M03_03);
++				// Vita port: the terminal can be poked (308,1) before a base-entry zone
++				// sends 308,3 (con-yard zone after a west-elevator entry). Credit it once.
++				if (!(mainframe_objective_flags & 1))
++				{
++					mainframe_objective_flags |= 1;
++					if (mainframe_objective_flags & 2)
++					{
++						Commands->Set_Objective_Status(1008, OBJECTIVE_STATUS_ACCOMPLISHED);
++					}
++				}
+ 				object = Commands->Find_Object(1100009);
+ 				if(object)
+ 				{
+@@ -590,6 +604,11 @@
+ 			keycard_objective_flags |= 2; // Vita port: see Add_Mission_Objective(1007).
+ 		}
+ 
++		if (id == 1008)
++		{
++			mainframe_objective_flags |= 2; // Vita port: see Add_Mission_Objective(1008).
++		}
++
+ 		if (id == 1002)
+ 		{
+ 			sam_count_1++;

@@ -1,0 +1,69 @@
+M03 soft-lock: primary objective 1007 ("acquire the security card") can stay
+pending forever. Zone 2013086/2013087 (M03_Conversation_Zone 4, entered
+without key 1) starts the key conversation M03CON004, and only its end
+callback sends 307,3, which adds 1007. The keycard (M03_Key_Card, dropped by
+officer 1144682) sends 307,1 on pickup. If the card is picked up while
+M03CON004 is still playing (officer already dead near the basement door),
+307,1 arrives first, Set_Objective_Status(1007) finds no objective and does
+nothing, and the later add leaves 1007 pending.
+
+Remember the pickup in a saved flag (new id 9) and credit it once when 1007
+is added. In the normal order (add, then pickup) the flag is never consulted.
+Saves without id 9 load with the flag clear, which is the original behaviour.
+
+--- a/Mission03.cpp
++++ b/Mission03.cpp
+@@ -55,6 +55,8 @@
+ 	int background_song;
+ 	int battle_song;
+ 	int sender1;
++	// Vita port: bit 0 = objective 1007 added, bit 1 = keycard picked up.
++	int keycard_objective_flags;
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+@@ -66,6 +68,7 @@
+ 		SAVE_VARIABLE(gunboat1, 6);
+ 		SAVE_VARIABLE(gunboat2, 7);
+ 		SAVE_VARIABLE(gunboat3, 8);
++		SAVE_VARIABLE(keycard_objective_flags, 9);
+ 	}
+ 
+ 	void Created(GameObject * obj)
+@@ -78,6 +81,7 @@
+ 		sam_count_1 = sam_count_2 = 0;
+ 		gunboat_triggered = gunboat1 = gunboat2 = gunboat3 = false;
+ 		rain = true;
++		keycard_objective_flags = 0;
+ 	//	Commands->Add_Objective(1006, OBJECTIVE_TYPE_TERTIARY, OBJECTIVE_STATUS_HIDDEN, 1008, IDS_Enc_ObjTitle_Hidden_M03_02, NULL, IDS_Enc_Obj_Hidden_M03_02);
+ 	//	Commands->Add_Objective(1007, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_HIDDEN, 1009);
+ 	//	Commands->Add_Objective(1008, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_HIDDEN, 1010);
+@@ -415,6 +419,16 @@
+ 		case 1007:
+ 			{
+ 				Commands->Add_Objective(id, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M03_02, NULL, IDS_Enc_Obj_Primary_M03_02);
++				// Vita port: the keycard can be picked up while M03CON004 still plays,
++				// before its end callback adds 1007. Credit the pickup once here.
++				if (!(keycard_objective_flags & 1))
++				{
++					keycard_objective_flags |= 1;
++					if (keycard_objective_flags & 2)
++					{
++						Commands->Set_Objective_Status(1007, OBJECTIVE_STATUS_ACCOMPLISHED);
++					}
++				}
+ 				object = Commands->Find_Object(1215546);
+ 				if(object)
+ 				{
+@@ -571,6 +585,11 @@
+ 			gunboat1 = true;
+ 		}
+ 
++		if (id == 1007)
++		{
++			keycard_objective_flags |= 2; // Vita port: see Add_Mission_Objective(1007).
++		}
++
+ 		if (id == 1002)
+ 		{
+ 			sam_count_1++;

@@ -283,3 +283,110 @@ Line numbers refer to staged lines after all patches.
 - **Runtime evidence.** The paradrop, the `Create_3D_Sound_At_Bone` lifetime
   and the conversation callbacks still need Vita3K and physical runs. Nothing
   here proves runtime or visual correctness.
+
+## Soft-lock hunt (2026-10-07)
+
+Scope: `M03_*` scripts, `Sakura_Killed`, `RMV_M03_Comm_Center_Terminal`,
+`RMV_Volcano_And_Lava_Ball_Creator`, `DLS_Volcano_Active` and the M03
+cinematics. The `M10_*` scripts in Mission03.cpp were left alone. Evidence
+class: staged source plus read-only host parsing of the unchanged Vita3K
+retail `M03.mix`/`always.dbs`/`always.dat`. Checks run: ARM `-fsyntax-only`
+of the patched file (exit 0, 139 warnings, the same count as the unpatched
+file) and host `tools.test_m03_pointer_exchange` plus
+`tools.test_custom_event_delivery` (OK). Nothing was built, launched or run on
+a device. Line numbers are staged lines after all patches.
+
+### Completion path and conversation key flags
+
+- `Mission_Complete(true)` has one owner: star-only zone 2000817 (definition
+  519, `check_stars_only`) at (-298.3, 78.2, 6.3), :6033. No objective gates
+  it. The only locked door between the base and that area is the key-6 door
+  (definition 328960015) at (-159.8, 61.7, 8.8). Key 6 comes only from
+  `Sakura_Killed::Killed` (:1358). Sakura's "Boss" is created only when
+  M03CON008 ends (`RMV_M03_Comm_Center_Terminal`, :1430-1456). M03CON008 is
+  started by the first star poke of terminal 1100009. Basement doors use
+  keys 1/2 (key-1 door at (-102.8, 33.7, -2.0), under the Comm Center at
+  (-104.2, 38.3)). Key 1 comes only from officer 1144682's `Level_01_Keycard`
+  drop (:4732).
+- Key flags from `m03.ldd` (`ConversationClass` `VARID_ISKEY` = 13). **Key:**
+  M03CON001-008, 010, 012 and 026. **Not key:** 009, 011, 013-025, 027-054
+  and 061-068. M03CON008 and M03CON010 are key, so `Start_Conversation`
+  never pre-empts them, and their handlers ignore the reason. A later key
+  conversation stops them through `ConversationMgrClass::Think` with ENDED,
+  which still notifies the monitor. The hard chain has **no reachable
+  conversation drop**.
+- Sakura can be finished only by star damage (`Damaged` heals below 5 HP for
+  other damagers). M03 places no drivable vehicle and creates none at runtime
+  (only the AI gunboat, harvester and turrets), so a vehicle damager cannot
+  occur.
+- `Level_01_Keycard` never expires. `PowerUpGameObj::Expire` is reached only
+  through the script command, and M03 never calls it.
+
+### Fixed (one patch per issue, registered after the M03 paradrop patch)
+
+Each fix stores state in a new saved controller variable on 1100004 (ids
+9-12). Saves without those ids load with the flag clear, which is the
+original behaviour. On the normal ordering the new branch is never taken.
+Staging: 548 ordered patches, zero fuzz, exit 0.
+
+| Patch | Issue | Site | Reachability | Severity |
+|---|---|---|---|---|
+| `scripts-a38-m03-keycard-objective-late-add` | Keycard pickup (307,1) arrives while key conversation M03CON004 still plays, before its end callback adds 1007 (307,3). The completion is dropped and primary 1007 stays pending. | add :458-470, complete :637-640 | Plausible: officer already dead near the basement-door zone (2013086/2013087). Killing the officer *during* M03CON004 is safe, because M03CON005 (key) stops M03CON004 with ENDED first. | Medium (primary objective) |
+| `scripts-a38-m03-mainframe-objective-late-add` | Terminal poke (308,1) before any 308,3. Zones 1144502 and 1100005 delete themselves through their own `RMV_Trigger_Zone` on the same entry, so the M03CON003 → M03CON002 → 308,3 callback chain and the 2 s M03CON002 timer never run. After a west-elevator entry, 308,3 comes only from con-yard zone 1144636 (x = -131.7, between the elevator and the key-6 door). | add :484-496, complete :642-645 | Plausible: elevator to Comm Center, poke, then cross 1144636 heading west. Placement relative to the elevator exit is not derived. | Medium (primary objective) |
+| `scripts-a38-m03-shore-sam-objective-late-add` | Both shore SAMs (300058/300059, 304,1) die before key conversation M03CON026 (zone 1100007/1100015) ends and adds 1004. | add :127-140, count :683-686 | Reachable: SAMs killed from range or by the gunboat (`cannon_targets`) before the zone, or during the conversation. | Low (secondary objective) |
+| `scripts-a38-m03-village-sam-objective-late-add` | Both village SAMs (300056/1100020, 302,1) die and M03CON020 finishes before zone 1100006 → `M03_Chinook_Fodder_Creator` sends 302,3 (add). | add :421-433, report :161 | Reachable: SAMs killed by the gunboat at the village or from range before the zone. | Low (secondary objective) |
+| `scripts-a38-m03-village-sam-report-fallback` | Completion of 1002 is only the end callback (100020) of **non-key** M03CON020 (:661). A key conversation that is playing (M03CON026 or M03CON005) pre-empts it before `Monitor_Conversation`. | timer :666-669, :325-328, `Report_Village_Sams` :734-743 | Narrow: the second village SAM dies while a key line plays. 30 s fallback; the two-remark conversation reports first on the normal path. | Low (secondary objective) |
+
+### Unreachable, retail-identical or deferred (no change)
+
+- **Intro chain (`M03_Intro_Substitute`, :3837).** Objectives 1000 and 1001
+  are added only through the end callback of non-key M03CON039, started by
+  an 8.5 s timer. The chain is M03CON039 → M03CON001 → 300,3 → M03CON012 →
+  301,3. No level, preset or cinematic data in `M03.mix`, `always.dbs` or
+  `always.dat` references `x3_intro.txt`, so this chain is the only adder.
+  That corrects the "Intro" row of the objective-chain table above.
+  Pre-emption needs a key conversation within the first 8.5 s, and
+  none can start that early (all key lines are base, cannon or terminal
+  lines). Unreachable.
+- **1000 / BASE_ENTERED on the west route.** The zone self-deletion above
+  also drops conv-3's 300,1. After an elevator entry, 1000 completes and the
+  Comm Center becomes damageable only when con-yard zone 1144636
+  (`M03_ConYardSeen`) is crossed. The designers suppress that zone through
+  900 from the east zone 1100005. Retail-identical. It is left alone because
+  a fix would move 1000's completion earlier on the west route. Needs a
+  route check on Vita3K.
+- **Gunboat killed by anything except the shore cannon.** No
+  `GUNBOAT_KILLED` is sent, so 1001, 1002 and 1004 are neither failed nor
+  completable: 302/304 are dropped while 1100003 is gone (:203), and
+  `M03_Beach_Scenario_Controller` needs the gunboat. This is a design rule
+  (protect the gunboat), and the gunboat carries `M00_Damage_Modifier_DME`.
+  Deferred.
+- **Escape 1010.** Its only completer (310,1) is the unbound
+  `M03_Outro_Cinematic`. This is retail-identical, and the exit zone
+  completes the mission anyway.
+- **Keycard placement.** `Level_01_Keycard` is created at the officer's
+  death position + 0.5 m and has no alternative source, so a drop in an
+  unreachable spot cannot be recovered. Retail-identical. Officer placement
+  was not derived.
+- **Key 5 revoke.** `Grant_Key(STAR,5,false)` (:1451) locks the east key-5
+  door (-47.4, 44.4) after M03CON008. The exit route runs west through the
+  key-6 door. Retail design.
+- **Commando re-arm.** `M03_Commando_Script::Destroyed` → 12176 →
+  `M03_Initial_Powerups` re-grants key 5 only to a live star. The star is
+  destroyed only on death or teardown, so no live star is re-armed.
+  Unreachable.
+- **Counters.** The beach counter has exactly four senders (1144677, 1144448,
+  1144731, 1144732; `RMV_Trigger_Killed`). The SAM counters have two senders
+  each. None filters on the killer (`M00_Trigger_When_Killed_RMV` fires on
+  any `Killed`). No undercount except the gunboat rule above.
+- **Save/load.** Keys persist in `SoldierGameObj::KeyRing`. The runtime "Boss"
+  and the active M03CON008 monitor are saved and relinked. Loading while
+  M03CON008 plays delivers INTERRUPTED to the old world's terminal script
+  during `Release_Level`, which creates a Boss that `Destroy_All` removes.
+  This is retail-identical.
+
+Physical signature for the fixes: an objective that is added already
+accomplished prints a new-objective line followed by a status-changed line in
+the same frame. If 1002 is reported by the fallback timer, the
+`M03CON020` transition-end record has no kind-3 observer call, and 1002
+becomes accomplished 30 s after the second village SAM dies.

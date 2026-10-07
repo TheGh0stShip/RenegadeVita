@@ -1,0 +1,76 @@
+M03 soft-lock: secondary objective 1002 (village SAM sites) is completed only
+by the end callback of M03CON020. M03CON020 is not a key conversation
+(m03.ldd VARID_ISKEY 0). ActiveConversationClass::Start_Conversation stops a
+non-key conversation at once (INTERRUPTED) while a key conversation is
+playing, before the script's Monitor_Conversation registers, so 100020 is
+never delivered. M03CON026 (shore SAM briefing) and M03CON005 (keycard
+officer) are key conversations that can be playing when the second village
+SAM dies.
+
+Start a 30 s fallback timer next to M03CON020 and credit 1002 once, from
+whichever comes first: the conversation end or the timer. M03CON020 has two
+remarks and ends well inside 30 s, so on the normal path the conversation
+reports first and the timer finds the report already made.
+
+--- a/Mission03.cpp
++++ b/Mission03.cpp
+@@ -47,6 +47,8 @@
+ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
+ {
+ 	enum {WEATHER_TIMER};
++	// Vita port: fallback for a pre-empted M03CON020 (see Complete_Mission_Objective).
++	enum {VILLAGE_SAM_REPORT_TIMER = 3020};
+ 	
+ 	int sam_count_1, sam_count_2;
+ 	bool gunboat_triggered, rain;
+@@ -156,8 +158,7 @@
+ 				//Commands->Start_Conversation(id, 100066);
+ 				//Commands->Monitor_Conversation(obj, id);
+ 
+-				village_sam_objective_flags |= 2; // Vita port: see Add_Mission_Objective(1002).
+-				Commands->Set_Objective_Status(1002, OBJECTIVE_STATUS_ACCOMPLISHED);
++				Report_Village_Sams(); // Vita port: once, shared with the fallback timer.
+ 			}
+ 
+ 			if (action_id == 100028)
+@@ -321,6 +322,11 @@
+ 			Sam_Sites_1_Dialogue();
+ 		}
+ 
++		if (timer_id == VILLAGE_SAM_REPORT_TIMER)
++		{
++			Report_Village_Sams();
++		}
++
+ 		if (timer_id == 1004)
+ 		{
+ 			//Commands->Create_Object("Level_3_Objective_Powerup_Temp", Vector3(48.3f, 79.2f, 21.0f));
+@@ -657,6 +663,10 @@
+ 				Commands->Join_Conversation(STAR, id);
+ 				Commands->Start_Conversation(id, 100020);
+ 				Commands->Monitor_Conversation(controller, id);
++				// Vita port: M03CON020 is not a key conversation. If a key conversation
++				// is playing, Start_Conversation stops it before Monitor_Conversation
++				// registers, so 100020 never arrives. Report 1002 after a grace period.
++				Commands->Start_Timer(Owner(), this, 30.0f, VILLAGE_SAM_REPORT_TIMER);
+ 
+ 				//Commands->Create_Object("Level_3_Objective_Powerup_Temp", Vector3(73.624f, -78.110f, 0.7f));
+ 				
+@@ -721,6 +731,17 @@
+ 		}
+ 	}
+ 
++	// Vita port: credit the village SAM report exactly once (conversation end
++	// or fallback timer, whichever comes first).
++	void Report_Village_Sams(void)
++	{
++		if (!(village_sam_objective_flags & 2))
++		{
++			village_sam_objective_flags |= 2;
++			Commands->Set_Objective_Status(1002, OBJECTIVE_STATUS_ACCOMPLISHED);
++		}
++	}
++
+ 	void Fail_Mission_Objective(int id)
+ 	{
+ 		Commands->Set_Objective_Status(id, OBJECTIVE_STATUS_FAILED);

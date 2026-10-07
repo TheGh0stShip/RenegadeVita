@@ -47,6 +47,8 @@
 DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 {
 	enum {WEATHER_TIMER};
+	// Vita port: fallback for a pre-empted M03CON020 (see Complete_Mission_Objective).
+	enum {VILLAGE_SAM_REPORT_TIMER = 3020};
 	
 	int sam_count_1, sam_count_2;
 	bool gunboat_triggered, rain;
@@ -55,6 +57,14 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 	int background_song;
 	int battle_song;
 	int sender1;
+	// Vita port: bit 0 = objective 1007 added, bit 1 = keycard picked up.
+	int keycard_objective_flags;
+	// Vita port: bit 0 = objective 1008 added, bit 1 = mainframe poked.
+	int mainframe_objective_flags;
+	// Vita port: bit 0 = objective 1004 added, bit 1 = both shore SAMs destroyed.
+	int shore_sam_objective_flags;
+	// Vita port: bit 0 = objective 1002 added, bit 1 = village SAMs reported.
+	int village_sam_objective_flags;
 
 	REGISTER_VARIABLES()
 	{
@@ -66,6 +76,10 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 		SAVE_VARIABLE(gunboat1, 6);
 		SAVE_VARIABLE(gunboat2, 7);
 		SAVE_VARIABLE(gunboat3, 8);
+		SAVE_VARIABLE(keycard_objective_flags, 9);
+		SAVE_VARIABLE(mainframe_objective_flags, 10);
+		SAVE_VARIABLE(shore_sam_objective_flags, 11);
+		SAVE_VARIABLE(village_sam_objective_flags, 12);
 	}
 
 	void Created(GameObject * obj)
@@ -78,6 +92,10 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 		sam_count_1 = sam_count_2 = 0;
 		gunboat_triggered = gunboat1 = gunboat2 = gunboat3 = false;
 		rain = true;
+		keycard_objective_flags = 0;
+		mainframe_objective_flags = 0;
+		shore_sam_objective_flags = 0;
+		village_sam_objective_flags = 0;
 	//	Commands->Add_Objective(1006, OBJECTIVE_TYPE_TERTIARY, OBJECTIVE_STATUS_HIDDEN, 1008, IDS_Enc_ObjTitle_Hidden_M03_02, NULL, IDS_Enc_Obj_Hidden_M03_02);
 	//	Commands->Add_Objective(1007, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_HIDDEN, 1009);
 	//	Commands->Add_Objective(1008, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_HIDDEN, 1010);
@@ -109,6 +127,16 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 			if (action_id == 2)
 			{
 				Commands->Add_Objective(1004, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Secondary_M03_03, NULL, IDS_Enc_Obj_Secondary_M03_03);
+				// Vita port: both shore SAMs can die before M03CON026 ends and adds
+				// 1004 (or before its zone is entered). Credit them once here.
+				if (!(shore_sam_objective_flags & 1))
+				{
+					shore_sam_objective_flags |= 1;
+					if (shore_sam_objective_flags & 2)
+					{
+						Commands->Set_Objective_Status(1004, OBJECTIVE_STATUS_ACCOMPLISHED);
+					}
+				}
 				object = Commands->Find_Object(1205777);
 				if(object)
 				{
@@ -130,7 +158,7 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 				//Commands->Start_Conversation(id, 100066);
 				//Commands->Monitor_Conversation(obj, id);
 
-				Commands->Set_Objective_Status(1002, OBJECTIVE_STATUS_ACCOMPLISHED);
+				Report_Village_Sams(); // Vita port: once, shared with the fallback timer.
 			}
 
 			if (action_id == 100028)
@@ -294,6 +322,11 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 			Sam_Sites_1_Dialogue();
 		}
 
+		if (timer_id == VILLAGE_SAM_REPORT_TIMER)
+		{
+			Report_Village_Sams();
+		}
+
 		if (timer_id == 1004)
 		{
 			//Commands->Create_Object("Level_3_Objective_Powerup_Temp", Vector3(48.3f, 79.2f, 21.0f));
@@ -388,6 +421,16 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 		case 1002: 
 			{
 				Commands->Add_Objective(1002, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Secondary_M03_02, NULL, IDS_Enc_Obj_Secondary_M03_02);
+				// Vita port: both village SAMs can die (and M03CON020 can finish) before
+				// zone 1100006 sends 302,3. Credit the earlier report once here.
+				if (!(village_sam_objective_flags & 1))
+				{
+					village_sam_objective_flags |= 1;
+					if (village_sam_objective_flags & 2)
+					{
+						Commands->Set_Objective_Status(1002, OBJECTIVE_STATUS_ACCOMPLISHED);
+					}
+				}
 				object = Commands->Find_Object(300056);
 				if(object)
 				{
@@ -415,6 +458,16 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 		case 1007:
 			{
 				Commands->Add_Objective(id, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M03_02, NULL, IDS_Enc_Obj_Primary_M03_02);
+				// Vita port: the keycard can be picked up while M03CON004 still plays,
+				// before its end callback adds 1007. Credit the pickup once here.
+				if (!(keycard_objective_flags & 1))
+				{
+					keycard_objective_flags |= 1;
+					if (keycard_objective_flags & 2)
+					{
+						Commands->Set_Objective_Status(1007, OBJECTIVE_STATUS_ACCOMPLISHED);
+					}
+				}
 				object = Commands->Find_Object(1215546);
 				if(object)
 				{
@@ -431,6 +484,16 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 		case 1008:
 			{
 				Commands->Add_Objective(id, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M03_03, NULL, IDS_Enc_Obj_Primary_M03_03);
+				// Vita port: the terminal can be poked (308,1) before a base-entry zone
+				// sends 308,3 (con-yard zone after a west-elevator entry). Credit it once.
+				if (!(mainframe_objective_flags & 1))
+				{
+					mainframe_objective_flags |= 1;
+					if (mainframe_objective_flags & 2)
+					{
+						Commands->Set_Objective_Status(1008, OBJECTIVE_STATUS_ACCOMPLISHED);
+					}
+				}
 				object = Commands->Find_Object(1100009);
 				if(object)
 				{
@@ -571,6 +634,16 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 			gunboat1 = true;
 		}
 
+		if (id == 1007)
+		{
+			keycard_objective_flags |= 2; // Vita port: see Add_Mission_Objective(1007).
+		}
+
+		if (id == 1008)
+		{
+			mainframe_objective_flags |= 2; // Vita port: see Add_Mission_Objective(1008).
+		}
+
 		if (id == 1002)
 		{
 			sam_count_1++;
@@ -590,6 +663,10 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 				Commands->Join_Conversation(STAR, id);
 				Commands->Start_Conversation(id, 100020);
 				Commands->Monitor_Conversation(controller, id);
+				// Vita port: M03CON020 is not a key conversation. If a key conversation
+				// is playing, Start_Conversation stops it before Monitor_Conversation
+				// registers, so 100020 never arrives. Report 1002 after a grace period.
+				Commands->Start_Timer(Owner(), this, 30.0f, VILLAGE_SAM_REPORT_TIMER);
 
 				//Commands->Create_Object("Level_3_Objective_Powerup_Temp", Vector3(73.624f, -78.110f, 0.7f));
 				
@@ -606,6 +683,7 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 			if (sam_count_2 >= 2)
 			{
 				gunboat3 = true;
+				shore_sam_objective_flags |= 2; // Vita port: see Action_Complete(2).
 
 				Commands->Set_Objective_Status(1004, OBJECTIVE_STATUS_ACCOMPLISHED);
 
@@ -650,6 +728,17 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 		if (id != 1002 && id != 1004 && id != 1009 && id != 1011 && id != 1012)
 		{
 			Commands->Set_Objective_Status(id, OBJECTIVE_STATUS_ACCOMPLISHED);
+		}
+	}
+
+	// Vita port: credit the village SAM report exactly once (conversation end
+	// or fallback timer, whichever comes first).
+	void Report_Village_Sams(void)
+	{
+		if (!(village_sam_objective_flags & 2))
+		{
+			village_sam_objective_flags |= 2;
+			Commands->Set_Objective_Status(1002, OBJECTIVE_STATUS_ACCOMPLISHED);
 		}
 	}
 

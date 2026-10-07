@@ -92,5 +92,24 @@ int main()
 		"default Vita camera response corrects physical up/down orientation", checks, failures);
 	printf("A3.2 Vita controller axis-contract: %s (%u checks, %u failures)\n",
 		failures == 0U ? "PASS" : "FAIL", checks, failures);
+	{
+		// Light tilt must not vanish at 60 Hz and must match 30 Hz over 1 s.
+		float r60 = 0.0f, r30 = 0.0f;
+		int32_t sum60 = 0, sum30 = 0;
+		for (int i = 0; i < 60; ++i)
+			sum60 += To_Camera_Mouse_Delta(0.05f, 1.0f / 60.0f, 1.0f, false, r60);
+		for (int i = 0; i < 30; ++i)
+			sum30 += To_Camera_Mouse_Delta(0.05f, 1.0f / 30.0f, 1.0f, false, r30);
+		Check(To_Camera_Mouse_Delta(0.05f, 1.0f / 60.0f) == 0 && sum60 > 0,
+			"camera residual preserves light tilt at 60 Hz", checks, failures);
+		Check(sum60 - sum30 <= 1 && sum30 - sum60 <= 1,
+			"camera residual matches 30 Hz and 60 Hz motion", checks, failures);
+		float rn = 0.0f; int32_t sumn = 0;
+		for (int i = 0; i < 60; ++i)
+			sumn += To_Camera_Mouse_Delta(-0.05f, 1.0f / 60.0f, 1.0f, false, rn);
+		Check(sumn == -sum60, "camera residual is sign symmetric", checks, failures);
+		To_Camera_Mouse_Delta(0.0f, 1.0f / 60.0f, 1.0f, false, r60);
+		Check(r60 == 0.0f, "camera residual clears at neutral", checks, failures);
+	}
 	return failures == 0U ? 0 : 1;
 }

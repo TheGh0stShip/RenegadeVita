@@ -48,6 +48,7 @@ namespace {
 
 RenegadeVitaInputTelemetry g_vita_input_telemetry = {};
 long g_vita_joystick_axis[2] = {};
+float g_vita_camera_residual[2] = {};
 RenegadeVitaInput::SelectTap g_select_tap;
 bool g_select_capture_enabled = false;
 
@@ -555,6 +556,7 @@ void DirectInput::Flush(void)
 	memset(DIMouseAxis, 0, sizeof(DIMouseAxis));
 	memset(RenegadeVitaWWUIKeyState, 0, sizeof(RenegadeVitaWWUIKeyState));
 	memset(g_vita_joystick_axis, 0, sizeof(g_vita_joystick_axis));
+	memset(g_vita_camera_residual, 0, sizeof(g_vita_camera_residual));
 	LastKeyPressed = 0;
 }
 
@@ -831,12 +833,16 @@ void DirectInput::Read(void)
 	if (gameplay_input_active) {
 		DIMouseAxis[MOUSE_X_AXIS] = RenegadeVitaInput::To_Camera_Mouse_Delta(
 			right.x.normalized, frame_seconds,
-			RenegadeVitaInput::DEFAULT_CAMERA_RESPONSE.horizontal_scale);
+			RenegadeVitaInput::DEFAULT_CAMERA_RESPONSE.horizontal_scale, false,
+			g_vita_camera_residual[MOUSE_X_AXIS]);
 		DIMouseAxis[MOUSE_Y_AXIS] = RenegadeVitaInput::To_Camera_Mouse_Delta(
 			right.y.normalized, frame_seconds,
 			RenegadeVitaInput::DEFAULT_CAMERA_RESPONSE.vertical_scale,
-			RenegadeVitaInput::DEFAULT_CAMERA_RESPONSE.invert_y);
+			RenegadeVitaInput::DEFAULT_CAMERA_RESPONSE.invert_y,
+			g_vita_camera_residual[MOUSE_Y_AXIS]);
 	} else {
+		g_vita_camera_residual[MOUSE_X_AXIS] = 0.0f;
+		g_vita_camera_residual[MOUSE_Y_AXIS] = 0.0f;
 		DIMouseAxis[MOUSE_X_AXIS] = 0;
 		DIMouseAxis[MOUSE_Y_AXIS] = 0;
 	}

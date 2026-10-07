@@ -179,4 +179,24 @@ inline int32_t To_Camera_Mouse_Delta(float normalized, float frame_seconds,
 	return static_cast<int32_t>(delta + (delta >= 0.0f ? 0.5f : -0.5f));
 }
 
+// Integer mouse deltas truncate small per-frame camera motion: at 60 Hz a
+// light right-stick tilt yields <0.5 units and rounds to zero every frame,
+// while the same tilt at 30 Hz produces motion. Carry the sub-unit remainder
+// across frames so slow aiming is continuous and frame-rate independent.
+inline int32_t To_Camera_Mouse_Delta(float normalized, float frame_seconds,
+	float axis_scale, bool invert, float &residual)
+{
+	const float bounded_seconds = Clamp(frame_seconds, 0.0f,
+		MAX_INPUT_FRAME_SECONDS);
+	float response = Apply_Camera_Response(normalized) *
+		Clamp(axis_scale, 0.0f, 2.0f);
+	if (invert) response = -response;
+	if (response == 0.0f) { residual = 0.0f; return 0; }
+	const float delta = residual +
+		response * CAMERA_MOUSE_UNITS_PER_SECOND * bounded_seconds;
+	const int32_t whole = static_cast<int32_t>(delta);
+	residual = Clamp(delta - static_cast<float>(whole), -1.0f, 1.0f);
+	return whole;
+}
+
 } // namespace RenegadeVitaInput

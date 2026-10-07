@@ -214,7 +214,23 @@
  void DlgMPTeamSelect::RequestWOLGameInfo(void)
  	{
  	WWDEBUG_SAY(("DlgMPTeamSelect requesting game info\n"));
-@@ -1017,6 +1067,7 @@
+@@ -558,6 +608,7 @@
+ 		mWOLSession->SendPrivateGameOptions(channel->GetName(), "RGINFO");
+ 		}
+ 	}
++#endif
+ 
+ 
+ /******************************************************************************
+@@ -647,6 +698,7 @@
+ 	}
+ 
+ 
++#if !defined(RENEGADE_VITA_LAN_FRONTEND)
+ /******************************************************************************
+ *
+ * NAME
+@@ -1017,6 +1069,7 @@
  			}
  		}
  	}

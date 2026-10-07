@@ -609,6 +609,7 @@ void DlgMPTeamSelect::RequestWOLGameInfo(void)
 		mWOLSession->SendPrivateGameOptions(channel->GetName(), "RGINFO");
 		}
 	}
+#endif
 
 
 /******************************************************************************
@@ -698,6 +699,7 @@ bool DlgMPTeamSelect::FindPlayerInListCtrl(const WCHAR* name, ListCtrlClass*& ou
 	}
 
 
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 /******************************************************************************
 *
 * NAME

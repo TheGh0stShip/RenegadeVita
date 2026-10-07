@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "89555246aa209416d9e425a6e95f5d64b704ce5f6d70ffbb849c26fd86c2eebd",
-  "patch_count": 507,
+  "stage_script_sha256": "c701689bace2fbd07a45f0fa896798d71925457c137724751f256f2e3c569d8c",
+  "patch_count": 511,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1060,6 +1060,11 @@
       "sha256": "939655508ca44caebc7b7a7d6bee0d1f54fce7e2b1d805e9c0c7a9d6cc4417e8"
     },
     {
+      "path": "port/patches/scripts-a36-m01-save-variable-ids.patch",
+      "stage_directory": "scripts",
+      "sha256": "98ee8984385ec0c333cfdb38bb885d2b8d139cd6181dda9d6583ba23e21a7396"
+    },
+    {
       "path": "port/patches/wwphys-a35-model-install-timing.patch",
       "stage_directory": "wwphys",
       "sha256": "e50f37874bbae65a036fe1880d4e6120f098000a34d9b67b8dc83df3fdbd5e1a"
@@ -1653,6 +1658,21 @@
       "path": "port/patches/scripts-a35-cinematic-original-dispatch.patch",
       "stage_directory": "scripts",
       "sha256": "841481b6c752edb0a6baeb81bdb4dce6f1ef04fa95f4d0ddd95c3810e52cebc1"
+    },
+    {
+      "path": "port/patches/scripts-a36-m09-keycard-mobius-refetch.patch",
+      "stage_directory": "scripts",
+      "sha256": "f7427f6ba596ef922a15e3933103b8269d0c5c42e84df7f8ceb660bb56668b56"
+    },
+    {
+      "path": "port/patches/scripts-a36-m10-gate-check-save-flags.patch",
+      "stage_directory": "scripts",
+      "sha256": "1fc7a1a73aa2f64fee5a052d48483c3b66c4ee13528b376533a0e460b879d18f"
+    },
+    {
+      "path": "port/patches/scripts-a36-m05-dead6-help-failed-text-save.patch",
+      "stage_directory": "scripts",
+      "sha256": "e5c6f8fde4b5325ebf559015fb593cc1feec2fdd4605c417dae835e817b6cf8a"
     },
     {
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
@@ -2367,7 +2387,7 @@
     {
       "path": "port/patches/combat-a36-boss-load-status.patch",
       "stage_directory": "combat",
-      "sha256": "c69c59d86e887651aeb68c14d30e69672c57938d83098ef232f3733c42fa28af"
+      "sha256": "7ef70017f7b1f4ebe4d1e65dffb404637f802108f3e4ec2e9fc8c624e1360a06"
     },
     {
       "path": "port/patches/wwphys-a36-base-load-status.patch",
@@ -2540,5 +2560,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "274af13bfc2f41b97feeb7c51389b1b3e9baa16cd60e0b052fb9546d7c80b46b"
+  "registry_sha256": "94e09eb52d38366223f45182aebe6b969dd3cbad1db44fe9db7f124ede494421"
 }

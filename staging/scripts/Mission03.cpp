@@ -65,6 +65,8 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 	int shore_sam_objective_flags;
 	// Vita port: bit 0 = objective 1002 added, bit 1 = village SAMs reported.
 	int village_sam_objective_flags;
+	// Vita port: bit 0 = objective 1000 completed, bit 1 = credited at the terminal poke.
+	int base_objective_flags;
 
 	REGISTER_VARIABLES()
 	{
@@ -80,6 +82,7 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 		SAVE_VARIABLE(mainframe_objective_flags, 10);
 		SAVE_VARIABLE(shore_sam_objective_flags, 11);
 		SAVE_VARIABLE(village_sam_objective_flags, 12);
+		SAVE_VARIABLE(base_objective_flags, 13);
 	}
 
 	void Created(GameObject * obj)
@@ -96,6 +99,7 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 		mainframe_objective_flags = 0;
 		shore_sam_objective_flags = 0;
 		village_sam_objective_flags = 0;
+		base_objective_flags = 0;
 	//	Commands->Add_Objective(1006, OBJECTIVE_TYPE_TERTIARY, OBJECTIVE_STATUS_HIDDEN, 1008, IDS_Enc_ObjTitle_Hidden_M03_02, NULL, IDS_Enc_Obj_Hidden_M03_02);
 	//	Commands->Add_Objective(1007, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_HIDDEN, 1009);
 	//	Commands->Add_Objective(1008, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_HIDDEN, 1010);
@@ -210,6 +214,13 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 			sender1 = Commands->Get_ID ( sender );
 		}
 		
+		// Vita port: 1000 was already credited at the terminal poke (see
+		// Complete_Mission_Objective(1008)). A later base-entry 300,1 is a repeat.
+		if (type == 300 && param == 1 && (base_objective_flags & 2))
+		{
+			return;
+		}
+
 		if (type >= 300 && type <= 312)
 		{
 			switch(param)
@@ -586,6 +597,7 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 
 		if (id == 1000)
 		{
+			base_objective_flags |= 1; // Vita port: see Complete_Mission_Objective(1008).
 			GameObject * com_center = Commands->Find_Object (1150002);
 			Commands->Send_Custom_Event(controller, com_center, BASE_ENTERED, 0);
 		}
@@ -642,6 +654,18 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 		if (id == 1008)
 		{
 			mainframe_objective_flags |= 2; // Vita port: see Add_Mission_Objective(1008).
+
+			// Vita port: on the west (elevator) route zone 1144502 deletes itself
+			// before M03CON003 ends, so its 300,1 is lost, and crossing east zone
+			// 1100005 next suppresses con-yard zone 1144636. Then 1000 never
+			// completes and the Comm Center keeps healing. Poking its mainframe
+			// proves it was located. The same poke sends MCT_ACCESSED
+			// (M03_Mct_Poke), so destroying the Comm Center can no longer fail.
+			if (!(base_objective_flags & 1))
+			{
+				base_objective_flags |= 2;
+				Complete_Mission_Objective(1000);
+			}
 		}
 
 		if (id == 1002)
@@ -1245,6 +1269,11 @@ DECLARE_SCRIPT(M03_Gunboat_Controller_RMV, "Receive_Type:int, Receive_Param_For_
 			Commands->Join_Conversation(STAR, id);
 			Commands->Start_Conversation(id, 100018);
 			Commands->Monitor_Conversation(obj, id);
+
+			// Vita port: give any gunboat death the shore cannon outcome. Otherwise
+			// 1001/1002/1004 stay pending for the rest of the mission and, at HUD
+			// priority 99/98/97, keep the default objective pointer off the primaries.
+			Commands->Send_Custom_Event(obj, Commands->Find_Object (1100004), GUNBOAT_KILLED, 0);
 
 			//Commands->Send_Custom_Event(obj, Commands->Find_Object (1100004), 302, 2);
 		}
@@ -6030,6 +6059,11 @@ DECLARE_SCRIPT(M03_Mission_Complete_Zone, "")
 		{
 			already_entered = true;
 			
+			// Vita port: Escape (1010) has no live completer; its 310,1 sender
+			// M03_Outro_Cinematic is not bound. Complete it here, once, before the
+			// mission ends (synchronous; a no-op if 1010 was never added).
+			Commands->Send_Custom_Event(obj, Commands->Find_Object(1100004), 310, 1, 0);
+
 			Commands->Mission_Complete ( true );
 		}
 	}

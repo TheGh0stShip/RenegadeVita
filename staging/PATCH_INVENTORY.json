@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "3403e0f0a0cdba2e4fd7839c6148817df5ba9a72a1b1d5d48d650e687a460434",
-  "patch_count": 572,
+  "stage_script_sha256": "703339135ef3b636418bacb4276e26fd82cba40f0ca7ad9ce0ecbc754d443df5",
+  "patch_count": 573,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1725,11 +1725,6 @@
       "sha256": "97710b22d758935849cc7e2add50deb6f1fe6ad2578d2375d41fb0e6c08d735c"
     },
     {
-      "path": "port/patches/scripts-a38-m02-followup-midtro-mendoza-repair-latch.patch",
-      "stage_directory": "scripts",
-      "sha256": "27a6b5e6dcbf77e4d776a24a3f763094ceed5140e509a0c097a63bc8103187c4"
-    },
-    {
       "path": "port/patches/scripts-a36-mx0-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "d64ed5c8485bd81670ab5a50e849a8e5090bbfc9d36f97ea584c34b56bb0468b"
@@ -1768,6 +1763,21 @@
       "path": "port/patches/scripts-a38-m03-village-sam-report-fallback.patch",
       "stage_directory": "scripts",
       "sha256": "7a154a51a8cf1cf3908db07031e6bcb9b90dd883aa8af8230f545b88d026740d"
+    },
+    {
+      "path": "port/patches/scripts-a38-m03-gunboat-any-killer-outcome.patch",
+      "stage_directory": "scripts",
+      "sha256": "7ae4d873e57edcb47808e695610b4a34ff05fe0a1a6a43dc0544dee3d24bd931"
+    },
+    {
+      "path": "port/patches/scripts-a38-m03-comm-center-located-at-terminal.patch",
+      "stage_directory": "scripts",
+      "sha256": "0fac0b877f0f3233d430169b160d436f3e7f3748756f71e21f8c92e450ab6654"
+    },
+    {
+      "path": "port/patches/scripts-a38-m03-escape-objective-at-exit.patch",
+      "stage_directory": "scripts",
+      "sha256": "bb192ba9c9da2ae421cb0265b5e3b72a614d2c8db60d89ac166affab8c310a53"
     },
     {
       "path": "port/patches/scripts-a36-m04-save-variable-ids.patch",
@@ -2815,11 +2825,6 @@
       "sha256": "330307d3b7cc4d80176c4fa5c9346d26eac23cfda291b3aba7d1aaff2411835d"
     },
     {
-      "path": "port/patches/scripts-a38-m01-followup-save-and-turrets-fallback.patch",
-      "stage_directory": "scripts",
-      "sha256": "5887a5da86e03064a28b38ef95002d7287a3327a9f6900195da7c3b1a7072d47"
-    },
-    {
       "path": "port/patches/combat-a37-screen-overlay-opacity-clamp.patch",
       "stage_directory": "combat",
       "sha256": "1fd9784eff93c659fa39a08322828cb55ab49dca36582e540f51be432e85a82a"
@@ -2865,5 +2870,5 @@
       "sha256": "fc6b37a6f0f9ef5136fbe67e950835ee8b2084fb57f42d6611599f96636e3a56"
     }
   ],
-  "registry_sha256": "bb6441b91baebcabef3f5ea1b7e38550dad10a8d881bcbd469216250501321d5"
+  "registry_sha256": "9a2ac64463b79402dbe25fd4b81cc0a4ab7784a751eb79a72af498d093d164c9"
 }

@@ -1,5 +1,31 @@
 # Live engineering progress
 
+# Campaign development push 2 — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Completed (source/data evidence and ARM -fsyntax-only only; nothing linked, emulated or run on hardware):
+- Boss completion paths: Raveshaw arc-effect/lightning-rod null guards; Mendoza death-camera
+  and Raveshaw death-facing/catwalk waypath guards that still reach Mission_Complete(true).
+- Save state: all remaining duplicate SAVE_VARIABLE ids fixed (MX0, M03, M04, M05, M11; audit
+  reports 0); M09 objective[3] and M02 rocket_soldier_speech saved; M05 APC id buffer bounded.
+  Script pointer sweep found no further stale-pointer reads. Admission-rule coverage review
+  found no rule that rejects a valid mid-mission quicksave (remap-failure risk noted).
+- Campaign chain: unconsumed autosave request dropped at non-handoff session end; mission rank
+  writes log key/value; difficulty, score/rank and conversation-completion traces found no defect.
+- Camera: cinematic sniper latch cleared on host release; look input ignored while a host
+  model owns the camera (M02 midtro).
+- Timing: timeGetTime uses CLOCK_MONOTONIC on Vita (RTC could step backward).
+- Memory/render: campaign texture prepare budget scales with vitaGL RAM+VRAM headroom
+  (48–96 MiB; M08 closure ≈63 MiB); M01 finale o_crate_sm warmed.
+- Diagnostics: bounded M01 intro command/frame-phase breadcrumbs for the X1C_Intro freeze.
+- Reports: ESCORT_PATHING_REVIEW, ELEVATORS, WEATHER_BY_MISSION, STEALTH_RENDERING,
+  CINEMATIC_PRESENTATION, LEVEL_LOAD_MEMORY, AUTOSAVE_CHAIN, DIFFICULTY_CHAIN,
+  SCORE_AND_RANKS, CONVERSATION_COMPLETION, SAVE_ADMISSION_COVERAGE, SCRIPT_POINTER_STATE,
+  M02_SNIPER_CONTROL. Staging: 525 patches, inventory PASS.
+
+Next: full ARM link + VPK, Vita3K install, then the M01 intro run to read the new breadcrumbs.
+
 # Campaign M01–M11 readiness push — 2026-10-07
 
 Renegade Vita — v3.5 active

@@ -55,7 +55,7 @@ def test_m13_intro_keeps_packageable_narrow_prepare_hook():
 
 def test_m01_beach_aircraft_are_prepared_during_loading():
     text = A31_RUNTIME.read_text(encoding="utf-8")
-    m01_block = text[text.index('stricmp(selected_archive, "M01.mix") == 0'):]
+    m01_block = text[text.index('\tif (m01) {'):]
     assert "after_m01_model_prepare" in m01_block
     assert "A4 M01 %s preparation" in m01_block
     assert '"v_Nod_cplane"' in m01_block
@@ -65,12 +65,24 @@ def test_m01_beach_aircraft_are_prepared_during_loading():
     assert '"XG_EV5_rope"' in m01_block
 
 
+def test_m01_finale_assets_are_prepared_during_loading():
+    text = A31_RUNTIME.read_text(encoding="utf-8")
+    m01_block = text[text.index('\tif (m01) {'):]
+    # Generic per-level preparation warms cinematic Create_Real_Object presets
+    # and Play_Animation names (X1Z_Finale.txt included); the one finale
+    # Create_Object model it cannot discover is listed explicitly.
+    assert '"o_crate_sm"' in m01_block
+    assert "Parse_Cinematic_Play_Animation_Name(line, animation)" in text
+    assert "Warm_Level_Cinematic_Preset_Models(presenter, archive, root_factory);" in text
+
+
 def test_m01_referenced_textures_prepare_before_first_world_frame():
     text = A31_RUNTIME.read_text(encoding="utf-8")
-    m01_block = text[text.index('stricmp(selected_archive, "M01.mix") == 0'):]
-    assert 'Warm_Original_Campaign_Referenced_Textures(loading_presenter, "M01")' in m01_block
-    assert m01_block.index('Warm_Original_Campaign_Referenced_Textures(loading_presenter, "M01")') < m01_block.index('A3.1 breadcrumb: original M00 level loaded')
-    assert 'additional_budget = 32ULL * 1024ULL * 1024ULL' in text
+    m01_block = text[text.index('\tif (m01) {'):]
+    assert 'Warm_Original_Campaign_Referenced_Textures(presenter, label)' in m01_block
+    prepare_call = text.index('Prepare_Original_Level_Loading_Resources(loading_presenter,\n\t\t\t\tselected_archive')
+    assert prepare_call < text.index('A3.1 breadcrumb: original M00 level loaded', prepare_call)
+    assert 'additional_budget = 48ULL * 1024ULL * 1024ULL' in text
 
 
 def test_saved_path_action_remaps_borrowed_pointers_without_new_references():

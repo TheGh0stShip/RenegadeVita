@@ -103,10 +103,28 @@ on the primary path.
 1. M01 intro/beach freeze. KNOWN_GAPS/PORT_STATUS report a native freeze
    during the M01 intro aircraft sequence (issue #1 PSTV; "M01 beach freeze").
    It is still unresolved, and source audit cannot close it.
-2. Finale assets are not prepared: `X1Z_CAMERA`, `X1Z_Traject_01..04`,
-   `x1z_trnspt` and the X1Z human animations load on demand during the
-   finale. That costs a possible hitch, but timer-driven success does not
-   depend on it. Add them to preparation only with a measured cost.
+2. Finale preparation (static audit of `X1Z_Finale.txt`, retail Vita3K copy,
+   read-only). The generic `Prepare_Original_Level_Loading_Resources` path
+   (`Warm_Level_Cinematic_Preset_Models`) now covers the finale:
+   - All 8 `Create_Real_Object` presets (`GDI_Transport_Helicopter_Flyover`,
+     `Civ_Female_v0a`, `Civ_Male_v1a/v2a`, `GDI_Prisoner_v0a/v1a/v2a`,
+     `GDI_MiniGunner_3Boss`) are soldier (factory `0x4010f`) or vehicle
+     (`0x40129`) definitions, so they are warmed with their weapon models
+     (`v_gdi_trnspt`, `c_ag_civ4`, `c_ag_civ1_male`, `c_ag_civ2_male`,
+     `c_ag_gdi_pr/pr1/pr2`, `c_ag_havoc`).
+   - All 18 distinct `Play_Animation` names parse (host re-implementation of
+     `Parse_Cinematic_Play_Animation_Name`) and map to existing files
+     (`X1Z_CAMERA`, `X1Z_Traject_01..04`, `x1z_trnspt`, ten `H_A_X1Z_*`, one
+     `H_B_X1Z_CivF01`, `v_gdi_trnspt`). `Get_HAnim` -> `Load_3D_Assets` also
+     registers the HLOD prototypes in `X1Z_CAMERA.w3d` and
+     `X1Z_Traject_01..04.w3d`, so those `Create_Object` models are prepared
+     as a side effect.
+   - Remaining `Create_Object` model `o_crate_sm` (slot 20, ROOTTRANSFORM host,
+     4 KB in `always.dat`, used only by the finale) is now in the M01 warm list.
+   Still unprepared: finale sounds (`Play_audio` presets, two unlocated, and
+   `01_A`). Preparation stops at the 24 MB vitaGL free-memory floor, which skips
+   the animation pass; check `A4 cinematic animation preparation: archive=M01.mix`
+   for `memory_floor=0` and `loaded=` equal to `named=` on hardware.
 3. Two finale `Play_audio` presets (`M00NSMG_KILL0053I1GBMG_SND`,
    `M03DSGN_DSGN0039RIGBMG_SND`) are unlocated (cosmetic). Eleven oversized
    M01 WAV RIFF headers also still need decoder validation.

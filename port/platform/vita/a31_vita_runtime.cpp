@@ -4072,7 +4072,13 @@ void Prepare_Original_Level_Loading_Resources(A31VitaLoadingPresenter &presenter
 			{ "XG_EV5_troopBN", true, 1U },
 			{ "XG_HD_Harness", true, 1U },
 			{ "XG_HD_HTraj", true, 1U },
-			{ "XG_TransprtBone", true, 1U }
+			{ "XG_TransprtBone", true, 1U },
+			// X1Z_Finale.txt Create_Object slot 20 (ROOTTRANSFORM host for
+			// every finale actor). It is the only finale Create_Object model
+			// not loaded as a side effect of a Play_Animation .w3d: the
+			// X1Z_CAMERA and X1Z_Traject_01..04 models share files with the
+			// animations that Warm_Level_Cinematic_Preset_Models loads.
+			{ "o_crate_sm", false, 0U }
 		};
 		for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
 			const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();

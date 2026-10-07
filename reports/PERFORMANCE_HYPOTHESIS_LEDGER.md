@@ -1401,3 +1401,14 @@ lit draws call `Evaluate_Indexed_Primary_Color` per vertex. Sorting already uses
 the A36 O(n) radix `Depth_Sort`. Risk: negligible for both changes; the strip
 scratch is never freed (bounded by the largest strip). Decision: deferred until
 a fixed-camera M13 physical run reports median/p95/p99/worst.
+## Text/HUD upload scratch reuse (2026-10-06, source only)
+
+Audit: glyph rasterization (`renegade_freetype_font_provider.cpp`) is called
+only by upstream `FontCharsClass` cache misses and already skips repeat FT
+loads of the same glyph; no per-frame texture creation found for unchanged
+text. Hypothesis: `Upload_Texture_Level_From_Surface` allocated a fresh RGBA
+`std::vector` on every dynamic-surface Unlock (Render2D text, HUD surfaces).
+Change: `static thread_local` scratch reused; `assign()` still fills the full
+size, so uploaded bytes and checksums are identical. Risk: retains the largest
+converted level's capacity (up to 16 MB for 2048x2048). Before/after:
+unmeasured. Decision: deferred until a fixed HUD replay on hardware.

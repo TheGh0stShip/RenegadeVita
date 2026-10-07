@@ -993,7 +993,10 @@ bool Upload_Texture_Level_From_Surface(IDirect3DTexture8 *texture, UINT level)
 	if (texture->SurfaceLevels[level]->GetDesc(&description) != D3D_OK) {
 		return false;
 	}
-	std::vector<unsigned char> rgba;
+	// Reused conversion scratch: dynamic surfaces (Render2D/HUD text, video)
+	// re-upload on Unlock; keep capacity instead of a heap round trip each time.
+	// Convert_Surface_To_RGBA assign()s the full size, so contents are unchanged.
+	static thread_local std::vector<unsigned char> rgba;
 	uint32_t checksum = 0U;
 	if (!Convert_Surface_To_RGBA(texture->SurfaceLevels[level], rgba, &checksum)) {
 		return false;

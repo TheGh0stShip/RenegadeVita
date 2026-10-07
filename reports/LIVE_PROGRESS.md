@@ -1,5 +1,30 @@
 # Live engineering progress
 
+# Campaign development push 4 (soft-lock hunt) — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Completed (static source/retail-data evidence, ARM -fsyntax-only and host tests only; nothing linked,
+emulated or run on hardware). Each mission report has a dated "Soft-lock hunt" section.
+- M10 (owner-approved): objectives 1001/1002/1004/1005 are delivered when a key conversation preempts
+  their follow-up conversation (monitor before start, exactly-once saved flags).
+- Hand-tailored mission fixes: M01 terminal-unlock watchdog and open-gate objective fallback; M03 five
+  late-add/pre-empted objective fixes; M04 torpedo objective race and missile briefing drop; M05 Deadeye
+  and Gunner poke re-arm; M07 Hotwire SAM-capture fallback and path-failure fallback; M08 Raveshaw
+  grounded-landing fallback (jump state never left JUMPING after a >67 ms frame); M09 intro escort
+  resume and keycard-door distance re-check; M11 end-conversation replay, monotonic Sydney route, cryo
+  spawn recursion bound; M13 fire-in-the-hole engineer registration race.
+- Engine/port: script zones fire Entered for star moves that cross a thin zone between Thinks (low-FPS
+  tunnelling); Vita elevator ENTERING timeout for AI riders (M11 Sydney); restored face-action end time
+  bounded after load; HUD objective index bounds; encyclopedia save bit-cache flush; boss slow-motion
+  reset on death popup/restart; default control profile keeps Vita bindings; Circle tap crouch latch.
+- Audits with no defect: cinematic command scheduling at 5–30 fps (host test over all 425 cinematic
+  files), script timers at low FPS, fail/retry flow. Conversation-gated objective audit tool: 292 gates,
+  9 fixed, 9 remaining AT RISK (M04 x5, M11 x4) only hide objective entries; none blocks completion.
+Staging: 570 patches, inventory PASS.
+
+Next: full ARM build (vitaGL rebuild), Vita3K install, physical M01–M11 routes from the readiness reports.
+
 # Campaign control coverage audit — 2026-10-07
 
 Renegade Vita — v3.5 active

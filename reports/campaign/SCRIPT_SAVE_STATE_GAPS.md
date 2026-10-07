@@ -202,6 +202,10 @@ skip, or a garbage value fed to the engine. **L** = cosmetic or AI only.
    (`M02_Objective_Controller::rocket_soldier_speech`, id 4). Host
    syntax-checked only. The M05 `M05_APC_Deploy` 10-byte buffer is hardened by
    `scripts-a36-m05-apc-deploy-param-buffer.patch` (16 bytes plus `snprintf`).
+
+   A full sweep of pointer members (`SCRIPT_POINTER_STATE.md`) confirms
+   that the M09 `mobius` re-fetch was the only campaign-reachable stale
+   pointer read in these files and in Toolkit*.cpp.
 3. Heuristic limits: method-local shadowing (M08 `controller_id`) and
    objective links made through custom events are not fully resolved. Treat
    tool scores as triage only.

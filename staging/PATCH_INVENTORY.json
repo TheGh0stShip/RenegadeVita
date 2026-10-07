@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "013916bfc7ec977eda2d870141576288b84d29eaf627d5d4f905a8630d8c8df1",
-  "patch_count": 543,
+  "stage_script_sha256": "d0b92971c5196e259d03644d845bee3d2105aca160e7c717c1e94a32931dfcd5",
+  "patch_count": 544,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -2718,7 +2718,12 @@
       "path": "port/patches/combat-a37-screen-overlay-opacity-clamp.patch",
       "stage_directory": "combat",
       "sha256": "1fd9784eff93c659fa39a08322828cb55ab49dca36582e540f51be432e85a82a"
+    },
+    {
+      "path": "port/patches/combat-a37-pathaction-elevator-entry-timeout.patch",
+      "stage_directory": "combat",
+      "sha256": "3fc0932b5dc0fd1950bfb7c54ee74578ef9d3c75b1762c26641904a0bb4a62b3"
     }
   ],
-  "registry_sha256": "837c7939b0493064f5b7e3dae68fae74cfb91baebbbe6875e002752fb92d1487"
+  "registry_sha256": "fb1d9c93bbf0252b250199457fede82ea5b4482279ec2556b03ca224196945c4"
 }

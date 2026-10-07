@@ -1598,6 +1598,20 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 # it like the color setters (retail scripts only use 0 and 1).
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-screen-overlay-opacity-clamp.patch"
+# Escort robustness: the original AI elevator ENTERING state has no timeout
+# (EXITING and doors use 5 s). After 5 s of sim time a rider standing inside
+# the inside zone is treated as arrived and requests the lift. Vita-guarded,
+# bounded breadcrumb. Anchored to the final pathaction.{h,cpp}.
+test "$(sha256sum "$rv_stage/combat/pathaction.cpp" | cut -d' ' -f1)" = \
+	"f114e3922cff9102c217a0258b996f5a83a9f7c6c334b5e7af612537b7eaab80"
+test "$(sha256sum "$rv_stage/combat/pathaction.h" | cut -d' ' -f1)" = \
+	"41e30f7a78e5b0d206a638d62aef0c7b795737589f9d6f27867ad8b79431cb9d"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-pathaction-elevator-entry-timeout.patch"
+test "$(sha256sum "$rv_stage/combat/pathaction.cpp" | cut -d' ' -f1)" = \
+	"aef6e04af1d4ef8099a84e75ac72642f3eb0e1e68856dddcf7548efa3ac1c99f"
+test "$(sha256sum "$rv_stage/combat/pathaction.h" | cut -d' ' -f1)" = \
+	"3b994bd202bec41945900168ceff9f588eaf699bed808a5b43d2874aef09d044"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

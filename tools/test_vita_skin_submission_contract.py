@@ -38,7 +38,7 @@ class VitaSkinSubmissionContractTests(unittest.TestCase):
         self.assertIn("glColor4f(Clamp01(final_color.X)", renderer)
         self.assertIn("is_skin ? NULL : mesh.Get_User_Lighting_Array(false);", renderer)
         self.assertIn("current_texturing = triangle_shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE;", renderer)
-        self.assertRegex(renderer, r"const bool skin_color_passthrough = is_skin && bound_textures\[0\] != NULL &&\s*current_texturing;")
+        self.assertRegex(renderer, r"const bool skin_color_passthrough = !procedural_pass && is_skin &&\s*bound_textures\[0\] != NULL &&\s*current_texturing;")
         self.assertIn("if (skin_color_passthrough)", renderer)
         self.assertIn("first textured skin color pass-through", renderer)
         self.assertIn("final_color = Vector3(1.0f, 1.0f, 1.0f);", renderer)

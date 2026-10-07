@@ -242,7 +242,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             encoding="utf-8", errors="replace"
         )
         function = renderer[
-            renderer.index("void Submit_Mesh(MeshClass &mesh"):
+            renderer.index("static void Submit_Mesh_Internal(MeshClass &mesh"):
             renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles")
         ]
 
@@ -263,7 +263,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
     def test_direct_mesh_uses_original_material_lighting_sources(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
         function = renderer[
-            renderer.index("void Submit_Mesh(MeshClass &mesh"):
+            renderer.index("static void Submit_Mesh_Internal(MeshClass &mesh"):
             renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles")
         ]
 
@@ -306,7 +306,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             encoding="utf-8", errors="replace"
         )
         function = renderer[
-            renderer.index("void Submit_Mesh(MeshClass &mesh"):
+            renderer.index("static void Submit_Mesh_Internal(MeshClass &mesh"):
             renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles")
         ]
         original_split_table = original[
@@ -322,22 +322,26 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             function.index("model->Get_Color_Array(0, false)")
         )
         self.assertIn("const unsigned *color1 =\n\t\t\tuser_lighting != NULL ? user_lighting :", function)
-        self.assertIn("if (color1 == NULL && model->Get_DCG_Source(pass) == VertexMaterialClass::COLOR1)", function)
+        self.assertIn("if (color1 == NULL && model->Get_DCG_Source(model_pass) == VertexMaterialClass::COLOR1)", function)
         self.assertIn("is_skin ? NULL : mesh.Get_User_Lighting_Array(false);", function)
 
     def test_direct_mesh_submit_renders_original_base_passes(self):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
         function = renderer[
-            renderer.index("void Submit_Mesh(MeshClass &mesh"):
+            renderer.index("static void Submit_Mesh_Internal(MeshClass &mesh"):
             renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles")
         ]
-        self.assertIn("const int base_pass_count = pass_count > 0 ? pass_count : 1;", function)
-        self.assertIn("for (int pass = 0; pass < base_pass_count; ++pass)", function)
-        self.assertIn("model->Peek_Texture(triangle_index, pass, 0)", function)
+        self.assertIn("const int base_pass_count = model_pass_count > 0 ? model_pass_count : 1;", function)
+        self.assertIn("const int draw_pass_count = procedural_pass ? 1 : base_pass_count;", function)
+        self.assertIn("for (int pass = 0; pass < draw_pass_count; ++pass)", function)
+        self.assertIn("model->Peek_Texture(triangle_index, pass, stage)", function)
+        self.assertIn("texture_for(triangle_index, pass, 0)", function)
         self.assertIn("model->Get_Shader(triangle_index, pass)", function)
-        self.assertIn("model->Get_UV_Array(pass, 0)", function)
-        self.assertIn("model->Get_DCG_Array(pass)", function)
-        self.assertIn("model->Peek_Material(static_cast<int>(vertex_index), pass)", function)
+        self.assertIn("shader_for(triangle_index, pass)", function)
+        self.assertIn("model->Get_UV_Array(model_pass, 0)", function)
+        self.assertIn("model->Get_DCG_Array(model_pass)", function)
+        self.assertIn("model->Peek_Material(vertex_index, pass)", function)
+        self.assertIn("material_for(static_cast<int>(vertex_index), pass)", function)
         self.assertNotIn("model->Peek_Texture(triangle_index, 0, 0)", function)
         self.assertNotIn("model->Get_Shader(triangle_index, 0)", function)
 
@@ -468,7 +472,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
         boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text()
         function = renderer[
-            renderer.index("void Submit_Mesh(MeshClass &mesh"):
+            renderer.index("static void Submit_Mesh_Internal(MeshClass &mesh"):
             renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles")
         ]
         mapper_helper = renderer[
@@ -487,7 +491,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertIn("VertexMaterialClass *current_material = NULL;", function)
         self.assertIn("const Vector2 *current_uvs[MeshMatDescClass::MAX_TEX_STAGES] = {};", function)
         self.assertIn("VertexMaterialClass *triangle_material =", function)
-        self.assertIn("model->Peek_Material(static_cast<int>(group_triangle[0]), pass)", function)
+        self.assertIn("material_for(static_cast<int>(group_triangle[0]), pass)", function)
         self.assertIn("triangle_material != current_material", function)
         self.assertIn("current_material = triangle_material;", function)
         self.assertIn("Resolve_UV_Array_For_Texture_State(model,", function)
@@ -517,7 +521,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         renderer = (ROOT / "port/renderer/vita/ww3d_vita_renderer.cpp").read_text()
         boundary = (ROOT / "port/renderer/vita/ww3d_dx8_boundary.cpp").read_text()
         function = renderer[
-            renderer.index("void Submit_Mesh(MeshClass &mesh"):
+            renderer.index("static void Submit_Mesh_Internal(MeshClass &mesh"):
             renderer.index("IndexedSubmissionResult Submit_Indexed_Triangles")
         ]
 

@@ -129,6 +129,7 @@
 #include "translateobj.h"
 #include "ww3d.h"
 #include "wwaudio.h"
+#include "SoundScene.h"
 #include "wwmath.h"
 #include "wwphys.h"
 #include "wwsaveload.h"
@@ -5978,6 +5979,23 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				{
 					RENEGADE_FRAME_PROFILE("Vita WWAudio Frame Update");
 					audio->On_Frame_Update(0);
+				}
+				/* M13 diagnostic: during cinematic freeze, log the WWAudio listener
+				** against the CombatManager camera at most once per second. */
+				if (GameObjManager::Is_Cinematic_Freeze_Active()) {
+					static uint64_t last_listener_log_us = 0U;
+					const uint64_t now_us = sceKernelGetProcessTimeWide();
+					SoundSceneClass *listener_scene = audio->Get_Sound_Scene();
+					CameraClass *combat_camera = CombatManager::Get_Camera();
+					if (listener_scene != NULL && now_us - last_listener_log_us >= 1000000U) {
+						last_listener_log_us = now_us;
+						const Vector3 lp = listener_scene->Get_Listener_Position();
+						const Vector3 cp = combat_camera != NULL ?
+							combat_camera->Get_Position() : Vector3(0.0f, 0.0f, 0.0f);
+						A30_Vita_Log("A4 cinematic listener: frame=%u listener=(%.2f,%.2f,%.2f) camera=(%.2f,%.2f,%.2f) has_camera=%d delta=%.2f\n",
+							static_cast<unsigned>(result.frames), lp.X, lp.Y, lp.Z, cp.X, cp.Y, cp.Z,
+							combat_camera != NULL ? 1 : 0, (lp - cp).Length());
+					}
 				}
 				last_render_trace = render_trace;
 				const A31MissionProgressState mission_progress =

@@ -1,0 +1,166 @@
+M11 Sydney rally legs retry a failed path a bounded number of times.
+The rally legs WAYPATH_01..04 (cell to rally zone 01, 02, 03a/03b) leave
+sydneys_location at IDLE, so the PATH_BAD_START, PATH_BAD_DEST and
+MOVE_NO_PROGRESS_MADE branches, which only re-send the elevator and switch
+stages, ignore them. A failed rally-leg solve left Sydney standing, and the
+rally zone she would arm never fired.
+
+Record each rally leg's action id and waypath (start/end) where it is issued.
+On one of those failures, while she is still IDLE and alive, re-issue the same
+goto (same waypath, priority and speed) 2 s later, at most 3 times per leg,
+with a log breadcrumb for each retry and for the limit. The timer id is the
+leg's action id, so a pending retry for a leg that has been replaced does
+nothing. State is saved on unused ids 15-19. A leg that succeeds is unchanged.
+
+diff --git a/Mission11.cpp b/Mission11.cpp
+--- a/Mission11.cpp
++++ b/Mission11.cpp
+@@ -9596,6 +9596,14 @@
+ 	bool sydney_damaged_conv02_playing;
+ 	bool sydney_damaged_conv03_playing;
+ 	bool reachedMissileSwitch;
++	// Vita port: the current rally leg (WAYPATH_01..04) and its retry count.
++	int rallyLegAction;
++	int rallyLegWaypath;
++	int rallyLegStart;
++	int rallyLegEnd;
++	int rallyLegRetries;
++
++	enum { VITA_RALLY_LEG_MAX_RETRIES = 3 };
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+@@ -9613,6 +9621,61 @@
+ 		SAVE_VARIABLE(sydney_damaged_conv02_playing, 12);
+ 		SAVE_VARIABLE(sydney_damaged_conv03_playing, 13);
+ 		SAVE_VARIABLE(reachedMissileSwitch, 14);
++		SAVE_VARIABLE(rallyLegAction, 15);
++		SAVE_VARIABLE(rallyLegWaypath, 16);
++		SAVE_VARIABLE(rallyLegStart, 17);
++		SAVE_VARIABLE(rallyLegEnd, 18);
++		SAVE_VARIABLE(rallyLegRetries, 19);
++	}
++
++	// Vita port: the rally legs leave sydneys_location at IDLE, so the
++	// PATH_BAD/NO_PROGRESS branches below never retry them and a failed leg
++	// leaves Sydney standing. Remember each leg as issued and re-issue the same
++	// goto after a delay, at most VITA_RALLY_LEG_MAX_RETRIES times per leg.
++	void Vita_Record_Rally_Leg( const ActionParamsStruct & params )
++	{
++		rallyLegAction = params.ActionID;
++		rallyLegWaypath = params.WaypathID;
++		rallyLegStart = params.WaypointStartID;
++		rallyLegEnd = params.WaypointEndID;
++		rallyLegRetries = 0;
++	}
++
++	void Vita_Rally_Leg_Failed( GameObject * obj, int action_id, ActionCompleteReason complete_reason )
++	{
++		if (sydneys_location != IDLE || killedYet == true || rallyLegAction == 0 || action_id != rallyLegAction)
++		{
++			return;
++		}
++
++		if (rallyLegRetries >= VITA_RALLY_LEG_MAX_RETRIES)
++		{
++			A30_Vita_Log("A4 M11 Sydney rally leg %d waypath %d failed (reason %d); retry limit %d reached\n",
++				action_id, rallyLegWaypath, (int)complete_reason, (int)VITA_RALLY_LEG_MAX_RETRIES);
++			return;
++		}
++
++		rallyLegRetries++;
++		A30_Vita_Log("A4 M11 Sydney rally leg %d waypath %d failed (reason %d); retry %d/%d in 2 s\n",
++			action_id, rallyLegWaypath, (int)complete_reason, rallyLegRetries, (int)VITA_RALLY_LEG_MAX_RETRIES);
++		// The timer id is the leg's action id, so a retry for a leg that has
++		// since been replaced does nothing.
++		Commands->Start_Timer( obj, this, 2.0f, action_id );
++	}
++
++	void Timer_Expired( GameObject * obj, int timer_id )
++	{
++		if (timer_id != 0 && timer_id == rallyLegAction && sydneys_location == IDLE && killedYet == false)
++		{
++			ActionParamsStruct params;
++			Commands->Set_Innate_Is_Stationary ( obj, false );
++			params.Set_Basic( this, 100, rallyLegAction );
++			params.Set_Movement( Vector3 (0,0,0), RUN, 0.5f );
++			params.WaypathID = rallyLegWaypath;
++			params.WaypointStartID = rallyLegStart;
++			params.WaypointEndID = rallyLegEnd;
++			Commands->Action_Goto(obj, params);
++		}
+ 	}
+ 
+ 	void Created( GameObject * obj ) 
+@@ -9636,6 +9699,11 @@
+ 		sydney_damaged_conv02_playing = false;
+ 		sydney_damaged_conv03_playing = false;
+ 		reachedMissileSwitch = false;
++		rallyLegAction = 0;
++		rallyLegWaypath = 0;
++		rallyLegStart = 0;
++		rallyLegEnd = 0;
++		rallyLegRetries = 0;
+ 		// Vita port: conversation IDs start at 1000, so 0 never matches the
+ 		// end-mission conversation before these members are assigned.
+ 		sydney_conv01 = 0;
+@@ -9805,6 +9873,7 @@
+ 					params.WaypointEndID = 100130;
+ 				}
+ 
++				Vita_Record_Rally_Leg( params );
+ 				Commands->Action_Goto(obj, params);
+ 			}
+ 
+@@ -9832,6 +9901,7 @@
+ 					params.WaypointEndID = 100162;
+ 				}
+ 
++				Vita_Record_Rally_Leg( params );
+ 				Commands->Action_Goto(obj, params);
+ 			}
+ 
+@@ -10016,6 +10086,7 @@
+ 						params.WaypointStartID = 100542;
+ 						params.WaypointEndID = 100544;
+ 
++						Vita_Record_Rally_Leg( params );
+ 						Commands->Action_Goto(obj, params);
+ 
+ 						GameObject * objectiveController = Commands->Find_Object ( M11_MISSION_CONTROLLER_JDG );
+@@ -10093,6 +10164,11 @@
+ 						Commands->Send_Custom_Event( obj, obj, 0, M01_MODIFY_YOUR_ACTION_04_JDG, 1 );
+ 					}
+ 
++					else
++					{
++						Vita_Rally_Leg_Failed( obj, action_id, complete_reason );
++					}
++
+ 				}
+ 				break;
+ 
+@@ -10122,6 +10198,11 @@
+ 					{
+ 						Commands->Send_Custom_Event( obj, obj, 0, M01_MODIFY_YOUR_ACTION_04_JDG, 1 );
+ 					}
++
++					else
++					{
++						Vita_Rally_Leg_Failed( obj, action_id, complete_reason );
++					}
+ 				}
+ 				break;
+ 
+@@ -10151,6 +10232,11 @@
+ 					{
+ 						Commands->Send_Custom_Event( obj, obj, 0, M01_MODIFY_YOUR_ACTION_04_JDG, 1 );
+ 					}
++
++					else
++					{
++						Vita_Rally_Leg_Failed( obj, action_id, complete_reason );
++					}
+ 				}
+ 				break;
+ 

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "f4b773512d96a99289299c6aadeed3f4483cc48e7213c6a9be32ecdbc1d60815",
-  "patch_count": 571,
+  "stage_script_sha256": "3b19303d796758e333f841f042aad4349b6c0388801e93974081797ac54d37ba",
+  "patch_count": 573,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1830,6 +1830,21 @@
       "sha256": "1029dcf04828ff3b3e60f56ee8e04236460e46676d22b6bbecde11b38010ab5c"
     },
     {
+      "path": "port/patches/scripts-a38-m11-objective-conversation-preemption.patch",
+      "stage_directory": "scripts",
+      "sha256": "a50a7daf377434ae02984cf8c1016c97a5bf2ef7b4452d698d13a4e66c39a762"
+    },
+    {
+      "path": "port/patches/scripts-a38-m11-rally-leg-retry.patch",
+      "stage_directory": "scripts",
+      "sha256": "71562ecbe6f5531cced1ccc0fae06a21fafb43b1545d25961c07b1a0b9cf8f56"
+    },
+    {
+      "path": "port/patches/scripts-a38-m11-rally-zone-recheck.patch",
+      "stage_directory": "scripts",
+      "sha256": "c4fed69387508773b3bfc8eaf16b1e09f15734dfef1e8b11c8fb3d52979208ee"
+    },
+    {
       "path": "port/patches/scripts-a36-m07-evac-param-id-buffer.patch",
       "stage_directory": "scripts",
       "sha256": "2862802fdcc436951fb6b0fb48d6c2a04f048a0ae67722583d8a0d69aadfff12"
@@ -2845,11 +2860,6 @@
       "sha256": "5a443ebf6a3eb814d1e19af9afe44985ea9958b82bf3e026425cb86ce04a9d2f"
     },
     {
-      "path": "port/patches/combat-a38-objective-early-status.patch",
-      "stage_directory": "combat",
-      "sha256": "697034527aad683cfdb2562f65ab1f9f5962967fae75e7b3a7a615e6753ce7cc"
-    },
-    {
       "path": "port/patches/commando-a37-default-input-profile-vita-mapping.patch",
       "stage_directory": "commando",
       "sha256": "a0161663d956b8e98e985a1fb002021d201c92fea1fdd760984376592bba6563"
@@ -2860,5 +2870,5 @@
       "sha256": "fc6b37a6f0f9ef5136fbe67e950835ee8b2084fb57f42d6611599f96636e3a56"
     }
   ],
-  "registry_sha256": "3c407dc572cad6a55311c7e176d01d868c7bcd97619fed50257b1b1782f30775"
+  "registry_sha256": "c64be5bc7ec27e6960c548ab0f82f29462a76e72699ac54bc241f1925a6910f9"
 }

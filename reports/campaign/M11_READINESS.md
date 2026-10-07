@@ -232,3 +232,67 @@ The flight recorder should show a conversation-monitor kind-3 call for
 `M11_End_Mission_Conversation` with reason ENDED, then the H_A_CON2 action completion,
 then `Mission_Complete(true)`. A kind-3 record with reason INTERRUPTED, followed about
 2 s later by a second creation of the same conversation, means patch A fired.
+
+## Follow-up fixes (2026-10-07)
+
+Evidence class: staged-source change plus static checks. One
+`arm-vita-eabi-g++ -fsyntax-only` of the patched unit passed (exit 0, 175
+warnings, the same count as the unpatched unit). Staging applied 573 ordered
+patches with zero fuzz and the inventory passed. The host unittests
+`test_audit_conversation_gated_objectives`, `test_m10_objective_conversation_resend`,
+`test_objective_state_lifecycle`, `test_audit_campaign_source_surface`,
+`test_audit_campaign_script_closure` and `test_mission_conversations` pass.
+`tools.audit_conversation_gated_objectives --mission M11` was re-run with the
+pre-change staged `Mission11.cpp` as baseline. M11 now has 0 AT RISK (was 4),
+0 REVIEW (was 1) and 7 FIXED (was 2). No build, emulator or device run.
+Line numbers refer to the staged `Mission11.cpp`.
+
+### Engine check
+
+The controller's `Action_Complete` acted only on ENDED. A key-conversation stop
+inside `Start_Conversation` arrives as INTERRUPTED (`activeconversation.cpp:400`),
+and an initialisation timeout arrives as UNABLE_TO_INIT (`:464`). So, for these
+ids only, the switch now also accepts both reasons. `Release_Level` also sends
+INTERRUPTED to live monitors (`Reset_Active_Conversations`, `level.cpp:58`)
+before `Destroy_All`. The replay therefore runs from a 1 s script timer, which
+dies with the outgoing level. This is the same choice as the M09 intro fix.
+
+### Fixes
+
+| Issue | Fix | Patch, site |
+| --- | --- | --- |
+| `M11_Level_Intro_Conversation` stopped at start: objective 2, the second intro and floor-1 security acting never come. | Monitor before Start. On INTERRUPTED/UNABLE_TO_INIT (or create id < 0), a 1 s timer runs the original ENDED branch (`Deliver_Intro_Conversation`) once. | `scripts-a38-m11-objective-conversation-preemption.patch`: start :404, delivery :236, interrupt case :358, timer :287 |
+| `M11_Level_Intro_Conversation02` stopped at start: objective 1 is never added. | Same pattern (`Deliver_Intro_Conversation02`). The museum guard inside `M11_ADD_FIRST_OBJECTIVE_JDG` is unchanged. | same patch: start :428, delivery :244 |
+| REVIEW `M11_EVA_SydneyPinged_Conversation`: losing it loses only the objective-2 HUD marker refresh (`M11_ADD_SECOND_OBJECTIVE_POG_JDG`). That is cosmetic, not a lock. | Same pattern, for consistency. | same patch: start :472, delivery :251 |
+| `M11_EVA_Activate_Nuke_Conversation` stopped at start: objective 5 and the switch blip are never added. Both senders (fifth-objective zone, Sydney leg 2) can overlap Sydney's key conversation. | Same pattern (`Deliver_EVA_Nuke_Conversation`). A second `M11_ADD_FIFTH_OBJECTIVE_JDG` still creates a second conversation as in retail. Only the first delivery acts (retail repeated a duplicate `Add_Objective`, which is rejected). | same patch: start :578, delivery :258 |
+| `M11_Add_Third_Objective_Conversation` (zone) stopped at start: objective 3 is never added and the zone is never removed. | Monitor before Start. INTERRUPTED/UNABLE_TO_INIT (or id < 0) starts a 1 s zone timer for the original branch: send `M11_ADD_THIRD_OBJECTIVE_JDG`, then destroy the zone. Saved `objectiveSent` (id 3); the conversation id is zeroed in `Created`. | same patch: zone :4956, start :5013, delivery :4981, interrupt case :5037 |
+| Soft-lock #4: a failed rally leg (`WAYPATH_01..04`) leaves Sydney at IDLE with no retry. | Each rally goto records its action id and waypath (start/end). PATH_BAD_START, PATH_BAD_DEST or MOVE_NO_PROGRESS_MADE for that leg, while she is IDLE and alive, re-issues the same goto after 2 s, at most 3 times per leg. Each retry and the limit leave a log line. The timer id is the leg's action id, so a stale retry does nothing. Saved ids 15-19. | `scripts-a38-m11-rally-leg-retry.patch`: record :10032, :10060, :10245; failure :10325, :10360, :10394; helpers :9791-9822 |
+| Soft-lock #5: a rally zone fires only on player entry after Sydney arrives. | `Entered`/`Exited` track STAR (saved id 2). When Sydney's arrival custom finds STAR inside, a 0.5 s timer runs the original `Entered` branch for STAR if the player is still inside. A saved `fired` flag (id 3) makes it run once whichever way it is reached. | `scripts-a38-m11-rally-zone-recheck.patch`: zones 01 :9146, 02 :9222, 03 :9298, 03b :9384 |
+
+On the normal path these changes add only the monitor-before-start ordering,
+the leg record and the presence flag. Conversation content, objective timing
+and routes are unchanged.
+
+### Physical signature
+
+If these paths fire, `ux0:data/renegade/user/logs/` should show:
+- `A4 M11 controller: <conversation> stopped before ending; objective step deferred 1 s`
+- `A4 M11 third-objective zone: ... deferred 1 s`
+- `A4 M11 Sydney rally leg <action> waypath <id> failed (reason <r>); retry <n>/3 in 2 s`, or `... retry limit 3 reached`
+- `A4 M11 M11_Sydney_Rally_Zone_0x_JDG: player already inside when Sydney arrived; firing rally`
+
+Leaving the level while one of the controller conversations is playing also
+prints the controller line. That is harmless, because the timer dies with the
+level.
+
+### Deferred
+
+- `CONVERSATION_GATED_OBJECTIVES.md` was not regenerated here, because that
+  needs the canonical baseline staging. The M11 re-run above is the evidence.
+- A rally path that fails deterministically fails 3 times. Sydney then stays
+  put as in retail, and a breadcrumb records it. Switching legs 2/3 to their
+  alternate route was not done, because it changes which rally zone is armed.
+- A save made before this patch loads `starInside` as false. If STAR is
+  already in the restored zone `InsideList`, the re-check cannot fire until the
+  player steps out and back in, which is retail behaviour.
+- Soft-lock #7 (elevator ENTERING timeout) is unchanged.

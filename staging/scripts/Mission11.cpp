@@ -41,6 +41,8 @@
 #include "mission1.h"
 #include "mission11.h"
 
+extern int A30_Vita_Log(const char *format, ...);
+
 
 /***********************************************************************************************************************
 Putting level specific character scripts here...sydney, petrova, havoc, etc...
@@ -201,6 +203,21 @@ DECLARE_SCRIPT(M11_Mission_Controller_JDG, "")
 	int evaNukeConv;
 
 	bool player_has_reached_musuem;
+	// Vita port: each conversation-gated step runs once, from the conversation's
+	// end or from its preemption (see Vita_Conversation_Stopped).
+	bool introConvDelivered;
+	bool introConv02Delivered;
+	bool evaPingedSydneyConvDelivered;
+	bool evaNukeConvDelivered;
+
+	enum
+	{
+		// Vita port: timer ids for the deferred replay of a stopped gate.
+		VITA_INTRO_CONV_TIMER = 1101,
+		VITA_INTRO_CONV02_TIMER,
+		VITA_EVA_PINGED_SYDNEY_CONV_TIMER,
+		VITA_EVA_NUKE_CONV_TIMER,
+	};
 
 	REGISTER_VARIABLES()
 	{
@@ -209,11 +226,94 @@ DECLARE_SCRIPT(M11_Mission_Controller_JDG, "")
 		SAVE_VARIABLE( missionIntroConv, 3 );
 		SAVE_VARIABLE( evaNukeConv, 4 );
 		SAVE_VARIABLE( player_has_reached_musuem, 5 );
+		SAVE_VARIABLE( introConvDelivered, 6 );
+		SAVE_VARIABLE( introConv02Delivered, 7 );
+		SAVE_VARIABLE( evaPingedSydneyConvDelivered, 8 );
+		SAVE_VARIABLE( evaNukeConvDelivered, 9 );
 	}
 
-	void Created( GameObject * obj ) 
+	// Original ENDED branches, each run at most once.
+	void Deliver_Intro_Conversation( GameObject * obj )
+	{
+		if (introConvDelivered) return;
+		introConvDelivered = true;
+		Commands->Send_Custom_Event( obj, obj, 0, M11_ADD_SECOND_OBJECTIVE_JDG, 0 );
+		Commands->Send_Custom_Event( obj, obj, 0, M11_PLAY_SECOND_INTRO_CONVERSATION_JDG, 3 );
+	}
+
+	void Deliver_Intro_Conversation02( GameObject * obj )
+	{
+		if (introConv02Delivered) return;
+		introConv02Delivered = true;
+		Commands->Send_Custom_Event( obj, obj, 0, M11_ADD_FIRST_OBJECTIVE_JDG, 0 );
+	}
+
+	void Deliver_EVA_Pinged_Sydney_Conversation( GameObject * obj )
+	{
+		if (evaPingedSydneyConvDelivered) return;
+		evaPingedSydneyConvDelivered = true;
+		Commands->Send_Custom_Event( obj, obj, 0, M11_ADD_SECOND_OBJECTIVE_POG_JDG, 0 );
+	}
+
+	void Deliver_EVA_Nuke_Conversation( GameObject * obj )
+	{
+		if (evaNukeConvDelivered) return;
+		evaNukeConvDelivered = true;
+		Commands->Add_Objective( M11_FIFTH_OBJECTIVE_JDG, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M11_05, NULL, IDS_Enc_Obj_Primary_M11_05 );
+
+		GameObject * nukeSwitch = Commands->Find_Object ( M11_END_MISSION_SWITCH_JDG );
+		if (nukeSwitch != NULL)
+		{
+			Commands->Set_Objective_Radar_Blip_Object( M11_FIFTH_OBJECTIVE_JDG, nukeSwitch );
+			Commands->Set_Objective_HUD_Info( M11_FIFTH_OBJECTIVE_JDG, 94, "POG_M11_1_04.tga", IDS_POG_SABOTAGE );
+		}
+
+		else
+		{
+			Commands->Debug_Message ( "***************************M11 mission controller cannot find sydnee to ping her on radar--add forth objective\n" );
+		}
+	}
+
+	// Vita port: a key conversation stops these non-key conversations inside
+	// Start_Conversation (INTERRUPTED); the monitor is registered first, so the
+	// stop arrives here. Replay the ENDED branch from a timer: the callback can
+	// also come from Release_Level, and a timer dies with the outgoing world.
+	void Vita_Conversation_Stopped( GameObject * obj, int timer_id, const char * name )
+	{
+		A30_Vita_Log("A4 M11 controller: %s stopped before ending; objective step deferred 1 s\n", name);
+		Commands->Start_Timer( obj, this, 1.0f, timer_id );
+	}
+
+	void Timer_Expired( GameObject * obj, int timer_id )
+	{
+		if (timer_id == VITA_INTRO_CONV_TIMER)
+		{
+			Deliver_Intro_Conversation( obj );
+		}
+
+		else if (timer_id == VITA_INTRO_CONV02_TIMER)
+		{
+			Deliver_Intro_Conversation02( obj );
+		}
+
+		else if (timer_id == VITA_EVA_PINGED_SYDNEY_CONV_TIMER)
+		{
+			Deliver_EVA_Pinged_Sydney_Conversation( obj );
+		}
+
+		else if (timer_id == VITA_EVA_NUKE_CONV_TIMER)
+		{
+			Deliver_EVA_Nuke_Conversation( obj );
+		}
+	}
+
+	void Created( GameObject * obj )
 	{
 		player_has_reached_musuem = false;
+		introConvDelivered = false;
+		introConv02Delivered = false;
+		evaPingedSydneyConvDelivered = false;
+		evaNukeConvDelivered = false;
 		// Vita port: conversation IDs start at 1000, so 0 never matches a
 		// monitored conversation before the member is assigned.
 		evaPingedSydneyConv = 0;
@@ -234,35 +334,48 @@ DECLARE_SCRIPT(M11_Mission_Controller_JDG, "")
 				{
 					if (action_id == missionIntroConv) //introduce rescue sydney objective here
 					{
-						Commands->Send_Custom_Event( obj, obj, 0, M11_ADD_SECOND_OBJECTIVE_JDG, 0 );
-						Commands->Send_Custom_Event( obj, obj, 0, M11_PLAY_SECOND_INTRO_CONVERSATION_JDG, 3 );
+						Deliver_Intro_Conversation( obj );
 					}
 
 					else if (action_id == missionIntroConv02) //introduce rescue sydney objective here
 					{
-						Commands->Send_Custom_Event( obj, obj, 0, M11_ADD_FIRST_OBJECTIVE_JDG, 0 );
+						Deliver_Intro_Conversation02( obj );
 					}
 
 					else if (action_id == evaPingedSydneyConv)
 					{
-						Commands->Send_Custom_Event( obj, obj, 0, M11_ADD_SECOND_OBJECTIVE_POG_JDG, 0 );
+						Deliver_EVA_Pinged_Sydney_Conversation( obj );
 					}
 
 					else if (action_id == evaNukeConv)
 					{
-						Commands->Add_Objective( M11_FIFTH_OBJECTIVE_JDG, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M11_05, NULL, IDS_Enc_Obj_Primary_M11_05 );
-						
-						GameObject * nukeSwitch = Commands->Find_Object ( M11_END_MISSION_SWITCH_JDG );
-						if (nukeSwitch != NULL)
-						{
-							Commands->Set_Objective_Radar_Blip_Object( M11_FIFTH_OBJECTIVE_JDG, nukeSwitch );
-							Commands->Set_Objective_HUD_Info( M11_FIFTH_OBJECTIVE_JDG, 94, "POG_M11_1_04.tga", IDS_POG_SABOTAGE );
-						}
+						Deliver_EVA_Nuke_Conversation( obj );
+					}
+				}
+				break;
 
-						else
-						{
-							Commands->Debug_Message ( "***************************M11 mission controller cannot find sydnee to ping her on radar--add forth objective\n" );
-						}
+			// Vita port: see Vita_Conversation_Stopped.
+			case ACTION_COMPLETE_CONVERSATION_INTERRUPTED:
+			case ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT:
+				{
+					if (action_id == missionIntroConv && !introConvDelivered)
+					{
+						Vita_Conversation_Stopped( obj, VITA_INTRO_CONV_TIMER, "M11_Level_Intro_Conversation" );
+					}
+
+					else if (action_id == missionIntroConv02 && !introConv02Delivered)
+					{
+						Vita_Conversation_Stopped( obj, VITA_INTRO_CONV02_TIMER, "M11_Level_Intro_Conversation02" );
+					}
+
+					else if (action_id == evaPingedSydneyConv && !evaPingedSydneyConvDelivered)
+					{
+						Vita_Conversation_Stopped( obj, VITA_EVA_PINGED_SYDNEY_CONV_TIMER, "M11_EVA_SydneyPinged_Conversation" );
+					}
+
+					else if (action_id == evaNukeConv && !evaNukeConvDelivered)
+					{
+						Vita_Conversation_Stopped( obj, VITA_EVA_NUKE_CONV_TIMER, "M11_EVA_Activate_Nuke_Conversation" );
 					}
 				}
 				break;
@@ -288,8 +401,13 @@ DECLARE_SCRIPT(M11_Mission_Controller_JDG, "")
 							Commands->Join_Conversation( NULL, missionIntroConv, false, false );
 							Commands->Join_Conversation( STAR, missionIntroConv, false, false );
 							//Commands->Join_Conversation( NULL, missionIntroConv, false, false );
-							Commands->Start_Conversation( missionIntroConv,  missionIntroConv );
+							// Vita port: monitor before Start so a key-conversation stop is seen.
 							Commands->Monitor_Conversation (obj, missionIntroConv);
+							Commands->Start_Conversation( missionIntroConv,  missionIntroConv );
+							if (missionIntroConv < 0)
+							{
+								Vita_Conversation_Stopped( obj, VITA_INTRO_CONV_TIMER, "M11_Level_Intro_Conversation" );
+							}
 						}
 
 						else
@@ -307,8 +425,13 @@ DECLARE_SCRIPT(M11_Mission_Controller_JDG, "")
 							Commands->Join_Conversation( NULL, missionIntroConv02, false, false );
 							Commands->Join_Conversation( NULL, missionIntroConv02, false, false );
 							//Commands->Join_Conversation( STAR, missionIntroConv02, false, false );
-							Commands->Start_Conversation( missionIntroConv02,  missionIntroConv02 );
+							// Vita port: monitor before Start so a key-conversation stop is seen.
 							Commands->Monitor_Conversation (obj, missionIntroConv02);
+							Commands->Start_Conversation( missionIntroConv02,  missionIntroConv02 );
+							if (missionIntroConv02 < 0)
+							{
+								Vita_Conversation_Stopped( obj, VITA_INTRO_CONV02_TIMER, "M11_Level_Intro_Conversation02" );
+							}
 
 							Commands->Send_Custom_Event( obj, Commands->Find_Object (M11_FLOOR01_SECURITY_CONTROLLER_JDG), 0, M01_START_ACTING_JDG, 5 );
 						}
@@ -346,8 +469,13 @@ DECLARE_SCRIPT(M11_Mission_Controller_JDG, "")
 
 						evaPingedSydneyConv = Commands->Create_Conversation( "M11_EVA_SydneyPinged_Conversation", 100, 1000, false);
 						Commands->Join_Conversation( NULL, evaPingedSydneyConv, false, false );;
-						Commands->Start_Conversation( evaPingedSydneyConv,  evaPingedSydneyConv );
+						// Vita port: monitor before Start so a key-conversation stop is seen.
 						Commands->Monitor_Conversation (obj, evaPingedSydneyConv);
+						Commands->Start_Conversation( evaPingedSydneyConv,  evaPingedSydneyConv );
+						if (evaPingedSydneyConv < 0)
+						{
+							Vita_Conversation_Stopped( obj, VITA_EVA_PINGED_SYDNEY_CONV_TIMER, "M11_EVA_SydneyPinged_Conversation" );
+						}
 
 					}
 					break;//
@@ -447,8 +575,13 @@ DECLARE_SCRIPT(M11_Mission_Controller_JDG, "")
 					{
 						evaNukeConv = Commands->Create_Conversation( "M11_EVA_Activate_Nuke_Conversation", 100, 1000, false);
 						Commands->Join_Conversation( NULL, evaNukeConv, false, false );;
-						Commands->Start_Conversation( evaNukeConv,  evaNukeConv );
+						// Vita port: monitor before Start so a key-conversation stop is seen.
 						Commands->Monitor_Conversation (obj, evaNukeConv);
+						Commands->Start_Conversation( evaNukeConv,  evaNukeConv );
+						if (evaNukeConv < 0)
+						{
+							Vita_Conversation_Stopped( obj, VITA_EVA_NUKE_CONV_TIMER, "M11_EVA_Activate_Nuke_Conversation" );
+						}
 					}
 					break;
 
@@ -4824,16 +4957,50 @@ DECLARE_SCRIPT(M11_Start_Third_Objective_Zone_JDG, "")//player's third objective
 {
 	int addThirdObjectiveConv;
 	bool entered;
+	// Vita port: objective 3 is added once, from the conversation's end or
+	// from its preemption.
+	bool objectiveSent;
+
+	enum { VITA_THIRD_OBJECTIVE_TIMER = 1101 };
 
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE(addThirdObjectiveConv, 1);
 		SAVE_VARIABLE(entered, 2);
+		SAVE_VARIABLE(objectiveSent, 3);
 	}
 
 	void Created( GameObject * obj ) 
 	{
 		entered = false;
+		objectiveSent = false;
+		addThirdObjectiveConv = 0;
+	}
+
+	// Original ENDED branch, run at most once.
+	void Deliver_Third_Objective( GameObject * obj )
+	{
+		if (objectiveSent) return;
+		objectiveSent = true;
+		Commands->Send_Custom_Event( obj, Commands->Find_Object (M11_MISSION_CONTROLLER_JDG), 0, M11_ADD_THIRD_OBJECTIVE_JDG, 0 );
+		Commands->Destroy_Object ( obj );//one time only zone--cleaning up
+	}
+
+	// Vita port: a key conversation stops this non-key conversation inside
+	// Start_Conversation (INTERRUPTED). Replay the ENDED branch from a timer, so
+	// a Release_Level stop dies with the outgoing world.
+	void Vita_Conversation_Stopped( GameObject * obj )
+	{
+		A30_Vita_Log("A4 M11 third-objective zone: M11_Add_Third_Objective_Conversation stopped before ending; objective step deferred 1 s\n");
+		Commands->Start_Timer( obj, this, 1.0f, VITA_THIRD_OBJECTIVE_TIMER );
+	}
+
+	void Timer_Expired( GameObject * obj, int timer_id )
+	{
+		if (timer_id == VITA_THIRD_OBJECTIVE_TIMER)
+		{
+			Deliver_Third_Objective( obj );
+		}
 	}
 
 	void Entered( GameObject * obj, GameObject * enterer ) 
@@ -4843,8 +5010,13 @@ DECLARE_SCRIPT(M11_Start_Third_Objective_Zone_JDG, "")//player's third objective
 			entered = true;
 			addThirdObjectiveConv = Commands->Create_Conversation( "M11_Add_Third_Objective_Conversation", 100, 1000, false);
 			Commands->Join_Conversation( NULL, addThirdObjectiveConv, false, false );;
-			Commands->Start_Conversation( addThirdObjectiveConv,  addThirdObjectiveConv );
+			// Vita port: monitor before Start so a key-conversation stop is seen.
 			Commands->Monitor_Conversation (obj, addThirdObjectiveConv);	
+			Commands->Start_Conversation( addThirdObjectiveConv,  addThirdObjectiveConv );
+			if (addThirdObjectiveConv < 0)
+			{
+				Vita_Conversation_Stopped( obj );
+			}
 		}
 	}
 
@@ -4856,8 +5028,18 @@ DECLARE_SCRIPT(M11_Start_Third_Objective_Zone_JDG, "")//player's third objective
 				{
 					if (action_id == addThirdObjectiveConv) //introduce acess powercore objective here
 					{
-						Commands->Send_Custom_Event( obj, Commands->Find_Object (M11_MISSION_CONTROLLER_JDG), 0, M11_ADD_THIRD_OBJECTIVE_JDG, 0 );
-						Commands->Destroy_Object ( obj );//one time only zone--cleaning up
+						Deliver_Third_Objective( obj );
+					}
+				}
+				break;
+
+			// Vita port: see Vita_Conversation_Stopped.
+			case ACTION_COMPLETE_CONVERSATION_INTERRUPTED:
+			case ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT:
+				{
+					if (entered && action_id == addThirdObjectiveConv && !objectiveSent)
+					{
+						Vita_Conversation_Stopped( obj );
 					}
 				}
 				break;
@@ -8964,15 +9146,24 @@ DECLARE_SCRIPT(M11_Silo_ElevatorZone04_JDG, "")//100702
 DECLARE_SCRIPT(M11_Sydney_Rally_Zone_01_JDG, "")
 {
 	bool sydneyInPosition;
+	// Vita port: whether STAR is inside (Entered/Exited), and a one-shot guard.
+	bool starInside;
+	bool fired;
+
+	enum { VITA_RALLY_RECHECK_TIMER = 1101 };
 
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE(sydneyInPosition, 1);
+		SAVE_VARIABLE(starInside, 2);
+		SAVE_VARIABLE(fired, 3);
 	}
 
 	void Created( GameObject * obj ) 
 	{
 		sydneyInPosition = false;
+		starInside = false;
+		fired = false;
 	}
 
 	void Custom( GameObject * obj, int type, int param, GameObject * sender ) 
@@ -8980,13 +9171,43 @@ DECLARE_SCRIPT(M11_Sydney_Rally_Zone_01_JDG, "")
 		if (param == M01_MODIFY_YOUR_ACTION_JDG)
 		{
 			sydneyInPosition = true;
+			// Vita port: the rally fires on STAR entry only. If the player is
+			// already standing inside when Sydney arrives, re-check shortly.
+			if (starInside == true && fired == false)
+			{
+				Commands->Start_Timer( obj, this, 0.5f, VITA_RALLY_RECHECK_TIMER );
+			}
+		}
+	}
+
+	void Timer_Expired( GameObject * obj, int timer_id )
+	{
+		GameObject * star = STAR;
+		if (timer_id == VITA_RALLY_RECHECK_TIMER && starInside == true && fired == false && star != NULL)
+		{
+			A30_Vita_Log("A4 M11 M11_Sydney_Rally_Zone_01_JDG: player already inside when Sydney arrived; firing rally\n");
+			Entered( obj, star );
+		}
+	}
+
+	void Exited( GameObject * obj, GameObject * exiter ) 
+	{
+		if (exiter == STAR)
+		{
+			starInside = false;
 		}
 	}
 
 	void Entered( GameObject * obj, GameObject * enterer ) 
 	{
-		if (enterer == STAR && sydneyInPosition == true)
+		if (enterer == STAR)
 		{
+			starInside = true;
+		}
+
+		if (enterer == STAR && sydneyInPosition == true && fired == false)
+		{
+			fired = true;
 			GameObject * sydney = Commands->Find_Object ( M11_REAL_SYDNEY_MOBIUS_JDG );
 			if (sydney != NULL )
 			{
@@ -9001,15 +9222,24 @@ DECLARE_SCRIPT(M11_Sydney_Rally_Zone_01_JDG, "")
 DECLARE_SCRIPT(M11_Sydney_Rally_Zone_02_JDG, "")
 {
 	bool sydneyInPosition;
+	// Vita port: whether STAR is inside (Entered/Exited), and a one-shot guard.
+	bool starInside;
+	bool fired;
+
+	enum { VITA_RALLY_RECHECK_TIMER = 1101 };
 
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE(sydneyInPosition, 1);
+		SAVE_VARIABLE(starInside, 2);
+		SAVE_VARIABLE(fired, 3);
 	}
 
 	void Created( GameObject * obj ) 
 	{
 		sydneyInPosition = false;
+		starInside = false;
+		fired = false;
 	}
 
 	void Custom( GameObject * obj, int type, int param, GameObject * sender ) 
@@ -9017,13 +9247,43 @@ DECLARE_SCRIPT(M11_Sydney_Rally_Zone_02_JDG, "")
 		if (param == M01_MODIFY_YOUR_ACTION_JDG)
 		{
 			sydneyInPosition = true;
+			// Vita port: the rally fires on STAR entry only. If the player is
+			// already standing inside when Sydney arrives, re-check shortly.
+			if (starInside == true && fired == false)
+			{
+				Commands->Start_Timer( obj, this, 0.5f, VITA_RALLY_RECHECK_TIMER );
+			}
+		}
+	}
+
+	void Timer_Expired( GameObject * obj, int timer_id )
+	{
+		GameObject * star = STAR;
+		if (timer_id == VITA_RALLY_RECHECK_TIMER && starInside == true && fired == false && star != NULL)
+		{
+			A30_Vita_Log("A4 M11 M11_Sydney_Rally_Zone_02_JDG: player already inside when Sydney arrived; firing rally\n");
+			Entered( obj, star );
+		}
+	}
+
+	void Exited( GameObject * obj, GameObject * exiter ) 
+	{
+		if (exiter == STAR)
+		{
+			starInside = false;
 		}
 	}
 
 	void Entered( GameObject * obj, GameObject * enterer ) 
 	{
-		if (enterer == STAR && sydneyInPosition == true)
+		if (enterer == STAR)
 		{
+			starInside = true;
+		}
+
+		if (enterer == STAR && sydneyInPosition == true && fired == false)
+		{
+			fired = true;
 			GameObject * sydney = Commands->Find_Object ( M11_REAL_SYDNEY_MOBIUS_JDG );
 			if (sydney != NULL )
 			{
@@ -9038,15 +9298,24 @@ DECLARE_SCRIPT(M11_Sydney_Rally_Zone_02_JDG, "")
 DECLARE_SCRIPT(M11_Sydney_Rally_Zone_03_JDG, "")
 {
 	bool sydneyInPosition;
+	// Vita port: whether STAR is inside (Entered/Exited), and a one-shot guard.
+	bool starInside;
+	bool fired;
+
+	enum { VITA_RALLY_RECHECK_TIMER = 1101 };
 
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE(sydneyInPosition, 1);
+		SAVE_VARIABLE(starInside, 2);
+		SAVE_VARIABLE(fired, 3);
 	}
 
 	void Created( GameObject * obj ) 
 	{
 		sydneyInPosition = false;
+		starInside = false;
+		fired = false;
 	}
 
 	void Custom( GameObject * obj, int type, int param, GameObject * sender ) 
@@ -9054,13 +9323,43 @@ DECLARE_SCRIPT(M11_Sydney_Rally_Zone_03_JDG, "")
 		if (param == M01_MODIFY_YOUR_ACTION_JDG)
 		{
 			sydneyInPosition = true;
+			// Vita port: the rally fires on STAR entry only. If the player is
+			// already standing inside when Sydney arrives, re-check shortly.
+			if (starInside == true && fired == false)
+			{
+				Commands->Start_Timer( obj, this, 0.5f, VITA_RALLY_RECHECK_TIMER );
+			}
+		}
+	}
+
+	void Timer_Expired( GameObject * obj, int timer_id )
+	{
+		GameObject * star = STAR;
+		if (timer_id == VITA_RALLY_RECHECK_TIMER && starInside == true && fired == false && star != NULL)
+		{
+			A30_Vita_Log("A4 M11 M11_Sydney_Rally_Zone_03_JDG: player already inside when Sydney arrived; firing rally\n");
+			Entered( obj, star );
+		}
+	}
+
+	void Exited( GameObject * obj, GameObject * exiter ) 
+	{
+		if (exiter == STAR)
+		{
+			starInside = false;
 		}
 	}
 
 	void Entered( GameObject * obj, GameObject * enterer ) 
 	{
-		if (enterer == STAR && sydneyInPosition == true)
+		if (enterer == STAR)
 		{
+			starInside = true;
+		}
+
+		if (enterer == STAR && sydneyInPosition == true && fired == false)
+		{
+			fired = true;
 			GameObject * sydney = Commands->Find_Object ( M11_REAL_SYDNEY_MOBIUS_JDG );
 			if (sydney != NULL )
 			{
@@ -9085,15 +9384,24 @@ DECLARE_SCRIPT(M11_Sydney_Rally_Zone_03_JDG, "")
 DECLARE_SCRIPT(M11_Sydney_Rally_Zone_03b_JDG, "")
 {
 	bool sydneyInPosition;
+	// Vita port: whether STAR is inside (Entered/Exited), and a one-shot guard.
+	bool starInside;
+	bool fired;
+
+	enum { VITA_RALLY_RECHECK_TIMER = 1101 };
 
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE(sydneyInPosition, 1);
+		SAVE_VARIABLE(starInside, 2);
+		SAVE_VARIABLE(fired, 3);
 	}
 
 	void Created( GameObject * obj ) 
 	{
 		sydneyInPosition = false;
+		starInside = false;
+		fired = false;
 	}
 
 	void Custom( GameObject * obj, int type, int param, GameObject * sender ) 
@@ -9101,13 +9409,43 @@ DECLARE_SCRIPT(M11_Sydney_Rally_Zone_03b_JDG, "")
 		if (param == M01_MODIFY_YOUR_ACTION_JDG)
 		{
 			sydneyInPosition = true;
+			// Vita port: the rally fires on STAR entry only. If the player is
+			// already standing inside when Sydney arrives, re-check shortly.
+			if (starInside == true && fired == false)
+			{
+				Commands->Start_Timer( obj, this, 0.5f, VITA_RALLY_RECHECK_TIMER );
+			}
+		}
+	}
+
+	void Timer_Expired( GameObject * obj, int timer_id )
+	{
+		GameObject * star = STAR;
+		if (timer_id == VITA_RALLY_RECHECK_TIMER && starInside == true && fired == false && star != NULL)
+		{
+			A30_Vita_Log("A4 M11 M11_Sydney_Rally_Zone_03b_JDG: player already inside when Sydney arrived; firing rally\n");
+			Entered( obj, star );
+		}
+	}
+
+	void Exited( GameObject * obj, GameObject * exiter ) 
+	{
+		if (exiter == STAR)
+		{
+			starInside = false;
 		}
 	}
 
 	void Entered( GameObject * obj, GameObject * enterer ) 
 	{
-		if (enterer == STAR && sydneyInPosition == true)
+		if (enterer == STAR)
 		{
+			starInside = true;
+		}
+
+		if (enterer == STAR && sydneyInPosition == true && fired == false)
+		{
+			fired = true;
 			GameObject * sydney = Commands->Find_Object ( M11_REAL_SYDNEY_MOBIUS_JDG );
 			if (sydney != NULL )
 			{
@@ -9414,6 +9752,14 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 	bool sydney_damaged_conv02_playing;
 	bool sydney_damaged_conv03_playing;
 	bool reachedMissileSwitch;
+	// Vita port: the current rally leg (WAYPATH_01..04) and its retry count.
+	int rallyLegAction;
+	int rallyLegWaypath;
+	int rallyLegStart;
+	int rallyLegEnd;
+	int rallyLegRetries;
+
+	enum { VITA_RALLY_LEG_MAX_RETRIES = 3 };
 
 	REGISTER_VARIABLES()
 	{
@@ -9431,6 +9777,61 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 		SAVE_VARIABLE(sydney_damaged_conv02_playing, 12);
 		SAVE_VARIABLE(sydney_damaged_conv03_playing, 13);
 		SAVE_VARIABLE(reachedMissileSwitch, 14);
+		SAVE_VARIABLE(rallyLegAction, 15);
+		SAVE_VARIABLE(rallyLegWaypath, 16);
+		SAVE_VARIABLE(rallyLegStart, 17);
+		SAVE_VARIABLE(rallyLegEnd, 18);
+		SAVE_VARIABLE(rallyLegRetries, 19);
+	}
+
+	// Vita port: the rally legs leave sydneys_location at IDLE, so the
+	// PATH_BAD/NO_PROGRESS branches below never retry them and a failed leg
+	// leaves Sydney standing. Remember each leg as issued and re-issue the same
+	// goto after a delay, at most VITA_RALLY_LEG_MAX_RETRIES times per leg.
+	void Vita_Record_Rally_Leg( const ActionParamsStruct & params )
+	{
+		rallyLegAction = params.ActionID;
+		rallyLegWaypath = params.WaypathID;
+		rallyLegStart = params.WaypointStartID;
+		rallyLegEnd = params.WaypointEndID;
+		rallyLegRetries = 0;
+	}
+
+	void Vita_Rally_Leg_Failed( GameObject * obj, int action_id, ActionCompleteReason complete_reason )
+	{
+		if (sydneys_location != IDLE || killedYet == true || rallyLegAction == 0 || action_id != rallyLegAction)
+		{
+			return;
+		}
+
+		if (rallyLegRetries >= VITA_RALLY_LEG_MAX_RETRIES)
+		{
+			A30_Vita_Log("A4 M11 Sydney rally leg %d waypath %d failed (reason %d); retry limit %d reached\n",
+				action_id, rallyLegWaypath, (int)complete_reason, (int)VITA_RALLY_LEG_MAX_RETRIES);
+			return;
+		}
+
+		rallyLegRetries++;
+		A30_Vita_Log("A4 M11 Sydney rally leg %d waypath %d failed (reason %d); retry %d/%d in 2 s\n",
+			action_id, rallyLegWaypath, (int)complete_reason, rallyLegRetries, (int)VITA_RALLY_LEG_MAX_RETRIES);
+		// The timer id is the leg's action id, so a retry for a leg that has
+		// since been replaced does nothing.
+		Commands->Start_Timer( obj, this, 2.0f, action_id );
+	}
+
+	void Timer_Expired( GameObject * obj, int timer_id )
+	{
+		if (timer_id != 0 && timer_id == rallyLegAction && sydneys_location == IDLE && killedYet == false)
+		{
+			ActionParamsStruct params;
+			Commands->Set_Innate_Is_Stationary ( obj, false );
+			params.Set_Basic( this, 100, rallyLegAction );
+			params.Set_Movement( Vector3 (0,0,0), RUN, 0.5f );
+			params.WaypathID = rallyLegWaypath;
+			params.WaypointStartID = rallyLegStart;
+			params.WaypointEndID = rallyLegEnd;
+			Commands->Action_Goto(obj, params);
+		}
 	}
 
 	void Created( GameObject * obj ) 
@@ -9454,6 +9855,11 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 		sydney_damaged_conv02_playing = false;
 		sydney_damaged_conv03_playing = false;
 		reachedMissileSwitch = false;
+		rallyLegAction = 0;
+		rallyLegWaypath = 0;
+		rallyLegStart = 0;
+		rallyLegEnd = 0;
+		rallyLegRetries = 0;
 		// Vita port: conversation IDs start at 1000, so 0 never matches the
 		// end-mission conversation before these members are assigned.
 		sydney_conv01 = 0;
@@ -9623,6 +10029,7 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 					params.WaypointEndID = 100130;
 				}
 
+				Vita_Record_Rally_Leg( params );
 				Commands->Action_Goto(obj, params);
 			}
 
@@ -9650,6 +10057,7 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 					params.WaypointEndID = 100162;
 				}
 
+				Vita_Record_Rally_Leg( params );
 				Commands->Action_Goto(obj, params);
 			}
 
@@ -9834,6 +10242,7 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 						params.WaypointStartID = 100542;
 						params.WaypointEndID = 100544;
 
+						Vita_Record_Rally_Leg( params );
 						Commands->Action_Goto(obj, params);
 
 						GameObject * objectiveController = Commands->Find_Object ( M11_MISSION_CONTROLLER_JDG );
@@ -9911,6 +10320,11 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 						Commands->Send_Custom_Event( obj, obj, 0, M01_MODIFY_YOUR_ACTION_04_JDG, 1 );
 					}
 
+					else
+					{
+						Vita_Rally_Leg_Failed( obj, action_id, complete_reason );
+					}
+
 				}
 				break;
 
@@ -9940,6 +10354,11 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 					{
 						Commands->Send_Custom_Event( obj, obj, 0, M01_MODIFY_YOUR_ACTION_04_JDG, 1 );
 					}
+
+					else
+					{
+						Vita_Rally_Leg_Failed( obj, action_id, complete_reason );
+					}
 				}
 				break;
 
@@ -9968,6 +10387,11 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 					else if (sydneys_location == GOING_TO_MISSILE_SWITCH)
 					{
 						Commands->Send_Custom_Event( obj, obj, 0, M01_MODIFY_YOUR_ACTION_04_JDG, 1 );
+					}
+
+					else
+					{
+						Vita_Rally_Leg_Failed( obj, action_id, complete_reason );
 					}
 				}
 				break;

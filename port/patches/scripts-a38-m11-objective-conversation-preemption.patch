@@ -1,0 +1,367 @@
+M11 conversation-gated objectives when a key conversation is playing.
+M11_Mission_Controller_JDG advances only from Action_Complete(ENDED) of the
+non-key conversations M11_Level_Intro_Conversation (objective 2 and the second
+intro, which also starts floor-1 security acting),
+M11_Level_Intro_Conversation02 (objective 1), M11_EVA_SydneyPinged_Conversation
+(objective-2 HUD marker) and M11_EVA_Activate_Nuke_Conversation (objective 5
+and its switch blip). M11_Start_Third_Objective_Zone_JDG adds objective 3 only
+from the ENDED end of M11_Add_Third_Objective_Conversation.
+ActiveConversationClass::Start_Conversation stops a non-key conversation with
+INTERRUPTED at once when a key conversation is active (M11 has three). Retail
+called Monitor_Conversation afterwards, so the stop was never seen and the
+step was lost for good.
+
+Register the monitor before Start_Conversation and accept INTERRUPTED and
+UNABLE_TO_INIT for these ids. The stop starts a 1 s timer that runs the
+original ENDED branch, moved unchanged into a Deliver_* helper. A timer, not a
+synchronous call, keeps the INTERRUPTED callbacks that Release_Level sends
+from acting on the outgoing world (the timer dies with the object). A failed
+Create_Conversation (id < 0) takes the same timer. Each step runs once,
+guarded by a saved flag on unused ids (controller 6-9, zone 3). The factory
+value-initialises, so old saves load the flags as false. On the normal path
+Start_Conversation never touches the monitor array, so the conversation, its
+end and the objective timing are unchanged. The zone also zeroes its
+conversation id in Created. Engine conversation code is unchanged.
+
+diff --git a/Mission11.cpp b/Mission11.cpp
+--- a/Mission11.cpp
++++ b/Mission11.cpp
+@@ -41,6 +41,8 @@
+ #include "mission1.h"
+ #include "mission11.h"
+ 
++extern int A30_Vita_Log(const char *format, ...);
++
+ 
+ /***********************************************************************************************************************
+ Putting level specific character scripts here...sydney, petrova, havoc, etc...
+@@ -201,6 +203,21 @@
+ 	int evaNukeConv;
+ 
+ 	bool player_has_reached_musuem;
++	// Vita port: each conversation-gated step runs once, from the conversation's
++	// end or from its preemption (see Vita_Conversation_Stopped).
++	bool introConvDelivered;
++	bool introConv02Delivered;
++	bool evaPingedSydneyConvDelivered;
++	bool evaNukeConvDelivered;
++
++	enum
++	{
++		// Vita port: timer ids for the deferred replay of a stopped gate.
++		VITA_INTRO_CONV_TIMER = 1101,
++		VITA_INTRO_CONV02_TIMER,
++		VITA_EVA_PINGED_SYDNEY_CONV_TIMER,
++		VITA_EVA_NUKE_CONV_TIMER,
++	};
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+@@ -209,11 +226,94 @@
+ 		SAVE_VARIABLE( missionIntroConv, 3 );
+ 		SAVE_VARIABLE( evaNukeConv, 4 );
+ 		SAVE_VARIABLE( player_has_reached_musuem, 5 );
++		SAVE_VARIABLE( introConvDelivered, 6 );
++		SAVE_VARIABLE( introConv02Delivered, 7 );
++		SAVE_VARIABLE( evaPingedSydneyConvDelivered, 8 );
++		SAVE_VARIABLE( evaNukeConvDelivered, 9 );
+ 	}
+ 
+-	void Created( GameObject * obj ) 
++	// Original ENDED branches, each run at most once.
++	void Deliver_Intro_Conversation( GameObject * obj )
++	{
++		if (introConvDelivered) return;
++		introConvDelivered = true;
++		Commands->Send_Custom_Event( obj, obj, 0, M11_ADD_SECOND_OBJECTIVE_JDG, 0 );
++		Commands->Send_Custom_Event( obj, obj, 0, M11_PLAY_SECOND_INTRO_CONVERSATION_JDG, 3 );
++	}
++
++	void Deliver_Intro_Conversation02( GameObject * obj )
++	{
++		if (introConv02Delivered) return;
++		introConv02Delivered = true;
++		Commands->Send_Custom_Event( obj, obj, 0, M11_ADD_FIRST_OBJECTIVE_JDG, 0 );
++	}
++
++	void Deliver_EVA_Pinged_Sydney_Conversation( GameObject * obj )
++	{
++		if (evaPingedSydneyConvDelivered) return;
++		evaPingedSydneyConvDelivered = true;
++		Commands->Send_Custom_Event( obj, obj, 0, M11_ADD_SECOND_OBJECTIVE_POG_JDG, 0 );
++	}
++
++	void Deliver_EVA_Nuke_Conversation( GameObject * obj )
++	{
++		if (evaNukeConvDelivered) return;
++		evaNukeConvDelivered = true;
++		Commands->Add_Objective( M11_FIFTH_OBJECTIVE_JDG, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M11_05, NULL, IDS_Enc_Obj_Primary_M11_05 );
++
++		GameObject * nukeSwitch = Commands->Find_Object ( M11_END_MISSION_SWITCH_JDG );
++		if (nukeSwitch != NULL)
++		{
++			Commands->Set_Objective_Radar_Blip_Object( M11_FIFTH_OBJECTIVE_JDG, nukeSwitch );
++			Commands->Set_Objective_HUD_Info( M11_FIFTH_OBJECTIVE_JDG, 94, "POG_M11_1_04.tga", IDS_POG_SABOTAGE );
++		}
++
++		else
++		{
++			Commands->Debug_Message ( "***************************M11 mission controller cannot find sydnee to ping her on radar--add forth objective\n" );
++		}
++	}
++
++	// Vita port: a key conversation stops these non-key conversations inside
++	// Start_Conversation (INTERRUPTED); the monitor is registered first, so the
++	// stop arrives here. Replay the ENDED branch from a timer: the callback can
++	// also come from Release_Level, and a timer dies with the outgoing world.
++	void Vita_Conversation_Stopped( GameObject * obj, int timer_id, const char * name )
++	{
++		A30_Vita_Log("A4 M11 controller: %s stopped before ending; objective step deferred 1 s\n", name);
++		Commands->Start_Timer( obj, this, 1.0f, timer_id );
++	}
++
++	void Timer_Expired( GameObject * obj, int timer_id )
++	{
++		if (timer_id == VITA_INTRO_CONV_TIMER)
++		{
++			Deliver_Intro_Conversation( obj );
++		}
++
++		else if (timer_id == VITA_INTRO_CONV02_TIMER)
++		{
++			Deliver_Intro_Conversation02( obj );
++		}
++
++		else if (timer_id == VITA_EVA_PINGED_SYDNEY_CONV_TIMER)
++		{
++			Deliver_EVA_Pinged_Sydney_Conversation( obj );
++		}
++
++		else if (timer_id == VITA_EVA_NUKE_CONV_TIMER)
++		{
++			Deliver_EVA_Nuke_Conversation( obj );
++		}
++	}
++
++	void Created( GameObject * obj )
+ 	{
+ 		player_has_reached_musuem = false;
++		introConvDelivered = false;
++		introConv02Delivered = false;
++		evaPingedSydneyConvDelivered = false;
++		evaNukeConvDelivered = false;
+ 		// Vita port: conversation IDs start at 1000, so 0 never matches a
+ 		// monitored conversation before the member is assigned.
+ 		evaPingedSydneyConv = 0;
+@@ -234,35 +334,48 @@
+ 				{
+ 					if (action_id == missionIntroConv) //introduce rescue sydney objective here
+ 					{
+-						Commands->Send_Custom_Event( obj, obj, 0, M11_ADD_SECOND_OBJECTIVE_JDG, 0 );
+-						Commands->Send_Custom_Event( obj, obj, 0, M11_PLAY_SECOND_INTRO_CONVERSATION_JDG, 3 );
++						Deliver_Intro_Conversation( obj );
+ 					}
+ 
+ 					else if (action_id == missionIntroConv02) //introduce rescue sydney objective here
+ 					{
+-						Commands->Send_Custom_Event( obj, obj, 0, M11_ADD_FIRST_OBJECTIVE_JDG, 0 );
++						Deliver_Intro_Conversation02( obj );
+ 					}
+ 
+ 					else if (action_id == evaPingedSydneyConv)
+ 					{
+-						Commands->Send_Custom_Event( obj, obj, 0, M11_ADD_SECOND_OBJECTIVE_POG_JDG, 0 );
++						Deliver_EVA_Pinged_Sydney_Conversation( obj );
+ 					}
+ 
+ 					else if (action_id == evaNukeConv)
+ 					{
+-						Commands->Add_Objective( M11_FIFTH_OBJECTIVE_JDG, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M11_05, NULL, IDS_Enc_Obj_Primary_M11_05 );
+-						
+-						GameObject * nukeSwitch = Commands->Find_Object ( M11_END_MISSION_SWITCH_JDG );
+-						if (nukeSwitch != NULL)
+-						{
+-							Commands->Set_Objective_Radar_Blip_Object( M11_FIFTH_OBJECTIVE_JDG, nukeSwitch );
+-							Commands->Set_Objective_HUD_Info( M11_FIFTH_OBJECTIVE_JDG, 94, "POG_M11_1_04.tga", IDS_POG_SABOTAGE );
+-						}
++						Deliver_EVA_Nuke_Conversation( obj );
++					}
++				}
++				break;
+ 
+-						else
+-						{
+-							Commands->Debug_Message ( "***************************M11 mission controller cannot find sydnee to ping her on radar--add forth objective\n" );
+-						}
++			// Vita port: see Vita_Conversation_Stopped.
++			case ACTION_COMPLETE_CONVERSATION_INTERRUPTED:
++			case ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT:
++				{
++					if (action_id == missionIntroConv && !introConvDelivered)
++					{
++						Vita_Conversation_Stopped( obj, VITA_INTRO_CONV_TIMER, "M11_Level_Intro_Conversation" );
++					}
++
++					else if (action_id == missionIntroConv02 && !introConv02Delivered)
++					{
++						Vita_Conversation_Stopped( obj, VITA_INTRO_CONV02_TIMER, "M11_Level_Intro_Conversation02" );
++					}
++
++					else if (action_id == evaPingedSydneyConv && !evaPingedSydneyConvDelivered)
++					{
++						Vita_Conversation_Stopped( obj, VITA_EVA_PINGED_SYDNEY_CONV_TIMER, "M11_EVA_SydneyPinged_Conversation" );
++					}
++
++					else if (action_id == evaNukeConv && !evaNukeConvDelivered)
++					{
++						Vita_Conversation_Stopped( obj, VITA_EVA_NUKE_CONV_TIMER, "M11_EVA_Activate_Nuke_Conversation" );
+ 					}
+ 				}
+ 				break;
+@@ -288,8 +401,13 @@
+ 							Commands->Join_Conversation( NULL, missionIntroConv, false, false );
+ 							Commands->Join_Conversation( STAR, missionIntroConv, false, false );
+ 							//Commands->Join_Conversation( NULL, missionIntroConv, false, false );
+-							Commands->Start_Conversation( missionIntroConv,  missionIntroConv );
++							// Vita port: monitor before Start so a key-conversation stop is seen.
+ 							Commands->Monitor_Conversation (obj, missionIntroConv);
++							Commands->Start_Conversation( missionIntroConv,  missionIntroConv );
++							if (missionIntroConv < 0)
++							{
++								Vita_Conversation_Stopped( obj, VITA_INTRO_CONV_TIMER, "M11_Level_Intro_Conversation" );
++							}
+ 						}
+ 
+ 						else
+@@ -307,8 +425,13 @@
+ 							Commands->Join_Conversation( NULL, missionIntroConv02, false, false );
+ 							Commands->Join_Conversation( NULL, missionIntroConv02, false, false );
+ 							//Commands->Join_Conversation( STAR, missionIntroConv02, false, false );
+-							Commands->Start_Conversation( missionIntroConv02,  missionIntroConv02 );
++							// Vita port: monitor before Start so a key-conversation stop is seen.
+ 							Commands->Monitor_Conversation (obj, missionIntroConv02);
++							Commands->Start_Conversation( missionIntroConv02,  missionIntroConv02 );
++							if (missionIntroConv02 < 0)
++							{
++								Vita_Conversation_Stopped( obj, VITA_INTRO_CONV02_TIMER, "M11_Level_Intro_Conversation02" );
++							}
+ 
+ 							Commands->Send_Custom_Event( obj, Commands->Find_Object (M11_FLOOR01_SECURITY_CONTROLLER_JDG), 0, M01_START_ACTING_JDG, 5 );
+ 						}
+@@ -346,8 +469,13 @@
+ 
+ 						evaPingedSydneyConv = Commands->Create_Conversation( "M11_EVA_SydneyPinged_Conversation", 100, 1000, false);
+ 						Commands->Join_Conversation( NULL, evaPingedSydneyConv, false, false );;
+-						Commands->Start_Conversation( evaPingedSydneyConv,  evaPingedSydneyConv );
++						// Vita port: monitor before Start so a key-conversation stop is seen.
+ 						Commands->Monitor_Conversation (obj, evaPingedSydneyConv);
++						Commands->Start_Conversation( evaPingedSydneyConv,  evaPingedSydneyConv );
++						if (evaPingedSydneyConv < 0)
++						{
++							Vita_Conversation_Stopped( obj, VITA_EVA_PINGED_SYDNEY_CONV_TIMER, "M11_EVA_SydneyPinged_Conversation" );
++						}
+ 
+ 					}
+ 					break;//
+@@ -447,8 +575,13 @@
+ 					{
+ 						evaNukeConv = Commands->Create_Conversation( "M11_EVA_Activate_Nuke_Conversation", 100, 1000, false);
+ 						Commands->Join_Conversation( NULL, evaNukeConv, false, false );;
+-						Commands->Start_Conversation( evaNukeConv,  evaNukeConv );
++						// Vita port: monitor before Start so a key-conversation stop is seen.
+ 						Commands->Monitor_Conversation (obj, evaNukeConv);
++						Commands->Start_Conversation( evaNukeConv,  evaNukeConv );
++						if (evaNukeConv < 0)
++						{
++							Vita_Conversation_Stopped( obj, VITA_EVA_NUKE_CONV_TIMER, "M11_EVA_Activate_Nuke_Conversation" );
++						}
+ 					}
+ 					break;
+ 
+@@ -4824,16 +4957,50 @@
+ {
+ 	int addThirdObjectiveConv;
+ 	bool entered;
++	// Vita port: objective 3 is added once, from the conversation's end or
++	// from its preemption.
++	bool objectiveSent;
++
++	enum { VITA_THIRD_OBJECTIVE_TIMER = 1101 };
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE(addThirdObjectiveConv, 1);
+ 		SAVE_VARIABLE(entered, 2);
++		SAVE_VARIABLE(objectiveSent, 3);
+ 	}
+ 
+ 	void Created( GameObject * obj ) 
+ 	{
+ 		entered = false;
++		objectiveSent = false;
++		addThirdObjectiveConv = 0;
++	}
++
++	// Original ENDED branch, run at most once.
++	void Deliver_Third_Objective( GameObject * obj )
++	{
++		if (objectiveSent) return;
++		objectiveSent = true;
++		Commands->Send_Custom_Event( obj, Commands->Find_Object (M11_MISSION_CONTROLLER_JDG), 0, M11_ADD_THIRD_OBJECTIVE_JDG, 0 );
++		Commands->Destroy_Object ( obj );//one time only zone--cleaning up
++	}
++
++	// Vita port: a key conversation stops this non-key conversation inside
++	// Start_Conversation (INTERRUPTED). Replay the ENDED branch from a timer, so
++	// a Release_Level stop dies with the outgoing world.
++	void Vita_Conversation_Stopped( GameObject * obj )
++	{
++		A30_Vita_Log("A4 M11 third-objective zone: M11_Add_Third_Objective_Conversation stopped before ending; objective step deferred 1 s\n");
++		Commands->Start_Timer( obj, this, 1.0f, VITA_THIRD_OBJECTIVE_TIMER );
++	}
++
++	void Timer_Expired( GameObject * obj, int timer_id )
++	{
++		if (timer_id == VITA_THIRD_OBJECTIVE_TIMER)
++		{
++			Deliver_Third_Objective( obj );
++		}
+ 	}
+ 
+ 	void Entered( GameObject * obj, GameObject * enterer ) 
+@@ -4843,8 +5010,13 @@
+ 			entered = true;
+ 			addThirdObjectiveConv = Commands->Create_Conversation( "M11_Add_Third_Objective_Conversation", 100, 1000, false);
+ 			Commands->Join_Conversation( NULL, addThirdObjectiveConv, false, false );;
+-			Commands->Start_Conversation( addThirdObjectiveConv,  addThirdObjectiveConv );
++			// Vita port: monitor before Start so a key-conversation stop is seen.
+ 			Commands->Monitor_Conversation (obj, addThirdObjectiveConv);	
++			Commands->Start_Conversation( addThirdObjectiveConv,  addThirdObjectiveConv );
++			if (addThirdObjectiveConv < 0)
++			{
++				Vita_Conversation_Stopped( obj );
++			}
+ 		}
+ 	}
+ 
+@@ -4856,8 +5028,18 @@
+ 				{
+ 					if (action_id == addThirdObjectiveConv) //introduce acess powercore objective here
+ 					{
+-						Commands->Send_Custom_Event( obj, Commands->Find_Object (M11_MISSION_CONTROLLER_JDG), 0, M11_ADD_THIRD_OBJECTIVE_JDG, 0 );
+-						Commands->Destroy_Object ( obj );//one time only zone--cleaning up
++						Deliver_Third_Objective( obj );
++					}
++				}
++				break;
++
++			// Vita port: see Vita_Conversation_Stopped.
++			case ACTION_COMPLETE_CONVERSATION_INTERRUPTED:
++			case ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT:
++				{
++					if (entered && action_id == addThirdObjectiveConv && !objectiveSent)
++					{
++						Vita_Conversation_Stopped( obj );
+ 					}
+ 				}
+ 				break;

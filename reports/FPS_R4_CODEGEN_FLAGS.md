@@ -143,4 +143,3 @@ and the DataSafe clock reads.
 Build twice, identical except for `-DRENEGADE_VITA_SIM_O3=ON`, and run the same M13 route. Over at
 least 1200 frames each, compare `A4 campaign pacing` combat avg_us and `A3.5 perf` sim p50/p95/p99.
 Adopt only if combat drops by at least 3% with no p99 regression.
-

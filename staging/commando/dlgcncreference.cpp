@@ -54,7 +54,7 @@
 #include "string_ids.h"
 #include "translatedb.h"
 #include "useroptions.h"
-#include "gamespyadmin.h"
+#include <gamespyadmin.h>
 #include "dialogtests.h"
 #include "dialogmgr.h"
 #include "specialbuilds.h"

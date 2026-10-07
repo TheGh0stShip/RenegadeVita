@@ -43,6 +43,7 @@
 #endif
 #include "gamedata.h"
 #include "cnetwork.h"
+#include "gamemode.h"
 #include "dlgmessagebox.h"
 #include "renegadedialogmgr.h"
 #include <combat\playertype.h>

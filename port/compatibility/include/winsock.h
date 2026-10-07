@@ -38,6 +38,9 @@ typedef struct _WSADATA { int unused; } WSADATA;
 #endif
 
 static inline int WSAStartup(unsigned short, WSADATA *) { return 0; }
+// Vita network bring-up/teardown is owned by the platform network boundary;
+// like WSAStartup, the Winsock reference count itself has no Vita meaning.
+static inline int WSACleanup(void) { return 0; }
 static inline int WSAGetLastError(void) { return errno; }
 static inline void WSASetLastError(int error) { errno = error; }
 static inline int closesocket(SOCKET socket)

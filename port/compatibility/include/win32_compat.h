@@ -222,6 +222,7 @@ extern HINSTANCE ProgramInstance;
 #define VK_SHIFT 0x10
 #define VK_ESCAPE 0x1B
 #define VK_F1 0x70
+#define VK_F5 0x74
 #define VK_F6 0x75
 #define VK_SPACE 0x20
 #define VK_CONTROL 0x11

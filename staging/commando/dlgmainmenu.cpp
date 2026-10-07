@@ -64,6 +64,9 @@
 #endif
 #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "nicenum.h"
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+#include "cnetwork.h"
+#endif
 #include "dlgmessagebox.h"
 #include "translatedb.h"
 #include "string_ids.h"

@@ -44,7 +44,7 @@
 #include "debug.h"
 #include "translatedb.h"
 #include "string_ids.h"
-#include "slavemaster.h"
+#include "a31_slavemaster_stub.h"
 
 
 ////////////////////////////////////////////////////////////////

@@ -49,13 +49,16 @@
  	//
 --- a/dlgmainmenu.cpp
 +++ b/dlgmainmenu.cpp
-@@ -61,10 +61,14 @@
+@@ -61,10 +61,17 @@
  #include "dialogtests.h"
  #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
  #include "dlgwolwait.h"
 +#endif
 +#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || defined(RENEGADE_VITA_LAN_FRONTEND)
  #include "nicenum.h"
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++#include "cnetwork.h"
++#endif
  #include "dlgmessagebox.h"
  #include "translatedb.h"
  #include "string_ids.h"
@@ -64,7 +67,7 @@
  #include "gamespyadmin.h"
  #endif
  
-@@ -477,15 +481,20 @@
+@@ -477,15 +484,20 @@
  			break;
  		}
  
@@ -86,7 +89,7 @@
  				GameInitMgrClass::Initialize_LAN ();
  			} else {
  				DlgMsgBox::DoDialog(
-@@ -495,11 +504,13 @@
+@@ -495,11 +507,13 @@
  			}
  			break;
  

@@ -1,0 +1,175 @@
+--- a/dlgcontrolsaveload.cpp
++++ b/dlgcontrolsaveload.cpp
+@@ -47,7 +47,7 @@
+ ////////////////////////////////////////////////////////////////
+ //	Local constants
+ ////////////////////////////////////////////////////////////////
+-static enum
++enum
+ {
+ 	MBEVENT_DELETE_PROMPT	= 1,
+ 	MBEVENT_SAVE_PROMPT
+@@ -86,7 +86,8 @@
+ 		//	Loop over all the configurations
+ 		//
+ 		int count = InputConfigMgrClass::Get_Configuration_Count ();
+-		for (int index = 0; index < count; index ++) {
++		int index;
++		for (index = 0; index < count; index ++) {
+ 			
+ 			//
+ 			//	Get information about this configuration
+--- a/dlgcncbattleinfo.cpp
++++ b/dlgcncbattleinfo.cpp
+@@ -243,7 +243,8 @@
+ 	//
+ 	//	Fill in the GDI buildings
+ 	//
+-	for (int index = 0; index < BUILDING_COUNT; index ++) {
++	int index;
++	for (index = 0; index < BUILDING_COUNT; index ++) {
+ 
+ 		//
+ 		//	Find the building
+--- a/inputconfigmgr.cpp
++++ b/inputconfigmgr.cpp
+@@ -44,7 +44,7 @@
+ #include "debug.h"
+ #include "translatedb.h"
+ #include "string_ids.h"
+-#include "slavemaster.h"
++#include "a31_slavemaster_stub.h"
+ 
+ 
+ ////////////////////////////////////////////////////////////////
+--- a/dlgmplangamelist.cpp
++++ b/dlgmplangamelist.cpp
+@@ -67,7 +67,7 @@
+ ////////////////////////////////////////////////////////////////
+ //	Local constants
+ ////////////////////////////////////////////////////////////////
+-static enum
++enum
+ {
+ 	COL_ICON				= 0,
+ 	COL_HOST_NAME,
+--- a/dlgserversaveload.cpp
++++ b/dlgserversaveload.cpp
+@@ -101,7 +101,8 @@
+ 		ServerSettingsManagerClass::Scan();
+ 		int count = ServerSettingsManagerClass::Get_Num_Settings_Files();
+ 
+-		for (int index = 0; index < count; index ++) {
++		int index;
++		for (index = 0; index < count; index ++) {
+ 
+ 			//
+ 			//	Get information about this configuration
+@@ -642,7 +643,7 @@
+  *=============================================================================================*/
+ ServerSettingsClass::ServerSettingsClass(char *filename, unsigned short *configname, int file_number)
+ {
+-	ConfigName = configname;	//"Default C&C Server Settings";
++	ConfigName = (const WCHAR *)configname;	//"Default C&C Server Settings";
+ 	RawFileName = filename;		//"svrcfg_cnc.ini"
+ 	FileNumber = file_number;
+ 	IsCustom = true;
+--- a/DlgMPTeamSelect.cpp
++++ b/DlgMPTeamSelect.cpp
+@@ -43,6 +43,7 @@
+ #endif
+ #include "gamedata.h"
+ #include "cnetwork.h"
++#include "gamemode.h"
+ #include "dlgmessagebox.h"
+ #include "renegadedialogmgr.h"
+ #include <combat\playertype.h>
+--- a/gameoptionsevent.cpp
++++ b/gameoptionsevent.cpp
+@@ -43,6 +43,7 @@
+ #include "gamemode.h"
+ #include "cnetwork.h"
+ #include "gametype.h"
++#include "resource.h"
+ #if defined(RENEGADE_VITA_LAN_FRONTEND)
+ #include "DlgMPConnect.h"
+ #include "DlgMPConnectionRefused.h"
+--- a/dlgcncreference.cpp
++++ b/dlgcncreference.cpp
+@@ -54,7 +54,7 @@
+ #include "string_ids.h"
+ #include "translatedb.h"
+ #include "useroptions.h"
+-#include "gamespyadmin.h"
++#include <gamespyadmin.h>
+ #include "dialogtests.h"
+ #include "dialogmgr.h"
+ #include "specialbuilds.h"
+--- a/dlgmplanhostoptions.cpp
++++ b/dlgmplanhostoptions.cpp
+@@ -598,6 +598,9 @@
+ 		}
+ 	}
+ #endif
++#if defined(RENEGADE_VITA_LAN_FRONTEND)
++	}
++#endif
+ 
+ 	ComboBoxCtrlClass* combo = (ComboBoxCtrlClass*)Get_Dlg_Item(IDC_CHOOSESIDE_COMBO);
+ 
+--- a/dlgserversaveload.h
++++ b/dlgserversaveload.h
+@@ -118,7 +118,7 @@
+ {
+ 	public:
+ 
+-		ServerSettingsClass(char *filename = "svrcfg_cnc.ini", unsigned short *configname = (unsigned short*)TRANSLATE(IDS_SERVER_SAVELOAD_DEFAULT), int file_number = 0);
++		ServerSettingsClass(char *filename = "svrcfg_cnc.ini", WCHAR *configname = (WCHAR *)TRANSLATE(IDS_SERVER_SAVELOAD_DEFAULT), int file_number = 0);
+ 		ServerSettingsClass(ServerSettingsClass *other);
+ 		bool Is_Default(void) {return(FileNumber == 0);}
+ 		bool Is_Default_Custom(void) {return(FileNumber == 1);}
+--- a/dlgserversaveload.cpp
++++ b/dlgserversaveload.cpp
+@@ -641,9 +641,9 @@
+  * HISTORY:                                                                                    *
+  *   12/17/2001 5:11PM ST : Created                                                            *
+  *=============================================================================================*/
+-ServerSettingsClass::ServerSettingsClass(char *filename, unsigned short *configname, int file_number)
+-{
+-	ConfigName = (const WCHAR *)configname;	//"Default C&C Server Settings";
++ServerSettingsClass::ServerSettingsClass(char *filename, WCHAR *configname, int file_number)
++{
++	ConfigName = configname;	//"Default C&C Server Settings";
+ 	RawFileName = filename;		//"svrcfg_cnc.ini"
+ 	FileNumber = file_number;
+ 	IsCustom = true;
+--- a/dlgserversaveload.cpp
++++ b/dlgserversaveload.cpp
+@@ -940,7 +940,8 @@
+ 			char filename[MAX_PATH];
+ 			int file_number = -1;
+ 
+-			for (int i=0 ; i<ServerSettingsList.Count() ; i++) {
++			int i;
++			for (i=0 ; i<ServerSettingsList.Count() ; i++) {
+ 				ServerSettingsClass *settings = ServerSettingsList[i];
+ 				if (settings) {
+ 					WWASSERT(settings->FileNumber >= 0);
+--- a/dlgserversaveload.cpp
++++ b/dlgserversaveload.cpp
+@@ -725,13 +725,13 @@
+ 	/*
+ 	** Add in the default as the first entry.
+ 	*/
+-	ServerSettingsList.Add(new ServerSettingsClass("def_svrcfg_cnc.ini", (unsigned short *)TRANSLATE(IDS_SERVER_SAVELOAD_DEFAULT), 0));
++	ServerSettingsList.Add(new ServerSettingsClass("def_svrcfg_cnc.ini", (WCHAR *)TRANSLATE(IDS_SERVER_SAVELOAD_DEFAULT), 0));
+ 	ServerSettingsList[0]->IsCustom = false;
+ 
+ 	/*
+ 	** Add in the custom default as the second entry.
+ 	*/
+-	ServerSettingsList.Add(new ServerSettingsClass("svrcfg_cnc.ini", (unsigned short *)TRANSLATE(IDS_SERVER_SAVELOAD_CUSTOM_DEFAULT), 1));
++	ServerSettingsList.Add(new ServerSettingsClass("svrcfg_cnc.ini", (WCHAR *)TRANSLATE(IDS_SERVER_SAVELOAD_CUSTOM_DEFAULT), 1));
+ 	ServerSettingsList[1]->IsCustom = true;
+ 
+ 	for (int i=2 ; i<MAX_SETTINGS_FILES ; i++) {

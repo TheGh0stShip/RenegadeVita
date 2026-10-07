@@ -1492,6 +1492,15 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a36-lan-connect-refusal.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a36-multiplayer-frontend-gcc15.patch"
+# The LAN frontend patches above modify these mixed-case headers after the
+# lowercase alias pass, so refresh the aliases that quoted lowercase includes
+# select; otherwise they would see the unpatched (WWOnline/WinBase) text.
+for rv_h in DlgMPConnect DlgMPConnectionRefused DlgMPTeamSelect DlgPasswordPrompt; do
+	cp -- "$rv_stage/commando/$rv_h.h" \
+		"$rv_stage/commando/$(printf '%s' "$rv_h" | tr '[:upper:]' '[:lower:]').h"
+done
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-credits-short-read.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a

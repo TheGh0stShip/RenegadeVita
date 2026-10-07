@@ -598,6 +598,9 @@ MPLanHostBasicOptionsTabClass::On_Apply (void)
 		}
 	}
 #endif
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+	}
+#endif
 
 	ComboBoxCtrlClass* combo = (ComboBoxCtrlClass*)Get_Dlg_Item(IDC_CHOOSESIDE_COMBO);
 

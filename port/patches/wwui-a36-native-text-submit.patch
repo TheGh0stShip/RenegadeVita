@@ -1,6 +1,16 @@
 --- a/dialogbase.cpp
 +++ b/dialogbase.cpp
-@@ -1050,3 +1050,12 @@
+@@ -70,6 +70,9 @@
+ 
+ #define DIRECTINPUT_VERSION 0x0800
+ #include <dinput.h>
++#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && defined(__vita__) && !defined(VK_F6)
++#define VK_F6 0x75 // wwlib/keyboard.h value; the Vita input boundary maps Square to it
++#endif
+ 
+ 
+ ////////////////////////////////////////////////////////////////
+@@ -1050,3 +1053,12 @@
  #if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && defined(__vita__)
 +		// Square submits a focused edit through its original Enter handler;
 +		// Cross still opens the keyboard. No network/save callback is invented.

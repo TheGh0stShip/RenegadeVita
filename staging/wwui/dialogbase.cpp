@@ -70,6 +70,9 @@
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && defined(__vita__) && !defined(VK_F6)
+#define VK_F6 0x75 // wwlib/keyboard.h value; the Vita input boundary maps Square to it
+#endif
 
 
 ////////////////////////////////////////////////////////////////

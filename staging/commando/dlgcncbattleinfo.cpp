@@ -243,7 +243,8 @@ CNCBattleInfoDialogClass::Configure_Icons (void)
 	//
 	//	Fill in the GDI buildings
 	//
-	for (int index = 0; index < BUILDING_COUNT; index ++) {
+	int index;
+	for (index = 0; index < BUILDING_COUNT; index ++) {
 
 		//
 		//	Find the building

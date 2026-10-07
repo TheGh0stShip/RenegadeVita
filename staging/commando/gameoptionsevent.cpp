@@ -43,6 +43,7 @@
 #include "gamemode.h"
 #include "cnetwork.h"
 #include "gametype.h"
+#include "resource.h"
 #if defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "DlgMPConnect.h"
 #include "DlgMPConnectionRefused.h"

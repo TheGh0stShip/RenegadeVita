@@ -12,11 +12,17 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def bounded_source(source):
+def camera_callback_body(source):
+    """Return the M09_Camera_Activate script declaration text."""
     declarations = list(re.finditer(r'\bDECLARE_SCRIPT\s*\(\s*(\w+)', source))
     match = next(item for item in declarations if item[1] == 'M09_Camera_Activate')
     start = match.start()
     end = next(item.start() for item in declarations if item.start() > start)
+    return start, end
+
+
+def bounded_source(source):
+    start, end = camera_callback_body(source)
     body = source[start:end]
     old = 'for (int x = 0; x < 10; x++)'
     if body.count(old) != 1:
@@ -36,7 +42,15 @@ class CameraTests(unittest.TestCase):
             staged = ROOT / 'staging/scripts/Mission09.cpp'
             experiment = work / 'Mission09-bounded.cpp'
             experiment.write_text(bounded_source(source.read_text(encoding='latin1')), encoding='latin1')
-            self.assertEqual(experiment.read_bytes(), staged.read_bytes())
+            # Later retained staging patches (for example the M09 save-variable
+            # and diagnostics patches) legitimately touch other scripts in this
+            # file, so only the camera callback is required to equal the bounded
+            # experiment byte for byte.
+            experiment_text = experiment.read_text(encoding='latin1')
+            staged_text = staged.read_text(encoding='latin1')
+            exp_start, exp_end = camera_callback_body(experiment_text)
+            stg_start, stg_end = camera_callback_body(staged_text)
+            self.assertEqual(experiment_text[exp_start:exp_end], staged_text[stg_start:stg_end])
             receipts = []
             for label, cpp in (('original', source), ('bounded_staged', staged)):
                 command = ['c++', '-std=c++17', '-O1', '-g', '-fpermissive',

@@ -20,9 +20,10 @@ class ScriptLoadCapacityTests(unittest.TestCase):
 #include <cstdio>
 #include <cstring>
 struct ChunkSeam {
-    unsigned length = 4, reads = 0;
+    unsigned length = 4, reads = 0, errors = 0;
     unsigned char bytes[4] = {10,20,30,40};
     unsigned Cur_Micro_Chunk_Length() { return length; }
+    void Report_Error() { ++errors; }
     void Read(void *data, unsigned size) { ++reads; assert(size <= 4); memcpy(data, bytes, size); }
 };
 struct ScriptLoader { ChunkSeam CLoad; };
@@ -39,11 +40,11 @@ int main() {
     loader.CLoad.reads = 0;
     data[0] = 1;
     Load_Data(loader, 2, data);
-    assert(loader.CLoad.reads == 0 && data[0] == 1);
+    assert(loader.CLoad.reads == 0 && data[0] == 1 && loader.CLoad.errors == 1);
     Load_Data(loader, -1, data);
-    assert(loader.CLoad.reads == 0 && data[0] == 1);
+    assert(loader.CLoad.reads == 0 && data[0] == 1 && loader.CLoad.errors == 2);
     Load_Data(loader, 4, nullptr);
-    assert(loader.CLoad.reads == 0);
+    assert(loader.CLoad.reads == 0 && loader.CLoad.errors == 3);
     Load_Data(loader, 4, data);
     assert(loader.CLoad.reads == 1 && data[3] == 40);
     loader.CLoad.length = 0;

@@ -232,6 +232,10 @@ Assessment for Vita:
    order, memory), the script would crash instead of skipping. A null guard
    would be a safe hardening but is a behavior change in original script
    plumbing, so none was added without evidence.
+   Update 2026-10-07: the null guard is now applied as
+   `port/patches/combat-a36-scriptcommands-null-guards.patch` (skips the
+   command and logs via `Debug_Say` when `Peek_Animation()` is NULL; unchanged
+   behavior otherwise). Source-only: not built or run.
 2. The first call of each scripted lift loads a `.w3d` on demand during
    gameplay; a hitch on first use is expected.
 3. M11 Sydney escort over ElevatorPhys relies on `Can_Object_Enter`,

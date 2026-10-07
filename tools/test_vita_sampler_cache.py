@@ -22,9 +22,9 @@ def build_contract(directory: Path, source: Path, sanitize: bool = False) -> Pat
         section("unsigned g_render_work_cache_mode =", "VitaIndexedMeshBatch g_indexed_mesh_batch;"),
         section("struct NativeTextureObjectSampler {", "void Read_Render_Work_Cache_Mode()"),
         section("bool Set_Texture_Stage_Enabled(", "bool Render_State_Cache_Matches("),
-        section("void Invalidate_Texture_State_Cache()", "bool Build_Indexed_Transform_Matrices("),
+        section("void Invalidate_Texture_State_Cache()", "bool Bind_Offscreen_Render_Target("),
         section("bool Bind_Texture(uint32_t", "bool Apply_DX8_Texture_Stage_State("),
-        section("void Release_Texture(uint32_t", "void Submit_Mesh("),
+        section("void Release_Texture(uint32_t", "static void Submit_Mesh_Internal("),
     ]
     (directory / "sampler-production.inc").write_text("\n".join(parts))
     executable = directory / "sampler-cache-test"

@@ -30,8 +30,11 @@ class IndexPreparationTest(unittest.TestCase):
 #include <cstring>
 #include <cassert>
 #include <vector>
+#define RENEGADE_FRAME_PROFILE(name) ((void)0)
 namespace RenegadeVitaRenderer {
 Statistics g_statistics={}; unsigned g_render_work_cache_mode=0;
+// The extracted range now also spans the render-target size query.
+uint32_t g_active_render_target_width=0U, g_active_render_target_height=0U;
 void Log_Indexed_Rejection(const char*,uint32_t) {}
 #include "production.inc"
 }

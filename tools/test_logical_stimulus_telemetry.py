@@ -21,7 +21,11 @@ class LogicalStimulusTelemetryTests(unittest.TestCase):
             if 'a35_script_lookup_telemetry.h' not in paths['scriptcommands.cpp'].read_text():
                 subprocess.run(args + ['--forward'], input=(ROOT / 'port/patches/combat-a35-script-lookup-telemetry.patch').read_bytes(), capture_output=True, check=True)
             result = subprocess.run(args + ['--forward'], input=patch, capture_output=True, check=True)
-            self.assertNotIn(b'offset', result.stdout)
+            # Later retained staging patches shift line numbers in these files, so
+            # a pure line offset is acceptable; the zero-fuzz argument above still
+            # rejects any context drift and the ordering checks below pin the hooks.
+            self.assertNotIn(b'fuzz', result.stdout)
+            self.assertNotIn(b'FAILED', result.stdout)
             commands = paths['scriptcommands.cpp'].read_text().split('int Create_Logical_Sound(', 1)[1].split('void Monitor_Sound(', 1)[0]
             self.assertLess(commands.index('A35_Campaign_Flight_Logical_Stimulus'), commands.index('sound->Add_To_Scene'))
             smart = paths['smartgameobj.cpp'].read_text().split('void\tSmartGameObj::On_Logical_Heard', 1)[1].split('\n}\n', 1)[0]

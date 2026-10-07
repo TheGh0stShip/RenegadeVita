@@ -254,7 +254,9 @@ void ScreenFadeManager::Set_Screen_Overlay_Color(float r,float g, float b,float 
 
 void ScreenFadeManager::Set_Screen_Overlay_Opacity(float opacity,float time)
 {
-	_OverlayOpacity.Set_Target_Value(opacity,time);
+	// Match the color setters: keep the target inside 0..1 so an out-of-range
+	// script value cannot overflow the float-to-color conversion at render time.
+	_OverlayOpacity.Set_Target_Value(WWMath::Clamp(opacity),time);
 }
 
 

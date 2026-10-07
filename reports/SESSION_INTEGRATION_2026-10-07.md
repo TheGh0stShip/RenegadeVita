@@ -92,3 +92,19 @@ demo profile is a separate work item.
 Use the dev240 plan in `FPS_ROUND4_INTEGRATION.md`, plus the tutorial
 benchmark/A-B in `tutorial/TUT_R1_INTEGRATION.md`. Launch twice: the first
 launch rebuilds the FFP shader cache.
+
+## Follow-up: A3.5-dev242
+
+dev241 never reached the frontend in Vita3K: it stopped at the global
+conversation load (`CONV10.CDB records=0`).
+
+- **Cause:** the A36 chunk structural-admission patch made a speculative
+  `Peek_Next_Chunk` set the sticky load error. The legacy one-byte category
+  probe in `Read_Conversation_Category` performs exactly that peek, so the
+  retail database was rejected.
+- **Fix:** `wwlib-a39-peek-next-chunk-speculative.patch`, plus the
+  `tools.test_chunk_peek_speculative` host test.
+- **Artifacts:** VPK `681d74368a8ad0425958d7634b2323c2abd009b5f892eb7a5b50f0ac6b5af706`;
+  installed eboot `0abef9f9c4847c2c2d48e7aede8b76afab1e0bacc8f7215671c721e8ae41059c`.
+- **Deployment:** Vita3K and the physical Vita were both updated, and neither was launched.
+  Receipt: `build/device-backups/A3.5-dev242-20261007/`.

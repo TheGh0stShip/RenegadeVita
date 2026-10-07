@@ -1,5 +1,17 @@
 # Live engineering progress
 
+# A3.5-dev242 — CONV10.CDB startup fix — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Vita3K run of dev241 (user): controlled failure before the intro movies, global conversation load=0.
+Cause: A36 chunk structural admission made Peek_Next_Chunk set the sticky error; ConversationMgr's
+legacy one-byte category probe peeks at a misaligned header in the retail CONV10.CDB, rejecting it.
+Fix: wwlib-a39-peek-next-chunk-speculative (624 patches); sanitizer host test reproduces and passes.
+Evidence: VPK `681d7436…af706`; Vita3K installed eboot `0abef9f9…1059c`; physical Vita eboot replaced
+(dev238 `613e92c8…` backed up), hash verified over VDB1, VPK in ux0:/data/renegade/user/. Not launched.
+Next: user launch on Vita3K and Vita; later load stages are now reached for the first time.
+
 # Cross-session integration A3.5-dev241 — 2026-10-07
 
 Renegade Vita — v3.5 active

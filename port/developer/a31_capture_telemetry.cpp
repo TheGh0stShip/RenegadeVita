@@ -617,6 +617,15 @@ A31CaptureBundleResult A31_Write_Capture_Bundle(const A31CaptureBundleInput &inp
 		input.history == NULL || !Make_Directory(input.base_directory)) {
 		Set_Error(result, "capture base directory unavailable"); return result;
 	}
+	// Bound per-session capture bundles so repeated requests cannot fill
+	// ux0:. Existing bundles on disk are never touched.
+	static const uint32_t kMaxCaptureBundlesPerSession = 64U;
+	static uint32_t s_capture_bundles_this_session = 0U;
+	if (s_capture_bundles_this_session >= kMaxCaptureBundlesPerSession) {
+		Set_Error(result, "capture bundle limit reached for this session (64); request refused");
+		return result;
+	}
+	++s_capture_bundles_this_session;
 	if (snprintf(result.bundle_path, sizeof(result.bundle_path), "%s/%s",
 		input.base_directory, input.bundle_label) <= 0 ||
 		!Make_Directory(result.bundle_path)) {

@@ -1680,6 +1680,14 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 # DEFAULT_INPUT.CFG; reapply the Vita controller bindings on every such load.
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a37-default-input-profile-vita-mapping.patch"
+# FaceLocation actions store an absolute TimeManager::Get_Seconds() end stamp
+# (a per-process clock) in saves; bound a restored stamp to the authored
+# duration so a load in a fresh session cannot hold the action for the old
+# session's uptime. Anchored to the final action.cpp so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/combat/action.cpp" | cut -d' ' -f1)" = \
+	"f90761922d80e0795ed3d99f9ce7545561f144d3dbfc52c735c1d1eb4f46edbb"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-face-action-stale-end-time-clamp.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

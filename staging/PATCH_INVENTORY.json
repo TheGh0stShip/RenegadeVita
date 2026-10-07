@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "c7e514cf26c36bdc2c5449e965656395fc25a5d6a2b6a7be9c4b28ca5117ca21",
-  "patch_count": 526,
+  "stage_script_sha256": "bd9191ba156982b6c53c90c148992397c2abe67766c912f15a63d73014e41e4c",
+  "patch_count": 544,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -743,6 +743,11 @@
       "path": "port/patches/wwaudio-a35-flush-enqueue-order.patch",
       "stage_directory": "wwaudio",
       "sha256": "b4a157a340fae36337718099db8cb5dca6b19adb5d693457ccc657111620151a"
+    },
+    {
+      "path": "port/patches/wwaudio-a36-completed-sounds-retain.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "7e608cdc0989b551b45ad4346304f6eb318b2918d6fcf6f80562f8d5397448ef"
     },
     {
       "path": "port/patches/wwnet-a30-gcc15.patch",
@@ -1610,6 +1615,11 @@
       "sha256": "6eb405114d43b9bc4b2fc9ecd0911f5c93f5fe17ceed23a435371d31f8b86f66"
     },
     {
+      "path": "port/patches/scripts-a37-mx0-area4-controller-id-init.patch",
+      "stage_directory": "scripts",
+      "sha256": "a89fcda5e3204e49d1d91bd3a2452b226f2292096924460e36a611146c589b72"
+    },
+    {
       "path": "port/patches/ww3d-a35-original-dazzle-lifecycle.patch",
       "stage_directory": "ww3d2",
       "sha256": "d3732d603f9118a9e0994b8d295b20baa628ba7fd502b728306bd0256e8826f1"
@@ -1700,6 +1710,11 @@
       "sha256": "96e0c369aa693e5c91118f63802233f9adbc1d5c6c8371419d58c811bc1d937b"
     },
     {
+      "path": "port/patches/scripts-a36-m02-respawn-area-bounds.patch",
+      "stage_directory": "scripts",
+      "sha256": "97710b22d758935849cc7e2add50deb6f1fe6ad2578d2375d41fb0e6c08d735c"
+    },
+    {
       "path": "port/patches/scripts-a36-mx0-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "d64ed5c8485bd81670ab5a50e849a8e5090bbfc9d36f97ea584c34b56bb0468b"
@@ -1708,6 +1723,11 @@
       "path": "port/patches/scripts-a36-m03-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "3750e35be83bf56556f5f2f2f9cea705363d677975e6f1b457090c15969ac795"
+    },
+    {
+      "path": "port/patches/scripts-a36-m03-paradrop-param-buffer.patch",
+      "stage_directory": "scripts",
+      "sha256": "81f463df9781939d28f3bd3144cd42c68c3e623bbd823f01a99a079ed25f793d"
     },
     {
       "path": "port/patches/scripts-a36-m04-save-variable-ids.patch",
@@ -1720,9 +1740,24 @@
       "sha256": "0bd30fe32e8dfd82138ed75c9bb18d1881b54f5e5ad3a39a02eb43b1f07201b0"
     },
     {
+      "path": "port/patches/scripts-a36-m05-resistance-poke-index-hang.patch",
+      "stage_directory": "scripts",
+      "sha256": "fdf0d2af1328c739d12f0e59ac234cd561eba22b8f7d8b8efdfbfdc7af9938cd"
+    },
+    {
+      "path": "port/patches/scripts-a36-m05-fire-loc-save.patch",
+      "stage_directory": "scripts",
+      "sha256": "6732bf9499ac2eae75569904fc06c40b5325a6ed66e9c1e5f2bf692e316e8fad"
+    },
+    {
       "path": "port/patches/scripts-a36-m11-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "4010ac3b2825d0bcdb333d51b4dd2f5d9109deda3868ea10afa68bbd1bf49d4f"
+    },
+    {
+      "path": "port/patches/scripts-a36-m11-conversation-id-init.patch",
+      "stage_directory": "scripts",
+      "sha256": "9579e0bd770447ae71d7bccd0247b6147d87191721cc84ec96caa5677b0001ad"
     },
     {
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
@@ -1740,9 +1775,24 @@
       "sha256": "88b2e61f05ad7b39a641f273e0db818834462af3dd1bf305898ff10a32dc571f"
     },
     {
+      "path": "port/patches/wwmath-a36-arm-int-floor-helpers.patch",
+      "stage_directory": "wwmath",
+      "sha256": "f117f4eca0e2fa965556fd94eb933aba596488f8bc27e3e4bf12fd9a080e2ce8"
+    },
+    {
+      "path": "port/patches/wwmath-a36-quat-matrix-single-precision.patch",
+      "stage_directory": "wwmath",
+      "sha256": "64517e68670ffba2266189d2dc979dea25c87d8b49c475c80526d82fdc3361ba"
+    },
+    {
       "path": "port/patches/ww3d2-a36-sorting-depth-sort-and-runs.patch",
       "stage_directory": "ww3d2",
       "sha256": "0bfc987809d41e001e72b4c744ec38086c7d5920e5186b0de77907187557cf4a"
+    },
+    {
+      "path": "port/patches/ww3d2-a36-raw-anim-sampler-inline.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "10b045af705f5904788b3cafde31db176ccc33d97a88157b880c0e0d37b17d39"
     },
     {
       "path": "port/patches/combat-a36-powerup-text-once.patch",
@@ -2215,6 +2265,11 @@
       "sha256": "d21f401349fb1618417e9cdb77f69e6117f45222da4c1f376c1856ed48018368"
     },
     {
+      "path": "port/patches/combat-a36-hud-text-build-once.patch",
+      "stage_directory": "combat",
+      "sha256": "5bb82ce986b838bfa1e56569d5a60df93e87e93286eb52897ca6a625ece40786"
+    },
+    {
       "path": "port/patches/combat-a36-screen-fade-admission.patch",
       "stage_directory": "combat",
       "sha256": "b25d4d6d6622dca5b6f964113baaa2d704568294d44c2e8d00c6497f4505416a"
@@ -2587,7 +2642,7 @@
     {
       "path": "port/patches/commando-a36-lan-team-selection.patch",
       "stage_directory": "commando",
-      "sha256": "99f64a56c995fc2f4ead39cdf48154cc15258dc6c57ac1b3397e8697d8d93783"
+      "sha256": "b94b1b1d2c72084bc6696ede2e8700e445308daae54aa9f4dd6485099b2f3384"
     },
     {
       "path": "port/patches/commando-a36-lan-server-presets.patch",
@@ -2630,10 +2685,45 @@
       "sha256": "71433b8b6e1764ad0707ba04f95022a43fa54fb1dd0d0156a0c538cfdc324301"
     },
     {
+      "path": "port/patches/combat-a36-raveshaw-star-dist-modulo-guard.patch",
+      "stage_directory": "combat",
+      "sha256": "8db90499831ea7491c2e6486d4094ccda4c5774ed04d7582149e83b58038e73b"
+    },
+    {
+      "path": "port/patches/combat-a36-raveshaw-stealth-soldier-create-guard.patch",
+      "stage_directory": "combat",
+      "sha256": "8696762046ee73979d8e8f279e5cef0b9071054cdbd288251690c96dc935d890"
+    },
+    {
+      "path": "port/patches/combat-a36-smart-control-disabled-weapon-guard.patch",
+      "stage_directory": "combat",
+      "sha256": "82e2110a38e9fdb81c97af66939a407ffe223a8fa3102fa5f38099afafe318d3"
+    },
+    {
       "path": "port/patches/scripts-a36-m01-intro-command-breadcrumbs.patch",
       "stage_directory": "scripts",
       "sha256": "30f0ad3ed7b87ca32095d32d6f800ae73043544a75cd96a5d2d0272cba7c3f73"
+    },
+    {
+      "path": "port/patches/combat-a36-scriptcommands-null-guards.patch",
+      "stage_directory": "combat",
+      "sha256": "d41a91caa9052ce951998d269fbc92bbfe1b0b3ac9e9a7ce449bed502118cef5"
+    },
+    {
+      "path": "port/patches/scripts-a36-m09-evac-gunner-param-buffer.patch",
+      "stage_directory": "scripts",
+      "sha256": "f156a69252fe516ec6b649dd2d11bd5f1c0661635885a1b8753f59763a60c1cc"
+    },
+    {
+      "path": "port/patches/scripts-a36-m01-load-position-tables.patch",
+      "stage_directory": "scripts",
+      "sha256": "40898d7a06f12b4e70be10cbe8cb0632852b29c31c9d7e1031ae882b24aab1d8"
+    },
+    {
+      "path": "port/patches/scripts-a36-m01-controller-id-init.patch",
+      "stage_directory": "scripts",
+      "sha256": "8344203252d190bbfabc8d76ae51164cabec4a81d780578383284115c478cf5d"
     }
   ],
-  "registry_sha256": "42fa68e4856c1e6d8619689f239ee7e8c03caa118fded9df44c08577de7e3216"
+  "registry_sha256": "5847ad957dc5c3b5b68cd51ae0201ce15d456d63bc787449f701d317321a061c"
 }

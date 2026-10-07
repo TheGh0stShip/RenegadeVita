@@ -1,0 +1,193 @@
+Raveshaw boss: liveness check for the thrown object.
+ThrownObject is a raw SimpleGameObj pointer, read every think while
+Raveshaw walks to the object (MOVE_STATE_GOTO_THROW_OBJECT), holds it
+(THROWN_OBJECT_STATE_PICKUP) and throws it (THROWN_OBJECT_STATE_FLYING).
+If anything other than the throw itself destroys it, the next think reads
+freed memory, and a save writes a stale pointer that load could remap onto
+an unrelated object. The retail "(Raveshaw Ammo)" presets (AC Unit
+81960250, Plastic Drum 81960251; health 1000, skin and shield Blamo) take
+damage only from BlamoKiller warheads (Ammo_SAM_Site_Blamo_Killer,
+Ammo_UltimateWeapon). Retail M08 also places none of them: m08.ldd, the
+M08.mix overlays, cinematics and scripts never name or reference these
+definition IDs, so Find_Object_To_Throw returns NULL and the throwing state
+always falls back to OVERALL_STATE_CHASE_STAR. The guard is defensive
+(modified data, debug weapons, scripts) and changes nothing on retail data.
+
+Add a GameObjReference (cleared by the engine when the object is destroyed)
+next to the pointer and drop the pointer when the reference is gone, at the
+start of each think and before saving. The walk-to state then takes the
+original nothing-to-throw branch (OVERALL_STATE_CHASE_STAR); a grab or throw
+already under way finishes empty-handed (PICKUP and the hand link were
+already NULL-safe; FLYING now is too) and decides its next state as before.
+Find_Object_To_Throw also skips delete-pending objects (freed by the next
+NetworkObjectMgrClass::Delete_Pending), as GameObjManager's own lookups do;
+no caller in the think order can select one today. The save format is
+unchanged: the pointer is still saved and remapped, and On_Post_Load rebuilds
+the reference from it. Breadcrumb (at most 4 per run): "A3.8 Raveshaw thrown
+object: destroyed before landing; dropped stale pointer".
+
+--- a/raveshawbossgameobj.h
++++ b/raveshawbossgameobj.h
+@@ -192,6 +192,7 @@
+ 	SimpleGameObj *					Find_Object_To_Throw (void);
+ 	WWINLINE SoldierGameObj *		Peek_Stealth_Soldier (void);
+ 	void									Verify_Stealth_Soldier (void);
++	void									Verify_Thrown_Object (void);
+ 
+ 	void									Link_Player_To_Hands (void);
+ 
+@@ -433,6 +434,7 @@
+ 	GameObjReference			StealthSoldier;
+ 	StealthEffectClass *		StealthEffect;
+ 	SimpleGameObj *			ThrownObject;
++	GameObjReference			ThrownObjectRef;	// Vita: liveness of ThrownObject
+ 	Vector3						FlyingObjectVector;
+ 	Vector3						FlyingObjectDest;
+ 	float							FlyingDist;
+--- a/raveshawbossgameobj.cpp
++++ b/raveshawbossgameobj.cpp
+@@ -681,6 +681,11 @@
+ bool
+ RaveshawBossGameObjClass::Save (ChunkSaveClass & csave)
+ {
++	//
++	//	Vita: never save (and later remap) a pointer to a destroyed object
++	//
++	Verify_Thrown_Object ();
++
+ 	bool saved = true;
+ 	csave.Begin_Chunk (CHUNKID_PARENT);
+ 		saved = SoldierGameObj::Save(csave) && saved;
+@@ -861,6 +866,10 @@
+ 		Peek_Physical_Object ()->Add_Effect_To_Me (TiberiumEffect);
+ 	}
+ 
++	//
++	//	Vita: track the remapped thrown object (NULL if it was not saved)
++	//
++	ThrownObjectRef = ThrownObject;
+ 	return ;
+ }
+ 
+@@ -1021,6 +1030,7 @@
+ 	if (ok_to_think) {
+ 
+ 		Verify_Stealth_Soldier ();
++		Verify_Thrown_Object ();
+ 
+ 		//
+ 		//	Get the position of both Raveshaw and the star (this information
+@@ -1124,6 +1134,44 @@
+ 
+ ///////////////////////////////////////////////////////////////////////////
+ //
++//	Verify_Thrown_Object
++//
++///////////////////////////////////////////////////////////////////////////
++void
++RaveshawBossGameObjClass::Verify_Thrown_Object (void)
++{
++	//
++	//	Vita: ThrownObject is a raw pointer with no liveness check.  The
++	// engine clears ThrownObjectRef when that object is destroyed, so a NULL
++	// reference with a non-NULL pointer means it was deleted by something
++	// other than the throw itself (the retail "(Raveshaw Ammo)" presets are
++	// Blamo, so only a BlamoKiller warhead or a script can do this).  Drop the
++	// stale pointer before any state reads it.  The walk-to state then takes
++	// the original nothing-to-throw branch, and a grab or throw already under
++	// way finishes empty-handed and decides its next state as usual.
++	//
++	if (ThrownObject == NULL || ThrownObjectRef.Get_Ptr () != NULL) {
++		return ;
++	}
++
++	ThrownObject = NULL;
++	if (ThrownObjectState.Get_State () != THROWN_OBJECT_STATE_NONE) {
++		ThrownObjectState.Set_State (THROWN_OBJECT_STATE_NONE);
++	}
++
++#if defined(__vita__)
++	static int reported = 0;
++	if (reported < 4) {
++		reported ++;
++		A30_Vita_Log ("A3.8 Raveshaw thrown object: destroyed before landing; dropped stale pointer\n");
++	}
++#endif
++	return ;
++}
++
++
++///////////////////////////////////////////////////////////////////////////
++//
+ //	Shuffle_Taunt_List
+ //
+ ///////////////////////////////////////////////////////////////////////////
+@@ -1264,6 +1312,7 @@
+ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_THROWING_OBJECT) (void)
+ {
+ 	ThrownObject = Find_Object_To_Throw ();
++	ThrownObjectRef = ThrownObject;
+ 	if (ThrownObject != NULL) {
+ 
+ 		//
+@@ -1751,6 +1800,15 @@
+ void
+ RaveshawBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_GOTO_THROW_OBJECT) (void)
+ {
++	//
++	//	Vita: the object was destroyed on the way, so there is nothing to
++	// throw.  Take the same branch as STATE_IMPL_BEGIN(OVERALL_STATE_THROWING_OBJECT).
++	//
++	if (ThrownObject == NULL) {
++		OverallState.Set_State (OVERALL_STATE_CHASE_STAR);
++		return ;
++	}
++
+ 	Vector3 obj_pos;
+ 	ThrownObject->Get_Position (&obj_pos);
+ 	if ((RaveshawPos - obj_pos).Length2 () < 3.0F || Get_Action ()->Is_Active () == false) {
+@@ -3518,6 +3576,10 @@
+ void
+ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(THROWN_OBJECT_STATE_FLYING) (void)
+ {
++	if (ThrownObject == NULL) {
++		return ;
++	}
++
+ 	Vector3 object_pos;
+ 	ThrownObject->Get_Position (&object_pos);
+ 
+@@ -3542,6 +3604,14 @@
+ {
+ 	const float RATE		= 15.0F;
+ 
++	//
++	//	Vita: nothing left in flight (destroyed before or during the throw)
++	//
++	if (ThrownObject == NULL) {
++		ThrownObjectState.Set_State (THROWN_OBJECT_STATE_NONE);
++		return ;
++	}
++
+ 	Vector3 object_pos;
+ 	ThrownObject->Get_Position (&object_pos);
+ 	
+@@ -3565,6 +3635,7 @@
+ 		ThrownObject->Completely_Damaged (offense_obj);
+ 		ThrownObject->Set_Delete_Pending ();
+ 		ThrownObject = NULL;
++		ThrownObjectRef = NULL;
+ 
+ 		//
+ 		//	Now, revert back to the nothing state
+@@ -4205,7 +4276,9 @@
+ 		//	Is this a simple game object?
+ 		//
+ 		PhysicalGameObj *phys_game_obj = obj_node->Data ()->As_PhysicalGameObj ();
+-		if (phys_game_obj != NULL && phys_game_obj->As_SimpleGameObj () != NULL) {
++		if (phys_game_obj != NULL && phys_game_obj->As_SimpleGameObj () != NULL &&
++			 phys_game_obj->Is_Delete_Pending () == false)	// Vita: freed at frame end
++		{
+ 			SimpleGameObj *object = phys_game_obj->As_SimpleGameObj ();
+ 			if (object != NULL) {
+ 				

@@ -1089,6 +1089,12 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-apache-controller-bounds.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m08-mobile-vehicle-attack-slot.patch"
+# M08 objective gates 802/803/804/806: register the conversation monitor before
+# Start_Conversation (the M10 key-preemption pattern; no M08 conversation is
+# key, so defensive) and send each objective once.  After the mobile-vehicle
+# slot patch, the last earlier mission08.cpp patch.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m08-objective-conversation-monitor-first.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-rmv-engineer-dead-pointer-roundtrip.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -1641,6 +1647,12 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 # the stealth-soldier guard, the last earlier raveshawbossgameobj.cpp patch.
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a38-raveshaw-jump-grounded-landing.patch"
+# M08 Raveshaw: ThrownObject is a raw pointer with no liveness check.  Track it
+# with a GameObjReference and drop it when the object is destroyed elsewhere
+# (walk-to falls back to CHASE_STAR).  Touches raveshawbossgameobj.h too.
+# Applied after the grounded-landing patch.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a38-raveshaw-thrown-object-liveness.patch"
 # VehicleGameObj::Think calls Apply_Control unconditionally, so the original
 # control-disabled branch dereferenced a NULL weapon for weaponless vehicles.
 # Applied after every other smartgameobj.cpp patch so no anchor moves.

@@ -357,3 +357,94 @@ landing fallback`.
   hit. The arena is enclosed, so this is retail-identical.
 - Physical check: in the boss fight, look for the fallback breadcrumb and
   confirm that the catwalk retreat, the collapse and the success flow follow.
+
+## Follow-up fixes — 2026-10-07
+
+Evidence class: read-only retail metadata (`objects.ddb` in `always.dbs`,
+`M08.mix` overlays and `m08.ldd`, `armor.ini` in `always.dat`, all through
+`MixArchive`), manual staged-source review, zero-fuzz staging replay (572
+ordered patches, inventory PASS, only the files below change), ARM
+`-fsyntax-only` of both patched files (exit 0, no warnings on changed lines),
+`tools/test_m08_readiness.py` (14 tests) and the conversation-gate,
+objective-lifecycle, script-portability, warning-route and sweep-link suites
+(59 tests OK). No build, emulator or Vita run. Staged line numbers.
+
+### 1. Raveshaw `ThrownObject` use-after-free — guarded (defensive)
+
+- Destructibility: `AC Unit (Raveshaw Ammo)` (81960250) and `Plastic Drum
+  (Raveshaw Ammo)` (81960251) have health 1000, skin Blamo and a 1000 Blamo
+  shield. `[Scale_Blamo]` is 0 for every warhead except `BlamoKiller`
+  (×10000) and the healing `Repair`/`RegenHealth`. Only
+  `Ammo_SAM_Site_Blamo_Killer` and `Ammo_UltimateWeapon` carry BlamoKiller,
+  so normal play cannot destroy them. No M08 overlay overrides them.
+- Retail M08 does not place them at all: their definition IDs do not occur in
+  `m08.ldd` (no 0x4010A instance, no spawner) or any M08 member, and no
+  cinematic or script names them. `Find_Object_To_Throw` therefore returns
+  NULL and `OVERALL_STATE_THROWING_OBJECT` always falls back to CHASE_STAR.
+  The UAF is unreachable on retail data on both counts.
+- Fix anyway (cheap, retail-neutral):
+  `combat-a38-raveshaw-thrown-object-liveness.patch` (applied after the
+  grounded-landing patch; touches `raveshawbossgameobj.h:195, 437` and the
+  `.cpp`). A `GameObjReference ThrownObjectRef` is set alongside the pointer
+  (`:1315`). The engine clears it on destruction, and `Verify_Thrown_Object`
+  (`:1141`) drops the stale pointer at the start of each think (`:1033`) and
+  before saving (`:687`), so no dangling pointer is saved or remapped. The
+  walk-to think takes the original nothing-to-throw branch, CHASE_STAR
+  (`:1807`). FLYING begin/think are NULL-safe (`:3579`, `:3610`). PICKUP and
+  the hand link were already NULL-safe. `Find_Object_To_Throw` skips
+  delete-pending objects (`:4280`). The save format is unchanged: the pointer
+  is still saved and remapped, and `On_Post_Load` rebuilds the reference
+  (`:872`). Breadcrumb (at most 4): `A3.8 Raveshaw thrown object: destroyed
+  before landing; dropped stale pointer`.
+
+### 2. The five REVIEW gates — receivers resolved
+
+All four zone gates send to 100002, where `M08_Objective_Controller::Custom`
+handles them (param 3 → `Add_An_Objective`, param 1 → accomplished). The
+co-attached `M08_Flyover_Controller` has no `Custom`.
+
+| Gate | Effect | Class |
+|---|---|---|
+| `M08_Activate_Objective_802` (zone 100007, `M08_CON001`) | add primary 802, accomplish primary 801 | fixed (defensive) |
+| `M08_Activate_Objective_803` (zones 100008/100009, `M08_CON002`) | add primary 803 (also revokes key 10), accomplish 802 | fixed (defensive) |
+| `M08_Activate_Objective_804` (zones 100003/100004, `M08_CON003`) | add secondary 804 | fixed (defensive) |
+| `M08_Activate_Objective_806` (zone 100018, `M08_CON004`) | add secondaries 806 and 807 | fixed (defensive) |
+| `M08_Warden_Announcement1` (zone 100049, `M08_CON006`) | none: the zone's only script has no `Action_Complete`, and the conversation's 300502 completion is delivered only to 100049 | NO EFFECT (the tool's approximate cross-script match is a false positive) |
+
+No gated objective is on the completion path, because
+`Mission_Complete (true)` comes from the boss class, and no M08 or global
+conversation is key. The key-preemption drop therefore cannot happen on
+retail data. The M10 pattern is applied anyway:
+`scripts-a38-m08-objective-conversation-monitor-first.patch` (applied after
+the mobile-vehicle slot patch) moves `Monitor_Conversation` before
+`Start_Conversation` (`mission08.cpp:368, 434, 501, 567`). It also adds an
+`objective_sent` flag, saved with id 2 and value-initialised, so older saves
+load it as false. With that flag each send happens exactly once
+(`:389, 456, 524, 578`). Timing and effects are unchanged when no key
+conversation plays. A scratch rerun of `tools.audit_conversation_gated_objectives
+--mission M08` reports FIXED 4 / NO EFFECT 2 / REVIEW 1, and the remaining
+REVIEW is Warden1. The shared `CONVERSATION_GATED_OBJECTIVES.md` was not
+regenerated in this round.
+
+### 3. CHASE_STAR never reads `OverallStateTimer` — assessed, no change
+
+`STATE_IMPL_BEGIN(OVERALL_STATE_CHASE_STAR)` sets a 6–20 s timer (`:1382`)
+that nothing reads. The state ends only on a grab within `ARMS_REACH`
+(1.95 m 3D, `:1395`). `MOVE_STATE_FOLLOW_STAR` only jumps to a player more
+than 8 m away (`:1919`), and the roar from `RAVESHAW_STATE_NOTHING` does not
+re-decide. A player 2–8 m away but unreachable, for example standing on
+geometry more than about 1.7 m above him, keeps him chasing. During that
+time he cannot reach `MOVE_STATE_CIRCLE_CATWALK`, which death needs
+(`:1249`), and the ≤5 % retreat (`:4337`) waits for the next decision. The
+player can always break the chase, though: step down within reach, or move
+more than 8 m away (1-in-5 jump roll every 0.75 s, then the normal decision
+cycle). Nothing in the original state machine removes that option, so the
+fight cannot become unwinnable. Adding a timeout would change retail pacing,
+so no fallback was added. This stays retail-identical and deferred.
+
+### Deferred
+
+- Regenerate `CONVERSATION_GATED_OBJECTIVES.md` (needs a coordinated
+  all-mission run).
+- Hardware: an M08 run with a mid-fight save/reload. Expect no
+  `Raveshaw thrown object` breadcrumb on retail data.

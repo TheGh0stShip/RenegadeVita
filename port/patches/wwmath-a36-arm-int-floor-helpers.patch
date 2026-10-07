@@ -1,0 +1,92 @@
+--- a/wwmath.h
++++ b/wwmath.h
+@@ -160,8 +160,13 @@
+ static float		Atan(float x) { return static_cast<float>(atan(x)); }
+ static float		Atan2(float y,float x) { return static_cast<float>(atan2(y,x)); }
+ static float		Sign(float val);
++#if defined(RENEGADE_VITA_PORT)
++static float		Ceil(float val);
++static float		Floor(float val);
++#else
+ static float		Ceil(float val) { return ceilf(val); }
+ static float		Floor(float val) { return floorf(val); }
++#endif
+ static bool			Fast_Is_Float_Positive(const float & val);
+ 
+ static float		Random_Float(void);
+@@ -297,6 +302,52 @@
+ 	return (bits & 0x7FF0000000000000ULL) != 0x7FF0000000000000ULL;
+ }
+ 
++#if defined(RENEGADE_VITA_PORT)
++// ARMv7 VFPv3 has no VRINTM/VRINTP, so floorf/ceilf were out-of-line newlib
++// calls. These are the newlib sf_floor.c/sf_ceil.c bit algorithms inlined:
++// integer-only except x+x for Inf/NaN (same VFP op as newlib), so results
++// are bit-identical for every input under any FPSCR FZ/DN/rounding mode.
++WWINLINE float WWMath::Floor(float x)
++{
++	uint32_t i0 = 0;
++	memcpy(&i0, &x, sizeof(i0));
++	const int32_t j0 = static_cast<int32_t>((i0 >> 23) & 0xFFU) - 0x7F;
++	if (j0 < 0) {
++		if (static_cast<int32_t>(i0) >= 0) i0 = 0U;
++		else if ((i0 & 0x7FFFFFFFU) != 0U) i0 = 0xBF800000U;
++	} else if (j0 < 23) {
++		const uint32_t mask = 0x007FFFFFU >> j0;
++		if ((i0 & mask) == 0U) return x;
++		if (static_cast<int32_t>(i0) < 0) i0 += 0x00800000U >> j0;
++		i0 &= ~mask;
++	} else {
++		return (j0 == 0x80) ? x + x : x;
++	}
++	memcpy(&x, &i0, sizeof(x));
++	return x;
++}
++
++WWINLINE float WWMath::Ceil(float x)
++{
++	uint32_t i0 = 0;
++	memcpy(&i0, &x, sizeof(i0));
++	const int32_t j0 = static_cast<int32_t>((i0 >> 23) & 0xFFU) - 0x7F;
++	if (j0 < 0) {
++		if (static_cast<int32_t>(i0) < 0) i0 = 0x80000000U;
++		else if (i0 != 0U) i0 = 0x3F800000U;
++	} else if (j0 < 23) {
++		const uint32_t mask = 0x007FFFFFU >> j0;
++		if ((i0 & mask) == 0U) return x;
++		if (static_cast<int32_t>(i0) > 0) i0 += 0x00800000U >> j0;
++		i0 &= ~mask;
++	} else {
++		return (j0 == 0x80) ? x + x : x;
++	}
++	memcpy(&x, &i0, sizeof(x));
++	return x;
++}
++#endif
++
+ // ----------------------------------------------------------------------------
+ // Float to long
+ // ----------------------------------------------------------------------------
+@@ -570,13 +621,20 @@
+ {
+ 	// Avoid x86 shift-count masking assumptions and float/int aliasing.
+ 	// Non-representable inputs use the 32-bit integer-indefinite value.
+-	if (!(f >= -2147483648.0f && f < 2147483648.0f)) return INT32_MIN;
++	// |f| >= 2^31 or NaN <=> magnitude bits >= 0x4F000000 (-2^31 itself maps
++	// to INT32_MIN either way); one integer compare replaces two VFP
++	// compare/VMRS flag transfers and is independent of FPSCR FZ/DN.
++	uint32_t bits = 0;
++	memcpy(&bits, &f, sizeof(bits));
++	if ((bits & 0x7FFFFFFFU) >= 0x4F000000U) return INT32_MIN;
+ 	return static_cast<int>(f);
+ }
+ 
+ WWINLINE int WWMath::Float_To_Int_Floor (const float& f)
+ {
+-	if (!(f >= -2147483648.0f && f < 2147483648.0f)) return INT32_MIN;
++	uint32_t bits = 0;
++	memcpy(&bits, &f, sizeof(bits));
++	if ((bits & 0x7FFFFFFFU) >= 0x4F000000U) return INT32_MIN;
+ 	const int truncated = static_cast<int>(f);
+ 	return truncated - (f < static_cast<float>(truncated) ? 1 : 0);
+ }

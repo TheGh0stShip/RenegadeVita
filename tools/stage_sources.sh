@@ -98,6 +98,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwdebug" -p1 < "$rv_root/port/patches/wwdebug-a36-vita-frame-profile.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwdebug" -p1 < "$rv_root/port/patches/wwdebug-a36-frame-profile-tu-opt-out.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a21-posix.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a22-gcc15.patch"
@@ -199,6 +201,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a36-path-timeslice-underflow.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a36-grid-texture-release.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a36-scene-cast-counters.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a30-pointer-tokens.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -392,6 +396,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-flush-enqueue-order.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a36-completed-sounds-retain.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a30-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a31-transport-boundary.patch"
@@ -537,6 +543,7 @@ echo "Applied: port/patches/wwphys-a35-static-object-load-diagnostics.patch"
 echo "Applied: port/patches/wwphys-a35-vita-durable-static-trace.patch"
 echo "Applied: port/patches/wwphys-a36-path-timeslice-underflow.patch"
 echo "Applied: port/patches/wwphys-a36-grid-texture-release.patch"
+echo "Applied: port/patches/wwphys-a36-scene-cast-counters.patch"
 echo "Applied: port/patches/combat-a30-pointer-tokens.patch"
 echo "Applied: port/patches/combat-a30-gcc15.patch"
 echo "Applied: port/patches/combat-a31-gcc15.patch"
@@ -1263,7 +1270,13 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwmath" -p1 < "$rv_root/port/patches/wwmath-a36-fabs-vabs.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwmath" -p1 < "$rv_root/port/patches/wwmath-a36-arm-int-floor-helpers.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwmath" -p1 < "$rv_root/port/patches/wwmath-a36-quat-matrix-single-precision.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a36-sorting-depth-sort-and-runs.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a36-raw-anim-sampler-inline.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-powerup-text-once.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -1452,6 +1465,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-persistent-observer-admission.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-hud-load-admission.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-hud-text-build-once.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-screen-fade-admission.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \

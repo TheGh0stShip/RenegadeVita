@@ -176,6 +176,17 @@ bool Submit_Material_Pass(MeshClass &mesh, MaterialPassClass &material_pass,
 void Invalidate_Static_Mesh_Cache();
 void Forget_Static_Mesh_Model(const void *model);
 void Forget_Static_Mesh_User_Lighting(const void *model, const void *user_lighting);
+// Loading-screen pre-staging of one rigid mesh's static cache entry: builds
+// and uploads the same streams its first draw would, without drawing. Only
+// unlit, not-yet-known meshes are staged; anything else is left to the
+// first draw. bytes receives the uploaded size.
+enum StaticMeshPrebuildResult {
+	STATIC_MESH_PREBUILD_SKIPPED,
+	STATIC_MESH_PREBUILD_BUILT,
+	STATIC_MESH_PREBUILD_BUDGET_FULL
+};
+StaticMeshPrebuildResult Prebuild_Static_Mesh(MeshClass &mesh, RenderInfoClass &render_info,
+	uint32_t &bytes);
 // Dynamic DX8 submissions (including original Render2D glyph quads) retain
 // ShaderClass as the owner of both blend/depth state and the per-stage texture
 // combiner contract.  The texture-presence arguments make that complete state
@@ -232,10 +243,17 @@ void Record_Texture_Checkerboard_Bind();
 void Record_Texture_Upload(uint64_t resident_bytes);
 void Record_Texture_Release(uint64_t resident_bytes);
 void Invalidate_Texture_State_Cache();
+// A GL_TEXTURE matrix load outside the renderer (the DX8 boundary's
+// D3DTS_TEXTUREn path) ends the renderer's known-identity state for that stage.
+void Invalidate_Texture_Matrix_Shadow(uint32_t stage);
 bool Bind_Offscreen_Render_Target(uint32_t framebuffer, uint32_t width,
 	uint32_t height);
 bool Restore_Default_Render_Target();
 bool Get_Active_Render_Target_Size(uint32_t *width, uint32_t *height);
+// Physical display buffer (960x544 unless internal-resolution-v1.flag selects
+// a smaller hardware-scaled scan-out). Full-display glViewport calls outside
+// Apply_Viewport must use this, not the 960x544 logical display.
+void Get_Physical_Display_Size(uint32_t &width, uint32_t &height);
 bool Use_Direct_Text_Atlas_Upload();
 bool Use_Native_DDS_Upload();
 bool Bind_Texture(uint32_t native_texture, bool valid);
@@ -250,6 +268,12 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 	uint32_t color_arg1, uint32_t color_arg2, uint32_t alpha_op,
 	uint32_t alpha_arg1, uint32_t alpha_arg2, bool texture_enabled);
+// Runs one original TextureClass::Apply inside a sampler batch: its bind and
+// combiner calls stay immediate, but only each stage's final address/filter
+// request reaches the GL texture object (RVRC1 bit 0; immediate when clear).
+void Begin_Texture_Sampler_Batch();
+void End_Texture_Sampler_Batch();
+void Apply_Platform_Texture_Stage(TextureClass &texture, unsigned stage);
 bool Apply_DX8_Render_State(uint32_t state, uint32_t value);
 void Record_Texture_Unsupported_Stage(uint32_t stage);
 void Release_Texture(uint32_t native_texture);

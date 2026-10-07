@@ -158,17 +158,19 @@ void Matrix3::Set(const Matrix4 & m)
 
 void Matrix3::Set(const Quaternion & q)
 {
-	Row[0][0] = (float)(1.0 - 2.0 * (q[1] * q[1] + q[2] * q[2]));
-	Row[0][1] = (float)(2.0 * (q[0] * q[1] - q[2] * q[3]));
-	Row[0][2] = (float)(2.0 * (q[2] * q[0] + q[1] * q[3]));
+	// Single precision is bit-identical to the original (float)(double) form:
+	// 2x is exact and double rounding of a float sum is innocuous (53>=2*24+2).
+	Row[0][0] = 1.0f - 2.0f * (q[1] * q[1] + q[2] * q[2]);
+	Row[0][1] = 2.0f * (q[0] * q[1] - q[2] * q[3]);
+	Row[0][2] = 2.0f * (q[2] * q[0] + q[1] * q[3]);
 
-	Row[1][0] = (float)(2.0 * (q[0] * q[1] + q[2] * q[3]));
-	Row[1][1] = (float)(1.0 - 2.0f * (q[2] * q[2] + q[0] * q[0]));
-	Row[1][2] = (float)(2.0 * (q[1] * q[2] - q[0] * q[3]));
+	Row[1][0] = 2.0f * (q[0] * q[1] + q[2] * q[3]);
+	Row[1][1] = 1.0f - 2.0f * (q[2] * q[2] + q[0] * q[0]);
+	Row[1][2] = 2.0f * (q[1] * q[2] - q[0] * q[3]);
 
-	Row[2][0] = (float)(2.0 * (q[2] * q[0] - q[1] * q[3]));
-	Row[2][1] = (float)(2.0 * (q[1] * q[2] + q[0] * q[3]));
-	Row[2][2] =(float)(1.0 - 2.0 * (q[1] * q[1] + q[0] * q[0]));
+	Row[2][0] = 2.0f * (q[2] * q[0] - q[1] * q[3]);
+	Row[2][1] = 2.0f * (q[1] * q[2] + q[0] * q[3]);
+	Row[2][2] =1.0f - 2.0f * (q[1] * q[1] + q[0] * q[0]);
 }
 
 

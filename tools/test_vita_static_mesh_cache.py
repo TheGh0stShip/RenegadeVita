@@ -33,19 +33,50 @@ class StaticMeshCacheTests(unittest.TestCase):
     def test_eligibility_excludes_frame_dependent_inputs(self):
         source = RENDERER.read_text()
         build = source[source.index('bool Build_Static_Mesh_Streams('):
-                       source.index('bool Static_Mesh_Entry_Current(')]
+                       source.index('StaticMeshRebuildReason Static_Mesh_Entry_Current(')]
         # Lit colours are cached too; their inputs are revalidated per frame.
         self.assertIn('if (color.lighting) uses_lighting = true;', build)
         self.assertIn('Static_Mesh_Passthrough_Stage(coordinates[0])', build)
         self.assertIn('Static_Mesh_Passthrough_Stage(coordinates[1])', build)
         self.assertIn('snapshot.mapper[0] != NULL', build)
         self.assertIn('if (current_detail_stage && bound_textures[0] == NULL) return false;', build)
-        current = source[source.index('bool Static_Mesh_Entry_Current('):
-                         source.index('bool Upload_Static_Mesh_Entry(')]
+        current = source[source.index('StaticMeshRebuildReason Static_Mesh_Entry_Current('):
+                         source.index('void Observe_Static_Mesh_Entry(')]
         self.assertIn('Is_Alternate_Material_Description_Enabled()', current)
         self.assertIn('Static_Mesh_Snapshot_Equal', current)
-        self.assertIn('Static_Mesh_Lighting_Equal(entry.lighting,', current)
+        self.assertIn('Static_Mesh_Lighting_Difference(entry.lighting,', current)
         self.assertIn('Capture_Static_Mesh_Lighting(render_info, world_transform)', current)
+
+    def test_lookup_wiring_and_thrash_telemetry(self):
+        source = RENDERER.read_text()
+        submit = source[source.index('bool Submit_Static_Mesh_Cache('):]
+        submit = submit[:submit.index('\n}\n')]
+        # Unlit entries stay shared per (model, user lighting); the drawing
+        # MeshClass is only the key for lit families.
+        self.assertIn('Static_Mesh_Cache_Lookup(g_static_mesh_cache,', submit)
+        self.assertIn('model, mesh.Get_User_Lighting_Array(false), &mesh,', submit)
+        self.assertIn('Replay_Static_Mesh_Entry(*entry);', submit)
+        ops = source[source.index('struct StaticMeshCacheOps {'):
+                     source.index('bool Submit_Static_Mesh_Cache(')]
+        self.assertIn('return Static_Mesh_Entry_Current(entry, model,', ops)
+        self.assertIn('Observe_Static_Mesh_Entry(entry, model,', ops)
+        self.assertIn('return Upload_Static_Mesh_Entry(entry, frame);', ops)
+        # Observe records exactly what Static_Mesh_Entry_Current compares.
+        observe = source[source.index('void Observe_Static_Mesh_Entry('):
+                         source.index('StaticMeshUploadResult Upload_Static_Mesh_Entry(')]
+        for needle in ('Is_Alternate_Material_Description_Enabled()',
+                       'Snapshot_Static_Mesh_Material(',
+                       'Capture_Static_Mesh_Lighting(render_info, world_transform)'):
+            self.assertIn(needle, observe)
+        upload = source[source.index('StaticMeshUploadResult Upload_Static_Mesh_Entry('):
+                        source.index('void Replay_Static_Mesh_Entry(')]
+        self.assertIn('return STATIC_MESH_UPLOAD_OVERSIZE;', upload)
+        log = source[source.index('void Log_Static_Mesh_Cache_Statistics()'):]
+        log = log[:log.index('\n}\n')]
+        for field in ('rebuild_world=%llu', 'collisions=%llu', 'volatile_resident=%u',
+                      'oversize=%llu', 'upload_bytes=%llu', 'max_frame_upload_bytes=%u'):
+            self.assertIn(field, log)
+        self.assertEqual(log.count('Vita_Append_A22_Runtime_Breadcrumb("static-mesh-cache",'), 2)
 
     def test_lifetime_follows_original_registration(self):
         boundary = (ROOT / 'port/renderer/vita/ww3d_dx8_boundary.cpp').read_text()
@@ -75,7 +106,7 @@ class StaticMeshCacheTests(unittest.TestCase):
         script = (ROOT / 'tools/build_vitagl_demo.sh').read_text()
         self.assertIn('-p1 < "$attribute_patch"', script)
         # Storage is allocated without data and filled only after mapping succeeds.
-        upload = source[source.index('bool Upload_Static_Mesh_Entry('):
+        upload = source[source.index('StaticMeshUploadResult Upload_Static_Mesh_Entry('):
                         source.index('void Replay_Static_Mesh_Entry(')]
         self.assertNotIn('vertex_bytes), builder.Vertices().Data()', upload)
         self.assertIn('glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizei>(vertex_bytes), NULL,', upload)

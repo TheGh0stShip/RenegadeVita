@@ -1333,7 +1333,14 @@ void BINKMovie::Render()
 	const GLboolean depth_enabled = glIsEnabled(GL_DEPTH_TEST);
 	const GLboolean cull_enabled = glIsEnabled(GL_CULL_FACE);
 	const GLboolean blend_enabled = glIsEnabled(GL_BLEND);
-	glViewport(0, 0, 960, 544);
+	// The movie quad is laid out in the 960x544 logical display (glOrtho
+	// below); the viewport covers the physical display buffer, which is
+	// smaller when a reduced internal resolution is selected.
+	uint32_t physical_width = 960U;
+	uint32_t physical_height = 544U;
+	RenegadeVitaRenderer::Get_Physical_Display_Size(physical_width, physical_height);
+	glViewport(0, 0, static_cast<GLsizei>(physical_width),
+		static_cast<GLsizei>(physical_height));
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);

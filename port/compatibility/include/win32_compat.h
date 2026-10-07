@@ -513,11 +513,29 @@ static inline BOOL QueryPerformanceFrequency(LARGE_INTEGER *frequency)
 	return 1;
 }
 
+#if defined(__vita__)
+#ifdef __cplusplus
+extern "C" {
+#endif
+// SceLibKernel; same declaration as <psp2/kernel/processmgr.h> (SceUInt64).
+uint64_t sceKernelGetProcessTimeWide(void);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
 static inline BOOL QueryPerformanceCounter(LARGE_INTEGER *counter)
 {
 	if (counter == NULL) {
 		return 0;
 	}
+#if defined(__vita__)
+	// VitaSDK newlib CLOCK_MONOTONIC is this microsecond clock split into
+	// seconds/nanoseconds by a software 64-bit division; t * 1000 is the
+	// identical nanosecond value. The pathfinder reads it once per A* node.
+	*counter = (LARGE_INTEGER)sceKernelGetProcessTimeWide() * INT64_C(1000);
+	return 1;
+#else
 	struct timespec now;
 	if (clock_gettime(CLOCK_MONOTONIC, &now) != 0) {
 		*counter = 0;
@@ -525,6 +543,7 @@ static inline BOOL QueryPerformanceCounter(LARGE_INTEGER *counter)
 	}
 	*counter = (LARGE_INTEGER)now.tv_sec * INT64_C(1000000000) + now.tv_nsec;
 	return 1;
+#endif
 }
 
 #ifndef TIMERR_NOERROR

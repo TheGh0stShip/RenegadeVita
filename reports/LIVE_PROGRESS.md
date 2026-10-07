@@ -13436,3 +13436,24 @@ multiplayer presentation closure.
 
 Blocker: runtime validation remains paused; GitHub Actions runners are
 prohibited.
+
+# FPS round 4 integrated candidate — 2026-10-07
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Completed: 20 FPS work items (render submission, state shadows, caches,
+prewarm, shader cache, audio, math/animation, LOD defaults, profiler,
+diagnostics) integrated as A3.5-dev240; two pre-existing main defects fixed
+(anonymous-namespace extern link failure since 17d6d5f, stale runtime symbol
+check in both build scripts).
+
+Evidence: 546-patch staging inventory PASS; 24 new/updated host modules pass
+on the combined tree; full ARM link, ELF/SELF/VPK identity PASS; VPK
+`4ded7a62…eb4180`; Vita3K installed and SELF hash verified, not launched.
+See [round-4 integration](FPS_ROUND4_INTEGRATION.md).
+
+Next: physical Vita run of A3.5-dev240 on the fixed M13/M01 route with the
+listed A/B switches.
+
+Blocker: physical FPS and visual parity require the user's Vita run.

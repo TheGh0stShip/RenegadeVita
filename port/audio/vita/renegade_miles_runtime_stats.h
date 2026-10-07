@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stddef.h>
 #include <stdint.h>
 
 struct RenegadeMilesRuntimeStats {
@@ -79,3 +80,18 @@ struct RenegadeMilesRuntimeStats {
 
 void Renegade_Miles_Reset_Runtime_Stats();
 void Renegade_Miles_Get_Runtime_Stats(RenegadeMilesRuntimeStats *stats);
+
+// Loading-screen pre-warm of the decoded-PCM cache. Decodes one complete
+// WAVE file image (the same bytes WWAudio later passes to
+// AIL_set_*sample_file) and retains it only when it fits the cache's free
+// budget and a free slot without evicting anything. Returns
+// RENEGADE_MILES_PREWARM_CACHED (newly retained), _PRESENT (already cached),
+// _FULL (would need eviction; caller should stop) or _SKIPPED (MPEG, too
+// large, or not decodable). *retained_bytes receives the retained size.
+enum {
+	RENEGADE_MILES_PREWARM_SKIPPED = 0,
+	RENEGADE_MILES_PREWARM_CACHED = 1,
+	RENEGADE_MILES_PREWARM_PRESENT = 2,
+	RENEGADE_MILES_PREWARM_FULL = 3
+};
+int Renegade_Miles_Prewarm_Pcm(const void *data, size_t bytes, size_t *retained_bytes);

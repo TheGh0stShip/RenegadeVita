@@ -17,9 +17,23 @@ public:
 	virtual uint16_t Channels() const = 0;
 	virtual int16_t Sample(size_t frame, uint16_t channel) = 0;
 	virtual size_t PCM_Storage_Bytes() const = 0;
+	// Decoded frames already resident: `*frames` interleaved frames starting at
+	// `*first`, all below Frame_Count(). For those frames Sample() returns the
+	// same values without decoding or changing state, so reading them here is
+	// equivalent to calling it. Valid until the next Sample() call.
+	virtual const int16_t *Resident_Window(size_t *first, size_t *frames) const
+	{
+		*first = 0;
+		*frames = 0;
+		return nullptr;
+	}
 };
 bool Is_Mpeg_Media(const uint8_t *data, size_t bytes);
 std::unique_ptr<MpegPlayback> Open_Mpeg_Playback(const uint8_t *data,
+	size_t bytes, const char **error = nullptr);
+// Same as above, but the playback adopts the caller's image instead of
+// copying it. The image is released on failure.
+std::unique_ptr<MpegPlayback> Open_Mpeg_Playback(std::unique_ptr<uint8_t[]> image,
 	size_t bytes, const char **error = nullptr);
 
 enum class WaveEncoding : uint16_t {

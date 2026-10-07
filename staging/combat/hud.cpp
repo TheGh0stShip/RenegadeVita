@@ -72,6 +72,8 @@
 #endif
 #if defined(RENEGADE_VITA_PORT)
 #include "a31_vita_hud_presentation.h"
+#include "dx8wrapper.h"
+#include "ww3d.h"
 #endif
 
 
@@ -669,6 +671,19 @@ int				_LastVehicleSeat = -1;
 #define		SNIPER_UV				90,0,255,53
 #define		SNIPER_OFFSET			-80,-4
 
+#if defined(RENEGADE_VITA_PORT)
+// The help text HUDHelpTextRenderer holds a complete build of, and the 2D
+// resolution and screen UV bias its renderers were created with. A powerup
+// the player cannot take (full health, shield or ammo) sets the same help
+// text every frame while he stands on it. The build depends only on the
+// string, the renderer's fixed font and shader and those two settings, so
+// an identical request keeps the build instead of making and uploading a
+// new text texture each frame.
+static WideStringClass	HUDHelpTextBuiltString;
+static RectClass			HUDHelpTextBuiltResolution;
+static bool					HUDHelpTextBuiltUVBias = false;
+static bool					HUDHelpTextBuilt = false;
+#endif
 
 static void HUD_Help_Text_Init( void )
 {
@@ -683,6 +698,9 @@ static void HUD_Help_Text_Init( void )
 	//
 	HUDHelpTextRenderer = new Render2DSentenceClass;
 	HUDHelpTextRenderer->Set_Font( font );
+#if defined(RENEGADE_VITA_PORT)
+	HUDHelpTextBuilt = false;
+#endif
 	HUDHelpTextExtents.Set (0, 0);
 	HUDHelpTextTimer = 0;
 	HUDHelpTextState = HUD_HELP_TEXT_DISPLAYING;
@@ -703,11 +721,33 @@ static	void	HUD_Help_Text_Render( void )
 	if (HUDInfo::Is_HUD_Help_Text_Dirty()) {
 		HUDHelpTextState = HUD_HELP_TEXT_DISPLAYING;
 		HUDInfo::Set_Is_HUD_Help_Text_Dirty( false );
+#if defined(RENEGADE_VITA_PORT)
+		const RectClass resolution = Render2DClass::Get_Screen_Resolution();
+		const bool uv_bias = WW3D::Is_Screen_UV_Biased();
+		if (	is_empty == false && HUDHelpTextBuilt &&
+				HUDHelpTextBuiltString == string &&
+				HUDHelpTextBuiltResolution == resolution &&
+				HUDHelpTextBuiltUVBias == uv_bias ) {
+			HUDHelpTextTimer = HUD_HELP_TEXT_DISPLAY_TIME;
+		} else {
+			HUDHelpTextRenderer->Reset();
+			HUDHelpTextBuilt = false;
+			if (is_empty == false) {
+				HUDHelpTextRenderer->Build_Sentence( string );
+				HUDHelpTextTimer = HUD_HELP_TEXT_DISPLAY_TIME;
+				HUDHelpTextBuiltString = string;
+				HUDHelpTextBuiltResolution = resolution;
+				HUDHelpTextBuiltUVBias = uv_bias;
+				HUDHelpTextBuilt = DX8Wrapper::Is_Initted();
+			}
+		}
+#else
 		HUDHelpTextRenderer->Reset();
 		if (is_empty == false) {
 			HUDHelpTextRenderer->Build_Sentence( string );
 			HUDHelpTextTimer = HUD_HELP_TEXT_DISPLAY_TIME;
 		}
+#endif
 		HUDHelpTextExtents = HUDHelpTextRenderer->Get_Text_Extents (string);
 	}
 
@@ -760,6 +800,9 @@ static	void	HUD_Help_Text_Render( void )
 			if (HUDHelpTextState >= HUD_HELP_TEXT_DONE) {
 				HUDInfo::Set_HUD_Help_Text( HUD_EMPTY_TEXT );
 				HUDHelpTextRenderer->Reset();
+#if defined(RENEGADE_VITA_PORT)
+				HUDHelpTextBuilt = false;
+#endif
 			} else if (HUDHelpTextState == HUD_HELP_TEXT_FADING) {
 				HUDHelpTextTimer = HUD_HELP_TEXT_FADE_TIME;
 			}
@@ -773,6 +816,9 @@ static	void	HUD_Help_Text_Shutdown( void )
 {
 	delete HUDHelpTextRenderer;
 	HUDHelpTextRenderer = NULL;
+#if defined(RENEGADE_VITA_PORT)
+	HUDHelpTextBuilt = false;
+#endif
 	return ;
 }
 
@@ -2001,6 +2047,19 @@ void * CurrentObjective = NULL;
 static int CachedObjectiveIndex=-1;
 int CachedRange=0;
 
+#if defined(RENEGADE_VITA_PORT)
+// The inputs of the build ObjectiveTextRenderer holds: both strings, where
+// they are drawn and the 2D resolution and screen UV bias its renderers were
+// created with.
+static WideStringClass	ObjectiveTextBuiltMessage;
+static WideStringClass	ObjectiveTextBuiltRange;
+static Vector2				ObjectiveTextBuiltMessagePosition;
+static Vector2				ObjectiveTextBuiltRangePosition;
+static RectClass			ObjectiveTextBuiltResolution;
+static bool					ObjectiveTextBuiltUVBias = false;
+static bool					ObjectiveTextBuilt = false;
+#endif
+
 #define	OBJECTIVE_ARROW_TEXTURE		"HUD_obje_arrow.TGA"
 
 static	void	Objective_Init( void )
@@ -2012,6 +2071,9 @@ static	void	Objective_Init( void )
 	FontCharsClass *font = StyleMgrClass::Peek_Font( StyleMgrClass::FONT_INGAME_TXT );
 	ObjectiveTextRenderer = new Render2DSentenceClass();
 	ObjectiveTextRenderer->Set_Font( font );
+#if defined(RENEGADE_VITA_PORT)
+	ObjectiveTextBuilt = false;
+#endif
 
 	CurrentObjectiveIndex=0;
 	CurrentObjective=NULL;
@@ -2037,9 +2099,82 @@ static	void	Objective_Shutdown( void )
 
 	delete ObjectiveTextRenderer;
 	ObjectiveTextRenderer = NULL;
+#if defined(RENEGADE_VITA_PORT)
+	ObjectiveTextBuilt = false;
+#endif
 }
 
 #define	POG_FLY_TIME	2.0f
+
+#if defined(RENEGADE_VITA_PORT)
+/*
+** The original rebuilds the pogs, and with them the objective text, every
+** frame for the two seconds a new pog flies in, and the text again whenever
+** the objectives change. Each rebuild makes and uploads a new text texture.
+** The text is a pure function of the message, the range string, their
+** positions, the renderer's fixed font and shader, the 2D resolution and the
+** screen UV bias, so keep the existing build when all of them are unchanged.
+** This runs exactly when the original text block runs, and a rebuild follows
+** the original order and layout.
+*/
+static	void	Objective_Update_Text( const RectClass & pog_box, int objective_count, int irange )
+{
+	if (objective_count>0) {
+		CachedRange=irange;
+		CachedObjectiveIndex=CurrentObjectiveIndex;
+
+		WideStringClass str(ObjectiveManager::Get_HUD_Objectives_Message( CurrentObjectiveIndex ),true);
+		Vector2 position = pog_box.Lower_Left();
+		position += Vector2( 0, -15 );
+		Vector2 text_size = ObjectiveTextRenderer->Get_Text_Extents( str );
+		position.X = (int)(pog_box.Center().X - (text_size.X/2));
+
+		WideStringClass range_str(0,true);
+		range_str.Format( TRANSLATE(IDS_HUD_RANGE), irange );
+		Vector2 range_position = pog_box.Lower_Left();
+		text_size = ObjectiveTextRenderer->Get_Text_Extents( range_str );
+		range_position.X = (int)(pog_box.Center().X - (text_size.X/2));
+
+		const RectClass resolution = Render2DClass::Get_Screen_Resolution();
+		const bool uv_bias = WW3D::Is_Screen_UV_Biased();
+		if (	ObjectiveTextBuilt &&
+				ObjectiveTextBuiltMessage == str &&
+				ObjectiveTextBuiltRange == range_str &&
+				ObjectiveTextBuiltMessagePosition == position &&
+				ObjectiveTextBuiltRangePosition == range_position &&
+				ObjectiveTextBuiltResolution == resolution &&
+				ObjectiveTextBuiltUVBias == uv_bias ) {
+			return;
+		}
+
+		ObjectiveTextRenderer->Reset();
+
+		// Draw message
+		ObjectiveTextRenderer->Build_Sentence( str );
+		ObjectiveTextRenderer->Set_Location( position );
+		ObjectiveTextRenderer->Draw_Sentence();
+
+		// Draw range
+		ObjectiveTextRenderer->Build_Sentence( range_str );
+		ObjectiveTextRenderer->Set_Location( range_position );
+		ObjectiveTextRenderer->Draw_Sentence();
+
+		ObjectiveTextBuiltMessage = str;
+		ObjectiveTextBuiltRange = range_str;
+		ObjectiveTextBuiltMessagePosition = position;
+		ObjectiveTextBuiltRangePosition = range_position;
+		ObjectiveTextBuiltResolution = resolution;
+		ObjectiveTextBuiltUVBias = uv_bias;
+		ObjectiveTextBuilt = DX8Wrapper::Is_Initted();
+	}
+	else {
+		ObjectiveTextRenderer->Reset();
+		ObjectiveTextBuilt = false;
+		CachedRange=0;
+		CachedObjectiveIndex=-1;
+	}
+}
+#endif
 
 static	void	Objective_Update( void )
 {
@@ -2102,7 +2237,9 @@ static	void	Objective_Update( void )
 
 		Objective_Release_Pogs();
 		// Reset text
+#if !defined(RENEGADE_VITA_PORT)
 		ObjectiveTextRenderer->Reset();
+#endif
 		CachedRange=0;
 		CachedObjectiveIndex=-1;
 
@@ -2212,6 +2349,9 @@ static	void	Objective_Update( void )
 	int irange=(int)(range);
 	irange=(irange/10)*10;
 	if (CachedObjectiveIndex!=CurrentObjectiveIndex || irange!=CachedRange) {
+#if defined(RENEGADE_VITA_PORT)
+		Objective_Update_Text( pog_box, objective_count, irange );
+#else
 		ObjectiveTextRenderer->Reset();
 
 		if (objective_count>0) {
@@ -2241,6 +2381,7 @@ static	void	Objective_Update( void )
 			CachedRange=0;
 			CachedObjectiveIndex=-1;
 		}
+#endif
 	}
 }
 

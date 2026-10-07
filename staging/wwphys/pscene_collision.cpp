@@ -46,6 +46,17 @@
 #include "lightcull.h"
 #include "staticphys.h"
 
+#if defined(__vita__)
+// Vita diagnostics only: scene cast counts by kind (ray, AABox, OBBox) and by
+// path (even = culling systems, odd = cached collision region). The native
+// frame boundary reads them at its 120-frame checkpoint. Results unchanged.
+unsigned int g_renegade_phys_cast_counts[6] = { 0U, 0U, 0U, 0U, 0U, 0U };
+#define RENEGADE_COUNT_PHYS_CAST(kind, region) \
+	(++g_renegade_phys_cast_counts[(kind) * 2 + ((region) ? 1 : 0)])
+#else
+#define RENEGADE_COUNT_PHYS_CAST(kind, region) ((void)0)
+#endif
+
 
 
 bool PhysicsSceneClass::Do_Groups_Collide(int group0,int group1)
@@ -142,6 +153,7 @@ bool PhysicsSceneClass::Cast_Ray(PhysRayCollisionTestClass & raytest,bool use_co
 	assert(raytest.Result->Fraction == 1.0f);
 	assert(raytest.Result->StartBad == false);
 	raytest.CollidedPhysObj = NULL;
+	RENEGADE_COUNT_PHYS_CAST(0, use_collision_region);
 
 	/*
 	** Check against physical objects in our vicinity
@@ -195,6 +207,7 @@ bool PhysicsSceneClass::Cast_AABox(PhysAABoxCollisionTestClass & boxtest,bool us
 	WWASSERT(boxtest.Result->Fraction == 1.0f);
 	WWASSERT(boxtest.Result->StartBad == false);
 	boxtest.CollidedPhysObj = NULL;
+	RENEGADE_COUNT_PHYS_CAST(1, use_collision_region);
 	
 	/*
 	** Check against physical objects in our vicinity
@@ -247,6 +260,7 @@ bool PhysicsSceneClass::Cast_OBBox(PhysOBBoxCollisionTestClass & boxtest,bool us
 	assert(boxtest.Result->Fraction == 1.0f);
 	assert(boxtest.Result->StartBad == false);
 	boxtest.CollidedPhysObj = NULL;
+	RENEGADE_COUNT_PHYS_CAST(2, use_collision_region);
 	
 	/*
 	** Check against physical objects in our vicinity

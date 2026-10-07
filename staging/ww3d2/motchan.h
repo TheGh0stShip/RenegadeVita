@@ -46,6 +46,7 @@
 #include "always.h"
 #include "bittype.h"
 #include "w3d_file.h"
+#include "wwdebug.h"
 
 class ChunkLoadClass;
 class Quaternion;
@@ -108,6 +109,42 @@ WWINLINE void MotionChannelClass::set_identity(float * setvec) const
 
 		setvec[0] = 0.0f;
 
+	}
+}
+
+// Inline so the per-pivot raw-animation samplers avoid one call per channel
+// read; otherwise the original definition from motchan.cpp.  The fixed 1/4
+// element copies are the original loop unrolled for the only W3D widths, so
+// GCC cannot turn the inlined loop into a memcpy call.
+WWINLINE void MotionChannelClass::Get_Vector(int frame,float * setvec) const
+{
+	if ((frame < FirstFrame) || (frame > LastFrame)) {
+		set_identity(setvec);
+	}else {
+		int vframe = frame - FirstFrame;
+		if (Data) {
+			const float * src = &Data[vframe * VectorLen];
+			if (VectorLen == 1) {
+				setvec[0] = src[0];
+			} else if (VectorLen == 4) {
+				setvec[0] = src[0];
+				setvec[1] = src[1];
+				setvec[2] = src[2];
+				setvec[3] = src[3];
+			} else {
+				for (int i=0; i<VectorLen; i++) {
+					setvec[i] = Data[vframe * VectorLen + i];
+				}
+			}
+		}
+		else {
+			WWASSERT(CompressedData);
+			float scale=ValueScale/65535.0f;
+			for (int i=0; i<VectorLen; i++) {
+				float value=int(CompressedData[vframe * VectorLen + i]);
+				setvec[i] = value*scale+ValueOffset;
+			}
+		}
 	}
 }
 

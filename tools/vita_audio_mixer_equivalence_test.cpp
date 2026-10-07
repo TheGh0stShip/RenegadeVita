@@ -202,6 +202,64 @@ private:
 	std::vector<uint64_t> *log_;
 };
 
+// Fake compressed music with the production playback's window semantics
+// (window refills, sequential continuation, one-frame previous cache, a
+// window that may extend past Frame_Count()). Only refills are logged, so the
+// windowed mixer must issue exactly the reference mixer's refills.
+class FakeWindowedMpeg final : public RenegadeVitaAudio::MpegPlayback {
+public:
+	FakeWindowedMpeg(size_t frames, uint16_t channels, uint32_t rate, size_t window,
+		size_t overrun, std::vector<uint64_t> *log)
+		: frames_(frames), channels_(channels), rate_(rate), window_(window),
+		  overrun_(overrun), log_(log), pcm_(window * channels) {}
+	size_t Frame_Count() const override { return frames_; }
+	uint32_t Sample_Rate() const override { return rate_; }
+	uint16_t Channels() const override { return channels_; }
+	size_t PCM_Storage_Bytes() const override { return pcm_.size() * sizeof(int16_t); }
+	static int16_t Value(size_t frame, uint16_t channel)
+	{
+		return static_cast<int16_t>((frame * 7919U + channel * 104729U + 13U) & 0xffffU);
+	}
+	int16_t Sample(size_t frame, uint16_t channel) override
+	{
+		if (frame >= frames_ || channel >= channels_) return 0;
+		if (previous_valid_ && cache_start_ > 0 && frame == cache_start_ - 1)
+			return previous_[channel];
+		if (frame < cache_start_ || frame >= cache_start_ + cache_frames_) {
+			const bool sequential = cache_frames_ != 0 && frame == cache_start_ + cache_frames_;
+			previous_valid_ = sequential;
+			if (sequential) {
+				for (uint16_t c = 0; c < channels_; ++c)
+					previous_[c] = pcm_[(cache_frames_ - 1U) * channels_ + c];
+			}
+			log_->push_back((sequential ? (UINT64_C(1) << 63U) : 0U) | frame);
+			cache_start_ = frame;
+			cache_frames_ = std::min(window_, frames_ + overrun_ - frame);
+			for (size_t f = 0; f < cache_frames_; ++f)
+				for (uint16_t c = 0; c < channels_; ++c)
+					pcm_[f * channels_ + c] = Value(cache_start_ + f, c);
+		}
+		return pcm_[(frame - cache_start_) * channels_ + channel];
+	}
+	const int16_t *Resident_Window(size_t *first, size_t *frames) const override
+	{
+		*first = cache_start_;
+		*frames = cache_start_ < frames_ ? std::min(cache_frames_, frames_ - cache_start_) : 0U;
+		return *frames != 0U ? pcm_.data() : nullptr;
+	}
+private:
+	size_t frames_;
+	uint16_t channels_;
+	uint32_t rate_;
+	size_t window_;
+	size_t overrun_;
+	std::vector<uint64_t> *log_;
+	std::vector<int16_t> pcm_;
+	size_t cache_start_ = 0, cache_frames_ = 0;
+	int16_t previous_[2] = {};
+	bool previous_valid_ = false;
+};
+
 struct VoiceState {
 	double cursor;
 	U32 loops_remaining;
@@ -236,7 +294,13 @@ RunResult Run_Scenario(uint64_t seed, bool reference)
 		const uint32_t frames = 1U + (random.Below(4U) == 0U ? random.Below(4U) : random.Below(3000U));
 		if (mpeg) {
 			const uint16_t mpeg_channels = static_cast<uint16_t>(1U + random.Below(2U));
-			sample->mpeg.reset(new FakeMpeg(frames, mpeg_channels, rate, &result.mpeg_log));
+			if (random.Below(2U) == 0U) {
+				const size_t window = 1U + random.Below(random.Below(2U) == 0U ? 8U : 600U);
+				sample->mpeg.reset(new FakeWindowedMpeg(frames, mpeg_channels, rate, window,
+					random.Below(3U), &result.mpeg_log));
+			} else {
+				sample->mpeg.reset(new FakeMpeg(frames, mpeg_channels, rate, &result.mpeg_log));
+			}
 			sample->wave = {};
 			sample->wave.channels = mpeg_channels;
 			sample->wave.sample_rate = rate;
@@ -434,11 +498,71 @@ void Check_Inverse_Distance_Rolloff()
 	std::printf("audio inverse distance rolloff PASS\n");
 }
 
+#if defined(RENEGADE_AUDIO_MPG123)
+// Production mpg123 playback: two voices open the same file, one mixed by the
+// windowed mixer and one by the original per-frame mixer, through sequential
+// play, rate changes, loop wraps and arbitrary seeks.
+void Check_Real_Mpeg(const char *path)
+{
+	std::FILE *file = std::fopen(path, "rb");
+	CHECK(file != nullptr);
+	std::vector<uint8_t> image;
+	uint8_t chunk[65536];
+	for (size_t got; (got = std::fread(chunk, 1, sizeof(chunk), file)) != 0;)
+		image.insert(image.end(), chunk, chunk + got);
+	std::fclose(file);
+	HSAMPLE fast = AIL_allocate_sample_handle(nullptr);
+	HSAMPLE reference = AIL_allocate_sample_handle(nullptr);
+	CHECK(AIL_set_named_sample_file(fast, nullptr, image.data(), static_cast<U32>(image.size()), 0) == 1);
+	CHECK(AIL_set_3D_sample_file_bounded(reference, image.data(), image.size()) == 1);
+	CHECK(fast->mpeg && reference->mpeg && fast->mpeg != reference->mpeg);
+	const size_t total = Sample_Frame_Count(fast);
+	CHECK(total > 4096U && total == Sample_Frame_Count(reference));
+	Random random{0x6d70673132ULL + total};
+	for (HSAMPLE sample : {fast, reference}) {
+		sample->volume = 101;
+		sample->pan = 40;
+		sample->loop_count = 0U;
+		sample->loops_remaining = 0U;
+		sample->spatial = false;
+	}
+	std::vector<int16_t> a(kOutputFrames * 2U), b(kOutputFrames * 2U);
+	for (unsigned buffer = 0; buffer < 400U; ++buffer) {
+		const uint32_t action = random.Below(10U);
+		double cursor = fast->cursor;
+		if (action == 0U) cursor = static_cast<double>(random.Unit()) * static_cast<double>(total);
+		else if (action == 1U) cursor = static_cast<double>(total) - random.Unit() * 600.0;
+		else if (action == 2U) cursor = static_cast<double>(random.Below(3000U));
+		if (action == 3U) {
+			const S32 rate = 4000 + static_cast<S32>(random.Below(90000U));
+			fast->playback_rate = reference->playback_rate = rate;
+		}
+		fast->cursor = reference->cursor = cursor;
+		const size_t frames = 1U + random.Below(static_cast<uint32_t>(kOutputFrames));
+		fast->playing = true; reference->playing = false;
+		Mix_Locked(a.data(), frames);
+		fast->playing = false; reference->playing = true;
+		Reference_Mix_Locked(b.data(), frames);
+		CHECK(std::memcmp(a.data(), b.data(), frames * 2U * sizeof(int16_t)) == 0);
+		CHECK(std::memcmp(&fast->cursor, &reference->cursor, sizeof(double)) == 0);
+	}
+	AIL_release_sample_handle(fast);
+	AIL_release_sample_handle(reference);
+	std::printf("audio real mpeg window PASS frames=%zu\n", total);
+}
+#endif
+
 } // namespace
 
 int main(int argc, char **argv)
 {
 	AIL_startup();
+#if defined(RENEGADE_AUDIO_MPG123)
+	if (argc > 2) {
+		for (int index = 2; index < argc; ++index) Check_Real_Mpeg(argv[index]);
+		return 0;
+	}
+#endif
 	const unsigned scenarios = argc > 1 ? static_cast<unsigned>(std::strtoul(argv[1], nullptr, 10)) : 3000U;
 	Check_Mixer_Equivalence(scenarios);
 	Check_Pcm_Cache();

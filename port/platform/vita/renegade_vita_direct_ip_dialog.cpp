@@ -11,14 +11,25 @@ bool cancel_requested = false;
 class DirectIPPopup;
 DirectIPPopup *active_popup = NULL;
 
+bool Is_Endpoint_Space(unsigned long c)
+{
+	return c == 0x20UL || (c >= 0x09UL && c <= 0x0dUL);
+}
+
+// IME/edit text may carry surrounding blanks; the strict IPv4 parser does not
+// accept them, so trim ASCII whitespace before narrowing. Compare as unsigned
+// so a signed 32-bit wchar_t cannot slip negative values past the ASCII gate.
 bool Narrow_Endpoint(const WCHAR *source, char *destination, unsigned capacity)
 {
 	if (source == NULL || destination == NULL || capacity == 0U) return false;
+	while (*source != 0 && Is_Endpoint_Space(static_cast<unsigned long>(*source))) ++source;
 	unsigned index = 0U;
 	for (; source[index] != 0; ++index) {
-		if (index + 1U >= capacity || source[index] > 0x7fU) return false;
-		destination[index] = static_cast<char>(source[index]);
+		const unsigned long c = static_cast<unsigned long>(source[index]);
+		if (index + 1U >= capacity || c > 0x7fUL) return false;
+		destination[index] = static_cast<char>(c);
 	}
+	while (index != 0U && Is_Endpoint_Space(static_cast<unsigned char>(destination[index - 1U]))) --index;
 	destination[index] = '\0';
 	return index != 0U;
 }

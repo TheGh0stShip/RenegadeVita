@@ -800,14 +800,47 @@ DECLARE_SCRIPT (M09_LabRoom_Controller, "")
 DECLARE_SCRIPT (M09_Mobius_Initial_Conversation, "")
 {
 	float max_health;
+	// Vita soft-lock guard: the escort hand-off below runs at most once.
+	bool escort_started;
+
+	enum { VITA_RESUME_P01 = 9021, VITA_RESUME_ESCORT = 9022 };
 
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( max_health, 1 );
+		SAVE_VARIABLE( escort_started, 2 );
+	}
+
+	// The original IDS_M09_P01 end handler: objective 901 and the follow
+	// script that every later escort step depends on.
+	void Start_Escort (GameObject *obj)
+	{
+		if (escort_started)
+		{
+			return;
+		}
+		escort_started = true;
+
+		Commands->Send_Custom_Event (obj, Commands->Find_Object(2000071), 901, 3, 0.0f);
+		Commands->Innate_Enable(obj);
+		Commands->Attach_Script(Commands->Find_Object (2000010), "M09_Mobius_Follow", "");
+		Commands->Send_Custom_Event (obj, Commands->Find_Object(2000279), CONVERSATION, ENDED, 0.0f);
+		Commands->Send_Custom_Event( obj, Commands->Find_Object (2000010), FOLLOW, 2001012, 1.0f );
+
+		Commands->Give_PowerUp(obj, "POW_Pistol_AI");
+		Commands->Select_Weapon (obj, "Weapon_Pistol_Ai" );
+	}
+
+	bool Escort_Actors_Alive (GameObject *obj)
+	{
+		GameObject *star = STAR;
+		return Commands->Get_Health (obj) > 0.0f && star != NULL && Commands->Get_Health (star) > 0.0f;
 	}
 
 	void Created (GameObject *obj)
 	{
+		escort_started = false;
+
 		Commands->Set_HUD_Help_Text ( IDS_M09DSGN_DSGN0072I1DSGN_TXT, TEXT_COLOR_OBJECTIVE_PRIMARY );
 
 		Commands->Start_Timer (obj, this, 5.0f, 20);
@@ -828,6 +861,23 @@ DECLARE_SCRIPT (M09_Mobius_Initial_Conversation, "")
 			Commands->Join_Conversation(STAR, conv_id, false, false);
 			Commands->Start_Conversation (conv_id, 900);
 			Commands->Monitor_Conversation (obj, conv_id);
+		}
+
+		// Vita soft-lock guard: deferred resume of an intro conversation that
+		// ended without ACTION_COMPLETE_CONVERSATION_ENDED (see Action_Complete).
+		if (timer_id == VITA_RESUME_P01 && !escort_started && Escort_Actors_Alive (obj))
+		{
+			const char *conv_name = ("IDS_M09_P01");
+			int conv_id = Commands->Create_Conversation (conv_name, 99, 200, false);
+			Commands->Join_Conversation(obj, conv_id, false, false);
+			Commands->Join_Conversation(STAR, conv_id, false, false);
+			Commands->Start_Conversation (conv_id, 903);
+			Commands->Monitor_Conversation (obj, conv_id);
+		}
+
+		if (timer_id == VITA_RESUME_ESCORT && Escort_Actors_Alive (obj))
+		{
+			Start_Escort (obj);
 		}
 	}
 
@@ -892,14 +942,20 @@ DECLARE_SCRIPT (M09_Mobius_Initial_Conversation, "")
 
 		if(action_id == 903 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
 		{
-			Commands->Send_Custom_Event (obj, Commands->Find_Object(2000071), 901, 3, 0.0f);
-			Commands->Innate_Enable(obj);
-			Commands->Attach_Script(Commands->Find_Object (2000010), "M09_Mobius_Follow", "");
-			Commands->Send_Custom_Event (obj, Commands->Find_Object(2000279), CONVERSATION, ENDED, 0.0f);
-			Commands->Send_Custom_Event( obj, Commands->Find_Object (2000010), FOLLOW, 2001012, 1.0f );
+			Start_Escort (obj);
+		}
 
-			Commands->Give_PowerUp(obj, "POW_Pistol_AI");
-			Commands->Select_Weapon (obj, "Weapon_Pistol_Ai" );
+		// Vita soft-lock guard: D07 (900) and P01 (903) are the only gate to
+		// objective 901 and M09_Mobius_Follow. An orator beyond the 200 m
+		// audience limit at a remark boundary ends them INTERRUPTED, and the
+		// original handlers above then never run. Resume on a short timer,
+		// not synchronously, so a level-release reset (which also reports
+		// INTERRUPTED) cannot start anything on the outgoing world.
+		if ((action_id == 900 || action_id == 903) && !escort_started &&
+			(reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED ||
+			 reason == ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT))
+		{
+			Commands->Start_Timer (obj, this, 1.0f, (action_id == 900) ? VITA_RESUME_P01 : VITA_RESUME_ESCORT);
 		}
 	}
 };
@@ -4367,6 +4423,16 @@ DECLARE_SCRIPT (M09_KeyCard_Zone, "")
 	{
 		if (timer_id == DIST_CHECK && star_in_zone)
 		{
+			// Vita soft-lock guard: the original re-check only compared the
+			// distance measured on entry, so a player waiting in this
+			// star-only zone for a trailing Mobius never got the door check.
+			// Re-measure it each pass; entry with Mobius close is unchanged.
+			mobius = Commands->Find_Object (2000010);
+			if (mobius != NULL)
+			{
+				mobius_distance = Commands->Get_Distance(Commands->Get_Position (STAR), Commands->Get_Position (mobius));
+			}
+
 			if (mobius_distance <= 15.0/* && !fired_off*/)
 			{
 				//fired_off = true;

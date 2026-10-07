@@ -1654,6 +1654,15 @@ test "$(sha256sum "$rv_stage/combat/pathaction.h" | cut -d' ' -f1)" = \
 # frame rates).  See reports/campaign/SCRIPT_ZONE_TUNNELLING.md.
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-scriptzone-swept-entry.patch"
+# M09 soft-lock hunt: re-measure Mobius in the keycard-door wait loop, and
+# resume the D07/P01 escort hand-off when an intro conversation ends
+# INTERRUPTED. Anchored to the final Mission09.cpp so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/scripts/Mission09.cpp" | cut -d' ' -f1)" = \
+	"3674367e03284d91c79a6fb49ebae3a567c68308fed10c673e81f567c83af36a"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m09-keycard-zone-distance-recheck.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m09-intro-conversation-resume.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

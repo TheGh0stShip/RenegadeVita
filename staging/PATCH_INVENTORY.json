@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "b3d82d5ec588ab3ad22e2659e42cb197bce35b36a1e00843a49820a1e2da72af",
+  "stage_script_sha256": "e0d557c188be77d1178f762218b1f2df0acf41f0f284120b80004764708e8e74",
   "patch_count": 545,
   "patches": [
     {
@@ -1735,16 +1735,6 @@
       "sha256": "745c985344466f36002809c8309182527a92f844a17f2b1bbefa9df7c38615c0"
     },
     {
-      "path": "port/patches/scripts-a38-m04-torpedo-objective-race.patch",
-      "stage_directory": "scripts",
-      "sha256": "32a8416089a9645f27bada94b34441effbea18530a112486d1ef52ced26eb49a"
-    },
-    {
-      "path": "port/patches/scripts-a38-m04-missile-briefing-drop.patch",
-      "stage_directory": "scripts",
-      "sha256": "26eca127c54b113203b29ca482d39a73fd9dd876ac4d7cab08f8e5b1f88d9c71"
-    },
-    {
       "path": "port/patches/scripts-a36-m05-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "0bd30fe32e8dfd82138ed75c9bb18d1881b54f5e5ad3a39a02eb43b1f07201b0"
@@ -2728,7 +2718,17 @@
       "path": "port/patches/combat-a37-screen-overlay-opacity-clamp.patch",
       "stage_directory": "combat",
       "sha256": "1fd9784eff93c659fa39a08322828cb55ab49dca36582e540f51be432e85a82a"
+    },
+    {
+      "path": "port/patches/scripts-a38-m09-keycard-zone-distance-recheck.patch",
+      "stage_directory": "scripts",
+      "sha256": "830d2aa7af952d0594a1c8debb21d808d8baecbd2fe8cabc2a5e5d7e4303b06e"
+    },
+    {
+      "path": "port/patches/scripts-a38-m09-intro-conversation-resume.patch",
+      "stage_directory": "scripts",
+      "sha256": "c336c47ccb99cb526384a9db2ff94f82429deea43ee1ff520fcfedfe6d8e039d"
     }
   ],
-  "registry_sha256": "cb1b8b6e20d96fa7f2c7e82912f9a468f797ec15d0ceb5c888495d238ddff17a"
+  "registry_sha256": "1059d93f2f7d6499e0f2c40d709002d6e8ecf5e43ea386771e8e93fd4579d5fd"
 }

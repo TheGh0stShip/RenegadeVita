@@ -1,0 +1,27 @@
+M09_KeyCard_Zone soft-lock guard. The zone (2000458, Script_Zone_Star) sends
+the containment-door key check only when Mobius is within 15 m. If Havoc
+enters first, the 2 s DIST_CHECK loop keeps running while he stays inside but
+compares the distance measured on entry, so it can never succeed; a player
+waiting at the door for a trailing Mobius never gets the door. Re-measure the
+distance on each pass. Entry with Mobius close, exit/re-entry and every reply
+path are unchanged; the check still fires at most once per loop.
+
+--- a/Mission09.cpp
++++ b/Mission09.cpp
+@@ -4367,6 +4367,16 @@
+ 	{
+ 		if (timer_id == DIST_CHECK && star_in_zone)
+ 		{
++			// Vita soft-lock guard: the original re-check only compared the
++			// distance measured on entry, so a player waiting in this
++			// star-only zone for a trailing Mobius never got the door check.
++			// Re-measure it each pass; entry with Mobius close is unchanged.
++			mobius = Commands->Find_Object (2000010);
++			if (mobius != NULL)
++			{
++				mobius_distance = Commands->Get_Distance(Commands->Get_Position (STAR), Commands->Get_Position (mobius));
++			}
++
+ 			if (mobius_distance <= 15.0/* && !fired_off*/)
+ 			{
+ 				//fired_off = true;

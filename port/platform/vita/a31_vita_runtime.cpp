@@ -3322,6 +3322,34 @@ bool Prepare_Explosion_Definition(const char *name)
 		DefinitionMgrClass::Find_Named_Definition(name, false), name, 0U);
 }
 
+// reports/SCRIPT_SPAWN_PRESETS.md: presets spawned by mission scripts
+// (not cinematic Create_Real_Object lines) for the scanned levels. Merged
+// into the cinematic warm set; unresolved or non soldier/vehicle presets
+// are skipped by the same checks as cinematic presets.
+static const char *const kM13ScriptSpawnPresets[] = {
+	"Generic_Cinematic", "Invisible_Object", "Large_Blocker",
+	"MX0_GDI_Medium_Tank_Destroyed", "Obelisk Effect",
+};
+static const char *const kM01ScriptSpawnPresets[] = {
+	"Invisible_Object", "Level_01_Keycard", "Level_02_Keycard",
+	"Level_03_Keycard", "M01_GDI_Gunboat", "NOD_Apache", "Nod_Buggy",
+	"Nod_FlameThrower_0", "Nod_Harvester", "Nod_Light_Tank_Dec",
+	"Nod_MiniGunner_0", "Nod_MiniGunner_1Off", "Nod_Turret_Destroyed",
+	"POW_Data_Disc", "POW_Health_100", "POW_IonCannonBeacon_Player",
+	"POW_Medal_Armor",
+};
+struct ScriptSpawnPresetSupplement {
+	const char *archive;
+	const char *const *presets;
+	size_t count;
+};
+static const ScriptSpawnPresetSupplement kScriptSpawnPresetSupplements[] = {
+	{ "M13.mix", kM13ScriptSpawnPresets,
+		sizeof(kM13ScriptSpawnPresets) / sizeof(kM13ScriptSpawnPresets[0]) },
+	{ "M01.mix", kM01ScriptSpawnPresets,
+		sizeof(kM01ScriptSpawnPresets) / sizeof(kM01ScriptSpawnPresets[0]) },
+};
+
 // Dev236 physical M13: the first Create_Real_Object of each new soldier
 // preset in an authored cinematic cost 0.2-0.6 s inside one frame (for
 // example Nod_minigunner_2sf, gdi_rocketsoldier_0, GDI_Engineer_0,
@@ -3386,6 +3414,20 @@ void Warm_Level_Cinematic_Preset_Models(A31VitaLoadingPresenter &presenter,
 			if (!seen) presets.push_back(preset);
 		}
 	}
+	unsigned supplemented = 0U;
+	for (const ScriptSpawnPresetSupplement &supplement : kScriptSpawnPresetSupplements) {
+		if (strcasecmp(supplement.archive, archive) != 0) continue;
+		for (size_t entry = 0U; entry < supplement.count; ++entry) {
+			const char *preset = supplement.presets[entry];
+			bool seen = false;
+			for (const std::string &existing : presets) {
+				if (strcasecmp(existing.c_str(), preset) == 0) { seen = true; break; }
+			}
+			if (!seen) { presets.push_back(preset); ++supplemented; }
+		}
+	}
+	A30_Vita_Log("A4 cinematic preset preparation: archive=%s script_spawn_supplement=%u\n",
+		archive, supplemented);
 	unsigned warmed = 0U;
 	// Warmed prototypes stay resident until LevelManager::Release_Level's
 	// original Free_Assets. Keep the same vitaGL free-memory floor as texture

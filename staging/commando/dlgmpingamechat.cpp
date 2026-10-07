@@ -796,6 +796,15 @@ MPIngameChatPopupClass::On_Init_Dialog (void)
 	//
 	Set_Background_Darkened (false);
 	PopupDialogClass::On_Init_Dialog ();
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && defined(__vita__)
+	// The original chat key leaves the caret in the edit field; Vita has no
+	// keyboard, so open the system IME there. Square still submits through
+	// the original Enter path; IME cancel leaves the text unchanged.
+	EditCtrlClass *edit_ctrl = (EditCtrlClass *)ChatModule->Get_Dlg_Item (IDC_MESSAGE_EDIT);
+	if (edit_ctrl != NULL) {
+		edit_ctrl->Begin_Native_Text_Entry ();
+	}
+#endif
 	return ;
 }
 

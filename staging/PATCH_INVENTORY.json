@@ -1717,7 +1717,7 @@
     {
       "path": "port/patches/commando-a36-chat-input-owner.patch",
       "stage_directory": "commando",
-      "sha256": "4c75a30cee4c85814059aa1e575d23c5960e1adcd892aacdec13fd038c9b7d9e"
+      "sha256": "63027721d42ce8e95e9d6cf5c5266ac150bd15a0c4a09968d768c54383296f13"
     },
     {
       "path": "port/patches/wwui-a36-native-text-submit.patch",

@@ -6,9 +6,17 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
+STAGE = ROOT / 'staging'
+UPSTREAM = Path(os.environ.get('RENEGADE_UPSTREAM_CODE', ROOT / 'upstream/CnC_Renegade/Code'))
 
 class UserSettingsTests(unittest.TestCase):
     def test_atomic_round_trip_validation_and_failed_write(self):
+        self.run_contract([])
+
+    def test_vita_rename_refuses_existing_destination(self):
+        self.run_contract(['-DRENEGADE_TEST_REFUSING_RENAME=1'])
+
+    def run_contract(self, defines):
         source = r'''
 #include "renegade_vita_user_settings.h"
 #include <assert.h>
@@ -52,6 +60,10 @@ int main(int argc, char **argv) {
  strcpy(State().path, (std::string(argv[1])+"/missing/options.cfg").c_str());
  assert(!Save(r));
  assert(Configure(path.c_str()) && State().record.value[9] == 12345);
+ // Interrupted replace: only options.cfg.previous survives; Configure restores it.
+ assert(rename(path.c_str(), (path + ".previous").c_str()) == 0);
+ State().record = Record{};
+ assert(Configure(path.c_str()) && State().record.value[9] == 12345);
  FILE *file = fopen(path.c_str(), "wb"); assert(file);
  assert(fwrite("RVOPT1 3\0ignored", 1, 16, file) == 16); fclose(file);
  assert(!Configure(path.c_str()) && State().record.value[0] == 0);
@@ -64,6 +76,21 @@ int main(int argc, char **argv) {
             subprocess.run(['g++','-std=c++17','-Wall','-Wextra','-Werror',
                             '-fsanitize=address,undefined','-fno-omit-frame-pointer','-fno-pie','-no-pie',
                             '-I'+str(ROOT/'port/platform'),str(directory/'main.cpp'),
+                            '-o',str(directory/'main.o'),'-c'],check=True)
+            # Link the real replacement owner (and its staged wwlib deps).
+            subprocess.run(['g++','-std=c++17',*defines,'-D_UNIX=1','-DRENEGADE_VITA_PORT=1',
+                            '-DNDEBUG=1','-fno-strict-aliasing','-w',
+                            '-fsanitize=address,undefined','-fno-omit-frame-pointer','-fno-pie','-no-pie',
+                            '-include',str(ROOT/'port/compatibility/include/msvc_compat.h'),
+                            '-I'+str(ROOT/'port/compatibility/include'),
+                            '-I'+str(ROOT/'port/filesystem'),
+                            '-I'+str(STAGE/'wwlib'),'-I'+str(STAGE/'wwmath'),
+                            '-I'+str(UPSTREAM/'wwdebug'),'-I'+str(UPSTREAM/'wwlib'),
+                            str(directory/'main.o'),
+                            str(ROOT/'port/filesystem/renegade_file_factory.cpp'),
+                            str(ROOT/'port/filesystem/renegade_paths.cpp'),
+                            str(STAGE/'wwlib/rawfile.cpp'),str(STAGE/'wwlib/bufffile.cpp'),
+                            str(STAGE/'wwlib/wwstring.cpp'),str(STAGE/'wwlib/chunkio.cpp'),
                             '-o',str(directory/'test')],check=True)
             subprocess.run([str(directory/'test'),str(directory)],check=True,
                            env={**os.environ,'ASAN_OPTIONS':'detect_leaks=1:halt_on_error=1',

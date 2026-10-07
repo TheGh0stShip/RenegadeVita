@@ -7,6 +7,12 @@
 #include <unistd.h>
 #include <errno.h>
 
+// Owned by port/filesystem/renegade_file_factory.cpp. Plain rename() maps to
+// sceIoRename on Vita, which refuses an existing destination, so every
+// options save after the first was silently discarded on hardware.
+bool Renegade_Replace_File(const char *source, const char *destination);
+bool Renegade_Recover_Interrupted_Replace(const char *destination);
+
 namespace RenegadeVitaUserSettings {
 enum { Audio = 1, Performance = 2, Count = 13 };
 struct Record { unsigned value[Count] = {}; };
@@ -50,6 +56,7 @@ inline bool Configure(const char *path)
 	state = Store{};
 	if (path == NULL || strlen(path) + 5 >= sizeof(state.path)) return false;
 	strcpy(state.path, path);
+	(void)Renegade_Recover_Interrupted_Replace(path);
 	FILE *file = fopen(path, "rb");
 	if (file == NULL) return errno == ENOENT;
 	char text[256] = {};
@@ -74,7 +81,7 @@ inline bool Save(const Record &record)
 	ok = fflush(file) == 0 && ok;
 	ok = fsync(fileno(file)) == 0 && ok;
 	ok = fclose(file) == 0 && ok;
-	if (ok) ok = rename(temporary, state.path) == 0;
+	if (ok) ok = Renegade_Replace_File(temporary, state.path);
 	if (!ok) { remove(temporary); return false; }
 	state.record = record;
 	return true;

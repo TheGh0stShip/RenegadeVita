@@ -90,7 +90,15 @@
 -
 --- a/combat.cpp
 +++ b/combat.cpp
-@@ -402,7 +402,14 @@
+@@ -96,6 +96,7 @@
+ #include "animatedsoundmgr.h"
+ #if defined(__vita__)
+ #include "a30_vita_runtime.h"
++#include "a35_level_load_status.h"
+ void A31_Vita_Render_Original_Loading_Callback(const char *phase, int minimum_progress);
+ #define VITA_LEVEL_LOAD_TRACE(...) A30_Vita_Log(__VA_ARGS__)
+ #define VITA_LEVEL_LOAD_PRESENT(phase, minimum_progress) \
+@@ -402,7 +403,14 @@
  		INIT_STATUS("Load definition databases");
  		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-entry\n");
  		VITA_LEVEL_LOAD_PRESENT("load-definitions-entry", 1);

@@ -2407,7 +2407,7 @@
     {
       "path": "port/patches/combat-a36-definition-load-admission.patch",
       "stage_directory": "combat",
-      "sha256": "9a52a9fa01801f7647044401b6a1c12b6a95fa6179a5e8fcd197ab929832884f"
+      "sha256": "b25144f542209a0f0b88f471014f7961cbae94277ebf9b78051ab396c3eee919"
     },
     {
       "path": "port/patches/combat-a36-corrupt-ddb-rejects-level-data.patch",
@@ -2560,5 +2560,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "94e09eb52d38366223f45182aebe6b969dd3cbad1db44fe9db7f124ede494421"
+  "registry_sha256": "15e54f131d5c87b8c9343aed13ed8aefd386ed15bc6b9c980e147032fd0a45e4"
 }

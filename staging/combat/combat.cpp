@@ -96,6 +96,7 @@
 #include "animatedsoundmgr.h"
 #if defined(__vita__)
 #include "a30_vita_runtime.h"
+#include "a35_level_load_status.h"
 void A31_Vita_Render_Original_Loading_Callback(const char *phase, int minimum_progress);
 #define VITA_LEVEL_LOAD_TRACE(...) A30_Vita_Log(__VA_ARGS__)
 #define VITA_LEVEL_LOAD_PRESENT(phase, minimum_progress) \

@@ -2,6 +2,9 @@
 
 #include "input.h"
 #include "directinput.h"
+// Renegade_Vita_Key_Label names DIK_* scan codes; keep this header
+// self-contained so include order in input.cpp/dlghelpscreen.cpp is irrelevant.
+#include <dinput.h>
 
 inline const WCHAR *Renegade_Vita_Key_Label(int key)
 {

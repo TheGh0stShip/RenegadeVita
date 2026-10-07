@@ -43,13 +43,24 @@
 #include "gamemode.h"
 #include "cnetwork.h"
 #include "gametype.h"
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+#include "DlgMPConnect.h"
+#include "DlgMPConnectionRefused.h"
+#include <WWUI\DialogMgr.h>
+#else
 #include "a31_network_dialog_stub.h"
+#endif
 #include "apppackettypes.h"
 #include "modpackagemgr.h"
 #include "specialbuilds.h"
 #include "translatedb.h"
 #include "string_ids.h"
 #include "realcrc.h"
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "a31_client_connect_boundary.h"
+#include "renegade_client_options.h"
+#include "connect.h"
+#endif
 
 DECLARE_NETWORKOBJECT_FACTORY(cGameOptionsEvent, NETCLASSID_GAMEOPTIONSEVENT);
 
@@ -83,6 +94,9 @@ cGameOptionsEvent::Act(void)
 	The_Game()->Set_Hosted_Game_Number(HostedGameNumber);
 
 	if (!IS_SOLOPLAY) {
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+		if (A31ClientConnect::Game_Options(The_Game(), true)) return;
+#endif
 		DialogBaseClass* dialog = DialogMgrClass::Find_Dialog(IDD_MULTIPLAY_CONNECTING);
 
 		if (dialog != NULL) {
@@ -133,6 +147,19 @@ cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 
 	WWASSERT(PTheGameData != NULL);
 
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	const bool modern = cNetwork::PClientConnection &&
+		cNetwork::PClientConnection->Has_TT_Client_Greeting();
+	RenegadeClientOptionsLayout layout;
+	if (!IS_SOLOPLAY && The_Game()->Is_Cnc() &&
+		!Renegade_Inspect_Client_Options(packet, modern, layout)) {
+		packet.Flush();
+		A31ClientConnect::Invalid_Game_Options();
+		Set_Delete_Pending();
+		return;
+	}
+#endif
+
 	The_Game()->Import_Tier_1_Data((cPacket &) packet);
 
 	The_Game()->Import_Tier_2_Data((cPacket &) packet);
@@ -146,8 +173,24 @@ cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 	//
 	// TSS103001...n.b. need test that Find_Map_Name succeeds...
 	//
-	ULONG mod_name_crc = packet.Get(mod_name_crc);
-	ULONG map_name_crc = packet.Get(map_name_crc);
+	ULONG mod_name_crc = 0, map_name_crc = 0;
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	if (modern) {
+		bool flag = false;
+		packet.Get(flag);
+		cNetwork::PClientConnection->Set_TT_Options_Flag(flag);
+		mod_name_crc = layout.ModCRC;
+		map_name_crc = layout.MapCRC;
+	} else
+#endif
+	{
+		packet.Get(mod_name_crc);
+		packet.Get(map_name_crc);
+	}
+
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	A31ClientConnect::Game_Options_Identity(map_name_crc, mod_name_crc, HostedGameNumber);
+#endif
 
 	// Find the mod and map names from their CRC
 	StringClass mod_name(0, true);
@@ -158,6 +201,13 @@ cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 
 	if (!IS_SOLOPLAY) {
 		if (!The_Game()->Is_Map_Valid()) {
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+			act = false;
+			if (A31ClientConnect::Game_Options(The_Game(), false)) {
+				Set_Delete_Pending();
+				return;
+			}
+#endif
 			DialogBaseClass* dialog = DialogMgrClass::Find_Dialog(IDD_MULTIPLAY_CONNECTING);
 
 			if (dialog != NULL) {
@@ -181,7 +231,6 @@ cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 
 	Set_Delete_Pending();
 }
-
 
 
 

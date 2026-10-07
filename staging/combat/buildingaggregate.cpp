@@ -314,14 +314,14 @@ const PersistFactoryClass & BuildingAggregateClass::Get_Factory(void) const
 bool BuildingAggregateClass::Save(ChunkSaveClass & csave)
 {
 	csave.Begin_Chunk(BAG_CHUNK_STATICANIMPHYS);
-		StaticAnimPhysClass::Save(csave);
+		if (!StaticAnimPhysClass::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(BAG_CHUNK_VARIABLES);
 		WRITE_MICRO_CHUNK(csave, BAG_VARIABLE_CURRENTSTATE, CurrentState );
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 
@@ -689,11 +689,12 @@ bool BuildingAggregateDefClass::Save_State_Animation_Data(ChunkSaveClass & csave
  *=============================================================================================*/
 bool	BuildingAggregateDefClass::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case BAGDEF_CHUNK_STATICANIMPHYS:
-				StaticAnimPhysDefClass::Load( cload );
+				if (!StaticAnimPhysDefClass::Load( cload )) loaded = false;
 				break;
   
 			case BAGDEF_CHUNK_VARIABLES:
@@ -719,7 +720,8 @@ bool	BuildingAggregateDefClass::Load( ChunkLoadClass &cload )
 			case BAGDEF_CHUNK_HEALTH50_POWEROFF_VARIABLES:
 			case BAGDEF_CHUNK_HEALTH25_POWEROFF_VARIABLES:
 			case BAGDEF_CHUNK_DESTROYED_POWEROFF_VARIABLES:
-				Load_State_Animation_Data(cload,cload.Cur_Chunk_ID() - BAGDEF_CHUNK_HEALTH100_POWERON_VARIABLES);
+				if (!Load_State_Animation_Data(cload,
+					cload.Cur_Chunk_ID() - BAGDEF_CHUNK_HEALTH100_POWERON_VARIABLES)) loaded = false;
 				break;
 
 			default:
@@ -730,7 +732,7 @@ bool	BuildingAggregateDefClass::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -762,6 +764,5 @@ bool BuildingAggregateDefClass::Load_State_Animation_Data(ChunkLoadClass & cload
 		}
 		cload.Close_Micro_Chunk();
 	}
-	return true;
+	return !cload.Has_Error();
 }
-

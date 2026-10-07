@@ -76,13 +76,26 @@ bool	GameObjObserverManager::Save( ChunkSaveClass & csave )
 
 bool	GameObjObserverManager::Load( ChunkLoadClass & cload )
 {
+	bool variables_seen = false;
+	bool next_id_seen = false;
+	bool loaded = true;
+	int next_id = NextID;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
+				if (variables_seen) {
+					loaded = false;
+					break;
+				}
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_NEXT_ID, NextID );
+						case MICROCHUNKID_NEXT_ID:
+							if (next_id_seen || cload.Cur_Micro_Chunk_Length() != sizeof(next_id) ||
+								cload.Read(&next_id, sizeof(next_id)) != sizeof(next_id)) loaded = false;
+							else next_id_seen = true;
+							break;
 						default:
 							Debug_Say(("Unhandled Variable Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 							break;
@@ -99,9 +112,10 @@ bool	GameObjObserverManager::Load( ChunkLoadClass & cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	loaded = loaded && variables_seen && next_id_seen && !cload.Has_Error();
+	if (loaded) NextID = next_id;
+	return loaded;
 }
-
 
 
 

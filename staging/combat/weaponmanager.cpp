@@ -251,11 +251,12 @@ bool	WeaponDefinitionClass::Save( ChunkSaveClass & csave )
 
 bool	WeaponDefinitionClass::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_WEAPON_DEF_PARENT:
-				DefinitionClass::Load( cload );
+				if (!DefinitionClass::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_WEAPON_DEF_VARIABLES:
@@ -311,7 +312,7 @@ bool	WeaponDefinitionClass::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 /*
@@ -621,11 +622,12 @@ bool	AmmoDefinitionClass::Save( ChunkSaveClass & csave )
 
 bool	AmmoDefinitionClass::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_AMMO_DEF_PARENT:
-				DefinitionClass::Load( cload );
+				if (!DefinitionClass::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_AMMO_DEF_VARIABLES:
@@ -715,7 +717,7 @@ bool	AmmoDefinitionClass::Load( ChunkLoadClass &cload )
 		ModelName = "NULL";
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 /*
@@ -730,7 +732,9 @@ const WeaponDefinitionClass *WeaponManager::Find_Weapon_Definition( const char *
 
 const WeaponDefinitionClass *WeaponManager::Find_Weapon_Definition( int id )
 {
-	return (const WeaponDefinitionClass *)DefinitionMgrClass::Find_Definition( id );
+	DefinitionClass *definition = DefinitionMgrClass::Find_Definition(id);
+	return definition && definition->Get_Class_ID() == CLASSID_DEF_WEAPON ?
+		static_cast<const WeaponDefinitionClass *>(definition) : NULL;
 }
 
 const AmmoDefinitionClass *WeaponManager::Find_Ammo_Definition( const char *name )
@@ -740,5 +744,7 @@ const AmmoDefinitionClass *WeaponManager::Find_Ammo_Definition( const char *name
 
 const AmmoDefinitionClass *WeaponManager::Find_Ammo_Definition( int id )
 {
-	return (const AmmoDefinitionClass *)DefinitionMgrClass::Find_Definition( id );
+	DefinitionClass *definition = DefinitionMgrClass::Find_Definition(id);
+	return definition && definition->Get_Class_ID() == CLASSID_DEF_AMMO ?
+		static_cast<const AmmoDefinitionClass *>(definition) : NULL;
 }

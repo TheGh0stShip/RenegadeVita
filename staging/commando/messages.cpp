@@ -82,7 +82,11 @@
 #include "clienthintmanager.h"
 #include "packetmgr.h"
 #include "specialbuilds.h"
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "gameinitmgr.h"
+#else
 #include "a31_gameinit_stub.h"
+#endif
 #include "a31_win_screen_stub.h"
 #include "a31_console_stub.h"
 #include "a31_cdkey_auth_stub.h"
@@ -1311,7 +1315,7 @@ bool cNetwork::Client_Think(void)
 		if (I_Am_Only_Client()) {
 			if ((DlgMsgBox::Get_Current_Count() == 0)
 					&& GameModeManager::Find("Combat") != NULL && GameModeManager::Find("Combat")->Is_Active()
-					&& The_Game() != NULL && ::wcslen(The_Game()->Get_Motd()) > 0) {
+					&& The_Game() != NULL && The_Game()->Get_Motd()[0] != 0) {
 
 				DlgMsgBox::DoDialog(TRANSLATE (IDS_MENU_MOTD), The_Game()->Get_Motd());
 				HaveDoneMotdDialog = true;

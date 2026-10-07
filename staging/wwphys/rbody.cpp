@@ -540,6 +540,8 @@ void RigidBodyClass::Init(const RigidBodyDefClass & def)
 
 RigidBodyClass::~RigidBodyClass(void)
 {
+	delete History;
+	History = NULL;
 	REF_PTR_RELEASE(Box);
 	if (ContactBox != NULL) {
 		delete ContactBox;
@@ -2094,7 +2096,7 @@ const PersistFactoryClass & RigidBodyClass::Get_Factory (void) const
 bool RigidBodyClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(RBODY_CHUNK_MOVEABLE);
-	MoveablePhysClass::Save(csave);
+	if (!MoveablePhysClass::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 	
 	uint32 ode_ptr_token = static_cast<uint32>(
@@ -2109,19 +2111,20 @@ bool RigidBodyClass::Save (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK(csave,RBODY_VARIABLE_STATE_AMOMENTUM,State.AMomentum);
 	WRITE_MICRO_CHUNK(csave,RBODY_VARIABLE_CONTACT_LENGTH,ContactThickness);
 	csave.End_Chunk();
-	return true;
+	return !csave.Has_Error();
 }
 
 bool RigidBodyClass::Load (ChunkLoadClass &cload)
 {
 	uint32 odesys_token = 0;
+	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case RBODY_CHUNK_MOVEABLE:
-				MoveablePhysClass::Load(cload);
+				if (!MoveablePhysClass::Load(cload)) loaded = false;
 				break;
 
 			case RBODY_CHUNK_VARIABLES:
@@ -2160,7 +2163,7 @@ bool RigidBodyClass::Load (ChunkLoadClass &cload)
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
 	Update_Auxiliary_State();
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -2239,12 +2242,13 @@ bool RigidBodyDefClass::Save(ChunkSaveClass &csave)
 
 bool RigidBodyDefClass::Load(ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case RIGIDBODYDEF_CHUNK_MOVEABLEPHYSDEF:
-				MoveablePhysDefClass::Load(cload);
+				if (!MoveablePhysDefClass::Load(cload)) loaded = false;
 				break;
 
 			case RIGIDBODYDEF_CHUNK_VARIABLES:
@@ -2265,7 +2269,7 @@ bool RigidBodyDefClass::Load(ChunkLoadClass &cload)
 
 		cload.Close_Chunk();
 	}
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 bool RigidBodyDefClass::Is_Type(const char * type_name)
@@ -2276,7 +2280,6 @@ bool RigidBodyDefClass::Is_Type(const char * type_name)
 		return MoveablePhysDefClass::Is_Type(type_name);
 	}
 }
-
 
 
 

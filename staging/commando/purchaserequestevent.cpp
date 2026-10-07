@@ -47,7 +47,13 @@
 #include "playertype.h"
 #include "purchaseresponseevent.h"
 #include "apppackettypes.h"
+#if defined(RENEGADE_VITA_PORT)
+#include "a31_console_stub.h"
+#else
 #include "consolemode.h"
+#endif
+#include "player.h"
+#include "playermanager.h"
 
 
 DECLARE_NETWORKOBJECT_FACTORY(cPurchaseRequestEvent, NETCLASSID_PURCHASEREQUESTEVENT);

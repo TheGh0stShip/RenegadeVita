@@ -53,6 +53,7 @@
 #include "bones.h"
 #include "humanstate.h"
 #include "surfaceeffects.h"
+#include "explosion.h"
 #include "debug.h"
 #include "backgroundmgr.h"
 #include "cover.h"
@@ -253,6 +254,8 @@ void	CombatManager::Shutdown( void )
 
 	ObjectiveManager::Shutdown();
 
+	ExplosionManager::Shutdown();
+
 	SurfaceEffectsManager::Shutdown();
 
 	CCameraClass::Shutdown();
@@ -399,7 +402,14 @@ public:
 		INIT_STATUS("Load definition databases");
 		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-entry\n");
 		VITA_LEVEL_LOAD_PRESENT("load-definitions-entry", 1);
-		SaveGameManager::Load_Definitions();
+		if (!SaveGameManager::Load_Definitions()) {
+#if defined(__vita__)
+			DefinitionMgrClass::Free_Definitions();
+			A35_Level_Load_Record_Failure(A35_LOAD_STATIC_SUBSYSTEM_FAILED);
+			VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-failed\n");
+			return;
+#endif
+		}
 		WWLOG_INTERMEDIATE("Load definitions");
 		VITA_LEVEL_LOAD_TRACE("A3.5 direct loader: phase=load-definitions-return\n");
 
@@ -601,6 +611,17 @@ void	CombatManager::Unload_Level( void )
 	// Don't log load-on-demands after the game is over
 	AssetStatusClass::Peek_Instance()->Enable_Load_On_Demand_Reporting(false);
 	WWLOG_INTERMEDIATE("AssetStatusClass::Peek_Instance()->Enable_Load_On_Demand_Reporting(false)");
+
+	// A mission may report completion before its final cinematic has delivered
+	// Control_Camera, -1. MainCamera outlives the level, so release any
+	// level-owned host before GameObjManager destroys that object and before the
+	// asset manager frees its RenderObj. Set_Host_Model also clears the global
+	// cinematic-freeze state through the original camera owner.
+	if (MainCamera != NULL) {
+		MainCamera->Set_Host_Model(NULL);
+	}
+	GameObjManager::Activate_Cinematic_Freeze(false);
+	WWLOG_INTERMEDIATE("Release level-owned cinematic camera state");
 
 	//
 	//	Free the static anim phys object network wrappers
@@ -872,7 +893,7 @@ enum	{
 bool	CombatManager::Save( ChunkSaveClass &csave )
 {
 	csave.Begin_Chunk( CHUNKID_THE_STAR );
-	TheStar.Save( csave );
+	if (!TheStar.Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -896,39 +917,77 @@ bool	CombatManager::Save( ChunkSaveClass &csave )
 
 	if ( COMBAT_CAMERA != NULL ) {
 		csave.Begin_Chunk( CHUNKID_CCAMERA );
-			COMBAT_CAMERA->Save( csave );
+			if (!COMBAT_CAMERA->Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	CombatManager::Load( ChunkLoadClass &cload )
 {
-	ReloadCount = 0;		// Legacy
-	IsFirstLoad = true;		// Default
+	bool star_seen = false;
+	bool variables_seen = false;
+	bool camera_seen = false;
+	bool loaded = true;
+	uint32 loaded_values = 0U;
+	bool is_first_load = true;
+	int difficulty_level = DifficultyLevel;
+	int sync_time = 0;
+	StringClass start_script;
+	StringClass respawn_script;
+	int reload_count = 0;
 	int legacy_dificulty_level = DifficultyLevel;
 	int cheat_history = 0;
-	FirstPerson = FirstPersonDefault;
+	bool first_person = FirstPersonDefault;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_THE_STAR:
-				TheStar.Load( cload );
+				if (star_seen) loaded = false;
+				else {
+					star_seen = true;
+					loaded = TheStar.Load(cload) && loaded;
+				}
 				break;
 
 			case CHUNKID_VARIABLES:
+				if (variables_seen) {
+					loaded = false;
+					break;
+				}
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_FIRST_LOAD, IsFirstLoad );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_DIFFICULTY_LEVEL, DifficultyLevel );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_SYNC_TIME, SyncTime );
-						READ_MICRO_CHUNK_WWSTRING( cload, MICROCHUNKID_START_SCRIPT, StartScript );
-						READ_MICRO_CHUNK_WWSTRING( cload, MICROCHUNKID_RESPAWN_SCRIPT, RespawnScript );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_RELOAD_COUNT, ReloadCount );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_CHEAT_HISTORY, cheat_history );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_FIRST_PERSON, FirstPerson );
+#define READ_REQUIRED_COMBAT_VALUE(id, value, bit) \
+						case (id): \
+							if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
+								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
+							else loaded_values |= (bit); \
+							break
+						READ_REQUIRED_COMBAT_VALUE(MICROCHUNKID_FIRST_LOAD, is_first_load, 1U);
+						READ_REQUIRED_COMBAT_VALUE(MICROCHUNKID_DIFFICULTY_LEVEL, difficulty_level, 2U);
+						READ_REQUIRED_COMBAT_VALUE(MICROCHUNKID_SYNC_TIME, sync_time, 4U);
+						case MICROCHUNKID_START_SCRIPT:
+						case MICROCHUNKID_RESPAWN_SCRIPT:
+						{
+							const bool is_start = cload.Cur_Micro_Chunk_ID() == MICROCHUNKID_START_SCRIPT;
+							const uint32 bit = is_start ? 8U : 16U;
+							StringClass &value = is_start ? start_script : respawn_script;
+							const uint32 length = cload.Cur_Micro_Chunk_Length();
+							if ((loaded_values & bit) != 0U || length == 0U || length > 512U) loaded = false;
+							else {
+								loaded_values |= bit;
+								loaded = cload.Read(value.Get_Buffer(length), length) == length && loaded;
+								loaded = static_cast<uint32>(value.Get_Length() + 1) == length && loaded;
+							}
+							break;
+						}
+						READ_REQUIRED_COMBAT_VALUE(MICROCHUNKID_RELOAD_COUNT, reload_count, 32U);
+						READ_REQUIRED_COMBAT_VALUE(MICROCHUNKID_CHEAT_HISTORY, cheat_history, 64U);
+						READ_REQUIRED_COMBAT_VALUE(MICROCHUNKID_FIRST_PERSON, first_person, 128U);
+#undef READ_REQUIRED_COMBAT_VALUE
 						default:
 							Debug_Say(( "Unrecognized CombatManager variable chunkID\n" ));
 							break;
@@ -939,8 +998,10 @@ bool	CombatManager::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_CCAMERA:
-				if ( COMBAT_CAMERA != NULL ) {
-					COMBAT_CAMERA->Load( cload );
+				if (camera_seen || COMBAT_CAMERA == NULL) loaded = false;
+				else {
+					camera_seen = true;
+					loaded = COMBAT_CAMERA->Load(cload) && loaded;
 				}
 				break;
 
@@ -952,6 +1013,17 @@ bool	CombatManager::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
+	const uint32 required_values = is_first_load ? 125U : 255U;
+	loaded = loaded && star_seen && variables_seen && loaded_values == required_values && !cload.Has_Error();
+	if (!loaded) return false;
+
+	IsFirstLoad = is_first_load;
+	DifficultyLevel = difficulty_level;
+	SyncTime = sync_time;
+	StartScript = start_script;
+	RespawnScript = respawn_script;
+	ReloadCount = reload_count;
+	FirstPerson = first_person;
 	if ( IsFirstLoad ) {
 		DifficultyLevel = legacy_dificulty_level;
 		ReloadCount = 0;
@@ -962,7 +1034,7 @@ bool	CombatManager::Load( ChunkLoadClass &cload )
 		CheatMgrClass::Get_Instance()->Update_History();
 	}
 
-	return true;
+	return loaded;
 }
 
 /*
@@ -1421,8 +1493,5 @@ void	CombatManager::Register_Star_Killer( ArmedGameObj * killer )
 		StarKillerID = 0;
 	}
 }
-
-
-
 
 

@@ -127,13 +127,13 @@ bool
 AccessiblePhysClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		StaticAnimPhysClass::Save (csave);
+		if (!StaticAnimPhysClass::Save(csave)) csave.Report_Error();
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
-		Save_Variables (csave);
+		if (!Save_Variables(csave)) csave.Report_Error();
 	csave.End_Chunk ();	
-	return true;
+	return !csave.Has_Error();
 }
 
 
@@ -146,7 +146,7 @@ bool
 AccessiblePhysClass::Save_Variables (ChunkSaveClass &csave)
 {
 	WRITE_MICRO_CHUNK (csave, VARID_LOCKCODE, LockCode);
-	return true;
+	return !csave.Has_Error();
 }
 
 
@@ -158,16 +158,17 @@ AccessiblePhysClass::Save_Variables (ChunkSaveClass &csave)
 bool
 AccessiblePhysClass::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		
 		switch(cload.Cur_Chunk_ID ()) 
 		{
 			case CHUNKID_PARENT:
-				StaticAnimPhysClass::Load (cload);
+				if (!StaticAnimPhysClass::Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_VARIABLES:
-				Load_Variables (cload);
+				if (!Load_Variables(cload)) loaded = false;
 				break;
 				
 			default:
@@ -178,7 +179,7 @@ AccessiblePhysClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -318,12 +319,13 @@ AccessiblePhysDefClass::Save_Variables (ChunkSaveClass &csave)
 bool
 AccessiblePhysDefClass::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		
 		switch(cload.Cur_Chunk_ID ()) 
 		{
 			case CHUNKID_DEF_PARENT:
-				StaticAnimPhysDefClass::Load (cload);
+				if (!StaticAnimPhysDefClass::Load (cload)) loaded = false;
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -338,7 +340,7 @@ AccessiblePhysDefClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 

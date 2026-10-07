@@ -6314,6 +6314,10 @@ DECLARE_SCRIPT(M08_Apache_Controller, "")
 		{
 			return;
 		}
+		if (param < 0 && type != 3000)
+		{
+			return;
+		}
 		
 		if (type == 1000)
 		{
@@ -6360,8 +6364,8 @@ DECLARE_SCRIPT(M08_Apache_Controller, "")
 		}
 		if (type == 5000)
 		{
-			Reload_At_Helipad(area);
-			Commands->Start_Timer(obj, this, 25.0f, 10 + area);
+			Reload_At_Helipad(param);
+			Commands->Start_Timer(obj, this, 25.0f, 10 + param);
 		}
 	}
 
@@ -6400,7 +6404,7 @@ DECLARE_SCRIPT(M08_Apache_Controller, "")
 
 		GameObject * apache = Commands->Create_Object("Nod_Apache_No_Idle", start_loc);
 		Commands->Enable_Engine(apache, true);
-		char param[10];
+		char param[12];
 		sprintf(param, "%d", current_area);
 		Commands->Attach_Script(apache, "M08_Apache", param);
 		Commands->Send_Custom_Event(Owner(), apache, 400, 400);
@@ -6421,6 +6425,10 @@ DECLARE_SCRIPT(M08_Apache_Controller, "")
 					attacking_apache = area;
 				}
 			}
+			return;
+		}
+		if (timer_id < 0 || timer_id > 2)
+		{
 			return;
 		}
 

@@ -38,6 +38,9 @@
 #include "damage.h"
 #include "scripts.h"
 #include "debug.h"
+#if defined(RENEGADE_VITA_PORT)
+#include "a35_campaign_flight_recorder.h"
+#endif
 #include "explosion.h"
 #include "assets.h"
 #include "combatsound.h"
@@ -100,13 +103,14 @@ bool	ScriptableGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	ScriptableGameObjDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 	StringClass str;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				BaseGameObjDef::Load( cload );
+				if (!BaseGameObjDef::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -139,7 +143,7 @@ bool	ScriptableGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -181,28 +185,41 @@ bool	GameObjObserverTimerClass::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_OBSERVER_ID, ObserverID );
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	GameObjObserverTimerClass::Load( ChunkLoadClass & cload )
 {
-	cload.Open_Chunk();
-	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_TIMER_VARIABLES );
-
-	while (cload.Open_Micro_Chunk()) {
-		switch(cload.Cur_Micro_Chunk_ID()) {
-			READ_MICRO_CHUNK( cload, MICROCHUNKID_REMAINING_TIME, RemainingTime );
-			READ_MICRO_CHUNK( cload, MICROCHUNKID_TIMER_ID, TimerID );
-			READ_MICRO_CHUNK( cload, MICROCHUNKID_OBSERVER_ID, ObserverID );
-
-			default:
-				Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Micro_Chunk_ID(),__FILE__,__LINE__));
-				break;
+	bool variables_seen = false;
+	bool loaded = true;
+	uint32 loaded_values = 0;
+	while (cload.Open_Chunk()) {
+		if (cload.Cur_Chunk_ID() != CHUNKID_TIMER_VARIABLES || variables_seen) {
+			loaded = false;
+		} else {
+			variables_seen = true;
+			while (cload.Open_Micro_Chunk()) {
+				switch(cload.Cur_Micro_Chunk_ID()) {
+#define READ_REQUIRED_OBSERVER_TIMER_VALUE(id, value, bit) \
+					case (id): \
+						if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
+							cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
+						else loaded_values |= (bit); \
+						break
+					READ_REQUIRED_OBSERVER_TIMER_VALUE(MICROCHUNKID_REMAINING_TIME, RemainingTime, 1U << 0);
+					READ_REQUIRED_OBSERVER_TIMER_VALUE(MICROCHUNKID_TIMER_ID, TimerID, 1U << 1);
+					READ_REQUIRED_OBSERVER_TIMER_VALUE(MICROCHUNKID_OBSERVER_ID, ObserverID, 1U << 2);
+#undef READ_REQUIRED_OBSERVER_TIMER_VALUE
+					default:
+						loaded = false;
+						break;
+				}
+				cload.Close_Micro_Chunk();
+			}
 		}
-		cload.Close_Micro_Chunk();
+		cload.Close_Chunk();
 	}
-	cload.Close_Chunk();
-	return true;
+	return loaded && variables_seen && loaded_values == 7U && ObserverID > 0 && !cload.Has_Error();
 }
 
 
@@ -237,27 +254,43 @@ bool	GameObjCustomTimerClass::Save( ChunkSaveClass & csave )
 
 	if ( Sender != NULL ) {
 		csave.Begin_Chunk( CHUNKID_TIMER_SENDER );
-		Sender.Save( csave );
+		if (!Sender.Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	GameObjCustomTimerClass::Load( ChunkLoadClass & cload )
 {
+	bool variables_seen = false;
+	bool sender_seen = false;
+	bool loaded = true;
+	uint32 loaded_values = 0;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_TIMER_VARIABLES:
+				if (variables_seen) {
+					loaded = false;
+					break;
+				}
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_REMAINING_TIME, RemainingTime );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_TYPE, Type );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_PARAM, Param );
+#define READ_REQUIRED_CUSTOM_TIMER_VALUE(id, value, bit) \
+						case (id): \
+							if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
+								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
+							else loaded_values |= (bit); \
+							break
+						READ_REQUIRED_CUSTOM_TIMER_VALUE(MICROCHUNKID_REMAINING_TIME, RemainingTime, 1U << 0);
+						READ_REQUIRED_CUSTOM_TIMER_VALUE(MICROCHUNKID_TYPE, Type, 1U << 1);
+						READ_REQUIRED_CUSTOM_TIMER_VALUE(MICROCHUNKID_PARAM, Param, 1U << 2);
+#undef READ_REQUIRED_CUSTOM_TIMER_VALUE
 
 						default:
-							Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Micro_Chunk_ID(),__FILE__,__LINE__));
+							loaded = false;
 							break;
 					}
 					cload.Close_Micro_Chunk();
@@ -265,18 +298,22 @@ bool	GameObjCustomTimerClass::Load( ChunkLoadClass & cload )
 				break;
 
 			case CHUNKID_TIMER_SENDER:
-				Sender.Load( cload );
+				if (sender_seen) loaded = false;
+				else {
+					sender_seen = true;
+					loaded = Sender.Load(cload) && loaded;
+				}
 				break;
 
 			default:
-				Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
+				loaded = false;
 				break;
 
 		}
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && variables_seen && loaded_values == 7U && !cload.Has_Error();
 }
 
 
@@ -428,11 +465,11 @@ enum	{
 bool	ScriptableGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-		BaseGameObj::Save( csave );
+		if (!BaseGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_REFERENCEABLE );
-		ReferenceableGameObj::Save( csave );
+		if (!ReferenceableGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -451,22 +488,30 @@ bool	ScriptableGameObj::Save( ChunkSaveClass & csave )
 	int i;
 	for ( i = 0; i < ObserverTimerList.Count(); i++ ) {
 		csave.Begin_Chunk( CHUNKID_OBSERVER_TIMER );
-			ObserverTimerList[i]->Save( csave );
+			if (ObserverTimerList[i] == NULL ||
+				!ObserverTimerList[i]->Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
 	for ( i = 0; i < CustomTimerList.Count(); i++ ) {
 		csave.Begin_Chunk( CHUNKID_CUSTOM_TIMER );
-			CustomTimerList[i]->Save( csave );
+			if (CustomTimerList[i] == NULL ||
+				!CustomTimerList[i]->Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	ScriptableGameObj::Load( ChunkLoadClass &cload )
 {
-	ReferenceableGameObj * referenceable_ptr = NULL;
+	uint32 referenceable_token = 0;
+	bool parent_seen = false;
+	bool referenceable_seen = false;
+	bool variables_seen = false;
+	bool referenceable_token_seen = false;
+	bool pending_seen = false;
+	bool loaded = true;
 
 	WWASSERT( Observers.Count() == 0 );
 
@@ -474,31 +519,55 @@ bool	ScriptableGameObj::Load( ChunkLoadClass &cload )
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				BaseGameObj::Load( cload );
+				if (parent_seen) loaded = false;
+				else {
+					parent_seen = true;
+					loaded = BaseGameObj::Load(cload) && loaded;
+				}
 				break;
 
 			case CHUNKID_REFERENCEABLE:
-				ReferenceableGameObj::Load( cload );
+				if (referenceable_seen) loaded = false;
+				else {
+					referenceable_seen = true;
+					loaded = ReferenceableGameObj::Load(cload) && loaded;
+				}
 				break;
 
 			case CHUNKID_VARIABLES:
+				if (variables_seen) {
+					loaded = false;
+					break;
+				}
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_REFERENCEABLE_PTR, referenceable_ptr );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_OBSERVER_CREATED_PENDING, ObserverCreatedPending );
-
-						case MICROCHUNKID_GAME_OBJ_OBSERVER_PTR:
-							GameObjObserverClass * ptr;
-#if defined(RENEGADE_HOST_ABI_TEST)
-							RV_Read_Micro_Chunk_Value(cload, ptr);
-#else
-							cload.Read(&ptr,sizeof(ptr));
-#endif
-							Observers.Add( ptr );
+						case MICROCHUNKID_REFERENCEABLE_PTR:
+							if (referenceable_token_seen || cload.Cur_Micro_Chunk_Length() != sizeof(referenceable_token) ||
+								cload.Read(&referenceable_token, sizeof(referenceable_token)) != sizeof(referenceable_token)) loaded = false;
+							else referenceable_token_seen = true;
 							break;
 
+						case MICROCHUNKID_OBSERVER_CREATED_PENDING:
+							if (pending_seen || cload.Cur_Micro_Chunk_Length() != sizeof(ObserverCreatedPending) ||
+								cload.Read(&ObserverCreatedPending, sizeof(ObserverCreatedPending)) != sizeof(ObserverCreatedPending)) loaded = false;
+							else pending_seen = true;
+							break;
+
+						case MICROCHUNKID_GAME_OBJ_OBSERVER_PTR:
+						{
+							uint32 observer_token = 0;
+							if (cload.Cur_Micro_Chunk_Length() != sizeof(observer_token) ||
+								cload.Read(&observer_token, sizeof(observer_token)) != sizeof(observer_token) || observer_token == 0) {
+								loaded = false;
+							} else {
+								Observers.Add(reinterpret_cast<GameObjObserverClass *>(static_cast<uintptr_t>(observer_token)));
+							}
+							break;
+						}
+
 						default:
-							Debug_Say(( "Unhandled Variable Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
+							loaded = false;
 							break;
 					}
 					cload.Close_Micro_Chunk();
@@ -506,21 +575,25 @@ bool	ScriptableGameObj::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_OBSERVER_TIMER:
+			{
 				GameObjObserverTimerClass * otimer;
 				otimer = new GameObjObserverTimerClass();
-				otimer->Load( cload );
+				loaded = otimer->Load(cload) && loaded;
 				ObserverTimerList.Add( otimer );
 				break;
+			}
 
 			case CHUNKID_CUSTOM_TIMER:
+			{
 				GameObjCustomTimerClass * ctimer;
 				ctimer = new GameObjCustomTimerClass();
-				ctimer->Load( cload );
+				loaded = ctimer->Load(cload) && loaded;
 				CustomTimerList.Add( ctimer );
 				break;
+			}
 
 			default:
-				Debug_Say(( "Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
+				loaded = false;
 				break;
 
 		}
@@ -532,14 +605,19 @@ bool	ScriptableGameObj::Load( ChunkLoadClass &cload )
 		REQUEST_POINTER_REMAP( (void **)&(Observers[ ob_idx ]) );
 	}
 
-	WWASSERT(referenceable_ptr != NULL);
-	if (referenceable_ptr != NULL) {
-		SaveLoadSystemClass::Register_Pointer(referenceable_ptr , (ReferenceableGameObj *)this);
+	if (referenceable_token_seen && referenceable_token != 0) {
+		SaveLoadSystemClass::Register_Pointer(
+			reinterpret_cast<void *>(static_cast<uintptr_t>(referenceable_token)),
+			(ReferenceableGameObj *)this);
+	} else {
+		loaded = false;
 	}
 
-	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+	loaded = loaded && parent_seen && referenceable_seen && variables_seen && pending_seen &&
+		!cload.Has_Error();
+	if (loaded) SaveLoadSystemClass::Register_Post_Load_Callback(this);
 
-	return true;
+	return loaded;
 }
 
 void ScriptableGameObj::On_Post_Load( void )
@@ -674,6 +752,10 @@ void	ScriptableGameObj::Post_Think( void )
 			}
 
 			if ( !found ) {
+#if defined(RENEGADE_VITA_PORT)
+				A35_Campaign_Flight_Observer_Timer_Miss(static_cast<int32_t>(Get_ID()),
+					static_cast<int32_t>(ObserverTimerList[i]->ObserverID), static_cast<int32_t>(ObserverTimerList[i]->TimerID));
+#endif
 				Debug_Say(( "Failed to find observer id %d for timer expired....\n", ObserverTimerList[i]->ObserverID ));
 
 				const GameObjObserverList & observer_list = Get_Observers();

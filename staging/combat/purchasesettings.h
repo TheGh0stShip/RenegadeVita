@@ -44,6 +44,9 @@
 #include "always.h"
 #include "definition.h"
 #include "widestring.h"
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "networkobject.h"
+#endif
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -52,6 +55,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////
 class PurchaseSettingsDefClass : public DefinitionClass
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+    , public NetworkObjectClass
+#endif
 {
 public:
 
@@ -65,6 +71,8 @@ public:
 		TYPE_EQUIPMENT,
 		TYPE_SECRET_CLASSES,
 		TYPE_SECRET_VEHICLES,
+		TYPE_AIR,
+		TYPE_NAVAL,
 		TYPE_COUNT
 	} TYPE;
 
@@ -83,6 +91,26 @@ public:
 	PurchaseSettingsDefClass (void);
 	~PurchaseSettingsDefClass (void);
 
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+    uint32 Get_Network_Class_ID() const override { return 2004; }
+    void Import_Occasional(BitStreamClass &packet) override;
+    void Export_Occasional(BitStreamClass &packet) override;
+    // Definitions own this lifetime; network cleanup must not delete presets.
+    void Delete() override {}
+    void Set_Delete_Pending() override {}
+#endif
+    bool Get_Hidden(int index) const { return Hidden[index]; }
+    bool Get_Disabled(int index) const { return Disabled[index]; }
+    bool Get_Busy(int index) const { return Busy[index]; }
+    bool Get_Page_Hidden() const { return PageHidden; }
+    bool Get_Page_Disabled() const { return PageDisabled; }
+    bool Get_Page_Busy() const { return PageBusy; }
+    bool Is_Available(int index) const {
+        return Is_Valid_Entry(index, -1) && !PageHidden && !PageDisabled && !PageBusy &&
+            !Hidden[index] && !Disabled[index] && !Busy[index];
+    }
+    static PurchaseSettingsDefClass *Find_Network_Definition(int type, int team);
+
 	//////////////////////////////////////////////////////////////////////////
 	//	Public methods
 	//////////////////////////////////////////////////////////////////////////
@@ -94,12 +122,16 @@ public:
 	virtual PersistClass *					Create (void) const ;
 	virtual bool								Save (ChunkSaveClass &csave);
 	virtual bool								Load (ChunkLoadClass &cload);
+	virtual void								On_Load_Rejected (void);
 	virtual const PersistFactoryClass &	Get_Factory (void) const;	
 
 	//
 	//	Accessors
 	//
 	TYPE								Get_Type (void)							{ return Type; }
+	static bool Is_Valid_Entry(int index, int alternate) {
+		return index >= 0 && index < MAX_ENTRIES && alternate >= -1 && alternate < MAX_ALTERNATES;
+	}
 	TEAM								Get_Team (void)							{ return Team; }
 
 	const WCHAR *					Get_Name (int index);
@@ -132,7 +164,7 @@ protected:
 	//////////////////////////////////////////////////////////////////////////
 	//	Protected methods
 	//////////////////////////////////////////////////////////////////////////
-	void				Load_Variables (ChunkLoadClass &cload);
+	bool				Load_Variables (ChunkLoadClass &cload);
 
 	//////////////////////////////////////////////////////////////////////////
 	//	Protected constants
@@ -160,6 +192,13 @@ protected:
 	StringClass			AlternateTextureList[MAX_ENTRIES][MAX_ALTERNATES];
 	
 	static PurchaseSettingsDefClass *	DefinitionArray[TYPE_COUNT][TEAM_COUNT];
+	int					PublishedType;
+	int					PublishedTeam;
+	PurchaseSettingsDefClass *	PreviousDefinition;
+    bool Hidden[MAX_ENTRIES] = {};
+    bool Disabled[MAX_ENTRIES] = {};
+    bool Busy[MAX_ENTRIES] = {};
+    bool PageHidden = false, PageDisabled = false, PageBusy = false;
 };
 
 

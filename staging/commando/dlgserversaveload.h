@@ -140,7 +140,7 @@ class ServerSettingsManagerClass
 		static ServerSettingsClass *Get_Settings(int index);
 		static void Load_Settings(ServerSettingsClass *settings);
 		static void Delete_Configuration(ServerSettingsClass *settings);
-		static void Save_Configuration(ServerSettingsClass *settings);
+		static bool Save_Configuration(ServerSettingsClass *settings);
 		static ServerSettingsClass *Add_Configuration(WideStringClass *display_name);
 
 

@@ -52,6 +52,7 @@
 #include "renegadedialogmgr.h"
 #include "god.h"
 #include "registry.h"
+#include "debug.h"
 #include "_globals.h"
 #include "dialogtests.h"
 #include "specialbuilds.h"
@@ -182,7 +183,15 @@ LoadSPGameMenuClass::Build_List (const char *search_string, int start_index)
 			//
 			WideStringClass description;
 			WideStringClass map_name;
-			SaveGameManager::Smart_Peek_Description (find_info.cFileName, description, map_name);
+			bool description_valid = SaveGameManager::Smart_Peek_Description (
+				find_info.cFileName, description, map_name);
+			int filename_length = ::strlen(find_info.cFileName);
+			bool is_save_file = filename_length > 4 &&
+				::stricmp(find_info.cFileName + filename_length - 4, ".SAV") == 0;
+			if (is_save_file && !description_valid) {
+				Debug_Say(( "Skipping unreadable save file %s\n", find_info.cFileName ));
+				continue;
+			}
 
 			//
 			//	Default to the map name if we don't have a description
@@ -544,8 +553,9 @@ LoadSPGameMenuClass::Load_Game (void)
 		//	Get the name of the map
 		//
 		StringClass *filename	= static_cast<StringClass *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index, 2)) );
+		if (filename == NULL) return;
 		StringClass save_name(filename->Peek_Buffer(),true);
-#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && RENEGADE_VITA_M00_DEMO
 		// Start_Game records the request. The native outer owner tears down
 		// this dialog and the suspended session before loading another world.
 		GameInitMgrClass::Start_Game(save_name, -1, 0);
@@ -574,6 +584,7 @@ LoadSPGameMenuClass::Load_Game (void)
 			//
 			//	End the current game before we load the new one
 			//
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 			if (GameModeManager::Find ("Combat")->Is_Suspended ()) {
 				GameInitMgrClass::End_Game();
 				GameModeManager::Safely_Deactivate ();
@@ -583,11 +594,21 @@ LoadSPGameMenuClass::Load_Game (void)
 			//	Load the map
 			//
 			GameInitMgrClass::Initialize_SP ();
+#endif
 			GameInitMgrClass::Start_Game (save_name, -1, 0);
+#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+			// The native outer owner has now received an ordinary save request.
+			// Replay resets through CampaignManager only after difficulty is
+			// accepted; cancelling replay or having no selection must leave the
+			// suspended campaign inventory intact.
+			cGod::Reset_Inventory();
+#endif
 		}
 	}
 
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 	cGod::Reset_Inventory();
+#endif
 
 	return ;
 

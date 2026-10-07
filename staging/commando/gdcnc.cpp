@@ -41,6 +41,7 @@
 #include "translatedb.h"
 #include "string_ids.h"
 #include "assets.h"
+#include "renegade_server_config.h"
 #include "a31_multihud_stub.h"
 #include "playerdata.h"
 #include "player.h"
@@ -301,7 +302,7 @@ void cGameDataCnc::Load_From_Server_Config(void)
 {
 	cGameData::Load_From_Server_Config(Get_Ini_Filename());
 
-   INIClass * p_ini = Get_INI(Get_Ini_Filename());
+   INIClass * p_ini = Renegade_Load_Server_Config(Get_Ini_Filename());
    WWASSERT(p_ini != NULL);
 
    bool				b;
@@ -344,7 +345,7 @@ void cGameDataCnc::Save_To_Server_Config(void)
 {
 	cGameData::Save_To_Server_Config(Get_Ini_Filename());
 
-   INIClass * p_ini = Get_INI(Get_Ini_Filename());
+   INIClass * p_ini = Renegade_Load_Server_Config(Get_Ini_Filename());
    WWASSERT(p_ini != NULL);
 
 
@@ -358,7 +359,7 @@ void cGameDataCnc::Save_To_Server_Config(void)
 	p_ini->Put_Int(   INI_SECTION_NAME, "StartingCredits",			Get_Starting_Credits());
 
 
-	Save_INI(p_ini, Get_Ini_Filename());
+	Renegade_Save_Server_Config(p_ini, Get_Ini_Filename());
    Release_INI(p_ini);
 }
 

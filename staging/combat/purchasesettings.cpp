@@ -92,8 +92,14 @@ PurchaseSettingsDefClass *		PurchaseSettingsDefClass::DefinitionArray[TYPE_COUNT
 //
 //////////////////////////////////////////////////////////////////////
 PurchaseSettingsDefClass::PurchaseSettingsDefClass (void)	:
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+    NetworkObjectClass(false),
+#endif
 	Team (TEAM_GDI),
-	Type (TYPE_CLASSES)
+	Type (TYPE_CLASSES),
+	PublishedType (-1),
+	PublishedTeam (-1),
+	PreviousDefinition (NULL)
 {
 	//
 	//	Initialize the cost and definition lists
@@ -183,10 +189,19 @@ PurchaseSettingsDefClass::~PurchaseSettingsDefClass (void)
 	//
 	//	Remove this entry from the static array
 	//
-	if (Type < TYPE_COUNT && Team < TEAM_COUNT) {
-		DefinitionArray[Type][Team] = NULL;
+	if (PublishedType >= 0 && PublishedType < TYPE_COUNT && PublishedTeam >= 0 &&
+		PublishedTeam < TEAM_COUNT && DefinitionArray[PublishedType][PublishedTeam] == this) {
+		DefinitionArray[PublishedType][PublishedTeam] = PreviousDefinition;
 	}
 	return ;
+}
+
+void PurchaseSettingsDefClass::On_Load_Rejected (void)
+{
+	if (PublishedType >= 0 && PublishedType < TYPE_COUNT && PublishedTeam >= 0 &&
+		PublishedTeam < TEAM_COUNT && DefinitionArray[PublishedType][PublishedTeam] == this) {
+		DefinitionArray[PublishedType][PublishedTeam] = PreviousDefinition;
+	}
 }
 
 
@@ -266,7 +281,7 @@ PurchaseSettingsDefClass::Save (ChunkSaveClass &csave)
 
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 
@@ -278,15 +293,20 @@ PurchaseSettingsDefClass::Save (ChunkSaveClass &csave)
 bool
 PurchaseSettingsDefClass::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
+	bool parent_seen = false;
+	bool variables_seen = false;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				DefinitionClass::Load (cload);
+				if (parent_seen || !DefinitionClass::Load (cload)) loaded = false;
+				parent_seen = true;
 				break;
 								
 			case CHUNKID_VARIABLES:
-				Load_Variables (cload);
+				if (variables_seen || !Load_Variables (cload)) loaded = false;
+				variables_seen = true;
 				break;
 
 			default:
@@ -298,7 +318,15 @@ PurchaseSettingsDefClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	loaded = loaded && parent_seen && variables_seen && !cload.Has_Error() &&
+		Type >= 0 && Type < TYPE_COUNT && Team >= 0 && Team < TEAM_COUNT;
+	if (loaded) {
+		PublishedType = Type;
+		PublishedTeam = Team;
+		PreviousDefinition = DefinitionArray[PublishedType][PublishedTeam];
+		DefinitionArray[PublishedType][PublishedTeam] = this;
+	}
+	return loaded;
 }
 
 
@@ -307,7 +335,7 @@ PurchaseSettingsDefClass::Load (ChunkLoadClass &cload)
 //	Load_Variables
 //
 ///////////////////////////////////////////////////////////////////////////////////////////
-void
+bool
 PurchaseSettingsDefClass::Load_Variables (ChunkLoadClass &cload)
 {
 	int entry_index	= 0;
@@ -372,13 +400,7 @@ PurchaseSettingsDefClass::Load_Variables (ChunkLoadClass &cload)
 		cload.Close_Micro_Chunk();
 	}
 
-	//
-	//	Add this definition to the static array
-	//
-	if (Type < TYPE_COUNT && Team < TEAM_COUNT) {
-		DefinitionArray[Type][Team] = this;
-	}
-	return ;
+	return !cload.Has_Error();
 }
 
 
@@ -411,6 +433,7 @@ PurchaseSettingsDefClass::Get_Name (int index)
 PurchaseSettingsDefClass *
 PurchaseSettingsDefClass::Find_Definition (TYPE type, TEAM team)
 {
+	if (type < 0 || type >= TYPE_COUNT || team < 0 || team >= TEAM_COUNT) return NULL;
 	PurchaseSettingsDefClass *retval = DefinitionArray[type][team];
 
 	if (retval == NULL) {
@@ -439,3 +462,10 @@ PurchaseSettingsDefClass::Find_Definition (TYPE type, TEAM team)
 	return retval;
 }
 
+PurchaseSettingsDefClass *
+PurchaseSettingsDefClass::Find_Network_Definition(int type, int team)
+{
+    // Network identity is exact; gameplay's mutant/secret fallback is not valid here.
+    if (type < 0 || type >= TYPE_COUNT || team < 0 || team >= TEAM_COUNT) return NULL;
+    return DefinitionArray[type][team];
+}

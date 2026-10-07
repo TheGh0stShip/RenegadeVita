@@ -68,6 +68,95 @@ SList<SoldierGameObj>	GameObjManager::StarGameObjList;
 SList<BuildingGameObj>	GameObjManager::BuildingGameObjList;
 bool							GameObjManager::CinematicFreezeActive;
 
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+static const char *Vita_Factory_Name(uint32 factory_id)
+{
+	switch (factory_id) {
+		case CHUNKID_GAME_OBJECT_POWERUP: return "PowerUpGameObj";
+		case CHUNKID_GAME_OBJECT_SIMPLE: return "SimpleGameObj";
+		case CHUNKID_GAME_OBJECT_SOLDIER: return "SoldierGameObj";
+		case CHUNKID_GAME_OBJECT_VEHICLE: return "VehicleGameObj";
+		case CHUNKID_GAME_OBJECT_CINEMATIC: return "CinematicGameObj";
+		case CHUNKID_GAME_OBJECT_SCRIPT_ZONE: return "ScriptZoneGameObj";
+		default: return "other";
+	}
+}
+
+static void Vita_Log_GameObj_Load_Summary(const char *phase)
+{
+	unsigned total = 0U;
+	unsigned physical = 0U;
+	unsigned smart = 0U;
+	unsigned scriptable = 0U;
+	unsigned soldiers = 0U;
+	unsigned vehicles = 0U;
+	unsigned simple = 0U;
+	unsigned powerups = 0U;
+	unsigned script_zones = 0U;
+	unsigned cinematics = 0U;
+	unsigned observer_refs = 0U;
+	unsigned samples = 0U;
+
+	for (SLNode<BaseGameObj> *objnode = GameObjManager::Get_Game_Obj_List()->Head();
+		objnode != NULL; objnode = objnode->Next()) {
+		BaseGameObj *obj = objnode->Data();
+		if (obj == NULL) continue;
+		++total;
+
+		PhysicalGameObj *phys_obj = obj->As_PhysicalGameObj();
+		SmartGameObj *smart_obj = obj->As_SmartGameObj();
+		ScriptableGameObj *script_obj = obj->As_ScriptableGameObj();
+		const uint32 factory_id = obj->Get_Factory().Chunk_ID();
+		unsigned observers = 0U;
+
+		if (phys_obj != NULL) {
+			++physical;
+		}
+		if (smart_obj != NULL) {
+			++smart;
+		}
+		if (script_obj != NULL) {
+			++scriptable;
+			observers = static_cast<unsigned>(script_obj->Get_Observers().Count());
+			observer_refs += observers;
+		}
+		if (factory_id == CHUNKID_GAME_OBJECT_SOLDIER) {
+			++soldiers;
+		} else if (factory_id == CHUNKID_GAME_OBJECT_VEHICLE) {
+			++vehicles;
+		} else if (factory_id == CHUNKID_GAME_OBJECT_SIMPLE) {
+			++simple;
+		} else if (factory_id == CHUNKID_GAME_OBJECT_POWERUP) {
+			++powerups;
+		} else if (factory_id == CHUNKID_GAME_OBJECT_SCRIPT_ZONE) {
+			++script_zones;
+		} else if (factory_id == CHUNKID_GAME_OBJECT_CINEMATIC) {
+			++cinematics;
+		}
+
+		const bool sample =
+			observers > 0U ||
+			factory_id == CHUNKID_GAME_OBJECT_SOLDIER ||
+			factory_id == CHUNKID_GAME_OBJECT_VEHICLE ||
+			factory_id == CHUNKID_GAME_OBJECT_CINEMATIC ||
+			factory_id == CHUNKID_GAME_OBJECT_SCRIPT_ZONE;
+		if (sample && samples < 24U) {
+			const BaseGameObjDef &def = obj->Get_Definition();
+			A30_Vita_Log("A4 mission object sample: phase=%s index=%u id=%d factory=0x%08X class=%s def=%s observers=%u physical=%d smart=%d\n",
+				phase, total - 1U, obj->Get_ID(), factory_id, Vita_Factory_Name(factory_id),
+				def.Get_Name(),
+				observers, phys_obj != NULL ? 1 : 0, smart_obj != NULL ? 1 : 0);
+			++samples;
+		}
+	}
+
+	A30_Vita_Log("A4 mission object summary: phase=%s total=%u physical=%u smart=%u scriptable=%u soldiers=%u vehicles=%u simple=%u powerups=%u script_zones=%u cinematics=%u observer_refs=%u cinematic_freeze=%d first_load=%d\n",
+		phase, total, physical, smart, scriptable, soldiers, vehicles, simple, powerups,
+		script_zones, cinematics, observer_refs, GameObjManager::Is_Cinematic_Freeze_Active() ? 1 : 0,
+		CombatManager::I_Am_Server() ? 1 : 0);
+}
+#endif
+
 /*
 **
 */
@@ -105,6 +194,10 @@ bool	GameObjManager::Save( ChunkSaveClass &csave )
 	SLNode<BaseGameObj> *objnode;
 	for (	objnode = GameObjManager::Get_Game_Obj_List()->Head(); objnode; objnode = objnode->Next()) {
 		BaseGameObj * obj = objnode->Data();
+		if (obj == NULL) {
+			csave.Report_Error();
+			continue;
+		}
 		csave.Begin_Chunk( obj->Get_Factory().Chunk_ID() );
 		obj->Get_Factory().Save( csave, obj );
 		csave.End_Chunk();
@@ -122,40 +215,63 @@ bool	GameObjManager::Save( ChunkSaveClass &csave )
 
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	GameObjManager::Load( ChunkLoadClass &cload )
 {
 	float sight_scale = 1.0f;
+	bool cinematic_freeze = false;
+	int next_id = NETID_DYNAMIC_OBJECT_MIN;
+	bool objects_seen = false;
+	bool variables_seen = false;
+	uint32 values_seen = 0U;
+	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_OBJECTS:
+				if (objects_seen) loaded = false;
+				objects_seen = true;
 				while (cload.Open_Chunk()) {
 					PersistFactoryClass * factory = SaveLoadSystemClass::Find_Persist_Factory( cload.Cur_Chunk_ID() );
-					if ( factory ) {
-						factory->Load( cload );
-					}
+					if (factory == NULL || factory->Load(cload) == NULL) loaded = false;
 					cload.Close_Chunk();
 				}
 				break;
 								
 			case CHUNKID_VARIABLES:
+				if (variables_seen) loaded = false;
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_GLOBAL_SIGHT_RANGE_SCALE, sight_scale );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_CINEMATIC_FREEZE, CinematicFreezeActive );
+						case MICROCHUNKID_GLOBAL_SIGHT_RANGE_SCALE:
+							if ((values_seen & 2U) != 0U ||
+								cload.Cur_Micro_Chunk_Length() != sizeof(sight_scale)) loaded = false;
+							else {
+								values_seen |= 2U;
+								loaded = cload.Read(&sight_scale, sizeof(sight_scale)) ==
+									sizeof(sight_scale) && loaded;
+							}
+							break;
+						case MICROCHUNKID_CINEMATIC_FREEZE:
+							if ((values_seen & 4U) != 0U ||
+								cload.Cur_Micro_Chunk_Length() != sizeof(cinematic_freeze)) loaded = false;
+							else {
+								values_seen |= 4U;
+								loaded = cload.Read(&cinematic_freeze, sizeof(cinematic_freeze)) ==
+									sizeof(cinematic_freeze) && loaded;
+							}
+							break;
 						case MICROCHUNKID_GENERATED_ID:
 						{
-							/*TSS091001*/
-							int next_id = NETID_DYNAMIC_OBJECT_MIN;
-							LOAD_MICRO_CHUNK( cload, next_id )
-							NetworkObjectMgrClass::Set_New_Dynamic_ID( next_id );
-							Debug_Say(( "NetworkObjectMgrClass::Set_New_Dynamic_ID to %d\n", next_id ));
-							/**/
+							if ((values_seen & 1U) != 0U ||
+								cload.Cur_Micro_Chunk_Length() != sizeof(next_id)) loaded = false;
+							else {
+								values_seen |= 1U;
+								loaded = cload.Read(&next_id, sizeof(next_id)) == sizeof(next_id) && loaded;
+							}
 							break;
 						}
 
@@ -175,9 +291,18 @@ bool	GameObjManager::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	SmartGameObj::Set_Global_Sight_Range_Scale( sight_scale );
+	loaded = loaded && !cload.Has_Error() && objects_seen && variables_seen && values_seen == 7U;
+	if (loaded) {
+		NetworkObjectMgrClass::Set_New_Dynamic_ID(next_id);
+		CinematicFreezeActive = cinematic_freeze;
+		SmartGameObj::Set_Global_Sight_Range_Scale(sight_scale);
+		Debug_Say(( "NetworkObjectMgrClass::Set_New_Dynamic_ID to %d\n", next_id ));
+	}
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	Vita_Log_GameObj_Load_Summary("GameObjManager::Load");
+#endif
 
-	return true;
+	return loaded;
 }
 
 
@@ -330,7 +455,7 @@ int	GameObjManager::Post_Think()
 {
 	// Allow each object in the master list to think
 	SLNode<BaseGameObj> *objnode;
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 	const uint64_t vita_post_start_us = sceKernelGetProcessTimeWide();
 	uint64_t vita_top_object_us[4] = { 0U, 0U, 0U, 0U };
 	int vita_top_object_id[4] = { 0, 0, 0, 0 };
@@ -348,17 +473,17 @@ int	GameObjManager::Post_Think()
 		}
 
 		if ( !objnode->Data()->Is_Hibernating() && objnode->Data()->Is_Post_Think_Allowed() ) {
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 			const bool vita_sample_object = (vita_object_count++ & 15U) == vita_sample_offset;
 			const uint64_t vita_object_start_us = vita_sample_object ? sceKernelGetProcessTimeWide() : 0U;
 			const int vita_object_id = vita_sample_object ? objnode->Data()->Get_ID() : 0;
 			const char *vita_object_name = vita_sample_object ? objnode->Data()->Get_Definition().Get_Name() : "";
 #endif
 			objnode->Data()->Post_Think();
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 			if (vita_sample_object) {
-				const uint64_t vita_object_us = sceKernelGetProcessTimeWide() - vita_object_start_us;
-				++vita_sampled_object_count;
+			const uint64_t vita_object_us = sceKernelGetProcessTimeWide() - vita_object_start_us;
+			++vita_sampled_object_count;
 			for (unsigned vita_rank = 0U; vita_rank < 4U; ++vita_rank) {
 				if (vita_object_us > vita_top_object_us[vita_rank]) {
 					for (unsigned vita_move = 3U; vita_move > vita_rank; --vita_move) {
@@ -379,16 +504,16 @@ int	GameObjManager::Post_Think()
 
 	//Destroy_Pending();
 
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 	const uint64_t vita_objects_end_us = sceKernelGetProcessTimeWide();
 #endif
 	GameObjObserverManager::Delete_Pending();
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 	const uint64_t vita_observers_end_us = sceKernelGetProcessTimeWide();
 #endif
 
 	ScriptManager::Destroy_Pending();
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 	const uint64_t vita_post_end_us = sceKernelGetProcessTimeWide();
 	static unsigned vita_slow_post_reports = 0U;
 	if (vita_post_end_us - vita_post_start_us >= 500000U &&

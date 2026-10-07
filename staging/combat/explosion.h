@@ -86,6 +86,9 @@ public:
 class	ExplosionManager {
 
 public:
+	static	void	Shutdown( void );
+	static	bool	Prepare_Explosion_Render_Objects( int explosion_id, int count = 1 );
+
 	static	void	Create_Explosion_At( int exlosion_id, const Vector3 & pos, ArmedGameObj * damager, const Vector3 & blast_direction = Vector3( 0,0,-1), DamageableGameObj * force_victim = NULL );
 	static	void	Create_Explosion_At( int exlosion_id, const Matrix3D & tm, ArmedGameObj * damager, const Vector3 & blast_direction = Vector3( 0,0,-1), DamageableGameObj * force_victim = NULL  );
 

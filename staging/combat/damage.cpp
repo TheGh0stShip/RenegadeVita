@@ -38,6 +38,7 @@
 **	Includes
 */
 #include "damage.h"
+#include "renegade_client_effects.h"
 #include "assets.h"
 #include "debug.h"
 #include "smartgameobj.h"
@@ -552,10 +553,10 @@ bool	OffenseObjectClass::Save( ChunkSaveClass & csave )
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_OWNER );
-	Owner.Save( csave );
+	if (!Owner.Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	OffenseObjectClass::Load( ChunkLoadClass &cload )
@@ -625,10 +626,10 @@ bool	DefenseObjectClass::Save( ChunkSaveClass & csave )
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_OWNER );
-	Owner.Save( csave );
+	if (!Owner.Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	DefenseObjectClass::Load( ChunkLoadClass &cload )
@@ -1099,11 +1100,33 @@ bool DefenseObjectClass::Would_Damage( const OffenseObjectClass	& offense, float
 void DefenseObjectClass::Import(BitStreamClass & packet)
 {
 	bool is_health_zero = packet.Get(is_health_zero);
+	bool modern = false;
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	modern = Renegade_Client_Uses_TT_Replication();
+#endif
 
-	int health				= packet.Get(health, BITPACK_HEALTH);
-	int shield_strength	= packet.Get(shield_strength, BITPACK_SHIELD_STRENGTH);
+	int health = 0, shield_strength = 0;
+	packet.Get(health, modern ? BITPACK_TT_HEALTH : BITPACK_HEALTH);
+	packet.Get(shield_strength, modern ? BITPACK_TT_SHIELD_STRENGTH : BITPACK_SHIELD_STRENGTH);
 	unsigned int shield_type;
 	packet.Get(shield_type, BITPACK_SHIELD_TYPE);
+	int health_max = 0, shield_max = 0;
+	unsigned int skin = 0;
+	if (modern) {
+		packet.Get(health_max, BITPACK_TT_HEALTH);
+		packet.Get(shield_max, BITPACK_TT_SHIELD_STRENGTH);
+		packet.Get(skin, BITPACK_SHIELD_TYPE);
+		if (health < 0 || health > 10000 || shield_strength < 0 || shield_strength > 10000 ||
+			health_max < 0 || health_max > 10000 || shield_max < 0 || shield_max > 10000 ||
+			shield_type >= (unsigned)ArmorWarheadManager::Get_Num_Armor_Types() ||
+			skin >= (unsigned)ArmorWarheadManager::Get_Num_Armor_Types()) packet.Mark_Read_Error();
+	}
+	if (packet.Has_Read_Error()) return;
+	if (modern) {
+		HealthMax = (float)health_max;
+		ShieldStrengthMax = (float)shield_max;
+		Skin = skin;
+	}
 
 	ShieldType			= shield_type;
 	Health				= (float)health;
@@ -1207,29 +1230,59 @@ bool DefenseObjectDefClass::Save(ChunkSaveClass &csave)
 	WRITE_SAFE_MICRO_CHUNK(csave,DEFENSEOBJECTDEF_VARIABLE_DAMAGE_POINTS,DamagePoints, float);
 	WRITE_SAFE_MICRO_CHUNK(csave,DEFENSEOBJECTDEF_VARIABLE_DEATH_POINTS,DeathPoints, float);
 	csave.End_Chunk();
-	return true;
+	return !csave.Has_Error();
 }
 
 bool DefenseObjectDefClass::Load(ChunkLoadClass &cload)
 {
+	float loaded_health = 0.0F;
+	float loaded_health_max = 0.0F;
+	float loaded_shield_strength = 0.0F;
+	float loaded_shield_strength_max = 0.0F;
+	float loaded_damage_points = 0.0F;
+	float loaded_death_points = 0.0F;
 	int skin_save_id = -2;
 	int shield_save_id = -2;
+	unsigned int fields_seen = 0;
+	bool variables_seen = false;
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID())
 		{
 			case DEFENSEOBJECTDEF_CHUNK_VARIABLES:
+				if (variables_seen) {
+					loaded = false;
+					break;
+				}
+				variables_seen = true;
 
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						READ_SAFE_MICRO_CHUNK(cload,DEFENSEOBJECTDEF_VARIABLE_HEALTH,Health,float);
-						READ_SAFE_MICRO_CHUNK(cload,DEFENSEOBJECTDEF_VARIABLE_HEALTHMAX,HealthMax,float);
-						READ_MICRO_CHUNK(cload,DEFENSEOBJECTDEF_VARIABLE_SKIN,skin_save_id);
-						READ_SAFE_MICRO_CHUNK(cload,DEFENSEOBJECTDEF_VARIABLE_SHIELDSTRENGTH,ShieldStrength,float);
-						READ_SAFE_MICRO_CHUNK(cload,DEFENSEOBJECTDEF_VARIABLE_SHIELDSTRENGTHMAX,ShieldStrengthMax,float);
-						READ_MICRO_CHUNK(cload,DEFENSEOBJECTDEF_VARIABLE_SHIELDTYPE,shield_save_id);
-						READ_SAFE_MICRO_CHUNK(cload,DEFENSEOBJECTDEF_VARIABLE_DAMAGE_POINTS,DamagePoints,float);
-						READ_SAFE_MICRO_CHUNK(cload,DEFENSEOBJECTDEF_VARIABLE_DEATH_POINTS,DeathPoints,float);
+						case DEFENSEOBJECTDEF_VARIABLE_HEALTH:
+							if ((fields_seen & 0x01U) || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_health) || cload.Read(&loaded_health, sizeof(loaded_health)) != sizeof(loaded_health)) loaded = false;
+							fields_seen |= 0x01U; break;
+						case DEFENSEOBJECTDEF_VARIABLE_HEALTHMAX:
+							if ((fields_seen & 0x02U) || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_health_max) || cload.Read(&loaded_health_max, sizeof(loaded_health_max)) != sizeof(loaded_health_max)) loaded = false;
+							fields_seen |= 0x02U; break;
+						case DEFENSEOBJECTDEF_VARIABLE_SKIN:
+							if ((fields_seen & 0x04U) || cload.Cur_Micro_Chunk_Length() != sizeof(skin_save_id) || cload.Read(&skin_save_id, sizeof(skin_save_id)) != sizeof(skin_save_id)) loaded = false;
+							fields_seen |= 0x04U; break;
+						case DEFENSEOBJECTDEF_VARIABLE_SHIELDSTRENGTH:
+							if ((fields_seen & 0x08U) || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_shield_strength) || cload.Read(&loaded_shield_strength, sizeof(loaded_shield_strength)) != sizeof(loaded_shield_strength)) loaded = false;
+							fields_seen |= 0x08U; break;
+						case DEFENSEOBJECTDEF_VARIABLE_SHIELDSTRENGTHMAX:
+							if ((fields_seen & 0x10U) || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_shield_strength_max) || cload.Read(&loaded_shield_strength_max, sizeof(loaded_shield_strength_max)) != sizeof(loaded_shield_strength_max)) loaded = false;
+							fields_seen |= 0x10U; break;
+						case DEFENSEOBJECTDEF_VARIABLE_SHIELDTYPE:
+							if ((fields_seen & 0x20U) || cload.Cur_Micro_Chunk_Length() != sizeof(shield_save_id) || cload.Read(&shield_save_id, sizeof(shield_save_id)) != sizeof(shield_save_id)) loaded = false;
+							fields_seen |= 0x20U; break;
+						case DEFENSEOBJECTDEF_VARIABLE_DAMAGE_POINTS:
+							if ((fields_seen & 0x40U) || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_damage_points) || cload.Read(&loaded_damage_points, sizeof(loaded_damage_points)) != sizeof(loaded_damage_points)) loaded = false;
+							fields_seen |= 0x40U; break;
+						case DEFENSEOBJECTDEF_VARIABLE_DEATH_POINTS:
+							if ((fields_seen & 0x80U) || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_death_points) || cload.Read(&loaded_death_points, sizeof(loaded_death_points)) != sizeof(loaded_death_points)) loaded = false;
+							fields_seen |= 0x80U; break;
 					}
 					cload.Close_Micro_Chunk();
 				}
@@ -1242,9 +1295,23 @@ bool DefenseObjectDefClass::Load(ChunkLoadClass &cload)
 
 		cload.Close_Chunk();
 	}
-	Skin = ArmorWarheadManager::Find_Armor_Save_ID( skin_save_id );
-	ShieldType = ArmorWarheadManager::Find_Armor_Save_ID( shield_save_id );
-	return true;
+	const ArmorType loaded_skin = ArmorWarheadManager::Find_Armor_Save_ID(skin_save_id);
+	const ArmorType loaded_shield = ArmorWarheadManager::Find_Armor_Save_ID(shield_save_id);
+	loaded = loaded && variables_seen && fields_seen == 0xFFU && !cload.Has_Error() &&
+		ArmorWarheadManager::Get_Num_Armor_Types() > 0 &&
+		ArmorWarheadManager::Get_Armor_Save_ID(loaded_skin) == skin_save_id &&
+		ArmorWarheadManager::Get_Armor_Save_ID(loaded_shield) == shield_save_id;
+	if (loaded) {
+		Health = loaded_health;
+		HealthMax = loaded_health_max;
+		Skin = loaded_skin;
+		ShieldStrength = loaded_shield_strength;
+		ShieldStrengthMax = loaded_shield_strength_max;
+		ShieldType = loaded_shield;
+		DamagePoints = loaded_damage_points;
+		DeathPoints = loaded_death_points;
+	}
+	return loaded;
 }
 
 
@@ -1320,6 +1387,8 @@ void DefenseObjectClass::Set_Precision(void)
 
 	cEncoderList::Set_Precision(BITPACK_HEALTH, 0, (int) MAX_MAX_HEALTH);
 	cEncoderList::Set_Precision(BITPACK_SHIELD_STRENGTH, 0, (int) MAX_MAX_SHIELD_STRENGTH);
+	cEncoderList::Set_Precision(BITPACK_TT_HEALTH, 0, 10000);
+	cEncoderList::Set_Precision(BITPACK_TT_SHIELD_STRENGTH, 0, 10000);
 	cEncoderList::Set_Precision(BITPACK_SHIELD_TYPE, 0,
 		//ArmorWarheadManager::Get_Num_Armor_Types(), 1);
 		ArmorWarheadManager::Get_Num_Armor_Types());
@@ -1408,4 +1477,3 @@ void	DefenseObjectClass::Set_Shield_Type( ArmorType type )
 				smart->Get_Player_Data()->On_Kill(victim_id, victim_team);
 			}
 			*/
-

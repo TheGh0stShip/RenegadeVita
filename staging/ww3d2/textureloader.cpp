@@ -915,7 +915,7 @@ void TextureLoader::Load_Thumbnail(TextureClass *tc)
 
 void LoaderThreadClass::Thread_Function(void)
 {
-	while (running) {
+	while (Should_Run()) {
 		// if there are no tasks on the background queue, no need to grab background lock.
 		if (!_BackgroundQueue.Is_Empty()) {
 			// Grab background load so other threads know we could be 

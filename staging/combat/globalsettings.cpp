@@ -75,7 +75,8 @@ GlobalSettingsDef::GlobalSettingsDef( void ) :
 	StealthDistanceHuman( 15.0f ),
 	StealthDistanceVehicle( 25.0f ),
 	MPStealthDistanceHuman( 15.0f ),
-	MPStealthDistanceVehicle( 25.0f )
+	MPStealthDistanceVehicle( 25.0f ),
+	PreviousGlobalSettings( GlobalSettings )
 
 {
 	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_SOUNDDEFINITIONID, DeathSoundID);
@@ -129,8 +130,13 @@ GlobalSettingsDef::GlobalSettingsDef( void ) :
 
 GlobalSettingsDef::~GlobalSettingsDef( void )
 {
-	GlobalSettings = NULL;
+	if (GlobalSettings == this) GlobalSettings = PreviousGlobalSettings;
 	return ;
+}
+
+void GlobalSettingsDef::On_Load_Rejected (void)
+{
+	if (GlobalSettings == this) GlobalSettings = PreviousGlobalSettings;
 }
 
 
@@ -237,11 +243,12 @@ bool	GlobalSettingsDef::Save( ChunkSaveClass & csave )
 
 bool	GlobalSettingsDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				DefinitionClass::Load( cload );
+				if (!DefinitionClass::Load( cload )) loaded = false;
 				break;
 								
 			case CHUNKID_DEF_VARIABLES:
@@ -296,7 +303,7 @@ bool	GlobalSettingsDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -379,11 +386,12 @@ bool	HumanLoiterGlobalSettingsDef::Save( ChunkSaveClass & csave )
 
 bool	HumanLoiterGlobalSettingsDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_HL_DEF_PARENT:
-				DefinitionClass::Load( cload );
+				if (!DefinitionClass::Load( cload )) loaded = false;
 				break;
 								
 			case CHUNKID_HL_DEF_VARIABLES:
@@ -416,7 +424,7 @@ bool	HumanLoiterGlobalSettingsDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 HumanLoiterGlobalSettingsDef * HumanLoiterGlobalSettingsDef::Get_Default_Loiters( void )
@@ -646,9 +654,9 @@ HUDGlobalSettingsDef::HUDGlobalSettingsDef( void ) :
 	SniperZoomGraph(SNIPER_ZOOM_GRAPH),
 	SniperZoomGraphUV(SNIPER_ZOOM_GRAPH_UV),
 	DamageIndicatorUV(DAMAGE_INDICATOR_UV),
-	DamageDiagIndicatorUV(DAMAGE_DIAG_INDICATOR_UV)
+	DamageDiagIndicatorUV(DAMAGE_DIAG_INDICATOR_UV),
+	PreviousInstance(Instance)
 {
-	WWASSERT( Instance == NULL );	 // Pat, you can remove this if needed 
 	Instance = this;
 
 	PARAM_SEPARATOR( HUDGlobalSettingsDef, "Colors" );
@@ -761,8 +769,12 @@ HUDGlobalSettingsDef::HUDGlobalSettingsDef( void ) :
 
 HUDGlobalSettingsDef::~HUDGlobalSettingsDef( void )
 {
-	WWASSERT( Instance == this );
-	Instance = NULL;
+	if (Instance == this) Instance = PreviousInstance;
+}
+
+void HUDGlobalSettingsDef::On_Load_Rejected (void)
+{
+	if (Instance == this) Instance = PreviousInstance;
 }
 
 uint32	HUDGlobalSettingsDef::Get_Class_ID (void) const	
@@ -992,11 +1004,12 @@ bool	HUDGlobalSettingsDef::Save( ChunkSaveClass & csave )
 
 bool	HUDGlobalSettingsDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_HL_DEF_PARENT:
-				DefinitionClass::Load( cload );
+				if (!DefinitionClass::Load( cload )) loaded = false;
 				break;
 								
 			case CHUNKID_HL_DEF_VARIABLES:
@@ -1116,7 +1129,7 @@ bool	HUDGlobalSettingsDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 /*
@@ -1186,11 +1199,12 @@ bool	HumanAnimOverrideDef::Save( ChunkSaveClass & csave )
 
 bool	HumanAnimOverrideDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_HAO_DEF_PARENT:
-				DefinitionClass::Load( cload );
+				if (!DefinitionClass::Load( cload )) loaded = false;
 				break;
 								
 			case CHUNKID_HAO_DEF_VARIABLES:
@@ -1219,6 +1233,5 @@ bool	HumanAnimOverrideDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
-

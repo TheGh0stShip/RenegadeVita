@@ -198,7 +198,7 @@ class PacketManagerClass
 		** Delta compression.
 		*/
 		static int Build_Delta_Packet_Patch(unsigned char *base_packet, unsigned char *add_packet, unsigned char *delta_packet, int base_packet_size, int add_packet_size);
-		static int Reconstruct_From_Delta(unsigned char *base_packet, unsigned char *reconstructed_packet, unsigned char *delta_packet, int base_packet_size, int &delta_size);
+		static int Reconstruct_From_Delta(unsigned char *base_packet, unsigned char *reconstructed_packet, unsigned char *delta_packet, int base_packet_size, int &delta_size, int available_delta_bytes);
 		bool Break_Packet(unsigned char *packet, int packet_len, unsigned char *ip_address, unsigned short port);
 
 		/*

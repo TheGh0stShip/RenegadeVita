@@ -446,8 +446,15 @@ CnCReferenceMenuClass::Exit_Game (void)
 	//
 	End_Dialog ();
 
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	// The native gameplay loop owns the between-frame teardown envelope. Let
+	// original GameInitMgr consume the request there, after retained render and
+	// dialog references have been released.
+	GameInitMgrClass::Set_Needs_Game_Exit (true);
+#else
 	GameInitMgrClass::End_Game ();
 	//GameInitMgrClass::Display_End_Game_Menu ();
+#endif
 
 	if (cGameSpyAdmin::Get_Is_Launched_From_Gamespy()) {
 #ifdef MULTIPLAYERDEMO
@@ -458,7 +465,9 @@ CnCReferenceMenuClass::Exit_Game (void)
 			Stop_Main_Loop(EXIT_SUCCESS);
 #endif // MULTIPLAYERDEMO
 	} else {
+#if !defined(RENEGADE_A4_ORIGINAL_FRONTEND) || RENEGADE_VITA_M00_DEMO
 		GameInitMgrClass::Display_End_Game_Menu ();
+#endif
 	}
 	return ;
 }

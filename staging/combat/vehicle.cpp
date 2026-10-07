@@ -39,6 +39,9 @@
 **	Includes
 */
 #include "vehicle.h"
+#include "renegade_client_effects.h"
+#include "renegade_vehicle_state.h"
+#include "weaponbag.h"
 #include "animcontrol.h"
 #include "debug.h"
 #include "combat.h"
@@ -333,20 +336,25 @@ bool	VehicleGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	VehicleGameObjDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	Free_Transition_List ();
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				SmartGameObjDef::Load( cload );
+				if (!SmartGameObjDef::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_DEF_TRANSITION:
 			{
 				TransitionDataClass *transition = new TransitionDataClass;
-				transition->Load( cload );
-				Transitions.Add( transition );
+				if (transition->Load(cload)) {
+					Transitions.Add(transition);
+				} else {
+					delete transition;
+					loaded = false;
+				}
 			}
 			break;
 
@@ -390,7 +398,7 @@ bool	VehicleGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 /*
@@ -602,7 +610,7 @@ bool	VehicleGameObj::Save( ChunkSaveClass & csave )
 	Destroy_Transitions();
 
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	SmartGameObj::Save( csave );
+	if (!SmartGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -622,18 +630,19 @@ bool	VehicleGameObj::Save( ChunkSaveClass & csave )
 
 	Create_And_Destroy_Transitions();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	VehicleGameObj::Load( ChunkLoadClass &cload )
 {
 	int num_seats = 0;
+	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				SmartGameObj::Load( cload );
+				if (!SmartGameObj::Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -685,7 +694,7 @@ bool	VehicleGameObj::Load( ChunkLoadClass &cload )
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 void	VehicleGameObj::On_Post_Load( void )
@@ -872,16 +881,20 @@ void	VehicleGameObj::Export_Creation( BitStreamClass &packet )
 void	VehicleGameObj::Import_Creation( BitStreamClass &packet )
 {
 	SmartGameObj::Import_Creation( packet );
+	if (packet.Has_Read_Error()) return;
 
 	//
 	//	Get the lock status from the server
 	//
-	int lock_owner_id;
+	int lock_owner_id = 0;
 	packet.Get(lock_owner_id);
+	float lock_timer = 0;
 	if (lock_owner_id != 0) {
-		LockOwner = GameObjManager::Find_PhysicalGameObj( lock_owner_id );
-		packet.Get(LockTimer,BITPACK_VEHICLE_LOCK_TIMER);
+		Renegade_Read_Vehicle_Float(packet, lock_timer, BITPACK_VEHICLE_LOCK_TIMER);
 	}
+	if (packet.Has_Read_Error()) return;
+	LockOwner = lock_owner_id ? GameObjManager::Find_PhysicalGameObj(lock_owner_id) : NULL;
+	LockTimer = lock_timer;
 
 	return ;
 }
@@ -910,6 +923,51 @@ void VehicleGameObj::Import_Rare( BitStreamClass &packet )
 {
    WWASSERT(CombatManager::I_Am_Only_Client());
 	SmartGameObj::Import_Rare( packet );
+	if (packet.Has_Read_Error()) return;
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	if (Renegade_Client_Uses_TT_Replication()) {
+		RenegadeVehicleRareState next;
+		if (!Renegade_Read_Vehicle_Rare(packet, SeatOccupants.Length(), next)) return;
+		std::vector<SoldierGameObj *> occupants(next.Occupants.size(), NULL);
+		for (unsigned i = 0; i < occupants.size(); ++i) {
+			int id = next.Occupants[i];
+			if (id < -1) { packet.Mark_Read_Error(); return; }
+			if (id <= 0) continue;
+			for (unsigned j = 0; j < i; ++j) {
+				if (next.Occupants[j] == id) { packet.Mark_Read_Error(); return; }
+			}
+			SmartGameObj *obj = GameObjManager::Find_SmartGameObj(id);
+			if (obj && !obj->As_SoldierGameObj()) { packet.Mark_Read_Error(); return; }
+			occupants[i] = obj ? obj->As_SoldierGameObj() : NULL;
+		}
+		// Remove old seats first so a driver/gunner swap cannot duplicate an occupant.
+		for (int i = 0; i < SeatOccupants.Length(); ++i)
+			if (SeatOccupants[i] && SeatOccupants[i] != occupants[i]) Remove_Occupant(SeatOccupants[i]);
+		for (int i = 0; i < SeatOccupants.Length(); ++i) {
+			SoldierGameObj *occupant = occupants[i];
+			if (occupant && !SeatOccupants[i]) {
+				VehicleGameObj *old = occupant->Get_Vehicle();
+				if (old && old != this) old->Remove_Occupant(occupant);
+				Add_Occupant(occupant, i);
+			}
+		}
+		bool was_delivered = VehicleDelivered;
+		VehicleDelivered = next.Delivered;
+		TTStateActive = true;
+		NetworkAllowEmptyStealth = next.AllowEmptyStealth;
+		NetworkLockTeam = next.LockTeam;
+		NetworkOwner = next.OwnerID ? GameObjManager::Find_PhysicalGameObj(next.OwnerID) : NULL;
+		NetworkCanBeStolen = next.CanBeStolen;
+		NetworkCanDrive = next.CanDrive;
+		// Stock vehicle types have no TT underground-effect owner; retail also
+		// consumes its color without applying it when that effect is absent.
+		if (!was_delivered && VehicleDelivered) {
+			BaseControllerClass *base = BaseControllerClass::Find_Base(Get_Player_Type());
+			if (base) base->On_Vehicle_Delivered(this);
+		}
+		return;
+	}
+#endif
 
 	//
 	// Update the seat occupants
@@ -966,6 +1024,35 @@ void VehicleGameObj::Import_Rare( BitStreamClass &packet )
 */
 void VehicleGameObj::Import_Frequent(BitStreamClass & packet)
 {
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	if (Renegade_Client_Uses_TT_Replication()) {
+		VehiclePhysClass *physics = Peek_Vehicle_Phys();
+		const bool moving = Get_Definition().Type != VEHICLE_TYPE_TURRET && physics;
+		RenegadeVehicleFrequentState next;
+		if (!Renegade_Read_Vehicle_Frequent(packet, moving, next)) return;
+		TTStateActive = true;
+		DriverIsGunner = next.DriverIsGunner;
+		NetworkCanFire = next.CanFire;
+		NetworkFixedTurret = next.FixedTurret;
+		NetworkTurretTurn = next.TurretTurn;
+		NetworkBarrelTilt = next.BarrelTilt;
+		if (moving) {
+			if (COMBAT_STAR && COMBAT_STAR->Get_Vehicle() == this)
+				physics->Network_Latency_State_Update(next.Position, next.Orientation, next.Velocity, next.AngularVelocity);
+			else physics->Network_Interpolate_State_Update(next.Position, next.Orientation, next.Velocity, next.AngularVelocity, 0.1f);
+			physics->Enable_Engine(next.Engine);
+		}
+		if (Peek_Physical_Object()) {
+			Peek_Physical_Object()->Set_Immovable(next.Immovable);
+			MoveablePhysClass *moveable = Peek_Physical_Object()->As_MoveablePhysClass();
+			if (next.Immovable && moveable) moveable->Set_Velocity(Vector3(0, 0, 0));
+		}
+		SmartGameObj::Import_Frequent(packet);
+		if (packet.Has_Read_Error()) return;
+		NetworkDamageMeshes = next.DamageMeshes;
+		return;
+	}
+#endif
 	/*
 	if (Get_Definition().Type == VEHICLE_TYPE_TURRET) {
 		WWDEBUG_SAY(("VEHICLE_TYPE_TURRET::Import_Frequent: %s, %d, %d\n",
@@ -1160,6 +1247,25 @@ void VehicleGameObj::Import_State_Cs(BitStreamClass & packet)
    SmartGameObj::Import_State_Cs(packet);
 }
 
+void VehicleGameObj::Import_Occasional(BitStreamClass &packet)
+{
+	SmartGameObj::Import_Occasional(packet);
+	if (packet.Has_Read_Error()) return;
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	if (Renegade_Client_Uses_TT_Replication()) {
+		bool changed = WeaponBag->Import_TT_Weapon_Selection(packet);
+		if (packet.Has_Read_Error()) return;
+		if (changed) {
+			Init_Muzzle_Bones();
+			if (Get_Weapon()) {
+				Get_Weapon()->Update_Muzzle_Flash(false, false);
+				Get_Weapon()->Stop_Firing_Sound();
+			}
+		}
+	}
+#endif
+}
+
 void VehicleGameObj::Export_State_Cs(BitStreamClass & packet)
 {
    SmartGameObj::Export_State_Cs(packet);
@@ -1262,6 +1368,21 @@ bool	VehicleGameObj::Set_Targeting( const Vector3 & target_pos, bool do_tilt )
 	}
 
 
+	if (TTStateActive && NetworkFixedTurret) {
+		relative_turn = TurretBone ? NetworkTurretTurn - TurretTurn : 0;
+		if (TurretBone && WWMath::Fabs(Get_Definition().WeaponTurnMax - Get_Definition().WeaponTurnMin) >= DEG_TO_RADF(360)) {
+			float wrapped = fmodf(relative_turn, DEG_TO_RADF(360));
+			if (wrapped > DEG_TO_RADF(180)) wrapped -= DEG_TO_RADF(360);
+			if (wrapped < -DEG_TO_RADF(180)) wrapped += DEG_TO_RADF(360);
+			TurretTurn += relative_turn - wrapped;
+			relative_turn = wrapped;
+		}
+		relative_tilt = BarrelBone ? NetworkBarrelTilt - BarrelTilt : 0;
+	}
+	if (TTStateActive && NetworkTargetUpdated)
+		return WWMath::Fabs(relative_turn) < 0.001f && WWMath::Fabs(relative_tilt) < 0.001f;
+	if (TTStateActive) NetworkTargetUpdated = true;
+
 	// Move the tilt and turn towards the desired, following rates and limits
 	float max_move;
 	max_move = Get_Definition().WeaponTurnRate * TimeManager::Get_Frame_Seconds();
@@ -1291,7 +1412,7 @@ bool	VehicleGameObj::Set_Targeting( const Vector3 & target_pos, bool do_tilt )
 	Update_Turret( TurretTurn, BarrelTilt );
 
 	// if a fast turner and had to turn, do it again,just to make sure (trying to fix obelisk)
-	if ( Get_Definition().WeaponTurnRate > DEG_TO_RAD(1000) &&
+	if ( !TTStateActive && Get_Definition().WeaponTurnRate > DEG_TO_RAD(1000) &&
 		( WWMath::Fabs(relative_turn) >= DEG_TO_RAD( 2 ) || WWMath::Fabs(relative_tilt) > DEG_TO_RAD( 2 ) ) ) {
 		static int calls = 0;
 		if ( calls < 3 ) {
@@ -1461,6 +1582,17 @@ void VehicleGameObj::Apply_Control( void )
 	Control.Set_Analog( ControlClass::ANALOG_TURN_LEFT,
 		WWMath::Clamp( Control.Get_Analog( ControlClass::ANALOG_TURN_LEFT ), -1.0F, 1.0F ) );
 
+	if (TTStateActive && !NetworkCanDrive) {
+		Control.Set_Analog(ControlClass::ANALOG_MOVE_FORWARD, 0);
+		Control.Set_Analog(ControlClass::ANALOG_MOVE_LEFT, 0);
+		Control.Set_Analog(ControlClass::ANALOG_MOVE_UP, 0);
+		Control.Set_Analog(ControlClass::ANALOG_TURN_LEFT, 0);
+	}
+	if (TTStateActive && !NetworkCanFire) {
+		Control.Set_Boolean(ControlClass::BOOLEAN_WEAPON_FIRE_PRIMARY, false);
+		Control.Set_Boolean(ControlClass::BOOLEAN_WEAPON_FIRE_SECONDARY, false);
+		Control.Set_Boolean(ControlClass::BOOLEAN_WEAPON_RELOAD, false);
+	}
 	SmartGameObj::Apply_Control();
 }
 
@@ -1490,7 +1622,7 @@ void	VehicleGameObj::Think( void )
 
 	// UnStealth if we don't have any occupants, and we aren't in single play
 	if (StealthEffect != NULL) {
-		if ((Get_Occupant_Count() == 0 ) && ( !IS_MISSION )) {
+		if ((Get_Occupant_Count() == 0 ) && ( !IS_MISSION ) && !(TTStateActive && NetworkAllowEmptyStealth)) {
 			StealthEffect->Enable_Stealth(false);
 		}
 	}
@@ -1522,6 +1654,14 @@ void	VehicleGameObj::Post_Think( void )
 	}
 }
 	SmartGameObj::Post_Think();
+	if (TTStateActive) {
+		if (!NetworkTargetUpdated) Set_Targeting(Get_Targeting_Pos());
+		NetworkTargetUpdated = false;
+		if (NetworkDamageMeshes) {
+			Update_Damage_Meshes();
+			NetworkDamageMeshes = false;
+		}
+	}
 
 {	WWPROFILE( _post_profile_name );
 	if ( Get_Weapon() && !Get_Definition().Fire0Anim.Is_Empty() ) {
@@ -2014,8 +2154,18 @@ bool	VehicleGameObj::Is_Entry_Permitted( SoldierGameObj * p_soldier )
 	//
 
 	WWASSERT(p_soldier != NULL);
+	if (!p_soldier) return false;
+	if (TTStateActive) {
+		if (p_soldier->Get_Vehicle() || Peek_Physical_Object()->Get_Collision_Group() == UNCOLLIDEABLE_GROUP)
+			return false;
+		SoldierGameObj *owner = NetworkOwner.Get_Ptr() ? NetworkOwner.Get_Ptr()->As_SoldierGameObj() : NULL;
+		if (owner && owner != p_soldier && !Get_Driver() && owner->Get_Player_Type() == p_soldier->Get_Player_Type())
+			return false;
+		if (NetworkLockTeam != 2 && NetworkLockTeam != p_soldier->Get_Player_Type()) return false;
+	}
 
 	bool is_permitted = true;
+	if (!p_soldier->Can_Drive_Vehicles() && Get_Driver() == NULL) return false;
 
 	int player_type = p_soldier->Get_Player_Type();
 
@@ -2049,7 +2199,8 @@ bool	VehicleGameObj::Is_Entry_Permitted( SoldierGameObj * p_soldier )
 
 	// If the vehicle is locked and you are not the lock owner, entry is not permitted
 	if (Is_Locked() && (p_soldier != LockOwner.Get_Ptr())) {
-		is_permitted = false;
+		if (!(TTStateActive && NetworkCanBeStolen && p_soldier->Can_Steal_Vehicles() &&
+			p_soldier->Get_Player_Type() != Get_Player_Type())) is_permitted = false;
 	}
 
 	return is_permitted;
@@ -2105,7 +2256,7 @@ void	VehicleGameObj::Create_New_Transitions( TransitionDataClass::StyleType tran
 
 void	VehicleGameObj::Update_Transitions( void )
 {
-#if defined(__vita__)
+#if defined(__vita__) && defined(RENEGADE_VITA_DETAILED_TIMING)
 	// Diagnostics only: skip timing and star distance once the log budget is spent.
 	const uint64_t update_start_us = g_vita_vehicle_transition_update_logs < 160U ?
 		sceKernelGetProcessTimeWide() : 0U;
@@ -2116,7 +2267,7 @@ void	VehicleGameObj::Update_Transitions( void )
 	for ( int i = 0; i < TransitionInstances.Count(); i++ ) {
 		TransitionInstances[i]->Set_Parent_Transform( tm );
 	}
-#if defined(__vita__)
+#if defined(__vita__) && defined(RENEGADE_VITA_DETAILED_TIMING)
 	const uint64_t update_elapsed_us =
 		update_start_us != 0U ? sceKernelGetProcessTimeWide() - update_start_us : 0U;
 	const float star_distance = update_start_us != 0U ? Vita_Distance_To_Star(this) : -1.0f;

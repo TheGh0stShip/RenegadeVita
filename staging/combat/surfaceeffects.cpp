@@ -234,7 +234,9 @@ void	PersistantSurfaceEmitterClass::Set_Emitter( const char * name )
 
 	// Start new Emitter
 	if ( name != NULL ) {
-		Emitter = (ParticleEmitterClass *)WW3DAssetManager::Get_Instance()->Create_Render_Obj( name );
+		if ( Emitter == NULL ) {
+			Emitter = (ParticleEmitterClass *)WW3DAssetManager::Get_Instance()->Create_Render_Obj( name );
+		}
 		if ( Emitter ) {
 			SET_REF_OWNER( Emitter );
 //			Emitter->Set_Remove_On_Complete( false );
@@ -536,7 +538,10 @@ void	SurfaceEffectsManager::Apply_Effect
 #if (RECYCLE_EMITTERS)
 		_EmitterRecycler.Spawn_Effect(emitter_name,tm);
 #else
-		ParticleEmitterClass * emitter = (ParticleEmitterClass *)WW3DAssetManager::Get_Instance()->Create_Render_Obj( emitter_name );
+		ParticleEmitterClass * emitter = NULL;
+		if ( emitter == NULL ) {
+			emitter = (ParticleEmitterClass *)WW3DAssetManager::Get_Instance()->Create_Render_Obj( emitter_name );
+		}
 		if ( emitter ) {
 			SET_REF_OWNER( emitter );
 			emitter->Set_Transform( tm );
@@ -739,5 +744,3 @@ void SurfaceEffectsManager::Set_Override_Surface_Type(int type)
 
 	PhysicsConstants::Set_Override_Surface_Type(OverrideSurfaceType);
 }
-
-

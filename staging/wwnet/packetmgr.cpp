@@ -38,6 +38,16 @@
 
 #include <always.h>
 #include <memory.h>
+#include <stdint.h>
+
+// Packet words remain 32-bit on LP64 hosts and may be unaligned on ARM.
+// Width correction cross-checked against OpenW3D 89cfaaffe7d9245e.
+static uint32_t Read_Packet_Word(const void *bytes)
+{
+	uint32_t word;
+	memcpy(&word, bytes, sizeof(word));
+	return word;
+}
 //#include <winsock.h>
 #include "systimer.h"
 #include <malloc.h>
@@ -317,8 +327,8 @@ int PacketManagerClass::Build_Delta_Packet_Patch(unsigned char *base_packet, uns
 
 			this_match = false;
 
-			if (*((long*)&base_packet[i]) == *((long*)&add_packet[i])) {
-				if (*((long*)&base_packet[i+4]) == *((long*)&add_packet[i+4])) {
+			if (Read_Packet_Word(&base_packet[i]) == Read_Packet_Word(&add_packet[i])) {
+				if (Read_Packet_Word(&base_packet[i+4]) == Read_Packet_Word(&add_packet[i+4])) {
 					chunks = true;
 					this_match = true;
 				}
@@ -425,8 +435,10 @@ int PacketManagerClass::Build_Delta_Packet_Patch(unsigned char *base_packet, uns
  * HISTORY:                                                                                    *
  *   9/26/2001 2:14PM ST : Created                                                             *
  *=============================================================================================*/
-int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsigned char *reconstructed_packet, unsigned char *delta_packet, int base_packet_size, int &delta_size)
+int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsigned char *reconstructed_packet, unsigned char *delta_packet, int base_packet_size, int &delta_size, int available_delta_bytes)
 {
+	delta_size = 0;
+	if (available_delta_bytes < static_cast<int>(sizeof(PacketDeltaHeaderStruct))) return 0;
 	if (base_packet == NULL) {
 		WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Reconstruct_From_Delta -- Bad base packet\n"));
 		return(0);
@@ -442,7 +454,7 @@ int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsig
 		return(0);
 	}
 
-	if (base_packet_size > 500) {
+	if (base_packet_size < 1 || base_packet_size > 500) {
 		WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Reconstruct_From_Delta -- Bad base packet size\n"));
 		return(0);
 	}
@@ -461,12 +473,14 @@ int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsig
 	unsigned char *read_delta_ptr = delta_packet + sizeof(PacketDeltaHeaderStruct);
 	pm_assert(sizeof(PacketDeltaHeaderStruct) == 1);
 	unsigned char *chunk_ptr = read_delta_ptr;
+	const unsigned char *delta_end = delta_packet + available_delta_bytes;
 
 	/*
 	** If there is chunk info then extract that first. Use it to copy the approprate parts of the base packet into the add packet.
 	*/
 	if (header->ChunkPack) {
 		for (int i=0 ; i<base_packet_size - 7 ; i+=8) {
+			if (read_delta_ptr >= delta_end) return 0;
 			if (Get_Bit(read_delta_ptr, read_bit_pos)) {
 				memcpy(&reconstructed_packet[i], &base_packet[i], 8);
 				restored_bytes += 8;
@@ -477,6 +491,7 @@ int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsig
 		** If the packet isn't an even number of chunks long then pull out an extra bit and throw it away. It should always be 0.
 		*/
 		if ((base_packet_size & 7) != 0) {
+			if (read_delta_ptr >= delta_end) return 0;
 //#ifdef WWDEBUG
 			unsigned char bitty =
 //#endif //WWDEBUG
@@ -499,6 +514,7 @@ int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsig
 		** If we have chunk info, then use it to skip matching chunks.
 		*/
 		if (header->ChunkPack) {
+			if (chunk_ptr >= delta_end) return 0;
 			if (Get_Bit(chunk_ptr, read_chunk_pos)) {
 				continue;
 			}
@@ -508,6 +524,7 @@ int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsig
 		** If this chunk didn't match then go through byte by byte and note differences.
 		*/
 		for (int j=i ; j<i+8 && j<base_packet_size ; j++) {
+			if (read_delta_ptr >= delta_end) return 0;
 			if (Get_Bit(read_delta_ptr, read_bit_pos)) {
 				reconstructed_packet[j] = base_packet[j];
 				restored_bytes++;
@@ -524,6 +541,7 @@ int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsig
 	if (read_bit_pos != 0) {
 		patch_bytes++;
 	}
+	if (patch_bytes > delta_end || num_patches > delta_end - patch_bytes) return 0;
 
 	/*
 	** Work out how many delta bytes we processed - it's needed for meta packet decoding.
@@ -744,7 +762,7 @@ WWPROFILE("PMgr Flush");
 						/*
 						** Is this packet for the same recipient?
 						*/
-						if (SendBuffers[base_index].Port == SendBuffers[index].Port && (*(unsigned long*)(&SendBuffers[index].IPAddress[0])) == (*(unsigned long*)(&SendBuffers[base_index].IPAddress[0]))) {
+						if (SendBuffers[base_index].Port == SendBuffers[index].Port && Read_Packet_Word(SendBuffers[index].IPAddress) == Read_Packet_Word(SendBuffers[base_index].IPAddress)) {
 
 							//WWDEBUG_SAY(("Found secondary packet %d\n", index));
 
@@ -849,7 +867,7 @@ WWPROFILE("PMgr Flush");
 				for (int j=i+1 ; j<NumSendBuffers ; j++) {
 					if (SendBuffers[j].PacketReady && SendBuffers[j].PacketSendSocket == socket) {
 						if (SendBuffers[i].PacketSendLength + SendBuffers[j].PacketSendLength < PACKET_MANAGER_MTU) {
-							if (SendBuffers[i].Port == SendBuffers[j].Port && (*(unsigned long*)(&SendBuffers[i].IPAddress[0])) == (*(unsigned long*)(&SendBuffers[j].IPAddress[0]))) {
+							if (SendBuffers[i].Port == SendBuffers[j].Port && Read_Packet_Word(SendBuffers[i].IPAddress) == Read_Packet_Word(SendBuffers[j].IPAddress)) {
 								unsigned char *dest_ptr = &SendBuffers[i].PacketBuffer->Buffer[current_len];
 								memcpy(dest_ptr, SendBuffers[j].PacketBuffer, SendBuffers[j].PacketSendLength);
 								current_header->MorePackets = 1;
@@ -893,7 +911,7 @@ WWPROFILE("PMgr Flush");
 
 #ifdef WRAPPER_CRC
 
-			unsigned long crc = CRC::Memory((unsigned char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength);
+			uint32_t crc = CRC::Memory((unsigned char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength);
 #if (1)
 			/*
 			** Reverse byte order to prevent the demo from having the same CRC as the game.
@@ -901,7 +919,7 @@ WWPROFILE("PMgr Flush");
 			crc = __builtin_bswap32(crc);
 #endif //(0)
 			char *crc_and_buffer = (char*)_alloca(SendBuffers[i].PacketSendLength + sizeof(crc));
-			*((unsigned long*) crc_and_buffer) = crc;
+			memcpy(crc_and_buffer, &crc, sizeof(crc));
 			memcpy(crc_and_buffer + sizeof(crc), (const char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength);
 
 			Register_Packet_Out(&SendBuffers[i].IPAddress[0], SendBuffers[i].Port, SendBuffers[i].PacketSendLength + UDP_HEADER_SIZE + sizeof(crc), 0);
@@ -988,6 +1006,8 @@ void PacketManagerClass::Disable_Optimizations(void)
  *=============================================================================================*/
 bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet_size, unsigned char *ip_address, unsigned short port)
 {
+	if (original_packet_size < static_cast<int>(sizeof(PacketPackHeaderStruct))) return false;
+	const unsigned char *packet_end = packet + original_packet_size;
 	/*
 	** Dereference a pointer to the packet header.
 	*/
@@ -1000,7 +1020,9 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 	int packet_size = header->PacketSize;
 	bool more_packets = header->MorePackets;
 
-	if (num_packets < 1 || packet_size > PACKET_MANAGER_MTU) {
+	if (num_packets < 1 || packet_size < 1 || packet_size > PACKET_MANAGER_MTU ||
+		num_packets > NumReceiveBuffers - NumReceivePackets ||
+		packet_size > original_packet_size - static_cast<int>(sizeof(*header))) {
 		WWDEBUG_SAY(("PacketManager - Packet decode error. num_packets = %d\n, packet_size = %d\n", num_packets, packet_size));
 		return(false);
 	}
@@ -1026,6 +1048,7 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 	** Get the rest of the packets.
 	*/
 	for (int i=0 ; i<num_packets-1 ; i++) {
+		if (packet_ptr >= packet_end) return false;
 		PacketDeltaHeaderStruct * delta_header = (PacketDeltaHeaderStruct*) packet_ptr;
 
 		/*
@@ -1036,7 +1059,7 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 //#ifdef WWDEBUG
 			int bytes =
 //#endif //WWDEBUG
-				Reconstruct_From_Delta(&ReceiveBuffers[delta_base_index].ReceiveHoldingBuffer[0], &ReceiveBuffers[NumReceivePackets].ReceiveHoldingBuffer[0], (unsigned char *)delta_header, packet_size, delta_size);
+				Reconstruct_From_Delta(&ReceiveBuffers[delta_base_index].ReceiveHoldingBuffer[0], &ReceiveBuffers[NumReceivePackets].ReceiveHoldingBuffer[0], (unsigned char *)delta_header, packet_size, delta_size, static_cast<int>(packet_end - packet_ptr));
 			if (bytes != packet_size) {
 				WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Break_Packet -- bytes !=  packet_size\n"));
 				return(false);
@@ -1057,15 +1080,13 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 			** Not a delta, just copy the whole thing.
 			*/
 			packet_ptr += sizeof(*delta_header);
+			if (packet_size > packet_end - packet_ptr) return false;
 			memcpy(&ReceiveBuffers[NumReceivePackets].ReceiveHoldingBuffer[0], packet_ptr, packet_size);
 			ReceiveBuffers[NumReceivePackets].ReceivePacketLength = packet_size;
 			packet_ptr += packet_size;
 			NumReceivePackets++;
 			Register_Packet_In(ip_address, port, 0, packet_size + UDP_HEADER_SIZE);
 			//WWDEBUG_SAY(("Extracted secondary packet from metapacket - %d (+1) bytes\n", PacketLength));
-		}
-		if (NumReceivePackets >= PACKET_MANAGER_RECEIVE_BUFFERS) {
-			break;
 		}
 	}
 
@@ -1074,7 +1095,7 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 	/*
 	** More packets in this buffer?
 	*/
-	if (more_packets && NumReceivePackets < PACKET_MANAGER_RECEIVE_BUFFERS) {
+	if (more_packets) {
 		if (!Break_Packet(packet_ptr, original_packet_size - bytes_pulled_from_packet, ip_address, port)) {
 			return(false);
 		}
@@ -1104,7 +1125,7 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
  *=============================================================================================*/
 void PacketManagerClass::Clear_Socket_Error(SOCKET socket)
 {
-	unsigned long error_code;
+	int error_code = 0;
 	int length = 4;
 	assert(socket != INVALID_SOCKET);
 
@@ -1145,25 +1166,36 @@ WWPROFILE("Pmgr Get");
 		sockaddr_in addr;
 		memset(&addr, 0, sizeof(addr));
 		pm_assert(packet_buffer_size >= PACKET_MANAGER_MTU);
-		int bytes;
-		int result = ioctlsocket(socket, FIONREAD, (unsigned long *)&bytes);
-		if (result == 0 && bytes != 0) {
+#if defined(RENEGADE_VITA_PORT)
+		// libc sockets are descriptors, not SceNet socket IDs. Receive directly
+		// through libc so its handle and errno translation remains authoritative.
+		int bytes = recvfrom(socket, (char*)packet_buffer, packet_buffer_size,
+			MSG_DONTWAIT, (LPSOCKADDR) &addr, &address_size);
+		if (bytes == SOCKET_ERROR && WSAGetLastError() == WSAEWOULDBLOCK) return 0;
+		{
+#else
+		unsigned long available = 0;
+		int result = ioctlsocket(socket, FIONREAD, &available);
+		int bytes = 0;
+		if (result == 0 && available != 0) {
 
 			bytes = recvfrom(socket, (char*)packet_buffer, packet_buffer_size, 0, (LPSOCKADDR) &addr, &address_size);
+#endif
 			if (bytes > 0) {
 #ifndef WRAPPER_CRC
 				Register_Packet_In((unsigned char*) &addr.sin_addr.s_addr, addr.sin_port, bytes + UDP_HEADER_SIZE, 0);
 #endif //WRAPPER_CRC
 
 #ifdef WRAPPER_CRC
-				unsigned long crc = CRC::Memory((unsigned char*)packet_buffer + 4, bytes - sizeof(crc));
+				if (bytes < 4 + static_cast<int>(sizeof(PacketPackHeaderStruct))) return 0;
+				uint32_t crc = CRC::Memory((unsigned char*)packet_buffer + 4, bytes - 4);
 #if (1)
 				/*
 				** Reverse byte order to prevent the demo from having the same CRC as the game.
 				*/
 				crc = __builtin_bswap32(crc);
 #endif //(0)
-				if (crc != *((unsigned long*)packet_buffer)) {
+				if (crc != Read_Packet_Word(packet_buffer)) {
 					WWDEBUG_SAY(("PMC::Get_Packet: Socket %d, received packet %d bytes long from %s\n", socket, bytes, Addr_As_String(&addr)));
 					WWDEBUG_SAY(("PMC::Get_Packet: *** PACKET WRAPPER CRC ERROR ***"));
 					NumReceivePackets = 0;
@@ -1335,7 +1367,7 @@ void PacketManagerClass::Register_Packet_In(unsigned char *ip_address, unsigned 
 	static unsigned long _last_ip = 0;
 	static unsigned short _last_port = 0;
 	static int _last_stats = -1;
-	unsigned long long_ip = *((unsigned long*)ip_address);
+	unsigned long long_ip = Read_Packet_Word(ip_address);
 
 	if (ResetStatsIn) {
 		_last_ip = 0;
@@ -1386,7 +1418,7 @@ void PacketManagerClass::Register_Packet_Out(unsigned char *ip_address, unsigned
 	static unsigned long _last_ip = 0;
 	static unsigned short _last_port = 0;
 	static int _last_stats = -1;
-	unsigned long long_ip = *((unsigned long*)ip_address);
+	unsigned long long_ip = Read_Packet_Word(ip_address);
 
 	if (ResetStatsOut) {
 		_last_ip = 0;
@@ -1605,7 +1637,7 @@ unsigned long PacketManagerClass::Get_Total_Compressed_Bandwidth_Out(void)
 unsigned long PacketManagerClass::Get_Raw_Bandwidth_In(SOCKADDR_IN *address)
 {
 	CriticalSectionClass::LockClass lock(CriticalSection);
-	unsigned long ip = *((unsigned long*)&address->sin_addr.s_addr);
+	unsigned long ip = Read_Packet_Word(&address->sin_addr.s_addr);
 	unsigned short port = address->sin_port;
 	int stats = Get_Stats_Index(ip, port, false);
 
@@ -1634,7 +1666,7 @@ unsigned long PacketManagerClass::Get_Raw_Bandwidth_In(SOCKADDR_IN *address)
 unsigned long PacketManagerClass::Get_Raw_Bandwidth_Out(SOCKADDR_IN *address)
 {
 	CriticalSectionClass::LockClass lock(CriticalSection);
-	unsigned long ip = *((unsigned long*)&address->sin_addr.s_addr);
+	unsigned long ip = Read_Packet_Word(&address->sin_addr.s_addr);
 	unsigned short port = address->sin_port;
 	int stats = Get_Stats_Index(ip, port, false);
 
@@ -1664,7 +1696,7 @@ unsigned long PacketManagerClass::Get_Raw_Bandwidth_Out(SOCKADDR_IN *address)
 unsigned long PacketManagerClass::Get_Raw_Bytes_Out(SOCKADDR_IN *address)
 {
 	CriticalSectionClass::LockClass lock(CriticalSection);
-	unsigned long ip = *((unsigned long*)&address->sin_addr.s_addr);
+	unsigned long ip = Read_Packet_Word(&address->sin_addr.s_addr);
 	unsigned short port = address->sin_port;
 	int stats = Get_Stats_Index(ip, port, false);
 
@@ -1695,7 +1727,7 @@ unsigned long PacketManagerClass::Get_Raw_Bytes_Out(SOCKADDR_IN *address)
 unsigned long PacketManagerClass::Get_Compressed_Bandwidth_In(SOCKADDR_IN *address)
 {
 	CriticalSectionClass::LockClass lock(CriticalSection);
-	unsigned long ip = *((unsigned long*)&address->sin_addr.s_addr);
+	unsigned long ip = Read_Packet_Word(&address->sin_addr.s_addr);
 	unsigned short port = address->sin_port;
 	int stats = Get_Stats_Index(ip, port, false);
 
@@ -1724,7 +1756,7 @@ unsigned long PacketManagerClass::Get_Compressed_Bandwidth_In(SOCKADDR_IN *addre
 unsigned long PacketManagerClass::Get_Compressed_Bandwidth_Out(SOCKADDR_IN *address)
 {
 	CriticalSectionClass::LockClass lock(CriticalSection);
-	unsigned long ip = *((unsigned long*)&address->sin_addr.s_addr);
+	unsigned long ip = Read_Packet_Word(&address->sin_addr.s_addr);
 	unsigned short port = address->sin_port;
 	int stats = Get_Stats_Index(ip, port, false);
 

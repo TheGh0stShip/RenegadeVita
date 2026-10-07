@@ -49,6 +49,10 @@
 #include "vehicle.h"
 #include "combat.h"
 #include "ccamera.h"
+#if defined(RENEGADE_VITA_PORT)
+#include "renegade_vita_control_labels.h"
+#include "wwfile.h"
+#endif
 
 
 #define DIRECTINPUT_VERSION 0x0800
@@ -1464,7 +1468,22 @@ Input::Load_Configuration (const char *filename)
 	//
 	//	Try to load the INI file
 	//
-	INIClass	*input_ini = Get_INI (filename);
+	INIClass	*input_ini = NULL;
+#if defined(RENEGADE_VITA_PORT)
+	// Custom profiles are writable user state. Prefer that rooted provider,
+	// then retain the original retail/MIX lookup for DEFAULT_INPUT.CFG.
+	StringClass user_filename;
+	user_filename.Format("user/config/%s", filename);
+	FileClass *user_file = _TheWritingFileFactory != NULL ?
+		_TheWritingFileFactory->Get_File(user_filename) : NULL;
+	if (user_file != NULL) {
+		if (user_file->Is_Available()) input_ini = new INIClass(*user_file);
+		_TheWritingFileFactory->Return_File(user_file);
+	}
+	if (input_ini == NULL) input_ini = Get_INI(filename);
+#else
+	input_ini = Get_INI (filename);
+#endif
 	if (input_ini == NULL) {
 		Debug_Say(("Input::Load_Configuration - Unable to load %s\n", filename));
 		return ;
@@ -1608,6 +1627,13 @@ Input::Save_Accelerated_Keys (INIClass	*input_ini)
 void
 Input::Get_Translated_Key_Name (int dik_id, WideStringClass &name)
 {	
+#if defined(RENEGADE_VITA_PORT)
+	const WCHAR *vita_name = Renegade_Vita_Key_Label(dik_id);
+	if (vita_name != NULL) {
+		name = vita_name;
+		return;
+	}
+#endif
 	for (int index = 0; index < KEYNAME_MAP_COUNT; index ++) {
 
 		//

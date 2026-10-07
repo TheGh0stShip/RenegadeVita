@@ -84,7 +84,7 @@ public:
 	//	Save/Load
 	//
 	static void						Save (ChunkSaveClass &csave);
-	static void						Load (ChunkLoadClass &cload);
+	static bool						Load (ChunkLoadClass &cload);
 
 	//
 	//	Path management

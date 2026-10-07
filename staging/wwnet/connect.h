@@ -38,6 +38,8 @@
 #include "slist.h"
 #include "wwpacket.h"
 #include "packettype.h"
+#include "renegade_tt_server_info.h"
+#include "renegade_tt_resources.h"
 
 //
 // A server can have this many clients (a client has only 1 rhost: the server)
@@ -127,6 +129,14 @@ class cConnection
 		int Get_Num_RHosts()	{return NumRHosts;}
 		cRemoteHost * Get_Remote_Host(int rhost);
 		bool Is_Destroy() {return IsDestroy;}
+		const RenegadeTTServerInfo &Get_TT_Server_Info() const {return TTServerInfo;}
+		const RenegadeTTResources &Get_TT_Resources() const {return TTResources;}
+		bool Has_TT_Client_Greeting() const {return TTClientGreeting;}
+		void Set_TT_Client_Greeting(bool modern) {TTClientGreeting = modern;}
+		void Set_TT_Options_Flag(bool value) {TTOptionsFlag = value;}
+		bool Get_TT_Options_Flag() const {return TTOptionsFlag;}
+		// Mark failure without deleting a connection still owned by its caller.
+		void Abort_Client() { WWASSERT(!IsServer); if (!IsServer) IsDestroy = true; }
       int Get_Local_Id() const {return LocalId;}
 		double Get_Max_Acceptable_Packetloss_Pc() const {return MaxAcceptablePacketlossPc;}
 		cNetStats & Get_Combined_Stats() {return CombinedStats;}
@@ -219,6 +229,10 @@ class cConnection
 		int MaxRHost;
       int					NumRHosts;
 		bool					IsDestroy;
+		RenegadeTTServerInfo TTServerInfo;
+		RenegadeTTResources TTResources;
+		bool TTClientGreeting = false;
+		bool TTOptionsFlag = false;
 		static UINT			TotalCompressedBytesSent;
 		static UINT			TotalUncompressedBytesSent;
 		cMsgStatList *		PStatList;

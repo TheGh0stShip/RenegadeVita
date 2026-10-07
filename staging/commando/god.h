@@ -58,10 +58,15 @@ class cGod
 		static void					Star_Killed( void );
 		static void					Respawn( void );
 		static void					Restart( void );
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+		static void					Request_Restart( void );
+		static bool					Has_Pending_Restart( void );
+#endif
 		static void					Load_Game( void );
 		static void					Mission_Failed( void );
 		static void					Exit( void );
 
+		static bool					Can_Save_Current_State( void );
 		static	bool				Save(ChunkSaveClass & csave);
 		static	bool				Load(ChunkLoadClass & cload);
 

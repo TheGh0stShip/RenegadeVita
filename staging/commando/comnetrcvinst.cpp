@@ -256,8 +256,10 @@ bool CombatNetworkReceiverInstanceClass::Client_Update_Dynamic_Objects(bool is_u
 	DWORD time_elapsed_ms = time_now_ms - last_update_time_ms;
 
 	int max_updates_per_second = cUserOptions::NetUpdateRate.Get();
-	WWASSERT(cServerFps::Get_Instance() != NULL);
-	int server_fps = cServerFps::Get_Instance()->Get_Fps();
+	// Acceptance can precede replication of the server FPS object. Until then
+	// retain the configured client rate, including an urgent disconnect flush.
+	cServerFps *server_fps_object = cServerFps::Get_Instance();
+	int server_fps = server_fps_object ? server_fps_object->Get_Fps() : 0;
 	if (server_fps > 0 && server_fps < cUserOptions::NetUpdateRate.Get()) {
 		max_updates_per_second = server_fps;
 	}

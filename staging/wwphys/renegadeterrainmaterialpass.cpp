@@ -223,9 +223,13 @@ RenegadeTerrainMaterialPassClass::Save (ChunkSaveClass &csave)
 	//
 	//	Save the material
 	//
-	csave.Begin_Chunk (CHUNKID_MATERIAL);
-		Material->Save (csave);
-	csave.End_Chunk ();
+	if (Material != NULL) {
+		csave.Begin_Chunk (CHUNKID_MATERIAL);
+			if (!Material->Save(csave)) csave.Report_Error();
+		csave.End_Chunk ();
+	} else {
+		csave.Report_Error();
+	}
 
 	//
 	//	Save the per-pass lists
@@ -259,7 +263,7 @@ RenegadeTerrainMaterialPassClass::Save (ChunkSaveClass &csave)
 		csave.End_Chunk ();		
 	}
 
-	return true;
+	return !csave.Has_Error();
 }
 
 

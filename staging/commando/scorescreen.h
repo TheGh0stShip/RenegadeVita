@@ -80,9 +80,11 @@ public:
 	void			On_Init_Dialog (void);
 	void			On_Destroy (void);
 	void			On_Command (int ctrl_id, int mesage_id, DWORD param);
+	static void	Set_Forced_Teardown (bool active);
 
 private:
 	bool			ScoreScreenActive;
+	static bool	ForcedTeardown;
 
 	int				Get_Time_To_Finish_Stars( void );
 	int				Get_Level_Of_Play_Stars( void );

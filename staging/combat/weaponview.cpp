@@ -227,16 +227,35 @@ bool	WeaponViewClass::Load( ChunkLoadClass &cload )
 {
 	Release_Weapon_Assets();
 	Release_Hands_Assets();
+	bool variables_seen = false;
+	bool hands_seen = false;
+	bool enabled_seen = false;
+	bool loaded = true;
+	uint32 hands_token = 0U;
+	bool weapon_view_enabled = false;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
 			{
+				if (variables_seen) {
+					loaded = false;
+					break;
+				}
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_HANDS_PHYS_OBJ, HandsPhysObj );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_ENABLED, WeaponViewEnabled );
+						case MICROCHUNKID_HANDS_PHYS_OBJ:
+							if (hands_seen || cload.Cur_Micro_Chunk_Length() != sizeof(hands_token) ||
+								cload.Read(&hands_token, sizeof(hands_token)) != sizeof(hands_token)) loaded = false;
+							else hands_seen = true;
+							break;
+						case MICROCHUNKID_ENABLED:
+							if (enabled_seen || cload.Cur_Micro_Chunk_Length() != sizeof(weapon_view_enabled) ||
+								cload.Read(&weapon_view_enabled, sizeof(weapon_view_enabled)) != sizeof(weapon_view_enabled)) loaded = false;
+							else enabled_seen = true;
+							break;
 
 						default:
 							Debug_Say(("Unhandled Micro Chunk:%d File:%s Line:%d\r\n",cload.Cur_Micro_Chunk_ID(),__FILE__,__LINE__));
@@ -256,11 +275,15 @@ bool	WeaponViewClass::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
+	loaded = loaded && variables_seen && enabled_seen && !cload.Has_Error();
+	if (!loaded) return false;
+	WeaponViewEnabled = weapon_view_enabled;
+	HandsPhysObj = reinterpret_cast<DecorationPhysClass *>(static_cast<uintptr_t>(hands_token));
 	if ( HandsPhysObj != NULL ) {
 		REQUEST_REF_COUNTED_POINTER_REMAP ((RefCountClass **)&HandsPhysObj);
 	}
 
-	return true;
+	return loaded;
 }
 
 /*

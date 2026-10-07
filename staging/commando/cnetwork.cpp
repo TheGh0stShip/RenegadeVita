@@ -35,13 +35,21 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 #include "cnetwork.h"
+#include "renegade_optional_network_modes.h"
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "a31_client_connect_boundary.h"
+#endif
 
 #include "a31_shell_stub.h"
 #include <stdio.h>
 
 #include "specialbuilds.h"
 
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+#include "langmode.h"
+#else
 #include "a31_lanmode_stub.h"
+#endif
 #include "a31_wol_stub.h"
 #include "playermanager.h"
 #include "textdisplay.h"
@@ -84,12 +92,20 @@
 #include "a31_slavemaster_stub.h"
 #include "gamedataupdateevent.h"
 #include "renegade_network_provider.h"
+#include "renegade_client_identity.h"
 // Demo playback is outside the Vita runtime boundary.
 #include "a31_serversettings_stub.h"
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+#include "DlgMPConnectionRefused.h"
+#include <WWUI\DialogMgr.h>
+#else
 #include "a31_network_dialog_stub.h"
+#endif
 
 #include "Resource.h"
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 // DialogMgrClass is supplied by a31_network_dialog_stub.h.
+#endif
 #include "ffactory.h"
 #include "realcrc.h"
 
@@ -127,6 +143,11 @@ bool												cNetwork::LastServerConnectionStateBad = false;
 bool												cNetwork::SensibleUpdates					= true;
 
 //-----------------------------------------------------------------------------
+// Retail 1.037's compatibility stamp, verified against game2.exe's key routine.
+// This is a legacy wire contract, not the Vita build identity or a TT revision.
+static const unsigned RetailNetworkBuild = 838;
+static bool NetworkDataCRCValid = false;
+
 void cNetwork::Init_Client(unsigned short my_port)
 {
 	WWMEMLOG(MEM_NETWORK);
@@ -173,7 +194,7 @@ void cNetwork::Init_Client(unsigned short my_port)
 	ULONG bbo = 0;
 	//if (IS_SOLOPLAY || GameModeManager::Find("LAN")->Is_Active()) {
 	if (IS_SOLOPLAY || 
-		 (GameModeManager::Find("LAN")->Is_Active() && !cGameSpyAdmin::Is_Gamespy_Game())) {
+		 (Renegade_Network_Mode_Active("LAN") && !cGameSpyAdmin::Is_Gamespy_Game())) {
 
 		bbo = cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_LANT1);
 
@@ -191,7 +212,7 @@ void cNetwork::Init_Client(unsigned short my_port)
 		bw_scale = (bw_scale / 1000) * 1000;
 		cBandwidthGraph::Set_Scale(bw_scale);
 
-		if (GameModeManager::Find("WOL")->Is_Active()) {
+		if (Renegade_Network_Mode_Active("WOL")) {
 			HaveDoneTeamChangeDialog = true;
 		}
 	}
@@ -215,6 +236,16 @@ void cNetwork::Init_Client(unsigned short my_port)
 	packet.Add(ExeKey);
 	packet.Add(bbo); // note, this field is consumed by wwnet
 
+	bool modern_greeting = false;
+	const bool greeting_ready = Renegade_Append_Client_Greeting(packet,
+		!IS_SOLOPLAY && I_Am_Only_Client(), &modern_greeting);
+	PClientConnection->Set_TT_Client_Greeting(modern_greeting);
+	if (!NetworkDataCRCValid || !greeting_ready) {
+		fprintf(stderr, "network compatibility: client preflight failed checksum=%d greeting=%d\n",
+			NetworkDataCRCValid, greeting_ready);
+		PClientConnection->Abort_Client();
+		return;
+	}
    PClientConnection->Connect_Cs(packet);
 	packet.Flush();
 
@@ -255,6 +286,9 @@ void cNetwork::Cleanup_Client(void)
 			Flush();
       }
 
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+      A31ClientConnect::Connection_Ended(PClientConnection);
+#endif
       delete PClientConnection;
       PClientConnection = NULL;
    }
@@ -306,7 +340,7 @@ void cNetwork::Accept_Handler(void)
 
 
    if (!I_Am_Server()) {
-      if (GameModeManager::Find("LAN")->Is_Active()) {
+      if (Renegade_Network_Mode_Active("LAN")) {
          PLC->Accept_Actions();
       } else {
 			 GameModeClass* gameMode = GameModeManager::Find("WOL");
@@ -343,7 +377,7 @@ void cNetwork::Refusal_Handler(REFUSAL_CODE refusal_code)
 
    WWASSERT(I_Am_Client());
 
-   if (GameModeManager::Find("LAN")->Is_Active()) {
+   if (Renegade_Network_Mode_Active("LAN")) {
       PLC->Refusal_Actions();
    } else {
 		 GameModeClass* gameMode = GameModeManager::Find("WOL");
@@ -393,9 +427,8 @@ void cNetwork::Refusal_Handler(REFUSAL_CODE refusal_code)
 //-----------------------------------------------------------------------------
 int cNetwork::Get_Data_Files_CRC(void)
 {
-#define	UNINITIALLIZED_CRC	0x4592abf1
-	static int crc = UNINITIALLIZED_CRC;
-	if ( crc == UNINITIALLIZED_CRC ) {
+	static unsigned int crc = 0;
+	if ( !NetworkDataCRCValid ) {
 		char * filelist[] = {
 		"jgo`fqv+aag",					//"objects.ddb",           
 		"dwhjw+lkl",					//"armor.ini",             
@@ -475,14 +508,25 @@ int cNetwork::Get_Data_Files_CRC(void)
 //			Debug_Say(( "		\"%s\",\n", name ));
 			FileClass * file = _TheFileFactory->Get_File( name );
 			if ( file && file->Is_Available() ) {
-				int size = file->Size();
-				file->Open();
-				while ( size > 0 ) {
-					unsigned char buffer[ 4096 ];
-					int amount = min( (int)size, (int)sizeof(buffer) );
-					amount = file->Read( buffer, amount );
+				if (!file->Open(FileClass::READ)) {
+					fprintf(stderr, "network compatibility: cannot open asset %s\n", name.Peek_Buffer());
+					_TheFileFactory->Return_File(file);
+					return 0;
+				}
+				// TT b9000 reads to EOF, without querying Size before Open. Short
+				// reads are valid; failed reads must not hang or cache a partial key.
+				unsigned char buffer[16384];
+				for (;;) {
+					const int amount = file->Read(buffer, sizeof(buffer));
+					if (amount == 0) break;
+					if (amount < 0 || amount > (int)sizeof(buffer)) {
+						fprintf(stderr, "network compatibility: failed read asset=%s amount=%d\n",
+							name.Peek_Buffer(), amount);
+						file->Close();
+						_TheFileFactory->Return_File(file);
+						return 0;
+					}
 					crc = CRC_Memory( buffer, amount, crc );
-					size -= amount;
 				}
 				file->Close();
 			} else {
@@ -492,6 +536,7 @@ int cNetwork::Get_Data_Files_CRC(void)
 				_TheFileFactory->Return_File( file );
 			}
 		}
+		NetworkDataCRCValid = true;
 	}
 	return crc;
 }
@@ -514,7 +559,7 @@ void cNetwork::Compute_Exe_Key(void)
 	// 11/07/01
 	// We now match only on build number.
 	//
-	string.Format("RENEGADE %u", BuildInfoClass::Get_Build_Number());
+	string.Format("RENEGADE %u", RetailNetworkBuild);
 
 	WWDEBUG_SAY(("File id string: %s\n", string));
 	key_string += string;
@@ -555,6 +600,9 @@ void cNetwork::Compute_Exe_Key(void)
 	//
 	int data_file_crc = Get_Data_Files_CRC();
 	ExeKey ^= data_file_crc;
+	fprintf(stderr, "network compatibility: retail_build=%u strings_version=%u data_crc=%08x key=%08x valid=%d\n",
+		RetailNetworkBuild, (unsigned)TranslateDBClass::Get_Version_Number(),
+		(unsigned)data_file_crc, (unsigned)ExeKey, NetworkDataCRCValid);
 }
 
 //-----------------------------------------------------------------------------
@@ -562,6 +610,11 @@ void cNetwork::Onetime_Init(void)
 {
 	WWMEMLOG(MEM_NETWORK);
    WWDEBUG_SAY(("cNetwork::Onetime_Init\n"));
+
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+	// The Vita LAN route initializes networking lazily and can be re-entered.
+	if (NetworkReceiver != NULL) return;
+#endif
 
 	Compute_Exe_Key();
 
@@ -580,6 +633,9 @@ void cNetwork::Onetime_Shutdown(void)
 
    Set_Receiver(NULL);
 	delete NetworkReceiver;
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+	NetworkReceiver = NULL;
+#endif
 
 #if 0
 	UINT comp_bytes	= cConnection::Get_Total_Compressed_Bytes_Sent();
@@ -646,7 +702,7 @@ void cNetwork::Init_Server(void)
 
 	//if (IS_SOLOPLAY || GameModeManager::Find("LAN")->Is_Active()) {
 	if (IS_SOLOPLAY || 
-		 (GameModeManager::Find("LAN")->Is_Active() && !cGameSpyAdmin::Is_Gamespy_Game())) {
+		 (Renegade_Network_Mode_Active("LAN") && !cGameSpyAdmin::Is_Gamespy_Game())) {
 
 		ULONG bbo = cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_LANT1);
 		WWASSERT(bbo > 0);
@@ -735,22 +791,29 @@ enum {
 //-----------------------------------------------------------------------------
 bool cNetwork::Save(ChunkSaveClass & csave)
 {
-	csave.Begin_Chunk(CHUNKID_PLAYERMANAGER);
-	cPlayerManager::Save(csave);
-	csave.End_Chunk();
+	bool saved = csave.Begin_Chunk(CHUNKID_PLAYERMANAGER);
+	saved = cPlayerManager::Save(csave) && saved;
+	saved = csave.End_Chunk() && saved;
 
-	return true;
+	return saved && !csave.Has_Error();
 }
 
 //-----------------------------------------------------------------------------
 bool cNetwork::Load(ChunkLoadClass &cload)
 {
+	bool player_manager_seen = false;
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PLAYERMANAGER:
-				//cPlayerManager::Remove_All();
-				cPlayerManager::Load(cload);
+				if (player_manager_seen) {
+					loaded = false;
+				} else {
+					player_manager_seen = true;
+					//cPlayerManager::Remove_All();
+					loaded = cPlayerManager::Load(cload) && loaded;
+				}
 				break;
 
 			default:
@@ -761,7 +824,7 @@ bool cNetwork::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && player_manager_seen;
 }
 
 //-----------------------------------------------------------------------------

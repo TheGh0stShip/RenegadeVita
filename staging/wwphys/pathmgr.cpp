@@ -284,10 +284,11 @@ PathMgrClass::Save (ChunkSaveClass &csave)
 //	Load
 //
 ////////////////////////////////////////////////////////////////////////////////////////////
-void
+bool
 PathMgrClass::Load (ChunkLoadClass &cload)
 {
 	Free_Objects ();
+	bool loaded = true;
 
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
@@ -298,8 +299,12 @@ PathMgrClass::Load (ChunkLoadClass &cload)
 				//	Allocate the path object, load its state, and add it to our list
 				//
 				PathSolveClass *path_object = new PathSolveClass;
-				path_object->Load (cload);
-				UsedPathList.Add (path_object);
+				if (path_object->Load (cload)) {
+					UsedPathList.Add (path_object);
+				} else {
+					loaded = false;
+					path_object->Release_Ref ();
+				}
 			}
 			break;
 		}
@@ -307,7 +312,10 @@ PathMgrClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return ;
+	if (cload.Has_Error ()) {
+		loaded = false;
+	}
+	return loaded;
 }
 
 

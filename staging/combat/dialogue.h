@@ -131,14 +131,14 @@ public:
 	//	Save/load
 	//
 	void			Save (ChunkSaveClass &csave);
-	void			Load (ChunkLoadClass &cload);
+	bool			Load (ChunkLoadClass &cload);
 
 protected:
 
 	////////////////////////////////////////////////////////////////
 	//	Protected methods
 	////////////////////////////////////////////////////////////////
-	void			Load_Variables (ChunkLoadClass &cload);
+	bool			Load_Variables (ChunkLoadClass &cload);
 
 	////////////////////////////////////////////////////////////////
 	//	Protected member data
@@ -191,14 +191,14 @@ public:
 	//	Save/load
 	//
 	void							Save (ChunkSaveClass &csave);
-	void							Load (ChunkLoadClass &cload);
+	bool							Load (ChunkLoadClass &cload);
 
 protected:
 
 	////////////////////////////////////////////////////////////////
 	//	Protected methods
 	////////////////////////////////////////////////////////////////
-	void							Load_Variables (ChunkLoadClass &cload);	
+	bool							Load_Variables (ChunkLoadClass &cload);
 
 	////////////////////////////////////////////////////////////////
 	//	Protected member data

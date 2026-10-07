@@ -116,11 +116,12 @@ bool	DamageableGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	DamageableGameObjDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				ScriptableGameObjDef::Load( cload );
+				if (!ScriptableGameObjDef::Load( cload )) loaded = false;
 				break;
 	
 			case CHUNKID_DEF_VARIABLES:
@@ -143,7 +144,7 @@ bool	DamageableGameObjDef::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_DEF_DEFENSEOBJECTDEF:
-				DefenseObjectDef.Load(cload);
+				if (!DefenseObjectDef.Load(cload)) loaded = false;
 				break;
 
 			default:
@@ -153,7 +154,7 @@ bool	DamageableGameObjDef::Load( ChunkLoadClass &cload )
 		}
 		cload.Close_Chunk();
 	}
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 /*
@@ -245,7 +246,7 @@ enum	{
 bool	DamageableGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-		ScriptableGameObj::Save( csave );
+		if (!ScriptableGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -254,19 +255,20 @@ bool	DamageableGameObj::Save( ChunkSaveClass & csave )
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_DEFENSEOBJECT );
-		DefenseObject.Save(csave);
+		if (!DefenseObject.Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	DamageableGameObj::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				ScriptableGameObj::Load( cload );
+				if (!ScriptableGameObj::Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -284,7 +286,7 @@ bool	DamageableGameObj::Load( ChunkLoadClass &cload )
 				break;
 								
 			case CHUNKID_DEFENSEOBJECT:
-				DefenseObject.Load( cload );
+				if (!DefenseObject.Load(cload)) loaded = false;
 				break;
 								
 			default:
@@ -295,7 +297,7 @@ bool	DamageableGameObj::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 void	DamageableGameObj::Apply_Damage( const OffenseObjectClass & damager, float scale, int alternate_skin )

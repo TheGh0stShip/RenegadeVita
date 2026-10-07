@@ -42,6 +42,10 @@
 #include "matinfo.h"
 #include "texture.h"
 #include "wwstring.h"
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include "a30_vita_runtime.h"
+#include <psp2/kernel/processmgr.h>
+#endif
 
 #include <windows.h>
 
@@ -58,6 +62,40 @@ const char * const EMPTY_STRING			= "";
 //	Global variable initialization
 //
 AggregateLoaderClass	_AggregateLoader;
+
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+struct VitaAggregateTemplateSlot {
+	const char *name;
+	AggregateDefClass *owner;
+	RenderObjClass *model;
+};
+static VitaAggregateTemplateSlot s_vita_m13_templates[] = {
+	{"X00_AG_Explode", NULL, NULL},
+	{"ag_rocketl", NULL, NULL},
+	{"c_ag_nod_sniper", NULL, NULL}
+};
+
+static VitaAggregateTemplateSlot *Vita_Find_M13_Template(const char *name)
+{
+	if (name == NULL) return NULL;
+	for (unsigned i = 0; i < sizeof(s_vita_m13_templates) / sizeof(s_vita_m13_templates[0]); ++i) {
+		if (stricmp(name, s_vita_m13_templates[i].name) == 0) return &s_vita_m13_templates[i];
+	}
+	return NULL;
+}
+
+static void Vita_Release_M13_Template(AggregateDefClass *owner)
+{
+	for (unsigned i = 0; i < sizeof(s_vita_m13_templates) / sizeof(s_vita_m13_templates[0]); ++i) {
+		VitaAggregateTemplateSlot &slot = s_vita_m13_templates[i];
+		if (slot.owner == owner) {
+			slot.model->Release_Ref();
+			slot.model = NULL;
+			slot.owner = NULL;
+		}
+	}
+}
+#endif
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -116,6 +154,9 @@ AggregateDefClass::AggregateDefClass (RenderObjClass &base_model)
 //
 AggregateDefClass::~AggregateDefClass (void)
 {
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	Vita_Release_M13_Template(this);
+#endif
 	// Free the name buffer if necessary
 	if (m_pName != NULL) {
 		
@@ -137,6 +178,10 @@ const AggregateDefClass &
 AggregateDefClass::operator= (const AggregateDefClass &src)
 {
 	int index;
+
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	Vita_Release_M13_Template(this);
+#endif
 
 	// Free the name buffer if necessary
 	if (m_pName != NULL) {		
@@ -200,6 +245,17 @@ AggregateDefClass::Free_Subobject_List (void)
 RenderObjClass *
 AggregateDefClass::Create (void)
 {
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	VitaAggregateTemplateSlot *vita_slot = Vita_Find_M13_Template(m_pName);
+	if (vita_slot != NULL && vita_slot->owner == this && vita_slot->model != NULL) {
+		const uint64_t clone_started_us = sceKernelGetProcessTimeWide();
+		RenderObjClass *instance = vita_slot->model->Clone();
+		A30_Vita_Log("A4 M13 aggregate template clone: name=%s result=%d elapsed_us=%llu\n",
+			m_pName, instance != NULL ? 1 : 0,
+			static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - clone_started_us));
+		return instance;
+	}
+#endif
 	// Attempt to create an instance of the hierarchy
 	RenderObjClass *pmodel = Create_Render_Object (m_Info.BaseModelName);
 	if (pmodel != NULL) {
@@ -215,6 +271,17 @@ AggregateDefClass::Create (void)
 	} else {
 		WWDEBUG_SAY (("Unable to load aggregate %s.\r\n", m_Info.BaseModelName));
 	}
+
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	if (pmodel != NULL && vita_slot != NULL) {
+		if (vita_slot->model != NULL) vita_slot->model->Release_Ref();
+		vita_slot->owner = this;
+		vita_slot->model = pmodel;
+		pmodel->Add_Ref();
+		A30_Vita_Log("A4 M13 aggregate template retained: name=%s subobjects=%d\n",
+			m_pName, m_SubobjectList.Count());
+	}
+#endif
 
 	// Return a pointer to the new aggregate
 	return pmodel;
@@ -321,9 +388,19 @@ AggregateDefClass::Create_Render_Object (const char *passet_name)
 	// Attempt to get an instance of the render object from the asset manager
 	prender_obj = WW3DAssetManager::Get_Instance()->Create_Render_Obj (passet_name);
 	
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+	// Create_Render_Obj already tries the W3D and parent path when on-demand
+	// loading is enabled for plain names. Dotted names may name a distinct
+	// full filename that the manager's prefix-based lookup did not try.
+	const bool attempt_direct_load =
+		!WW3DAssetManager::Get_Instance()->Get_WW3D_Load_On_Demand() ||
+		(passet_name != NULL && ::strchr(passet_name, '.') != NULL);
+#else
+	const bool attempt_direct_load = true;
+#endif
 	// If we couldn't find the render object in the asset manager, then attempt to
 	// load it from file
-	if ((prender_obj == NULL) &&
+	if ((prender_obj == NULL) && attempt_direct_load &&
 	    Load_Assets (passet_name)) {
 
 		// It should be in the asset manager now, so attempt to get it again.
@@ -902,4 +979,3 @@ AggregateLoaderClass::Load_W3D (ChunkLoadClass &chunk_load)
     // Return a pointer to the prototype
 	 return pprototype;
 }
-

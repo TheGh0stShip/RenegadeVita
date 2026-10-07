@@ -149,6 +149,13 @@ void ScoreScreenGameModeClass::Save_Stats( void )
 //	ScoreScreenDialogClass
 //
 ////////////////////////////////////////////////////////////////
+bool ScoreScreenDialogClass::ForcedTeardown = false;
+
+void ScoreScreenDialogClass::Set_Forced_Teardown(bool active)
+{
+	ForcedTeardown = active;
+}
+
 ScoreScreenDialogClass::ScoreScreenDialogClass (void)	:
 	MenuDialogClass (IDD_SCORE_SCREEN)
 {
@@ -327,7 +334,9 @@ ScoreScreenDialogClass::On_Destroy (void)
 	MenuDialogClass::On_Destroy ();
 	if ( ScoreScreenActive ) {
 		ScoreScreenActive = false;
-		CampaignManager::Continue();
+		if (!ForcedTeardown) {
+			CampaignManager::Continue();
+		}
 	}
 	return ;
 }

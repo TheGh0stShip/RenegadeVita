@@ -113,6 +113,9 @@
 #include "assetstatus.h"
 #if defined(__vita__)
 #include "a30_vita_runtime.h"
+#if !RENEGADE_VITA_M00_DEMO
+#include <psp2/kernel/processmgr.h>
+#endif
 #endif
 
 /*
@@ -125,6 +128,13 @@ WW3DAssetManager *		WW3DAssetManager::TheInstance = NULL;
 ** to always be available...
 */
 static NullPrototypeClass _NullPrototype;
+
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+// A successfully parsed W3D can lack the requested child prototype. Keep
+// those names until Free_Assets; Find_Prototype still runs on every request.
+static DynamicVectorClass<StringClass> s_unresolved_loaded_prototypes;
+static const int kMaxUnresolvedLoadedPrototypes = 256;
+#endif
 
 /*
 ** Iterator for the Render Objects in the asset manager
@@ -443,6 +453,9 @@ void WW3DAssetManager::Free_Assets(void)
 {
 	WWPROFILE( "WW3DAssetManager::Free_Assets" );
 
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+	s_unresolved_loaded_prototypes.Delete_All();
+#endif
 	// delete all of the prototypes
 	int count = Prototypes.Count();
 	while (count-- > 0) {
@@ -542,23 +555,24 @@ bool WW3DAssetManager::Load_3D_Assets(FileClass & w3dfile)
 	}
 
 	ChunkLoadClass cload(&w3dfile);
+	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 
 		switch (cload.Cur_Chunk_ID()) {
 
 			case W3D_CHUNK_HIERARCHY:
-				HTreeManager.Load_Tree(cload);
+				loaded = (HTreeManager.Load_Tree(cload) == 0) && loaded;
 				break;
 
 			case W3D_CHUNK_ANIMATION:
 			case W3D_CHUNK_COMPRESSED_ANIMATION:
 			case W3D_CHUNK_MORPH_ANIMATION:
-				HAnimManager.Load_Anim(cload);
+				loaded = (HAnimManager.Load_Anim(cload) == 0) && loaded;
 				break;
         
 			default:
-				Load_Prototype(cload);
+				loaded = Load_Prototype(cload) && loaded;
 				break;
 		}
 
@@ -567,7 +581,7 @@ bool WW3DAssetManager::Load_3D_Assets(FileClass & w3dfile)
 
 	w3dfile.Close();
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -695,6 +709,15 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
 	if (WW3D_Load_On_Demand && proto == NULL) {	// If we didn't find one, try to load on demand
 		AssetStatusClass::Peek_Instance()->Report_Load_On_Demand_RObj(name);
 
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		bool already_parsed_without_prototype = false;
+		for (int index = 0; index < s_unresolved_loaded_prototypes.Count(); ++index) {
+			if (stricmp(s_unresolved_loaded_prototypes[index].Peek_Buffer(), name) == 0) {
+				already_parsed_without_prototype = true;
+				break;
+			}
+		}
+#endif
 		char filename [MAX_PATH];
 		const char *mesh_name = ::strchr (name, '.');
 		if (mesh_name != NULL) {
@@ -708,10 +731,17 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
 #if defined(__vita__)
 		A35_Vita_Static_Load_Trace_Name("asset-load-on-demand-entry", filename);
 #endif
-		if ( Load_3D_Assets( filename ) == false ) {
-			StringClass	new_filename(StringClass("..\\"),true);
-			new_filename+=filename;
-			Load_3D_Assets( new_filename );
+		bool loaded = false;
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		if (!already_parsed_without_prototype)
+#endif
+		{
+			loaded = Load_3D_Assets(filename);
+			if (!loaded) {
+				StringClass new_filename(StringClass("..\\"), true);
+				new_filename += filename;
+				loaded = Load_3D_Assets(new_filename);
+			}
 		}
 #if defined(__vita__)
 		A35_Vita_Static_Load_Trace_Name("asset-load-on-demand-return", filename);
@@ -719,12 +749,17 @@ RenderObjClass * WW3DAssetManager::Create_Render_Obj(const char * name)
 #endif
 
 		proto = Find_Prototype(name);		// try again
+#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		if (loaded && proto == NULL &&
+			s_unresolved_loaded_prototypes.Count() < kMaxUnresolvedLoadedPrototypes) {
+			s_unresolved_loaded_prototypes.Add(StringClass(name));
+		}
+#endif
 #if defined(__vita__)
 		A35_Vita_Static_Load_Trace_Step("asset-find-retry-return",
 			(current_depth << 1U) | (proto != NULL ? 1U : 0U));
 #endif
 	}
-
 	if (proto == NULL) {
 		AssetStatusClass::Peek_Instance()->Report_Missing_RObj(name);
 #if defined(__vita__)

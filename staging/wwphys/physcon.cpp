@@ -207,35 +207,64 @@ void PhysicsConstants::Save(ChunkSaveClass & csave)
 	csave.End_Chunk();
 }
 
-void PhysicsConstants::Load(ChunkLoadClass & cload)
+bool PhysicsConstants::Load(ChunkLoadClass & cload)
 {
+	Vector3 gravity_acceleration = GravityAcceleration;
+	float linear_damping = LinearDamping;
+	float angular_damping = AngularDamping;
+	float resting_contact_velocity = RestingContactVelocity;
+	float min_friction_velocity = MinFrictionVelocity;
+	float default_contact_friction = DefaultContactFriction;
+	float min_friction_velocity2 = MinFrictionVelocity2;
+	uint32 loaded_values = 0U;
+	bool loaded_variables = false;
+	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
-		
-		switch(cload.Cur_Chunk_ID()) 
-		{
+		switch(cload.Cur_Chunk_ID()) {
 			case PHYSCONSTANTS_CHUNK_VARIABLES:
+				if (loaded_variables) {
+					loaded = false;
+					break;
+				}
+				loaded_variables = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						READ_MICRO_CHUNK(cload,PHYSCONSTANT_GRAVITYACCELERATION,GravityAcceleration);
-						READ_MICRO_CHUNK(cload,PHYSCONSTANT_LINEARDAMPING,LinearDamping);
-						READ_MICRO_CHUNK(cload,PHYSCONSTANT_ANGULARDAMPING,AngularDamping);
-						READ_MICRO_CHUNK(cload,PHYSCONSTANT_RESTINGCONTACTVELOCITY,RestingContactVelocity);
-						READ_MICRO_CHUNK(cload,PHYSCONSTANT_MINFRICTIONVELOCITY,MinFrictionVelocity);
-						READ_MICRO_CHUNK(cload,PHYSCONSTANT_DEFAULTCONTACTFRICTION,DefaultContactFriction);
-						READ_MICRO_CHUNK(cload,PHYSCONSTANT_MINFRICTIONVELOCITY2,MinFrictionVelocity2);
+#define READ_REQUIRED_PHYSICS_VALUE(id, value, bit) \
+						case (id): \
+							if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
+								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
+							else loaded_values |= (bit); \
+							break
+						READ_REQUIRED_PHYSICS_VALUE(PHYSCONSTANT_GRAVITYACCELERATION, gravity_acceleration, 1U);
+						READ_REQUIRED_PHYSICS_VALUE(PHYSCONSTANT_LINEARDAMPING, linear_damping, 2U);
+						READ_REQUIRED_PHYSICS_VALUE(PHYSCONSTANT_ANGULARDAMPING, angular_damping, 4U);
+						READ_REQUIRED_PHYSICS_VALUE(PHYSCONSTANT_RESTINGCONTACTVELOCITY, resting_contact_velocity, 8U);
+						READ_REQUIRED_PHYSICS_VALUE(PHYSCONSTANT_MINFRICTIONVELOCITY, min_friction_velocity, 16U);
+						READ_REQUIRED_PHYSICS_VALUE(PHYSCONSTANT_DEFAULTCONTACTFRICTION, default_contact_friction, 32U);
+						READ_REQUIRED_PHYSICS_VALUE(PHYSCONSTANT_MINFRICTIONVELOCITY2, min_friction_velocity2, 64U);
+#undef READ_REQUIRED_PHYSICS_VALUE
 					}
 					cload.Close_Micro_Chunk();
 				}
 				break;
-		
 
 			default:
 				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
-		
 		cload.Close_Chunk();
 	}
-}
 
+	loaded = loaded && loaded_variables && loaded_values == 0x7FU && !cload.Has_Error();
+	if (loaded) {
+		GravityAcceleration = gravity_acceleration;
+		LinearDamping = linear_damping;
+		AngularDamping = angular_damping;
+		RestingContactVelocity = resting_contact_velocity;
+		MinFrictionVelocity = min_friction_velocity;
+		DefaultContactFriction = default_contact_friction;
+		MinFrictionVelocity2 = min_friction_velocity2;
+	}
+	return loaded;
+}

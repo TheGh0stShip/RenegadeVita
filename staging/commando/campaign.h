@@ -54,6 +54,8 @@ public:
 	static	void	Init( void );
 	static	void	Shutdown( void );
 	static	bool	Is_Catalog_Ready( void );
+	static	bool	Current_Level_Matches_Archive( const char *archive );
+	static	bool	Loaded_Save_State_Matches_Archive( const char *archive );
 
 	static	bool	Save(ChunkSaveClass & csave);
 	static	bool	Load(ChunkLoadClass &cload);

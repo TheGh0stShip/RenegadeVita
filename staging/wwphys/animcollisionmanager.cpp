@@ -1464,6 +1464,7 @@ bool AnimCollisionManagerClass::Load(ChunkLoadClass &cload)
 			WWDEBUG_SAY(( "FAILED TO FIND PREV ANIM IN AnimCollisionManagerClass::Internal_Set_Animation(\"%s\")\n", prev_anim_name ));
 		}
 		REF_PTR_SET(PrevAnimation,anim);
+		REF_PTR_RELEASE(anim);
 	}
 
 	return true;

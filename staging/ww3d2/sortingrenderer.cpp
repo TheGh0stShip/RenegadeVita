@@ -23,9 +23,13 @@
 #include "vertmaterial.h"
 #include "texture.h"
 #include "d3d8.h"
-#include "D3dx8math.h"
 #include "statistics.h"
 #include <wwprofile.h>
+#include "simplevec.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <new>
 
 bool SortingRendererClass::_EnableTriangleDraw=true;
 
@@ -42,10 +46,10 @@ struct ShortVectorIStruct
 struct TempIndexStruct
 {
 	ShortVectorIStruct tri;
-	unsigned short idx;
+	unsigned idx;
 
 	TempIndexStruct() {}
-	TempIndexStruct(const ShortVectorIStruct& tri_, unsigned short idx_)
+	TempIndexStruct(const ShortVectorIStruct& tri_, unsigned idx_)
 		:
 		tri(tri_),
 		idx(idx_)
@@ -178,6 +182,130 @@ void Sort (
 	else QuickSort(array,keys,0,count-1);			// quick sort
 }
 
+#if defined(RENEGADE_VITA_PORT)
+// ----------------------------------------------------------------------------
+//
+// Depth_Sort (TempIndexStruct* array, float* keys, unsigned count)
+//
+// Sort() above falls back to an insertion sort, or to a quicksort with the
+// last element as pivot, both of which degrade to O(n^2) (the quicksort also
+// to O(n) recursion depth) when overlapping particle emitters interleave
+// their polygons. This stable LSD radix sort on the depth bits produces the
+// same ascending order in O(n). Only polygons of exactly equal depth may be
+// ordered differently: in submission order instead of an arbitrary one.
+//
+// ----------------------------------------------------------------------------
+
+static unsigned* radix_key_array;
+static unsigned* radix_key_scratch;
+static unsigned* radix_order_array;
+static unsigned* radix_order_scratch;
+static TempIndexStruct* radix_item_scratch;
+static unsigned radix_array_count;
+
+static void Release_Radix_Arrays()
+{
+	delete[] radix_key_array;
+	delete[] radix_key_scratch;
+	delete[] radix_order_array;
+	delete[] radix_order_scratch;
+	delete[] radix_item_scratch;
+	radix_key_array=NULL;
+	radix_key_scratch=NULL;
+	radix_order_array=NULL;
+	radix_order_scratch=NULL;
+	radix_item_scratch=NULL;
+	radix_array_count=0;
+}
+
+// Order-preserving map from float to unsigned: negative values reverse,
+// positive values rise above them. It is exactly invertible.
+static unsigned Depth_To_Radix_Key(float depth)
+{
+	unsigned bits;
+	memcpy(&bits,&depth,sizeof(bits));
+	return (bits&0x80000000U) ? ~bits : (bits|0x80000000U);
+}
+
+static float Radix_Key_To_Depth(unsigned key)
+{
+	const unsigned bits=(key&0x80000000U) ? (key&0x7fffffffU) : ~key;
+	float depth;
+	memcpy(&depth,&bits,sizeof(depth));
+	return depth;
+}
+
+static void Depth_Sort(TempIndexStruct* array, float* keys, unsigned count)
+{
+	if (count<=1) return;
+	// Already ascending: keep the original's early return (same predicate).
+	unsigned i;
+	for (i=1;i<count;++i) if (!(keys[i]>=keys[i-1])) break;
+	if (i==count) return;
+
+	if (count>radix_array_count) {
+		// The native target builds without exceptions. Allocate a complete
+		// replacement before releasing the usable workspace; if memory is
+		// tight, preserve correctness with the original sorter.
+		unsigned* new_key=new (std::nothrow) unsigned[count];
+		unsigned* new_key_scratch=new (std::nothrow) unsigned[count];
+		unsigned* new_order=new (std::nothrow) unsigned[count];
+		unsigned* new_order_scratch=new (std::nothrow) unsigned[count];
+		TempIndexStruct* new_items=new (std::nothrow) TempIndexStruct[count];
+		if (new_key==NULL || new_key_scratch==NULL || new_order==NULL ||
+			new_order_scratch==NULL || new_items==NULL) {
+			delete[] new_key;
+			delete[] new_key_scratch;
+			delete[] new_order;
+			delete[] new_order_scratch;
+			delete[] new_items;
+			Sort<TempIndexStruct,float>(array,keys,static_cast<int>(count));
+			return;
+		}
+		Release_Radix_Arrays();
+		radix_key_array=new_key;
+		radix_key_scratch=new_key_scratch;
+		radix_order_array=new_order;
+		radix_order_scratch=new_order_scratch;
+		radix_item_scratch=new_items;
+		radix_array_count=count;
+	}
+	unsigned* key=radix_key_array;
+	unsigned* key_next=radix_key_scratch;
+	unsigned* order=radix_order_array;
+	unsigned* order_next=radix_order_scratch;
+	for (i=0;i<count;++i) {
+		key[i]=Depth_To_Radix_Key(keys[i]);
+		order[i]=i;
+	}
+	for (unsigned shift=0;shift<32;shift+=8) {
+		unsigned offsets[256];
+		memset(offsets,0,sizeof(offsets));
+		for (i=0;i<count;++i) ++offsets[(key[i]>>shift)&0xffU];
+		// A digit shared by every key does not reorder anything.
+		if (offsets[(key[0]>>shift)&0xffU]==count) continue;
+		unsigned total=0;
+		for (unsigned digit=0;digit<256;++digit) {
+			const unsigned bucket=offsets[digit];
+			offsets[digit]=total;
+			total+=bucket;
+		}
+		for (i=0;i<count;++i) {
+			const unsigned slot=offsets[(key[i]>>shift)&0xffU]++;
+			key_next[slot]=key[i];
+			order_next[slot]=order[i];
+		}
+		unsigned* swap=key; key=key_next; key_next=swap;
+		swap=order; order=order_next; order_next=swap;
+	}
+	for (i=0;i<count;++i) radix_item_scratch[i]=array[order[i]];
+	for (i=0;i<count;++i) {
+		array[i]=radix_item_scratch[i];
+		keys[i]=Radix_Key_To_Depth(key[i]);
+	}
+}
+#endif
+
 // ----------------------------------------------------------------------------
 
 struct SortingNodeStruct : DLNodeClass<SortingNodeStruct>
@@ -302,6 +430,7 @@ void SortingRendererClass::Insert_Triangles(
 	unsigned short min_vertex_index,
 	unsigned short vertex_count)
 {
+	if (!polygon_count) return;
 	if (!WW3D::Is_Sorting_Enabled()) {
 		DX8Wrapper::Draw_Triangles(start_index,polygon_count,min_vertex_index,vertex_count);
 		return;
@@ -329,14 +458,12 @@ void SortingRendererClass::Insert_Triangles(
 
 	// Transform the center point to view space for sorting
 
-	D3DXMATRIX mtx=(D3DXMATRIX&)state->sorting_state.world*(D3DXMATRIX&)state->sorting_state.view;
-	D3DXVECTOR3 vec=(D3DXVECTOR3&)state->bounding_sphere.Center;
-	D3DXVECTOR4 transformed_vec;
-	D3DXVec3Transform(
-		&transformed_vec,
-		&vec,
-		&mtx); 
-	state->transformed_center=Vector3(transformed_vec[0],transformed_vec[1],transformed_vec[2]);
+	// DX8 stores row-vector matrices; WWMath uses column vectors.
+	Matrix4 mtx;
+	Matrix4::Multiply(state->sorting_state.view.Transpose(),
+		state->sorting_state.world.Transpose(), &mtx);
+	Matrix4::Transform_Vector(mtx, state->bounding_sphere.Center,
+		&state->transformed_center);
 
 	SortingNodeStruct* node=sorted_list.Head();
 	while (node) {
@@ -406,20 +533,16 @@ void Release_Refs(SortingNodeStruct* state)
 static unsigned overlapping_node_count;
 static unsigned overlapping_polygon_count;
 static unsigned overlapping_vertex_count;
-const unsigned MAX_OVERLAPPING_NODES=4096;
-static SortingNodeStruct* overlapping_nodes[MAX_OVERLAPPING_NODES];
+static SimpleDynVecClass<SortingNodeStruct*> overlapping_nodes;
 
 // ----------------------------------------------------------------------------
 
 void SortingRendererClass::Insert_To_Sorting_Pool(SortingNodeStruct* state)
 {
-	if (overlapping_node_count>=MAX_OVERLAPPING_NODES) {
-		Release_Refs(state);
-		WWASSERT(0);
-		return;
+	if (!overlapping_nodes.Add(state)) {
+		fprintf(stderr, "SortingRenderer: allocation failed for %u queued nodes\n", overlapping_node_count+1);
+		abort();
 	}
-
-	overlapping_nodes[overlapping_node_count]=state;
 	overlapping_vertex_count+=state->vertex_count;
 	overlapping_polygon_count+=state->polygon_count;
 	overlapping_node_count++;
@@ -448,6 +571,14 @@ static void Apply_Render_State(RenderStateStruct& render_state)
 		DX8Wrapper::Set_Texture(i,render_state.Textures[i]);
 	}
 
+#if defined(RENEGADE_VITA_PORT)
+	for (unsigned i=0; i<4; ++i) {
+		DX8Wrapper::Set_Light(i, render_state.LightEnable[i] ? &render_state.Lights[i] : NULL);
+	}
+	// The CPU-backed draw boundary consumes wrapper state, not just device state.
+	DX8Wrapper::Set_Transform(D3DTS_WORLD, render_state.world.Transpose());
+	DX8Wrapper::Set_Transform(D3DTS_VIEW, render_state.view.Transpose());
+#else
 	if (render_state.LightEnable[0]) {
 		DX8Wrapper::Set_DX8_Light(0,&render_state.Lights[0]);
 		if (render_state.LightEnable[1]) {
@@ -481,17 +612,102 @@ static void Apply_Render_State(RenderStateStruct& render_state)
 
 	DX8Wrapper::_Set_DX8_Transform(D3DTS_WORLD,render_state.world);
 	DX8Wrapper::_Set_DX8_Transform(D3DTS_VIEW,render_state.view);
+#endif
 }
+
+#if defined(RENEGADE_VITA_PORT)
+// Two nodes draw identically when every input the draw boundary reads is
+// equal: shader, material, textures, transforms and, for lit materials only,
+// the lights. Consecutive sorted runs of such nodes are one draw of the same
+// triangles in the same order.
+static bool Same_Draw_State(const RenderStateStruct& a, const RenderStateStruct& b)
+{
+	if (a.shader.Get_Bits()!=b.shader.Get_Bits() || a.material!=b.material) return false;
+	for (unsigned i=0;i<MAX_TEXTURE_STAGES;++i) {
+		if (a.Textures[i]!=b.Textures[i]) return false;
+	}
+	if (memcmp(&a.world,&b.world,sizeof(a.world))!=0 ||
+		memcmp(&a.view,&b.view,sizeof(a.view))!=0) return false;
+	if (a.material!=NULL && a.material->Get_Lighting()) {
+		for (unsigned i=0;i<4;++i) {
+			if (a.LightEnable[i]!=b.LightEnable[i]) return false;
+			if (a.LightEnable[i] && memcmp(&a.Lights[i],&b.Lights[i],sizeof(a.Lights[i]))!=0) return false;
+		}
+	}
+	return true;
+}
+#endif
 
 // ----------------------------------------------------------------------------
 
 void SortingRendererClass::Flush_Sorting_Pool()
 {
 	if (!overlapping_node_count) return;
+	bool enable_triangle_draw=DX8Wrapper::_Is_Triangle_Draw_Enabled();
+	DX8Wrapper::_Enable_Triangle_Draw(_Is_Triangle_Draw_Enabled());
+	unsigned node_id;
+
+	if (overlapping_vertex_count > 65535U || overlapping_polygon_count > 65535U / 3U) {
+		// Keep the same global depth sort, but retain node-local 16-bit indices.
+		// Only oversized pools use this path; ordinary batches keep one VB/IB.
+		TempIndexStruct* tris = Get_Temp_Index_Array(overlapping_polygon_count);
+		float* depths = Get_Polygon_Z_Array(overlapping_polygon_count);
+		unsigned polygon_offset = 0;
+		for (node_id=0; node_id<overlapping_node_count; ++node_id) {
+			SortingNodeStruct* state = overlapping_nodes[node_id];
+			SortingVertexBufferClass* vb = static_cast<SortingVertexBufferClass*>(state->sorting_state.vertex_buffer);
+			SortingIndexBufferClass* ib = static_cast<SortingIndexBufferClass*>(state->sorting_state.index_buffer);
+			const VertexFormatXYZNDUV2* vertices = vb->VertexBuffer + state->sorting_state.vba_offset +
+				state->sorting_state.index_base_offset + state->min_vertex_index;
+			const unsigned short* indices = ib->index_buffer + state->sorting_state.iba_offset + state->start_index;
+			float* vertex_depths = Get_Vertex_Z_Array(state->vertex_count);
+			Matrix4 transform;
+			Matrix4::Multiply(state->sorting_state.view.Transpose(), state->sorting_state.world.Transpose(), &transform);
+			for (unsigned v=0; v<state->vertex_count; ++v) {
+				vertex_depths[v] = transform[2][0]*vertices[v].x + transform[2][1]*vertices[v].y +
+					transform[2][2]*vertices[v].z + transform[2][3];
+			}
+			for (unsigned p=0; p<state->polygon_count; ++p) {
+				ShortVectorIStruct tri(indices[p*3]-state->min_vertex_index,
+					indices[p*3+1]-state->min_vertex_index, indices[p*3+2]-state->min_vertex_index);
+				tris[polygon_offset] = TempIndexStruct(tri, node_id);
+				depths[polygon_offset++] = (vertex_depths[tri.i]+vertex_depths[tri.j]+vertex_depths[tri.k])/3.0f;
+			}
+		}
+#if defined(RENEGADE_VITA_PORT)
+		Depth_Sort(tris, depths, overlapping_polygon_count);
+#else
+		Sort<TempIndexStruct,float>(tris, depths, overlapping_polygon_count);
+#endif
+		for (unsigned first=0; first<overlapping_polygon_count;) {
+			node_id = tris[first].idx;
+			unsigned end = first+1;
+			while (end<overlapping_polygon_count && tris[end].idx==node_id && end-first<65535U/3U) ++end;
+			SortingNodeStruct* state = overlapping_nodes[node_id];
+			DynamicVBAccessClass vb(BUFFER_TYPE_DYNAMIC_DX8, dynamic_fvf_type, state->vertex_count);
+			{
+				DynamicVBAccessClass::WriteLockClass lock(&vb);
+				SortingVertexBufferClass* source = static_cast<SortingVertexBufferClass*>(state->sorting_state.vertex_buffer);
+				const VertexFormatXYZNDUV2* vertices = source->VertexBuffer + state->sorting_state.vba_offset +
+					state->sorting_state.index_base_offset + state->min_vertex_index;
+				memcpy(lock.Get_Formatted_Vertex_Array(), vertices, sizeof(*vertices)*state->vertex_count);
+			}
+			DynamicIBAccessClass ib(BUFFER_TYPE_DYNAMIC_DX8, (end-first)*3);
+			{
+				DynamicIBAccessClass::WriteLockClass lock(&ib);
+				ShortVectorIStruct* indices = reinterpret_cast<ShortVectorIStruct*>(lock.Get_Index_Array());
+				for (unsigned p=first; p<end; ++p) indices[p-first] = tris[p].tri;
+			}
+			DX8Wrapper::Set_Vertex_Buffer(vb);
+			DX8Wrapper::Set_Index_Buffer(ib, 0);
+			Apply_Render_State(state->sorting_state);
+			DX8Wrapper::Draw_Triangles(0, end-first, 0, state->vertex_count);
+			first = end;
+		}
+	} else {
 
 	SNAPSHOT_SAY(("SortingSystem - Flush \n"));
 
-	unsigned node_id;
 	// Fill dynamic index buffer with sorting index buffer vertices
 	unsigned * node_id_array=Get_Node_Id_Array(overlapping_polygon_count);
 	float* polygon_z_array=Get_Polygon_Z_Array(overlapping_polygon_count);
@@ -517,9 +733,9 @@ void SortingRendererClass::Flush_Sorting_Pool()
 			src_verts+=state->sorting_state.index_base_offset;
 			src_verts+=state->min_vertex_index;
 
-			D3DXMATRIX d3d_mtx=(D3DXMATRIX&)state->sorting_state.world*(D3DXMATRIX&)state->sorting_state.view;
-			D3DXMatrixTranspose(&d3d_mtx,&d3d_mtx);
-			const Matrix4& mtx=(const Matrix4&)d3d_mtx;
+			Matrix4 mtx;
+			Matrix4::Multiply(state->sorting_state.view.Transpose(),
+				state->sorting_state.world.Transpose(), &mtx);
 			for (unsigned i=0;i<state->vertex_count;++i,++src_verts) {
 				vertex_z_array[i] = (mtx[2][0] * src_verts->x + mtx[2][1] * src_verts->y + mtx[2][2] * src_verts->z + mtx[2][3]);
 
@@ -539,7 +755,7 @@ void SortingRendererClass::Flush_Sorting_Pool()
 			indices+=state->start_index;
 			indices+=state->sorting_state.iba_offset;
 
-			for (i=0;i<state->polygon_count;++i) {
+			for (unsigned i=0;i<state->polygon_count;++i) {
 				unsigned short idx1=indices[i*3]-state->min_vertex_index;
 				unsigned short idx2=indices[i*3+1]-state->min_vertex_index;
 				unsigned short idx3=indices[i*3+2]-state->min_vertex_index;
@@ -572,14 +788,18 @@ void SortingRendererClass::Flush_Sorting_Pool()
 	for (unsigned a=0;a<overlapping_polygon_count;++a) {
 		tis[a]=TempIndexStruct(polygon_idx_array[a],node_id_array[a]);
 	}
+#if defined(RENEGADE_VITA_PORT)
+	Depth_Sort(tis,polygon_z_array,overlapping_polygon_count);
+#else
 	Sort<TempIndexStruct,float>(tis,polygon_z_array,overlapping_polygon_count);
+#endif
 
 	DynamicIBAccessClass dyn_ib_access(BUFFER_TYPE_DYNAMIC_DX8,overlapping_polygon_count*3);
 	{
 		DynamicIBAccessClass::WriteLockClass lock(&dyn_ib_access);
 		ShortVectorIStruct* sorted_polygon_index_array=(ShortVectorIStruct*)lock.Get_Index_Array();
 
-		for (a=0;a<overlapping_polygon_count;++a) {
+		for (unsigned a=0;a<overlapping_polygon_count;++a) {
 			sorted_polygon_index_array[a]=tis[a].tri;
 		}
 	}
@@ -591,12 +811,54 @@ void SortingRendererClass::Flush_Sorting_Pool()
 
 	DX8Wrapper::Apply_Render_State_Changes();
 
-	bool enable_triangle_draw=DX8Wrapper::_Is_Triangle_Draw_Enabled();
-	DX8Wrapper::_Enable_Triangle_Draw(_Is_Triangle_Draw_Enabled());
-
 	unsigned count_to_render=1;
 	unsigned start_index=0;
 	node_id=tis[0].idx;
+#if defined(RENEGADE_VITA_PORT)
+	// Each node's vertices occupy their own range of the shared dynamic VB
+	// and the indices are absolute, so a merged run draws with the union of
+	// its nodes' vertex ranges.
+	SortingNodeStruct* run_state=overlapping_nodes[node_id];
+	unsigned run_min=run_state->min_vertex_index;
+	unsigned run_end=run_min+run_state->vertex_count;
+	for (unsigned i=1;i<overlapping_polygon_count;++i) {
+		if (node_id!=tis[i].idx) {
+			node_id=tis[i].idx;
+			SortingNodeStruct* state=overlapping_nodes[node_id];
+			if (Same_Draw_State(run_state->sorting_state,state->sorting_state)) {
+				if (state->min_vertex_index<run_min) run_min=state->min_vertex_index;
+				if (state->min_vertex_index+state->vertex_count>run_end)
+					run_end=state->min_vertex_index+state->vertex_count;
+			} else {
+				Apply_Render_State(run_state->sorting_state);
+				DX8Wrapper::Draw_Triangles(
+					start_index*3,
+					count_to_render,
+					run_min,
+					run_end-run_min);
+				count_to_render=0;
+				start_index=i;
+				run_state=state;
+				run_min=state->min_vertex_index;
+				run_end=run_min+state->vertex_count;
+			}
+		}
+		count_to_render++;
+	}
+	if (count_to_render) {
+		Apply_Render_State(run_state->sorting_state);
+		DX8Wrapper::Draw_Triangles(
+			start_index*3,
+			count_to_render,
+			run_min,
+			run_end-run_min);
+	}
+	// Leave the wrapper in the state of the last node, as the unmerged loop
+	// does.
+	if (overlapping_nodes[node_id]!=run_state) {
+		Apply_Render_State(overlapping_nodes[node_id]->sorting_state);
+	}
+#else
 	for (unsigned i=1;i<overlapping_polygon_count;++i) {
 		if (node_id!=tis[i].idx) {
 			SortingNodeStruct* state=overlapping_nodes[node_id];
@@ -626,7 +888,9 @@ void SortingRendererClass::Flush_Sorting_Pool()
 			state->min_vertex_index,
 			state->vertex_count);
 	}
+#endif
 
+	}
 	// Release all references and return nodes back to the clean list for the frame...
 	for (node_id=0;node_id<overlapping_node_count;++node_id) {
 		SortingNodeStruct* state=overlapping_nodes[node_id];
@@ -636,6 +900,7 @@ void SortingRendererClass::Flush_Sorting_Pool()
 	overlapping_node_count=0;
 	overlapping_polygon_count=0;
 	overlapping_vertex_count=0;
+	overlapping_nodes.Delete_All(false);
 
 	DX8Wrapper::_Enable_Triangle_Draw(enable_triangle_draw);
 	SNAPSHOT_SAY(("SortingSystem - Done flushing\n"));
@@ -687,6 +952,8 @@ void SortingRendererClass::Flush()
 
 void SortingRendererClass::Deinit()
 {
+	overlapping_nodes.Delete_All();
+	overlapping_nodes.Resize(0);
 	SortingNodeStruct *head = NULL;
 
 	//
@@ -694,6 +961,7 @@ void SortingRendererClass::Deinit()
 	//
 	while ((head = sorted_list.Head ()) != NULL) {
 		sorted_list.Remove_Head ();
+		Release_Refs(head);
 		delete head;
 	}
 
@@ -723,5 +991,7 @@ void SortingRendererClass::Deinit()
 	delete[] temp_index_array;
 	temp_index_array=NULL;
 	temp_index_array_count=0;
+#if defined(RENEGADE_VITA_PORT)
+	Release_Radix_Arrays();
+#endif
 }
-

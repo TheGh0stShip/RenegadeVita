@@ -67,17 +67,22 @@ enum	{
 bool	CoverManager::Save( ChunkSaveClass & csave )
 {
 	for ( int index = 0; index < CoverPositions.Count(); index++ ) {
+		if (CoverPositions[index] == NULL) {
+			csave.Report_Error();
+			continue;
+		}
 		csave.Begin_Chunk( CHUNKID_COVER_ENTRY );
-		CoverPositions[index]->Save( csave );
+		if (!CoverPositions[index]->Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	CoverManager::Load( ChunkLoadClass & cload )
 {
 	WWASSERT( CoverPositions.Count() == 0 );
+	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
@@ -85,8 +90,8 @@ bool	CoverManager::Load( ChunkLoadClass & cload )
 			case CHUNKID_COVER_ENTRY:
 			{
 				CoverEntryClass * cover = NEW_REF( CoverEntryClass, () );
-				cover->Load( cload );
-				Add_Entry( cover );
+				if (cover->Load(cload)) Add_Entry(cover);
+				else loaded = false;
 				cover->Release_Ref();
 				break;
 			}
@@ -98,7 +103,7 @@ bool	CoverManager::Load( ChunkLoadClass & cload )
 		}
 		cload.Close_Chunk();
 	}
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -228,28 +233,44 @@ bool	CoverEntryClass::Load( ChunkLoadClass & cload )
 {
 	WWASSERT( AttackPositionList.Count() == 0 );
 
-	CoverEntryClass * old_me = NULL;
+	uint32 old_me_token = 0U;
+	bool variables_seen = false;
+	bool loaded = true;
+	uint32 loaded_values = 0U;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
+				if (variables_seen) {
+					loaded = false;
+					break;
+				}
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
 
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_TRANSFORM,     Transform );				
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_CROUCH,        Crouch );				
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_IN_USE,        InUse );				
+#define READ_REQUIRED_COVER_VALUE(id, value, bit) \
+						case (id): \
+							if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
+								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
+							else loaded_values |= (bit); \
+							break
+						READ_REQUIRED_COVER_VALUE(MICROCHUNKID_TRANSFORM, Transform, 1U);
+						READ_REQUIRED_COVER_VALUE(MICROCHUNKID_CROUCH, Crouch, 2U);
+						READ_REQUIRED_COVER_VALUE(MICROCHUNKID_IN_USE, InUse, 4U);
 
 						case MICROCHUNKID_ATTACK_POSITION:
 						{
 							Vector3 pos;
-							cload.Read(&pos,sizeof(pos));
-							AttackPositionList.Add( pos );
+							if (cload.Cur_Micro_Chunk_Length() != sizeof(pos) ||
+								cload.Read(&pos, sizeof(pos)) != sizeof(pos)) loaded = false;
+							else AttackPositionList.Add(pos);
 							break;
 						}
 
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_REMAP_PTR,     old_me );				
+						READ_REQUIRED_COVER_VALUE(MICROCHUNKID_REMAP_PTR, old_me_token, 8U);
+#undef READ_REQUIRED_COVER_VALUE
 
 						default:
 							Debug_Say(( "Unrecognized CoverEntry Variable chunkID %d\n", cload.Cur_Micro_Chunk_ID() ));
@@ -269,12 +290,13 @@ bool	CoverEntryClass::Load( ChunkLoadClass & cload )
 	}
 
 	// publish my remap pair
-	WWASSERT(old_me != NULL);
-	if (old_me != NULL) {
-		SaveLoadSystemClass::Register_Pointer( old_me, this );
+	loaded = loaded && variables_seen && loaded_values == 15U && old_me_token != 0U && !cload.Has_Error();
+	if (loaded) {
+		SaveLoadSystemClass::Register_Pointer(
+			reinterpret_cast<CoverEntryClass *>(static_cast<uintptr_t>(old_me_token)), this);
 	}
 
-	return true;
+	return loaded;
 }
 
 Vector3 CoverEntryClass::Get_Attack_Position( Vector3 & enemy_pos )	

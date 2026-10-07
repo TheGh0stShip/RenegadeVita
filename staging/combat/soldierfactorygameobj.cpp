@@ -154,12 +154,13 @@ SoldierFactoryGameObjDef::Save (ChunkSaveClass &csave)
 bool
 SoldierFactoryGameObjDef::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ())
 	{
 		switch (cload.Cur_Chunk_ID ())
 		{
 			case CHUNKID_DEF_PARENT:
-				BuildingGameObjDef::Load (cload);
+				if (!BuildingGameObjDef::Load (cload)) loaded = false;
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -174,7 +175,7 @@ SoldierFactoryGameObjDef::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -294,12 +295,12 @@ bool
 SoldierFactoryGameObj::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		BuildingGameObj::Save (csave);
+		if (!BuildingGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
 	csave.End_Chunk ();
-	return true;
+	return !csave.Has_Error();
 }
 
 
@@ -311,11 +312,12 @@ SoldierFactoryGameObj::Save (ChunkSaveClass &csave)
 bool
 SoldierFactoryGameObj::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				BuildingGameObj::Load (cload);
+				if (!BuildingGameObj::Load(cload)) loaded = false;
 				break;
 								
 			case CHUNKID_VARIABLES:
@@ -330,7 +332,7 @@ SoldierFactoryGameObj::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 

@@ -158,7 +158,7 @@ enum	{
 bool cPlayer::Save(ChunkSaveClass & csave)
 {
 	csave.Begin_Chunk(CHUNKID_PARENT);
-	PlayerDataClass::Save( csave );
+	if (!PlayerDataClass::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(CHUNKID_VARIABLES);
@@ -173,34 +173,80 @@ bool cPlayer::Save(ChunkSaveClass & csave)
 
 	csave.End_Chunk();
 
-	return true;
+	return !csave.Has_Error();
 }
 
 //-----------------------------------------------------------------------------
 bool cPlayer::Load(ChunkLoadClass &cload)
 {
-	void * old_ptr = NULL;
+	uint32 old_ptr_token = 0;
+	int id = 0;
+	int kills = 0;
+	int deaths = 0;
+	int team = 0;
+	WideStringClass name;
+	bool parent_seen = false;
+	bool variables_seen = false;
+	bool id_seen = false;
+	bool name_seen = false;
+	bool kills_seen = false;
+	bool deaths_seen = false;
+	bool team_seen = false;
+	bool remap_seen = false;
+	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 		case CHUNKID_PARENT:
-				PlayerDataClass::Load( cload );
+				if (parent_seen) {
+					loaded = false;
+				} else {
+					parent_seen = true;
+					loaded = PlayerDataClass::Load( cload ) && loaded;
+				}
 				break;
 
 			case CHUNKID_VARIABLES:
+				if (variables_seen) {
+					loaded = false;
+					break;
+				}
+				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
-
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						READ_MICRO_CHUNK(cload, MICROCHUNK_ID, Id);
-						READ_MICRO_CHUNK_WIDESTRING(cload, MICROCHUNK_NAME, Name);
-						READ_SAFE_MICRO_CHUNK(cload, MICROCHUNK_KILLS, Kills,int);
-						READ_SAFE_MICRO_CHUNK(cload, MICROCHUNK_DEATHS, Deaths, int);
-						READ_SAFE_MICRO_CHUNK(cload, MICROCHUNK_TEAMNUMBER, PlayerType, int);
-						READ_MICRO_CHUNK(cload, MICROCHUNK_REMAP_POINTER, old_ptr);
+						case MICROCHUNK_ID:
+							if (id_seen || cload.Cur_Micro_Chunk_Length() != sizeof(id) ||
+								cload.Read(&id, sizeof(id)) != sizeof(id)) loaded = false;
+							else id_seen = true;
+							break;
+						case MICROCHUNK_NAME:
+						{
+							const uint32 length = cload.Cur_Micro_Chunk_Length();
+							WCHAR value[128];
+							if (name_seen || length < sizeof(WCHAR) || length > sizeof(value) ||
+								(length % sizeof(WCHAR)) != 0 || cload.Read(value, length) != length ||
+								value[(length / sizeof(WCHAR)) - 1U] != 0) loaded = false;
+							else {
+								name_seen = true;
+								name = value;
+							}
+							break;
+						}
+#define READ_REQUIRED_PLAYER_VALUE(id_value, value, seen) \
+						case (id_value): \
+							if ((seen) || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
+								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
+							else (seen) = true; \
+							break
+						READ_REQUIRED_PLAYER_VALUE(MICROCHUNK_KILLS, kills, kills_seen);
+						READ_REQUIRED_PLAYER_VALUE(MICROCHUNK_DEATHS, deaths, deaths_seen);
+						READ_REQUIRED_PLAYER_VALUE(MICROCHUNK_TEAMNUMBER, team, team_seen);
+						READ_REQUIRED_PLAYER_VALUE(MICROCHUNK_REMAP_POINTER, old_ptr_token, remap_seen);
+#undef READ_REQUIRED_PLAYER_VALUE
 
 						default:
-							Debug_Say(( "Unrecognized cPlayer Variable chunkID\n" ));
+							loaded = false;
 							break;
 					}
 
@@ -209,18 +255,27 @@ bool cPlayer::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				Debug_Say(( "Unrecognized cPlayer chunkID\n" ));
+				loaded = false;
 				break;
 
 		}
 		cload.Close_Chunk();
 	}
 
-	if ( old_ptr != NULL ) {
-		SaveLoadSystemClass::Register_Pointer(old_ptr, this);
+	loaded = loaded && parent_seen && variables_seen && id_seen && name_seen &&
+		kills_seen && deaths_seen && team_seen && remap_seen && old_ptr_token != 0 &&
+		!cload.Has_Error();
+	if (loaded) {
+		Id = id;
+		Name = name;
+		Kills = kills;
+		Deaths = deaths;
+		PlayerType = team;
+		SaveLoadSystemClass::Register_Pointer(
+			reinterpret_cast<void *>(static_cast<uintptr_t>(old_ptr_token)), this);
 	}
 
-	return true;
+	return loaded;
 }
 
 //------------------------------------------------------------------------------------
@@ -249,7 +304,7 @@ void cPlayer::On_Create(void)
 					widestring.Format(
 						L"%s, %s.\n",
 						TRANSLATION(IDS_MP_WELCOME_RENEGADE),
-						Name);
+						(const WCHAR *)Name);
 					//
 					//	Display the message...
 					//
@@ -265,15 +320,15 @@ void cPlayer::On_Create(void)
 						widestring.Format(
 							L"%s, %s.\n",
 							TRANSLATION(IDS_MP_WELCOME_RENEGADE),
-							Name);
+							(const WCHAR *)Name);
 					} else {
 						widestring.Format(
 							L"%s, %s, %s %s %s.\n",
 							TRANSLATION(IDS_MP_WELCOME_RENEGADE),
-							Name,
+							(const WCHAR *)Name,
 							TRANSLATION(IDS_MP_TO),
-							The_Game()->Get_Team_Word(),
-							cTeamManager::Get_Team_Name(PlayerType));
+							(const WCHAR *)The_Game()->Get_Team_Word(),
+							(const WCHAR *)cTeamManager::Get_Team_Name(PlayerType));
 					}
 
 					//
@@ -296,7 +351,7 @@ void cPlayer::On_Create(void)
 					WideStringClass widestring;
 					widestring.Format(
 						L"%s %s\n",
-						Name,
+						(const WCHAR *)Name,
 						TRANSLATION(IDS_MP_RENEGADE_JOINS));
 
 					//
@@ -313,15 +368,15 @@ void cPlayer::On_Create(void)
 					if (The_Game()->IsTeamChangingAllowed.Is_True()) {
 						widestring.Format(
 							L"%s %s\n",
-							Name,
+							(const WCHAR *)Name,
 							TRANSLATION(IDS_MP_RENEGADE_JOINS));
 					} else {
 						widestring.Format(
 							L"%s %s %s %s\n",
-							Name,
+							(const WCHAR *)Name,
 							TRANSLATION(IDS_MP_TEAMPLAYER_JOINS),
-							The_Game()->Get_Team_Word(),
-							cTeamManager::Get_Team_Name(PlayerType));
+							(const WCHAR *)The_Game()->Get_Team_Word(),
+							(const WCHAR *)cTeamManager::Get_Team_Name(PlayerType));
 					}
 
 					//
@@ -350,7 +405,7 @@ void cPlayer::On_Destroy(void)
 		WideStringClass message;
 		message.Format(
 			L"%s %s\n",
-			Name, TRANSLATION(IDS_MP_PLAYER_LEFT_GAME));
+			(const WCHAR *)Name, TRANSLATION(IDS_MP_PLAYER_LEFT_GAME));
 
 		//
 		//	Display the message...
@@ -486,9 +541,9 @@ void cPlayer::Get_Player_String(int rank, WideStringClass & string, bool force_v
 	}
 	*/
 	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		substring.Format(L"%-34s", Name);
+		substring.Format(L"%-34s", (const WCHAR *)Name);
 	} else {
-		substring.Format(L"%-9s", Name);
+		substring.Format(L"%-9s", (const WCHAR *)Name);
 	}
 	if (IsActive.Is_True()) {
 		substring += L"  ";

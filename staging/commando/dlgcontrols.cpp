@@ -42,6 +42,9 @@
 #include "tabctrl.h"
 #include "dialogresource.h"
 #include "inputconfigmgr.h"
+#if defined(RENEGADE_VITA_PORT)
+#include "a31_interactive_runtime_policy.h"
+#endif
 
 
 ////////////////////////////////////////////////////////////////
@@ -118,6 +121,10 @@ ControlsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 
 		case IDC_DEFAULTS_BUTTON:
 			InputConfigMgrClass::Load_Default_Configuration ();
+#if defined(RENEGADE_VITA_PORT)
+			A31_Interactive_Configure_Vita_Controls();
+			Reload();
+#endif
 			break;
 
 		case IDC_SAVELOAD_BUTTON:

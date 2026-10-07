@@ -59,6 +59,7 @@ public:
 
 protected:
 
+	virtual bool				Required_For_Player_Save(void) const { return true; }
 	virtual bool				Contains_Data(void) const;
 	virtual bool				Save (ChunkSaveClass &csave);
 	virtual bool				Load (ChunkLoadClass &cload);

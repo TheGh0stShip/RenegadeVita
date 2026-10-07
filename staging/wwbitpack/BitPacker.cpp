@@ -60,6 +60,7 @@ cBitPacker& cBitPacker::operator=(const cBitPacker& rhs)
 	memcpy(Buffer, rhs.Buffer, MAX_BUFFER_SIZE);
 	BitReadPosition		= rhs.BitReadPosition;
 	BitWritePosition		= rhs.BitWritePosition;
+	ReadError = rhs.ReadError;
 
    return * this;
 }
@@ -162,26 +163,24 @@ void cBitPacker::Get_Bits(ULONG & value, UINT num_bits)
 	}
 #else // New faster version
 
-	// Verify that we're not reading over buffer or write pointer
-	WWASSERT(num_bits > 0 && num_bits <= MAX_BITS);
-	WWASSERT(BitReadPosition+num_bits <= MAX_BUFFER_SIZE * 8);
-	WWASSERT(BitReadPosition+num_bits <= BitWritePosition);
-
-	UINT read_len=num_bits;
-	UINT byte_num = BitReadPosition / 8;
-	UINT bit_offset = BitReadPosition % 8;
-	BitReadPosition += num_bits;
-
-	UINT bit_count = 8 - bit_offset;
-	if (bit_count>num_bits) bit_count=num_bits;
-	value = (ULONG(Buffer[byte_num++]) << (bit_offset+24));
-	num_bits-=bit_count;
-
-	int shift=24-bit_count;
-	for (;shift>0;shift-=8,num_bits-=8) value|=unsigned(Buffer[byte_num++]) << shift;
-	if (num_bits>0) value|=Buffer[byte_num++]>>(-shift);
-
-	value >>= 32-read_len;
+	value = 0;
+	if (ReadError || num_bits == 0 || num_bits > MAX_BITS ||
+		BitWritePosition > MAX_BUFFER_SIZE * 8 || BitReadPosition > BitWritePosition ||
+		num_bits > BitWritePosition - BitReadPosition) {
+		Mark_Read_Error();
+		return;
+	}
+	// Consume only the requested bytes, including a partial final byte.
+	// The old fast reader speculatively accessed three bytes even for one bit.
+	while (num_bits) {
+		const UINT offset = BitReadPosition & 7;
+		const UINT count = num_bits < 8 - offset ? num_bits : 8 - offset;
+		const UINT shift = 8 - offset - count;
+		value = (value << count) |
+			((Buffer[BitReadPosition / 8] >> shift) & ((1u << count) - 1));
+		BitReadPosition += count;
+		num_bits -= count;
+	}
 #endif
 }
 
@@ -194,6 +193,12 @@ void cBitPacker::Set_Bit_Write_Position(UINT position)
 {
 	//WWASSERT(position <= BufferSize * 8);
 	WWASSERT(position <= MAX_BUFFER_SIZE * 8);
+	if (position > MAX_BUFFER_SIZE * 8) {
+		BitWritePosition = 0;
+		Mark_Read_Error();
+		return;
+	}
+	if (position == 0) {BitReadPosition = 0; ReadError = false;}
 	BitWritePosition = position;
 }
 

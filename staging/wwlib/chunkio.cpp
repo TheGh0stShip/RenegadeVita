@@ -86,7 +86,8 @@ ChunkSaveClass::ChunkSaveClass(FileClass * file) :
 	File(file),
 	StackIndex(0),
 	InMicroChunk(false),
-	MicroChunkPosition(0)
+	MicroChunkPosition(0),
+	Error(false)
 {
 	memset(PositionStack,0,sizeof(PositionStack));
 	memset(HeaderStack,0,sizeof(HeaderStack));
@@ -129,6 +130,7 @@ bool ChunkSaveClass::Begin_Chunk(uint32 id)
 	
 	// write a temporary chunk header (size = 0)
 	if (File->Write(&chunkh,sizeof(chunkh)) != sizeof(chunkh)) {
+		Error = true;
 		return false;
 	}
 	return true;
@@ -163,6 +165,7 @@ bool ChunkSaveClass::End_Chunk(void)
 	// write the completed header
 	File->Seek(chunkpos,SEEK_SET);
 	if (File->Write(&chunkh,sizeof(chunkh)) != sizeof(chunkh)) {
+		Error = true;
 		return false;
 	}
 
@@ -174,7 +177,7 @@ bool ChunkSaveClass::End_Chunk(void)
 	// Go back to the end of the file
 	File->Seek(curpos,SEEK_SET);
 
-	return true;
+	return !Error;
 }
 
 
@@ -242,13 +245,14 @@ bool ChunkSaveClass::End_Micro_Chunk(void)
 	// Seek back and write the micro chunk header
 	File->Seek(MicroChunkPosition,SEEK_SET);
 	if (File->Write(&MCHeader,sizeof(MCHeader)) != sizeof(MCHeader)) {
+		Error = true;
 		return false;
 	}
 
 	// Go back to the end of the file
 	File->Seek(curpos,SEEK_SET);
 	InMicroChunk = false;
-	return true;
+	return !Error;
 }
 
 /*********************************************************************************************** 
@@ -272,7 +276,10 @@ uint32 ChunkSaveClass::Write(const void * buf, uint32 nbytes)
 	assert(StackIndex > 0);
 
 	// write the bytes into the file
-	if (File->Write(buf,nbytes) != (int)nbytes) return 0;
+	if (File->Write(buf,nbytes) != (int)nbytes) {
+		Error = true;
+		return 0;
+	}
 
 	// track them in the wrapping chunk
 	HeaderStack[StackIndex-1].Add_Size(nbytes);
@@ -391,7 +398,8 @@ ChunkLoadClass::ChunkLoadClass(FileClass * file) :
 	File(file),
 	StackIndex(0),
 	InMicroChunk(false),
-	MicroChunkPosition(0)
+	MicroChunkPosition(0),
+	Error(false)
 {
 	memset(PositionStack,0,sizeof(PositionStack));
 	memset(HeaderStack,0,sizeof(HeaderStack));
@@ -413,19 +421,48 @@ ChunkLoadClass::ChunkLoadClass(FileClass * file) :
  *=============================================================================================*/
 bool ChunkLoadClass::Open_Chunk()
 {
-	// if user didn't close any micro chunks that he opened, bad things could happen
-	assert(InMicroChunk == false);
-	if (File == NULL) {
-		WWDEBUG_ERROR(("ChunkLoadClass::Open_Chunk null file pointer depth=%d\n", StackIndex));
+	if (Error) return false;
+	if (InMicroChunk) {
+		Error = true;
 		return false;
 	}
-	// check for stack overflow
-	assert(StackIndex < MAX_STACK_DEPTH-1);
-
-	// if the parent chunk has been completely eaten, return false
-	if ((StackIndex > 0) && (PositionStack[StackIndex-1] == HeaderStack[StackIndex-1].Get_Size())) {
-		WWDEBUG_WARNING(("ChunkLoadClass::Open_Chunk exhausted parent at depth=%d\n", StackIndex));
+	if (File == NULL) {
+		WWDEBUG_ERROR(("ChunkLoadClass::Open_Chunk null file pointer depth=%d\n", StackIndex));
+		Error = true;
 		return false;
+	}
+	if (StackIndex >= MAX_STACK_DEPTH - 1) {
+		Error = true;
+		return false;
+	}
+
+	uint32 available = 0U;
+	if (StackIndex > 0) {
+		const uint32 parent_size = HeaderStack[StackIndex-1].Get_Size();
+		const uint32 parent_position = PositionStack[StackIndex-1];
+		if (parent_position > parent_size) {
+			Error = true;
+			return false;
+		}
+		available = parent_size - parent_position;
+		if (available == 0U) return false;
+		if (available < sizeof(ChunkHeader)) {
+			Error = true;
+			return false;
+		}
+	} else {
+		const int file_position = File->Tell();
+		const int file_size = File->Size();
+		if (file_position < 0 || file_size < file_position) {
+			Error = true;
+			return false;
+		}
+		available = static_cast<uint32>(file_size - file_position);
+		if (available == 0U) return false;
+		if (available < sizeof(ChunkHeader)) {
+			Error = true;
+			return false;
+		}
 	}
 
 	WWDEBUG_SAY(("ChunkLoadClass::Open_Chunk pre-read id/len depth=%d parent-depth=%d remaining=%u\n",
@@ -436,6 +473,11 @@ bool ChunkLoadClass::Open_Chunk()
 	if (File->Read(&HeaderStack[StackIndex],sizeof(ChunkHeader)) != sizeof(ChunkHeader)) {
 		WWDEBUG_WARNING(("ChunkLoadClass::Open_Chunk short header read at depth=%d expected=%u\n",
 			StackIndex + 1, (uint32)sizeof(ChunkHeader) ));
+		Error = true;
+		return false;
+	}
+	if (HeaderStack[StackIndex].Get_Size() > available - sizeof(ChunkHeader)) {
+		Error = true;
 		return false;
 	}
 	WWDEBUG_SAY(("ChunkLoadClass::Open_Chunk opened id=%u length=%u has_children=%u depth=%d\n",
@@ -464,25 +506,40 @@ bool ChunkLoadClass::Open_Chunk()
  *=============================================================================================*/
 bool ChunkLoadClass::Peek_Next_Chunk(uint32 * set_id,uint32 * set_size)
 {
-	// if user didn't close any micro chunks that he opened, bad things could happen
-	assert(InMicroChunk == false);							
-	
-	// check for stack overflow
-	assert(StackIndex < MAX_STACK_DEPTH-1);
-
-	// if the parent chunk has been completely eaten, return false
-	if ((StackIndex > 0) && (PositionStack[StackIndex-1] == HeaderStack[StackIndex-1].Get_Size())) {
+	if (Error || InMicroChunk || File == NULL || StackIndex >= MAX_STACK_DEPTH - 1) {
+		Error = true;
 		return false;
 	}
+	uint32 available = 0U;
+	if (StackIndex > 0) {
+		const uint32 parent_size = HeaderStack[StackIndex-1].Get_Size();
+		const uint32 parent_position = PositionStack[StackIndex-1];
+		if (parent_position > parent_size) { Error = true; return false; }
+		available = parent_size - parent_position;
+	} else {
+		const int file_position = File->Tell();
+		const int file_size = File->Size();
+		if (file_position < 0 || file_size < file_position) { Error = true; return false; }
+		available = static_cast<uint32>(file_size - file_position);
+	}
+	if (available == 0U) return false;
+	if (available < sizeof(ChunkHeader)) { Error = true; return false; }
 
 	// peek at the next chunk header, return false if the read fails
 	ChunkHeader temp_header;
 	if (File->Read(&temp_header,sizeof(ChunkHeader)) != sizeof(ChunkHeader)) {
+		Error = true;
 		return false;
 	}
 
-	int seek_offset = sizeof(ChunkHeader);
-	File->Seek(-seek_offset,SEEK_CUR);
+	const int header_end = File->Tell();
+	if (header_end < static_cast<int>(sizeof(ChunkHeader)) ||
+		File->Seek(-static_cast<int>(sizeof(ChunkHeader)),SEEK_CUR) !=
+			header_end - static_cast<int>(sizeof(ChunkHeader)) ||
+		temp_header.Get_Size() > available - sizeof(ChunkHeader)) {
+		Error = true;
+		return false;
+	}
 	
 	if (set_id != NULL) {
 		*set_id = temp_header.Get_Type();
@@ -508,25 +565,34 @@ bool ChunkLoadClass::Peek_Next_Chunk(uint32 * set_id,uint32 * set_size)
  *=============================================================================================*/
 bool ChunkLoadClass::Close_Chunk()
 {
-	// if user didn't close any micro chunks that he opened, bad things could happen
-	assert(InMicroChunk == false);							
-
-	// check for stack overflow
-	assert(StackIndex > 0);
+	if (InMicroChunk || StackIndex <= 0 || File == NULL) {
+		Error = true;
+		return false;
+	}
 	
-	int csize = HeaderStack[StackIndex-1].Get_Size();
-	int pos = PositionStack[StackIndex-1];
+	const uint32 csize = HeaderStack[StackIndex-1].Get_Size();
+	const uint32 pos = PositionStack[StackIndex-1];
 	
-	if (pos < csize) {
-		File->Seek(csize - pos,SEEK_CUR);
+	if (pos > csize) {
+		Error = true;
+	} else if (pos < csize && !Error && Seek(csize - pos) != csize - pos) {
+		Error = true;
 	}
 
 	StackIndex--;
 	if (StackIndex > 0) {
-		PositionStack[StackIndex - 1] += csize + sizeof(ChunkHeader);
+		const uint32 parent_size = HeaderStack[StackIndex - 1].Get_Size();
+		const uint32 parent_position = PositionStack[StackIndex - 1];
+		const uint32 child_total = csize + static_cast<uint32>(sizeof(ChunkHeader));
+		if (child_total < csize || parent_position > parent_size ||
+			child_total > parent_size - parent_position) {
+			Error = true;
+		} else {
+			PositionStack[StackIndex - 1] += child_total;
+		}
 	}
 
-	return true;
+	return !Error;
 }
 
 
@@ -617,11 +683,24 @@ int ChunkLoadClass::Contains_Chunks()
  *=============================================================================================*/
 bool ChunkLoadClass::Open_Micro_Chunk()
 {
-	assert(!InMicroChunk);
+	if (Error || InMicroChunk || StackIndex <= 0) {
+		Error = true;
+		return false;
+	}
+	const uint32 chunk_size = HeaderStack[StackIndex-1].Get_Size();
+	const uint32 chunk_position = PositionStack[StackIndex-1];
+	if (chunk_position > chunk_size) { Error = true; return false; }
+	const uint32 available = chunk_size - chunk_position;
+	if (available == 0U) return false;
+	if (available < sizeof(MicroChunkHeader)) { Error = true; return false; }
 	
 	// read the chunk header
 	// calling the ChunkLoadClass::Read fn so that if we exhaust the chunk, the read will fail
 	if (Read(&MCHeader,sizeof(MCHeader)) != sizeof(MCHeader)) {
+		return false;
+	}
+	if (MCHeader.Get_Size() > available - sizeof(MicroChunkHeader)) {
+		Error = true;
 		return false;
 	}
 	
@@ -645,24 +724,22 @@ bool ChunkLoadClass::Open_Micro_Chunk()
  *=============================================================================================*/
 bool ChunkLoadClass::Close_Micro_Chunk()
 {
-	assert(InMicroChunk);
-	InMicroChunk = false;
-
-	int csize = MCHeader.Get_Size();
-	int pos = MicroChunkPosition;
-	
-	// seek the file past this micro chunk 
-	if (pos < csize) {
-
-		File->Seek(csize - pos,SEEK_CUR);
-		
-		// update the tracking variables for where we are in the normal chunk.
-		if (StackIndex > 0) {
-			PositionStack[StackIndex-1] += csize - pos;
-		}
+	if (!InMicroChunk || StackIndex <= 0 || File == NULL) {
+		Error = true;
+		return false;
 	}
 
-	return true;
+	const uint32 csize = MCHeader.Get_Size();
+	const uint32 pos = static_cast<uint32>(MicroChunkPosition);
+	
+	if (pos > csize) {
+		Error = true;
+	} else if (pos < csize && !Error && Seek(csize - pos) != csize - pos) {
+		Error = true;
+	}
+	InMicroChunk = false;
+
+	return !Error;
 }
 
 
@@ -710,20 +787,28 @@ uint32 ChunkLoadClass::Cur_Micro_Chunk_Length()
 // Seek over nbytes in the stream
 uint32 ChunkLoadClass::Seek(uint32 nbytes)
 {
-	assert(StackIndex >= 1);
+	if (Error || StackIndex < 1 || File == NULL) {
+		Error = true;
+		return 0;
+	}
 
 	// Don't seek if we would go past the end of the current chunk
-	if (PositionStack[StackIndex-1] + nbytes > (int)HeaderStack[StackIndex-1].Get_Size()) {
+	if (PositionStack[StackIndex-1] > HeaderStack[StackIndex-1].Get_Size() ||
+		nbytes > HeaderStack[StackIndex-1].Get_Size() - PositionStack[StackIndex-1]) {
+		Error = true;
 		return 0;
 	}
 
 	// Don't read if we are in a micro chunk and would go past the end of it
-	if (InMicroChunk && MicroChunkPosition + nbytes > MCHeader.Get_Size()) {
+	if (InMicroChunk && (MicroChunkPosition < 0 ||
+		nbytes > MCHeader.Get_Size() - static_cast<uint32>(MicroChunkPosition))) {
+		Error = true;
 		return 0;
 	}
 	
 	uint32 curpos=File->Tell();
 	if (File->Seek(nbytes,SEEK_CUR)-curpos != (int)nbytes) {
+		Error = true;
 		return 0;
 	}
 
@@ -752,19 +837,27 @@ uint32 ChunkLoadClass::Seek(uint32 nbytes)
  *=============================================================================================*/
 uint32 ChunkLoadClass::Read(void * buf,uint32 nbytes)
 {
-	assert(StackIndex >= 1);
+	if (Error || StackIndex < 1 || File == NULL || (buf == NULL && nbytes != 0U)) {
+		Error = true;
+		return 0;
+	}
 
 	// Don't read if we would go past the end of the current chunk
-	if (PositionStack[StackIndex-1] + nbytes > (int)HeaderStack[StackIndex-1].Get_Size()) {
+	if (PositionStack[StackIndex-1] > HeaderStack[StackIndex-1].Get_Size() ||
+		nbytes > HeaderStack[StackIndex-1].Get_Size() - PositionStack[StackIndex-1]) {
+		Error = true;
 		return 0;
 	}
 
 	// Don't read if we are in a micro chunk and would go past the end of it
-	if (InMicroChunk && MicroChunkPosition + nbytes > MCHeader.Get_Size()) {
+	if (InMicroChunk && (MicroChunkPosition < 0 ||
+		nbytes > MCHeader.Get_Size() - static_cast<uint32>(MicroChunkPosition))) {
+		Error = true;
 		return 0;
 	}
 	
 	if (File->Read(buf,nbytes) != (int)nbytes) {
+		Error = true;
 		return 0;
 	}
 
@@ -795,7 +888,7 @@ uint32 ChunkLoadClass::Read(void * buf,uint32 nbytes)
 uint32 ChunkLoadClass::Read(IOVector2Struct * v)
 {
 	assert(v != NULL);
-	return Read(v,sizeof(v));
+	return Read(v,sizeof(*v));
 }
 
 
@@ -814,7 +907,7 @@ uint32 ChunkLoadClass::Read(IOVector2Struct * v)
 uint32 ChunkLoadClass::Read(IOVector3Struct * v)
 {
 	assert(v != NULL);
-	return Read(v,sizeof(v));
+	return Read(v,sizeof(*v));
 }
 
 
@@ -833,7 +926,7 @@ uint32 ChunkLoadClass::Read(IOVector3Struct * v)
 uint32 ChunkLoadClass::Read(IOVector4Struct * v)
 {
 	assert(v != NULL);
-	return Read(v,sizeof(v));
+	return Read(v,sizeof(*v));
 }
 
 
@@ -852,5 +945,5 @@ uint32 ChunkLoadClass::Read(IOVector4Struct * v)
 uint32 ChunkLoadClass::Read(IOQuaternionStruct * q)
 {
 	assert(q != NULL);
-	return Read(q,sizeof(q));
+	return Read(q,sizeof(*q));
 }

@@ -49,6 +49,15 @@
 #include "translatedb.h"
 #include "string_ids.h"
 #include "editctrl.h"
+#include "god.h"
+
+#if defined(RENEGADE_VITA_PORT)
+static void Vita_Report_Manual_Save_Failure(const WCHAR *message)
+{
+	// Original WWUI owns the popup; leave the save menu open for retry.
+	DlgMsgBox::DoDialog(L"Save failed", message);
+}
+#endif
 
 
 ////////////////////////////////////////////////////////////////
@@ -271,6 +280,14 @@ SaveGameMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 void
 SaveGameMenuClass::Save_Game (bool prompt)
 {
+#if defined(RENEGADE_VITA_PORT)
+	if (!cGod::Can_Save_Current_State()) {
+		Vita_Report_Manual_Save_Failure(
+			L"The game cannot be saved during a death or mission transition.");
+		return;
+	}
+#endif
+
 	//
 	//	Get a pointer to the list control
 	//
@@ -299,8 +316,17 @@ SaveGameMenuClass::Save_Game (bool prompt)
 		bool save_file = true;
 		if (list_ctrl->Get_Entry_Data (item_index, 0) == NULL) {
 			Get_Unique_Save_Filename (full_path);
+#if defined(RENEGADE_VITA_PORT)
+			if (full_path.Is_Empty()) {
+				Vita_Report_Manual_Save_Failure(
+					L"A save location could not be selected. Please try again.");
+				return;
+			}
+#endif
 		} else {
-			StringClass filename = (static_cast<StringClass *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index, 2))))->Peek_Buffer ();
+			StringClass *saved_filename = static_cast<StringClass *>(Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index, 2)));
+			if (saved_filename == NULL) return;
+			StringClass filename = saved_filename->Peek_Buffer();
 
 			//
 			//	Build a full filename
@@ -328,6 +354,13 @@ SaveGameMenuClass::Save_Game (bool prompt)
 				//
 				SaveGameManager::Set_Description (Get_Dlg_Item_Text (IDC_FILENAME_EDIT));
 				SaveGameManager::Save_Game( full_path, &_CommandoSaveLoad, NULL );
+#if defined(RENEGADE_VITA_PORT)
+				if (!SaveGameManager::Last_Save_Write_Succeeded()) {
+					Vita_Report_Manual_Save_Failure(
+						L"The game could not finish writing this save. Please try again.");
+					return;
+				}
+#endif
 
 				//
 				//	Quit out of the dialog
@@ -366,6 +399,12 @@ SaveGameMenuClass::On_ListCtrl_DblClk
 void
 SaveGameMenuClass::Get_Unique_Save_Filename (StringClass &filename)
 {
+#if defined(RENEGADE_VITA_PORT)
+	if (_TheWritingFileFactory == NULL) {
+		filename = "";
+		return;
+	}
+#endif
 	int slot	= 1;
 	bool done	= false;
 
@@ -381,6 +420,12 @@ SaveGameMenuClass::Get_Unique_Save_Filename (StringClass &filename)
 			done = !file->Is_Available ();
 			_TheWritingFileFactory->Return_File (file);
 		}
+#if defined(RENEGADE_VITA_PORT)
+		else {
+			filename = "";
+			return;
+		}
+#endif
 	}
 
 	return ;
@@ -716,7 +761,13 @@ SaveGameMenuClass::Check_HD_Space (void)
 	bool retval = true;
 
 	uint64_t diskspace = 0;
-	if (!Renegade_Get_User_Free_Space(diskspace)) return false;
+	if (!Renegade_Get_User_Free_Space(diskspace)) {
+#if defined(RENEGADE_VITA_PORT)
+		Vita_Report_Manual_Save_Failure(
+			L"Available storage space could not be checked. Please try again.");
+#endif
+		return false;
+	}
 
 	//
 	//	Is there at least 2 megs of disk space available?

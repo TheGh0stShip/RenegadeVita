@@ -35,6 +35,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 #include "physicalgameobj.h"
+#include "renegade_client_effects.h"
+#include "renegade_physical_rare.h"
 #include "damage.h"
 #include "scripts.h"
 #include "debug.h"
@@ -193,15 +195,16 @@ bool	PhysicalGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	PhysicalGameObjDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case LEGACY_CHUNKID_DEF_PARENT_OLD:
-				ScriptableGameObjDef::Load( cload );
+				if (!ScriptableGameObjDef::Load( cload )) loaded = false;
 				break;
 								
 			case CHUNKID_DEF_PARENT:
-				DamageableGameObjDef::Load( cload );
+				if (!DamageableGameObjDef::Load( cload )) loaded = false;
 				break;
 								
 			case CHUNKID_DEF_VARIABLES:
@@ -229,7 +232,7 @@ bool	PhysicalGameObjDef::Load( ChunkLoadClass &cload )
 				break;
 			
 			case LEGACY_CHUNKID_DEF_DEFENSEOBJECTDEF:
-				DefenseObjectDef.Load(cload);
+				if (!DefenseObjectDef.Load(cload)) loaded = false;
 				break;
 
 			default:
@@ -240,7 +243,7 @@ bool	PhysicalGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 bool	PhysicalGameObjDef::Is_Valid_Config (StringClass &message)
@@ -432,7 +435,7 @@ enum	{
 bool	PhysicalGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-		DamageableGameObj::Save( csave );
+		if (!DamageableGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -453,13 +456,13 @@ bool	PhysicalGameObj::Save( ChunkSaveClass & csave )
 
 	if ( AnimControl ) {
 		csave.Begin_Chunk( CHUNKID_ANIM_CONTROL );
-		AnimControl->Save( csave );
+		if (!AnimControl->Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
    if ( HostGameObj.Get_Ptr() != NULL ) {
 		csave.Begin_Chunk( CHUNKID_HOST_GAME_OBJ );
-		HostGameObj.Save( csave );
+		if (!HostGameObj.Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
@@ -477,23 +480,24 @@ bool	PhysicalGameObj::Save( ChunkSaveClass & csave )
 	Vector3					TintColor;
 */
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	PhysicalGameObj::Load( ChunkLoadClass &cload )
 {
 	WWASSERT( PhysObj == NULL );		// May need to change to release???
 	CombatPhysObserverClass * phys_observer_ptr = NULL;
+	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case LEGACY_CHUNKID_PARENT_OLD:
-				ScriptableGameObj::Load( cload );
+				if (!ScriptableGameObj::Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_PARENT:
-				DamageableGameObj::Load( cload );
+				if (!DamageableGameObj::Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -524,16 +528,16 @@ bool	PhysicalGameObj::Load( ChunkLoadClass &cload )
 				break;
 								
 			case LEGACY_CHUNKID_DEFENSE:
-				DefenseObject.Load( cload );
+				if (!DefenseObject.Load(cload)) loaded = false;
 				break;
 								
 			case CHUNKID_ANIM_CONTROL:
 				Set_Animation( NULL );  // Build AnimControl
-				AnimControl->Load( cload );
+				if (AnimControl == NULL || !AnimControl->Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_HOST_GAME_OBJ:
-				HostGameObj.Load( cload );
+				if (!HostGameObj.Load(cload)) loaded = false;
 				break;
 
 			default:
@@ -544,8 +548,11 @@ bool	PhysicalGameObj::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	WWASSERT( PhysObj != NULL );		
-	REQUEST_REF_COUNTED_POINTER_REMAP( (RefCountClass **)&PhysObj );
+	if (PhysObj != NULL) {
+		REQUEST_REF_COUNTED_POINTER_REMAP((RefCountClass **)&PhysObj);
+	} else {
+		loaded = false;
+	}
 
 	if ( ActiveConversation != NULL ) {
 		REQUEST_REF_COUNTED_POINTER_REMAP( (RefCountClass **)&ActiveConversation );
@@ -555,11 +562,13 @@ bool	PhysicalGameObj::Load( ChunkLoadClass &cload )
 	WWASSERT(phys_observer_ptr != NULL);
 	if (phys_observer_ptr != NULL) {
 		SaveLoadSystemClass::Register_Pointer(phys_observer_ptr, (CombatPhysObserverClass *)this);
+	} else {
+		loaded = false;
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 void PhysicalGameObj::On_Post_Load (void)					
@@ -1053,15 +1062,30 @@ void	PhysicalGameObj::Import_Creation( BitStreamClass &packet )
 	//	Read the object's position
 	//
 	Vector3 position (0, 0, 0);
-	packet.Get( position.X, BITPACK_WORLD_POSITION_X );
-	packet.Get( position.Y, BITPACK_WORLD_POSITION_Y );
-	packet.Get( position.Z, BITPACK_WORLD_POSITION_Z );
+	bool modern = false;
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	modern = Renegade_Client_Uses_TT_Replication();
+#endif
+	if (modern) {
+		packet.Get(position.X);
+		packet.Get(position.Y);
+		packet.Get(position.Z);
+	} else {
+		packet.Get(position.X, BITPACK_WORLD_POSITION_X);
+		packet.Get(position.Y, BITPACK_WORLD_POSITION_Y);
+		packet.Get(position.Z, BITPACK_WORLD_POSITION_Z);
+	}
 
 	//
 	//	Read the object's facing
 	//
 	float facing = 0;
 	packet.Get( facing );
+	if (packet.Has_Read_Error()) return;
+	if (!WWMath::Is_Valid_Float(position.X)) position.X = 0;
+	if (!WWMath::Is_Valid_Float(position.Y)) position.Y = 0;
+	if (!WWMath::Is_Valid_Float(position.Z)) position.Z = 0;
+	if (!WWMath::Is_Valid_Float(facing)) facing = 0;
 
 	//
 	//	Build a matrix from the position and facing, then set it
@@ -1163,17 +1187,34 @@ void	PhysicalGameObj::Export_Rare( BitStreamClass &packet )
 void	PhysicalGameObj::Import_Rare( BitStreamClass &packet )
 {
 	DamageableGameObj::Import_Rare( packet );
+	bool modern = false;
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	modern = Renegade_Client_Uses_TT_Replication();
+#endif
+	if (!Renegade_Validate_Physical_Rare(packet, modern, As_VehicleGameObj() != NULL)) {
+		packet.Mark_Read_Error();
+		return;
+	}
+	RenegadePhysicalRarePrefix prefix;
+	if (modern) {
+		Renegade_Read_Physical_Rare_Prefix(packet, prefix);
+		PhysObj->Set_Collision_Group(prefix.CollisionGroup);
+		if (prefix.ClearAnimation && AnimControl) {
+			AnimControl->Set_Animation(static_cast<const char *>(NULL), 0, 0);
+			AnimControl->Set_Mode(ANIM_MODE_STOP);
+		}
+	}
 
 	//
 	//	Get the model name
 	//
 	StringClass model_name;
-	packet.Get_Terminated_String( model_name.Get_Buffer( 256 ), 256, true );
+	packet.Get_Terminated_String(model_name.Get_Buffer(modern ? 1024 : 256), modern ? 1024 : 256, true);
 
 	//
 	//	Set the new model (if necessary)
 	//
-	const char *old_model_name = Peek_Physical_Object()->Peek_Model()->Get_Name();
+	const char *old_model_name = Peek_Model() ? Peek_Model()->Get_Name() : "";
 	if ( model_name.Compare_No_Case (old_model_name) != 0 ) {
 		Peek_Physical_Object()->Set_Model_By_Name( model_name );
 	}
@@ -1185,7 +1226,7 @@ void	PhysicalGameObj::Import_Rare( BitStreamClass &packet )
 	int target_frame	= 0;
 	int curr_frame		= 0;
 	int anim_mode		= ANIM_MODE_TARGET;
-	packet.Get_Terminated_String( animation_name.Get_Buffer( 256 ), 256, true );
+	packet.Get_Terminated_String(animation_name.Get_Buffer(modern ? 1024 : 256), modern ? 1024 : 256, true);
 	packet.Get( curr_frame );
 	packet.Get( target_frame );
 	packet.Get( anim_mode );
@@ -1226,11 +1267,15 @@ void	PhysicalGameObj::Import_Rare( BitStreamClass &packet )
 	//
 	int player_type = packet.Get( player_type );
 	Set_Player_Type( player_type );
+	if (modern) {
+		RadarBlipColorType = prefix.RadarColor;
+		RadarBlipShapeType = prefix.RadarShape;
+	}
 
 	HUDPokableIndicatorEnabled = packet.Get( HUDPokableIndicatorEnabled );
 
 
-	if ( As_VehicleGameObj() != NULL ) {
+	if (modern || As_VehicleGameObj() != NULL) {
 		// Get Hidden
 		bool hidden = packet.Get( hidden );
 		if ( Peek_Model() ) {
@@ -1415,4 +1460,3 @@ void PhysicalGameObj::Object_Shattered_Something
 														false		// no emitter
 														);
 }
-

@@ -142,7 +142,7 @@ public:
 	//	Save/load stuff
 	//
 	void					Save (ChunkSaveClass &csave);
-	void					Load (ChunkLoadClass &cload);
+	bool					Load (ChunkLoadClass &cload);
 	void					On_Post_Load (void);
 
 	//
@@ -217,7 +217,7 @@ protected:
 	//
 	//	Save/load methods
 	//
-	void		Load_Variables (ChunkLoadClass &cload);
+	bool		Load_Variables (ChunkLoadClass &cload);
 
 private:
 

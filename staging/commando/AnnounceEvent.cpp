@@ -39,13 +39,15 @@
 #include "apppackettypes.h"
 #include "networkobjectmgr.h"
 #include "cnetwork.h"
+#include "playermanager.h"
+#include "player.h"
 #include "gamemode.h"
 #include "playertype.h"
 #include "translateobj.h"
 #include "translatedb.h"
 #include "wwaudio.h"
 #include "messagewindow.h"
-#include <wwlib\widestring.h>
+#include "widestring.h"
 #include "cncmodesettings.h"
 #include "floodprotectionmgr.h"
 
@@ -333,7 +335,7 @@ void SCAnnouncement::Import_Creation(BitStreamClass& packet)
 	packet.Get(mToID);
 	packet.Get(mFromID);
 	packet.Get(mAnnouncementID);
-	packet.Add(mRadioCmdID);
+	packet.Get(mRadioCmdID);
 
 	BYTE type = 0;
 	packet.Get(type);

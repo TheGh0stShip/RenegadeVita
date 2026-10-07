@@ -79,11 +79,13 @@ public:
 
 protected:
 	void	Play_Movie( const char * filename );
+	void	Stop_Current_Movie( void );
 
 	CDVerifyClass		CDVerifier;
 	StringClass			PendingMovieFilename;
 	bool					IsPending;
 	bool					IsPlaying;
+	bool					WasLeavePressed;
 };
 
 #endif //	MOVIE_H

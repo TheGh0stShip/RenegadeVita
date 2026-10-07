@@ -70,6 +70,10 @@ public:
 	//
 	static void		Set_Is_Client_Required (bool onoff)	{ IsClientRequired = onoff; }
 	static void		Set_Is_Server_Required (bool onoff)	{ IsServerRequired = onoff; }
+#if defined(RENEGADE_VITA_LAN_FRONTEND)
+	static bool		Is_Client_Required (void)			{return IsClientRequired;}
+	static bool		Is_Server_Required (void)			{return IsServerRequired;}
+#endif
 
 	//
 	//	Interface type init
@@ -82,6 +86,9 @@ public:
 	static void		Initialize_WOL (void);
 	static void		Initialize_SP (void);
 	static void		Initialize_Skirmish (void);
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+	static bool		Initialize_Direct_IP(bool dedicated_server);
+#endif
 
 	static bool		Is_LAN_Initialized (void)			{ return Mode == MODE_LAN; }
 	static bool		Is_WOL_Initialized (void)			{ return Mode == MODE_WOL; }
@@ -102,6 +109,10 @@ public:
 	static void		Think (void);
 	static void		Set_Needs_Game_Exit			(bool onoff)	{ NeedsGameExit = onoff; }
 	static void		Set_Needs_Game_Exit_All		(bool onoff)	{ NeedsGameExitAll = onoff; }
+#if defined(RENEGADE_VITA_PORT)
+	static bool		Has_Pending_Game_Exit(void)
+		{ return NeedsGameExit || NeedsGameExitAll; }
+#endif
 
 	//
 	//	WOL specific
@@ -119,7 +130,8 @@ private:
 		MODE_SP,
 		MODE_SKIRMISH,
 		MODE_LAN,
-		MODE_WOL
+		MODE_WOL,
+		MODE_DIRECT_IP
 	};
 
 	////////////////////////////////////////////////////////////////

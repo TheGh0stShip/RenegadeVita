@@ -53,7 +53,9 @@
 SaveLoadSubSystemClass *		SaveLoadSystemClass::SubSystemListHead = NULL;
 PersistFactoryClass *			SaveLoadSystemClass::FactoryListHead = NULL;
 SList<PostLoadableClass>		SaveLoadSystemClass::PostLoadList;
+SList<PersistClass>			SaveLoadSystemClass::RejectedLoadList;
 PointerRemapClass					SaveLoadSystemClass::PointerRemapper;
+bool								SaveLoadSystemClass::ReportedLoadFailure = false;
 
 
 
@@ -62,48 +64,103 @@ bool SaveLoadSystemClass::Save (ChunkSaveClass &csave,SaveLoadSubSystemClass & s
 	bool ok = true;
 
 	if (subsystem.Contains_Data()) {
-		csave.Begin_Chunk (subsystem.Chunk_ID ());
+		ok = csave.Begin_Chunk (subsystem.Chunk_ID ());
 		ok &= subsystem.Save (csave);
-		csave.End_Chunk ();
+		ok = csave.End_Chunk () && ok;
 	}
 
-	return ok;
+	return ok && !csave.Has_Error();
 }
 
-bool SaveLoadSystemClass::Load (ChunkLoadClass &cload,bool auto_post_load)
+bool SaveLoadSystemClass::Load (ChunkLoadClass &cload,bool auto_post_load,
+	bool require_player_save_subsystems)
 {
 	WWLOG_PREPARE_TIME_AND_MEMORY("SaveLoadSystemClass::Load");
 	PointerRemapper.Reset();
+	ReportedLoadFailure = false;
+	// Rejected objects outlive the failed Load return so the caller can unwind
+	// partially loaded owners that may have remapped pointers to them.
+	PersistClass *retired_object = RejectedLoadList.Remove_Head();
+	while (retired_object != NULL) {
+		delete retired_object;
+		retired_object = RejectedLoadList.Remove_Head();
+	}
 	WWLOG_INTERMEDIATE("PointerRemapper.Reset()");
 	bool ok = true;
+	SaveLoadSubSystemClass *sys = NULL;
+	if (require_player_save_subsystems) {
+		for (sys = SubSystemListHead; sys != NULL; sys = sys->NextSubSystem) {
+			sys->PlayerSaveLoadSeen = false;
+		}
+	}
 
 	// Load each chunk we encounter and link the manager into the PostLoad list
 	while (cload.Open_Chunk ()) {
 		SaveLoadStatus::Inc_Status_Count();		// Count the sub systems loaded
-		SaveLoadSubSystemClass *sys = Find_Sub_System(cload.Cur_Chunk_ID ());
+		sys = Find_Sub_System(cload.Cur_Chunk_ID ());
 		WWLOG_INTERMEDIATE("Find_Sub_System");
 		if (sys != NULL) {
 //WWRELEASE_SAY(("			Name: %s\n",sys->Name()));
-			INIT_SUB_STATUS(sys->Name());
-			ok &= sys->Load(cload);
-			WWLOG_INTERMEDIATE(sys->Name());
+			if (require_player_save_subsystems && sys->Required_For_Player_Save() &&
+				sys->PlayerSaveLoadSeen) {
+				ok = false;
+			} else {
+				if (require_player_save_subsystems && sys->Required_For_Player_Save()) {
+					sys->PlayerSaveLoadSeen = true;
+				}
+				INIT_SUB_STATUS(sys->Name());
+				ok &= sys->Load(cload);
+				WWLOG_INTERMEDIATE(sys->Name());
+			}
 		}
 		cload.Close_Chunk();
 	}
+	ok = !cload.Has_Error() && ok;
+
+	if (require_player_save_subsystems) {
+		for (sys = SubSystemListHead; sys != NULL; sys = sys->NextSubSystem) {
+			if (sys->Required_For_Player_Save() && !sys->PlayerSaveLoadSeen) {
+				ok = false;
+			}
+			sys->PlayerSaveLoadSeen = false;
+		}
+	}
+	ok = !ReportedLoadFailure && ok;
 
 	// Process all of the pointer remap requests
-	PointerRemapper.Process();
+	ok = PointerRemapper.Process() && ok;
 	WWLOG_INTERMEDIATE("PointerRemapper.Process()");
 	PointerRemapper.Reset();
 	WWLOG_INTERMEDIATE("PointerRemapper.Reset()");
 
-	// Call PostLoad on each PersistClass that wanted post-load
-	if (auto_post_load) {
+	// A rejected load still remaps pointer tokens above so partially created
+	// objects can be destroyed safely, but it must never execute their post-load
+	// behavior. Remove registrations while every registered object is alive.
+	if (!ok) {
+		Discard_Post_Load_Callbacks();
+	} else if (auto_post_load) {
 		Post_Load_Processing(NULL);
 	}
 	WWLOG_INTERMEDIATE("PostLoadProcessing");
 
 	return ok;
+}
+
+void SaveLoadSystemClass::Report_Load_Failure (void)
+{
+	ReportedLoadFailure = true;
+}
+
+bool SaveLoadSystemClass::Has_Reported_Load_Failure (void)
+{
+	return ReportedLoadFailure;
+}
+
+void SaveLoadSystemClass::Retain_Rejected_Object_Until_Next_Load (PersistClass *object)
+{
+	if (object != NULL && RejectedLoadList.Find_Node(object) == NULL) {
+		RejectedLoadList.Add_Tail(object);
+	}
 }
 
 // Nework update macro for post loader.
@@ -130,6 +187,15 @@ bool SaveLoadSystemClass::Post_Load_Processing (void(*network_callback)(void))
 	}
 
 	return true;
+}
+
+void SaveLoadSystemClass::Discard_Post_Load_Callbacks (void)
+{
+	PostLoadableClass *obj = PostLoadList.Remove_Head();
+	while (obj != NULL) {
+		obj->Set_Post_Load_Registered(false);
+		obj = PostLoadList.Remove_Head();
+	}
 }
 
 void SaveLoadSystemClass::Register_Sub_System (SaveLoadSubSystemClass * sys)

@@ -59,39 +59,59 @@ enum	{
 bool	CommandoSaveLoadClass::Save( ChunkSaveClass &csave )
 {
 	WWMEMLOG(MEM_GAMEDATA);
+	bool saved = true;
 
 	csave.Begin_Chunk( CHUNKID_NETWORK );
-	cNetwork::Save( csave );
-	csave.End_Chunk();
+	saved = cNetwork::Save(csave) && saved;
+	saved = csave.End_Chunk() && saved;
 
 	csave.Begin_Chunk( CHUNKID_GOD );
-	cGod::Save( csave );
-	csave.End_Chunk();
+	saved = cGod::Save(csave) && saved;
+	saved = csave.End_Chunk() && saved;
 
 	csave.Begin_Chunk( CHUNKID_CAMPAIGN );
-	CampaignManager::Save( csave );
-	csave.End_Chunk();
+	saved = CampaignManager::Save(csave) && saved;
+	saved = csave.End_Chunk() && saved;
 
-	return true;
+	return saved && !csave.Has_Error();
 }
 
 bool	CommandoSaveLoadClass::Load( ChunkLoadClass &cload )
 {
 	WWMEMLOG(MEM_GAMEDATA);
+	bool loaded = true;
+	bool network_seen = false;
+	bool god_seen = false;
+	bool campaign_seen = false;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_NETWORK:
-				cNetwork::Load( cload );
+				if (network_seen) {
+					loaded = false;
+				} else {
+					network_seen = true;
+					loaded = cNetwork::Load( cload ) && loaded;
+				}
 				break;
 
 			case CHUNKID_GOD:
-				cGod::Load( cload );
+				if (god_seen) {
+					loaded = false;
+				} else {
+					god_seen = true;
+					loaded = cGod::Load( cload ) && loaded;
+				}
 				break;
 
 			case CHUNKID_CAMPAIGN:
-				CampaignManager::Load( cload );
+				if (campaign_seen) {
+					loaded = false;
+				} else {
+					campaign_seen = true;
+					loaded = CampaignManager::Load( cload ) && loaded;
+				}
 				break;
 
 			default:
@@ -101,7 +121,7 @@ bool	CommandoSaveLoadClass::Load( ChunkLoadClass &cload )
 		}
 		cload.Close_Chunk();
 	}
-	return true;
+	return loaded && network_seen && god_seen && campaign_seen;
 }
 
 

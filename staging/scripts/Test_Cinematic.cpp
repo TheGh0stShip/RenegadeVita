@@ -129,25 +129,25 @@ public:
 	** Object Slots
 	*/
 	#define	NUM_SLOTS	40
-	int	ObjectSlots[ NUM_SLOTS ];
+	int	ObjectSlots[ NUM_SLOTS ] = {};
 
-	int	MyID;  // doesn't need to be saved
+	int	MyID = 0;  // doesn't need to be saved
 
 	/*
 	** Timing
 	*/
-	unsigned int	LastSyncTime;
-	float				Time;
-	float				FrameSync;
-	bool				PrimaryKilled;
+	unsigned int	LastSyncTime = 0;
+	float				Time = 0.0f;
+	float				FrameSync = 0.0f;
+	bool				PrimaryKilled = false;
 
-	bool				IsCameraCinematic;
+	bool				IsCameraCinematic = false;
 
 
 	/*
 	** Parameters
 	*/
-	char * NextParameter;
+	char * NextParameter = NULL;
 
 	/*
 	** Control Lines
@@ -158,7 +158,12 @@ public:
 		ControlLine *	Next;
 	};
 
-	ControlLine * Controls;
+	ControlLine * Controls = NULL;
+
+	~Test_Cinematic() override
+	{
+		while (Controls != NULL) Remove_Head_Control_Line();
+	}
 
 	void	Add_Control_Line( float time, const char * command )
 	{
@@ -203,14 +208,11 @@ public:
 	*/
 	void	Load_Control_File( const char * filename ) 
 	{
-		Commands->Debug_Message( "Loading Control File %s\n", (int)filename );
+		Commands->Debug_Message( "Loading Control File %s\n", filename );
 
-		char full_filename[80];
-		sprintf( full_filename, "DATA\\%s", filename );
-//		FILE * in = fopen( full_filename, "rt" );
 		int handle = Commands->Text_File_Open( filename );
 		if ( handle == 0 ) {
-			Commands->Debug_Message( "Failed to open %s\n", (int)full_filename );
+			Commands->Debug_Message( "Failed to open DATA\\%s\n", filename );
 			return;
 		}
 
@@ -311,6 +313,7 @@ public:
 #define	CHUNKID_CONTROL_COMMAND_SIZE				5
 #define	CHUNKID_CONTROL_COMMAND						6
 #define	CHUNKID_PRIMARY_KILLED						7
+#define CHUNKID_CAMERA_CINEMATIC 8
 
 	/*
 	**
@@ -328,6 +331,7 @@ public:
 			Commands->Save_Data(saver, CHUNKID_VARIABLE_TIME, sizeof( Time ), &Time );
 //Commands->Debug_Message( "Saving Time %f\n", Time );
 			Commands->Save_Data(saver, CHUNKID_PRIMARY_KILLED, sizeof( PrimaryKilled ), &PrimaryKilled );
+			Commands->Save_Data(saver, CHUNKID_CAMERA_CINEMATIC, sizeof(IsCameraCinematic), &IsCameraCinematic);
 		Commands->End_Chunk(saver);
 
 		// Save the Object Slots
@@ -358,6 +362,8 @@ public:
 	void Load(ScriptLoader& loader)
 	{
 		Controls = NULL;
+		// Legacy saves omit this field; never read an uninitialized bool.
+		IsCameraCinematic = false;
 		NextParameter = NULL;
 
 		for ( int i = 0; i < NUM_SLOTS; i++ ) {
@@ -395,6 +401,10 @@ public:
 //Commands->Debug_Message( "Loading Time %f\n", Time );
 								break;
 
+							case CHUNKID_CAMERA_CINEMATIC:
+								Commands->Load_Data(loader, sizeof(IsCameraCinematic), &IsCameraCinematic);
+								break;
+
 						}
 						Commands->Load_End(loader);
 					}
@@ -430,10 +440,12 @@ public:
 						}
 						if ( id == CHUNKID_CONTROL_COMMAND ) {
 							#define	MAX_COMMAND_LOAD_SIZE 200
-							char load_command[MAX_COMMAND_LOAD_SIZE+1];
-							if ( len < MAX_COMMAND_LOAD_SIZE ) {
+							char load_command[MAX_COMMAND_LOAD_SIZE+1] = {};
+							if ( len > 0 && len < MAX_COMMAND_LOAD_SIZE ) {
 								Commands->Load_Data(loader, len, &load_command[0] );
-								Add_Control_Line( time, load_command );
+								if (load_command[len - 1] == '\0') {
+									Add_Control_Line( time, load_command );
+								}
 //Commands->Debug_Message( "Loading Command %f %s\n", time, load_command );
 							}
 						}
@@ -474,7 +486,17 @@ public:
 		}
 
 		// Create a decoration cinematic object, then set it's model
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		const bool vita_trace_object = (slot == 19 || slot == 37) && strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0;
+		const uint64_t vita_create_start_us = vita_trace_object ? sceKernelGetProcessTimeWide() : 0U;
+#endif
 		GameObject * obj = Commands->Create_Object( "Generic_Cinematic", Commands->Get_Position( Owner() ) );
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		if (vita_trace_object) {
+			A30_Vita_Log("A4 M13 cinematic object create: slot=%d model=%s object_us=%llu obj=%p\n",
+				slot, model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_create_start_us), static_cast<void *>(obj));
+		}
+#endif
 #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
 		if (strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0 && slot == 0) {
 			A30_Vita_Log("A4 M13 intro script: create slot=0 model=%s object=%p\n",
@@ -485,7 +507,16 @@ public:
 
 		if ( obj ) {
 			Commands->Add_To_Dirty_Cull_List(obj);
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+			const uint64_t vita_model_start_us = vita_trace_object ? sceKernelGetProcessTimeWide() : 0U;
+#endif
 			Commands->Set_Model( obj, model_name );
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+			if (vita_trace_object) {
+				A30_Vita_Log("A4 M13 cinematic object model: slot=%d model=%s set_model_us=%llu obj=%p\n",
+					slot, model_name, static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_model_start_us), static_cast<void *>(obj));
+			}
+#endif
 			Commands->Set_Facing( obj, Commands->Get_Facing( Owner() ) );
 			if ( slot != -1 ) {
 				ObjectSlots[ slot ] = Commands->Get_ID( obj );
@@ -523,6 +554,12 @@ public:
 		}
 
 		GameObject * obj = NULL;
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		const bool vita_m13_intro = strcmp(Get_Parameter("ControlFilename"), "X00_Intro.txt") == 0;
+		const bool vita_trace_real_object =
+			vita_m13_intro && (slot == 13 || slot == 18 || slot == 27 || slot == 34 || slot == 36);
+		const uint64_t vita_real_create_start_us = vita_trace_real_object ? sceKernelGetProcessTimeWide() : 0U;
+#endif
 		if (( host_slot_name != NULL ) && ( *host_slot_name != 0 ) ) {
 			int host_slot = atoi( host_slot_name );
 			GameObject * host_obj = Commands->Find_Object( ObjectSlots[ host_slot ] );
@@ -531,6 +568,18 @@ public:
 			obj = Commands->Create_Object( preset_name, Commands->Get_Position( Owner() ) );
 			Commands->Set_Facing( obj, Commands->Get_Facing( Owner() ) );
 		}
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		if (vita_trace_real_object) {
+			A30_Vita_Log("A4 M13 real object create: slot=%d preset=%s host_slot=%s host_bone=%s obj=%p id=%d elapsed_us=%llu\n",
+				slot,
+				preset_name != NULL ? preset_name : "",
+				host_slot_name != NULL ? host_slot_name : "",
+				host_bone_name != NULL ? host_bone_name : "",
+				static_cast<void *>(obj),
+				obj != NULL ? Commands->Get_ID(obj) : 0,
+				static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - vita_real_create_start_us));
+		}
+#endif
 
 		if ( obj ) {
 			Commands->Enable_Engine( obj, true );
@@ -719,6 +768,12 @@ public:
 
 
 		GameObject * to = Commands->Find_Object( to_id );
+		#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+		if (stricmp(Get_Parameter("ControlFilename"), "X0Z_Finale.txt") == 0) {
+			A30_Vita_Log("M13 finale: cinematic Send_Custom target=%d resolved=%d type=%d param=%d\n",
+				to_id, to != NULL ? 1 : 0, type, parameter);
+		}
+		#endif
 		if ( to ) {
 			Commands->Send_Custom_Event( Owner(), to, type, parameter );
 		} else {
@@ -804,7 +859,7 @@ public:
 			GameObject * obj = Commands->Find_Object( id );
 			if ( obj ) {
 				Commands->Enable_Hibernation( obj, false );
-				char id[10];
+				char id[12]; // signed 32-bit decimal ID, sign and terminator
 				sprintf( id, "%d", MyID );
 				Commands->Attach_Script( obj, "Test_Cinematic_Primary_Killed", id );
 			} else {
@@ -977,6 +1032,7 @@ public:
 #endif
 	}
 
+
 	void	Parse_Commands( GameObject* obj ) {
 
 		unsigned int sync_diff = Commands->Get_Sync_Time() - LastSyncTime;
@@ -988,6 +1044,7 @@ public:
 		MyID = Commands->Get_ID( obj );
 
 //		Commands->Debug_Message( "Cinematic Time %1.3f Frame %1.3f Bump Time %1.3f\n", Time, Time * 30.0f, bump_time );
+
 
 		// If Primary Destroyed, 
 		if ( PrimaryKilled ) {
@@ -1124,4 +1181,3 @@ parameter = OBJECT_ID
 
 ;_________________________________________
 #endif
-

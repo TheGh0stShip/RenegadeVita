@@ -73,6 +73,10 @@ public:
 
 	DECLARE_EDITABLE( ArmedGameObjDef, PhysicalGameObjDef );
 
+	// Vita loading-screen warm-up reads the primary weapon preset (read-only).
+	int										Get_Weapon_Def_ID( void ) const	{ return WeaponDefID; }
+	int										Get_Secondary_Weapon_Def_ID( void ) const	{ return SecondaryWeaponDefID; }
+
 protected:
 	float											WeaponTiltRate;
 	float											WeaponTiltMin;
@@ -138,6 +142,7 @@ public:
 
 protected:
 	WeaponBagClass *			WeaponBag;				// Weapon & Ammo collection
+	void Init_Muzzle_Bones(void);
 
 private:
 	Vector3						TargetingPos;
@@ -150,7 +155,6 @@ private:
 	enum { MAX_MUZZLES = 4 };
 	MuzzleRecoilClass			MuzzleRecoilController[MAX_MUZZLES];
 
-	void							Init_Muzzle_Bones( void );
 };
 
 

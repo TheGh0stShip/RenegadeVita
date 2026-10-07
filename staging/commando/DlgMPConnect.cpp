@@ -42,13 +42,17 @@
 #include "resource.h"
 #include <wwdebug\wwdebug.h>
 #include "dlgmainmenu.h"
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "gamespyadmin.h"
+#endif
 #include "specialbuilds.h"
 #include "dialogtests.h"
 #include "dialogmgr.h"
 #include "gamemode.h"
 #include "langmode.h"
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "wolgmode.h"
+#endif
 
 /******************************************************************************
 *
@@ -198,12 +202,15 @@ void DlgMPConnect::On_Command(int ctrlID, int message, DWORD param)
 			{
 			cNetwork::Cleanup_Client();
 			}
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 		if (cGameSpyAdmin::Get_Is_Launched_From_Gamespy()) 
 			{
 			extern void Stop_Main_Loop (int);
 			Stop_Main_Loop(EXIT_SUCCESS);
 			}
-		else if (DialogMgrClass::Get_Dialog_Count () == 1)
+		else
+#endif
+		if (DialogMgrClass::Get_Dialog_Count () == 1)
 			{
 			START_DIALOG (MainMenuDialogClass);
 			}
@@ -272,10 +279,12 @@ void DlgMPConnect::On_Periodic(void)
 			// Remove the dialog from menuing system
 			End_Dialog();
 
-			if (GameModeManager::Find("LAN")->Is_Active())
+			GameModeClass *lan_mode = GameModeManager::Find("LAN");
+			if (lan_mode != NULL && lan_mode->Is_Active())
 				{
       		PLC->Refusal_Actions();
    			}
+#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 			else
 				{
 		 		GameModeClass* gameMode = GameModeManager::Find("WOL");
@@ -287,6 +296,7 @@ void DlgMPConnect::On_Periodic(void)
 			 		wolGame->Refusal_Actions();
 		 			}
 				}
+#endif
 
 			Release_Ref();
 			}

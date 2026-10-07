@@ -4603,7 +4603,7 @@ DECLARE_SCRIPT (M09_Camera_Activate, "Camera0=0:int, Camera1=0:int, Camera2=0:in
 		{
 			already_entered = true;
 
-			for (int x = 0; x < 10; x++)
+			for (int x = 0; x < int(sizeof(camera) / sizeof(camera[0])); x++)
 			{
 				if (camera [x] != 0)
 				{

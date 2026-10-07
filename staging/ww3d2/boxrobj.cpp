@@ -104,6 +104,7 @@
 #include "sortingrenderer.h"
 #include "visrasterizer.h"
 #include "meshgeometry.h"
+#include <string.h>
 #if defined(RENEGADE_VITA_PORT)
 #include "ww3d_vita_renderer.h"
 #endif
@@ -1365,7 +1366,13 @@ OBBoxClass & OBBoxRenderObjClass::Get_Box(void)
 PrototypeClass * BoxLoaderClass::Load_W3D(ChunkLoadClass & cload)
 {
 	W3dBoxStruct box;
-	cload.Read(&box,sizeof(box));
+	if (cload.Cur_Chunk_Length() != sizeof(box) ||
+		cload.Read(&box, sizeof(box)) != sizeof(box) ||
+		cload.Has_Error() ||
+		::memchr(box.Name, '\0', sizeof(box.Name)) == NULL ||
+		box.Name[0] == '\0') {
+		return NULL;
+	}
 	return new BoxPrototypeClass(box);
 }
 

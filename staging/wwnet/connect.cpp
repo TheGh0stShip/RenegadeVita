@@ -396,6 +396,7 @@ LPCSTR cConnection::Type_Translation(int type)
 		ADD_CASE(PACKETTYPE_ACCEPT_SC);
 		ADD_CASE(PACKETTYPE_REFUSAL_SC);
 		ADD_CASE(PACKETTYPE_FIREWALL_PROBE);
+		ADD_CASE(PACKETTYPE_RESOURCE_MANAGER);
 
 	default:
 		DIE;
@@ -714,6 +715,10 @@ bool cConnection::Receive_Packet()
 	WWASSERT(p_from_address != NULL);
 	cRemoteHost * p_sender_rhost = NULL;
 	if (sender_id != cPacket::UNDEFINED_ID) {
+		if (PRHost == NULL || sender_id < MinRHost || sender_id > MaxRHost) {
+			packet.Flush();
+			return true;
+		}
 		p_sender_rhost = PRHost[sender_id];
 
 		//WWASSERT(p_sender_rhost != NULL);
@@ -786,6 +791,11 @@ bool cConnection::Receive_Packet()
          }
 
       case PACKETTYPE_ACCEPT_SC: {
+				if (IsServer || sender_id != SERVER_RHOST_ID || p_sender_rhost == NULL ||
+					!Sender_Id_Tests(packet)) {
+					packet.Flush();
+					return false;
+				}
 				//WWDEBUG_SAY(("cConnection::Receive_Packet : PACKETTYPE_ACCEPT_SC received\n"));
 				WWDEBUG_SAY(("CONNECT: PACKETTYPE_ACCEPT_SC received\n"));
 
@@ -803,7 +813,22 @@ bool cConnection::Receive_Packet()
 
                WWASSERT(sender_id == SERVER_RHOST_ID);
 
-					packet.Get(LocalId); // This is where we learn our id
+					int accepted_id = ID_UNKNOWN;
+					if (packet.Get_Bit_Read_Position() > packet.Get_Bit_Write_Position() ||
+						packet.Get_Bit_Write_Position() - packet.Get_Bit_Read_Position() < 32U) {
+						Abort_Client();
+						packet.Flush();
+						return false;
+					}
+					packet.Get(accepted_id);
+					if (accepted_id <= SERVER_RHOST_ID ||
+						!Renegade_Read_TT_Server_Info(packet, TTServerInfo)) {
+						fprintf(stderr, "connection: invalid or unsupported server accept metadata\n");
+						Abort_Client();
+						packet.Flush();
+						return false;
+					}
+					LocalId = accepted_id;
                WWDEBUG_SAY(("  Received LocalId:%d\n", LocalId));
                Send_Ack(p_from_address, packet_id);
 
@@ -917,6 +942,12 @@ bool cConnection::Receive_Packet()
          }
 
 
+      case PACKETTYPE_RESOURCE_MANAGER:
+            if (IsServer || !TTServerInfo.Present || sender_id != SERVER_RHOST_ID) {
+               packet.Flush();
+               return true;
+            }
+            // TT resources share the original ACK, duplicate and ordering owner.
       case PACKETTYPE_RELIABLE: {
 
 				//WWDEBUG_SAY(("CONNECT: PACKETTYPE_RELIABLE received\n"));
@@ -1319,6 +1350,16 @@ int cConnection::Receive_Wrapper(cPacket & packet)
 	int ret_code = Low_Level_Receive_Wrapper(full_packet);
 
 	if (ret_code > 0) {
+		const unsigned header_size = cPacket::Get_Packet_Header_Size();
+		if (static_cast<unsigned>(ret_code) < header_size) return 0;
+		const BYTE *header = reinterpret_cast<const BYTE *>(full_packet.Get_Data()) + header_size - 7;
+		const unsigned body_bits = (static_cast<unsigned>(header[5]) << 8) | header[6];
+		if ((header[0] >> 4) > PACKETTYPE_LAST ||
+			body_bits > (static_cast<unsigned>(ret_code) - header_size) * 8U ||
+			body_bits > packet.Get_Buffer_Size() * 8U) {
+			// Reject unknown types before indexing the original per-type statistics.
+			return 0;
+		}
 		//
 		// We won't be able to read the header from the full packet unless we
 		// set the bit length (approximately).
@@ -1942,6 +1983,17 @@ void cConnection::Service_Read()
 
 					WWASSERT(p_packet->Get_Type() >= PACKETTYPE_FIRST && p_packet->Get_Type() <= PACKETTYPE_LAST);
 
+					if (p_packet->Get_Type() == PACKETTYPE_RESOURCE_MANAGER) {
+						if (!TTResources.Receive(*p_packet)) {
+							fprintf(stderr, "connection: invalid TT %s; session stopped\n", TTResources.Get_Error());
+							Abort_Client();
+						}
+						p_packet->Flush();
+					}
+					if (IsDestroy) {
+						// Preserve queue ownership until normal connection cleanup.
+						break;
+					}
 					if (p_packet->Get_Type() == PACKETTYPE_RELIABLE) {
                   bool abort = Demultiplex_R_Or_U_Packet(p_packet, rhost_id);
 						if (abort) {
@@ -2295,6 +2347,7 @@ void cConnection::Service_Send(bool is_urgent)
 
 
                   Destroy_Connection(rhost_id);
+                  p_rhost = NULL;
                   //WWDEBUG_SAY(("*** WWNET: Exceeded maximum resends (%d)) - assuming connection to rhost %d is broken.\n",
 						//	cNetUtil::MAX_RESENDS, rhost_id));
 
@@ -2313,7 +2366,10 @@ void cConnection::Service_Send(bool is_urgent)
 			}
 
 			// Keep track of how many packets in the queue are waiting on late acks.
-			p_rhost->Set_Total_Resent_Packets_In_Queue(resent_packets);
+			// A reliable-send timeout destroys the host and its queued packets.
+			if (p_rhost != NULL) {
+				p_rhost->Set_Total_Resent_Packets_In_Queue(resent_packets);
+			}
 		}
 	}
 

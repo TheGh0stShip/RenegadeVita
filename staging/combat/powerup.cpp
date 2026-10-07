@@ -201,11 +201,12 @@ bool	PowerUpGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	PowerUpGameObjDef::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				SimpleGameObjDef::Load( cload );
+				if (!SimpleGameObjDef::Load( cload )) loaded = false;
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -247,7 +248,7 @@ bool	PowerUpGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 const PersistFactoryClass & PowerUpGameObjDef::Get_Factory (void) const
@@ -551,7 +552,7 @@ enum	{
 bool	PowerUpGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-		SimpleGameObj::Save( csave );
+		if (!SimpleGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -561,22 +562,23 @@ bool	PowerUpGameObj::Save( ChunkSaveClass & csave )
 
 	if ( WeaponBag != NULL ) {
 		csave.Begin_Chunk( CHUNKID_WEAPONBAG );
-		WeaponBag->Save( csave );
+		if (!WeaponBag->Save(csave)) csave.Report_Error();
 		csave.End_Chunk();
 	}
 
 // We don't save IdleSoundObj
 
-	return true;
+	return !csave.Has_Error();
 }
 
 bool	PowerUpGameObj::Load( ChunkLoadClass &cload )
 {
+	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				SimpleGameObj::Load( cload );
+				if (!SimpleGameObj::Load(cload)) loaded = false;
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -598,7 +600,7 @@ bool	PowerUpGameObj::Load( ChunkLoadClass &cload )
 			case CHUNKID_WEAPONBAG:
 				WWASSERT( WeaponBag == NULL );
 				WeaponBag = new WeaponBagClass( NULL );
-			 	WeaponBag->Load( cload );
+				if (WeaponBag == NULL || !WeaponBag->Load(cload)) loaded = false;
 				break;
 
 			default:
@@ -610,7 +612,7 @@ bool	PowerUpGameObj::Load( ChunkLoadClass &cload )
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);		// MOVED
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 void	PowerUpGameObj::On_Post_Load( void )

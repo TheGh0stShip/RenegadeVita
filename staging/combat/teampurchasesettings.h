@@ -44,6 +44,9 @@
 #include "translatedb.h"
 #include "wwstring.h"
 #include "definition.h"
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+#include "networkobject.h"
+#endif
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -51,6 +54,9 @@
 //
 //////////////////////////////////////////////////////////////////////
 class TeamPurchaseSettingsDefClass : public DefinitionClass
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+    , public NetworkObjectClass
+#endif
 {
 public:
 
@@ -70,6 +76,21 @@ public:
 	TeamPurchaseSettingsDefClass (void);
 	~TeamPurchaseSettingsDefClass (void);
 
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
+    uint32 Get_Network_Class_ID() const override { return 2005; }
+    void Import_Occasional(BitStreamClass &packet) override;
+    void Export_Occasional(BitStreamClass &packet) override;
+    // The definition manager, not the network delete queue, owns presets.
+    void Delete() override {}
+    void Set_Delete_Pending() override {}
+#endif
+    bool Get_Hidden(int index) const { return Hidden[index]; }
+    bool Get_Disabled(int index) const { return Disabled[index]; }
+    bool Get_Busy(int index) const { return Busy[index]; }
+    bool Is_Available(int index) const {
+        return Is_Valid_Entry(index) && !Hidden[index] && !Disabled[index] && !Busy[index];
+    }
+
 	//////////////////////////////////////////////////////////////////////
 	//	Public methods
 	//////////////////////////////////////////////////////////////////////
@@ -81,12 +102,14 @@ public:
 	virtual PersistClass *					Create (void) const ;
 	virtual bool								Save (ChunkSaveClass &csave);
 	virtual bool								Load (ChunkLoadClass &cload);
+	virtual void								On_Load_Rejected (void);
 	virtual const PersistFactoryClass &	Get_Factory (void) const;	
 
 	//
 	//	Accessors
 	//
 	TEAM								Get_Team (void)							{ return Team; }
+	static bool Is_Valid_Entry(int index) { return index >= 0 && index < MAX_ENTRIES; }
 
 	const WCHAR *					Get_Enlisted_Name (int index);
 	int								Get_Enlisted_Definition (int index)	{ return DefinitionList[index]; }
@@ -115,7 +138,7 @@ protected:
 	//////////////////////////////////////////////////////////////////////
 	//	Protected methods
 	//////////////////////////////////////////////////////////////////////
-	void				Load_Variables (ChunkLoadClass &cload);
+	bool				Load_Variables (ChunkLoadClass &cload);
 
 	//////////////////////////////////////////////////////////////////////
 	//	Protected constants
@@ -152,6 +175,11 @@ protected:
 	StringClass			SupplyTextureName;
 	
 	static TeamPurchaseSettingsDefClass *	DefinitionArray[TEAM_COUNT];
+	int					PublishedTeam;
+	TeamPurchaseSettingsDefClass *	PreviousDefinition;
+    bool Hidden[MAX_ENTRIES] = {};
+    bool Disabled[MAX_ENTRIES] = {};
+    bool Busy[MAX_ENTRIES] = {};
 };
 
 

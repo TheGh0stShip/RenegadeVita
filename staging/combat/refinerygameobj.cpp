@@ -195,12 +195,13 @@ RefineryGameObjDef::Save (ChunkSaveClass &csave)
 bool
 RefineryGameObjDef::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ())
 	{
 		switch (cload.Cur_Chunk_ID ())
 		{
 			case CHUNKID_DEF_PARENT:
-				BuildingGameObjDef::Load (cload);
+				if (!BuildingGameObjDef::Load (cload)) loaded = false;
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -215,7 +216,7 @@ RefineryGameObjDef::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -288,6 +289,15 @@ RefineryGameObj::RefineryGameObj (void)	:
 ////////////////////////////////////////////////////////////////
 RefineryGameObj::~RefineryGameObj (void)
 {
+	// Vehicle destruction and level teardown may release either owner first.
+	if (Harvester != NULL) {
+		HarvesterClass *observer = Harvester;
+		Harvester = NULL;
+		observer->Set_Refinery(NULL);
+		VehicleGameObj *vehicle = observer->Get_Vehicle();
+		if (vehicle != NULL) vehicle->Remove_Observer(observer);
+		else GameObjObserverManager::Delete_Register(observer);
+	}
 	if (MoneyTrickleSound != NULL) {
 		MoneyTrickleSound->Stop();
 		REF_PTR_RELEASE(MoneyTrickleSound);
@@ -354,7 +364,7 @@ bool
 RefineryGameObj::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		BuildingGameObj::Save (csave);
+		if (!BuildingGameObj::Save(csave)) csave.Report_Error();
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
@@ -363,7 +373,7 @@ RefineryGameObj::Save (ChunkSaveClass &csave)
 		WRITE_MICRO_CHUNK (csave, MICROCHUNKID_UNLOAD_TIMER,			UnloadTimer);
 		WRITE_MICRO_CHUNK (csave, MICROCHUNKID_DOCK_TM,					DockTM);
 	csave.End_Chunk ();
-	return true;
+	return !csave.Has_Error();
 }
 
 
@@ -375,11 +385,12 @@ RefineryGameObj::Save (ChunkSaveClass &csave)
 bool
 RefineryGameObj::Load (ChunkLoadClass &cload)
 {
+	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				BuildingGameObj::Load (cload);
+				if (!BuildingGameObj::Load(cload)) loaded = false;
 				break;
 								
 			case CHUNKID_VARIABLES:
@@ -394,7 +405,7 @@ RefineryGameObj::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return true;
+	return loaded && !cload.Has_Error();
 }
 
 
@@ -867,5 +878,4 @@ RefineryGameObj::Import_Rare (BitStreamClass &packet)
 
 	packet.Get (IsHarvesterDocked);
 }
-
 

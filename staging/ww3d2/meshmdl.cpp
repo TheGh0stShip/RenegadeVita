@@ -44,6 +44,9 @@
 #include "bwrender.h"
 #include "camera.h"
 #include "dx8renderer.h"
+#if defined(RENEGADE_VITA_PORT)
+#include "ww3d_vita_renderer.h"
+#endif
 #include "hashtemplate.h"
 
 
@@ -117,9 +120,19 @@ MeshModelClass::~MeshModelClass(void)
 	return ;
 }
 
+void MeshModelClass::Vita_Invalidate_Static_Cache(void)
+{
+#if defined(RENEGADE_VITA_PORT)
+	RenegadeVitaRenderer::Forget_Static_Mesh_Model(this);
+#endif
+}
+
 MeshModelClass & MeshModelClass::operator = (const MeshModelClass & that)
 {
 	if (this != &that) {
+#if defined(RENEGADE_VITA_PORT)
+		RenegadeVitaRenderer::Forget_Static_Mesh_Model(this);
+#endif
 
 		MeshGeometryClass::operator = (that);
 
@@ -148,6 +161,10 @@ MeshModelClass & MeshModelClass::operator = (const MeshModelClass & that)
 
 void MeshModelClass::Reset(int polycount,int vertcount,int passcount)
 {
+#if defined(RENEGADE_VITA_PORT)
+	// Destruction and reloads end every cached native stream of this model.
+	RenegadeVitaRenderer::Forget_Static_Mesh_Model(this);
+#endif
 	Reset_Geometry(polycount,vertcount);
 
 	// Release everything we have and reset to initial state
@@ -408,6 +425,7 @@ void MeshModelClass::get_deformed_screenspace_vertices(Vector4 *dst_vert,const R
 
 void MeshModelClass::Make_Geometry_Unique()
 {
+	Vita_Invalidate_Static_Cache();
 	WWASSERT(Vertex);
 
 	ShareBufferClass<Vector3> * unique_verts = NEW_REF(ShareBufferClass<Vector3>,(*Vertex));
@@ -427,16 +445,19 @@ void MeshModelClass::Make_Geometry_Unique()
 
 void MeshModelClass::Make_UV_Array_Unique(int pass,int stage)
 {
+	Vita_Invalidate_Static_Cache();
 	CurMatDesc->Make_UV_Array_Unique(pass,stage);
 }
 
 void MeshModelClass::Make_Color_Array_Unique(int array_index)
 {
+	Vita_Invalidate_Static_Cache();
 	CurMatDesc->Make_Color_Array_Unique(array_index);
 }
 
 void MeshModelClass::Enable_Alternate_Material_Description(bool onoff)
 {
+	Vita_Invalidate_Static_Cache();
 	if ((onoff == true) && (AlternateMatDesc != NULL)) {
 		if (CurMatDesc != AlternateMatDesc) {
 			CurMatDesc = AlternateMatDesc;

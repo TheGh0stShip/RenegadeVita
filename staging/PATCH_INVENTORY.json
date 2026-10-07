@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "f4b35e71c8de9cbcba97c094cf1abe1f122efa255e38c184833f83a653403822",
-  "patch_count": 604,
+  "stage_script_sha256": "116b87d919d9c4cefea09b6089eec82597b97e19b8df5ca67836d70b65cf1811",
+  "patch_count": 571,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1605,11 +1605,6 @@
       "sha256": "b556a868a338e5044bf806c77d221ecadd73a101c78a34480dd2a604260d12fb"
     },
     {
-      "path": "port/patches/scripts-a38-m08-objective-conversation-monitor-first.patch",
-      "stage_directory": "scripts",
-      "sha256": "70516904adf24500bd79f66b9fa625a954feef6692fdbb40f799b3cc29dcc1ef"
-    },
-    {
       "path": "port/patches/scripts-a35-rmv-engineer-dead-pointer-roundtrip.patch",
       "stage_directory": "scripts",
       "sha256": "f79516454ff9c734df14ce2d527ed7157862c904c47ac6473ea0dccd56f0895c"
@@ -1623,11 +1618,6 @@
       "path": "port/patches/scripts-a37-mx0-area4-controller-id-init.patch",
       "stage_directory": "scripts",
       "sha256": "a89fcda5e3204e49d1d91bd3a2452b226f2292096924460e36a611146c589b72"
-    },
-    {
-      "path": "port/patches/scripts-a38-m13-area4-star-area-monotonic.patch",
-      "stage_directory": "scripts",
-      "sha256": "e83c4828d63d97a08272e3fb646ec8f9c5ad3cf1255b676ceb43a254e59b368d"
     },
     {
       "path": "port/patches/scripts-a38-m13-firehole-engineer-register.patch",
@@ -1710,31 +1700,6 @@
       "sha256": "67b439e68bf42f766741f8983ea2a895390509f0710785bab8f376642dee67f3"
     },
     {
-      "path": "port/patches/scripts-a38-m06-conversation-preempt-rearm.patch",
-      "stage_directory": "scripts",
-      "sha256": "6855d02838ee11cbee87a5308c8cfba94639a88e3ed0f06eea38d6ccdb2a50a1"
-    },
-    {
-      "path": "port/patches/scripts-a38-m10-ne-gate-briefing-monitor-first.patch",
-      "stage_directory": "scripts",
-      "sha256": "b00765c21bffbc679013953d8dee51f2311ae94b4c89554d768e878053e2a9de"
-    },
-    {
-      "path": "port/patches/scripts-a38-m10-attack-target-save-ids.patch",
-      "stage_directory": "scripts",
-      "sha256": "2ed1d5d23e6a8d9cd304c720529f32cdd5221d6a7345bbeae1e5f7f85dc3f330"
-    },
-    {
-      "path": "port/patches/scripts-a38-m10-paradrop-param-buffer.patch",
-      "stage_directory": "scripts",
-      "sha256": "02d7c36f0c5dbf30fc6eada2c082d5353550e87bfc0e37659163ecdc5c6a8bd9"
-    },
-    {
-      "path": "port/patches/scripts-a38-m10-primary-add-before-accomplish.patch",
-      "stage_directory": "scripts",
-      "sha256": "deb1514073f44b091964c927b361c4692ea1958471f30b84caa583e4ef8f19b5"
-    },
-    {
       "path": "port/patches/scripts-a36-m05-dead6-help-failed-text-save.patch",
       "stage_directory": "scripts",
       "sha256": "e5c6f8fde4b5325ebf559015fb593cc1feec2fdd4605c417dae835e817b6cf8a"
@@ -1758,11 +1723,6 @@
       "path": "port/patches/scripts-a36-m02-respawn-area-bounds.patch",
       "stage_directory": "scripts",
       "sha256": "97710b22d758935849cc7e2add50deb6f1fe6ad2578d2375d41fb0e6c08d735c"
-    },
-    {
-      "path": "port/patches/scripts-a38-m02-followup-midtro-mendoza-repair-latch.patch",
-      "stage_directory": "scripts",
-      "sha256": "27a6b5e6dcbf77e4d776a24a3f763094ceed5140e509a0c097a63bc8103187c4"
     },
     {
       "path": "port/patches/scripts-a36-mx0-save-variable-ids.patch",
@@ -1805,21 +1765,6 @@
       "sha256": "7a154a51a8cf1cf3908db07031e6bcb9b90dd883aa8af8230f545b88d026740d"
     },
     {
-      "path": "port/patches/scripts-a38-m03-gunboat-any-killer-outcome.patch",
-      "stage_directory": "scripts",
-      "sha256": "7ae4d873e57edcb47808e695610b4a34ff05fe0a1a6a43dc0544dee3d24bd931"
-    },
-    {
-      "path": "port/patches/scripts-a38-m03-comm-center-located-at-terminal.patch",
-      "stage_directory": "scripts",
-      "sha256": "0fac0b877f0f3233d430169b160d436f3e7f3748756f71e21f8c92e450ab6654"
-    },
-    {
-      "path": "port/patches/scripts-a38-m03-escape-objective-at-exit.patch",
-      "stage_directory": "scripts",
-      "sha256": "bb192ba9c9da2ae421cb0265b5e3b72a614d2c8db60d89ac166affab8c310a53"
-    },
-    {
       "path": "port/patches/scripts-a36-m04-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "745c985344466f36002809c8309182527a92f844a17f2b1bbefa9df7c38615c0"
@@ -1833,6 +1778,11 @@
       "path": "port/patches/scripts-a38-m04-missile-briefing-drop.patch",
       "stage_directory": "scripts",
       "sha256": "26eca127c54b113203b29ca482d39a73fd9dd876ac4d7cab08f8e5b1f88d9c71"
+    },
+    {
+      "path": "port/patches/scripts-a38-m04-conversation-gate-preempt.patch",
+      "stage_directory": "scripts",
+      "sha256": "5790bb59ab3e971e5b7298d684f2f83e1e848f9a4901bc2c3df2dfb46bf50e6c"
     },
     {
       "path": "port/patches/scripts-a36-m05-save-variable-ids.patch",
@@ -1860,21 +1810,6 @@
       "sha256": "b2161f242e2f76695d1d2a0be0c4a842a520672ab273be05343f999c567adbc1"
     },
     {
-      "path": "port/patches/scripts-a38-m05-townsquare-count-robust.patch",
-      "stage_directory": "scripts",
-      "sha256": "9821324976a87055aa482a32fc2925f7a94d2a50b336c9181bca903e1ca81584"
-    },
-    {
-      "path": "port/patches/scripts-a38-m05-blackhand-redrop-on-loss.patch",
-      "stage_directory": "scripts",
-      "sha256": "e5566aee5677d4084e608b17a502c8e78ccae1afd240ef20601277b55e48ef03"
-    },
-    {
-      "path": "port/patches/scripts-a38-m05-escapee-babushka-poke-rearm.patch",
-      "stage_directory": "scripts",
-      "sha256": "a6780abeb2eb437cfcfbf4724d4e8dc2b52f0e292db30317e39c3d83d396ce48"
-    },
-    {
       "path": "port/patches/scripts-a36-m11-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "4010ac3b2825d0bcdb333d51b4dd2f5d9109deda3868ea10afa68bbd1bf49d4f"
@@ -1900,21 +1835,6 @@
       "sha256": "1029dcf04828ff3b3e60f56ee8e04236460e46676d22b6bbecde11b38010ab5c"
     },
     {
-      "path": "port/patches/scripts-a38-m11-objective-conversation-preemption.patch",
-      "stage_directory": "scripts",
-      "sha256": "a50a7daf377434ae02984cf8c1016c97a5bf2ef7b4452d698d13a4e66c39a762"
-    },
-    {
-      "path": "port/patches/scripts-a38-m11-rally-leg-retry.patch",
-      "stage_directory": "scripts",
-      "sha256": "71562ecbe6f5531cced1ccc0fae06a21fafb43b1545d25961c07b1a0b9cf8f56"
-    },
-    {
-      "path": "port/patches/scripts-a38-m11-rally-zone-recheck.patch",
-      "stage_directory": "scripts",
-      "sha256": "c4fed69387508773b3bfc8eaf16b1e09f15734dfef1e8b11c8fb3d52979208ee"
-    },
-    {
       "path": "port/patches/scripts-a36-m07-evac-param-id-buffer.patch",
       "stage_directory": "scripts",
       "sha256": "2862802fdcc436951fb6b0fb48d6c2a04f048a0ae67722583d8a0d69aadfff12"
@@ -1933,11 +1853,6 @@
       "path": "port/patches/scripts-a38-m07-hotwire-path-failure-fallback.patch",
       "stage_directory": "scripts",
       "sha256": "52ad8739d4d43d04d37087b30b3734d01fa9822427cd00a771e31543182d1122"
-    },
-    {
-      "path": "port/patches/scripts-a38-m07-followup-climb-briefing-evac-paradrop.patch",
-      "stage_directory": "scripts",
-      "sha256": "ceb14b7f194d1c7931618439891462827bd345d883f6ae55a5dcc0b120525808"
     },
     {
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
@@ -2845,11 +2760,6 @@
       "sha256": "71433b8b6e1764ad0707ba04f95022a43fa54fb1dd0d0156a0c538cfdc324301"
     },
     {
-      "path": "port/patches/combat-a38-mendoza-end-position-timeout.patch",
-      "stage_directory": "combat",
-      "sha256": "6dbf6aef73a3fc58b4335484670e6514660bff040630fd2d8be688927dc38fe1"
-    },
-    {
       "path": "port/patches/combat-a36-raveshaw-star-dist-modulo-guard.patch",
       "stage_directory": "combat",
       "sha256": "8db90499831ea7491c2e6486d4094ccda4c5774ed04d7582149e83b58038e73b"
@@ -2863,11 +2773,6 @@
       "path": "port/patches/combat-a38-raveshaw-jump-grounded-landing.patch",
       "stage_directory": "combat",
       "sha256": "fe1e4eb02e059607f6df29c01c1fbb95aaf739cef53c0a929a7f60d6478def3d"
-    },
-    {
-      "path": "port/patches/combat-a38-raveshaw-thrown-object-liveness.patch",
-      "stage_directory": "combat",
-      "sha256": "996e7e7f4cfd47e5c540adb1f61dad495412deb38a547445934052e93ded70dc"
     },
     {
       "path": "port/patches/combat-a36-smart-control-disabled-weapon-guard.patch",
@@ -2910,11 +2815,6 @@
       "sha256": "330307d3b7cc4d80176c4fa5c9346d26eac23cfda291b3aba7d1aaff2411835d"
     },
     {
-      "path": "port/patches/scripts-a38-m01-followup-save-and-turrets-fallback.patch",
-      "stage_directory": "scripts",
-      "sha256": "5887a5da86e03064a28b38ef95002d7287a3327a9f6900195da7c3b1a7072d47"
-    },
-    {
       "path": "port/patches/combat-a37-screen-overlay-opacity-clamp.patch",
       "stage_directory": "combat",
       "sha256": "1fd9784eff93c659fa39a08322828cb55ab49dca36582e540f51be432e85a82a"
@@ -2927,7 +2827,7 @@
     {
       "path": "port/patches/combat-a37-scriptzone-swept-entry.patch",
       "stage_directory": "combat",
-      "sha256": "86db0e212e93def155f5637d9c3a305950fb795e5b90e4c94d70ba5418a3c813"
+      "sha256": "fb83f93007291c4e539c4ecbfcb1857d537732802cddd0330f86a499e13ea332"
     },
     {
       "path": "port/patches/scripts-a38-m09-keycard-zone-distance-recheck.patch",
@@ -2940,21 +2840,6 @@
       "sha256": "c336c47ccb99cb526384a9db2ff94f82429deea43ee1ff520fcfedfe6d8e039d"
     },
     {
-      "path": "port/patches/scripts-a39-m09-one-way-lift-mobius-recovery.patch",
-      "stage_directory": "scripts",
-      "sha256": "c0998f4467c85e162077b351acaf29f1dcdbb50a2f47e1557784ba62605e9e14"
-    },
-    {
-      "path": "port/patches/scripts-a39-m09-catchup-timer-restart.patch",
-      "stage_directory": "scripts",
-      "sha256": "60de143423b3a0fbcf2092b99248c63f4c1810ea21692be546e7f63588daa4db"
-    },
-    {
-      "path": "port/patches/scripts-a39-m09-midtro-reposition-fallback.patch",
-      "stage_directory": "scripts",
-      "sha256": "f5e37c991c91fc8e0df8c3c71a4d66510edeab15cbb7503c9c995ea795cbb5be"
-    },
-    {
       "path": "port/patches/combat-a37-hud-objective-index-bounds.patch",
       "stage_directory": "combat",
       "sha256": "ae406f0dd7173d744a1d84105b2b6518b88c1446a0ebf9260b23ecaf8363805f"
@@ -2965,11 +2850,6 @@
       "sha256": "5a443ebf6a3eb814d1e19af9afe44985ea9958b82bf3e026425cb86ce04a9d2f"
     },
     {
-      "path": "port/patches/combat-a38-objective-early-status.patch",
-      "stage_directory": "combat",
-      "sha256": "697034527aad683cfdb2562f65ab1f9f5962967fae75e7b3a7a615e6753ce7cc"
-    },
-    {
       "path": "port/patches/commando-a37-default-input-profile-vita-mapping.patch",
       "stage_directory": "commando",
       "sha256": "a0161663d956b8e98e985a1fb002021d201c92fea1fdd760984376592bba6563"
@@ -2978,52 +2858,7 @@
       "path": "port/patches/combat-a37-face-action-stale-end-time-clamp.patch",
       "stage_directory": "combat",
       "sha256": "fc6b37a6f0f9ef5136fbe67e950835ee8b2084fb57f42d6611599f96636e3a56"
-    },
-    {
-      "path": "port/patches/wwsaveload-a37-pointer-remap-release-capacity.patch",
-      "stage_directory": "wwsaveload",
-      "sha256": "69a26e968797d5ea204f0d2dc4efafb955a89712c9d3288f66e8e5080c8f07c4"
-    },
-    {
-      "path": "port/patches/ww3d2-a37-asset-status-release-elision.patch",
-      "stage_directory": "ww3d2",
-      "sha256": "655052350331b17f714876c89289f7e9dae41cfc40d5f57181f80375664f62fa"
-    },
-    {
-      "path": "port/patches/wwphys-a38-missing-model-keeps-current.patch",
-      "stage_directory": "wwphys",
-      "sha256": "fb1dd060778e70425eec1c39bcb02809b7935d39d3a8e65b3ff57d1eb5d87321"
-    },
-    {
-      "path": "port/patches/combat-a38-modelless-animation-guard.patch",
-      "stage_directory": "combat",
-      "sha256": "a845fe32df7c8572e9005febeac42eac90b7c441de2c218c5c17a71cdf6f2168"
-    },
-    {
-      "path": "port/patches/combat-a38-timemgr-resume-real-step-cap.patch",
-      "stage_directory": "combat",
-      "sha256": "cc9c9c8fa88706e46c191b8e6a1285d3ace37634c967460f0bce1d77ec7e6121"
-    },
-    {
-      "path": "port/patches/scripts-a38-cinematic-slow-command-text-copy.patch",
-      "stage_directory": "scripts",
-      "sha256": "32096c4e60c57860bbf0a18b88ccd29dfc265cef4cfeec8931287af74bac1e08"
-    },
-    {
-      "path": "port/patches/wwsaveload-a37-rejected-load-discard-hook.patch",
-      "stage_directory": "wwsaveload",
-      "sha256": "043ac884c42afb3cfb2fb4e4b9e94766c5312415ef7bdc54637c642d9c95d0a0"
-    },
-    {
-      "path": "port/patches/combat-a37-rejected-load-discard-unlink.patch",
-      "stage_directory": "combat",
-      "sha256": "bdafeff99b1e688387c2c56c405584a5003201350512d870bc69bb705f8eeebc"
-    },
-    {
-      "path": "port/patches/wwphys-a37-rejected-load-carrier-discard.patch",
-      "stage_directory": "wwphys",
-      "sha256": "eea439cd189d569c5fc40c8cf902765d74c471376b7929812c7d6b742b1d4fe6"
     }
   ],
-  "registry_sha256": "2272b565d9e011f690bca062ba42928204f5f6509021fcb68e4150c563264698"
+  "registry_sha256": "7f244bdd82ccd0d28beb343701ac934bdb07c94b2be59dd1e53d5e69950d7942"
 }

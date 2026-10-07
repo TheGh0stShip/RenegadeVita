@@ -1,0 +1,346 @@
+M04 conversation gates: briefings stopped by a playing key conversation.
+M04_Objective_Controller_JDG starts seven non-key briefings (mission start
+400 -> objective 100 and prisoner markers/HUD; prison key 401 -> objective
+110 and the Eva guard hint; engine room 430 -> secondary 200, pog and engine
+blips; missile room 440 -> objective 300, racks pokable; first mate 410 ->
+objective 600, marker 601, HUD; protect POWs 470 -> objective 800, marker
+801, HUD) and M04_Start_TorpedoObjective_Zone_JDG starts the torpedo
+announcement (-> custom 450 = objective 400, markers 401/402, pog). Each step
+runs only from Action_Complete on ENDED. ActiveConversationClass::
+Start_Conversation stops a non-key conversation with INTERRUPTED at once
+while a key conversation plays (m04.ldd key: medlab guard, three missile
+racks, captain key). Retail registered the monitor after Start, so that stop
+was never observed and the step was lost.
+
+Register the monitor before Start (the M10 pattern). The stop then reaches
+Action_Complete synchronously; it is accepted as the briefing's end only
+while a transient conversation_starting names that conversation, so
+INTERRUPTED from any other source (ConversationMgrClass::Reset at level
+reset/load) keeps the retail result. If Create_Conversation fails (id < 0),
+the step runs directly (UNABLE_TO_INIT). Saved once-flags (unused controller
+ids 49-53) make each controller step run once; the missile step keeps its
+id-48 flag and the 441 fallback as a backstop; the torpedo zone is already
+latched by its saved conversationPlaying. Without a key conversation Start
+never touches the monitor array, so the normal path is unchanged.
+
+Cosmetic: the controller records which torpedo was sabotaged (ids 54/55); a
+450 that arrives after one torpedo was sabotaged no longer re-adds that
+torpedo's radar marker, which nothing would clear. Older saves load all new
+flags as false (value-initialised scripts) and keep the retail behaviour.
+
+--- a/Mission04.cpp
++++ b/Mission04.cpp
+@@ -105,6 +105,18 @@
+ 	// Vita soft-lock fix: missiles become pokable only when missileConv ends.
+ 	bool missile_objective_activated;
+ 	enum { MISSILE_OBJECTIVE_FALLBACK = 441, MISSILE_OBJECTIVE_FALLBACK_DELAY = 20 };
++	// Vita conversation-gate fix: each briefing's end step runs once, also when
++	// a playing key conversation stops the briefing inside Start_Conversation.
++	bool mission_intro_step_done;
++	bool prison_key_step_done;
++	bool engine_room_step_done;
++	bool first_mate_step_done;
++	bool protect_pows_step_done;
++	// Vita: per-torpedo sabotage, so a late 450 does not re-mark a sabotaged torpedo.
++	bool torpedo_01_done;
++	bool torpedo_02_done;
++	// Vita: the briefing inside Start_Conversation (0 otherwise; not saved).
++	int conversation_starting;
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+@@ -160,6 +172,13 @@
+ 		SAVE_VARIABLE( first_mate_primary_triggered, 46 );
+ 		SAVE_VARIABLE( torpedo_objective_completed, 47 );
+ 		SAVE_VARIABLE( missile_objective_activated, 48 );
++		SAVE_VARIABLE( mission_intro_step_done, 49 );
++		SAVE_VARIABLE( prison_key_step_done, 50 );
++		SAVE_VARIABLE( engine_room_step_done, 51 );
++		SAVE_VARIABLE( first_mate_step_done, 52 );
++		SAVE_VARIABLE( protect_pows_step_done, 53 );
++		SAVE_VARIABLE( torpedo_01_done, 54 );
++		SAVE_VARIABLE( torpedo_02_done, 55 );
+ 	}
+ 
+ 	void Created( GameObject * obj ) 
+@@ -217,17 +236,48 @@
+ 
+ 		attach_havocs_script						= 600;
+ 
++		mission_intro_step_done = false;
++		prison_key_step_done = false;
++		engine_room_step_done = false;
++		first_mate_step_done = false;
++		protect_pows_step_done = false;
++		torpedo_01_done = false;
++		torpedo_02_done = false;
++		conversation_starting = 0;
++
+ 		Commands->Send_Custom_Event( obj, obj, 0, announce_prisoner_objective, 3 );
+ 	}
+ 
+-	void Action_Complete( GameObject * obj, int action_id, ActionCompleteReason complete_reason )	
++	// Vita conversation-gate fix: called right after Start_Conversation of a
++	// briefing whose monitor was registered before the start. Closes the start
++	// window. If Create_Conversation failed, nothing can play or report, so the
++	// briefing's end step runs now.
++	void Briefing_Start_Done( GameObject * obj, int conv )
++	{
++		if (conv < 0)
++		{
++			Action_Complete( obj, conv, ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT );
++		}
++		conversation_starting = 0;
++	}
++
++	void Action_Complete( GameObject * obj, int action_id, ActionCompleteReason complete_reason )
+ 	{
+ 		switch (complete_reason)
+ 		{
++			// Vita conversation-gate fix: ActiveConversationClass::Start_Conversation
++			// stops a non-key briefing (INTERRUPTED) while a key conversation plays.
++			// The monitor is now registered first, so that stop arrives here while
++			// conversation_starting names the briefing; treat it as the briefing's
++			// end. Stops at any other time (level reset) keep the retail result.
++			case ACTION_COMPLETE_CONVERSATION_INTERRUPTED:
++			case ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT:
+ 			case ACTION_COMPLETE_CONVERSATION_ENDED: //
++				if (complete_reason == ACTION_COMPLETE_CONVERSATION_ENDED || (conversation_starting != 0 && action_id == conversation_starting))
+ 				{
+-					if (action_id == missionIntroConv) //rescue prisoners here
++					if (action_id == missionIntroConv && mission_intro_step_done == false) //rescue prisoners here
+ 					{
++						mission_intro_step_done = true;
+ 						Commands->Debug_Message ( "**********************mission start conversation over--sending custom\n" );
+ 						Commands->Send_Custom_Event( obj, obj, 0, 1, 0 );
+ 
+@@ -283,8 +333,9 @@
+ 						}
+ 					}
+ 
+-					else if (action_id == engineIntroConv) //destroy engine terminals
++					else if (action_id == engineIntroConv && engine_room_step_done == false) //destroy engine terminals
+ 					{
++						engine_room_step_done = true;
+ 						//Commands->Send_Custom_Event( obj, obj, 0, 1, 2 );
+ 
+ 						Commands->Add_Objective( 200, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Secondary_M04_02, NULL, IDS_Enc_Obj_Secondary_M04_02 );
+@@ -325,14 +376,18 @@
+ 						}
+ 					}
+ 
+-					else if (action_id == prisonKeyIntroConv) //get prison key from guard
++					else if (action_id == prisonKeyIntroConv && prison_key_step_done == false) //get prison key from guard
+ 					{
++						prison_key_step_done = true;
+ 						Commands->Add_Objective( 110, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M04_02, NULL, IDS_Enc_Obj_Primary_M04_02 );
+ 
+ 						medlab_conv = Commands->Create_Conversation( "M04_Eva_Tells_Where_Guard_Is", 100, 100, false);
+ 						Commands->Join_Conversation( NULL, medlab_conv, false, true );
+-						Commands->Start_Conversation( medlab_conv, medlab_conv );
++						// Vita: monitor before Start (see the case labels above).
+ 						Commands->Monitor_Conversation (obj, medlab_conv);
++						conversation_starting = medlab_conv;
++						Commands->Start_Conversation( medlab_conv, medlab_conv );
++						Briefing_Start_Done( obj, medlab_conv );
+ 					}
+ 
+ 					else if (action_id == medlab_conv) //get prison key from guard
+@@ -347,8 +402,9 @@
+ 						}//
+ 					}
+ 
+-					else if (action_id == firstmateConv) //get level 2 key from first mate  protectPOWsConv
++					else if (action_id == firstmateConv && first_mate_step_done == false) //get level 2 key from first mate  protectPOWsConv
+ 					{
++						first_mate_step_done = true;
+ 						Commands->Create_Sound ( "00-n040e", Vector3 (0,0,0), obj);
+ 						Commands->Add_Objective( 600, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M04_07, NULL, IDS_Enc_Obj_Primary_M04_07 );
+ 						Commands->Add_Radar_Marker ( 601, Commands->Get_Position( Commands->Find_Object ( M04_SHIPS_FIRST_MATE_JDG )), RADAR_BLIP_SHAPE_OBJECTIVE, RADAR_BLIP_COLOR_PRIMARY_OBJECTIVE );
+@@ -362,8 +418,9 @@
+ 						}
+ 					}
+ 
+-					else if (action_id == protectPOWsConv) //give protect prisoner objective  
++					else if (action_id == protectPOWsConv && protect_pows_step_done == false) //give protect prisoner objective
+ 					{
++						protect_pows_step_done = true;
+ 						Commands->Add_Objective(  800, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M04_06, NULL, IDS_Enc_Obj_Primary_M04_06 );
+ 						Commands->Add_Radar_Marker ( 801, Vector3 (2.55f, -5.29f, -16.96f), RADAR_BLIP_SHAPE_OBJECTIVE, RADAR_BLIP_COLOR_PRIMARY_OBJECTIVE );
+ 
+@@ -401,8 +458,11 @@
+ 				missionIntroConv = Commands->Create_Conversation( "M04_Mission_Start_Conversation", 100, 1000, false);
+ 				Commands->Join_Conversation( NULL, missionIntroConv, false, false );
+ 				///Commands->Join_Conversation( STAR, missionIntroConv, false, false );
+-				Commands->Start_Conversation( missionIntroConv,  missionIntroConv );
++				// Vita: monitor before Start (see Action_Complete).
+ 				Commands->Monitor_Conversation (obj, missionIntroConv);
++				conversation_starting = missionIntroConv;
++				Commands->Start_Conversation( missionIntroConv,  missionIntroConv );
++				Briefing_Start_Done( obj, missionIntroConv );
+ 
+ 				prisoner_primary_active = true;
+ 				//Commands->Create_Sound ( "00-n040e", Vector3 (0,0,0), obj);
+@@ -424,8 +484,11 @@
+ 			{
+ 				prisonKeyIntroConv = Commands->Create_Conversation( "M04_Add_PrisonKey_Objective", 100, 1000, false);
+ 				Commands->Join_Conversation( NULL, prisonKeyIntroConv, false, false );
+-				Commands->Start_Conversation( prisonKeyIntroConv,  prisonKeyIntroConv );
++				// Vita: monitor before Start (see Action_Complete).
+ 				Commands->Monitor_Conversation (obj, prisonKeyIntroConv);
++				conversation_starting = prisonKeyIntroConv;
++				Commands->Start_Conversation( prisonKeyIntroConv,  prisonKeyIntroConv );
++				Briefing_Start_Done( obj, prisonKeyIntroConv );
+ 
+ 				GameObject * objectiveReminder = Commands->Find_Object ( 105760 );
+ 				if (objectiveReminder != NULL)
+@@ -460,19 +523,27 @@
+ 				engineIntroConv = Commands->Create_Conversation( "M04_Add_EngineRoom_Objective_Conversation", 100, 1000, false);
+ 				Commands->Join_Conversation( NULL, engineIntroConv, false, false );
+ 				//Commands->Join_Conversation( STAR, engineIntroConv, false, false );
+-				Commands->Start_Conversation( engineIntroConv,  engineIntroConv );
++				// Vita: monitor before Start (see Action_Complete).
+ 				Commands->Monitor_Conversation (obj, engineIntroConv);
++				conversation_starting = engineIntroConv;
++				Commands->Start_Conversation( engineIntroConv,  engineIntroConv );
++				Briefing_Start_Done( obj, engineIntroConv );
+ 			}
+ 
+ 			else if (param == announce_missile_room_objective)//
+ 			{
+ 				missileConv = Commands->Create_Conversation( "M04_Add_MissileRoom_Objective_Conversation", 100, 1000, false);
+ 				Commands->Join_Conversation( NULL, missileConv, false, false );
+-				Commands->Start_Conversation( missileConv,  missileConv );
++				// Vita: monitor before Start (see Action_Complete).
+ 				Commands->Monitor_Conversation (obj, missileConv);
++				conversation_starting = missileConv;
++				Commands->Start_Conversation( missileConv,  missileConv );
++				Briefing_Start_Done( obj, missileConv );
+ 				// Vita soft-lock fix: missileConv is not a key conversation. If a
+ 				// key one is playing, Start_Conversation ends it before the
+ 				// monitor is registered and its end callback never arrives.
++				// (Backstop since the monitor-first start: a monitor that could
++				// not be registered.)
+ 				Commands->Send_Custom_Event( obj, obj, 0, MISSILE_OBJECTIVE_FALLBACK, MISSILE_OBJECTIVE_FALLBACK_DELAY );
+ 
+ 				missile_primary_active = true;
+@@ -514,8 +585,16 @@
+ 				torpedo_primary_active = true;
+ 				//Commands->Create_Sound ( "00-n040e", Vector3 (0,0,0), obj);
+ 				Commands->Add_Objective( 400, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M04_04, NULL, IDS_Enc_Obj_Primary_M04_04 );
+-				Commands->Add_Radar_Marker ( 401, Commands->Get_Position( Commands->Find_Object ( 100409 )), RADAR_BLIP_SHAPE_OBJECTIVE, RADAR_BLIP_COLOR_PRIMARY_OBJECTIVE );
+-				Commands->Add_Radar_Marker ( 402, Commands->Get_Position( Commands->Find_Object ( 100410 )), RADAR_BLIP_SHAPE_OBJECTIVE, RADAR_BLIP_COLOR_PRIMARY_OBJECTIVE );
++				// Vita: a torpedo sabotaged before this announcement already
++				// cleared its marker; do not add a marker that nothing clears.
++				if (torpedo_01_done == false)
++				{
++					Commands->Add_Radar_Marker ( 401, Commands->Get_Position( Commands->Find_Object ( 100409 )), RADAR_BLIP_SHAPE_OBJECTIVE, RADAR_BLIP_COLOR_PRIMARY_OBJECTIVE );
++				}
++				if (torpedo_02_done == false)
++				{
++					Commands->Add_Radar_Marker ( 402, Commands->Get_Position( Commands->Find_Object ( 100410 )), RADAR_BLIP_SHAPE_OBJECTIVE, RADAR_BLIP_COLOR_PRIMARY_OBJECTIVE );
++				}
+ 				Commands->Send_Custom_Event( obj, obj, 0, 1, 2 );//this sets a small delay before havoc responds
+ 
+ 				GameObject * objectiveReminder = Commands->Find_Object ( 105760 );
+@@ -541,8 +620,11 @@
+ 
+ 				firstmateConv = Commands->Create_Conversation( "M04_Add_FirstMate_Objective_JDG", 100, 1000, false);
+ 				Commands->Join_Conversation( NULL, firstmateConv, false, false );
+-				Commands->Start_Conversation( firstmateConv,  firstmateConv );
++				// Vita: monitor before Start (see Action_Complete).
+ 				Commands->Monitor_Conversation (obj, firstmateConv);
++				conversation_starting = firstmateConv;
++				Commands->Start_Conversation( firstmateConv,  firstmateConv );
++				Briefing_Start_Done( obj, firstmateConv );
+ 
+ 				GameObject * objectiveReminder = Commands->Find_Object ( 105760 );
+ 				if (objectiveReminder != NULL)
+@@ -581,8 +663,11 @@
+ 			{
+ 				protectPOWsConv = Commands->Create_Conversation( "M04_Protect_The_Prisoners_Conversation", 100, 1000, false);
+ 				Commands->Join_Conversation( NULL, protectPOWsConv, false, false );
+-				Commands->Start_Conversation( protectPOWsConv,  protectPOWsConv );
++				// Vita: monitor before Start (see Action_Complete).
+ 				Commands->Monitor_Conversation (obj, protectPOWsConv);
++				conversation_starting = protectPOWsConv;
++				Commands->Start_Conversation( protectPOWsConv,  protectPOWsConv );
++				Briefing_Start_Done( obj, protectPOWsConv );
+ 
+ 				GameObject * objectiveReminder = Commands->Find_Object ( 105760 );
+ 				if (objectiveReminder != NULL)
+@@ -1019,6 +1104,7 @@
+ 
+ 			else if (param == torpedo_01_sabotaged)
+ 			{
++				torpedo_01_done = true;
+ 				Commands->Clear_Radar_Marker ( 401 );
+ 				number_torpedos_sabotaged++;
+ 
+@@ -1037,6 +1123,7 @@
+ 
+ 			else if (param == torpedo_02_sabotaged)
+ 			{
++				torpedo_02_done = true;
+ 				Commands->Clear_Radar_Marker ( 402 );
+ 				number_torpedos_sabotaged++;
+ 
+@@ -10115,35 +10202,52 @@
+ {
+ 	bool conversationPlaying;
+ 	int missionIntroConv;
++	// Vita: the announcement inside Start_Conversation (0 otherwise; not saved).
++	int conversation_starting;
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE( conversationPlaying, 1 );
+-		SAVE_VARIABLE( missionIntroConv, 2 );	
++		SAVE_VARIABLE( missionIntroConv, 2 );
+ 	}
+ 
+-	void Created( GameObject * obj ) 
++	void Created( GameObject * obj )
+ 	{
+ 		conversationPlaying = false;
++		conversation_starting = 0;
+ 	}
+ 
+-	void Entered( GameObject * obj, GameObject * enterer ) 
++	void Entered( GameObject * obj, GameObject * enterer )
+ 	{
+ 		if ( enterer == STAR && conversationPlaying == false)//M04_Add_Torpedo_Objective_Conversation
+ 		{
+ 			conversationPlaying = true;
+ 			missionIntroConv = Commands->Create_Conversation( "M04_Add_Torpedo_Objective_Conversation", 100, 1000, false);
+ 			Commands->Join_Conversation( NULL, missionIntroConv, false, false );
+-			Commands->Start_Conversation( missionIntroConv,  missionIntroConv );
++			// Vita: monitor before Start (see Action_Complete).
+ 			Commands->Monitor_Conversation (obj, missionIntroConv);
++			conversation_starting = missionIntroConv;
++			Commands->Start_Conversation( missionIntroConv,  missionIntroConv );
++			if (missionIntroConv < 0)
++			{
++				Action_Complete( obj, missionIntroConv, ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT );
++			}
++			conversation_starting = 0;
+ 		}
+ 	}
+ 
+-	void Action_Complete( GameObject * obj, int action_id, ActionCompleteReason complete_reason )	
++	void Action_Complete( GameObject * obj, int action_id, ActionCompleteReason complete_reason )
+ 	{
+ 		switch (complete_reason)
+ 		{
+-			case ACTION_COMPLETE_CONVERSATION_ENDED: 
++			// Vita conversation-gate fix: a playing key conversation stops this
++			// non-key announcement inside Start_Conversation (INTERRUPTED). The
++			// monitor is registered first, so treat that stop as the end; this
++			// zone starts the announcement once (conversationPlaying, saved).
++			case ACTION_COMPLETE_CONVERSATION_INTERRUPTED:
++			case ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT:
++			case ACTION_COMPLETE_CONVERSATION_ENDED:
++				if (complete_reason == ACTION_COMPLETE_CONVERSATION_ENDED || (conversation_starting != 0 && action_id == conversation_starting))
+ 				{
+ 					if (action_id == missionIntroConv)//conversation is over, now add objective and pogs
+ 					{

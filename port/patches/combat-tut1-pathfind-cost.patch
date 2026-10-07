@@ -1,0 +1,26 @@
+--- a/soldier.cpp
++++ b/soldier.cpp
+@@ -99,6 +99,9 @@
+ #include "weaponview.h"
+ #include "ffactory.h"
+ #include "realcrc.h"
++#if defined(__vita__)
++#include "renegade_vita_pathfind_cost.h"
++#endif
+ 
+ /*
+ **
+@@ -2466,6 +2469,13 @@
+ 			Get_Position( &position );
+ 			if ( UnitCoordinationZoneMgr::Is_Unit_In_Zone( position ) ) {
+ 				Enable_Ghost_Collision( true );
++#if defined(__vita__)
++				Renegade_Vita_Pathfind_Cost_Note_Zone();
++			} else if ( Renegade_Vita_Pathfind_Cost_Skip_Probe(
++					Peek_Physical_Object ()->Get_Collision_Group() == SOLDIER_GHOST_COLLISION_GROUP ) ) {
++				// RVPF1 bit 0: Enable_Ghost_Collision( false ) returns at once
++				// unless ghosted, so the probe's answer would go unused.
++#endif
+ 			} else if ( Is_Safe_To_Disable_Ghost_Collision( position ) ) {
+ 				Enable_Ghost_Collision( false );
+ 			}

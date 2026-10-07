@@ -1383,32 +1383,24 @@ accessor (`combat-a36-armed-def-weapon-id.patch`). Tracked staging is
 refreshed: 499 patches, inventory PASS, including the earlier
 `wwdebug-a36-vita-frame-profile.patch`, which had not yet been staged.
 
-## Indexed boundary per-draw/per-vertex overhead (2026-10-06, source only)
+## M13 ambush port-added Think overhead audit (2026-10-06, source only)
 
-Context: physical M13 ambush frames cost ~190 ms. Audit of the Vita indexed
-path used by particles (PointGroup/part_buf) and sorted geometry.
-Hypotheses, none measured:
-1. `ww3d_dx8_boundary.cpp` strip draws heap-allocated an expanded index array
-   per draw. Change: grow-only static scratch (consumed synchronously by
-   `Submit_Indexed_Triangles`, never retained). Identical indices emitted.
-2. `ww3d_vita_renderer.cpp` re-evaluated the draw-invariant
-   `material->Get_Lighting()` predicate per emitted vertex. Change: hoisted to
-   one `const bool` per draw. Identical colour path.
-Larger suspected cost, deliberately not changed: non-batched draws (cache mode
-bit 8 clear) still issue immediate-mode glColor/glNormal/2x texcoord/glVertex
-per corner (6+ vitaGL calls per vertex, with shared vertices re-emitted), and
-lit draws call `Evaluate_Indexed_Primary_Color` per vertex. Sorting already uses
-the A36 O(n) radix `Depth_Sort`. Risk: negligible for both changes; the strip
-scratch is never freed (bounded by the largest strip). Decision: deferred until
-a fixed-camera M13 physical run reports median/p95/p99/worst.
-## Text/HUD upload scratch reuse (2026-10-06, source only)
-
-Audit: glyph rasterization (`renegade_freetype_font_provider.cpp`) is called
-only by upstream `FontCharsClass` cache misses and already skips repeat FT
-loads of the same glyph; no per-frame texture creation found for unchanged
-text. Hypothesis: `Upload_Texture_Level_From_Surface` allocated a fresh RGBA
-`std::vector` on every dynamic-surface Unlock (Render2D text, HUD surfaces).
-Change: `static thread_local` scratch reused; `assign()` still fills the full
-size, so uploaded bytes and checksums are identical. Risk: retains the largest
-converted level's capacity (up to 16 MB for 2048x2048). Before/after:
-unmeasured. Decision: deferred until a fixed HUD replay on hardware.
+Hypothesis: port-added logging, telemetry or census walks inside
+`CombatManager::Think` explain part of the ~97 ms/frame physical M13 ambush
+simulation cost (~20 soldiers, ~15 vehicles). Audit result: rejected as the
+primary cause. Every port-added log in GameObjManager PostThink, script
+timers, transitions, Logan path, target box, action stall, observer misses
+and vehicle diagnostics is budget-capped (8-160 lines) or event-gated; the
+M13 actor census runs only every 120 frames; `WWDEBUG_SAY` is compiled out;
+flight-recorder stimulus hooks return early for non-detention types; runtime
+log writes go through the writer thread. Remaining always-on per-frame cost
+is the WWPROFILE frame profiler (two process-time reads per scope, reported
+as `scopes_per_frame`) and the PostThink 1/16 sampled object timing, both
+microsecond-scale. One defect fixed: `VehicleGameObj::Update_Transitions`
+still read process time twice and computed star distance for every vehicle
+every frame after its 160-line log budget was spent; it now skips them.
+Risk: none to original semantics (diagnostic-only). Before/after: unmeasured;
+expected well under 0.1 ms/frame. Decision: adopted as hygiene; look for the
+real cost in original Think/pathfind/physics via the A3.6 frame-profile lines
+(and optionally disable the profiler with frame-profile-v1.flag `RVFP1 0` to
+bound its own overhead).

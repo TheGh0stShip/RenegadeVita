@@ -73,7 +73,7 @@
  
  	for ( int i = 0; i < trans_data_list.Count(); i++ ) {
  		if ( trans_data_list[i]->Get_Type() == transition_type ) {
-@@ -2035,18 +2083,63 @@
+@@ -2035,18 +2083,65 @@
  			TransitionInstances.Add( trans );
  			// add to master list
  			TransitionManager::Add( trans );
@@ -102,7 +102,9 @@
  void	VehicleGameObj::Update_Transitions( void )
  {
 +#if defined(__vita__)
-+	const uint64_t update_start_us = sceKernelGetProcessTimeWide();
++	// Diagnostics only: skip timing and star distance once the log budget is spent.
++	const uint64_t update_start_us = g_vita_vehicle_transition_update_logs < 160U ?
++		sceKernelGetProcessTimeWide() : 0U;
 +#endif
  	Matrix3D tm = Get_Transform();
  
@@ -112,8 +114,8 @@
  	}
 +#if defined(__vita__)
 +	const uint64_t update_elapsed_us =
-+		sceKernelGetProcessTimeWide() - update_start_us;
-+	const float star_distance = Vita_Distance_To_Star(this);
++		update_start_us != 0U ? sceKernelGetProcessTimeWide() - update_start_us : 0U;
++	const float star_distance = update_start_us != 0U ? Vita_Distance_To_Star(this) : -1.0f;
 +	const bool slow_update = update_elapsed_us >= 3000U;
 +	const bool near_star = star_distance >= 0.0f && star_distance <= 18.0f &&
 +		TransitionInstances.Count() > 0;
@@ -137,9 +139,9 @@
  }
  
  
-@@ -2057,1 +2148,1 @@
+@@ -2057,1 +2150,1 @@
 -	sprintf( string, "V_%sL1.M_%sCL", Get_Definition().TypeName, Get_Definition().TypeName );
 +	snprintf( string, sizeof(string), "V_%sL1.M_%sCL", Get_Definition().TypeName.Peek_Buffer(), Get_Definition().TypeName.Peek_Buffer() );
-@@ -2067,1 +2158,1 @@
+@@ -2067,1 +2160,1 @@
 -	sprintf( string, "V_%sL1.M_%sOP", Get_Definition().TypeName, Get_Definition().TypeName );
 +	snprintf( string, sizeof(string), "V_%sL1.M_%sOP", Get_Definition().TypeName.Peek_Buffer(), Get_Definition().TypeName.Peek_Buffer() );

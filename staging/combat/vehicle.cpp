@@ -2257,7 +2257,9 @@ void	VehicleGameObj::Create_New_Transitions( TransitionDataClass::StyleType tran
 void	VehicleGameObj::Update_Transitions( void )
 {
 #if defined(__vita__) && defined(RENEGADE_VITA_DETAILED_TIMING)
-	const uint64_t update_start_us = sceKernelGetProcessTimeWide();
+	// Diagnostics only: skip timing and star distance once the log budget is spent.
+	const uint64_t update_start_us = g_vita_vehicle_transition_update_logs < 160U ?
+		sceKernelGetProcessTimeWide() : 0U;
 #endif
 	Matrix3D tm = Get_Transform();
 
@@ -2267,8 +2269,8 @@ void	VehicleGameObj::Update_Transitions( void )
 	}
 #if defined(__vita__) && defined(RENEGADE_VITA_DETAILED_TIMING)
 	const uint64_t update_elapsed_us =
-		sceKernelGetProcessTimeWide() - update_start_us;
-	const float star_distance = Vita_Distance_To_Star(this);
+		update_start_us != 0U ? sceKernelGetProcessTimeWide() - update_start_us : 0U;
+	const float star_distance = update_start_us != 0U ? Vita_Distance_To_Star(this) : -1.0f;
 	const bool slow_update = update_elapsed_us >= 3000U;
 	const bool near_star = star_distance >= 0.0f && star_distance <= 18.0f &&
 		TransitionInstances.Count() > 0;

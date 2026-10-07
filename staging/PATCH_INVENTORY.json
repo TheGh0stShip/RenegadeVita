@@ -402,7 +402,7 @@
     {
       "path": "port/patches/combat-a35-vehicle-proximity-diagnostics.patch",
       "stage_directory": "combat",
-      "sha256": "e7ec1a9b6c95db0fe4423a6456570e0fc576e8ba8a4239c724bcb71b022292f2"
+      "sha256": "237b8c5e330d3ebd78cde5a6be29e78c46cfa235129d92164a704405e0194803"
     },
     {
       "path": "port/patches/combat-a35-weaponview-reload-latch.patch",
@@ -2500,5 +2500,5 @@
       "sha256": "b0e9c5c72a9f9620a0980b8ffc9503b4fc21d7c5bb8a26705b9a6e751d4c113f"
     }
   ],
-  "registry_sha256": "617a490db4cd70c740376fa43bfa42ca9ee20a13447c756e1498ab1305b635a8"
+  "registry_sha256": "6c702b703d7321cc696f172fae001376eec88a0f26abf55612eb955b268a61fb"
 }

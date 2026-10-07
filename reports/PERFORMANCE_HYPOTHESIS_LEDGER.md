@@ -1377,3 +1377,8 @@ named by the level archive's cinematic scripts on the loading screen. Risk:
 longer loading and resident prototype memory. Before: six slow commands and
 three slow frames over 0.5 s in dev236 M13. After: unmeasured. Decision:
 deferred until a physical M13 run with matching artifacts.
+Follow-up: the warm-up also loads each warmed preset's primary weapon model
+and back model, through a one-line read-only `Get_Weapon_Def_ID` staging
+accessor (`combat-a36-armed-def-weapon-id.patch`). Tracked staging is
+refreshed: 499 patches, inventory PASS, including the earlier
+`wwdebug-a36-vita-frame-profile.patch`, which had not yet been staged.

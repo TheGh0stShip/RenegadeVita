@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "074d9feb74e3666da44daaafc8ce1e6c213c68185f728a64ee46f4b16d48e589",
-  "patch_count": 498,
+  "stage_script_sha256": "eb89e64a8c31e2df6b860932900d88bd6caf520064441fe7036f34dd505b8517",
+  "patch_count": 499,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -2105,6 +2105,11 @@
       "sha256": "83a34b61aaa8db6e116624a7ac8ea13c0c20829d6fdfa1f1b4e81c4948d74437"
     },
     {
+      "path": "port/patches/combat-a36-armed-def-weapon-id.patch",
+      "stage_directory": "combat",
+      "sha256": "d67e1d14c8f275019401b6ea1e65a048c28b689d08b178fb36fc45e3b9f06c6a"
+    },
+    {
       "path": "port/patches/combat-a36-bullet-load-admission.patch",
       "stage_directory": "combat",
       "sha256": "f4386856512db5b2c6f23bafdd950f3c60284f2d08a17a148b57e12ed885319e"
@@ -2495,5 +2500,5 @@
       "sha256": "b0e9c5c72a9f9620a0980b8ffc9503b4fc21d7c5bb8a26705b9a6e751d4c113f"
     }
   ],
-  "registry_sha256": "4df4546bca11169a316902021ba6977485c525fa973918945ee14db43ade41e6"
+  "registry_sha256": "617a490db4cd70c740376fa43bfa42ca9ee20a13447c756e1498ab1305b635a8"
 }

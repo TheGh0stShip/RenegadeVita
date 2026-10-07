@@ -71,6 +71,8 @@
 #include "physicalgameobj.h"
 #include "phys.h"
 #include "combatchunkid.h"
+#include "armedgameobj.h"
+#include "weaponmanager.h"
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 #include "dialogmgr.h"
 #include "dlgevaencyclopedia.h"
@@ -3312,6 +3314,16 @@ void Warm_Level_Cinematic_Preset_Models(A31VitaLoadingPresenter &presenter,
 			static_cast<PhysDefClass *>(phys_definition)->Get_Model_Name();
 		if (model.Is_Empty()) continue;
 		if (A35_Vita_Warm_Render_Obj(model.Peek_Buffer())) ++warmed;
+		// Soldier and vehicle definitions are ArmedGameObjDefs. Their primary
+		// weapon's third-person and back models load on the same first spawn.
+		const WeaponDefinitionClass *weapon = WeaponManager::Find_Weapon_Definition(
+			static_cast<const ArmedGameObjDef *>(object_definition)->Get_Weapon_Def_ID());
+		if (weapon != NULL) {
+			if (!weapon->Model.Is_Empty() &&
+				A35_Vita_Warm_Render_Obj(weapon->Model.Peek_Buffer())) ++warmed;
+			if (!weapon->BackModel.Is_Empty() &&
+				A35_Vita_Warm_Render_Obj(weapon->BackModel.Peek_Buffer())) ++warmed;
+		}
 		presenter.Render_Original_Progress("after_cinematic_preset_prepare");
 	}
 	A30_Vita_Log("A4 cinematic preset preparation: archive=%s scripts=%u presets=%u warmed=%u elapsed_us=%llu\n",

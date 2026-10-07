@@ -73,6 +73,9 @@ public:
 
 	DECLARE_EDITABLE( ArmedGameObjDef, PhysicalGameObjDef );
 
+	// Vita loading-screen warm-up reads the primary weapon preset (read-only).
+	int										Get_Weapon_Def_ID( void ) const	{ return WeaponDefID; }
+
 protected:
 	float											WeaponTiltRate;
 	float											WeaponTiltMin;

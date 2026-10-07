@@ -219,6 +219,11 @@ public:
 #ifdef ENABLE_WWPROFILE
 #define	WWPROFILE( name )						WWProfileSampleClass _wwprofile( name, false )
 #define	WWROOTPROFILE( name )				WWProfileSampleClass _wwprofile( name, true )
+#elif defined(RENEGADE_VITA_FRAME_PROFILE)
+// Vita: flat per-frame game-thread timing; see renegade_vita_frame_profile.h.
+#include "renegade_vita_frame_profile.h"
+#define	WWPROFILE( name )						RenegadeVitaFrameProfileScope _wwprofile( name )
+#define	WWROOTPROFILE( name )				RenegadeVitaFrameProfileScope _wwprofile( name )
 #else
 #define	WWPROFILE( name )
 #define	WWROOTPROFILE( name )

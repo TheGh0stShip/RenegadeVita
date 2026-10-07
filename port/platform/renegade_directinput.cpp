@@ -24,6 +24,7 @@
 #include <psp2/io/fcntl.h>
 #include <psp2/io/stat.h>
 #include <psp2/touch.h>
+#include <psp2/kernel/sysmem.h>
 #include "vita_runtime_log.h"
 #include "renegade_vita_dev_input.h"
 #include "render2d.h"
@@ -581,6 +582,17 @@ void DirectInput::Read(void)
 		Flush();
 		return;
 	}
+	// PSTV only: DualShock L2/R2/L3/R3 are reported solely by the Ext2 read.
+	// Merge just those bits so handheld Vita input is byte-for-byte unchanged.
+	static const int s_is_vita_tv =
+		sceKernelGetModel() == SCE_KERNEL_MODEL_VITATV ? 1 : 0;
+	if (s_is_vita_tv) {
+		SceCtrlData extended = {};
+		if (sceCtrlPeekBufferPositiveExt2(0, &extended, 1) > 0) {
+			controller.buttons |= extended.buttons &
+				(SCE_CTRL_L3 | SCE_CTRL_R3 | SCE_CTRL_L2 | SCE_CTRL_R2);
+		}
+	}
 	if (!g_logged_first_read_controller) {
 		Vita_Append_A22_Runtime_Breadcrumb("input",
 			"DirectInput::Read first controller buttons=%08X lx/ly/rx/ry=%u/%u/%u/%u",
@@ -725,13 +737,17 @@ void DirectInput::Read(void)
 		(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_CROSS) != 0);
 	Set_Button(DIKeyboardButtons, DIK_LCONTROL,
 		(ordinary_gameplay_input || dialog_navigation) &&
-		(buttons & SCE_CTRL_CIRCLE) != 0 && !team_chat_chord &&
-		!camera_toggle_chord);
+		(((buttons & SCE_CTRL_CIRCLE) != 0 && !team_chat_chord &&
+		!camera_toggle_chord) ||
+		// PSTV DualShock: L3 also drives the original crouch key.
+		(ordinary_gameplay_input && (buttons & SCE_CTRL_L3) != 0)));
 	Set_Button(DIKeyboardButtons, DIK_E,
 		(ordinary_gameplay_input || dialog_navigation) &&
 		(buttons & SCE_CTRL_TRIANGLE) != 0 && !public_chat_chord);
 	Set_Button(DIKeyboardButtons, DIK_F,
-		ordinary_gameplay_input && (back_touch.down || camera_toggle_chord));
+		ordinary_gameplay_input && (back_touch.down || camera_toggle_chord ||
+		// PSTV DualShock: R3 drives original FirstPersonToggle (no rear touch).
+		(buttons & SCE_CTRL_R3) != 0U));
 	Set_Button(DIKeyboardButtons, DIK_R,
 		(ordinary_gameplay_input || dialog_navigation) &&
 		(buttons & SCE_CTRL_SQUARE) != 0 && !quicksave_chord);

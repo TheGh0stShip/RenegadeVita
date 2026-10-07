@@ -86,6 +86,14 @@ bool Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 bool Decode_Wave_With_Info(const uint8_t *data, size_t bytes,
 	DecodedWave *decoded, WaveInfo *info, const char **error = nullptr);
 
+// RVAU1 bit 0 (audio-cost-v1.flag). When enabled, an ADPCM decode reserves its
+// final sample count once: a header-only final block (counted as zero frames
+// by the estimate) and mono IMA fact padding no longer make the vector regrow
+// to about twice the decoded size and keep that capacity. Decoded samples are
+// identical either way. Raises counts decodes whose reserve this enlarged.
+void Set_Exact_Decode_Reserve(bool enabled);
+uint32_t Exact_Decode_Reserve_Raises();
+
 // Pure per-block ADPCM decoders: output depends only on block bytes and the
 // validated format. Writes interleaved frames into a caller-provided buffer of
 // output_frames capacity; fails without partial-success if it is too small.

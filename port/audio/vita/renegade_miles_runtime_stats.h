@@ -95,3 +95,23 @@ enum {
 	RENEGADE_MILES_PREWARM_FULL = 3
 };
 int Renegade_Miles_Prewarm_Pcm(const void *data, size_t bytes, size_t *retained_bytes);
+
+// RVAU1 audio cost switches (audio-cost-v1.flag; bits in renegade_audio_cost.h).
+// The Vita provider reads the flag in AIL_startup; tests may set the mask.
+// Counters are cumulative since startup.
+struct RenegadeMilesAudioCostStats {
+	uint32_t mode;
+	uint32_t stream_probe_hits;      // stream opens that reused a cached decode
+	uint32_t stream_probe_misses;
+	uint32_t stream_pcm_deferred;    // first opens kept out of the PCM cache
+	uint32_t stream_pcm_admitted;    // repeat opens admitted to the PCM cache
+	uint32_t image_pool_hits;        // stream images read into a slab
+	uint32_t image_pool_oversize;    // larger than a slab: heap path
+	uint32_t image_pool_busy;        // every slab claimed: heap path
+	uint32_t image_pool_allocation_failures;
+	uint32_t image_pool_resident_bytes;
+	uint32_t exact_reserve_raises;   // decodes whose reserve bit 0 enlarged
+};
+void Renegade_Miles_Set_Audio_Cost_Mode(unsigned mode);
+unsigned Renegade_Miles_Get_Audio_Cost_Mode();
+void Renegade_Miles_Get_Audio_Cost_Stats(RenegadeMilesAudioCostStats *stats);

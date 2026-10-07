@@ -2943,6 +2943,16 @@ void Log_Audio_Runtime_Statistics(const char *reason, uint32_t frame)
 		static_cast<double>(dialog_volume),
 		static_cast<double>(cinematic_volume),
 		stats.last_error[0] != '\0' ? stats.last_error : "none");
+	// RVAU1 audio-cost-v1.flag A/B evidence; counters are cumulative.
+	RenegadeMilesAudioCostStats cost = {};
+	Renegade_Miles_Get_Audio_Cost_Stats(&cost);
+	A30_Vita_Log("A3.5 audio-cost: reason=%s frame=%u mode=%X probe=hits:%u misses:%u stream_pcm=deferred:%u admitted:%u image_pool=hits:%u oversize:%u busy:%u alloc_fail:%u resident:%u exact_reserve_raises=%u\n",
+		reason != NULL ? reason : "unknown", frame, cost.mode,
+		cost.stream_probe_hits, cost.stream_probe_misses,
+		cost.stream_pcm_deferred, cost.stream_pcm_admitted,
+		cost.image_pool_hits, cost.image_pool_oversize, cost.image_pool_busy,
+		cost.image_pool_allocation_failures, cost.image_pool_resident_bytes,
+		cost.exact_reserve_raises);
 }
 
 void Log_File_Factory_Statistics(uint32_t frame = 0U)

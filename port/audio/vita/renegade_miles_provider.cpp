@@ -1,5 +1,6 @@
 #include "mss.h"
 
+#include "renegade_audio_cost.h"
 #include "renegade_miles_runtime_stats.h"
 #include "renegade_miles_test.h"
 #include "renegade_wave_decoder.h"
@@ -88,6 +89,11 @@ struct RenegadeMilesPreparedSource {
 	uint64_t source_hash = 0U;
 	size_t source_bytes = 0U;
 	const char *error = nullptr;
+	// RVAU1 bit 1: the cached decode of these bytes, referenced under the
+	// provider lock before decoding was skipped; publication consumes it.
+	RenegadeMilesPcm *pinned = nullptr;
+	// RVAU1 bit 2: publication applies second-open cache admission.
+	bool second_open_admission = false;
 	bool is_mpeg = false;
 	bool cacheable = false;
 };
@@ -172,6 +178,27 @@ uint64_t g_pcm_cache_clock = 0U;
 size_t g_pcm_live_bytes = 0U;
 size_t g_pcm_live_high_water_bytes = 0U;
 size_t g_pcm_largest_image_bytes = 0U;
+// RVAU1 (audio-cost-v1.flag), see renegade_audio_cost.h. Each bit is read
+// where its decision is made; the startup flag read or a test sets them.
+std::atomic<unsigned> g_audio_cost_mode{RENEGADE_VITA_AUDIO_COST_DEFAULT};
+// Stream file images up to one slab skip the per-open heap allocation. One
+// 128 KiB slab holds 188 of the 197 streamed M00 dialogue images; the second
+// is allocated only if two opens ever overlap.
+RenegadeAudioImagePool<128U * 1024U, 2U> g_stream_image_pool;
+// Second-open admission: (hash, bytes) of recent first-time stream decodes
+// kept out of the PCM cache. Guarded by g_mutex.
+constexpr size_t kStreamSeenSlots = 64U;
+struct StreamSeenKey {
+	uint64_t hash;
+	size_t bytes;
+};
+StreamSeenKey g_stream_seen[kStreamSeenSlots] = {};
+size_t g_stream_seen_next = 0U;
+// Guarded by g_mutex; cumulative since startup.
+uint32_t g_stream_probe_hits = 0U;
+uint32_t g_stream_probe_misses = 0U;
+uint32_t g_stream_pcm_deferred = 0U;
+uint32_t g_stream_pcm_admitted = 0U;
 
 void Initialize_Mutex()
 {
@@ -530,6 +557,34 @@ bool Prepare_Stream_Source(std::unique_ptr<uint8_t[]> &source, size_t bytes,
 		&prepared->wave, &prepared->info, &prepared->error);
 }
 
+// RVAU1 bit 2. A stream's decoded PCM enters the cache on its second open
+// within the last kStreamSeenSlots first-time opens. A one-shot dialogue line
+// then no longer evicts idle effect PCM (including loading-screen pre-warm);
+// its PCM is released when the stream closes. Only retention changes: the
+// published PCM is the same decode either way.
+bool Admit_Stream_Pcm_Locked(const RenegadeMilesPreparedSource *prepared)
+{
+	if (!prepared->second_open_admission) return true;
+	for (const StreamSeenKey &key : g_stream_seen) {
+		if (key.bytes == prepared->source_bytes && key.hash == prepared->source_hash) {
+			++g_stream_pcm_admitted;
+			return true;
+		}
+	}
+	g_stream_seen[g_stream_seen_next].hash = prepared->source_hash;
+	g_stream_seen[g_stream_seen_next].bytes = prepared->source_bytes;
+	g_stream_seen_next = (g_stream_seen_next + 1U) % kStreamSeenSlots;
+	++g_stream_pcm_deferred;
+	return false;
+}
+
+void Release_Pinned_Pcm_Locked(RenegadeMilesPreparedSource *prepared)
+{
+	if (prepared == nullptr || prepared->pinned == nullptr) return;
+	Release_Pcm(prepared->pinned);
+	prepared->pinned = nullptr;
+}
+
 bool Publish_Stream_Source_Locked(RenegadeMilesSample *sample,
 	RenegadeMilesPreparedSource *prepared)
 {
@@ -545,6 +600,17 @@ bool Publish_Stream_Source_Locked(RenegadeMilesSample *sample,
 					std::numeric_limits<uint32_t>::max()));
 		sample->mpeg = std::move(prepared->mpeg);
 		sample->encoded_data_bytes = static_cast<U32>(prepared->source_bytes);
+	} else if (prepared->pinned != nullptr) {
+		// RVAU1 bit 1: the open reused this cached decode instead of decoding
+		// the same bytes again. Publication matches the cache-hit branch below.
+		RenegadeMilesPcm *pcm = prepared->pinned;
+		++g_stats.pcm_cache_hits;
+		pcm->last_use = ++g_pcm_cache_clock;
+		Set_Sample_Pcm(sample, pcm);
+		sample->wave = Wave_Metadata(pcm->wave);
+		sample->mpeg.reset();
+		sample->encoded_data_bytes = pcm->encoded_data_bytes;
+		Release_Pinned_Pcm_Locked(prepared);
 	} else {
 		// Preparation already performed the decode outside the mixer lock. A
 		// concurrently retained cache entry can still win publication here.
@@ -565,7 +631,7 @@ bool Publish_Stream_Source_Locked(RenegadeMilesSample *sample,
 			pcm->source_hash = prepared->source_hash;
 			pcm->source_bytes = prepared->source_bytes;
 			Track_New_Pcm(pcm);
-			if (prepared->cacheable) Cache_Pcm(pcm);
+			if (prepared->cacheable && Admit_Stream_Pcm_Locked(prepared)) Cache_Pcm(pcm);
 		}
 		pcm->last_use = ++g_pcm_cache_clock;
 		Set_Sample_Pcm(sample, pcm);
@@ -1112,10 +1178,13 @@ void Release_Sample(RenegadeMilesSample *sample)
 	delete sample;
 }
 
+// With a lease (RVAU1 bit 3) an image that fits a free slab is read into it
+// and *image stays empty; otherwise the image is heap allocated as before.
 bool Read_Stream_Image(const char *name, AIL_FILE_OPEN_CALLBACK file_open,
 	AIL_FILE_CLOSE_CALLBACK file_close, AIL_FILE_SEEK_CALLBACK file_seek,
 	AIL_FILE_READ_CALLBACK file_read, std::unique_ptr<uint8_t[]> *image,
-	size_t *image_bytes, const char **error)
+	size_t *image_bytes, const char **error,
+	RenegadeAudioImageLease *lease = nullptr)
 {
 	if (name == nullptr || image == nullptr || image_bytes == nullptr || file_open == nullptr ||
 		file_close == nullptr || file_seek == nullptr || file_read == nullptr) {
@@ -1134,20 +1203,90 @@ bool Read_Stream_Image(const char *name, AIL_FILE_OPEN_CALLBACK file_open,
 		if (error != nullptr) *error = "stream source size is invalid";
 		return false;
 	}
-	std::unique_ptr<uint8_t[]> pending(new (std::nothrow) uint8_t[static_cast<size_t>(file_size)]);
-	if (!pending) {
+	const bool slab = lease != nullptr &&
+		g_stream_image_pool.Acquire(static_cast<size_t>(file_size), lease);
+	std::unique_ptr<uint8_t[]> pending(slab ? nullptr :
+		new (std::nothrow) uint8_t[static_cast<size_t>(file_size)]);
+	uint8_t *const target = slab ? lease->data : pending.get();
+	if (target == nullptr) {
 		file_close(handle);
 		if (error != nullptr) *error = "stream image allocation failed";
 		return false;
 	}
-	const U32 read = file_read(handle, pending.get(), static_cast<U32>(file_size));
+	const U32 read = file_read(handle, target, static_cast<U32>(file_size));
 	file_close(handle);
 	if (read != static_cast<U32>(file_size)) {
+		if (slab) g_stream_image_pool.Release(lease);
 		if (error != nullptr) *error = "stream source read was incomplete";
 		return false;
 	}
 	*image = std::move(pending);
 	*image_bytes = static_cast<size_t>(file_size);
+	return true;
+}
+
+// RVAU1 stream open (bits 1-3): the same file callbacks, validation, decode
+// and publication as Read_Stream_Image followed by Prepare_Stream_Source.
+// Only where the transient image lives (bit 3), whether a cached decode of
+// identical bytes is reused instead of decoding again (bit 1), and when the
+// image is released (before publication) differ. Bit 2 is applied when the
+// prepared source is published. Returns whether the image was read.
+bool Load_Stream_Source_Costed(const char *name, AIL_FILE_OPEN_CALLBACK file_open,
+	AIL_FILE_CLOSE_CALLBACK file_close, AIL_FILE_SEEK_CALLBACK file_seek,
+	AIL_FILE_READ_CALLBACK file_read, unsigned mode, size_t *image_bytes,
+	RenegadeMilesPreparedSource *prepared, const char **read_error,
+	bool *source_prepared)
+{
+	*source_prepared = false;
+	std::unique_ptr<uint8_t[]> image;
+	RenegadeAudioImageLease lease;
+	if (!Read_Stream_Image(name, file_open, file_close, file_seek, file_read,
+		&image, image_bytes, read_error,
+		(mode & RENEGADE_AUDIO_COST_STREAM_IMAGE_POOL) != 0U ? &lease : nullptr)) {
+		return false;
+	}
+	const size_t bytes = *image_bytes;
+	const uint8_t *data = lease.data != nullptr ? lease.data : image.get();
+	if (bytes < 12U || RenegadeVitaAudio::Is_Mpeg_Media(data, bytes)) {
+		// MPEG playback adopts a heap image, so a slab image is copied out
+		// first; the original preparation then runs unchanged.
+		if (lease.data != nullptr) {
+			image.reset(new (std::nothrow) uint8_t[bytes]);
+			if (image) std::memcpy(image.get(), lease.data, bytes);
+			g_stream_image_pool.Release(&lease);
+			if (!image) {
+				prepared->error = "stream image allocation failed";
+				return true;
+			}
+		}
+		*source_prepared = Prepare_Stream_Source(image, bytes, prepared);
+		return true;
+	}
+	prepared->source_bytes = bytes;
+	prepared->cacheable = bytes <= kPcmCacheMaximumSourceBytes;
+	prepared->source_hash = prepared->cacheable ? Hash_Image(data, bytes) : 0U;
+	prepared->second_open_admission =
+		(mode & RENEGADE_AUDIO_COST_STREAM_SECOND_OPEN_ADMISSION) != 0U;
+	if (prepared->cacheable && (mode & RENEGADE_AUDIO_COST_STREAM_CACHE_PROBE) != 0U) {
+		// Same key publication uses. The reference keeps the entry from being
+		// evicted before publication consumes it.
+		AIL_lock();
+		RenegadeMilesPcm *pcm = Find_Cached_Pcm(prepared->source_hash, bytes);
+		if (pcm != nullptr) {
+			++pcm->references;
+			prepared->pinned = pcm;
+			++g_stream_probe_hits;
+		} else {
+			++g_stream_probe_misses;
+		}
+		AIL_unlock();
+	}
+	*source_prepared = prepared->pinned != nullptr ||
+		RenegadeVitaAudio::Decode_Wave_With_Info(data, bytes, &prepared->wave,
+			&prepared->info, &prepared->error);
+	// The decode owns its PCM; publication never reads the image.
+	g_stream_image_pool.Release(&lease);
+	image.reset();
 	return true;
 }
 
@@ -1163,9 +1302,31 @@ RenegadeMilesSample::~RenegadeMilesSample()
 	Release_Pcm(pcm);
 }
 
+#if defined(__vita__)
+// "RVAU1 <hex>\n" in audio-cost-v1.flag selects the RVAU1 mask; a missing or
+// malformed file keeps the build default.
+static void Read_Audio_Cost_Flag()
+{
+	unsigned mode = RENEGADE_VITA_AUDIO_COST_DEFAULT;
+	FILE *file = std::fopen("ux0:data/renegade/user/config/audio-cost-v1.flag", "rb");
+	if (file != nullptr) {
+		char value[9] = {};
+		const size_t size = std::fread(value, 1U, sizeof(value), file);
+		const bool read_ok = std::ferror(file) == 0;
+		std::fclose(file);
+		unsigned parsed = 0U;
+		if (read_ok && Renegade_Parse_Audio_Cost_Flag(value, size, &parsed)) mode = parsed;
+	}
+	Renegade_Miles_Set_Audio_Cost_Mode(mode);
+}
+#endif
+
 void AIL_startup(void)
 {
 	Ensure_Mutex();
+#if defined(__vita__)
+	Read_Audio_Cost_Flag();
+#endif
 }
 
 void AIL_shutdown(void)
@@ -1178,6 +1339,9 @@ void AIL_shutdown(void)
 	}
 	g_samples.clear();
 	Clear_Pcm_Cache();
+	g_stream_image_pool.Free_Idle();
+	std::fill(std::begin(g_stream_seen), std::end(g_stream_seen), StreamSeenKey{0U, 0U});
+	g_stream_seen_next = 0U;
 	AIL_unlock();
 }
 
@@ -1568,15 +1732,27 @@ HSTREAM AIL_open_stream_by_sample(HDIGDRIVER, HSAMPLE sample,
 	Reset_Sample(sample);
 	AIL_unlock();
 
+	const unsigned cost_mode = g_audio_cost_mode.load(std::memory_order_relaxed) &
+		(RENEGADE_AUDIO_COST_STREAM_CACHE_PROBE |
+		 RENEGADE_AUDIO_COST_STREAM_SECOND_OPEN_ADMISSION |
+		 RENEGADE_AUDIO_COST_STREAM_IMAGE_POOL);
 	std::unique_ptr<uint8_t[]> image;
 	size_t image_bytes = 0U;
 	const char *read_error = sample != nullptr ? nullptr : "invalid stream sample";
-	const bool image_loaded = sample != nullptr && Read_Stream_Image(name,
-		file_open, file_close, file_seek, file_read, &image, &image_bytes,
-		&read_error);
 	RenegadeMilesPreparedSource prepared;
-	const bool source_prepared = image_loaded && Prepare_Stream_Source(
-		image, image_bytes, &prepared);
+	bool image_loaded = false;
+	bool source_prepared = false;
+	if (cost_mode == 0U) {
+		image_loaded = sample != nullptr && Read_Stream_Image(name,
+			file_open, file_close, file_seek, file_read, &image, &image_bytes,
+			&read_error);
+		source_prepared = image_loaded && Prepare_Stream_Source(
+			image, image_bytes, &prepared);
+	} else if (sample != nullptr) {
+		image_loaded = Load_Stream_Source_Costed(name, file_open, file_close,
+			file_seek, file_read, cost_mode, &image_bytes, &prepared, &read_error,
+			&source_prepared);
+	}
 
 	AIL_lock();
 	RenegadeMilesStream *stream = nullptr;
@@ -1595,6 +1771,8 @@ HSTREAM AIL_open_stream_by_sample(HDIGDRIVER, HSAMPLE sample,
 			Capture_Last_Stream_Locked(sample);
 		}
 	}
+	// Publication consumes an RVAU1 cache pin; drop one it did not reach.
+	Release_Pinned_Pcm_Locked(&prepared);
 	if (stream != nullptr) ++g_stats.stream_open_successes;
 	else ++g_stats.stream_open_failures;
 	AIL_unlock();
@@ -1826,5 +2004,37 @@ void Renegade_Miles_Get_Runtime_Stats(RenegadeMilesRuntimeStats *stats)
 	}
 	std::snprintf(stats->last_error, sizeof(stats->last_error), "%s",
 		g_last_error);
+	AIL_unlock();
+}
+
+void Renegade_Miles_Set_Audio_Cost_Mode(unsigned mode)
+{
+	mode &= RENEGADE_AUDIO_COST_ALL;
+	g_audio_cost_mode.store(mode, std::memory_order_relaxed);
+	RenegadeVitaAudio::Set_Exact_Decode_Reserve(
+		(mode & RENEGADE_AUDIO_COST_EXACT_DECODE_RESERVE) != 0U);
+}
+
+unsigned Renegade_Miles_Get_Audio_Cost_Mode()
+{
+	return g_audio_cost_mode.load(std::memory_order_relaxed);
+}
+
+void Renegade_Miles_Get_Audio_Cost_Stats(RenegadeMilesAudioCostStats *stats)
+{
+	if (stats == nullptr) return;
+	*stats = {};
+	stats->mode = g_audio_cost_mode.load(std::memory_order_relaxed);
+	stats->image_pool_hits = g_stream_image_pool.Hits();
+	stats->image_pool_oversize = g_stream_image_pool.Oversize();
+	stats->image_pool_busy = g_stream_image_pool.Busy();
+	stats->image_pool_allocation_failures = g_stream_image_pool.Allocation_Failures();
+	stats->image_pool_resident_bytes = g_stream_image_pool.Resident_Bytes();
+	stats->exact_reserve_raises = RenegadeVitaAudio::Exact_Decode_Reserve_Raises();
+	AIL_lock();
+	stats->stream_probe_hits = g_stream_probe_hits;
+	stats->stream_probe_misses = g_stream_probe_misses;
+	stats->stream_pcm_deferred = g_stream_pcm_deferred;
+	stats->stream_pcm_admitted = g_stream_pcm_admitted;
 	AIL_unlock();
 }

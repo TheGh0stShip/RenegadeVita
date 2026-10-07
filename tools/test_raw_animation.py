@@ -32,10 +32,11 @@ class RawAnimationTests(unittest.TestCase):
 
             # A private generated copy proves the fixture rejects the old ARM rounding.
             source = (ROOT / "staging/ww3d2/hrawanim.cpp").read_text()
-            corrected = "static_cast<int>(WWMath::Floor(frame))"
+            corrected = "int frame0 = Raw_Anim_Frame_Floor(frame);"
             self.assertEqual(source.count(corrected), 3)
             legacy = Path(directory) / "legacy-hrawanim.cpp"
-            legacy.write_text(source.replace(corrected, "WWMath::Float_To_Long(frame - 0.499999f)"))
+            legacy.write_text(source.replace(
+                corrected, "int frame0 = WWMath::Float_To_Long(frame - 0.499999f);"))
             command.insert(1, f'-DRAW_ANIMATION_SOURCE="{legacy}"')
             result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

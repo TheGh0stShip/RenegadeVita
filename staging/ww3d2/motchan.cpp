@@ -1323,28 +1323,7 @@ return;
 	Data=NULL;
 }
 
-//==========================================================================================
-void MotionChannelClass::
-Get_Vector(int frame,float * setvec) const{
-	if ((frame < FirstFrame) || (frame > LastFrame)) {
-		set_identity(setvec);
-	}else {
-		int vframe = frame - FirstFrame;
-		if (Data) {
-			for (int i=0; i<VectorLen; i++) {
-				setvec[i] = Data[vframe * VectorLen + i];
-			}
-		}
-		else {
-			WWASSERT(CompressedData);
-			float scale=ValueScale/65535.0f;
-			for (int i=0; i<VectorLen; i++) {
-				float value=int(CompressedData[vframe * VectorLen + i]);
-				setvec[i] = value*scale+ValueOffset;
-			}
-		}
-	}
-}
+// MotionChannelClass::Get_Vector is defined inline in motchan.h.
 
 // EOF - motchan.cpp
 

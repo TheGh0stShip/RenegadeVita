@@ -1,0 +1,132 @@
+--- a/motchan.h
++++ b/motchan.h
+@@ -46,6 +46,7 @@
+ #include "always.h"
+ #include "bittype.h"
+ #include "w3d_file.h"
++#include "wwdebug.h"
+ 
+ class ChunkLoadClass;
+ class Quaternion;
+@@ -111,6 +112,42 @@
+ 	}
+ }
+ 
++// Inline so the per-pivot raw-animation samplers avoid one call per channel
++// read; otherwise the original definition from motchan.cpp.  The fixed 1/4
++// element copies are the original loop unrolled for the only W3D widths, so
++// GCC cannot turn the inlined loop into a memcpy call.
++WWINLINE void MotionChannelClass::Get_Vector(int frame,float * setvec) const
++{
++	if ((frame < FirstFrame) || (frame > LastFrame)) {
++		set_identity(setvec);
++	}else {
++		int vframe = frame - FirstFrame;
++		if (Data) {
++			const float * src = &Data[vframe * VectorLen];
++			if (VectorLen == 1) {
++				setvec[0] = src[0];
++			} else if (VectorLen == 4) {
++				setvec[0] = src[0];
++				setvec[1] = src[1];
++				setvec[2] = src[2];
++				setvec[3] = src[3];
++			} else {
++				for (int i=0; i<VectorLen; i++) {
++					setvec[i] = Data[vframe * VectorLen + i];
++				}
++			}
++		}
++		else {
++			WWASSERT(CompressedData);
++			float scale=ValueScale/65535.0f;
++			for (int i=0; i<VectorLen; i++) {
++				float value=int(CompressedData[vframe * VectorLen + i]);
++				setvec[i] = value*scale+ValueOffset;
++			}
++		}
++	}
++}
++
+ /******************************************************************************
+ 
+ 	BitChannelClass is used to store a boolean "on/off" value for each frame
+--- a/motchan.cpp
++++ b/motchan.cpp
+@@ -1323,28 +1323,7 @@
+ 	Data=NULL;
+ }
+ 
+-//==========================================================================================
+-void MotionChannelClass::
+-Get_Vector(int frame,float * setvec) const{
+-	if ((frame < FirstFrame) || (frame > LastFrame)) {
+-		set_identity(setvec);
+-	}else {
+-		int vframe = frame - FirstFrame;
+-		if (Data) {
+-			for (int i=0; i<VectorLen; i++) {
+-				setvec[i] = Data[vframe * VectorLen + i];
+-			}
+-		}
+-		else {
+-			WWASSERT(CompressedData);
+-			float scale=ValueScale/65535.0f;
+-			for (int i=0; i<VectorLen; i++) {
+-				float value=int(CompressedData[vframe * VectorLen + i]);
+-				setvec[i] = value*scale+ValueOffset;
+-			}
+-		}
+-	}
+-}
++// MotionChannelClass::Get_Vector is defined inline in motchan.h.
+ 
+ // EOF - motchan.cpp
+ 
+--- a/hrawanim.cpp
++++ b/hrawanim.cpp
+@@ -73,6 +73,17 @@
+ 	BitChannelClass *			Vis;
+ };
+ 
++// Same value as static_cast<int>(WWMath::Floor(frame)) for every input.  On
++// [0, 2^31) the floor equals truncation, so the per-sample floorf call is
++// skipped; all other inputs (negative, huge, NaN) take the original expression.
++static inline int Raw_Anim_Frame_Floor(float frame)
++{
++	if (frame >= 0.0f && frame < 2147483648.0f) {
++		return static_cast<int>(frame);
++	}
++	return static_cast<int>(WWMath::Floor(frame));
++}
++
+ /***********************************************************************************************
+  * NodeMotionStruct::NodeMotionStruct -- constructor                                           *
+  *                                                                                             *
+@@ -473,7 +484,7 @@
+ 
+ 	// Select the preceding key independently of x87 versus ARM rounding.
+ 	// Float_To_Long truncates on ARM, so the old half-frame bias extrapolates.
+-	int frame0 = static_cast<int>(WWMath::Floor(frame));
++	int frame0 = Raw_Anim_Frame_Floor(frame);
+ 
+ 	int frame1 = frame0 + 1;
+ 
+@@ -530,7 +541,7 @@
+  *=============================================================================================*/
+ void HRawAnimClass::Get_Orientation(Quaternion& q, int pividx,float frame) const
+ {
+-	int frame0 = static_cast<int>(WWMath::Floor(frame));
++	int frame0 = Raw_Anim_Frame_Floor(frame);
+ 	int frame1 = frame0 + 1;
+ 
+ 	float ratio = frame - (float)frame0;
+@@ -583,7 +594,7 @@
+ //		return;
+ //	}
+ 
+-	int frame0 = static_cast<int>(WWMath::Floor(frame));
++	int frame0 = Raw_Anim_Frame_Floor(frame);
+ 
+ 	int frame1 = frame0 + 1;
+ 

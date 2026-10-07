@@ -312,7 +312,9 @@ def test_m01_first_beach_cinematic_uses_fresh_volatile_render_objects():
 class RuntimeInstrumentationContracts(unittest.TestCase):
     def test_raw_animation_samplers_use_portable_lower_key(self):
         text = (ROOT / "staging" / "ww3d2" / "hrawanim.cpp").read_text(encoding="utf-8")
-        self.assertEqual(text.count("int frame0 = static_cast<int>(WWMath::Floor(frame));"), 3)
+        self.assertEqual(text.count("int frame0 = Raw_Anim_Frame_Floor(frame);"), 3)
+        # The helper keeps the floor semantics; only [0, 2^31) skips floorf.
+        self.assertIn("return static_cast<int>(WWMath::Floor(frame));", text)
         self.assertNotIn("WWMath::Float_To_Long(frame-0.499999f)", text)
 
     def test_preservation_patch_cannot_restore_per_object_postthink_timing(self):

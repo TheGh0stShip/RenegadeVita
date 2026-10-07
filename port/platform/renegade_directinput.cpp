@@ -5,6 +5,7 @@
 
 #include "directinput.h"
 #include "dinput.h"
+#include "renegade_vita_bench_hooks.h"
 #include "renegade_vita_button_state_contract.h"
 #include "renegade_vita_input_contract.h"
 #include "renegade_vita_input_route.h"
@@ -606,12 +607,20 @@ void DirectInput::Read(void)
 	}
 			Apply_Replay_Sample(controller);
 			RenegadeVitaDevInput::Apply(controller);
+			// Dev-only tutorial benchmark (RVTB1): neutral pad while a fixed
+			// viewpoint is held; START stays live so the player can abort.
+			const bool bench_input_suppressed = g_renegade_vita_bench_hooks.input_suppressed;
+			if (bench_input_suppressed) {
+				controller.buttons &= SCE_CTRL_START;
+				controller.lx = controller.ly = controller.rx = controller.ry = 128U;
+			}
 			Record_Sample(controller);
 			const unsigned int buttons = controller.buttons;
-			const VitaTouchSample front_touch = Sample_Touch_Port(
+			VitaTouchSample front_touch = Sample_Touch_Port(
 				SCE_TOUCH_PORT_FRONT, g_front_touch_sampling_initialized);
-			const VitaTouchSample back_touch = Sample_Touch_Port(
+			VitaTouchSample back_touch = Sample_Touch_Port(
 				SCE_TOUCH_PORT_BACK, g_back_touch_sampling_initialized);
+			if (bench_input_suppressed) front_touch.down = back_touch.down = false;
             if (RenegadeVitaTextEntry::Block_Input(buttons == 0U &&
                     !front_touch.down && !back_touch.down)) {
                 Flush();

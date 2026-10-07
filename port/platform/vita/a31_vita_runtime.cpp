@@ -28,6 +28,7 @@
 #include "renegade_vita_input_telemetry.h"
 #include "renegade_build_identity.h"
 #include "renegade_vita_frame_profile.h"
+#include "renegade_vita_tutorial_bench.h"
 #include "ww3d_vita_renderer.h"
 #include "ww3d_vita_ffp_program_warm.h"
 
@@ -2949,6 +2950,11 @@ bool Is_Start_Pressed()
 			(controller.buttons & SCE_CTRL_START) != 0U) ||
 		Renegade_Vita_Input_Route_Replay_Exit_Requested();
 #endif
+}
+
+void Log_Tutorial_Bench_Line(const char *line)
+{
+	A30_Vita_Log("%s\n", line);
 }
 
 #if !RENEGADE_VITA_M00_DEMO
@@ -6274,6 +6280,19 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #if RENEGADE_VITA_M00_DEMO
 				A31DemoEndingPresenter demo_ending;
 #endif
+				// Dev-only fixed tutorial benchmark (tutorial-bench-v1.flag, RVTB1).
+				// Inert unless the flag is present and M00 is loaded; it hooks this
+				// loop and the original camera seam, never replacing either.
+				static RenegadeVitaTutorialBench::Controller tutorial_bench;
+#if RENEGADE_VITA_M00_DEMO
+				tutorial_bench.Configure(RenegadeVitaTutorialBench::Read_Flag_File(), true, true,
+					RENEGADE_BUILD_CANDIDATE_LABEL, Log_Tutorial_Bench_Line);
+#else
+				tutorial_bench.Configure(RenegadeVitaTutorialBench::Read_Flag_File(),
+					stricmp(selected_archive, "M00_Tutorial.mix") == 0, !loading_checkpoint,
+					RENEGADE_BUILD_CANDIDATE_LABEL, Log_Tutorial_Bench_Line);
+#endif
+				RenegadeVitaTutorialBench::Session_Guard tutorial_bench_guard(tutorial_bench);
 			while (true) {
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
 					extern bool g_client_quit;
@@ -6759,7 +6778,15 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				}
 				const bool was_suspended = combat_mode->Is_Suspended();
 				A35_Script_Lookup_Set_Context(A35_LOOKUP_GAMEPLAY, result.frames + 1U);
+				if (tutorial_bench.Running()) {
+					unsigned bench_counters[RenegadeVitaTutorialBench::COUNTER_COUNT];
+					RenegadeVitaTutorialBench::Copy_Counters(
+						RenegadeVitaRenderer::Get_Statistics(), bench_counters);
+					tutorial_bench.Arm_Simulation(bench_counters);
+				}
 				A31_Interactive_Run_Simulation_Frame();
+				// The benchmark camera/input hooks never outlive this one call.
+				RenegadeVitaTutorialBench::Controller::Release_Hooks();
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
 				// cNetwork::Update can expire intermission, delete player bodies and
 				// queue exit/restart during this frame. Do not inspect or render that
@@ -7060,6 +7087,50 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #if defined(RENEGADE_VITA_FRAME_PROFILE)
 				Renegade_Frame_Profile_End_Frame(static_cast<uint32_t>(frame_end - frame_begin));
 #endif
+				if (tutorial_bench.Enabled()) {
+					RenegadeVitaTutorialBench::FrameInput bench_frame = {};
+					bench_frame.frame_index = result.frames;
+					bench_frame.frame_begin_us = frame_begin;
+					bench_frame.simulation_begin_us = simulation_begin;
+					bench_frame.render_begin_us = render_begin;
+					bench_frame.frame_end_us = frame_end;
+					RenegadeVitaTutorialBench::Copy_Counters(
+						RenegadeVitaRenderer::Get_Statistics(), bench_frame.counters_after);
+					CCameraClass *bench_camera = CombatManager::Get_Camera();
+					bench_frame.control_ready = tutorial_control_ready_observed;
+					bench_frame.camera_host_model = bench_camera != NULL &&
+						bench_camera->Is_Using_Host_Model();
+					bench_frame.star_alive = render_trace.star_available &&
+						!result.star_killed_observed;
+					bench_frame.first_person = CombatManager::Is_First_Person();
+					bench_frame.active_conversations = mission_progress.active_conversation_count;
+					bench_frame.pose_valid = RenegadeVitaTutorialBench::Read_Pose(
+						bench_camera, bench_frame.pose);
+					tutorial_bench.End_Frame(bench_frame);
+					char bench_label[96];
+					unsigned bench_viewpoint = 0U;
+					if (tutorial_bench.Take_Capture_Request(bench_label, sizeof(bench_label),
+						&bench_viewpoint)) {
+						// "RVTB1 C": one bundle of the held view; the readback stall
+						// lands in the next viewpoint's unmeasured settle frames.
+						const bool readback = capture_pixels != NULL &&
+							RenegadeVitaRenderer::Capture_Resolved_Frame_RGBA(capture_pixels,
+								kCaptureBytes, true);
+						A31StateSnapshot state = Make_Interactive_Capture_State(render_trace,
+							result.frames, frame_end, "tutorial-bench-viewpoint");
+						state.benchmark_active = true;
+						state.benchmark_point = bench_viewpoint;
+						snprintf(state.benchmark_route, sizeof(state.benchmark_route), "%s",
+							"M00-tutorial-bench-v1");
+						const A31CaptureBundleResult capture = Capture_Interactive_Frame(state,
+							*capture_history, readback ? capture_pixels : NULL, bench_label);
+						A30_Vita_Log("Capture: %s candidate=%s phase=tutorial-bench viewpoint=%u path=%s screenshot/state=%d/%d error_code=%d\n",
+							capture.passed ? "PASS" : "FAIL", RENEGADE_BUILD_CANDIDATE_LABEL,
+							bench_viewpoint, capture.bundle_path,
+							capture.screenshot_written ? 1 : 0, capture.state_written ? 1 : 0,
+							capture.first_error_code);
+					}
+				}
 				if (result.frames == 0U) {
 					A30_Vita_Log("A3.1 breadcrumb: interactive render state scene=%p camera=%p star=%p static/dynamic/lights=%u/%u/%u vis=%u/%u camera=(%.3f,%.3f,%.3f) player=(%.3f,%.3f,%.3f) clip=%.3f..%.3f\n",
 						reinterpret_cast<void *>(render_trace.scene_pointer),

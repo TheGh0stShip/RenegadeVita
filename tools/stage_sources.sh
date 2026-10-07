@@ -1715,6 +1715,12 @@ test "$(sha256sum "$rv_stage/combat/action.cpp" | cut -d' ' -f1)" = \
 	"f90761922d80e0795ed3d99f9ce7545561f144d3dbfc52c735c1d1eb4f46edbb"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-face-action-stale-end-time-clamp.patch"
+# Dev-only tutorial benchmark (tutorial-bench-v1.flag, RVTB1): after the
+# original CCameraClass::Update, an armed fixed viewpoint replaces the camera
+# transform through CameraClass::Set_Transform. Inert unless the native loop
+# arms it for one simulation frame.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-tut1-bench-camera.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

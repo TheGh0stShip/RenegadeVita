@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "1d3ba7b85f98c7d5031a898fe8ca6af79849b000f276ed75e251ce4cd8fc0085",
-  "patch_count": 570,
+  "stage_script_sha256": "608d3a72a87b143ae67bab9cb3d144e220e4cd5421a5a643d0f01066223fc9f3",
+  "patch_count": 572,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -2853,7 +2853,17 @@
       "path": "port/patches/combat-a37-face-action-stale-end-time-clamp.patch",
       "stage_directory": "combat",
       "sha256": "fc6b37a6f0f9ef5136fbe67e950835ee8b2084fb57f42d6611599f96636e3a56"
+    },
+    {
+      "path": "port/patches/wwsaveload-a37-pointer-remap-release-capacity.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "69a26e968797d5ea204f0d2dc4efafb955a89712c9d3288f66e8e5080c8f07c4"
+    },
+    {
+      "path": "port/patches/ww3d2-a37-asset-status-release-elision.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "655052350331b17f714876c89289f7e9dae41cfc40d5f57181f80375664f62fa"
     }
   ],
-  "registry_sha256": "60a19958272010aaec489ede1fe246f2402a2cd33e89f80e601ea26005af4dae"
+  "registry_sha256": "54e20fbc99fe017d8a63856a7fc0a88fc966813a47005f440c3762a6f1d65be5"
 }

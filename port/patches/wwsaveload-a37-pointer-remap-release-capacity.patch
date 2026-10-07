@@ -1,0 +1,18 @@
+--- a/pointerremap.cpp
++++ b/pointerremap.cpp
+@@ -56,9 +56,12 @@
+ 
+ void PointerRemapClass::Reset(void)
+ {
+-	PointerPairTable.Delete_All();
+-	PointerRequestTable.Delete_All();
+-	RefCountRequestTable.Delete_All();
++	// Delete_All() reallocates the old capacity, so one large .lsd load kept
++	// its tables for the rest of the process. Clear() frees them; Add() grows
++	// them again by the same growth step on the next load.
++	PointerPairTable.Clear();
++	PointerRequestTable.Clear();
++	RefCountRequestTable.Clear();
+ }
+ 
+ bool PointerRemapClass::Process(void)

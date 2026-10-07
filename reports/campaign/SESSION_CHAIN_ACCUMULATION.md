@@ -72,14 +72,42 @@ but keeps the largest size seen so far for the rest of the process.
 | Armor/Bones/SurfaceEffects/Dazzle/Script re-init in `Start_Game` (`_reload_game_configuration_files`) | Combat / ww3d2 | Each Init shuts down or replaces in place; Combat/WW3D shutdowns at session end | 0 | None |
 | `cNicEnum` (`Init` every session) | nicenum.cpp | Fixed static arrays; `WSAStartup` is a no-op on Vita | 0 | None |
 | GameModeManager entries (stack modes) | a31 runtime | Removed at teardown (`Find("Combat") == NULL` is checked) | 0 | None |
-| `SaveLoadSystemClass` PointerRemapper tables (pair 8 B, request 4 B) | wwsaveload (original static) | `Reset()` uses `Delete_All`, which keeps capacity (growth step 4096) | High-water of the largest `.lsd`/`.ldd` load's pointer count. Estimated 0.3–2 MiB after M02/M01, kept through M08. Not measured | Low–medium. Not fixed: needs an upstream patch (free the tables in `WWSaveLoad::Shutdown`) |
-| `AssetStatusClass` report hashes (missing + load-on-demand names) | ww3d2 original singleton | Never reset. Reporting is enabled by `Vita_Finalize_Loaded_Level` and disabled by `Unload_Level`. Missing-asset entries are always added | Only new distinct names (deduplicated). Bounded by the asset-name universe (≤ about 0.5 MiB estimated). Read only under `WWDEBUG`, which the Vita build does not define, so this is dead data | Low. Not fixed (needs an upstream patch) |
-| Pool allocators (`AutoPoolClass`: multilist nodes, packets) | wwlib original | Never returned to heap | High-water of the most concurrent nodes (largest level) | Low. Not quantified |
+| **`SaveLoadSystemClass` PointerRemapper tables** (pair 8 B, request 4 B; `WWDEBUG` is off, so no file/line) | wwsaveload (original static) | **Was never released.** `Reset()` (start and end of every `SaveLoadSystemClass::Load`) used `Delete_All`, which frees and then reallocates the old capacity (growth step 4096). Now `Clear()` | Was high-water, held from the end of the largest load for the rest of the process, including during gameplay. Estimate below: about 0.40–0.65 MiB after M02, 0.25–0.45 MiB after M01. M02 is the largest, so its tables were held through M08 | **Fixed** (patch 4). Low–medium |
+| **`AssetStatusClass` report hashes** (missing + load-on-demand names) | ww3d2 original singleton | Never reset. Load-on-demand reporting is turned on after level load (`combatgmode.cpp`) and off at unload. Missing-asset entries are always added | Only new distinct names. Read only by the `WWDEBUG` destructor (`asset_report.txt`), and the Vita build does not define `WWDEBUG` (compdb: `-DNDEBUG`, no `WWDEBUG`), so this was write-only data | **Fixed** (patch 5): release builds no longer collect. Was ≤ about 0.25–0.3 MiB if every one of the 3,977 retail W3D names were reported; 20–150 KiB for a realistic campaign |
+| Pool allocators (`AutoPoolClass`: multilist nodes, packets, `GenericSLNode`) | wwlib original | Never returned to heap | High-water of the most concurrent nodes (largest level). `PostLoadList` uses `SList` → `GenericSLNode` (8 B, blocks of 256), so a large load's post-load registrations leave free nodes in that pool for other `SList` users. Estimated ≤ 80 KiB for M02 | Low. Not changed (shared original allocator) |
+| ww3d2 mesh scratch (`MeshGeometryClass` `_PlaneEQArray` 16 B/poly, `mesh.cpp` decal `_TempVertexBuffer`, `meshmdl.cpp` skin buffers, `decalmsh.cpp`, `pointgr.cpp`) | ww3d2 original file statics | Never reset; grow-only (`Uninitialised_Grow` / `Resize`) | High-water of the largest mesh's polygon or vertex count. Tens to a few hundred KiB, not per-mission growth. `dx8renderer.cpp`'s copies are not compiled | Low. Not changed |
+| Unresolved-prototype name cache | assetmgr.cpp (port patch) | `Delete_All` in `Free_Assets` each session | 0. Capped at 256 names; the kept pointer array is about 1 KiB | None |
+| `HAnimManagerClass` missing-anim table, HTree/HAnim/prototype tables | Members of `WW3DAssetManager` | Asset-manager destructor each session | 0 | None |
+| `AnimatedSoundMgrClass` tables | ww3d2 static | `Shutdown` from `WW3D::Shutdown` and `CombatManager::Shutdown` | 0 | None |
+| Original `TextureLoader` task pool, `DX8TextureManager`, texture file cache | ww3d2 | Not compiled (replaced by the Vita texture boundary) | n/a | None |
 | vitaGL FFP shader/program caches, GXM pools | vitaGL (process lifetime) | No shutdown API | Only new state combinations | Low. Fixed pools |
 
 No per-mission linear growth was found in port code or in the original code
 driven by the Vita loop. The defects were high-water retentions that let one
-mission's peak buffer survive into every later mission. Three are fixed below.
+mission's peak buffer survive into every later mission. Five are fixed below.
+
+### Pointer-remap table estimate (retail chunk count, not a measurement)
+
+A host Python scan of the retail level files counted the chunks that always
+register a pointer pair: `SimplePersistFactoryClass` object pointers
+(`0x00100100`), pathfind sectors (`0x01060643`) and pathfind portals
+(`0x01060654`). `PhysClass` can register up to three more pairs per object
+(cullable, widget user, editable), so the upper bound adds three per factory
+object. Requests (4 B each) were not counted directly; the estimate is 1–3 per
+factory object, split across the plain and ref-counted tables.
+
+| Level file | Size | Factory objects | Sectors | Portals | Pairs (base … upper) | Retained after load |
+|---|---|---|---|---|---|---|
+| m02.lsd | 7.2 MB | 5,973 | 14,094 | 20,092 | 40.2k … 58k | about 0.40–0.65 MiB |
+| m01.lsd | 4.9 MB | 4,722 | 8,357 | 12,588 | 25.7k … 39.8k | about 0.25–0.45 MiB |
+| m08.lsd | 4.4 MB | 3,558 | 8,946 | 12,396 | 24.9k … 35.6k | about 0.25–0.40 MiB |
+| m13.lsd | 0.9 MB | 601 | 2,313 | 3,317 | 6.2k … 8.0k | about 0.1 MiB |
+| m02.ldd | 1.7 MB | 1,455 | 0 | 0 | < 6k | (smaller than the `.lsd`) |
+
+Capacity rounds up to whole 4096-entry steps (32 KiB per pair step, 16 KiB
+per request step). Before the fix, the tables were reallocated at that size at
+the end of every load, after the level's own allocations, and then held until
+the process exited.
 
 ## Changes in this unit
 
@@ -103,8 +131,31 @@ mission's peak buffer survive into every later mission. Three are fixed below.
    steady rise is retained state, and a rising `free_chunks` with flat
    `in_use` is fragmentation.
 
+4. `port/patches/wwsaveload-a37-pointer-remap-release-capacity.patch`
+   (staged `wwsaveload/pointerremap.cpp`, `PointerRemapClass::Reset`):
+   `Delete_All()` → `Clear()` on the pair, request and ref-counted request
+   tables. `Reset` is called only at the start and end of
+   `SaveLoadSystemClass::Load`, so the tables are now freed after every load.
+   `Clear()` keeps the 4096 growth step, and `Add()` regrows from an empty
+   vector (`!VectorMax`), so remap results are unchanged. The only cost is
+   incremental regrowth during the next load (about 15 reallocations for M02,
+   which the original already did on the first load of a process).
+5. `port/patches/ww3d2-a37-asset-status-release-elision.patch` (staged
+   `ww3d2/assetstatus.cpp`, `AssetStatusClass::Add_To_Report`): the body is
+   compiled only under `WWDEBUG`, the same guard as the only reader (the
+   destructor's `asset_report.txt`). Release builds keep the API and flags but
+   no longer collect names or allocate a lower-case temporary per report.
+   `WWDEBUG` builds are unchanged.
+
+Both patches are registered last in `tools/stage_sources.sh`, each behind a
+new sha256 anchor of its pre-patch staged file. No existing anchor changed.
+Restaging from upstream (temporary symlink) exits 0 with zero offset or fuzz,
+and reproduces `HEAD` staging except for these two files and
+`PATCH_INVENTORY.json` (572 ordered patches).
+
 Validation: `-fsyntax-only` with the Vita toolchain passes for all four
-changed translation units. The stale compdb needed
+changed translation units of changes 1–3, and for `pointerremap.cpp`,
+`saveload.cpp` and `assetstatus.cpp` of changes 4–5. The stale compdb needed
 `-DRENEGADE_VITA_CAMPAIGN_MSAA_SAMPLES=2`, a newer CMake define. The related
 Python contract tests pass except 14 that fail identically at HEAD without
 these changes: missing `build/deps` archives, stale source-anchor
@@ -116,9 +167,15 @@ tests.
 - Run M13 → M01 → M02 (at least three handoffs) and compare the
   `SESSION residual` lines. M08 is the decisive point for heap and GPU
   headroom.
-- If the residual shows growth of 1 MiB or more per handoff, the next
-  candidates in order are: PointerRemapper capacity (upstream patch to
-  `WWSaveLoad::Shutdown`), `AssetStatusClass` tables, then AutoPool high-water.
+- After M02, `in_use` in the `SESSION residual` line should now be about
+  0.4–0.65 MiB lower than before these patches (pointer-remap tables). This
+  has not been measured.
+- If the residual still shows growth of 1 MiB or more per handoff, the next
+  candidates are AutoPool high-water (`GenericSLNode`, multilist nodes) and
+  the ww3d2 mesh scratch arrays. Neither is per-mission growth.
+- Not checked: whether moving the pointer-remap allocation from one block at
+  load end to regrowth during the next load changes M08 heap fragmentation.
+  The `free_chunks` field of the residual line shows this.
 - The log byte cap is per process. A full 12-mission run will truncate
   non-priority evidence after about 4 MiB. Raise the cap or reset it per
   session (a policy decision) before relying on late-mission logs.

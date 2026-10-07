@@ -1700,6 +1700,19 @@ test "$(sha256sum "$rv_stage/combat/action.cpp" | cut -d' ' -f1)" = \
 	"f90761922d80e0795ed3d99f9ce7545561f144d3dbfc52c735c1d1eb4f46edbb"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-face-action-stale-end-time-clamp.patch"
+# Session-chain memory: PointerRemapClass::Reset used Delete_All, which
+# reallocates the old capacity, so the largest .lsd load's remap tables stayed
+# allocated for the rest of the process. AssetStatusClass name tables are read
+# only by the WWDEBUG report, so release builds skip collecting them. Both are
+# anchored to the final staged files so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/wwsaveload/pointerremap.cpp" | cut -d' ' -f1)" = \
+	"8ea7f3ad73b7949942956dcf2599307ab7934128a705752912720e83d38ef335"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwsaveload" -p1 < "$rv_root/port/patches/wwsaveload-a37-pointer-remap-release-capacity.patch"
+test "$(sha256sum "$rv_stage/ww3d2/assetstatus.cpp" | cut -d' ' -f1)" = \
+	"a9ce9600b8f24589eb029554951d40cb8f08d4f5c762ca11d4b7323ce1e535d1"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a37-asset-status-release-elision.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

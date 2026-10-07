@@ -819,9 +819,11 @@ DefinitionMgrClass::Load_Objects (ChunkLoadClass &cload)
 			} else {
 				retval = false;
 			}
-		} else {
-			retval = false;
 		}
+		// No factory: as in the original loader, skip the record. Retail
+		// objects.ddb carries level-editor-only definitions (Commando editor
+		// chunk range) that the game never registers; Open/Close_Chunk still
+		// validate their structure.
 
 		cload.Close_Chunk ();
 	}

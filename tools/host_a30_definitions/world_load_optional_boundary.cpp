@@ -73,3 +73,13 @@ AudibleSoundClass *WWAudioClass::Create_Continuous_Sound(int,
 // PhysicsSceneClass retains Customized_Render even though this executable never
 // renders. The D3D8-shaped render-state symbols are owned by the shared Vita
 // DX8 boundary so every host/target executable resolves the same edge.
+
+// Host world-load proof: animated-sound triggers (WWAudio-backed in the Vita
+// build) and the Vita offscreen render target are outside this harness.
+#include "animatedsoundmgr.h"
+bool AnimatedSoundMgrClass::Does_Animation_Have_Embedded_Sounds(HAnimClass *) { return false; }
+float AnimatedSoundMgrClass::Trigger_Sound(HAnimClass *, float, float new_frame, const Matrix3D &)
+{
+	return new_frame;
+}
+void RenegadeVita_Release_DX8_Render_Target() {}

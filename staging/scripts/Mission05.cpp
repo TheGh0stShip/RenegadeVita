@@ -1124,11 +1124,12 @@ DECLARE_SCRIPT(M05_DEAD6_Rocket_Soldier, "") // first gunner
 					int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
 					Commands->Join_Conversation(obj, conv_id, false, true);
 					Commands->Join_Conversation(STAR, conv_id, false, true);
-					Commands->Start_Conversation (conv_id, 300001);
-					Commands->Monitor_Conversation (obj, conv_id);
-					
+					// Vita: monitor before starting, so a start refused by a
+					// playing key conversation still reports INTERRUPTED.
 					poke_id = 2;
 					immortal = false;
+					Commands->Monitor_Conversation (obj, conv_id);
+					Commands->Start_Conversation (conv_id, 300001);
 				}
 				break;
 			case 2: 
@@ -1137,8 +1138,8 @@ DECLARE_SCRIPT(M05_DEAD6_Rocket_Soldier, "") // first gunner
 					const char *conv_name = ("M05_CON011");
 					int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
 					Commands->Join_Conversation(obj, conv_id, false, true);
-					Commands->Start_Conversation (conv_id, 300002);
 					Commands->Monitor_Conversation (obj, conv_id);	
+					Commands->Start_Conversation (conv_id, 300002);
 				}
 				break;
 			case 3: 
@@ -1189,6 +1190,17 @@ DECLARE_SCRIPT(M05_DEAD6_Rocket_Soldier, "") // first gunner
 		if(reason == ACTION_COMPLETE_CONVERSATION_ENDED)
 		{
 			conversation = false;
+		}
+
+		// Vita: an interrupted talk re-arms the poke instead of locking
+		// Gunner (and the 501 midtro poke) forever.
+		if(reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED && (action_id == 300001 || action_id == 300002))
+		{
+			conversation = false;
+			if(action_id == 300001 && poke_id == 2)
+			{
+				poke_id = 1;
+			}
 		}
 
 		if(action_id == 300003 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
@@ -1273,6 +1285,14 @@ DECLARE_SCRIPT(M05_DEAD6_MiniGunner, "") // deadeye
 		{
 			conversation = false;
 			
+		}
+		// Vita: an interrupted rescue talk re-arms the poke instead of
+		// leaving 502 pending forever.
+		if(action_id == 300004 && reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED && poke_id == 3)
+		{
+			conversation = false;
+			poke_id = 1;
+			Commands->Enable_HUD_Pokable_Indicator( obj, true );
 		}
 		if(action_id == 300004 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
 		{
@@ -1373,11 +1393,12 @@ DECLARE_SCRIPT(M05_DEAD6_MiniGunner, "") // deadeye
 					int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
 					Commands->Join_Conversation(STAR, conv_id, false, true);
 					Commands->Join_Conversation(obj, conv_id, false, true);
-					Commands->Start_Conversation (conv_id, 300004);
-					Commands->Monitor_Conversation (obj, conv_id);
+					// Vita: monitor before starting, so a start refused by a
+					// playing key conversation still reports INTERRUPTED.
 					Commands->Enable_HUD_Pokable_Indicator( obj, false );
-
 					poke_id = 3;
+					Commands->Monitor_Conversation (obj, conv_id);
+					Commands->Start_Conversation (conv_id, 300004);
 		
 				}
 			break;

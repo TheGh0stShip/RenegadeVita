@@ -337,3 +337,96 @@ The two new patches sit after the existing M05 patches. No later patch touches
   not freeze.
 - Quicksave and reload while the Triangle tank or the cathedral Apaches are
   active. They should keep firing at their authored targets.
+
+## Soft-lock hunt (2026-10-07)
+
+Evidence class: staged-source inspection, host Python reads of the read-only
+Vita3K retail copy (`m05.ldd` conversation flags and bindings, cinematic
+texts in `always.dat`/`M05.mix`), and one `arm-vita-eabi-g++ -fsyntax-only`
+of the patched `staging/scripts/Mission05.cpp` (exit 0). No build, emulator
+or device run. Line numbers are the staged file after these patches.
+
+`Mission_Complete(true)` has one caller: 506/param 1 at `:301`. It does not
+check objective state, so only the Patch → cathedral chain can block M05.
+
+### Key conversations (`m05.ldd`, `ConversationClass` VARID_ISKEY)
+
+Key: M05_CON003-008, 014, 037 and 038 (the zone radio briefings, the Patch
+poke and two secondaries). Every other M05 conversation is non-key. A
+non-key start while a key conversation plays stops at once with
+INTERRUPTED, before the script's `Monitor_Conversation` (the M10 pattern).
+
+### Fixed: objective locks (reachable, Low; mission still completes)
+
+1. **Deadeye 502** (`:1289`, `:1396`). `M05_CON013` is non-key, and 502
+   completes only on ENDED. A poke during a key radio (e.g. `M05_CON004`
+   near the Inn), or leaving range mid-talk, left `poke_id == 3` and
+   `conversation == true`. Deadeye could not be poked again, and 502 stayed
+   pending. *Fix:* `scripts-a38-m05-deadeye-poke-rearm.patch`. The poke state
+   and monitor are set before `Start_Conversation`, and an INTERRUPTED 300004
+   re-arms the poke.
+2. **Gunner 501** (`:1127`, `:1195`). `M05_CON010/011` are non-key, and
+   `conversation` resets only on ENDED. The same refusal locked Gunner, so
+   the post-Town-Square poke that plays `X5M_MIDTRO_A` (which completes 501)
+   could not happen. *Fix:* `scripts-a38-m05-gunner-poke-rearm.patch`. The
+   monitor is set before the start, an INTERRUPTED 300001/300002 clears
+   `conversation`, and a refused first talk is replayed.
+
+Both patches are idempotent (they only reassign script fields), add no saved
+variable, and leave the ENDED path unchanged. They are registered after
+`scripts-a36-m05-fire-loc-save.patch`. Staging: 545 ordered patches, PASS,
+and only `Mission05.cpp` changed.
+
+### Checked, no patch (retail-identical or not reachable)
+
+- **Patch / cathedral start** (`:1440`, `:1492`). The first star poke always
+  sends `M05_INITIATE_CATHEDRAL`, whatever happens to `M05_CON014`. CON014
+  is key, and its callback accepts ENDED and INTERRUPTED. Receivers 100001
+  and 100287 are placed objects.
+- **504/506 ordering.** If Patch is poked before zone 100046 plays
+  `M05_CON005`, the 504 completion arrives before 504 exists. It is ignored,
+  and the zone later adds 504 as pending. Nothing sends the zone's 100/100
+  suppress event. The 501 and 502 zones are the same. This is cosmetic only,
+  because `Mission_Complete` does not read objectives.
+- **Hotwire 503** (`:910`). `M05_CON009` is non-key, but the
+  `M05_X5N_MIDTRO_B` zone (`:7464`) destroys Hotwire and its text sends
+  503/1, so there is a second path. The `M05_CON001` start callback only
+  adds 503 (`:376`).
+- **Cathedral vehicle counter** (`:6110`, exact `== 0`). Delay-0 customs are
+  dispatched synchronously. `Apply_Damage` stops at health ≤ 0, killed
+  vehicles are delete-pending at once, and `VehicleGameObj::Object_Expired`
+  skips Killed once delete-pending. So each counted vehicle sends exactly one
+  KILLED, and a flipped artillery that expires still sends Killed. No placed
+  object or other text attaches `M05_Cathedral_Apache/_Artillery`, so the
+  counter cannot go negative before completion. A placeholder killed while
+  slung sends neither event.
+- **Black Hand count** (`> 7`, `:6305`). Each `X5D_CHTroopdrop7/8/10` drop
+  gives one soldier: a minigunner with "" from 7, and rocket soldiers with
+  "8" and "10". It also gives the transport helicopter with
+  `M05_Cathedral_Para_Unit ""`, which `Destroy_Object` removes at frame 280.
+  It counts only if the player shoots it down. The 8 and 10 soldiers re-drop
+  on each kill while `blackhand_cnt < 9`, so the supply is unbounded. Killed
+  is not filtered by killer, so ally kills count. **Deferred retail risk:**
+  a soldier removed without Killed (soldiers' `Object_Expired` only deletes,
+  e.g. a COLLIDE_KILL crush) ends its chain. Losing both chains caps the
+  count at 1 + shot-down helicopters.
+- **Town Square** (`:4416`). This needs exact `unit_id1 == 6 && unit_id2 ==
+  6 && unit_id3 == 1 && unit_id4 == 1`, and gates secondary 507 and Gunner's
+  `500/500`. The supply is exactly 6 + 6: two placed units each, plus two
+  `X5D_CHTroopdrop1/2` drops of two. `Enable_Spawner(100117/100118)`
+  (`:4384`) targets placed soldiers, not spawners, so it is a no-op. Unit 4
+  is the flame tank from spawner 100618, enabled only by the roadblock zone
+  100623 (`:6627`). Its respawn count was not decoded. A lost unit, or a
+  second flame tank, blocks 507 and 501 permanently. This is retail design,
+  is not on the 506 chain, and is deferred.
+- **Save/load and death.** The controller, Patch, Apache, para-unit and
+  Dead6 states are saved. Script timers and custom timers are saved with
+  their objects. Death restarts or reloads the level.
+
+### Physical test additions
+
+- Enter the Inn radio zone and poke Deadeye while `M05_CON004` still plays.
+  Deadeye must stay pokable, and a second poke must play CON013 and complete
+  502. Repeat for Gunner during `M05_CON006`.
+- In the cathedral battle, record `blackhand_cnt` progress. Telemetry should
+  show a REINFORCE for every para death before completion.

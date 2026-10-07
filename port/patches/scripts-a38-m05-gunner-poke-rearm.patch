@@ -1,0 +1,57 @@
+M05_DEAD6_Rocket_Soldier (Gunner) clears `conversation` only on an ENDED
+conversation end. Poked() started the non-key M05_CON010/M05_CON011
+(actions 300001/300002) before Monitor_Conversation, so a start refused by
+a playing key conversation (e.g. the Town Square radio M05_CON006) never
+called back, and an INTERRUPTED end (player left the range) was ignored.
+Gunner then stayed unpokable forever, so the poke that plays X5M_MIDTRO_A
+and completes objective 501 could not happen (retail behaviour). Register
+the monitor before starting and re-arm the poke on an INTERRUPTED end; a
+refused first talk is replayed on the next poke. The ENDED path is
+unchanged.
+
+--- a/Mission05.cpp
++++ b/Mission05.cpp
+@@ -1124,11 +1124,12 @@
+ 					int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
+ 					Commands->Join_Conversation(obj, conv_id, false, true);
+ 					Commands->Join_Conversation(STAR, conv_id, false, true);
+-					Commands->Start_Conversation (conv_id, 300001);
+-					Commands->Monitor_Conversation (obj, conv_id);
+-					
++					// Vita: monitor before starting, so a start refused by a
++					// playing key conversation still reports INTERRUPTED.
+ 					poke_id = 2;
+ 					immortal = false;
++					Commands->Monitor_Conversation (obj, conv_id);
++					Commands->Start_Conversation (conv_id, 300001);
+ 				}
+ 				break;
+ 			case 2: 
+@@ -1137,8 +1138,8 @@
+ 					const char *conv_name = ("M05_CON011");
+ 					int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
+ 					Commands->Join_Conversation(obj, conv_id, false, true);
+-					Commands->Start_Conversation (conv_id, 300002);
+ 					Commands->Monitor_Conversation (obj, conv_id);	
++					Commands->Start_Conversation (conv_id, 300002);
+ 				}
+ 				break;
+ 			case 3: 
+@@ -1191,6 +1192,17 @@
+ 			conversation = false;
+ 		}
+ 
++		// Vita: an interrupted talk re-arms the poke instead of locking
++		// Gunner (and the 501 midtro poke) forever.
++		if(reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED && (action_id == 300001 || action_id == 300002))
++		{
++			conversation = false;
++			if(action_id == 300001 && poke_id == 2)
++			{
++				poke_id = 1;
++			}
++		}
++
+ 		if(action_id == 300003 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
+ 		{
+ 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100001), 501, 1, 0.0f);

@@ -1,0 +1,44 @@
+M05_DEAD6_MiniGunner (Deadeye) completes objective 502 only when the
+non-key conversation M05_CON013 (action 300004) ends with ENDED. Poked()
+started it before Monitor_Conversation, so a start refused by a playing key
+conversation (M05_CON003-008/014/037/038, e.g. the Inn radio M05_CON004)
+stopped with INTERRUPTED before any monitor existed. An INTERRUPTED end
+(player left the conversation range) was also ignored. Either way poke_id
+was 3 and conversation stayed true, so Deadeye could never be poked again
+and 502 stayed pending for the rest of the mission (retail behaviour).
+Register the monitor (and the poke state) before starting, and re-arm the
+poke on an INTERRUPTED end of 300004. The ENDED path is unchanged.
+
+--- a/Mission05.cpp
++++ b/Mission05.cpp
+@@ -1274,6 +1274,14 @@
+ 			conversation = false;
+ 			
+ 		}
++		// Vita: an interrupted rescue talk re-arms the poke instead of
++		// leaving 502 pending forever.
++		if(action_id == 300004 && reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED && poke_id == 3)
++		{
++			conversation = false;
++			poke_id = 1;
++			Commands->Enable_HUD_Pokable_Indicator( obj, true );
++		}
+ 		if(action_id == 300004 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
+ 		{
+ 			Commands->Set_Innate_Is_Stationary(obj, false);
+@@ -1373,11 +1381,12 @@
+ 					int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
+ 					Commands->Join_Conversation(STAR, conv_id, false, true);
+ 					Commands->Join_Conversation(obj, conv_id, false, true);
+-					Commands->Start_Conversation (conv_id, 300004);
+-					Commands->Monitor_Conversation (obj, conv_id);
++					// Vita: monitor before starting, so a start refused by a
++					// playing key conversation still reports INTERRUPTED.
+ 					Commands->Enable_HUD_Pokable_Indicator( obj, false );
+-
+ 					poke_id = 3;
++					Commands->Monitor_Conversation (obj, conv_id);
++					Commands->Start_Conversation (conv_id, 300004);
+ 		
+ 				}
+ 			break;

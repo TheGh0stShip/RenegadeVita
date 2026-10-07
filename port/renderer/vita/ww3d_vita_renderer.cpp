@@ -64,8 +64,10 @@ void RenegadeVita_Release_DX8_Render_Target();
 #include <psp2/kernel/sysmem.h>
 #include <vitaGL.h>
 #include "ww3d_vita_indexed_mesh_batch.h"
+#include "ww3d_vita_indexed_vertex_records.h"
 #include "ww3d_vita_static_mesh_cache.h"
 extern "C" void vglRenegadeEndIndexed(GLsizei count, const GLushort *indices);
+extern "C" GLboolean vglRenegadeImmediateVertices(const GLfloat *records, GLsizei count);
 extern "C" void vglRenegadeBeginProjective(GLenum mode);
 extern "C" void vglRenegadeTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat q);
 extern "C" void vglRenegadeInvalidateVertexAttributes(void);
@@ -1377,11 +1379,26 @@ const float *Select_Indexed_UV_Array(
 	return uv_source == 1U ? uv1 : uv0;
 }
 
-bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
+void Note_Indexed_Passthrough_Texture(unsigned stage, DWORD mode,
+	const char *texture_name)
+{
+	if (!g_logged_first_passthrough_texture_v_preserved &&
+		mode == D3DTSS_TCI_PASSTHRU &&
+		!Has_Loadscreen_Texture_Prefix(texture_name)) {
+		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
+			"first indexed gameplay passthrough texture V preserved: texture=%s stage=%u",
+			texture_name != NULL ? texture_name : "none", stage);
+		g_logged_first_passthrough_texture_v_preserved = true;
+	}
+}
+
+// The coordinate one indexed stage emits for one vertex; *s, *t, *q are the
+// values Emit_Indexed_Texture_Coordinate passes to GL.
+void Compute_Indexed_Texture_Coordinate(unsigned stage,
 	const OriginalTextureCoordinateState &state, const float uv0[2],
 	const float uv1[2], const float position[3], const float normal[3],
 	const float *world_transform, const float *view_transform,
-	const char *texture_name)
+	const char *texture_name, float *s, float *t, float *q)
 {
 	float source_s = 0.0f;
 	float source_t = 0.0f;
@@ -1414,36 +1431,65 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		source_s = uv[0];
 		source_t = uv[1];
 	}
-	if (!g_logged_first_passthrough_texture_v_preserved &&
-		mode == D3DTSS_TCI_PASSTHRU &&
-		!Has_Loadscreen_Texture_Prefix(texture_name)) {
-		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
-			"first indexed gameplay passthrough texture V preserved: texture=%s stage=%u",
-			texture_name != NULL ? texture_name : "none", stage);
-		g_logged_first_passthrough_texture_v_preserved = true;
-	}
+	Note_Indexed_Passthrough_Texture(stage, mode, texture_name);
 
-	float s = 0.0f;
-	float t = 0.0f;
-	float q = 1.0f;
+	*s = 0.0f;
+	*t = 0.0f;
+	*q = 1.0f;
 	Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,
-		&s, &t, &q);
-	if ((state.texture_transform_flags & D3DTTFF_PROJECTED) != 0U)
-		vglRenegadeTexCoord3f(texture_unit, s, t, q);
-	else glMultiTexCoord2f(texture_unit, s, t);
+		s, t, q);
 	if (!g_logged_first_generated_texture_coordinate &&
 		Uses_Generated_Texture_Coordinates(state)) {
 		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
 			"first generated texture coordinates: stage=%u mode=%08X flags=%08X source=(%.3f,%.3f,%.3f) homogeneous=(%.3f,%.3f,%.3f)",
 			stage, static_cast<unsigned>(mode),
 			static_cast<unsigned>(state.texture_transform_flags),
-			source_s, source_t, source_r, s, t, q);
+			source_s, source_t, source_r, *s, *t, *q);
 		g_logged_first_generated_texture_coordinate = true;
 	}
+}
+
+bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
+	const OriginalTextureCoordinateState &state, const float uv0[2],
+	const float uv1[2], const float position[3], const float normal[3],
+	const float *world_transform, const float *view_transform,
+	const char *texture_name)
+{
+	float s = 0.0f;
+	float t = 0.0f;
+	float q = 1.0f;
+	Compute_Indexed_Texture_Coordinate(stage, state, uv0, uv1, position, normal,
+		world_transform, view_transform, texture_name, &s, &t, &q);
+	if ((state.texture_transform_flags & D3DTTFF_PROJECTED) != 0U)
+		vglRenegadeTexCoord3f(texture_unit, s, t, q);
+	else glMultiTexCoord2f(texture_unit, s, t);
 	return true;
 }
 
 void Set_Texture_Env(uint32_t stage, GLenum name, GLint value);
+
+// The (s, t) glMultiTexCoord2f receives for a stage without D3DTTFF_PROJECTED.
+// Pass-through without a transform is the selected UV unchanged: the
+// transform copies its source when the flags are D3DTTFF_DISABLE.
+void Record_Indexed_Texture_Coordinate(unsigned stage,
+	const OriginalTextureCoordinateState &state, const float uv0[2],
+	const float uv1[2], const float position[3], const float normal[3],
+	const float *world_transform, const float *view_transform,
+	const char *texture_name, float coordinate[2])
+{
+	if (Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU &&
+		state.texture_transform_flags == D3DTTFF_DISABLE) {
+		Note_Indexed_Passthrough_Texture(stage, D3DTSS_TCI_PASSTHRU, texture_name);
+		const float *uv = Select_Indexed_UV_Array(state, uv0, uv1);
+		coordinate[0] = uv[0];
+		coordinate[1] = uv[1];
+		return;
+	}
+	float q = 1.0f;
+	Compute_Indexed_Texture_Coordinate(stage, state, uv0, uv1, position, normal,
+		world_transform, view_transform, texture_name,
+		&coordinate[0], &coordinate[1], &q);
+}
 
 void Apply_Original_Shader_State(const ShaderClass &shader)
 {
@@ -5467,8 +5513,70 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 				submission.texture_names[1]);
 		if (emit_position) glVertex3f(position[0], position[1], position[2]);
 	};
+	// Batched unique vertices of an unlit, non-projective primitive are
+	// appended as packed records (ww3d_vita_indexed_vertex_records.h) instead
+	// of five vitaGL calls each. A record holds the position, coordinates and
+	// colour those calls would leave for glVertex3f; the last corner's calls
+	// are still replayed below, so vitaGL's current attributes are unchanged.
+	static IndexedVertexRecord indexed_records[INDEXED_VERTEX_RECORD_CHUNK];
+	uint32_t indexed_record_sources[INDEXED_VERTEX_RECORD_CHUNK];
+	uint32_t indexed_record_count = 0U;
+	bool record_indexed_vertices = false;
+	auto record_indexed_vertex = [&](uint32_t actual_index) {
+		const unsigned char *vertex = submission.vertex_data +
+			actual_index * submission.vertex_stride;
+		IndexedVertexRecord &record = indexed_records[indexed_record_count];
+		float normal[3];
+		float uv0[2];
+		float uv1[2];
+		uint32_t diffuse = 0;
+		memcpy(record.position, vertex, 3U * sizeof(float));
+		memcpy(&diffuse, vertex + diffuse_offset, sizeof(diffuse));
+		memcpy(normal, vertex + category_layout.normal_offset, 3U * sizeof(float));
+		memcpy(uv0, vertex + uv0_offset, 2U * sizeof(float));
+		memcpy(uv1, vertex + uv1_offset, 2U * sizeof(float));
+		if (!indexed_lighting ||
+			!Evaluate_Indexed_Primary_Color(submission, actual_index, record.color))
+			Decode_Indexed_Record_Color(diffuse, record.color);
+		Record_Indexed_Texture_Coordinate(0U, texture_coordinates[0], uv0, uv1,
+			record.position, normal, submission.world_transform,
+			submission.view_transform, submission.texture_names[0], record.uv0);
+		Record_Indexed_Texture_Coordinate(1U, texture_coordinates[1], uv0, uv1,
+			record.position, normal, submission.world_transform,
+			submission.view_transform, submission.texture_names[1], record.uv1);
+		indexed_record_sources[indexed_record_count++] = actual_index;
+	};
+	auto flush_indexed_records = [&]() {
+		if (indexed_record_count != 0U && !vglRenegadeImmediateVertices(
+			reinterpret_cast<const GLfloat *>(indexed_records),
+			static_cast<GLsizei>(indexed_record_count))) {
+			// vitaGL appended nothing: emit this run through the calls.
+			record_indexed_vertices = false;
+			for (uint32_t record = 0U; record < indexed_record_count; ++record)
+				emit_indexed_vertex(indexed_record_sources[record], true);
+		}
+		indexed_record_count = 0U;
+	};
+	auto emit_batched_vertex = [&](uint32_t actual_index) {
+		if (!record_indexed_vertices) {
+			emit_indexed_vertex(actual_index, true);
+			return;
+		}
+		record_indexed_vertex(actual_index);
+		if (indexed_record_count == INDEXED_VERTEX_RECORD_CHUNK)
+			flush_indexed_records();
+	};
+	auto begin_indexed_primitive = [&]() {
+		Begin_Texture_Coordinate_Primitive(texture_coordinates);
+		// An empty append only asks whether the open primitive's vitaGL state
+		// (unlit, non-projective) takes records; it writes nothing.
+		record_indexed_vertices = RENEGADE_VITA_INDEXED_VERTEX_RECORDS &&
+			indexed_batch && vglRenegadeImmediateVertices(
+				reinterpret_cast<const GLfloat *>(indexed_records), 0);
+	};
 	auto end_indexed_batch = [&]() {
 		if (indexed_batch && g_indexed_mesh_batch.Count()) {
+			flush_indexed_records();
 			emit_indexed_vertex(g_indexed_mesh_batch.Last(), false);
 			vglRenegadeEndIndexed(g_indexed_mesh_batch.Count(), g_indexed_mesh_batch.Indices());
 			g_mesh_expanded_corners += g_indexed_mesh_batch.Count();
@@ -5477,19 +5585,19 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 		} else glEnd();
 	};
 	if (indexed_batch) g_indexed_mesh_batch.Reset();
-	Begin_Texture_Coordinate_Primitive(texture_coordinates);
+	begin_indexed_primitive();
 	for (uint32_t triangle = 0; triangle < submission.triangle_count; ++triangle) {
 		if (indexed_batch && g_indexed_mesh_batch.Full()) {
 			end_indexed_batch();
 			g_indexed_mesh_batch.Reset();
-			Begin_Texture_Coordinate_Primitive(texture_coordinates);
+			begin_indexed_primitive();
 		}
 		for (uint32_t corner = 0; corner < 3U; ++corner) {
 			const uint32_t relative_index = submission.index_data[
 				submission.first_index + triangle * 3U + corner];
 			const uint32_t actual_index = submission.base_vertex_index + relative_index;
 			if (!indexed_batch || g_indexed_mesh_batch.Append(actual_index)) {
-				emit_indexed_vertex(actual_index, true);
+				emit_batched_vertex(actual_index);
 			}
 		}
 	}

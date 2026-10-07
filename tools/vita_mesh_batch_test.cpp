@@ -7,7 +7,13 @@
 #include <vector>
 #include "ww3d_vita_indexed_mesh_batch.h"
 #include "category_fvf_layout.h"
+#include "ww3d_vita_indexed_vertex_records.h"
 #define __vita__ 1
+using RenegadeVitaRenderer::IndexedVertexRecord;
+using RenegadeVitaRenderer::INDEXED_VERTEX_RECORD_CHUNK;
+using RenegadeVitaRenderer::Decode_Indexed_Record_Color;
+using GLfloat=float;
+using GLsizei=int;
 struct Vector2 { float X,Y; };
 struct Vector3 { float X,Y,Z; Vector3(float x=0,float y=0,float z=0):X(x),Y(y),Z(z){} };
 struct Matrix3D { float offset; };
@@ -152,6 +158,41 @@ void vglRenegadeEndIndexed(int count,const uint16_t *indices) {
         if(capture) recorded.push_back({emitted[indices[i]],state});
     }
 }
+// Same (s,t) the fixture's Emit_Indexed_Texture_Coordinate passes to GL; the
+// production Record/Emit equivalence is tested in test_vitagl_immediate_records.
+void Record_Indexed_Texture_Coordinate(unsigned stage,const OriginalTextureCoordinateState &s,
+    const float *uv0,const float *uv1,const float *position,const float *normal,
+    const float *world,const float *view,const char *name,float coordinate[2]) {
+    const Attributes saved=current;
+    Emit_Indexed_Texture_Coordinate(stage,stage,s,uv0,uv1,position,normal,world,view,name);
+    coordinate[0]=current[3+stage*2];coordinate[1]=current[4+stage*2];
+    current=saved;
+}
+// Unlit vitaGL streams position, both coordinates and RGBA (elements 0..10);
+// the normal is not in the stream, so appended records mark it and stream
+// comparisons stop at element 10. The current vertex is never touched.
+static bool records_supported=false;
+static int records_fail_at=-1;
+static uint64_t records_appended=0;
+bool vglRenegadeImmediateVertices(const GLfloat *records,GLsizei count) {
+    assert(open && count>=0 && count<=INDEXED_VERTEX_RECORD_CHUNK);
+    if(!records_supported) return false;
+    if(count && records_fail_at>=0 && records_fail_at--==0) { records_supported=false; return false; }
+    for(int i=0;i<count;++i) {
+        Attributes a{}; std::memcpy(a.data(),records+i*11,11*sizeof(float));
+        a[11]=a[12]=a[13]=-7.f; emitted.push_back(a);
+    }
+    records_appended+=count;
+    return true;
+}
+static bool same_stream(const std::vector<Recorded> &a,const std::vector<Recorded> &b) {
+    if(a.size()!=b.size()) return false;
+    for(size_t i=0;i<a.size();++i) {
+        if(a[i].state!=b[i].state) return false;
+        if(std::memcmp(a[i].attributes.data(),b[i].attributes.data(),11*sizeof(float))) return false;
+    }
+    return true;
+}
 static void run(MeshModelClass *model,MeshClass &mesh,RenderInfoClass &render_info,
     const std::vector<Vector3> &points,const std::vector<Vector3> &ns,
     const std::vector<TriIndex> &ts,bool is_skin,int base_pass_count) {
@@ -159,7 +200,13 @@ static void run(MeshModelClass *model,MeshClass &mesh,RenderInfoClass &render_in
     const TriIndex *triangles=ts.data();
     const int vertex_count=points.size(),triangle_count=ts.size();
     const Matrix3D original_world_transform={.25f},original_view_transform={-.5f};
+#ifndef GENERIC_INDEXED_ONLY
     #include "production.inc"
+#else
+    (void)model;(void)mesh;(void)render_info;(void)vertices;(void)normals;(void)triangles;
+    (void)vertex_count;(void)triangle_count;(void)original_world_transform;(void)original_view_transform;
+    (void)is_skin;(void)base_pass_count;
+#endif
 }
 struct FixtureDrawState { VertexMaterialClass *material; };
 struct Submission {
@@ -184,7 +231,7 @@ static void run_indexed(const Submission &submission,bool dynamic_two_uv_layout,
     #include "indexed-production.inc"
 }
 static void test_generic_indexed() {
-    size_t compared=0;
+    size_t compared=0; unsigned record_runs=0;
     std::vector<unsigned char> bytes(17000*44+1);
     std::vector<uint16_t> indices={9,8,7};
     for(unsigned i=0;i<18000;++i) indices.push_back((i%29==0 ? 8192 : 0)+((i/3+i%3)%2000));
@@ -200,19 +247,32 @@ static void test_generic_indexed() {
         }
         Submission s={bytes.data()+1,indices.data(),stride,6000,3,base,world,view,{"a","b"}};
         std::vector<Recorded> baseline; Attributes last{};
-        for(bool indexed:{false,true}) {
-            current={};state={1,2,3,4};recorded.clear();
+        // 0 per-vertex, 1 batched per-vertex, 2 batched records,
+        // 3 records refused by the third append (that run replays per vertex).
+        for(unsigned mode:{0,1,2,3}) {
+            const bool indexed=mode!=0;
+            current={};state={1,2,3,4};recorded.clear();calls=0;records_appended=0;
+            records_supported=mode>=2;records_fail_at=mode==3 ? 2 : -1;
             run_indexed(s,stride==44,indexed); assert(!open);
             if(!indexed) {baseline=recorded;last=current;}
             else {
-                assert(recorded==baseline);compared+=recorded.size();
+                if(mode==1) assert(recorded==baseline);
+                assert(same_stream(recorded,baseline));compared+=recorded.size();
                 for(unsigned a=3;a<current.size();++a) assert(current[a]==last[a]);
+                if(mode==2) { assert(calls==0 && records_appended>0); ++record_runs; }
+                if(mode==3) assert(calls>0 && records_appended==2U*INDEXED_VERTEX_RECORD_CHUNK);
             }
         }
     }
-    std::printf("production generic indexed equivalence PASS corners=%zu layouts=36/44 offsets=unaligned base=0/7\n",compared);
+    records_supported=false;
+    std::printf("production generic indexed equivalence PASS corners=%zu layouts=36/44 offsets=unaligned base=0/7 record_runs=%u\n",compared,record_runs);
 }
 int main() {
+#ifdef GENERIC_INDEXED_ONLY
+    // Only the DX8-boundary indexed slice (test_vita_indexed_vertex_records).
+    test_generic_indexed();
+    return 0;
+#endif
     MeshModelClass model; MeshClass mesh; RenderInfoClass info;
     std::vector<Vector3> points(17000),normals(17000);
     model.colors.resize(points.size());

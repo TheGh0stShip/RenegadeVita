@@ -97,3 +97,66 @@ objective chain, so no code changed.
 7. Pull `ux0:data/renegade/user/logs/` and the flight recorder; check for
    "native provider missing script" lines (expect exactly the three fodder
    names) and conversation transition records for `M11_End_Mission_Conversation`.
+
+## Full audit (2026-10-07)
+
+Evidence class: host source review of `staging/scripts/Mission11.cpp` and a
+read-only check of the unchanged retail `Data/` (Vita3K copy). Tools:
+`tools.audit_mission_content_bindings --map M11.mix` (receipt under ignored
+`build/`), `reports/generated/sweeps/live_script_{bindings,parameters}.json`,
+`missing_cinematic_names.json`, `renegade_cinematic_dependency_scan.scan`,
+`check_campaign_chain.py`, plus throwaway scanners for event receivers, timer
+ids, waypath ids and literal asset names. Only `arm-vita-eabi-g++
+-fsyntax-only` was run on the patched unit. Nothing here is a runtime or
+visual result.
+
+### Results by area
+
+| Area | Result |
+| --- | --- |
+| Level script bindings | 517 bindings (465 persisted, 44 definition, 8 spawner). 514 are registered. The 3 unregistered names are the known fodder spawner scripts (100581/100582/100586), unchanged from retail. Parameter shape: 67 equal-count, 447 `excess_values` where the level supplies one empty value to a `""` descriptor (harmless), 0 `fewer_values`. |
+| Custom events | 453 `Send_Custom_Event` sites in 171 scripts. Each type/param has a matching `Custom` comparison in the unit, except `M00_CUSTOM_POWERUP_GRANT_DISABLE` (179), which is received by the shared `M00_Soldier_Powerup_Disable`. Cinematic `send_custom` targets (X11M: 101449 p0, 106230 p0/p1; X11N: 101607, 157366, 101606, 100697 p0, 101449 p1) all have handlers. |
+| Timers | 28 `Start_Timer` sites. Handlers that do not compare `timer_id` accept every id. No timer lacks a handler. |
+| Hard-coded object IDs | 76 literal and 51 named `Find_Object` IDs. Not serialized: 100012 (`:406`, the power-core zone cleanup), `M11_MUSEUM_GUARD_04/06` (100259/100261). All three lookups are NULL-guarded, so they are a retail no-op. `Enable_Spawner` 102421-102426 (power-core pickups) have no spawner. `Spawner_Enable` loops over existing spawners, so this is a no-op. Missile lifts 167620-167623 and doors 1300001123/1124 are present in `m11.lsd`. |
+| Waypaths | All 67 `WaypathID`/`WaypointStartID`/`WaypointEndID` values, including Petrova's 21-route table and Sydney's 4 lift legs (105199, 105205, 104839, 104845, 104850), are present in the M11 level data. This is a byte-presence check only. |
+| Presets/sounds/models | Content-binding closure: 0 missing literal presets and 0 missing cinematic texts. 215 string-array, `Set_Model`, explosion and weapon literals resolve. Retail-identical miss: Petrova taunt `M00GCTK_KIOV0004I1MBPT_SND` (`:7569`), where `Create_Sound` returns 0 and nothing plays. Sound twiddlers `M11_Exterior_{NOD,GDI}Troops_Twiddler_JDG` include definition IDs that are absent from `objects.ddb` (2539, 3323-3325, 3330, 3339, 3349, 3379). `TwiddlerClass::Twiddle` then returns NULL and `Create_Sound` skips the sound. The weapon eject and muzzle-flash phys IDs that are absent are global and not M11-specific. |
+| Animations | All 12 cinematics resolve their models, animations and presets across `always.dat`, `Always2.dat` and `M11.mix`. Retail-identical miss: `X11C_BN_Sydney.X11C_SYD_A..D` (`:6955-6976`). The archive registers these as `X11C_BN_SYDNEY.X11C_BN_SYD_*`, so `Get_HAnim` returns NULL and the torture-bone helper does not animate. Sydney's own `S_B_HUMAN.H_B_X11C_SYD_*` loop, which drives `Animation_Complete`, does resolve. |
+| Strings/conversations | 0 unresolved objective or HUD strings (`OBJECTIVE_TEXT_READINESS.md`). 0 unlocated conversations (earlier section). `ShieldKevlar` and `Blamo` are in `armor.ini`. |
+| Random/array bounds | Every `Get_Random_Int(0,N)` index is within its array (`CRandom::Get_Int` is `[min,max)`). Each `while (random == last)` loop draws from a range of more than one value, so it terminates. `flyovers[last]` wraps at 4. Petrova's `_waypaths[CurrentLocation]` is only reached after `START_ACTING` sets `SOUTH0`. |
+| Pass/end chain | Re-verified from the earlier section. Mid-mission, Sydney appears only through X11N `send_custom 101449 p1` (frame 494), which follows the Level 3 keycard pickup. The port has no in-engine cinematic skip that could drop that command. `check_campaign_chain.py`: 0 failures, state 35 END goes to `Display_End_Game_Menu`. `Movies/R_Finale.BIK` is present. |
+| Port patches on M11 | `scripts-a36-m11-save-variable-ids.patch` is correct: Petrova taunt ids are now 1/2/3. The shared action watchdog, elevator and pathfinding patches are reviewed in `ESCORT_PATHING_REVIEW.md` and `ELEVATORS.md`. |
+
+### Defect fixed
+
+- **Uninitialized conversation-ID members on the objective chain** (medium,
+  completion-blocking if it occurred). `M11_Sydney_Script_JDG::Created`
+  leaves `sydney_conv01`, `sydney_damaged_conv01..03` and `missionEndConv`
+  uninitialized (`new T` default-init). When `M11_End_Mission_Conversation`
+  ends, `Action_Complete` tests the damaged-conversation IDs before
+  `missionEndConv`. If Sydney was never hurt, a stale heap value equal to the
+  end conversation's ID would take the damage branch. The `H_A_CON2`
+  animation would then never play and `M11_END_MISSION_PASS_JDG` would never
+  be sent. On Vita, 12 in-process campaign sessions reuse newlib heap memory
+  that can hold earlier conversation IDs (which start at 1000 in every
+  level). The controller's 4 conversation members have the same pattern, and
+  could misroute the objective-5 HUD step. Fix:
+  `scripts-a36-m11-conversation-id-init.patch` zeroes these 9 members in
+  `Created`. The controller's members are zeroed before its synchronous
+  self-custom. Active conversation IDs are never 0, so no original route
+  changes. Staged with zero fuzz (526 ordered patches, inventory PASS);
+  `-fsyntax-only` passes.
+
+### Deferred
+
+- The same uninitialized `int` conversation-member pattern exists in
+  `M11_Barracks_Scientist_JDG`, `..._TechnicianConversation_Blackhand_JDG`,
+  `..._MutantConversationGuy_01_JDG`, `M11_Start_Third_Objective_Zone_JDG`
+  and `M11_Temple_Hologram_Controller_JDG`, and across other missions.
+  A single value-initialising `new T()` in `ScriptRegistrant::Create` would
+  close it everywhere. That changes shared script plumbing, so it was not
+  done in this M11-scoped unit.
+- `M11_Flyover_Contoller_JDG` starts a new `Test_Cinematic` every 10 s for the
+  whole mission (original). Its memory and object churn on Vita is unmeasured.
+- Fodder spawner scripts, `X11C_BN_Sydney` bone animations, the
+  `M00GCTK_KIOV0004I1MBPT_SND` taunt and missing twiddler choices are
+  retail-identical misses. Each one degrades without crashing.

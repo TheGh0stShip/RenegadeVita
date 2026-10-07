@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "f1f7e1a5a95294f4a500d14f7ed4d408d305205ac075fa75368dabee7b9b2042",
+  "stage_script_sha256": "3518aae2b80e3fe7a06c6b7d7629c5415a269184c3dc26338d7249fca10b9126",
   "patch_count": 526,
   "patches": [
     {
@@ -1705,11 +1705,6 @@
       "sha256": "3750e35be83bf56556f5f2f2f9cea705363d677975e6f1b457090c15969ac795"
     },
     {
-      "path": "port/patches/scripts-a36-m03-paradrop-param-buffer.patch",
-      "stage_directory": "scripts",
-      "sha256": "81f463df9781939d28f3bd3144cd42c68c3e623bbd823f01a99a079ed25f793d"
-    },
-    {
       "path": "port/patches/scripts-a36-m04-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "745c985344466f36002809c8309182527a92f844a17f2b1bbefa9df7c38615c0"
@@ -1723,6 +1718,11 @@
       "path": "port/patches/scripts-a36-m11-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "4010ac3b2825d0bcdb333d51b4dd2f5d9109deda3868ea10afa68bbd1bf49d4f"
+    },
+    {
+      "path": "port/patches/scripts-a36-m11-conversation-id-init.patch",
+      "stage_directory": "scripts",
+      "sha256": "9579e0bd770447ae71d7bccd0247b6147d87191721cc84ec96caa5677b0001ad"
     },
     {
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
@@ -2635,5 +2635,5 @@
       "sha256": "30f0ad3ed7b87ca32095d32d6f800ae73043544a75cd96a5d2d0272cba7c3f73"
     }
   ],
-  "registry_sha256": "f71475bf596a9d26bcd7f9f13b27cb44976b7a2d0b8a4b09d152828abe20d010"
+  "registry_sha256": "21fa8dec098577daa4aacb804fcf3d8552c6e6d853ec9c0c093b195c3e4b2e0c"
 }

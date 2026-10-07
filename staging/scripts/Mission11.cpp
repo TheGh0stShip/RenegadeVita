@@ -214,6 +214,12 @@ DECLARE_SCRIPT(M11_Mission_Controller_JDG, "")
 	void Created( GameObject * obj ) 
 	{
 		player_has_reached_musuem = false;
+		// Vita port: conversation IDs start at 1000, so 0 never matches a
+		// monitored conversation before the member is assigned.
+		evaPingedSydneyConv = 0;
+		missionIntroConv02 = 0;
+		missionIntroConv = 0;
+		evaNukeConv = 0;
 		Commands->Show_Player_Map_Marker ( false );
 		Commands->Reveal_Map ( );
 		Commands->Enable_Hibernation( obj, false );
@@ -9432,6 +9438,13 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 		sydney_damaged_conv01_playing = false;
 		sydney_damaged_conv02_playing = false;
 		sydney_damaged_conv03_playing = false;
+		// Vita port: conversation IDs start at 1000, so 0 never matches the
+		// end-mission conversation before these members are assigned.
+		sydney_conv01 = 0;
+		sydney_damaged_conv01 = 0;
+		sydney_damaged_conv02 = 0;
+		sydney_damaged_conv03 = 0;
+		missionEndConv = 0;
 	}
 
 	void Damaged( GameObject * obj, GameObject * damager, float amount ) 

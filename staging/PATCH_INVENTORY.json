@@ -1607,7 +1607,7 @@
     {
       "path": "port/patches/ww3d-a35-original-decal-submission.patch",
       "stage_directory": "ww3d2",
-      "sha256": "aea7db40c16a9e86ad00e3125d675b3ff43022103b09847062fe2784cf763102"
+      "sha256": "c9fdb13340769cf5ea029082a6300ad3cdfca5925dec0e915a33163f29279899"
     },
     {
       "path": "port/patches/ww3d2-a37-prim-anim-sphere-gcc15.patch",
@@ -2535,5 +2535,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "a238b5d4845b9b4c096c1f802b438583a4cceb0e7e52b89528d681237759fb90"
+  "registry_sha256": "1ae0f5aba8698d59290aaa71063eee83409ce593cecc329f9ad61505229cb6ab"
 }

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "a490bda54360300c473399978318e5704acdccaaa8f20691d64170145cfea36a",
-  "patch_count": 502,
+  "stage_script_sha256": "2a2f5d43e240279660a8ba47850a41019166def899ab9baf7e76a9fdaccb31e5",
+  "patch_count": 506,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1010,6 +1010,11 @@
       "sha256": "a91f96743f83cdf9324006eb416480e5606e5f10c919c985f1120454919202d7"
     },
     {
+      "path": "port/patches/wwlib-a36-targa-rle-bound.patch",
+      "stage_directory": "wwlib",
+      "sha256": "c128f4e82238df425dbe450bbe210e645076bd9de2ff0f7d8c14667a439af7c1"
+    },
+    {
       "path": "port/patches/ww3d2-a35-format-table-init.patch",
       "stage_directory": "ww3d2",
       "sha256": "42dab9fe7a22408c6e51e4a8510b641252d6804e0c41d00f2bf7a97eec9c64ee"
@@ -1028,6 +1033,11 @@
       "path": "port/patches/combat-a35-hud-target-box-nan-guard.patch",
       "stage_directory": "combat",
       "sha256": "1d5f217c8ebefca8325df014e76b4bd3375fc5b6037e6d3c5edda891b1eb7db4"
+    },
+    {
+      "path": "port/patches/combat-a35-hud-readout-x87-rounding.patch",
+      "stage_directory": "combat",
+      "sha256": "3f86630632c91c910d96b6bc2e3324759e3d469d0d796f6860b75f6077817eb2"
     },
     {
       "path": "port/patches/combat-a35-script-timer-timing.patch",
@@ -1657,7 +1667,7 @@
     {
       "path": "port/patches/ww3d2-a36-sorting-depth-sort-and-runs.patch",
       "stage_directory": "ww3d2",
-      "sha256": "a2364eee2f1ce12847953e0c7dde2c648e8a88480a6083be84ad55d61fc4fcdb"
+      "sha256": "0bfc987809d41e001e72b4c744ec38086c7d5920e5186b0de77907187557cf4a"
     },
     {
       "path": "port/patches/combat-a36-powerup-text-once.patch",
@@ -2245,6 +2255,11 @@
       "sha256": "1f8e06ef876a5f128653ee2cb2997296c21a720772987b326cfd5c78fcaa582a"
     },
     {
+      "path": "port/patches/wwlib-a36-chunk-string-termination.patch",
+      "stage_directory": "wwlib",
+      "sha256": "8130c5189a1f47bd4c2c5bcae1428807e8164233776a9647cd4c50e6c9471f7b"
+    },
+    {
       "path": "port/patches/combat-a36-script-load-status.patch",
       "stage_directory": "combat",
       "sha256": "84dfd6a5b3856c03ca1b15458cf65cb76c46896d67c665635bc40c0e88eeca7f"
@@ -2445,6 +2460,11 @@
       "sha256": "1a70074f1bcf5fefed34456f701bd70c8144a660e0d5188a632fbed8356a249a"
     },
     {
+      "path": "port/patches/ww3d2-a36-dds-short-file.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "77ae05f8c9773d157bbdcf6718e28efd063623bdfa433bfb2c2cdaa3a2787340"
+    },
+    {
       "path": "port/patches/commando-a36-lan-browser-factory.patch",
       "stage_directory": "commando",
       "sha256": "409f464f9e922206ae78d9f46116e6bd4e92ea2a8ef1a95452d3f146d251f222"
@@ -2515,5 +2535,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "3bb126caabe7f5e3f2c1702e75e44465ac783c2159c242e1f319f254d72561fd"
+  "registry_sha256": "e1edf4a78bd2981892fe090d3efc24b884483454805aa8b971fafd49f993c405"
 }

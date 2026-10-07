@@ -127,7 +127,7 @@ class SortingDepthSortTests(unittest.TestCase):
         self.assertIn('if (a.material!=NULL && a.material->Get_Lighting()) {', same)
         boundary = (ROOT / 'port/renderer/vita/ww3d_vita_renderer.cpp').read_text()
         self.assertEqual(boundary.count('submission.draw_state->LightEnable['), 1)
-        self.assertIn('submission.draw_state->material->Get_Lighting() &&', boundary)
+        self.assertIn('submission.draw_state->material->Get_Lighting();', boundary)
         flush = section(source, 'void SortingRendererClass::Flush_Sorting_Pool()',
                         'void SortingRendererClass::Flush()')
         self.assertIn('Depth_Sort(tis,polygon_z_array,overlapping_polygon_count);', flush)

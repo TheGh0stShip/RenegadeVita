@@ -90,7 +90,7 @@
 +			delete[] new_order;
 +			delete[] new_order_scratch;
 +			delete[] new_items;
-+			Sort<TempIndexStruct,float>(array,keys,0,count);
++			Sort<TempIndexStruct,float>(array,keys,static_cast<int>(count));
 +			return;
 +		}
 +		Release_Radix_Arrays();

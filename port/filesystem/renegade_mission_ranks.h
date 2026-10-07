@@ -12,6 +12,18 @@
 #include <new>
 #include <pthread.h>
 
+#ifdef __vita__
+// sceIoRename does not replace an existing destination; use the rooted
+// file-factory replace helper (renegade_file_factory.cpp).
+bool Renegade_Replace_File(const char *source, const char *destination);
+bool Renegade_Recover_Interrupted_Replace(const char *destination);
+#define RENEGADE_STORE_REPLACE(source, destination) Renegade_Replace_File(source, destination)
+#define RENEGADE_STORE_RECOVER(destination) ((void)Renegade_Recover_Interrupted_Replace(destination))
+#else
+#define RENEGADE_STORE_REPLACE(source, destination) (rename(source, destination) == 0)
+#define RENEGADE_STORE_RECOVER(destination) ((void)0)
+#endif
+
 namespace RenegadeMissionRanks {
 enum { MaxEntries = 128, NameBytes = 96, PathBytes = 1024 };
 static_assert(sizeof(int) == sizeof(int32_t), "Original registry integers are 32-bit");
@@ -115,6 +127,7 @@ inline bool Configure(const char *path, const char *key)
     }
     strcpy(store.path, path);
     strcpy(store.key, key);
+    RENEGADE_STORE_RECOVER(path);
     FILE *file = fopen(path, "rb");
     if (file == NULL) {
         if (errno == ENOENT) { store.writable = true; return true; }
@@ -168,7 +181,7 @@ inline bool Save(const Record &record)
     Check_IO(fflush(file) == 0, error);
     Check_IO(fsync(fileno(file)) == 0, error);
     Check_IO(fclose(file) == 0, error);
-    if (error == 0) Check_IO(rename(temporary, store.path) == 0, error);
+    if (error == 0) Check_IO(RENEGADE_STORE_REPLACE(temporary, store.path), error);
     if (error != 0) remove(temporary);
     store.error = error;
     store.last_write_ok = error == 0;

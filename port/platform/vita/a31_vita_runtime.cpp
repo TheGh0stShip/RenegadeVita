@@ -3897,6 +3897,39 @@ static bool Is_Original_Campaign_Mission_Archive(const char *archive)
 	return mission >= 1 && mission <= 13;
 }
 
+// Original FontCharsClass rasterizes each glyph (FreeType on Vita) the first
+// time a Render2DSentence measures or blits it, so the first objective, help
+// or target text of a session pays that cost inside a gameplay frame. Store
+// the printable ASCII set of the in-game HUD fonts on the loading screen
+// instead. A glyph's pixels and width do not depend on when it is stored;
+// only its slot in the font's own buffers does. Bounded: 96 glyphs per font,
+// at most a few 64 KiB glyph buffers; a font already warmed is only looked up.
+static void Warm_Original_HUD_Font_Glyphs(const char *label)
+{
+	const StyleMgrClass::FONT_STYLE styles[] = {
+		StyleMgrClass::FONT_INGAME_TXT,
+		StyleMgrClass::FONT_INGAME_BIG_TXT,
+		StyleMgrClass::FONT_INGAME_SUBTITLE_TXT,
+		StyleMgrClass::FONT_INGAME_HEADER_TXT
+	};
+	const uint64_t started_us = sceKernelGetProcessTimeWide();
+	unsigned fonts = 0U;
+	unsigned visible = 0U;
+	for (unsigned index = 0U; index < sizeof(styles) / sizeof(styles[0]); ++index) {
+		FontCharsClass *font = StyleMgrClass::Peek_Font(styles[index]);
+		if (font == NULL) continue;
+		++fonts;
+		// Build_Sentence also measures the terminating NUL.
+		font->Get_Char_Width(static_cast<WCHAR>(0));
+		for (unsigned ch = 0x20U; ch <= 0x7EU; ++ch) {
+			if (font->Get_Char_Width(static_cast<WCHAR>(ch)) > 0) ++visible;
+		}
+	}
+	A30_Vita_Log("A4 %s HUD font glyph preparation: fonts=%u glyphs_per_font=96 visible=%u elapsed_us=%llu\n",
+		label, fonts, visible,
+		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - started_us));
+}
+
 // Loading-time preparation for one loaded level. Runs after the original
 // Load_Level (initial session load and in-session restart/round reload)
 // and before gameplay resumes. Everything here is optional cache warming of
@@ -4107,6 +4140,7 @@ void Prepare_Original_Level_Loading_Resources(A31VitaLoadingPresenter &presenter
 	if (stricmp(archive, "M00_Tutorial.mix") != 0) {
 		Warm_Original_Campaign_Referenced_Textures(presenter, label);
 	}
+	Warm_Original_HUD_Font_Glyphs(label);
 	A30_Vita_Log("A4 level preparation: complete owner=%s archive=%s elapsed_us=%llu\n",
 		owner != NULL ? owner : "(none)", archive,
 		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - level_prepare_started_us));

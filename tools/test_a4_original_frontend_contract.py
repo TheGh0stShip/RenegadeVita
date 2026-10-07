@@ -290,7 +290,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "CursorPos.Y = front_touch.y;",
             "Set_Button(DIMouseButtons, DirectInput::BUTTON_MOUSE_LEFT & 0xFF",
             "front touch feeds original mouse cursor and left click",
-            "ordinary_gameplay_input && (back_touch.down || camera_toggle_chord)",
+            "ordinary_gameplay_input && (back_touch.down || camera_toggle_chord ||",
             "(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_UP) != 0",
             "(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_DOWN) != 0",
             "(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_LEFT) != 0",

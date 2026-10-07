@@ -147,6 +147,16 @@ int main()
 	A30_Vita_Log("Runtime identity: candidate=%s display=%s path=%s\n",
 		RENEGADE_BUILD_CANDIDATE_LABEL, RENEGADE_BUILD_DISPLAY_LABEL,
 		RENEGADE_BUILD_RUNTIME_LOG_PATH);
+	{
+		// Read-only FPSCR snapshot of the game thread (original engine assumed
+		// x87 with denormals preserved). FPSCR is never written here.
+		uint32_t fpscr = 0U;
+		__asm__ volatile("vmrs %0, fpscr" : "=r"(fpscr));
+		static const char *const rmode_names[4] = { "RN", "RP", "RM", "RZ" };
+		A30_Vita_Log("FPSCR: value=%08X FZ=%u DN=%u rmode=%s\n",
+			static_cast<unsigned>(fpscr), static_cast<unsigned>((fpscr >> 24) & 1U),
+			static_cast<unsigned>((fpscr >> 25) & 1U), rmode_names[(fpscr >> 22) & 3U]);
+	}
 	// Select the native userland performance clocks explicitly. No plugin or
 	// kernel override is needed; record failures and actual frequencies rather
 	// than assuming the requests were honored by the device power policy.

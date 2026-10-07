@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "8cd7d65588ffad47be9afee294511e1e453a51bfca3d615a39e40aadf2bed5b9",
-  "patch_count": 527,
+  "stage_script_sha256": "ea3a5b85ca677575e961ea926e2f424ad16d83d23127d3a54ad6eaacbbb5dab4",
+  "patch_count": 538,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1610,6 +1610,11 @@
       "sha256": "6eb405114d43b9bc4b2fc9ecd0911f5c93f5fe17ceed23a435371d31f8b86f66"
     },
     {
+      "path": "port/patches/scripts-a37-mx0-area4-controller-id-init.patch",
+      "stage_directory": "scripts",
+      "sha256": "a89fcda5e3204e49d1d91bd3a2452b226f2292096924460e36a611146c589b72"
+    },
+    {
       "path": "port/patches/ww3d-a35-original-dazzle-lifecycle.patch",
       "stage_directory": "ww3d2",
       "sha256": "d3732d603f9118a9e0994b8d295b20baa628ba7fd502b728306bd0256e8826f1"
@@ -1695,6 +1700,11 @@
       "sha256": "96e0c369aa693e5c91118f63802233f9adbc1d5c6c8371419d58c811bc1d937b"
     },
     {
+      "path": "port/patches/scripts-a36-m02-respawn-area-bounds.patch",
+      "stage_directory": "scripts",
+      "sha256": "97710b22d758935849cc7e2add50deb6f1fe6ad2578d2375d41fb0e6c08d735c"
+    },
+    {
       "path": "port/patches/scripts-a36-mx0-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "d64ed5c8485bd81670ab5a50e849a8e5090bbfc9d36f97ea584c34b56bb0468b"
@@ -1703,6 +1713,11 @@
       "path": "port/patches/scripts-a36-m03-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "3750e35be83bf56556f5f2f2f9cea705363d677975e6f1b457090c15969ac795"
+    },
+    {
+      "path": "port/patches/scripts-a36-m03-paradrop-param-buffer.patch",
+      "stage_directory": "scripts",
+      "sha256": "81f463df9781939d28f3bd3144cd42c68c3e623bbd823f01a99a079ed25f793d"
     },
     {
       "path": "port/patches/scripts-a36-m04-save-variable-ids.patch",
@@ -1715,9 +1730,24 @@
       "sha256": "0bd30fe32e8dfd82138ed75c9bb18d1881b54f5e5ad3a39a02eb43b1f07201b0"
     },
     {
+      "path": "port/patches/scripts-a36-m05-resistance-poke-index-hang.patch",
+      "stage_directory": "scripts",
+      "sha256": "fdf0d2af1328c739d12f0e59ac234cd561eba22b8f7d8b8efdfbfdc7af9938cd"
+    },
+    {
+      "path": "port/patches/scripts-a36-m05-fire-loc-save.patch",
+      "stage_directory": "scripts",
+      "sha256": "6732bf9499ac2eae75569904fc06c40b5325a6ed66e9c1e5f2bf692e316e8fad"
+    },
+    {
       "path": "port/patches/scripts-a36-m11-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "4010ac3b2825d0bcdb333d51b4dd2f5d9109deda3868ea10afa68bbd1bf49d4f"
+    },
+    {
+      "path": "port/patches/scripts-a36-m11-conversation-id-init.patch",
+      "stage_directory": "scripts",
+      "sha256": "9579e0bd770447ae71d7bccd0247b6147d87191721cc84ec96caa5677b0001ad"
     },
     {
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
@@ -2625,9 +2655,34 @@
       "sha256": "71433b8b6e1764ad0707ba04f95022a43fa54fb1dd0d0156a0c538cfdc324301"
     },
     {
+      "path": "port/patches/combat-a36-raveshaw-star-dist-modulo-guard.patch",
+      "stage_directory": "combat",
+      "sha256": "8db90499831ea7491c2e6486d4094ccda4c5774ed04d7582149e83b58038e73b"
+    },
+    {
+      "path": "port/patches/combat-a36-raveshaw-stealth-soldier-create-guard.patch",
+      "stage_directory": "combat",
+      "sha256": "8696762046ee73979d8e8f279e5cef0b9071054cdbd288251690c96dc935d890"
+    },
+    {
+      "path": "port/patches/combat-a36-smart-control-disabled-weapon-guard.patch",
+      "stage_directory": "combat",
+      "sha256": "82e2110a38e9fdb81c97af66939a407ffe223a8fa3102fa5f38099afafe318d3"
+    },
+    {
       "path": "port/patches/scripts-a36-m01-intro-command-breadcrumbs.patch",
       "stage_directory": "scripts",
       "sha256": "30f0ad3ed7b87ca32095d32d6f800ae73043544a75cd96a5d2d0272cba7c3f73"
+    },
+    {
+      "path": "port/patches/combat-a36-scriptcommands-null-guards.patch",
+      "stage_directory": "combat",
+      "sha256": "d41a91caa9052ce951998d269fbc92bbfe1b0b3ac9e9a7ce449bed502118cef5"
+    },
+    {
+      "path": "port/patches/scripts-a36-m09-evac-gunner-param-buffer.patch",
+      "stage_directory": "scripts",
+      "sha256": "f156a69252fe516ec6b649dd2d11bd5f1c0661635885a1b8753f59763a60c1cc"
     },
     {
       "path": "port/patches/scripts-a36-m01-load-position-tables.patch",
@@ -2640,5 +2695,5 @@
       "sha256": "8344203252d190bbfabc8d76ae51164cabec4a81d780578383284115c478cf5d"
     }
   ],
-  "registry_sha256": "982ace8312efe560a527626f701a0a77b7dc5db767c8bd3249ad0df459c8ab7b"
+  "registry_sha256": "756b8d57b9bcee783ea80d2d5c4b8a437d44224e3541720c38816a2a8704f92d"
 }

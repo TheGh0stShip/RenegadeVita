@@ -444,7 +444,7 @@ bool Decode_Mpeg(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 
 bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
 	const char **error, bool allow_truncated_data, bool allow_retail_trailing_content)
-{
+try {
 	if (error != nullptr) *error = nullptr;
 	if (data == nullptr || info == nullptr || bytes < 12U) {
 		return Fail("truncated RIFF header", error);
@@ -567,6 +567,10 @@ bool Inspect_Wave(const uint8_t *data, size_t bytes, WaveInfo *info,
 		? parsed.fact_sample_frames : parsed.estimated_sample_frames;
 	*info = std::move(parsed);
 	return true;
+} catch (const std::bad_alloc &) {
+	// Callers in -fno-exceptions TUs (AIL_WAV_info_bounded) cannot unwind a
+	// coefficient-table allocation failure; report it through the error path.
+	return Fail("WAVE inspect allocation failed", error);
 }
 
 bool Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,

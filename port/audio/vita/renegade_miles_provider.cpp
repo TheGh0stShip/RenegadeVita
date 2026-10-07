@@ -9,6 +9,7 @@
 #include <atomic>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <limits>
 #include <new>
@@ -112,7 +113,37 @@ int g_audio_port = -1;
 #endif
 RenegadeMilesDriver g_driver = {};
 RenegadeMilesSample g_listener;
-std::vector<RenegadeMilesSample *> g_samples;
+// Ordered sample registry with non-throwing growth. This TU is built with
+// -fno-exceptions, where std::vector growth failure aborts the process; keep
+// insertion order identical so mixing iteration stays bit-exact.
+class SampleRegistry {
+	RenegadeMilesSample **items = nullptr;
+	size_t count = 0, capacity = 0;
+public:
+	RenegadeMilesSample **begin() const { return items; }
+	RenegadeMilesSample **end() const { return items + count; }
+	size_t size() const { return count; }
+	bool push_back(RenegadeMilesSample *sample)
+	{
+		if (count == capacity) {
+			const size_t grown = capacity == 0 ? 16U : capacity * 2U;
+			void *resized = std::realloc(items, grown * sizeof(*items));
+			if (resized == nullptr) return false;
+			items = static_cast<RenegadeMilesSample **>(resized);
+			capacity = grown;
+		}
+		items[count++] = sample;
+		return true;
+	}
+	void erase(RenegadeMilesSample **entry)
+	{
+		std::memmove(entry, entry + 1,
+			static_cast<size_t>(end() - (entry + 1)) * sizeof(*items));
+		--count;
+	}
+	void clear() { count = 0; }
+};
+SampleRegistry g_samples;
 char g_last_error[160] = "no error";
 RenegadeMilesRuntimeStats g_stats = {};
 AIL_FILE_OPEN_CALLBACK g_file_open = nullptr;
@@ -896,8 +927,13 @@ void Stop_Output()
 RenegadeMilesSample *Allocate_Sample()
 {
 	RenegadeMilesSample *sample = new (std::nothrow) RenegadeMilesSample;
-	if (sample != nullptr) g_samples.push_back(sample);
-	else Set_Error("sample allocation failed");
+	if (sample == nullptr) {
+		Set_Error("sample allocation failed");
+	} else if (!g_samples.push_back(sample)) {
+		delete sample;
+		sample = nullptr;
+		Set_Error("sample registry allocation failed");
+	}
 	return sample;
 }
 

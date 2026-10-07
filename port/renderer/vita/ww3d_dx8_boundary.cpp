@@ -34,6 +34,7 @@
 
 #if defined(__vita__)
 #include "vita_runtime_log.h"
+#include "renegade_vita_frame_profile.h"
 #include <vitaGL.h>
 extern "C" GLboolean vglRenegadeUploadDXTChain(GLuint id, GLenum format,
 	GLsizei width, GLsizei height, GLsizei levels,
@@ -2380,6 +2381,7 @@ void IDirect3DSurface8::Set_Texture_Owner(IDirect3DTexture8 *texture, UINT level
 
 HRESULT IDirect3DSurface8::Upload_Texture_Owner()
 {
+	RENEGADE_FRAME_PROFILE("Vita Render Texture Upload");
 	if (OwnerTexture == NULL) return D3D_OK;
 	if (OwnerTexture->SurfaceLevels == NULL ||
 		OwnerTextureLevel >= OwnerTexture->GetLevelCount() ||
@@ -2974,6 +2976,7 @@ void DX8Wrapper::Draw_Sorting_IB_VB(unsigned primitive_type,
 	unsigned short start_index, unsigned short polygon_count,
 	unsigned short min_vertex_index, unsigned short vertex_count)
 {
+	RENEGADE_FRAME_PROFILE("Vita Render Sorted Draw");
 	WWASSERT(render_state.vertex_buffer_type == BUFFER_TYPE_SORTING ||
 		render_state.vertex_buffer_type == BUFFER_TYPE_DYNAMIC_SORTING);
 	WWASSERT(render_state.index_buffer_type == BUFFER_TYPE_SORTING ||

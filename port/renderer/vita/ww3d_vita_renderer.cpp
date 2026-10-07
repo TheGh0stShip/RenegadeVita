@@ -2042,6 +2042,7 @@ bool Build_Static_Mesh_Streams(MeshClass &mesh, MeshModelClass *model,
 	int triangle_count, int base_pass_count, const Matrix3D &world_transform,
 	bool &uses_lighting)
 {
+	RENEGADE_FRAME_PROFILE("Vita Render Static Cache Build");
 	uses_lighting = false;
 	StaticMeshStreamBuilder &builder = g_static_mesh_builder;
 	if (!builder.Begin(static_cast<uint32_t>(vertex_count))) return false;
@@ -2197,6 +2198,7 @@ bool Static_Mesh_Entry_Current(const StaticMeshEntry &entry, MeshModelClass *mod
 
 bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
 {
+	RENEGADE_FRAME_PROFILE("Vita Render Static Cache Upload");
 	const StaticMeshStreamBuilder &builder = g_static_mesh_builder;
 	const uint32_t vertex_bytes = builder.Vertices().Count() * STATIC_MESH_VERTEX_STRIDE;
 	const uint32_t index_bytes = builder.Indices().Count() * sizeof(uint16_t);
@@ -2269,6 +2271,7 @@ bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
 // path. Positions stay in model space under the loaded modelview matrix.
 void Replay_Static_Mesh_Entry(const StaticMeshEntry &entry)
 {
+	RENEGADE_FRAME_PROFILE("Vita Render Static Cache Replay");
 	// The same FFP program may last have been patched for the immediate
 	// layout; force register rebinding for these client arrays.
 	vglRenegadeInvalidateVertexAttributes();
@@ -3638,6 +3641,7 @@ void Release_Texture(uint32_t native_texture)
 static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 	MaterialPassClass *material_pass)
 {
+	RENEGADE_FRAME_PROFILE("Vita Render Submit Mesh");
 	MeshModelClass *model = mesh.Peek_Model();
 	if (!g_statistics.initialized || model == NULL) {
 		return;
@@ -3845,6 +3849,7 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 	} else
 #endif
 	for (int pass = 0; pass < draw_pass_count; ++pass) {
+		RENEGADE_FRAME_PROFILE("Vita Render Immediate Mesh Pass");
 		const int model_pass = procedural_pass ? 0 : pass;
 		const Vector2 *uvs[MeshMatDescClass::MAX_TEX_STAGES] = {
 			model->Get_UV_Array(model_pass, 0),
@@ -4236,6 +4241,7 @@ bool Evaluate_Indexed_Primary_Color(const IndexedTriangleSubmission &submission,
 IndexedSubmissionResult Submit_Indexed_Triangles(
 	const IndexedTriangleSubmission &submission)
 {
+	RENEGADE_FRAME_PROFILE("Vita Render Indexed Triangles");
 	if (!g_statistics.initialized) {
 		++g_statistics.rejected_indexed_submissions;
 		Log_Indexed_Rejection("renderer is not initialized", submission.vertex_format);

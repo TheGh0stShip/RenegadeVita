@@ -25,6 +25,7 @@
 
 #include "ww3d_vita_indexed_mesh_batch.h"
 #include "ww3d_vita_static_mesh_cache.h"
+#include "ww3d_vita_vertex_array_batch.h"
 
 using namespace RenegadeVitaRenderer;
 
@@ -444,7 +445,8 @@ struct MeshBoundaryTiming {
 };
 static MeshBoundaryTiming g_mesh_boundary_timing;
 enum { MESH_BOUNDARY_TIMING_SAMPLE_STRIDE = 16U };
-static uint32_t g_draw_end_timing_sequence = 0U;
+// Only the detailed-timing build samples draw ends.
+[[maybe_unused]] static uint32_t g_draw_end_timing_sequence = 0U;
 static uint64_t g_fake_process_time_us = 0U;
 uint64_t sceKernelGetProcessTimeWide() { return ++g_fake_process_time_us; }
 static bool g_logged_first_user_lighting = false;
@@ -543,6 +545,29 @@ void vglRenegadeEndIndexed(int, const uint16_t *)
 // ---------------------------------------------------------------------------
 // Production text under test.
 
+// Profiling scopes are timing only.
+#define RENEGADE_FRAME_PROFILE(name) ((void)0)
+// vertex-array-v1 stays off: these fixtures compare the immediate per-corner
+// stream with the static mesh cache. The vertex-array path has its own
+// equivalence test (tools/test_vita_vertex_array_submission.py).
+VitaVertexArrayBatch g_vertex_array_batch;
+bool g_vertex_array_enabled = false;
+uint64_t g_vertex_array_batches = 0, g_vertex_array_corners = 0;
+bool Vertex_Array_Batch_Eligible(const OriginalTextureCoordinateState *, bool, bool,
+	const Vector2 *const *)
+{
+	return false;
+}
+void Draw_Vertex_Array_Batch(VitaVertexArrayBatch &, bool, bool, const char *, bool)
+{
+	CHECK(false && "vertex-array batches are disabled in this harness");
+}
+// TextureClass::Apply sampler batching is a GL-call optimisation; the
+// recorded binding is the same, so bind directly.
+void Apply_Platform_Texture_Stage(TextureClass &texture, unsigned stage)
+{
+	texture.Apply_For_Platform_Boundary(stage);
+}
 StaticMeshStreamBuilder g_static_mesh_builder;
 #include "static-mesh-helpers.inc"
 #include "static-mesh-build.inc"
@@ -559,6 +584,21 @@ static void Run_Immediate(MeshModelClass *model, MeshClass &mesh,
 	const int base_pass_count = fixture.pass_count;
 	const Matrix3D original_world_transform = {kWorldOffset};
 	const Matrix3D original_view_transform = {kViewOffset};
+	// Submit_Mesh_Internal's locals for an ordinary (non-procedural) pass:
+	// every model pass over every triangle in original order.
+	const bool procedural_pass = false;
+	const int draw_pass_count = base_pass_count;
+	const int submitted_triangle_count = triangle_count;
+	const auto triangle_at = [](int draw_index) { return draw_index; };
+	const auto texture_for = [model](int triangle_index, int pass, int stage) {
+		return model->Peek_Texture(triangle_index, pass, stage);
+	};
+	const auto shader_for = [model](int triangle_index, int pass) {
+		return model->Get_Shader(triangle_index, pass);
+	};
+	const auto material_for = [model](int vertex_index, int pass) {
+		return model->Peek_Material(vertex_index, pass);
+	};
 #define __vita__ 1
 #include "immediate-production.inc"
 #undef __vita__

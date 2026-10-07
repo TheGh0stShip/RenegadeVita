@@ -73,6 +73,17 @@ struct NodeMotionStruct
 	BitChannelClass *			Vis;
 };
 
+// Same value as static_cast<int>(WWMath::Floor(frame)) for every input.  On
+// [0, 2^31) the floor equals truncation, so the per-sample floorf call is
+// skipped; all other inputs (negative, huge, NaN) take the original expression.
+static inline int Raw_Anim_Frame_Floor(float frame)
+{
+	if (frame >= 0.0f && frame < 2147483648.0f) {
+		return static_cast<int>(frame);
+	}
+	return static_cast<int>(WWMath::Floor(frame));
+}
+
 /***********************************************************************************************
  * NodeMotionStruct::NodeMotionStruct -- constructor                                           *
  *                                                                                             *
@@ -473,7 +484,7 @@ void HRawAnimClass::Get_Translation(Vector3& trans, int pividx, float frame ) co
 
 	// Select the preceding key independently of x87 versus ARM rounding.
 	// Float_To_Long truncates on ARM, so the old half-frame bias extrapolates.
-	int frame0 = static_cast<int>(WWMath::Floor(frame));
+	int frame0 = Raw_Anim_Frame_Floor(frame);
 
 	int frame1 = frame0 + 1;
 
@@ -530,7 +541,7 @@ void HRawAnimClass::Get_Translation(Vector3& trans, int pividx, float frame ) co
  *=============================================================================================*/
 void HRawAnimClass::Get_Orientation(Quaternion& q, int pividx,float frame) const
 {
-	int frame0 = static_cast<int>(WWMath::Floor(frame));
+	int frame0 = Raw_Anim_Frame_Floor(frame);
 	int frame1 = frame0 + 1;
 
 	float ratio = frame - (float)frame0;
@@ -583,7 +594,7 @@ void HRawAnimClass::Get_Transform(Matrix3D& mtx, int pividx, float frame ) const
 //		return;
 //	}
 
-	int frame0 = static_cast<int>(WWMath::Floor(frame));
+	int frame0 = Raw_Anim_Frame_Floor(frame);
 
 	int frame1 = frame0 + 1;
 

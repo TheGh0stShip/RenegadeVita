@@ -23,7 +23,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             "RenegadeVitaRenderer::Apply_Indexed_Shader_State(state.shader,")
         loop = function.index("for (unsigned stage = 0; stage < MAX_TEXTURE_STAGES; ++stage)")
         texture = function.index(
-            "state.Textures[stage]->Apply_For_Platform_Boundary(stage)")
+            "RenegadeVitaRenderer::Apply_Platform_Texture_Stage(*state.Textures[stage], stage)")
         fallback = function.index("RenegadeVitaRenderer::Bind_Texture(0U, false)")
         stage1_disable = function.index("RenegadeVitaRenderer::Disable_Texture_Stage(stage)")
         material = function.index("Apply_Indexed_Texture_Coordinate_State(state.material)")
@@ -107,9 +107,9 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertIn("cOp = D3DTOP_SELECTARG1;", original)
         self.assertIn("cArg1 = D3DTA_TEXTURE;", original)
         self.assertIn("case ShaderClass::GRADIENT_DISABLE:", renderer)
-        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);", renderer)
+        self.assertIn("Set_Texture_Env(0U, GL_TEXTURE_ENV_MODE, GL_REPLACE);", renderer)
         self.assertLess(
-            renderer.index("glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);"),
+            renderer.index("Set_Texture_Env(0U, GL_TEXTURE_ENV_MODE, GL_REPLACE);"),
             renderer.index("if (state.alpha_test)")
         )
 
@@ -138,7 +138,8 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         ):
             self.assertIn(needle, contract)
 
-        self.assertIn("glAlphaFunc(To_GL_Depth_Function(state.alpha_compare),", renderer)
+        # Issued through the exact GL-state shadow (tools/test_vita_render_state_shadow.py).
+        self.assertIn("Shadow_Alpha_Func(To_GL_Depth_Function(state.alpha_compare),", renderer)
         self.assertIn("static_cast<float>(state.alpha_reference) / 255.0f", renderer)
         self.assertNotIn("glAlphaFunc(GL_GREATER, 0.0f);", renderer)
         self.assertIn('"inverse alpha cutout"', host)
@@ -364,7 +365,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             "model->Peek_Texture(triangle_index, pass, 1)",
             "model->Get_UV_Array(pass, 1)",
             "triangle_shader.Uses_Post_Detail_Texture()",
-            "bound_textures[1]->Apply_For_Platform_Boundary(1U)",
+            "Apply_Platform_Texture_Stage(*bound_textures[1], 1U)",
             "Apply_Original_Texture_Stage_State(triangle_shader,",
             "first original MeshClass stage1 texture",
             "Apply_Original_Texture_Coordinate_State(current_material);",
@@ -376,7 +377,7 @@ class VitaIndexedStateContractTests(unittest.TestCase):
             "DWORD texcoord_index;",
             "DWORD texture_transform_flags;",
             "Apply_Texture_Stage_Transform(stage)",
-            "state.Textures[stage]->Apply_For_Platform_Boundary(stage)",
+            "RenegadeVitaRenderer::Apply_Platform_Texture_Stage(*state.Textures[stage], stage)",
             "RenegadeVitaRenderer::Bind_Texture_Stage(stage, texture->NativeTexture,",
             "Apply_Texture_Stage_Combiner(stage)",
             "Caps.MaxSimultaneousTextures = MAX_TEXTURE_STAGES;",
@@ -445,27 +446,27 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         self.assertIn("case ShaderClass::DETAILALPHA_INVSCALE:", original_shader)
         self.assertIn("cOp = D3DTOP_ADDSMOOTH;", original_shader)
         self.assertIn("aOp = D3DTOP_ADDSMOOTH;", original_shader)
-        self.assertIn("void Set_Texture_Env_White_Constant()", renderer)
+        self.assertIn("void Set_Texture_Env_White_Constant(uint32_t stage)", renderer)
         self.assertIn("glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, white);", renderer)
 
         self.assertIn("case D3DTOP_ADDSMOOTH:", rgb)
-        self.assertIn("Set_Texture_Env_White_Constant();", rgb)
-        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);", rgb)
-        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_CONSTANT);", rgb)
-        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,", rgb)
+        self.assertIn("Set_Texture_Env_White_Constant(stage);", rgb)
+        self.assertIn("Set_Texture_Env(stage, GL_COMBINE_RGB, GL_INTERPOLATE);", rgb)
+        self.assertIn("Set_Texture_Env(stage, GL_SRC0_RGB, GL_CONSTANT);", rgb)
+        self.assertIn("Set_Texture_Env(stage, GL_SRC1_RGB,", rgb)
         self.assertIn("To_GL_Texture_Argument(argument0));", rgb)
-        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB,", rgb)
+        self.assertIn("Set_Texture_Env(stage, GL_SRC2_RGB,", rgb)
         self.assertIn("To_GL_Texture_Argument(argument1));", rgb)
-        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_COLOR);", rgb)
+        self.assertIn("Set_Texture_Env(stage, GL_OPERAND2_RGB, GL_SRC_COLOR);", rgb)
         self.assertNotIn("case D3DTOP_ADD:\n\tcase D3DTOP_ADDSMOOTH:", rgb)
 
         self.assertIn("case D3DTOP_ADDSMOOTH:", alpha)
-        self.assertIn("Set_Texture_Env_White_Constant();", alpha)
-        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_INTERPOLATE);", alpha)
-        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_CONSTANT);", alpha)
-        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,", alpha)
-        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_ALPHA,", alpha)
-        self.assertIn("glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_ALPHA, GL_SRC_ALPHA);", alpha)
+        self.assertIn("Set_Texture_Env_White_Constant(stage);", alpha)
+        self.assertIn("Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_INTERPOLATE);", alpha)
+        self.assertIn("Set_Texture_Env(stage, GL_SRC0_ALPHA, GL_CONSTANT);", alpha)
+        self.assertIn("Set_Texture_Env(stage, GL_SRC1_ALPHA,", alpha)
+        self.assertIn("Set_Texture_Env(stage, GL_SRC2_ALPHA,", alpha)
+        self.assertIn("Set_Texture_Env(stage, GL_OPERAND2_ALPHA, GL_SRC_ALPHA);", alpha)
         self.assertNotIn("case D3DTOP_ADD:\n\tcase D3DTOP_ADDSMOOTH:", alpha)
 
     def test_direct_mesh_submit_replays_original_material_mapper_state(self):

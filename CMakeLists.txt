@@ -41,6 +41,13 @@ endif()
 # -O2 everywhere for an A/B comparison or a suspected optimizer regression.
 option(RENEGADE_VITA_HOT_PATH_O3
   "Compile the renderer, audio, WW3D, WWAudio, WWMath and WWPhys translation units at -O3" ON)
+# Hardware A/B only: also build the original Combat and WWLib translation
+# units at -O3. The codegen review (reports/FPS_R4_CODEGEN_FLAGS.md) found the
+# dominant per-frame bodies (SoldierGameObj::Think/Apply_Control,
+# SmartGameObj::Think, BulletClass::Think) unchanged and Combat text ~24%
+# larger, so it stays OFF until a measured physical run shows a sim gain.
+option(RENEGADE_VITA_SIM_O3
+  "Also compile the Combat and WWLib translation units at -O3 (hardware A/B)" OFF)
 option(RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
   "Enable one-shot diagnostic save/mission launch requests; keep OFF for public packages" OFF)
 # Only the native launch boundary consumes this option. A directory-wide
@@ -469,6 +476,7 @@ set(RENEGADE_A30_PORT_SOURCES
   ${RENEGADE_ROOT}/port/platform/renegade_optional_services.cpp
   ${RENEGADE_ROOT}/port/platform/renegade_network_provider.cpp
 	${RENEGADE_ROOT}/port/renderer/vita/ww3d_vita_renderer.cpp
+	${RENEGADE_ROOT}/port/renderer/vita/ww3d_vita_ffp_program_warm.cpp
 	${RENEGADE_ROOT}/port/renderer/vita/ww3d_dx8_boundary.cpp
 	${RENEGADE_ROOT}/port/renderer/vita/surface_boundary.cpp
 	${RENEGADE_ROOT}/port/renderer/vita/renegade_freetype_font_provider.cpp
@@ -547,6 +555,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${RENEGADE_STAGE}/wwtranslatedb
   ${RENEGADE_STAGE}/ww3d2
   ${RENEGADE_STAGE}/wwphys
+  # Staged wwprofile.h routes WWPROFILE to the Vita frame profiler; without
+  # this entry every engine TU resolved the pristine header (empty macro).
+  ${RENEGADE_STAGE}/wwdebug
   ${RENEGADE_UPSTREAM}/Code/wwdebug
   ${RENEGADE_UPSTREAM}/Code/wwlib
   ${RENEGADE_UPSTREAM}/Code/wwutil
@@ -594,6 +605,12 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
   RENEGADE_VITAGL_HAS_PHYCONT_MEM=${RENEGADE_VITAGL_HAS_PHYCONT_MEM}
   RENEGADE_VITAGL_PHYCONT_MEM=${RENEGADE_VITAGL_PHYCONT_MEM}
 	)
+# Each frame-profile scope costs two process-time syscalls. WWPhys wheel.cpp
+# opens up to five scopes per wheel per force evaluation (two per midpoint
+# integration step), far more calls than the work they bracket. The enclosing
+# VehiclePhysClass::Compute_Force_And_Torque scope still times the wheel loop.
+set_property(SOURCE ${RENEGADE_STAGE}/wwphys/wheel.cpp APPEND PROPERTY
+  COMPILE_DEFINITIONS RENEGADE_VITA_FRAME_PROFILE_SKIP_TU=1)
 if(RENEGADE_A4_ORIGINAL_FRONTEND)
   target_compile_definitions(${PROJECT_NAME} PRIVATE
     RENEGADE_A4_ORIGINAL_FRONTEND=1
@@ -676,6 +693,15 @@ if(RENEGADE_VITA_HOT_PATH_O3)
   set_property(SOURCE ${rv_hot_path_sources} APPEND PROPERTY COMPILE_OPTIONS -O3)
   list(LENGTH rv_hot_path_sources rv_hot_path_source_count)
   message(STATUS "Hot-path -O3 translation units: ${rv_hot_path_source_count}")
+endif()
+# -O3 adds no aliasing or overflow assumption that -O2 lacks: the target keeps
+# -fno-strict-aliasing (original float/int punning) and random.cpp -fwrapv.
+if(RENEGADE_VITA_SIM_O3)
+  get_target_property(rv_sim_o3_sources ${PROJECT_NAME} SOURCES)
+  list(FILTER rv_sim_o3_sources INCLUDE REGEX "/staging/(combat|wwlib)/")
+  set_property(SOURCE ${rv_sim_o3_sources} APPEND PROPERTY COMPILE_OPTIONS -O3)
+  list(LENGTH rv_sim_o3_sources rv_sim_o3_source_count)
+  message(STATUS "Simulation -O3 translation units (A/B): ${rv_sim_o3_source_count}")
 endif()
 target_link_options(${PROJECT_NAME} PRIVATE
   -fshort-wchar

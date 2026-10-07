@@ -1,0 +1,15 @@
+--- a/wwprofile.h
++++ b/wwprofile.h
+@@ -219,8 +219,11 @@
+ #ifdef ENABLE_WWPROFILE
+ #define	WWPROFILE( name )						WWProfileSampleClass _wwprofile( name, false )
+ #define	WWROOTPROFILE( name )				WWProfileSampleClass _wwprofile( name, true )
+-#elif defined(RENEGADE_VITA_FRAME_PROFILE)
++#elif defined(RENEGADE_VITA_FRAME_PROFILE) && !defined(RENEGADE_VITA_FRAME_PROFILE_SKIP_TU)
+ // Vita: flat per-frame game-thread timing; see renegade_vita_frame_profile.h.
++// A translation unit whose scopes run per sub-element (for example per
++// vehicle wheel) defines RENEGADE_VITA_FRAME_PROFILE_SKIP_TU and compiles
++// them out; its enclosing per-object scope still times the whole loop.
+ #include "renegade_vita_frame_profile.h"
+ #define	WWPROFILE( name )						RenegadeVitaFrameProfileScope _wwprofile( name )
+ #define	WWROOTPROFILE( name )				RenegadeVitaFrameProfileScope _wwprofile( name )

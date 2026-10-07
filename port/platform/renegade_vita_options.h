@@ -1,6 +1,7 @@
 #pragma once
 
 #include "renegade_vita_user_settings.h"
+#include "renegade_vita_performance_defaults.h"
 #include "wwaudio.h"
 #include "ww3d.h"
 #include "pscene.h"
@@ -55,13 +56,15 @@ inline bool Save_Performance(PhysicsSceneClass &scene)
 	return Save(r);
 }
 
+// A saved Performance record wins; otherwise the original-option first-run
+// defaults stand in for the System Settings WWConfig would have written.
 inline void Apply_Performance(PhysicsSceneClass &scene)
 {
-	using namespace RenegadeVitaUserSettings;
-	const Record &r = State().record;
-	if ((r.value[0] & Performance) == 0) return;
-	scene.Set_Polygon_Budgets(r.value[9], r.value[10]);
-	WW3D::Set_Texture_Reduction(r.value[11]);
-	SurfaceEffectsManager::Set_Mode(static_cast<SurfaceEffectsManager::MODE>(r.value[12]));
+	static_assert(SurfaceEffectsManager::MODE_FULL == 2, "record stores original mode values");
+	const RenegadeVitaPerformanceDefaults::Performance p =
+		RenegadeVitaPerformanceDefaults::Effective(RenegadeVitaUserSettings::State().record);
+	scene.Set_Polygon_Budgets(p.static_budget, p.dynamic_budget);
+	WW3D::Set_Texture_Reduction(p.texture_reduction);
+	SurfaceEffectsManager::Set_Mode(static_cast<SurfaceEffectsManager::MODE>(p.surface_effect_mode));
 }
 } // namespace RenegadeVitaOptions

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "1d3ba7b85f98c7d5031a898fe8ca6af79849b000f276ed75e251ce4cd8fc0085",
-  "patch_count": 570,
+  "stage_script_sha256": "2e5877f4186918baedc7aa17be22f5c1528c9a85f48282cb13cdbc199a3746e0",
+  "patch_count": 577,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -18,6 +18,11 @@
       "path": "port/patches/wwdebug-a36-vita-frame-profile.patch",
       "stage_directory": "wwdebug",
       "sha256": "3c508221457f5aacf069c6cc6a6e78fb0c104f77d04a38ac564f87f7de80a5f7"
+    },
+    {
+      "path": "port/patches/wwdebug-a36-frame-profile-tu-opt-out.patch",
+      "stage_directory": "wwdebug",
+      "sha256": "4d186d2712291119990f54e94e88c39fe21a2e98a250d5ec435c83b8455bae70"
     },
     {
       "path": "port/patches/wwlib-a21-posix.patch",
@@ -263,6 +268,11 @@
       "path": "port/patches/wwphys-a36-grid-texture-release.patch",
       "stage_directory": "wwphys",
       "sha256": "ac44a8ebfd105fba9ef4ef0ca5b9479ebf33b0a15e11c2e9ceb8eb2ec6cfb3ab"
+    },
+    {
+      "path": "port/patches/wwphys-a36-scene-cast-counters.patch",
+      "stage_directory": "wwphys",
+      "sha256": "f5f35644c07df0fc305da339aefb254a8567756636164355780563d9ac07499d"
     },
     {
       "path": "port/patches/combat-a30-pointer-tokens.patch",
@@ -743,6 +753,11 @@
       "path": "port/patches/wwaudio-a35-flush-enqueue-order.patch",
       "stage_directory": "wwaudio",
       "sha256": "b4a157a340fae36337718099db8cb5dca6b19adb5d693457ccc657111620151a"
+    },
+    {
+      "path": "port/patches/wwaudio-a36-completed-sounds-retain.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "7e608cdc0989b551b45ad4346304f6eb318b2918d6fcf6f80562f8d5397448ef"
     },
     {
       "path": "port/patches/wwnet-a30-gcc15.patch",
@@ -1865,9 +1880,24 @@
       "sha256": "88b2e61f05ad7b39a641f273e0db818834462af3dd1bf305898ff10a32dc571f"
     },
     {
+      "path": "port/patches/wwmath-a36-arm-int-floor-helpers.patch",
+      "stage_directory": "wwmath",
+      "sha256": "f117f4eca0e2fa965556fd94eb933aba596488f8bc27e3e4bf12fd9a080e2ce8"
+    },
+    {
+      "path": "port/patches/wwmath-a36-quat-matrix-single-precision.patch",
+      "stage_directory": "wwmath",
+      "sha256": "64517e68670ffba2266189d2dc979dea25c87d8b49c475c80526d82fdc3361ba"
+    },
+    {
       "path": "port/patches/ww3d2-a36-sorting-depth-sort-and-runs.patch",
       "stage_directory": "ww3d2",
       "sha256": "0bfc987809d41e001e72b4c744ec38086c7d5920e5186b0de77907187557cf4a"
+    },
+    {
+      "path": "port/patches/ww3d2-a36-raw-anim-sampler-inline.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "10b045af705f5904788b3cafde31db176ccc33d97a88157b880c0e0d37b17d39"
     },
     {
       "path": "port/patches/combat-a36-powerup-text-once.patch",
@@ -2338,6 +2368,11 @@
       "path": "port/patches/combat-a36-hud-load-admission.patch",
       "stage_directory": "combat",
       "sha256": "d21f401349fb1618417e9cdb77f69e6117f45222da4c1f376c1856ed48018368"
+    },
+    {
+      "path": "port/patches/combat-a36-hud-text-build-once.patch",
+      "stage_directory": "combat",
+      "sha256": "5bb82ce986b838bfa1e56569d5a60df93e87e93286eb52897ca6a625ece40786"
     },
     {
       "path": "port/patches/combat-a36-screen-fade-admission.patch",
@@ -2855,5 +2890,5 @@
       "sha256": "fc6b37a6f0f9ef5136fbe67e950835ee8b2084fb57f42d6611599f96636e3a56"
     }
   ],
-  "registry_sha256": "60a19958272010aaec489ede1fe246f2402a2cd33e89f80e601ea26005af4dae"
+  "registry_sha256": "68dde3299ff55134a9144915d1d02b799fce19d2c48b767dce76a323798223bc"
 }

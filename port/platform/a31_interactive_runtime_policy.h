@@ -175,6 +175,9 @@ struct A31SimulationStageTotals
 	uint64_t other_us;
 	uint64_t simulated_us;
 	uint64_t real_us;
+	// WWPhys scene casts issued inside the Combat stage, indexed like
+	// g_renegade_phys_cast_counts: ray/AABox/OBBox x culled/collision-region.
+	uint64_t combat_casts[6];
 };
 A31SimulationStageTotals A31_Interactive_Get_Simulation_Stage_Totals();
 A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present = true);

@@ -29,6 +29,7 @@
 #include "renegade_build_identity.h"
 #include "renegade_vita_frame_profile.h"
 #include "ww3d_vita_renderer.h"
+#include "ww3d_vita_ffp_program_warm.h"
 
 #include "assetmgr.h"
 #include "_globals.h"
@@ -129,6 +130,12 @@
 #include "translateobj.h"
 #include "ww3d.h"
 #include "wwaudio.h"
+#include "audiblesound.h"
+#include "weapons.h"
+#include "pscene.h"
+#include "camera.h"
+#include "rinfo.h"
+#include "mesh.h"
 #include "SoundScene.h"
 #include "wwmath.h"
 #include "wwphys.h"
@@ -166,6 +173,13 @@ extern GameObject *Find_Object(int obj_id);
 extern void Set_Position(GameObject *obj, const Vector3 &position);
 extern void Set_Facing(GameObject *obj, float degrees);
 extern void Select_Weapon(GameObject *obj, const char *weapon_name);
+// Original Combat/Commando globals. Declared here at file scope: a block-scope
+// extern inside the anonymous namespace below would name a nonexistent
+// internal-linkage symbol and fail to link.
+extern bool g_b_core_restart;
+extern bool g_client_quit;
+extern int _AwakeSoldiers;
+extern int _HibernatingSoldiers;
 extern void Send_Custom_Event(GameObject *from, GameObject *to, int type, int param, float delay);
 extern void Attach_Script(GameObject *object, const char *script_name, const char *script_params);
 extern GameObject *Create_Object(const char *type_name, const Vector3 &position);
@@ -2716,6 +2730,33 @@ void Log_Campaign_Simulation_Stages()
 		static_cast<unsigned long long>(stages.real_us / 1000U),
 		static_cast<unsigned long long>(stages.simulated_us / 1000U),
 		static_cast<unsigned long long>(drift_us / 1000U));
+	// Windowed (since the previous checkpoint) so an ambush is not diluted by
+	// the quiet frames before it: WWPhys scene casts issued by Combat.
+	// _AwakeSoldiers/_HibernatingSoldiers: original GameObjManager::Think
+	// soldier tallies (console-only on PC).
+	static A31SimulationStageTotals previous = {};
+	static int previous_awake = 0;
+	static int previous_hibernating = 0;
+	if (stages.frames < previous.frames) previous = A31SimulationStageTotals();
+	if (_AwakeSoldiers < previous_awake) previous_awake = 0;
+	if (_HibernatingSoldiers < previous_hibernating) previous_hibernating = 0;
+	const uint32_t window_frames = stages.frames - previous.frames;
+	if (window_frames != 0U) {
+		double per_frame[6];
+		for (unsigned kind = 0U; kind < 6U; ++kind) {
+			per_frame[kind] = static_cast<double>(
+				stages.combat_casts[kind] - previous.combat_casts[kind]) / window_frames;
+		}
+		A30_Vita_Log("A4 combat casts: frames=%u window=%u combat_avg_us=%llu soldiers_awake/hibernating_per_frame=%.1f/%.1f per_frame ray_cull/ray_region/aabox_cull/aabox_region/obbox_cull/obbox_region=%.1f/%.1f/%.1f/%.1f/%.1f/%.1f\n",
+			stages.frames, window_frames,
+			static_cast<unsigned long long>((stages.combat_us - previous.combat_us) / window_frames),
+			static_cast<double>(_AwakeSoldiers - previous_awake) / window_frames,
+			static_cast<double>(_HibernatingSoldiers - previous_hibernating) / window_frames,
+			per_frame[0], per_frame[1], per_frame[2], per_frame[3], per_frame[4], per_frame[5]);
+	}
+	previous = stages;
+	previous_awake = _AwakeSoldiers;
+	previous_hibernating = _HibernatingSoldiers;
 #endif
 }
 
@@ -2939,8 +2980,6 @@ bool Run_Original_Gameplay_Pause_Menu(MenuGameModeClass2 &menu_mode,
 	WWAudioClass *audio, bool &pause_observed,
 	bool &resume_observed, bool death_dialog = false)
 {
-	extern bool g_b_core_restart;
-	extern bool g_client_quit;
 	GameModeClass *combat_mode = GameModeManager::Find("Combat");
 	if (combat_mode == NULL ||
 		(death_dialog ? !combat_mode->Is_Suspended() : !combat_mode->Is_Active())) return true;
@@ -3905,6 +3944,372 @@ static bool Is_Original_Campaign_Mission_Archive(const char *archive)
 	return mission >= 1 && mission <= 13;
 }
 
+// Original FontCharsClass rasterizes each glyph (FreeType on Vita) the first
+// time a Render2DSentence measures or blits it, so the first objective, help
+// or target text of a session pays that cost inside a gameplay frame. Store
+// the printable ASCII set of the in-game HUD fonts on the loading screen
+// instead. A glyph's pixels and width do not depend on when it is stored;
+// only its slot in the font's own buffers does. Bounded: 96 glyphs per font,
+// at most a few 64 KiB glyph buffers; a font already warmed is only looked up.
+static void Warm_Original_HUD_Font_Glyphs(const char *label)
+{
+	const StyleMgrClass::FONT_STYLE styles[] = {
+		StyleMgrClass::FONT_INGAME_TXT,
+		StyleMgrClass::FONT_INGAME_BIG_TXT,
+		StyleMgrClass::FONT_INGAME_SUBTITLE_TXT,
+		StyleMgrClass::FONT_INGAME_HEADER_TXT
+	};
+	const uint64_t started_us = sceKernelGetProcessTimeWide();
+	unsigned fonts = 0U;
+	unsigned visible = 0U;
+	for (unsigned index = 0U; index < sizeof(styles) / sizeof(styles[0]); ++index) {
+		FontCharsClass *font = StyleMgrClass::Peek_Font(styles[index]);
+		if (font == NULL) continue;
+		++fonts;
+		// Build_Sentence also measures the terminating NUL.
+		font->Get_Char_Width(static_cast<WCHAR>(0));
+		for (unsigned ch = 0x20U; ch <= 0x7EU; ++ch) {
+			if (font->Get_Char_Width(static_cast<WCHAR>(ch)) > 0) ++visible;
+		}
+	}
+	A30_Vita_Log("A4 %s HUD font glyph preparation: fonts=%u glyphs_per_font=96 visible=%u elapsed_us=%llu\n",
+		label, fonts, visible,
+		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - started_us));
+}
+
+// Round-4 loading-screen pre-warm switches. Default all on; a user config
+// file containing exactly "RVPL1 <hex>\n" selects a mask: bit 0 soldier
+// locomotion/hit animations, bit 1 decoded-PCM sound effects, bit 2 static
+// world geometry streams. "RVPL1 0\n" disables all three. Pre-existing
+// cinematic/explosion/texture preparation is not affected by this flag.
+enum {
+	LEVEL_PRELOAD_ANIMATIONS = 1U,
+	LEVEL_PRELOAD_SOUNDS = 2U,
+	LEVEL_PRELOAD_GEOMETRY = 4U,
+	LEVEL_PRELOAD_DEFAULT = 7U
+};
+
+static unsigned Read_Level_Preload_Mode()
+{
+	unsigned mode = LEVEL_PRELOAD_DEFAULT;
+	FILE *file = fopen("ux0:data/renegade/user/config/preload-v1.flag", "rb");
+	if (file != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok && size == 8U && memcmp(value, "RVPL1 ", 6U) == 0 && value[7] == '\n') {
+			if (value[6] >= '0' && value[6] <= '7') mode = static_cast<unsigned>(value[6] - '0');
+		}
+	}
+	return mode;
+}
+
+static bool Level_Preload_Memory_Floor_Reached()
+{
+	RenegadeVitaRenderer::BackendMemoryStatistics memory = {};
+	return RenegadeVitaRenderer::Query_Backend_Memory(memory) &&
+		memory.all_free < 24ULL * 1024ULL * 1024ULL;
+}
+
+static void Add_Level_Preload_Reference(std::vector<std::pair<int, unsigned> > &ids, int id,
+	unsigned weight)
+{
+	if (id <= 0) return;
+	for (std::pair<int, unsigned> &entry : ids) {
+		if (entry.first == id) { entry.second += weight; return; }
+	}
+	ids.push_back(std::make_pair(id, weight));
+}
+
+// HumanStateClass::Update_Animation (staging/combat/humanstate.cpp:748-798)
+// loads "S_A_HUMAN.H_A_<torso><leg>" on demand, probing the tilt variants
+// "H_A_<'A'+style>{1,2,3}<leg>" for aiming hold styles, and the wound table
+// (humanstate.cpp:1347-1361) on hits. The first soldier to enter a new
+// state pays the HAnim file load (or a failed probe of every archive) in a
+// gameplay frame. Load the common set for the hold styles of this level's
+// soldiers through the same Get_HAnim; HAnimManager keeps hits and records
+// misses exactly as first use would. Animation selection is unchanged.
+static void Warm_Level_Soldier_Animations(A31VitaLoadingPresenter &presenter, const char *label)
+{
+	static const char *const torso_names[NUM_WEAPON_HOLD_STYLES] = {
+		"A0", "A0", "C2", "D2", "E2", "F2", "A0", "A0", "B0", "A0"
+	};
+	static const char *const primary_legs[] = { "A0", "A1", "B1" };
+	static const char *const secondary_legs[] = { "A2", "A3", "A4", "A5", "A6", "C0", "C1" };
+	static const char *const wound_names[] = {
+		"S_A_HUMAN.H_A_811A", "S_A_HUMAN.H_A_812A", "S_A_HUMAN.H_A_821A",
+		"S_A_HUMAN.H_A_822A", "S_A_HUMAN.H_A_831A", "S_A_HUMAN.H_A_832A",
+		"S_A_HUMAN.H_A_841A", "S_A_HUMAN.H_A_842A", "S_A_HUMAN.H_A_851A",
+		"S_A_HUMAN.H_A_852A", "S_A_HUMAN.H_A_861A", "S_A_HUMAN.H_A_862A",
+		"S_A_HUMAN.H_A_871A"
+	};
+	const uint64_t started_us = sceKernelGetProcessTimeWide();
+	bool styles[NUM_WEAPON_HOLD_STYLES] = {};
+	unsigned soldiers = 0U;
+	for (SLNode<BaseGameObj> *node = GameObjManager::Get_Game_Obj_List()->Head();
+		node != NULL; node = node->Next()) {
+		PhysicalGameObj *physical = node->Data()->As_PhysicalGameObj();
+		if (physical == NULL || physical->As_SoldierGameObj() == NULL) continue;
+		ArmedGameObj *armed = physical->As_ArmedGameObj();
+		if (armed == NULL) continue;
+		++soldiers;
+		const int weapon_ids[2] = {
+			armed->Get_Definition().Get_Weapon_Def_ID(),
+			armed->Get_Definition().Get_Secondary_Weapon_Def_ID()
+		};
+		for (int weapon_id : weapon_ids) {
+			const WeaponDefinitionClass *weapon = WeaponManager::Find_Weapon_Definition(weapon_id);
+			if (weapon != NULL && weapon->Style >= 0 && weapon->Style < NUM_WEAPON_HOLD_STYLES)
+				styles[weapon->Style] = true;
+		}
+	}
+	std::vector<std::string> names;
+	const auto add_name = [&names](const std::string &name) {
+		for (const std::string &existing : names) {
+			if (strcasecmp(existing.c_str(), name.c_str()) == 0) return;
+		}
+		names.push_back(name);
+	};
+	const auto add_legs = [&](const char *const *legs, size_t count) {
+		for (int style = 0; style < NUM_WEAPON_HOLD_STYLES; ++style) {
+			if (!styles[style]) continue;
+			const char *torso = torso_names[style];
+			for (size_t leg = 0U; leg < count; ++leg) {
+				char name[48];
+				if (torso[1] == '2') {
+					for (char tilt = '1'; tilt <= '3'; ++tilt) {
+						snprintf(name, sizeof(name), "S_A_HUMAN.H_A_%c%c%s",
+							static_cast<char>('A' + style), tilt, legs[leg]);
+						add_name(name);
+					}
+				} else {
+					snprintf(name, sizeof(name), "S_A_HUMAN.H_A_%s%s", torso, legs[leg]);
+					add_name(name);
+				}
+			}
+		}
+	};
+	if (soldiers != 0U) {
+		add_legs(primary_legs, sizeof(primary_legs) / sizeof(primary_legs[0]));
+		for (const char *wound : wound_names) add_name(wound);
+		add_legs(secondary_legs, sizeof(secondary_legs) / sizeof(secondary_legs[0]));
+	}
+	const unsigned max_attempts = 160U;
+	const uint64_t time_limit_us = 2500000ULL;
+	unsigned attempted = 0U, loaded = 0U, missing = 0U;
+	bool memory_floor = false, time_limit = false;
+	WW3DAssetManager *assets = WW3DAssetManager::Get_Instance();
+	for (size_t index = 0U; assets != NULL && index < names.size() && attempted < max_attempts; ++index) {
+		if (index % 8U == 0U) {
+			if (Level_Preload_Memory_Floor_Reached()) { memory_floor = true; break; }
+			if (sceKernelGetProcessTimeWide() - started_us > time_limit_us) { time_limit = true; break; }
+		}
+		++attempted;
+		HAnimClass *animation = assets->Get_HAnim(names[index].c_str());
+		if (animation != NULL) {
+			++loaded;
+			animation->Release_Ref();
+		} else {
+			++missing;
+		}
+		if ((index + 1U) % 16U == 0U) presenter.Render_Original_Progress("after_soldier_animation_prepare");
+	}
+	A30_Vita_Log("A4 %s soldier animation preparation: soldiers=%u styles=%u%u%u%u%u%u%u%u%u%u named=%u attempted=%u loaded=%u missing=%u memory_floor=%u time_limit=%u elapsed_us=%llu\n",
+		label, soldiers, styles[0], styles[1], styles[2], styles[3], styles[4], styles[5],
+		styles[6], styles[7], styles[8], styles[9],
+		static_cast<unsigned>(names.size()), attempted, loaded, missing,
+		memory_floor ? 1U : 0U, time_limit ? 1U : 0U,
+		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - started_us));
+}
+
+// Weapon fire/reload/empty and explosion sound definitions referenced by this
+// level's objects, most referenced first. Each WAVE image is read through the
+// original file factory and decoded into the provider's decoded-PCM cache,
+// which is keyed by image content, so the first in-game play of that file is
+// a cache hit. WWAudio buffers, sound objects, priorities, randomisation and
+// playback are untouched; nothing is evicted to make room.
+static void Warm_Level_Sound_Pcm(A31VitaLoadingPresenter &presenter, const char *label)
+{
+	const uint64_t started_us = sceKernelGetProcessTimeWide();
+	std::vector<std::pair<int, unsigned> > sound_ids;
+	const auto add_explosion = [&sound_ids](int explosion_id, unsigned weight) {
+		DefinitionClass *definition = DefinitionMgrClass::Find_Definition(explosion_id, false);
+		if (definition != NULL && definition->Get_Class_ID() == CLASSID_DEF_EXPLOSION) {
+			Add_Level_Preload_Reference(sound_ids,
+				static_cast<ExplosionDefinitionClass *>(definition)->SoundDefID, weight);
+		}
+	};
+	for (SLNode<BaseGameObj> *node = GameObjManager::Get_Game_Obj_List()->Head();
+		node != NULL; node = node->Next()) {
+		PhysicalGameObj *physical = node->Data()->As_PhysicalGameObj();
+		if (physical == NULL) continue;
+		add_explosion(physical->Get_Definition().Get_Killed_Explosion_ID(), 1U);
+		ArmedGameObj *armed = physical->As_ArmedGameObj();
+		if (armed == NULL) continue;
+		const int weapon_ids[2] = {
+			armed->Get_Definition().Get_Weapon_Def_ID(),
+			armed->Get_Definition().Get_Secondary_Weapon_Def_ID()
+		};
+		for (int weapon_id : weapon_ids) {
+			const WeaponDefinitionClass *weapon = WeaponManager::Find_Weapon_Definition(weapon_id);
+			if (weapon == NULL) continue;
+			const int ammo_ids[2] = { weapon->PrimaryAmmoDefID, weapon->SecondaryAmmoDefID };
+			for (int ammo_id : ammo_ids) {
+				const AmmoDefinitionClass *ammo = WeaponManager::Find_Ammo_Definition(ammo_id);
+				if (ammo == NULL) continue;
+				// Fire sounds play on every shot; weight them first.
+				Add_Level_Preload_Reference(sound_ids, ammo->FireSoundDefID, 4U);
+				Add_Level_Preload_Reference(sound_ids, ammo->ContinuousSoundDefID, 4U);
+				add_explosion(ammo->ExplosionDefID, 2U);
+			}
+			Add_Level_Preload_Reference(sound_ids, weapon->ReloadSoundDefID, 1U);
+			Add_Level_Preload_Reference(sound_ids, weapon->EmptySoundDefID, 1U);
+		}
+	}
+	std::stable_sort(sound_ids.begin(), sound_ids.end(),
+		[](const std::pair<int, unsigned> &a, const std::pair<int, unsigned> &b) {
+			return a.second > b.second;
+		});
+	const unsigned max_sounds = 96U;
+	const uint64_t time_limit_us = 1500000ULL;
+	unsigned attempted = 0U, cached = 0U, present = 0U, skipped = 0U, missing = 0U;
+	bool cache_full = false, time_limit = false;
+	uint64_t read_bytes = 0U, retained_bytes = 0U;
+	for (size_t index = 0U; index < sound_ids.size() && attempted < max_sounds; ++index) {
+		if (sceKernelGetProcessTimeWide() - started_us > time_limit_us) { time_limit = true; break; }
+		DefinitionClass *definition = DefinitionMgrClass::Find_Definition(sound_ids[index].first, false);
+		if (definition == NULL || definition->Get_Class_ID() != CLASSID_SOUND) continue;
+		const StringClass &filename =
+			static_cast<AudibleSoundDefinitionClass *>(definition)->Get_Filename();
+		if (filename.Is_Empty()) continue;
+		// AudibleSoundDefinitionClass::Create_Sound strips relative paths.
+		const char *name = filename.Peek_Buffer();
+		const char *delimiter = strrchr(name, '\\');
+		if (delimiter != NULL && filename.Get_Length() > 2 && name[1] != ':') name = delimiter + 1;
+		++attempted;
+		FileClass *file = _TheFileFactory != NULL ? _TheFileFactory->Get_File(name) : NULL;
+		if (file == NULL) { ++missing; continue; }
+		unsigned char *image = NULL;
+		int size = 0;
+		if (file->Is_Available() && file->Open()) {
+			size = file->Size();
+			if (size >= 12 && size <= 1024 * 1024) {
+				image = static_cast<unsigned char *>(malloc(static_cast<size_t>(size)));
+				if (image != NULL && file->Read(image, size) != size) {
+					free(image);
+					image = NULL;
+				}
+			}
+			file->Close();
+		}
+		_TheFileFactory->Return_File(file);
+		if (image == NULL) { ++missing; continue; }
+		read_bytes += static_cast<uint64_t>(size);
+		size_t retained = 0U;
+		const int result = Renegade_Miles_Prewarm_Pcm(image, static_cast<size_t>(size), &retained);
+		free(image);
+		if (result == RENEGADE_MILES_PREWARM_CACHED) { ++cached; retained_bytes += retained; }
+		else if (result == RENEGADE_MILES_PREWARM_PRESENT) ++present;
+		else if (result == RENEGADE_MILES_PREWARM_FULL) { cache_full = true; break; }
+		else ++skipped;
+		if (attempted % 8U == 0U) presenter.Render_Original_Progress("after_sound_pcm_prepare");
+	}
+	A30_Vita_Log("A4 %s sound PCM preparation: referenced=%u attempted=%u cached=%u present=%u skipped=%u missing=%u read_bytes=%llu retained_bytes=%llu cache_full=%u time_limit=%u elapsed_us=%llu\n",
+		label, static_cast<unsigned>(sound_ids.size()), attempted, cached, present, skipped,
+		missing, static_cast<unsigned long long>(read_bytes),
+		static_cast<unsigned long long>(retained_bytes), cache_full ? 1U : 0U,
+		time_limit ? 1U : 0U,
+		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - started_us));
+}
+
+struct LevelGeometryPrebuildState {
+	RenderInfoClass *render_info;
+	unsigned meshes;
+	unsigned built;
+	uint64_t bytes;
+	bool budget_full;
+};
+
+static void Prebuild_Level_Render_Object_Meshes(RenderObjClass *object,
+	LevelGeometryPrebuildState &state, unsigned depth)
+{
+	if (object == NULL || depth > 6U || state.budget_full) return;
+	if (object->Class_ID() == RenderObjClass::CLASSID_MESH) {
+		++state.meshes;
+		uint32_t bytes = 0U;
+		const RenegadeVitaRenderer::StaticMeshPrebuildResult result =
+			RenegadeVitaRenderer::Prebuild_Static_Mesh(*static_cast<MeshClass *>(object),
+				*state.render_info, bytes);
+		if (result == RenegadeVitaRenderer::STATIC_MESH_PREBUILD_BUILT) {
+			++state.built;
+			state.bytes += bytes;
+		} else if (result == RenegadeVitaRenderer::STATIC_MESH_PREBUILD_BUDGET_FULL) {
+			state.budget_full = true;
+		}
+		return;
+	}
+	const int count = object->Get_Num_Sub_Objects();
+	for (int index = 0; index < count && !state.budget_full; ++index) {
+		RenderObjClass *sub_object = object->Get_Sub_Object(index);
+		if (sub_object == NULL) continue;
+		Prebuild_Level_Render_Object_Meshes(sub_object, state, depth + 1U);
+		sub_object->Release_Ref();
+	}
+}
+
+// The static mesh cache builds and uploads each rigid world mesh on its
+// first draw, so turning the camera in gameplay pays a burst of builds.
+// Stage the level's static physics models here, nearest the star first,
+// through the renderer's own build/upload. Bounded by time, the vitaGL
+// free-memory floor, and three quarters of the cache budget.
+static void Prebuild_Level_Static_Geometry(A31VitaLoadingPresenter &presenter, const char *label)
+{
+	const uint64_t started_us = sceKernelGetProcessTimeWide();
+	PhysicsSceneClass *scene = PhysicsSceneClass::Get_Instance();
+	if (scene == NULL) return;
+	Vector3 origin(0.0f, 0.0f, 0.0f);
+	SoldierGameObj *star = CombatManager::Get_The_Star();
+	if (star != NULL) star->Get_Position(&origin);
+	std::vector<std::pair<float, PhysClass *> > objects;
+	{
+		RefPhysListIterator iterator = scene->Get_Static_Object_Iterator();
+		for (iterator.First(); !iterator.Is_Done(); iterator.Next()) {
+			PhysClass *object = iterator.Peek_Obj();
+			if (object == NULL || object->Peek_Model() == NULL) continue;
+			Vector3 position;
+			object->Get_Position(&position);
+			objects.push_back(std::make_pair((position - origin).Length2(), object));
+		}
+	}
+	std::stable_sort(objects.begin(), objects.end(),
+		[](const std::pair<float, PhysClass *> &a, const std::pair<float, PhysClass *> &b) {
+			return a.first < b.first;
+		});
+	CameraClass *camera = NEW_REF(CameraClass, ());
+	RenderInfoClass render_info(*camera);
+	LevelGeometryPrebuildState state = { &render_info, 0U, 0U, 0U, false };
+	const uint64_t time_limit_us = 3000000ULL;
+	bool memory_floor = false, time_limit = false;
+	unsigned visited = 0U;
+	for (const std::pair<float, PhysClass *> &entry : objects) {
+		if (visited % 16U == 0U) {
+			if (Level_Preload_Memory_Floor_Reached()) { memory_floor = true; break; }
+			if (sceKernelGetProcessTimeWide() - started_us > time_limit_us) { time_limit = true; break; }
+			if (visited != 0U) presenter.Render_Original_Progress("after_static_geometry_prepare");
+		}
+		++visited;
+		Prebuild_Level_Render_Object_Meshes(entry.second->Peek_Model(), state, 0U);
+		if (state.budget_full) break;
+	}
+	camera->Release_Ref();
+	A30_Vita_Log("A4 %s static geometry preparation: objects=%u visited=%u meshes=%u built=%u bytes=%llu star=%u budget_full=%u memory_floor=%u time_limit=%u elapsed_us=%llu\n",
+		label, static_cast<unsigned>(objects.size()), visited, state.meshes, state.built,
+		static_cast<unsigned long long>(state.bytes), star != NULL ? 1U : 0U,
+		state.budget_full ? 1U : 0U, memory_floor ? 1U : 0U, time_limit ? 1U : 0U,
+		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - started_us));
+}
+
 // Loading-time preparation for one loaded level. Runs after the original
 // Load_Level (initial session load and in-session restart/round reload)
 // and before gameplay resumes. Everything here is optional cache warming of
@@ -3924,6 +4329,8 @@ void Prepare_Original_Level_Loading_Resources(A31VitaLoadingPresenter &presenter
 	const char *label = m13 ? "M13" : (m01 ? "M01" : archive);
 	A30_Vita_Log("A4 level preparation: begin owner=%s archive=%s campaign=%d\n",
 		owner != NULL ? owner : "(none)", archive, campaign ? 1 : 0);
+	// Persist FFP program keys first used since the last loading screen.
+	RenegadeVitaFfpProgramWarm::Record_Resident_Keys("level-prepare");
 	Warm_Level_Cinematic_Preset_Models(presenter, archive, root_factory);
 	// Dev155-157 measured retained aggregate/HLOD templates and the M13 intro
 	// set remain hand-selected: generic per-instance retention is unmeasured.
@@ -4107,6 +4514,17 @@ void Prepare_Original_Level_Loading_Resources(A31VitaLoadingPresenter &presenter
 	if (campaign) {
 		Warm_Level_World_Killed_Explosions(presenter, label);
 	}
+	const unsigned preload_mode = Read_Level_Preload_Mode();
+	A30_Vita_Log("A4 %s round-4 preload: mode=%u animations=%u sounds=%u geometry=%u flag=preload-v1.flag\n",
+		label, preload_mode, preload_mode & LEVEL_PRELOAD_ANIMATIONS ? 1U : 0U,
+		preload_mode & LEVEL_PRELOAD_SOUNDS ? 1U : 0U,
+		preload_mode & LEVEL_PRELOAD_GEOMETRY ? 1U : 0U);
+	if ((preload_mode & LEVEL_PRELOAD_ANIMATIONS) != 0U) {
+		Warm_Level_Soldier_Animations(presenter, label);
+	}
+	if ((preload_mode & LEVEL_PRELOAD_SOUNDS) != 0U) {
+		Warm_Level_Sound_Pcm(presenter, label);
+	}
 	// The original loader initialized every foreground texture on the
 	// loading screen (TextureLoader Init_Textures). Without that, each
 	// mission and skirmish map decoded its textures inside the gameplay
@@ -4114,6 +4532,11 @@ void Prepare_Original_Level_Loading_Resources(A31VitaLoadingPresenter &presenter
 	// presentation prewarm.
 	if (stricmp(archive, "M00_Tutorial.mix") != 0) {
 		Warm_Original_Campaign_Referenced_Textures(presenter, label);
+	}
+	Warm_Original_HUD_Font_Glyphs(label);
+	// Geometry last: textures keep their established budget priority.
+	if ((preload_mode & LEVEL_PRELOAD_GEOMETRY) != 0U) {
+		Prebuild_Level_Static_Geometry(presenter, label);
 	}
 	A30_Vita_Log("A4 level preparation: complete owner=%s archive=%s elapsed_us=%llu\n",
 		owner != NULL ? owner : "(none)", archive,

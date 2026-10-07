@@ -627,6 +627,56 @@ int main()
 	AIL_release_3D_sample_handle(empty_spatial);
 	AIL_shutdown();
 
+	// Loading-screen PCM prewarm: the first in-game load of a prewarmed image
+	// is a cache hit that publishes exactly the PCM a cold decode produces.
+	{
+		std::vector<uint8_t> warm_samples;
+		for (int index = 0; index < 64; ++index)
+			Write_U16(warm_samples, static_cast<uint16_t>(index * 977 - 20000));
+		const auto warm = Wave(1, 1, 48000, 2, 16, {}, warm_samples);
+		DecodedWave cold;
+		passed &= Require(RenegadeVitaAudio::Decode_Wave(warm.data(), warm.size(), &cold),
+			"prewarm fixture decode failed");
+		AIL_startup();
+		Renegade_Miles_Reset_Runtime_Stats();
+		size_t retained = 0U;
+		passed &= Require(Renegade_Miles_Prewarm_Pcm(warm.data(), warm.size(), &retained) ==
+			RENEGADE_MILES_PREWARM_CACHED && retained > 0U, "prewarm did not retain PCM");
+		size_t repeated = 1U;
+		passed &= Require(Renegade_Miles_Prewarm_Pcm(warm.data(), warm.size(), &repeated) ==
+			RENEGADE_MILES_PREWARM_PRESENT && repeated == 0U, "repeated prewarm was not present");
+		passed &= Require(Renegade_Miles_Prewarm_Pcm(warm.data(), 8U, &repeated) ==
+			RENEGADE_MILES_PREWARM_SKIPPED, "truncated prewarm image was not skipped");
+		RenegadeMilesRuntimeStats warm_stats{};
+		Renegade_Miles_Get_Runtime_Stats(&warm_stats);
+		passed &= Require(warm_stats.pcm_cache_entries == 1U && warm_stats.pcm_decodes == 0U &&
+			warm_stats.pcm_cache_bytes == retained, "prewarm cache accounting differs");
+		WAVEFORMAT warm_format = { WAVE_FORMAT_PCM, 2, 48000, 192000, 4 };
+		HDIGDRIVER warm_driver = nullptr;
+		passed &= Require(AIL_waveOutOpen(&warm_driver, nullptr, 0, &warm_format) == AIL_NO_ERROR,
+			"prewarm driver open failed");
+		HSAMPLE warm_sample = AIL_allocate_sample_handle(warm_driver);
+		passed &= Require(warm_sample != nullptr &&
+			AIL_set_named_sample_file(warm_sample, nullptr, warm.data(),
+				static_cast<uint32_t>(warm.size()), 0) != 0, "prewarmed sample load failed");
+		Renegade_Miles_Get_Runtime_Stats(&warm_stats);
+		passed &= Require(warm_stats.pcm_cache_hits == 1U && warm_stats.pcm_decodes == 0U,
+			"prewarmed sample load decoded again");
+		AIL_set_sample_pan(warm_sample, 0);
+		AIL_set_sample_volume(warm_sample, 127);
+		AIL_set_sample_loop_count(warm_sample, 1);
+		AIL_start_sample(warm_sample);
+		int16_t warm_mixed[128] = {};
+		passed &= Require(Renegade_Miles_Mix_For_Test(warm_mixed, 64), "prewarm mix failed");
+		bool equal = cold.samples.size() == 64U;
+		for (size_t index = 0; equal && index < 64U; ++index)
+			equal = warm_mixed[index * 2U] == cold.samples[index];
+		passed &= Require(equal, "prewarmed PCM differs from a cold decode");
+		AIL_release_sample_handle(warm_sample);
+		AIL_waveOutClose(warm_driver);
+		AIL_shutdown();
+	}
+
 	if (!passed) return 1;
 	std::puts("vita_audio_continuous_lifecycle=passed stop=1 resume=1 end=1 reuse=1 release=1");
 	std::puts("vita_audio_empty_pcm=passed formats=4 invalid=2 replacement=1 spatial=1");

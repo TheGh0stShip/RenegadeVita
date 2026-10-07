@@ -1,0 +1,51 @@
+--- a/source/ffp.c
++++ b/source/ffp.c
+@@ -2743,6 +2743,48 @@
+ 	renegade_immediate_index_count = 0;
+ }
+ 
++// Renegade platform extension: append caller-packed vertices to the open
++// glBegin primitive. A record is 11 floats, x y z s0 t0 s1 t1 r g b a: the
++// position glVertex3f receives and the current uv, uv2 and clr it would copy.
++// Only the unlit, non-projective layouts are handled; each vertex stores the
++// fields glVertex3f stores for the enabled texture units, at the same stride,
++// and the vertex count advances as it does. Current attributes are unchanged.
++// Otherwise nothing is written and GL_FALSE asks for per-vertex calls; a zero
++// count only reports which applies. Pool capacity is not checked, as in
++// glVertex3f.
++GLboolean vglRenegadeImmediateVertices(const GLfloat *records, GLsizei count) {
++#ifndef SKIP_ERROR_HANDLING
++	if (phase != MODEL_CREATION) {
++		SET_GL_ERROR_WITH_RET(GL_INVALID_OPERATION, GL_FALSE)
++	}
++#endif
++	if (lighting_state || renegade_projective_immediate || count < 0)
++		return GL_FALSE;
++	const GLfloat *src = records;
++	float *dst = legacy_pool_ptr;
++	if (texture_units[1].state) { // Multitexturing enabled: the record layout
++		vgl_fast_memcpy(dst, src, sizeof(float) * 11 * count);
++		dst += (LEGACY_MT_VERTEX_STRIDE - 15) * count;
++	} else if (texture_units[0].state) { // Texturing enabled
++		for (GLsizei i = 0; i < count; i++, src += 11, dst += LEGACY_VERTEX_STRIDE - 15) {
++			for (int c = 0; c < 5; c++)
++				dst[c] = src[c];
++			for (int c = 0; c < 4; c++)
++				dst[5 + c] = src[7 + c];
++		}
++	} else { // Texturing disabled
++		for (GLsizei i = 0; i < count; i++, src += 11, dst += LEGACY_NT_VERTEX_STRIDE - 15) {
++			for (int c = 0; c < 3; c++)
++				dst[c] = src[c];
++			for (int c = 0; c < 4; c++)
++				dst[3 + c] = src[7 + c];
++		}
++	}
++	legacy_pool_ptr = dst;
++	vertex_count += count;
++	return GL_TRUE;
++}
++
+ void glTexEnvfv(GLenum target, GLenum pname, GLfloat *param) {
+ #ifdef HAVE_DLISTS
+ 	// Enqueueing function to a display list if one is being compiled

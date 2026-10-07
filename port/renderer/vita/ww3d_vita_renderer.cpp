@@ -3,10 +3,12 @@
 #include "renegade_vita_frame_profile.h"
 #include "category_fvf_layout.h"
 #include "normal_transform.h"
+#include "ww3d_vita_skin_deform_cache.h"
 
 #include "camera.h"
 #include "d3d8.h"
 #include "dx8wrapper.h"
+#include "htree.h"
 #include "lightenvironment.h"
 #include "matpass.h"
 #include "mesh.h"
@@ -22,6 +24,7 @@
 #include "tri.h"
 #include "vertmaterial.h"
 #include "ww3d_vita_render_state_contract.h"
+#include "internal_resolution.h"
 
 // The per-index geometry checksum hashes every referenced vertex of every
 // indexed draw (HUD, text, particles, sorted geometry). It is a host/test
@@ -62,11 +65,34 @@ void RenegadeVita_Release_DX8_Render_Target();
 #include <psp2/kernel/sysmem.h>
 #include <vitaGL.h>
 #include "ww3d_vita_indexed_mesh_batch.h"
+#include "ww3d_vita_indexed_vertex_records.h"
 #include "ww3d_vita_static_mesh_cache.h"
+#include "ww3d_vita_ffp_program_warm.h"
+#include "ww3d_vita_vertex_array_batch.h"
 extern "C" void vglRenegadeEndIndexed(GLsizei count, const GLushort *indices);
+extern "C" GLboolean vglRenegadeImmediateVertices(const GLfloat *records, GLsizei count);
 extern "C" void vglRenegadeBeginProjective(GLenum mode);
 extern "C" void vglRenegadeTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat q);
 extern "C" void vglRenegadeInvalidateVertexAttributes(void);
+#include <psp2/kernel/threadmgr.h>
+#include "ww3d_vita_gxm_tuning.h"
+// Read-only views of pinned vitaGL (6e7fe40) internals for the init sizing
+// log and the per-frame transient pool peaks (gxm.c, vgl.c, ffp.c,
+// utils/mem_utils.c). Never written by the port.
+extern "C" {
+extern int legacy_pool_size;
+extern float *legacy_pool_ptr;
+extern float *legacy_pool_end;
+extern uint32_t circular_data_pool_size;
+extern uint8_t *circular_data_pool[];
+extern uint8_t *circular_data_pool_ptr[];
+extern uint8_t *circular_data_pool_limit[];
+extern int vgl_circular_idx;
+extern uint8_t gxm_display_buffer_count;
+extern uint32_t gxm_param_buf_size;
+extern uint32_t vsync_interval;
+extern GLboolean has_cached_mem;
+}
 #endif
 
 namespace RenegadeVitaRenderer {
@@ -88,6 +114,13 @@ bool g_logged_first_invalid_procedural_apt = false;
 Vector3 *g_deformed_skin_vertices = NULL;
 Vector3 *g_deformed_skin_normals = NULL;
 int g_deformed_skin_capacity = 0;
+// Skin submissions that are followed by another submission of the same mesh
+// in the frame deform into this per-frame cache so the later submission can
+// reuse the identical output (see ww3d_vita_skin_deform_cache.h for the
+// invalidation argument). Off until Read_Skin_Deform_Cache_Mode() enables it,
+// so the M00 demo and any non-campaign build keep the original scratch path.
+SkinDeformCache<Vector3> g_skin_deform_cache;
+bool g_skin_deform_cache_enabled = false;
 // Original MeshClass uses a retained scratch APT rather than allocating one
 // for every projected mesh. Rendering is single-threaded at this boundary.
 SimpleDynVecClass<uint32> g_procedural_material_apt;
@@ -125,6 +158,65 @@ void Release_Deformed_Skin_Scratch()
 	g_deformed_skin_vertices = NULL;
 	g_deformed_skin_normals = NULL;
 	g_deformed_skin_capacity = 0;
+	g_skin_deform_cache.Release();
+}
+
+// Same predicate MeshClass::Render uses to queue a material pass after the
+// base submission. Skins without one keep the original scratch path and pay
+// no snapshot cost.
+bool Skin_Material_Pass_Follows(MeshClass &mesh, RenderInfoClass &render_info)
+{
+	for (int index = 0; index < render_info.Additional_Pass_Count(); ++index) {
+		MaterialPassClass *pass = render_info.Peek_Additional_Pass(index);
+		if (pass != NULL &&
+			(!mesh.Is_Translucent() || pass->Is_Enabled_On_Translucent_Meshes())) {
+			return true;
+		}
+	}
+	return false;
+}
+
+// True when vertices/normals now hold MeshClass::Get_Deformed_Vertices output
+// for this submission. Any submission first reuses a deformation stored
+// earlier in this frame whose model and every referenced pivot transform are
+// verified bitwise unchanged (a queued material pass after its base pass, a
+// base pass after a material-pass-only render such as a shadow, projector or
+// stealth pass, or the same skin seen by another camera). On a miss, only
+// submissions that are expected to be followed by another one of the same
+// mesh store their deformation: a base pass that MeshClass::Render follows
+// with queued material passes, and any material pass. False keeps the
+// original uncached scratch path.
+bool Fetch_Cached_Deformed_Skin(MeshClass &mesh, MeshModelClass *model,
+	RenderInfoClass &render_info, bool material_pass, int vertex_count,
+	const Vector3 *&vertices, const Vector3 *&normals)
+{
+	if (!g_skin_deform_cache_enabled) return false;
+	const RenderObjClass *container = mesh.Get_Container();
+	const HTreeClass *htree = container != NULL ? container->Get_HTree() : NULL;
+	if (htree == NULL) return false;
+	static_assert(sizeof(Matrix3D) == SkinDeformCache<Vector3>::MATRIX_BYTES,
+		"pivot snapshots hold one Matrix3D");
+	const auto transform_at = [htree](int pivot) -> const void * {
+		return &htree->Get_Transform(pivot);
+	};
+	g_skin_deform_cache.Begin_Frame(g_statistics.frames);
+	if (g_skin_deform_cache.Find(&mesh, model, vertex_count,
+		htree->Num_Pivots(), transform_at, &vertices, &normals)) {
+		return true;
+	}
+	if (!material_pass && !Skin_Material_Pass_Follows(mesh, render_info)) return false;
+	Vector3 *deformed_vertices = NULL;
+	Vector3 *deformed_normals = NULL;
+	if (!g_skin_deform_cache.Reserve(&mesh, model, vertex_count,
+		&deformed_vertices, &deformed_normals)) {
+		return false;
+	}
+	mesh.Get_Deformed_Vertices(deformed_vertices, deformed_normals);
+	g_skin_deform_cache.Commit(model->Get_Vertex_Bone_Links(), vertex_count,
+		htree->Num_Pivots(), transform_at);
+	vertices = deformed_vertices;
+	normals = deformed_normals;
+	return true;
 }
 
 struct NativePresentationRect {
@@ -137,6 +229,11 @@ struct NativePresentationRect {
 NativePresentationRect g_native_presentation_rect = {
 	0U, 0U, DISPLAY_WIDTH, DISPLAY_HEIGHT
 };
+
+// Physical vitaGL display buffer. Smaller than the 960x544 logical display
+// only when internal-resolution-v1.flag selects hardware scan-out scaling.
+uint32_t g_physical_display_width = DISPLAY_WIDTH;
+uint32_t g_physical_display_height = DISPLAY_HEIGHT;
 
 #if defined(__vita__)
 bool g_logged_first_frame = false;
@@ -236,6 +333,15 @@ struct NativeTextureStageCache {
 	uint32_t alpha_op;
 	uint32_t alpha_arg1;
 	uint32_t alpha_arg2;
+	// Last GL_TEXTURE_ENV values sent to this unit (RVRC1 bit 0). Texture
+	// environment state belongs to the unit, not to the bound object, and each
+	// glTexEnvi is idempotent per (unit, name), so an equal resend is a no-op.
+	// Apply_Original_Shader_State rewrites only GL_TEXTURE_ENV_MODE and clears
+	// combiner_known; the combine operands recorded here survive it.
+	enum { ENV_SHADOW_SLOTS = 15 };
+	uint32_t env_known;
+	GLint env_values[ENV_SHADOW_SLOTS];
+	bool env_color_white;
 };
 
 struct NativeRenderStateCache {
@@ -253,6 +359,13 @@ unsigned g_render_work_cache_mode = 15U;
 VitaIndexedMeshBatch g_indexed_mesh_batch;
 uint64_t g_mesh_expanded_corners = 0, g_mesh_unique_vertices = 0;
 uint64_t g_mesh_indexed_batches = 0;
+// vertex-array-v1: eligible per-frame mesh batches are drawn from client
+// arrays (Draw_Vertex_Array_Batch). Enabled only by Read_Vertex_Array_Mode.
+VitaVertexArrayBatch g_vertex_array_batch;
+bool g_vertex_array_enabled = false;
+bool g_logged_first_vertex_array_batch = false;
+uint64_t g_vertex_array_batches = 0, g_vertex_array_corners = 0;
+uint64_t g_vertex_array_vertices = 0;
 #if !RENEGADE_VITA_M00_DEMO
 enum { MESH_BOUNDARY_TIMING_SAMPLE_STRIDE = 16U };
 struct MeshBoundaryTiming {
@@ -283,6 +396,30 @@ struct NativeTextureObjectSampler {
 enum { TEXTURE_OBJECT_SAMPLER_SLOTS = 1024 };
 NativeTextureObjectSampler g_texture_object_samplers[TEXTURE_OBJECT_SAMPLER_SLOTS] = {};
 uint32_t g_texture_object_sampler_generation = 1U;
+// One original TextureClass::Apply binds with the stage's previous sampler
+// request, then sets each changed filter and address state separately; every
+// step used to reach the bound GL object. Inside a sampler batch only each
+// stage's final request is kept and applied when the batch closes (see
+// Configure_Texture_Sampler_Stage). No draw can occur inside a batch.
+struct PendingTextureSampler {
+	bool pending;
+	uint32_t texture;
+	uint32_t address_u;
+	uint32_t address_v;
+	uint32_t min_filter;
+	uint32_t mag_filter;
+	uint32_t mip_filter;
+};
+PendingTextureSampler g_pending_texture_samplers[MeshMatDescClass::MAX_TEX_STAGES] = {};
+unsigned g_texture_sampler_batch_depth = 0U;
+uint64_t g_texture_sampler_deferrals = 0U;
+uint64_t g_texture_env_writes = 0U;
+uint64_t g_texture_env_skips = 0U;
+
+uint32_t Texture_Object_Sampler_Slot(uint32_t texture)
+{
+	return (texture * 2654435761U) & (TEXTURE_OBJECT_SAMPLER_SLOTS - 1U);
+}
 
 void Invalidate_Texture_Object_Samplers()
 {
@@ -292,6 +429,24 @@ void Invalidate_Texture_Object_Samplers()
 	if (g_texture_object_sampler_generation == 0U) {
 		memset(g_texture_object_samplers, 0, sizeof(g_texture_object_samplers));
 		g_texture_object_sampler_generation = 1U;
+	}
+}
+
+// glDeleteTextures frees one object's parameters and unbinds its name from
+// every unit. Unit enables, texture environments and all other objects keep
+// their state. glGenTextures may recycle the name with default parameters, so
+// every memo of this name, and any deferred request for it, is dropped.
+void Invalidate_Texture_Object_State(uint32_t texture)
+{
+	NativeTextureObjectSampler &object =
+		g_texture_object_samplers[Texture_Object_Sampler_Slot(texture)];
+	if (object.texture == texture) object.generation = 0U;
+	for (uint32_t stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+		NativeTextureStageCache &cache = g_texture_stage_cache[stage];
+		if (cache.texture == texture) cache.texture_known = false;
+		if (cache.sampler_texture == texture) cache.sampler_known = false;
+		PendingTextureSampler &pending = g_pending_texture_samplers[stage];
+		if (pending.texture == texture) pending.pending = false;
 	}
 }
 
@@ -340,9 +495,318 @@ struct AppliedFogStateCache {
 };
 AppliedFogStateCache g_applied_fog_state = {};
 
+// Exact GL-level shadow of the fixed-function raster state and FFP transforms
+// set on the per-batch path (Apply_Original_Shader_State, Apply_DX8_Render_State,
+// mesh/indexed submission transforms and the per-stage texture-matrix reset).
+// A call is skipped only when vitaGL already holds the bitwise-identical
+// argument. vitaGL derives its GXM depth/cull/bias state, blend key and FFP
+// shader key from these arguments alone, so the skipped call would rewrite
+// identical values; a skipped matrix load also avoids an MVP rebuild and a
+// vertex-uniform re-upload of identical data. Every field starts unknown and
+// becomes unknown again on Invalidate_Native_State_Cache (initialization,
+// reactivation, render-target switches) and after a GL error. Code that changes
+// this state behind the shadow must restore it exactly (the Bink presenter
+// does) or invalidate it (the DX8 boundary's GL_TEXTURE matrix load calls
+// Invalidate_Texture_Matrix_Shadow). vitaGL's own clear/blit paths restore
+// GXM state from the same variables these calls set. RVGS1 0 in
+// user/config/gl-state-shadow-v1.flag restores the unshadowed call sequence.
+enum NativeGLStateShadowField {
+	NATIVE_SHADOW_BLEND = 1U << 0,
+	NATIVE_SHADOW_BLEND_FUNC = 1U << 1,
+	NATIVE_SHADOW_ALPHA_TEST = 1U << 2,
+	NATIVE_SHADOW_ALPHA_FUNC = 1U << 3,
+	NATIVE_SHADOW_DEPTH_FUNC = 1U << 4,
+	NATIVE_SHADOW_DEPTH_MASK = 1U << 5,
+	NATIVE_SHADOW_COLOR_MASK = 1U << 6,
+	NATIVE_SHADOW_CULL = 1U << 7,
+	NATIVE_SHADOW_CULL_FACE = 1U << 8,
+	NATIVE_SHADOW_POLYGON_OFFSET_FILL = 1U << 9,
+	NATIVE_SHADOW_POLYGON_OFFSET = 1U << 10,
+	NATIVE_SHADOW_POLYGON_MODE = 1U << 11,
+	NATIVE_SHADOW_PROJECTION = 1U << 12,
+	NATIVE_SHADOW_MODELVIEW = 1U << 13,
+	// One identity bit per texture stage, starting here.
+	NATIVE_SHADOW_TEXTURE_IDENTITY = 1U << 14
+};
+
+struct NativeGLStateShadow {
+	uint32_t known;
+	bool blend;
+	bool alpha_test;
+	bool cull;
+	bool polygon_offset_fill;
+	GLenum blend_source;
+	GLenum blend_destination;
+	GLenum alpha_function;
+	GLfloat alpha_reference;
+	GLenum depth_function;
+	GLboolean depth_mask;
+	GLboolean color_mask[4];
+	GLenum cull_face;
+	GLfloat polygon_offset_factor;
+	GLfloat polygon_offset_units;
+	GLenum polygon_mode;
+	GLfloat projection[16];
+	GLfloat modelview[16];
+};
+
+struct NativeGLStateShadowCounters {
+	uint64_t raster_calls;
+	uint64_t raster_skips;
+	uint64_t transform_loads;
+	uint64_t transform_skips;
+	uint64_t texture_matrix_loads;
+	uint64_t texture_matrix_skips;
+};
+
+bool g_gl_state_shadow_enabled = true;
+NativeGLStateShadow g_gl_state_shadow = {};
+NativeGLStateShadowCounters g_gl_state_shadow_counters = {};
+
+void Invalidate_GL_State_Shadow()
+{
+	memset(&g_gl_state_shadow, 0, sizeof(g_gl_state_shadow));
+}
+
+bool Same_Float_Bits(GLfloat left, GLfloat right)
+{
+	return memcmp(&left, &right, sizeof(left)) == 0;
+}
+
+// Returns false when the field is known to hold the requested value already.
+bool Shadow_Needs_Call(uint32_t field, bool same)
+{
+	if (g_gl_state_shadow_enabled && (g_gl_state_shadow.known & field) != 0U && same) {
+		++g_gl_state_shadow_counters.raster_skips;
+		return false;
+	}
+	g_gl_state_shadow.known |= field;
+	++g_gl_state_shadow_counters.raster_calls;
+	return true;
+}
+
+void Shadow_Capability(GLenum capability, uint32_t field, bool &current, bool enabled)
+{
+	if (!Shadow_Needs_Call(field, current == enabled)) return;
+	if (enabled) glEnable(capability);
+	else glDisable(capability);
+	current = enabled;
+}
+
+void Shadow_Blend(bool enabled)
+{
+	Shadow_Capability(GL_BLEND, NATIVE_SHADOW_BLEND, g_gl_state_shadow.blend, enabled);
+}
+
+void Shadow_Alpha_Test(bool enabled)
+{
+	Shadow_Capability(GL_ALPHA_TEST, NATIVE_SHADOW_ALPHA_TEST,
+		g_gl_state_shadow.alpha_test, enabled);
+}
+
+void Shadow_Cull(bool enabled)
+{
+	Shadow_Capability(GL_CULL_FACE, NATIVE_SHADOW_CULL, g_gl_state_shadow.cull, enabled);
+}
+
+void Shadow_Polygon_Offset_Fill(bool enabled)
+{
+	Shadow_Capability(GL_POLYGON_OFFSET_FILL, NATIVE_SHADOW_POLYGON_OFFSET_FILL,
+		g_gl_state_shadow.polygon_offset_fill, enabled);
+}
+
+void Shadow_Blend_Func(GLenum source, GLenum destination)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_BLEND_FUNC,
+		shadow.blend_source == source && shadow.blend_destination == destination)) return;
+	glBlendFunc(source, destination);
+	shadow.blend_source = source;
+	shadow.blend_destination = destination;
+}
+
+void Shadow_Alpha_Func(GLenum function, GLfloat reference)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_ALPHA_FUNC, shadow.alpha_function == function &&
+		Same_Float_Bits(shadow.alpha_reference, reference))) return;
+	glAlphaFunc(function, reference);
+	shadow.alpha_function = function;
+	shadow.alpha_reference = reference;
+}
+
+void Shadow_Depth_Func(GLenum function)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_DEPTH_FUNC, shadow.depth_function == function)) return;
+	glDepthFunc(function);
+	shadow.depth_function = function;
+}
+
+void Shadow_Depth_Mask(GLboolean mask)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_DEPTH_MASK, shadow.depth_mask == mask)) return;
+	glDepthMask(mask);
+	shadow.depth_mask = mask;
+}
+
+void Shadow_Color_Mask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_COLOR_MASK, shadow.color_mask[0] == red &&
+		shadow.color_mask[1] == green && shadow.color_mask[2] == blue &&
+		shadow.color_mask[3] == alpha)) return;
+	glColorMask(red, green, blue, alpha);
+	shadow.color_mask[0] = red;
+	shadow.color_mask[1] = green;
+	shadow.color_mask[2] = blue;
+	shadow.color_mask[3] = alpha;
+}
+
+void Shadow_Cull_Face(GLenum face)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_CULL_FACE, shadow.cull_face == face)) return;
+	glCullFace(face);
+	shadow.cull_face = face;
+}
+
+void Shadow_Polygon_Offset(GLfloat factor, GLfloat units)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_POLYGON_OFFSET,
+		Same_Float_Bits(shadow.polygon_offset_factor, factor) &&
+		Same_Float_Bits(shadow.polygon_offset_units, units))) return;
+	glPolygonOffset(factor, units);
+	shadow.polygon_offset_factor = factor;
+	shadow.polygon_offset_units = units;
+}
+
+void Shadow_Polygon_Mode(GLenum mode)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_POLYGON_MODE, shadow.polygon_mode == mode)) return;
+	glPolygonMode(GL_FRONT_AND_BACK, mode);
+	shadow.polygon_mode = mode;
+}
+
+// Matrices compare bitwise (memcmp), never with a tolerance. A null matrix
+// requests identity through glLoadIdentity, as the unshadowed callers did.
+bool Shadow_Matrix_Needs_Load(uint32_t field, const GLfloat *current,
+	const GLfloat *requested)
+{
+	if (g_gl_state_shadow_enabled && (g_gl_state_shadow.known & field) != 0U &&
+		memcmp(current, requested, 16U * sizeof(GLfloat)) == 0) {
+		++g_gl_state_shadow_counters.transform_skips;
+		return false;
+	}
+	++g_gl_state_shadow_counters.transform_loads;
+	return true;
+}
+
+void Shadow_Load_Matrix(uint32_t field, GLfloat *current, const GLfloat *matrix)
+{
+	static const GLfloat identity[16] = {
+		1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
+	};
+	const GLfloat *requested = matrix != NULL ? matrix : identity;
+	if (!Shadow_Matrix_Needs_Load(field, current, requested)) return;
+	if (field == NATIVE_SHADOW_PROJECTION) glMatrixMode(GL_PROJECTION);
+	if (matrix != NULL) glLoadMatrixf(matrix);
+	else glLoadIdentity();
+	memcpy(current, requested, 16U * sizeof(GLfloat));
+	g_gl_state_shadow.known |= field;
+}
+
+// Leaves GL_MODELVIEW selected, exactly as the unshadowed sequence did.
+void Shadow_Load_Transforms(const GLfloat *projection, const GLfloat *modelview)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	Shadow_Load_Matrix(NATIVE_SHADOW_PROJECTION, shadow.projection, projection);
+	glMatrixMode(GL_MODELVIEW);
+	Shadow_Load_Matrix(NATIVE_SHADOW_MODELVIEW, shadow.modelview, modelview);
+}
+
+// Mesh and indexed submissions used to reload identity transforms after every
+// draw. No draw consumes that baseline: every FFP draw site loads its own
+// projection and modelview first (Submit_Mesh_Internal, including the static
+// replay, and Submit_Indexed_Triangles), the Bink presenter pushes and loads
+// its own, and glClear uses vitaGL's clear program. With the shadow active the
+// reload is omitted, so an identical projection or modelview in the next
+// submission is not reloaded. Begin_Frame still requests identity every frame
+// through the shadow.
+void Release_Submission_Transforms()
+{
+	if (g_gl_state_shadow_enabled) return;
+	Shadow_Load_Transforms(NULL, NULL);
+}
+
+// The caller has selected GL_TEXTURE0 + stage and the GL_TEXTURE matrix mode.
+void Shadow_Load_Texture_Identity(unsigned stage)
+{
+	const uint32_t field = stage < MeshMatDescClass::MAX_TEX_STAGES ?
+		static_cast<uint32_t>(NATIVE_SHADOW_TEXTURE_IDENTITY) << stage : 0U;
+	if (g_gl_state_shadow_enabled && field != 0U &&
+		(g_gl_state_shadow.known & field) != 0U) {
+		++g_gl_state_shadow_counters.texture_matrix_skips;
+		return;
+	}
+	glLoadIdentity();
+	g_gl_state_shadow.known |= field;
+	++g_gl_state_shadow_counters.texture_matrix_loads;
+}
+
+void Invalidate_Texture_Identity_Shadow(unsigned stage)
+{
+	if (stage < MeshMatDescClass::MAX_TEX_STAGES) {
+		g_gl_state_shadow.known &=
+			~(static_cast<uint32_t>(NATIVE_SHADOW_TEXTURE_IDENTITY) << stage);
+	}
+}
+
+void Read_GL_State_Shadow_Mode()
+{
+	g_gl_state_shadow_enabled = true;
+	FILE *file = fopen("ux0:data/renegade/user/config/gl-state-shadow-v1.flag", "rb");
+	if (file != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok && size == 8U && memcmp(value, "RVGS1 ", 6U) == 0 &&
+			value[7] == '\n' && (value[6] == '0' || value[6] == '1')) {
+			g_gl_state_shadow_enabled = value[6] == '1';
+		}
+	}
+	Invalidate_GL_State_Shadow();
+	memset(&g_gl_state_shadow_counters, 0, sizeof(g_gl_state_shadow_counters));
+	Vita_Append_A22_Runtime_Breadcrumb("gl-state-shadow",
+		"version=1 enabled=%d default=1 acceptance=unassessed",
+		g_gl_state_shadow_enabled ? 1 : 0);
+}
+
+// Called once per 120-frame End_Frame window.
+void Log_GL_State_Shadow_Window(uint32_t frame)
+{
+	const NativeGLStateShadowCounters &counters = g_gl_state_shadow_counters;
+	Vita_Append_A22_Runtime_Breadcrumb("gl-state-shadow",
+		"version=1 frame=%u window=120 enabled=%d raster_calls=%llu raster_skips=%llu transform_loads=%llu transform_skips=%llu texture_matrix_loads=%llu texture_matrix_skips=%llu",
+		frame, g_gl_state_shadow_enabled ? 1 : 0,
+		static_cast<unsigned long long>(counters.raster_calls),
+		static_cast<unsigned long long>(counters.raster_skips),
+		static_cast<unsigned long long>(counters.transform_loads),
+		static_cast<unsigned long long>(counters.transform_skips),
+		static_cast<unsigned long long>(counters.texture_matrix_loads),
+		static_cast<unsigned long long>(counters.texture_matrix_skips));
+	memset(&g_gl_state_shadow_counters, 0, sizeof(g_gl_state_shadow_counters));
+}
+
 void Invalidate_Native_State_Cache()
 {
 	memset(&g_applied_fog_state, 0, sizeof(g_applied_fog_state));
+	Invalidate_GL_State_Shadow();
 	memset(g_texture_stage_cache, 0, sizeof(g_texture_stage_cache));
 	Invalidate_Texture_Object_Samplers();
 	memset(&g_render_state_cache, 0, sizeof(g_render_state_cache));
@@ -630,7 +1094,7 @@ void Reset_Texture_Matrix_Stage(unsigned stage)
 {
 	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
 	glMatrixMode(GL_TEXTURE);
-	glLoadIdentity();
+	Shadow_Load_Texture_Identity(stage);
 	glMatrixMode(GL_MODELVIEW);
 	RenegadeVita_Invalidate_DX8_Texture_Stage_Transform(stage);
 	glActiveTexture(GL_TEXTURE0);
@@ -925,11 +1389,26 @@ const float *Select_Indexed_UV_Array(
 	return uv_source == 1U ? uv1 : uv0;
 }
 
-bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
+void Note_Indexed_Passthrough_Texture(unsigned stage, DWORD mode,
+	const char *texture_name)
+{
+	if (!g_logged_first_passthrough_texture_v_preserved &&
+		mode == D3DTSS_TCI_PASSTHRU &&
+		!Has_Loadscreen_Texture_Prefix(texture_name)) {
+		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
+			"first indexed gameplay passthrough texture V preserved: texture=%s stage=%u",
+			texture_name != NULL ? texture_name : "none", stage);
+		g_logged_first_passthrough_texture_v_preserved = true;
+	}
+}
+
+// The coordinate one indexed stage emits for one vertex; *s, *t, *q are the
+// values Emit_Indexed_Texture_Coordinate passes to GL.
+void Compute_Indexed_Texture_Coordinate(unsigned stage,
 	const OriginalTextureCoordinateState &state, const float uv0[2],
 	const float uv1[2], const float position[3], const float normal[3],
 	const float *world_transform, const float *view_transform,
-	const char *texture_name)
+	const char *texture_name, float *s, float *t, float *q)
 {
 	float source_s = 0.0f;
 	float source_t = 0.0f;
@@ -962,33 +1441,64 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 		source_s = uv[0];
 		source_t = uv[1];
 	}
-	if (!g_logged_first_passthrough_texture_v_preserved &&
-		mode == D3DTSS_TCI_PASSTHRU &&
-		!Has_Loadscreen_Texture_Prefix(texture_name)) {
-		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
-			"first indexed gameplay passthrough texture V preserved: texture=%s stage=%u",
-			texture_name != NULL ? texture_name : "none", stage);
-		g_logged_first_passthrough_texture_v_preserved = true;
-	}
+	Note_Indexed_Passthrough_Texture(stage, mode, texture_name);
 
-	float s = 0.0f;
-	float t = 0.0f;
-	float q = 1.0f;
+	*s = 0.0f;
+	*t = 0.0f;
+	*q = 1.0f;
 	Apply_DX8_Texture_Transform(state, source_s, source_t, source_r, 1.0f,
-		&s, &t, &q);
-	if ((state.texture_transform_flags & D3DTTFF_PROJECTED) != 0U)
-		vglRenegadeTexCoord3f(texture_unit, s, t, q);
-	else glMultiTexCoord2f(texture_unit, s, t);
+		s, t, q);
 	if (!g_logged_first_generated_texture_coordinate &&
 		Uses_Generated_Texture_Coordinates(state)) {
 		Vita_Append_A22_Runtime_Breadcrumb("indexed-submit",
 			"first generated texture coordinates: stage=%u mode=%08X flags=%08X source=(%.3f,%.3f,%.3f) homogeneous=(%.3f,%.3f,%.3f)",
 			stage, static_cast<unsigned>(mode),
 			static_cast<unsigned>(state.texture_transform_flags),
-			source_s, source_t, source_r, s, t, q);
+			source_s, source_t, source_r, *s, *t, *q);
 		g_logged_first_generated_texture_coordinate = true;
 	}
+}
+
+bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
+	const OriginalTextureCoordinateState &state, const float uv0[2],
+	const float uv1[2], const float position[3], const float normal[3],
+	const float *world_transform, const float *view_transform,
+	const char *texture_name)
+{
+	float s = 0.0f;
+	float t = 0.0f;
+	float q = 1.0f;
+	Compute_Indexed_Texture_Coordinate(stage, state, uv0, uv1, position, normal,
+		world_transform, view_transform, texture_name, &s, &t, &q);
+	if ((state.texture_transform_flags & D3DTTFF_PROJECTED) != 0U)
+		vglRenegadeTexCoord3f(texture_unit, s, t, q);
+	else glMultiTexCoord2f(texture_unit, s, t);
 	return true;
+}
+
+void Set_Texture_Env(uint32_t stage, GLenum name, GLint value);
+
+// The (s, t) glMultiTexCoord2f receives for a stage without D3DTTFF_PROJECTED.
+// Pass-through without a transform is the selected UV unchanged: the
+// transform copies its source when the flags are D3DTTFF_DISABLE.
+void Record_Indexed_Texture_Coordinate(unsigned stage,
+	const OriginalTextureCoordinateState &state, const float uv0[2],
+	const float uv1[2], const float position[3], const float normal[3],
+	const float *world_transform, const float *view_transform,
+	const char *texture_name, float coordinate[2])
+{
+	if (Texture_Coordinate_Mode(state) == D3DTSS_TCI_PASSTHRU &&
+		state.texture_transform_flags == D3DTTFF_DISABLE) {
+		Note_Indexed_Passthrough_Texture(stage, D3DTSS_TCI_PASSTHRU, texture_name);
+		const float *uv = Select_Indexed_UV_Array(state, uv0, uv1);
+		coordinate[0] = uv[0];
+		coordinate[1] = uv[1];
+		return;
+	}
+	float q = 1.0f;
+	Compute_Indexed_Texture_Coordinate(stage, state, uv0, uv1, position, normal,
+		world_transform, view_transform, texture_name,
+		&coordinate[0], &coordinate[1], &q);
 }
 
 void Apply_Original_Shader_State(const ShaderClass &shader)
@@ -1019,42 +1529,44 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 			** default is modulation; leaving that default multiplies valid
 			** M00 textures by black DCG/material colours and produces the
 			** physical all-black-surface regression seen in dev16. */
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			Set_Texture_Env(0U, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 			break;
 		case ShaderClass::GRADIENT_ADD:
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
+			Set_Texture_Env(0U, GL_TEXTURE_ENV_MODE, GL_ADD);
 			break;
 		default:
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			Set_Texture_Env(0U, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 			break;
 		}
 	} else {
 		glActiveTexture(GL_TEXTURE0);
 		glDisable(GL_TEXTURE_2D);
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		Set_Texture_Env(0U, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	}
+	// Raster calls go through the exact GL-state shadow: only values vitaGL does
+	// not already hold are issued, in the original order.
 	if (state.alpha_test) {
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(To_GL_Depth_Function(state.alpha_compare),
+		Shadow_Alpha_Test(true);
+		Shadow_Alpha_Func(To_GL_Depth_Function(state.alpha_compare),
 			static_cast<float>(state.alpha_reference) / 255.0f);
 	} else {
-		glDisable(GL_ALPHA_TEST);
+		Shadow_Alpha_Test(false);
 	}
 	const GLenum source = To_GL_Source_Blend(shader.Get_Src_Blend_Func());
 	const GLenum destination = To_GL_Destination_Blend(shader.Get_Dst_Blend_Func());
-	if (!state.blend) glDisable(GL_BLEND);
+	if (!state.blend) Shadow_Blend(false);
 	else {
-		glEnable(GL_BLEND);
-		glBlendFunc(source, destination);
+		Shadow_Blend(true);
+		Shadow_Blend_Func(source, destination);
 	}
-	glDepthFunc(To_GL_Depth_Function(state.depth_compare));
-	glDepthMask(state.depth_write ? GL_TRUE : GL_FALSE);
-	glColorMask(state.color_write ? GL_TRUE : GL_FALSE, state.color_write ? GL_TRUE : GL_FALSE,
+	Shadow_Depth_Func(To_GL_Depth_Function(state.depth_compare));
+	Shadow_Depth_Mask(state.depth_write ? GL_TRUE : GL_FALSE);
+	Shadow_Color_Mask(state.color_write ? GL_TRUE : GL_FALSE, state.color_write ? GL_TRUE : GL_FALSE,
 		state.color_write ? GL_TRUE : GL_FALSE, state.color_write ? GL_TRUE : GL_FALSE);
 	if (state.cull) {
-		glEnable(GL_CULL_FACE);
-		glCullFace(culling_inverted ? GL_FRONT : GL_BACK);
-	} else glDisable(GL_CULL_FACE);
+		Shadow_Cull(true);
+		Shadow_Cull_Face(culling_inverted ? GL_FRONT : GL_BACK);
+	} else Shadow_Cull(false);
 	g_texture_stage_cache[0].enabled_known = true;
 	g_texture_stage_cache[0].enabled =
 		shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE;
@@ -1084,141 +1596,191 @@ GLenum To_GL_Texture_Argument(uint32_t argument)
 	}
 }
 
-void Set_Texture_Env_White_Constant()
+int Texture_Env_Shadow_Slot(GLenum name)
 {
-	GLfloat white[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, white);
+	switch (name) {
+	case GL_TEXTURE_ENV_MODE: return 0;
+	case GL_COMBINE_RGB: return 1;
+	case GL_SRC0_RGB: return 2;
+	case GL_SRC1_RGB: return 3;
+	case GL_SRC2_RGB: return 4;
+	case GL_OPERAND0_RGB: return 5;
+	case GL_OPERAND1_RGB: return 6;
+	case GL_OPERAND2_RGB: return 7;
+	case GL_COMBINE_ALPHA: return 8;
+	case GL_SRC0_ALPHA: return 9;
+	case GL_SRC1_ALPHA: return 10;
+	case GL_SRC2_ALPHA: return 11;
+	case GL_OPERAND0_ALPHA: return 12;
+	case GL_OPERAND1_ALPHA: return 13;
+	case GL_OPERAND2_ALPHA: return 14;
+	default: return -1;
+	}
 }
 
-void Apply_GL_RGB_Texture_Op(uint32_t operation, uint32_t argument0,
+// The caller has made `stage` the active unit. vitaGL marks the fragment
+// program dirty on every glTexEnvi, even an equal one; skipping an equal
+// resend leaves the unit's environment, and so the selected program, unchanged.
+void Set_Texture_Env(uint32_t stage, GLenum name, GLint value)
+{
+	NativeTextureStageCache &cache = g_texture_stage_cache[stage];
+	const int slot = Texture_Env_Shadow_Slot(name);
+	const uint32_t bit = slot >= 0 ? 1U << static_cast<unsigned>(slot) : 0U;
+	if ((g_render_work_cache_mode & 1U) != 0U && bit != 0U &&
+		(cache.env_known & bit) != 0U && cache.env_values[slot] == value) {
+		++g_texture_env_skips;
+		return;
+	}
+	glTexEnvi(GL_TEXTURE_ENV, name, value);
+	if (bit != 0U) {
+		cache.env_known |= bit;
+		cache.env_values[slot] = value;
+	}
+	++g_texture_env_writes;
+}
+
+void Set_Texture_Env_White_Constant(uint32_t stage)
+{
+	NativeTextureStageCache &cache = g_texture_stage_cache[stage];
+	if ((g_render_work_cache_mode & 1U) != 0U && cache.env_color_white) {
+		++g_texture_env_skips;
+		return;
+	}
+	GLfloat white[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, white);
+	cache.env_color_white = true;
+	++g_texture_env_writes;
+}
+
+void Apply_GL_RGB_Texture_Op(uint32_t stage, uint32_t operation, uint32_t argument0,
 	uint32_t argument1)
 {
 	switch (operation) {
 	case D3DTOP_SELECTARG1:
 	case D3DTOP_SELECTARG2:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_REPLACE);
+		Set_Texture_Env(stage, GL_SRC0_RGB,
 			To_GL_Texture_Argument(operation == D3DTOP_SELECTARG1 ?
 				argument0 : argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
 		break;
 	case D3DTOP_MODULATE:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_MODULATE);
+		Set_Texture_Env(stage, GL_SRC0_RGB,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+		Set_Texture_Env(stage, GL_SRC1_RGB,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND1_RGB, GL_SRC_COLOR);
 		break;
 	case D3DTOP_ADD:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_ADD);
+		Set_Texture_Env(stage, GL_SRC0_RGB,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+		Set_Texture_Env(stage, GL_SRC1_RGB,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND1_RGB, GL_SRC_COLOR);
 		break;
 	case D3DTOP_ADDSMOOTH:
-		Set_Texture_Env_White_Constant();
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_CONSTANT);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+		Set_Texture_Env_White_Constant(stage);
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_INTERPOLATE);
+		Set_Texture_Env(stage, GL_SRC0_RGB, GL_CONSTANT);
+		Set_Texture_Env(stage, GL_SRC1_RGB,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB,
+		Set_Texture_Env(stage, GL_SRC2_RGB,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND2_RGB, GL_SRC_COLOR);
 		break;
 	case D3DTOP_SUBTRACT:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_SUBTRACT);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_SUBTRACT);
+		Set_Texture_Env(stage, GL_SRC0_RGB,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+		Set_Texture_Env(stage, GL_SRC1_RGB,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND1_RGB, GL_SRC_COLOR);
 		break;
 	case D3DTOP_BLENDTEXTUREALPHA:
 	case D3DTOP_BLENDCURRENTALPHA:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_INTERPOLATE);
+		Set_Texture_Env(stage, GL_SRC0_RGB,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+		Set_Texture_Env(stage, GL_SRC1_RGB,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB,
+		Set_Texture_Env(stage, GL_SRC2_RGB,
 			operation == D3DTOP_BLENDTEXTUREALPHA ? GL_TEXTURE : GL_PREVIOUS);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND2_RGB, GL_SRC_ALPHA);
 		break;
 	case D3DTOP_DISABLE:
 	default:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_REPLACE);
+		Set_Texture_Env(stage, GL_SRC0_RGB, GL_PREVIOUS);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
 		break;
 	}
 }
 
-void Apply_GL_Alpha_Texture_Op(uint32_t operation, uint32_t argument0,
+void Apply_GL_Alpha_Texture_Op(uint32_t stage, uint32_t operation, uint32_t argument0,
 	uint32_t argument1)
 {
 	switch (operation) {
 	case D3DTOP_SELECTARG1:
 	case D3DTOP_SELECTARG2:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,
+		Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_REPLACE);
+		Set_Texture_Env(stage, GL_SRC0_ALPHA,
 			To_GL_Texture_Argument(operation == D3DTOP_SELECTARG1 ?
 				argument0 : argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
 		break;
 	case D3DTOP_MODULATE:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,
+		Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_MODULATE);
+		Set_Texture_Env(stage, GL_SRC0_ALPHA,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,
+		Set_Texture_Env(stage, GL_SRC1_ALPHA,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
 		break;
 	case D3DTOP_ADD:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_ADD);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,
+		Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_ADD);
+		Set_Texture_Env(stage, GL_SRC0_ALPHA,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,
+		Set_Texture_Env(stage, GL_SRC1_ALPHA,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
 		break;
 	case D3DTOP_ADDSMOOTH:
-		Set_Texture_Env_White_Constant();
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_INTERPOLATE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_CONSTANT);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,
+		Set_Texture_Env_White_Constant(stage);
+		Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_INTERPOLATE);
+		Set_Texture_Env(stage, GL_SRC0_ALPHA, GL_CONSTANT);
+		Set_Texture_Env(stage, GL_SRC1_ALPHA,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_ALPHA,
+		Set_Texture_Env(stage, GL_SRC2_ALPHA,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND2_ALPHA, GL_SRC_ALPHA);
 		break;
 	case D3DTOP_SUBTRACT:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_SUBTRACT);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,
+		Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_SUBTRACT);
+		Set_Texture_Env(stage, GL_SRC0_ALPHA,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,
+		Set_Texture_Env(stage, GL_SRC1_ALPHA,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
 		break;
 	case D3DTOP_DISABLE:
 	default:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PREVIOUS);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_REPLACE);
+		Set_Texture_Env(stage, GL_SRC0_ALPHA, GL_PREVIOUS);
+		Set_Texture_Env(stage, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
 		break;
 	}
 }
@@ -1783,6 +2345,66 @@ void Log_VitaGL_Memory()
 		(&_newlib_heap_size_user != NULL ? _newlib_heap_size_user : 0U), static_cast<unsigned>(heap.arena),
 		static_cast<unsigned>(heap.uordblks), static_cast<unsigned>(heap.fordblks));
 }
+
+// One line of the sizes vitaGL actually adopted. The fourth vglInitExtended
+// argument is the user RAM left outside vitaGL's RAM pool, not the sceGxm
+// parameter buffer; the ring sizes are static in vitaGL, so they are the
+// values requested before vglInit.
+void Log_VitaGL_Effective_Sizing(const VitaGLSizing &requested)
+{
+	const uint32_t slice = gxm_display_buffer_count != 0U ?
+		VitaGL_Span_Bytes(circular_data_pool[0], circular_data_pool_limit[0]) : 0U;
+	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
+		"vitagl-effective: version=1 source=%s overridden=%03X immediate_pool=%d circular_pool=%u circular_slice=%u display_buffers=%u parameter_buffer=%u vdm_ring=%u vertex_ring=%u fragment_ring=%u fragment_usse_ring=%u ram_reserve=%u vsync_interval=%u cached_mem=%u",
+		requested.overridden != 0U ? "vitagl-sizing-v1.flag" : "default",
+		requested.overridden, legacy_pool_size, circular_data_pool_size, slice,
+		static_cast<unsigned>(gxm_display_buffer_count), gxm_param_buf_size,
+		requested.vdm_ring_bytes, requested.vertex_ring_bytes,
+		requested.fragment_ring_bytes, requested.fragment_usse_ring_bytes,
+		requested.ram_reserve_bytes, vsync_interval,
+		static_cast<unsigned>(has_cached_mem));
+	SceKernelThreadInfo info;
+	memset(&info, 0, sizeof(info));
+	info.size = sizeof(info);
+	const int info_result = sceKernelGetThreadInfo(sceKernelGetThreadId(), &info);
+	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
+		"game-thread: info_rc=%08X priority=%08X init_priority=%08X affinity=%08X cpu=%d",
+		static_cast<unsigned>(info_result),
+		static_cast<unsigned>(info_result >= 0 ? info.currentPriority : 0),
+		static_cast<unsigned>(info_result >= 0 ? info.initPriority : 0),
+		static_cast<unsigned>(sceKernelGetThreadCpuAffinityMask(sceKernelGetThreadId())),
+		sceKernelGetCpuId());
+}
+
+// Called once per presented frame before vglSwapBuffers, while the frame's
+// circular slice and immediate pool cursors are still current.
+void Sample_VitaGL_Transient_Pools(uint32_t frame)
+{
+	static VitaGLPoolWindow window = {};
+	const uint32_t capacity = legacy_pool_size > 0 ?
+		static_cast<uint32_t>(legacy_pool_size) : 0U;
+	uint32_t immediate_used = 0U;
+	if (legacy_pool_end != NULL && capacity != 0U) {
+		const uint8_t *base =
+			reinterpret_cast<const uint8_t *>(legacy_pool_end) - capacity;
+		immediate_used = VitaGL_Span_Bytes(base, legacy_pool_ptr);
+	}
+	const int index = vgl_circular_idx;
+	const bool index_valid = index >= 0 &&
+		index < static_cast<int>(gxm_display_buffer_count);
+	window.Record(immediate_used, capacity,
+		index_valid ? VitaGL_Span_Bytes(circular_data_pool[index], circular_data_pool_ptr[index]) : 0U,
+		index_valid ? VitaGL_Span_Bytes(circular_data_pool[index], circular_data_pool_limit[index]) : 0U);
+	if (window.frames < 120U) return;
+	Vita_Append_A22_Runtime_Breadcrumb("vitagl-pools",
+		"version=1 frame=%u frames=%u immediate_peak=%u immediate_avg=%u immediate_capacity=%u immediate_overruns=%u circular_peak=%u circular_slice=%u circular_overruns=%u cpu=%d",
+		frame, window.frames, window.immediate_peak_bytes,
+		window.Immediate_Average_Bytes(), window.immediate_capacity_bytes,
+		window.immediate_overrun_frames, window.circular_peak_bytes,
+		window.circular_slice_bytes, window.circular_overrun_frames,
+		sceKernelGetCpuId());
+	window.Reset();
+}
 #endif
 
 bool Reactivate_Native_Backend_State()
@@ -1793,8 +2415,11 @@ bool Reactivate_Native_Backend_State()
 		g_lifecycle.native_initialization_calls,
 		g_lifecycle.logical_sessions);
 	(void)glGetError();
-	glViewport(0, 0, static_cast<GLsizei>(DISPLAY_WIDTH),
-		static_cast<GLsizei>(DISPLAY_HEIGHT));
+	// The raw state calls below bypass the GL-state shadow, including on the
+	// error return that skips Invalidate_Native_State_Cache.
+	Invalidate_GL_State_Shadow();
+	glViewport(0, 0, static_cast<GLsizei>(g_physical_display_width),
+		static_cast<GLsizei>(g_physical_display_height));
 	glDepthRangef(0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -1933,6 +2558,105 @@ void Log_Static_Mesh_Cache_Statistics()
 		static_cast<unsigned long long>(g_static_mesh_statistics.allocation_failures),
 		static_cast<unsigned long long>(g_static_mesh_statistics.cached_batches),
 		static_cast<unsigned long long>(g_static_mesh_statistics.cached_triangles));
+	// Thrash detail on its own line so neither exceeds the breadcrumb buffer.
+	// Counters are cumulative; max_frame_* cover the frames since the last line.
+	const uint64_t *reasons = g_static_mesh_statistics.rebuild_reasons;
+	Vita_Append_A22_Runtime_Breadcrumb("static-mesh-cache",
+		"thrash frame=%u rebuild_counts=%llu rebuild_alternate=%llu rebuild_material=%llu rebuild_ambient=%llu rebuild_lights=%llu rebuild_world=%llu collisions=%llu rapid=%llu volatile_resident=%u recovered=%llu oversize=%llu upload_bytes=%llu max_frame_builds=%u max_frame_upload_bytes=%u lit_families=%llu stale_instances=%llu",
+		g_statistics.frames,
+		static_cast<unsigned long long>(reasons[STATIC_MESH_REBUILD_COUNTS]),
+		static_cast<unsigned long long>(reasons[STATIC_MESH_REBUILD_ALTERNATE]),
+		static_cast<unsigned long long>(reasons[STATIC_MESH_REBUILD_MATERIAL]),
+		static_cast<unsigned long long>(reasons[STATIC_MESH_REBUILD_AMBIENT]),
+		static_cast<unsigned long long>(reasons[STATIC_MESH_REBUILD_LIGHTS]),
+		static_cast<unsigned long long>(reasons[STATIC_MESH_REBUILD_WORLD]),
+		static_cast<unsigned long long>(g_static_mesh_statistics.collisions),
+		static_cast<unsigned long long>(g_static_mesh_statistics.rapid_volatile),
+		g_static_mesh_cache.Volatile(),
+		static_cast<unsigned long long>(g_static_mesh_statistics.volatile_recoveries),
+		static_cast<unsigned long long>(g_static_mesh_statistics.oversize_rejects),
+		static_cast<unsigned long long>(g_static_mesh_statistics.upload_bytes),
+		g_static_mesh_statistics.max_frame_builds,
+		g_static_mesh_statistics.max_frame_upload_bytes,
+		static_cast<unsigned long long>(g_static_mesh_statistics.lit_families),
+		static_cast<unsigned long long>(g_static_mesh_statistics.stale_instances));
+	g_static_mesh_statistics.max_frame_builds = 0U;
+	g_static_mesh_statistics.max_frame_upload_bytes = 0U;
+}
+
+void Read_Skin_Deform_Cache_Mode()
+{
+	// "RVSD1 0\n" restores per-submission skin deformation for A/B comparison.
+	g_skin_deform_cache_enabled = true;
+	FILE *file = fopen("ux0:data/renegade/user/config/skin-deform-cache-v1.flag", "rb");
+	if (file != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok && size == 8U && memcmp(value, "RVSD1 ", 6U) == 0 &&
+			value[7] == '\n' && value[6] == '0') {
+			g_skin_deform_cache_enabled = false;
+		}
+	}
+	Vita_Append_A22_Runtime_Breadcrumb("skin-deform-cache",
+		"version=1 enabled=%d entries=%d vertices=%d bones=%d acceptance=unassessed",
+		g_skin_deform_cache_enabled ? 1 : 0,
+		static_cast<int>(SkinDeformCache<Vector3>::MAX_ENTRIES),
+		static_cast<int>(SkinDeformCache<Vector3>::MAX_VERTICES),
+		static_cast<int>(SkinDeformCache<Vector3>::MAX_BONES));
+}
+
+void Log_Skin_Deform_Cache_Statistics()
+{
+	const SkinDeformCacheStatistics &counters = g_skin_deform_cache.Counters();
+	Vita_Append_A22_Runtime_Breadcrumb("skin-deform-cache",
+		"frame=%u enabled=%d bytes=%u stores=%llu hits=%llu misses=%llu stale=%llu overflows=%llu forgets=%llu allocation_failures=%llu",
+		g_statistics.frames, g_skin_deform_cache_enabled ? 1 : 0,
+		g_skin_deform_cache.Bytes(),
+		static_cast<unsigned long long>(counters.stores),
+		static_cast<unsigned long long>(counters.hits),
+		static_cast<unsigned long long>(counters.misses),
+		static_cast<unsigned long long>(counters.stale),
+		static_cast<unsigned long long>(counters.overflows),
+		static_cast<unsigned long long>(counters.forgets),
+		static_cast<unsigned long long>(counters.allocation_failures));
+}
+
+// Build default (1 = on); a user config file containing exactly "RVVA1 0\n"
+// keeps every per-frame mesh batch on the immediate path for A/B comparison,
+// and "RVVA1 1\n" is explicit on. Ineligible batches are immediate either way.
+#if !defined(RENEGADE_VITA_VERTEX_ARRAY_DEFAULT)
+#define RENEGADE_VITA_VERTEX_ARRAY_DEFAULT 1
+#endif
+void Read_Vertex_Array_Mode()
+{
+	g_vertex_array_enabled = RENEGADE_VITA_VERTEX_ARRAY_DEFAULT != 0;
+	FILE *file = fopen("ux0:data/renegade/user/config/vertex-array-v1.flag", "rb");
+	if (file != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok && size == 8U && memcmp(value, "RVVA1 ", 6U) == 0 &&
+			value[7] == '\n' && (value[6] == '0' || value[6] == '1')) {
+			g_vertex_array_enabled = value[6] == '1';
+		}
+	}
+	Vita_Append_A22_Runtime_Breadcrumb("vertex-array",
+		"version=1 enabled=%d default=%d acceptance=unassessed",
+		g_vertex_array_enabled ? 1 : 0, RENEGADE_VITA_VERTEX_ARRAY_DEFAULT != 0 ? 1 : 0);
+}
+
+void Log_Vertex_Array_Statistics()
+{
+	Vita_Append_A22_Runtime_Breadcrumb("vertex-array",
+		"frame=%u enabled=%d batches=%llu corners=%llu vertices=%llu scratch_bytes=%u",
+		g_statistics.frames, g_vertex_array_enabled ? 1 : 0,
+		static_cast<unsigned long long>(g_vertex_array_batches),
+		static_cast<unsigned long long>(g_vertex_array_corners),
+		static_cast<unsigned long long>(g_vertex_array_vertices),
+		g_vertex_array_batch.Bytes());
 }
 
 // Build default from CMake; a user config file containing exactly
@@ -1973,6 +2697,128 @@ bool Read_Vsync_Enabled()
 		}
 	}
 	return enabled;
+}
+
+// Defaults reproduce the shipped vitaGL/sceGxm sizes; an exactly valid
+// vitagl-sizing-v1.flag (see ww3d_vita_gxm_tuning.h) overrides named fields.
+VitaGLSizing Read_VitaGL_Sizing()
+{
+	VitaGLSizing sizing = Default_VitaGL_Sizing();
+	FILE *file = fopen("ux0:data/renegade/user/config/vitagl-sizing-v1.flag", "rb");
+	if (file != NULL) {
+		char text[161] = {};
+		const size_t size = fread(text, 1U, sizeof(text), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (!read_ok || size >= sizeof(text) || !Parse_VitaGL_Sizing_Flag(text, size, &sizing)) {
+			Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
+				"vitagl-sizing-v1.flag rejected: read_ok=%d size=%u; defaults kept",
+				read_ok ? 1 : 0, static_cast<unsigned>(size));
+		}
+	}
+	return sizing;
+}
+
+// Overridden fields only: without the flag the vglInit sequence is unchanged.
+void Apply_VitaGL_Sizing(const VitaGLSizing &sizing)
+{
+	if (sizing.overridden & VitaGLSizing::CIRCULAR) vglSetCircularPoolSize(sizing.circular_pool_bytes);
+	if (sizing.overridden & VitaGLSizing::BUFFERS) vglSetDisplayBufferCount(static_cast<int>(sizing.display_buffers));
+	if (sizing.overridden & VitaGLSizing::VDM) vglSetVDMBufferSize(sizing.vdm_ring_bytes);
+	if (sizing.overridden & VitaGLSizing::VERTEX) vglSetVertexBufferSize(sizing.vertex_ring_bytes);
+	if (sizing.overridden & VitaGLSizing::FRAGMENT) vglSetFragmentBufferSize(sizing.fragment_ring_bytes);
+	if (sizing.overridden & VitaGLSizing::USSE) vglSetUSSEBufferSize(sizing.fragment_usse_ring_bytes);
+	if (sizing.overridden & VitaGLSizing::PARAMETER) vglSetParamBufferSize(sizing.parameter_buffer_bytes);
+}
+
+// Default 100% (native 960x544 scan-out, unchanged behaviour). A user config
+// file containing exactly "RVIR1 100\n", "RVIR1 75\n", "RVIR1 67\n",
+// "RVIR1 50\n" or "RVIR1 auto\n" selects hardware scan-out scaling.
+RenegadeVitaInternalResolution::Mode g_internal_resolution_mode = {false, 0U};
+bool g_internal_resolution_from_flag = false;
+RenegadeVitaInternalResolution::Controller g_internal_resolution_controller;
+uint32_t g_internal_resolution_pending_level = RenegadeVitaInternalResolution::LEVEL_COUNT;
+uint64_t g_internal_resolution_last_present_us = 0U;
+uint32_t g_internal_resolution_changes = 0U;
+
+void Read_Internal_Resolution_Mode()
+{
+	using namespace RenegadeVitaInternalResolution;
+	g_internal_resolution_mode.automatic = false;
+	g_internal_resolution_mode.level = LEVEL_100;
+	g_internal_resolution_from_flag = false;
+	FILE *file = fopen("ux0:data/renegade/user/config/internal-resolution-v1.flag", "rb");
+	if (file != NULL) {
+		char value[12] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		Mode parsed = g_internal_resolution_mode;
+		if (read_ok && size < sizeof(value) && Parse_Flag(value, size, parsed)) {
+			g_internal_resolution_mode = parsed;
+			g_internal_resolution_from_flag = true;
+		}
+	}
+	g_internal_resolution_controller.Reset(g_internal_resolution_mode.level, LEVEL_50);
+	g_internal_resolution_pending_level = LEVEL_COUNT;
+	g_internal_resolution_last_present_us = 0U;
+	g_internal_resolution_changes = 0U;
+}
+
+// vglSwapResolution only records the request; vitaGL reallocates the display
+// buffers at the end of the following vglSwapBuffers. Commit the matching
+// logical->physical mapping right after that swap so no frame mixes sizes.
+void Commit_Pending_Internal_Resolution()
+{
+	using namespace RenegadeVitaInternalResolution;
+	if (g_internal_resolution_pending_level >= LEVEL_COUNT) return;
+	const LevelSize &size = Level_Size(g_internal_resolution_pending_level);
+	g_internal_resolution_pending_level = LEVEL_COUNT;
+	g_physical_display_width = size.width;
+	g_physical_display_height = size.height;
+	glViewport(0, 0, static_cast<GLsizei>(size.width),
+		static_cast<GLsizei>(size.height));
+	g_current_native_viewport_known = false;
+	++g_internal_resolution_changes;
+}
+
+void Update_Internal_Resolution_After_Present()
+{
+	using namespace RenegadeVitaInternalResolution;
+	Commit_Pending_Internal_Resolution();
+	if (!g_internal_resolution_mode.automatic) return;
+	const uint64_t now_us = sceKernelGetProcessTimeWide();
+	const uint64_t previous_us = g_internal_resolution_last_present_us;
+	g_internal_resolution_last_present_us = now_us;
+	// The IME common dialog draws into the display buffer: never sample or
+	// resize under it.
+	if (RenegadeVitaTextEntry::Active()) return;
+	if (previous_us == 0U || now_us <= previous_us) return;
+	const uint64_t interval_us = now_us - previous_us;
+	(void)g_internal_resolution_controller.Record_Frame(
+		interval_us > 0xFFFFFFFFULL ? 0xFFFFFFFFU : static_cast<uint32_t>(interval_us));
+	// Evaluate on the shared 120-frame checkpoint so decisions line up with
+	// the frame-vblank/render-work-cache breadcrumbs. A window that missed
+	// presents (IME, non-presenting frames) is discarded, not judged.
+	if ((g_statistics.frames % Controller::WINDOW) != 0U) return;
+	const Decision decision = g_internal_resolution_controller.Evaluate();
+	if (decision.kind == DECISION_NONE) return;
+	const bool change = decision.level != decision.previous_level;
+	if (change) {
+		const LevelSize &size = Level_Size(decision.level);
+		(void)vglSwapResolution(static_cast<int>(size.width), static_cast<int>(size.height));
+		g_internal_resolution_pending_level = decision.level;
+	}
+	if (change || (g_statistics.frames % 1200U) == 0U) {
+		Vita_Append_A22_Runtime_Breadcrumb("internal-resolution",
+			"version=1 frame=%u decision=%s from=%u%% to=%u%% physical=%ux%u p50_us=%u p95_us=%u down_lock=%u up_lock=%u changes=%u",
+			g_statistics.frames, Decision_Name(decision.kind),
+			Level_Size(decision.previous_level).percent,
+			Level_Size(decision.level).percent,
+			g_physical_display_width, g_physical_display_height,
+			decision.p50_us, decision.p95_us, decision.down_lock,
+			decision.up_lock, g_internal_resolution_changes);
+	}
 }
 
 StaticMeshMaterialSnapshot Snapshot_Static_Mesh_Material(VertexMaterialClass *material)
@@ -2199,41 +3045,73 @@ bool Build_Static_Mesh_Streams(MeshClass &mesh, MeshModelClass *model,
 	return true;
 }
 
-bool Static_Mesh_Entry_Current(const StaticMeshEntry &entry, MeshModelClass *model,
-	int vertex_count, int triangle_count, int base_pass_count,
+// STATIC_MESH_REBUILD_NONE when the entry still matches this draw.
+// Per-polygon texture, shader and per-vertex material pointers are not
+// compared. They live in MeshModelClass's private MeshMatDescClass, and every
+// post-load writer goes through a MeshModelClass mutator that forgets the
+// model's entries first (ww3d2 lifetime patch: Set_*/Set_Single_*,
+// Get_*_Array(create), Make_*_Unique, Set_Pass_Count, alternate
+// descriptions, Reset/operator=). MeshClass/MeshModelClass Replace_Texture
+// and Replace_VertexMaterial are compiled out (#if 0) in the original source,
+// and building damage/power swaps use alternate descriptions. The texture
+// and material objects themselves are bound live at replay or compared
+// through the snapshots below.
+StaticMeshRebuildReason Static_Mesh_Entry_Current(const StaticMeshEntry &entry,
+	MeshModelClass *model, int vertex_count, int triangle_count, int base_pass_count,
 	const RenderInfoClass &render_info, const Matrix3D &world_transform)
 {
 	if (entry.vertex_count != static_cast<uint32_t>(vertex_count) ||
 		entry.triangle_count != static_cast<uint32_t>(triangle_count) ||
-		entry.pass_count != static_cast<uint32_t>(base_pass_count) ||
-		entry.alternate_materials != model->Is_Alternate_Material_Description_Enabled())
-		return false;
+		entry.pass_count != static_cast<uint32_t>(base_pass_count))
+		return STATIC_MESH_REBUILD_COUNTS;
+	if (entry.alternate_materials != model->Is_Alternate_Material_Description_Enabled())
+		return STATIC_MESH_REBUILD_ALTERNATE;
 	for (uint32_t index = 0U; index < entry.material_count; ++index) {
 		const StaticMeshMaterialSnapshot &cached = entry.materials[index];
 		if (!Static_Mesh_Snapshot_Equal(cached, Snapshot_Static_Mesh_Material(
-			static_cast<VertexMaterialClass *>(cached.material)))) return false;
+			static_cast<VertexMaterialClass *>(cached.material))))
+			return STATIC_MESH_REBUILD_MATERIAL;
 	}
-	return !entry.lighting.uses_lighting || Static_Mesh_Lighting_Equal(entry.lighting,
+	if (!entry.lighting.uses_lighting) return STATIC_MESH_REBUILD_NONE;
+	return Static_Mesh_Lighting_Difference(entry.lighting,
 		Capture_Static_Mesh_Lighting(render_info, world_transform));
 }
 
-bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
+// Records a VOLATILE entry's current inputs, the same ones
+// Static_Mesh_Entry_Current compares, so its next sample can tell whether
+// they are still changing. Never affects what is drawn.
+void Observe_Static_Mesh_Entry(StaticMeshEntry &entry, MeshModelClass *model,
+	int vertex_count, int triangle_count, int base_pass_count,
+	const RenderInfoClass &render_info, const Matrix3D &world_transform)
+{
+	entry.vertex_count = static_cast<uint32_t>(vertex_count);
+	entry.triangle_count = static_cast<uint32_t>(triangle_count);
+	entry.pass_count = static_cast<uint32_t>(base_pass_count);
+	entry.alternate_materials = model->Is_Alternate_Material_Description_Enabled();
+	for (uint32_t index = 0U; index < entry.material_count; ++index) {
+		entry.materials[index] = Snapshot_Static_Mesh_Material(
+			static_cast<VertexMaterialClass *>(entry.materials[index].material));
+	}
+	if (entry.lighting.uses_lighting)
+		entry.lighting = Capture_Static_Mesh_Lighting(render_info, world_transform);
+}
+
+StaticMeshUploadResult Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
 {
 	RENEGADE_FRAME_PROFILE("Vita Render Static Cache Upload");
 	const StaticMeshStreamBuilder &builder = g_static_mesh_builder;
 	const uint32_t vertex_bytes = builder.Vertices().Count() * STATIC_MESH_VERTEX_STRIDE;
 	const uint32_t index_bytes = builder.Indices().Count() * sizeof(uint16_t);
 	const uint32_t total_bytes = vertex_bytes + index_bytes;
-	if (vertex_bytes == 0U || index_bytes == 0U ||
-		total_bytes > STATIC_MESH_CACHE_BUDGET_BYTES / 4U) return false;
+	if (vertex_bytes == 0U || index_bytes == 0U) return STATIC_MESH_UPLOAD_FAILED;
+	if (total_bytes > STATIC_MESH_CACHE_BUDGET_BYTES / 4U) return STATIC_MESH_UPLOAD_OVERSIZE;
 	if (g_static_mesh_cache.Bytes() + total_bytes > STATIC_MESH_CACHE_BUDGET_BYTES) {
 		g_static_mesh_statistics.evictions += g_static_mesh_cache.Enforce_Budget(
 			STATIC_MESH_CACHE_BUDGET_BYTES - total_bytes, frame);
 	}
 	if (g_static_mesh_cache.Bytes() + total_bytes > STATIC_MESH_CACHE_BUDGET_BYTES ||
 		vglMemFree(VGL_MEM_ALL) < STATIC_MESH_CACHE_FREE_RESERVE_BYTES + total_bytes) {
-		++g_static_mesh_statistics.allocation_failures;
-		return false;
+		return STATIC_MESH_UPLOAD_FAILED;
 	}
 	const uint32_t batch_bytes = builder.Batches().Count() * sizeof(StaticMeshBatch);
 	const uint32_t material_bytes =
@@ -2244,8 +3122,7 @@ bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
 	if (batches == NULL || materials == NULL) {
 		free(batches);
 		free(materials);
-		++g_static_mesh_statistics.allocation_failures;
-		return false;
+		return STATIC_MESH_UPLOAD_FAILED;
 	}
 	memcpy(batches, builder.Batches().Data(), batch_bytes);
 	if (material_bytes != 0U) memcpy(materials, builder.Materials().Data(), material_bytes);
@@ -2291,8 +3168,7 @@ bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
 		Release_Static_Mesh_Buffers(buffers[0], buffers[1]);
 		free(batches);
 		free(materials);
-		++g_static_mesh_statistics.allocation_failures;
-		return false;
+		return STATIC_MESH_UPLOAD_FAILED;
 	}
 	entry.vertex_buffer = buffers[0];
 	entry.index_buffer = buffers[1];
@@ -2301,7 +3177,7 @@ bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
 	entry.materials = materials;
 	entry.material_count = builder.Materials().Count();
 	g_static_mesh_cache.Account(entry, total_bytes);
-	return true;
+	return STATIC_MESH_UPLOAD_OK;
 }
 
 // Replays the recorded runs with the same state sequence as the immediate
@@ -2330,9 +3206,9 @@ void Replay_Static_Mesh_Entry(const StaticMeshEntry &entry)
 		if (!same_state) {
 			const ShaderClass shader(batch.shader_bits);
 			Apply_Original_Shader_State(shader);
-			if (texture0 != NULL) texture0->Apply_For_Platform_Boundary(0U);
+			if (texture0 != NULL) Apply_Platform_Texture_Stage(*texture0, 0U);
 			else Bind_Texture(0U, false);
-			if (batch.detail_stage) texture1->Apply_For_Platform_Boundary(1U);
+			if (batch.detail_stage) Apply_Platform_Texture_Stage(*texture1, 1U);
 			else Disable_Texture_Stage(1U);
 			Apply_Original_Texture_Coordinate_State(
 				static_cast<VertexMaterialClass *>(batch.material));
@@ -2386,8 +3262,68 @@ void Replay_Static_Mesh_Entry(const StaticMeshEntry &entry)
 	++g_statistics.state_changes;
 }
 
+// The WW3D/GL side of Static_Mesh_Cache_Lookup for one rigid mesh draw.
+struct StaticMeshCacheOps {
+	MeshClass &mesh;
+	MeshModelClass *model;
+	const RenderInfoClass &render_info;
+	const Vector3 *vertices;
+	const Vector3 *normals;
+	const TriIndex *triangles;
+	int vertex_count;
+	int triangle_count;
+	int base_pass_count;
+	const Matrix3D &world_transform;
+	uint32_t frame;
+
+	StaticMeshRebuildReason Validate(const StaticMeshEntry &entry) const
+	{
+		return Static_Mesh_Entry_Current(entry, model, vertex_count, triangle_count,
+			base_pass_count, render_info, world_transform);
+	}
+	void Observe(StaticMeshEntry &entry) const
+	{
+		Observe_Static_Mesh_Entry(entry, model, vertex_count, triangle_count,
+			base_pass_count, render_info, world_transform);
+	}
+	void Describe(StaticMeshEntry &entry) const
+	{
+		entry.vertex_count = static_cast<uint32_t>(vertex_count);
+		entry.triangle_count = static_cast<uint32_t>(triangle_count);
+		entry.pass_count = static_cast<uint32_t>(base_pass_count);
+		entry.alternate_materials = model->Is_Alternate_Material_Description_Enabled();
+	}
+	StaticMeshBuildResult Build(bool &uses_lighting) const
+	{
+		if (Build_Static_Mesh_Streams(mesh, model, render_info, vertices, normals,
+			triangles, vertex_count, triangle_count, base_pass_count, world_transform,
+			uses_lighting)) return STATIC_MESH_BUILD_OK;
+		// A failed builder is a host allocation failure, not an eligibility verdict.
+		return g_static_mesh_builder.Failed() ? STATIC_MESH_BUILD_FAILED :
+			STATIC_MESH_BUILD_INELIGIBLE;
+	}
+	bool Retain_Materials(StaticMeshEntry &entry) const
+	{
+		return Static_Mesh_Retain_Materials(entry, g_static_mesh_builder.Materials().Data(),
+			g_static_mesh_builder.Materials().Count());
+	}
+	StaticMeshUploadResult Upload(StaticMeshEntry &entry) const
+	{
+		return Upload_Static_Mesh_Entry(entry, frame);
+	}
+	void Capture_Lighting(StaticMeshEntry &entry) const
+	{
+		entry.lighting = Capture_Static_Mesh_Lighting(render_info, world_transform);
+	}
+	uint32_t Built_Triangles() const
+	{
+		return g_static_mesh_builder.Indices().Count() / 3U;
+	}
+};
+
 // Draws every pass of a rigid mesh from its cached streams when it is
 // eligible. Returns false when the immediate path must draw it instead.
+// Instances share unlit entries; lit ones are keyed by this MeshClass too.
 bool Submit_Static_Mesh_Cache(MeshClass &mesh, MeshModelClass *model,
 	const RenderInfoClass &render_info, const Vector3 *vertices,
 	const Vector3 *normals, const TriIndex *triangles, int vertex_count,
@@ -2395,94 +3331,14 @@ bool Submit_Static_Mesh_Cache(MeshClass &mesh, MeshModelClass *model,
 {
 	if (!g_static_mesh_cache_enabled) return false;
 	const uint32_t frame = g_statistics.frames;
-	const void *user_lighting = mesh.Get_User_Lighting_Array(false);
-	StaticMeshEntry *entry = g_static_mesh_cache.Find(model, user_lighting);
-	if (entry != NULL) {
-		entry->last_used_frame = frame;
-		if (entry->state == STATIC_MESH_ENTRY_VOLATILE) return false;
-		const bool current = Static_Mesh_Entry_Current(*entry, model, vertex_count,
-			triangle_count, base_pass_count, render_info, world_transform);
-		if (entry->state == STATIC_MESH_ENTRY_READY && current) {
-			// Rebuilds are forgiven after a long stable period, so occasional
-			// lighting changes over a level do not exhaust the volatile limit.
-			if (entry->rebuilds != 0U &&
-				frame - entry->built_frame > STATIC_MESH_CACHE_STALE_FRAMES)
-				entry->rebuilds = 0U;
-			Replay_Static_Mesh_Entry(*entry);
-			++g_static_mesh_statistics.hits;
-			return true;
-		}
-		// Unchanged ineligible geometry stays on immediate mode. Only an
-		// allocation failure (nonzero retry frame) is attempted again later.
-		if (entry->state == STATIC_MESH_ENTRY_INELIGIBLE && current &&
-			(entry->retry_frame == 0U ||
-			 static_cast<int32_t>(frame - entry->retry_frame) < 0)) return false;
-		if (entry->state == STATIC_MESH_ENTRY_READY || !current) {
-			g_static_mesh_cache.Release_Storage(*entry);
-			if (++entry->rebuilds > StaticMeshCacheTable::MaxRebuilds) {
-				entry->state = STATIC_MESH_ENTRY_VOLATILE;
-				++g_static_mesh_statistics.volatile_entries;
-				return false;
-			}
-			++g_static_mesh_statistics.rebuilds;
-		}
-	} else {
-		entry = g_static_mesh_cache.Insert(model, user_lighting);
-		if (entry == NULL) {
-			g_static_mesh_statistics.evictions +=
-				g_static_mesh_cache.Evict_Stale(frame, STATIC_MESH_CACHE_STALE_FRAMES);
-			entry = g_static_mesh_cache.Insert(model, user_lighting);
-			if (entry == NULL) return false;
-		}
-		entry->last_used_frame = frame;
-	}
-
-	entry->vertex_count = static_cast<uint32_t>(vertex_count);
-	entry->triangle_count = static_cast<uint32_t>(triangle_count);
-	entry->pass_count = static_cast<uint32_t>(base_pass_count);
-	entry->alternate_materials = model->Is_Alternate_Material_Description_Enabled();
-	entry->state = STATIC_MESH_ENTRY_INELIGIBLE;
-	entry->retry_frame = 0U;
-	memset(&entry->lighting, 0, sizeof(entry->lighting));
-	bool uses_lighting = false;
-	const bool built = Build_Static_Mesh_Streams(mesh, model, render_info, vertices,
-		normals, triangles, vertex_count, triangle_count, base_pass_count,
-		world_transform, uses_lighting);
-	if (!built && g_static_mesh_builder.Failed()) {
-		// Host allocation failure, not an eligibility verdict.
-		++g_static_mesh_statistics.allocation_failures;
-		entry->retry_frame = frame + STATIC_MESH_CACHE_RETRY_FRAMES;
-		if (entry->retry_frame == 0U) entry->retry_frame = 1U;
-		return false;
-	}
-	if (!built) {
-		++g_static_mesh_statistics.ineligible;
-		// Retain the materials that produced the verdict so a changed material
-		// description or material state reconsiders this entry.
-		const uint32_t material_bytes = g_static_mesh_builder.Materials().Count() *
-			sizeof(StaticMeshMaterialSnapshot);
-		if (material_bytes != 0U) {
-			entry->materials = static_cast<StaticMeshMaterialSnapshot *>(malloc(material_bytes));
-			if (entry->materials != NULL) {
-				memcpy(entry->materials, g_static_mesh_builder.Materials().Data(), material_bytes);
-				entry->material_count = g_static_mesh_builder.Materials().Count();
-			}
-		}
-		if (entry->materials == NULL) entry->state = STATIC_MESH_ENTRY_VOLATILE;
-		return false;
-	}
-	if (!Upload_Static_Mesh_Entry(*entry, frame)) {
-		entry->retry_frame = frame + STATIC_MESH_CACHE_RETRY_FRAMES;
-		if (entry->retry_frame == 0U) entry->retry_frame = 1U;
-		return false;
-	}
-	if (uses_lighting) entry->lighting = Capture_Static_Mesh_Lighting(render_info, world_transform);
-	entry->state = STATIC_MESH_ENTRY_READY;
-	entry->built_frame = frame;
-	++g_static_mesh_statistics.builds;
-	g_static_mesh_statistics.cached_batches += entry->batch_count;
-	g_static_mesh_statistics.cached_triangles += g_static_mesh_builder.Indices().Count() / 3U;
-	if (!g_logged_first_static_mesh_build) {
+	StaticMeshCacheOps ops = { mesh, model, render_info, vertices, normals, triangles,
+		vertex_count, triangle_count, base_pass_count, world_transform, frame };
+	bool built = false;
+	const StaticMeshEntry *entry = Static_Mesh_Cache_Lookup(g_static_mesh_cache,
+		g_static_mesh_statistics, model, mesh.Get_User_Lighting_Array(false), &mesh,
+		frame, STATIC_MESH_CACHE_RETRY_FRAMES, STATIC_MESH_CACHE_STALE_FRAMES, ops, built);
+	if (entry == NULL) return false;
+	if (built && !g_logged_first_static_mesh_build) {
 		Vita_Append_A22_Runtime_Breadcrumb("static-mesh-cache",
 			"first cached mesh: mesh=%s vertices=%u indices=%u batches=%u materials=%u bytes=%u",
 			mesh.Get_Name(), g_static_mesh_builder.Vertices().Count(),
@@ -2514,6 +3370,15 @@ bool Use_Native_DDS_Upload()
 	return (g_render_work_cache_mode & 4U) != 0U;
 #else
 	return false;
+#endif
+}
+
+void Invalidate_Texture_Matrix_Shadow(uint32_t stage)
+{
+#if defined(__vita__)
+	Invalidate_Texture_Identity_Shadow(stage);
+#else
+	(void)stage;
 #endif
 }
 
@@ -2580,6 +3445,12 @@ bool Restore_Default_Render_Target()
 	g_active_render_target_height = 0U;
 	Invalidate_Native_State_Cache();
 	return true;
+}
+
+void Get_Physical_Display_Size(uint32_t &width, uint32_t &height)
+{
+	width = g_physical_display_width;
+	height = g_physical_display_height;
 }
 
 bool Get_Active_Render_Target_Size(uint32_t *width, uint32_t *height)
@@ -2691,10 +3562,20 @@ bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
 		return false;
 	}
 
-	viewport.x = static_cast<uint32_t>(left);
-	viewport.y = static_cast<uint32_t>(DISPLAY_HEIGHT - bottom);
-	viewport.width = static_cast<uint32_t>(right - left);
-	viewport.height = static_cast<uint32_t>(bottom - top);
+	// Logical 960x544 display -> physical display buffer (identity at 100%).
+	using RenegadeVitaInternalResolution::Scale_Edge;
+	const uint32_t physical_left =
+		Scale_Edge(left, DISPLAY_WIDTH, g_physical_display_width, false);
+	const uint32_t physical_right =
+		Scale_Edge(right, DISPLAY_WIDTH, g_physical_display_width, true);
+	const uint32_t physical_top =
+		Scale_Edge(top, DISPLAY_HEIGHT, g_physical_display_height, false);
+	const uint32_t physical_bottom =
+		Scale_Edge(bottom, DISPLAY_HEIGHT, g_physical_display_height, true);
+	viewport.x = physical_left;
+	viewport.y = g_physical_display_height - physical_bottom;
+	viewport.width = physical_right - physical_left;
+	viewport.height = physical_bottom - physical_top;
 	viewport.min_depth = min_depth;
 	viewport.max_depth = max_depth;
 	return true;
@@ -2922,8 +3803,27 @@ bool Initialize()
 		"display request: 960x544 buffers=3 color=SCE_GXM_COLOR_FORMAT_A8B8G8R8 depth=SCE_GXM_DEPTH_STENCIL_FORMAT_DF32M_S8 msaa=SCE_GXM_MULTISAMPLE_4X");
 #else
 	const unsigned campaign_msaa_samples = Read_Campaign_MSAA_Samples();
+	Read_Internal_Resolution_Mode();
+	{
+		// Auto starts at 960x544 so the depth/stencil surface vitaGL sizes at
+		// init covers every later (smaller) scan-out level.
+		const RenegadeVitaInternalResolution::LevelSize &initial_size =
+			RenegadeVitaInternalResolution::Level_Size(
+				g_internal_resolution_mode.automatic ?
+					RenegadeVitaInternalResolution::LEVEL_100 :
+					g_internal_resolution_mode.level);
+		g_physical_display_width = initial_size.width;
+		g_physical_display_height = initial_size.height;
+		Vita_Append_A22_Runtime_Breadcrumb("internal-resolution",
+			"version=1 mode=%s source=%s effective=%u%% physical=%ux%u logical=%ux%u scaling=display-scanout",
+			g_internal_resolution_mode.automatic ? "auto" : "fixed",
+			g_internal_resolution_from_flag ? "internal-resolution-v1.flag" : "default",
+			initial_size.percent, initial_size.width, initial_size.height,
+			static_cast<unsigned>(DISPLAY_WIDTH), static_cast<unsigned>(DISPLAY_HEIGHT));
+	}
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
-		"display request: 960x544 buffers=3 color=SCE_GXM_COLOR_FORMAT_A8B8G8R8 depth=SCE_GXM_DEPTH_STENCIL_FORMAT_DF32M_S8 msaa_samples=%u",
+		"display request: %ux%u buffers=3 color=SCE_GXM_COLOR_FORMAT_A8B8G8R8 depth=SCE_GXM_DEPTH_STENCIL_FORMAT_DF32M_S8 msaa_samples=%u",
+		g_physical_display_width, g_physical_display_height,
 		campaign_msaa_samples);
 #endif
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
@@ -2948,8 +3848,11 @@ bool Initialize()
 	g_shader_init_calls = 0;
 	g_shader_init_last_result = -1;
 	Read_Render_Work_Cache_Mode();
+	Read_GL_State_Shadow_Mode();
 #if !RENEGADE_VITA_M00_DEMO
 	Read_Static_Mesh_Cache_Mode();
+	Read_Skin_Deform_Cache_Mode();
+	Read_Vertex_Array_Mode();
 #endif
 	Invalidate_Native_State_Cache();
 
@@ -2964,8 +3867,14 @@ bool Initialize()
 		campaign_msaa_samples == 2U ? SCE_GXM_MULTISAMPLE_2X : SCE_GXM_MULTISAMPLE_NONE;
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "campaign framebuffer msaa=%ux",
 		campaign_msaa_samples);
+	// Defaults: 4 MiB immediate pool and 0x1000000 (16 MiB) user RAM reserve.
+	const VitaGLSizing vitagl_sizing = Read_VitaGL_Sizing();
+	Apply_VitaGL_Sizing(vitagl_sizing);
 	const GLboolean resolution_fallback = vglInitExtended(
-		4 * 1024 * 1024, 960, 544, 0x1000000, campaign_msaa);
+		static_cast<int>(vitagl_sizing.immediate_pool_bytes),
+		static_cast<int>(g_physical_display_width),
+		static_cast<int>(g_physical_display_height),
+		static_cast<int>(vitagl_sizing.ram_reserve_bytes), campaign_msaa);
 #endif
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 		"vglInit return: raw=%d semantic=resolution_fallback call_completed=1",
@@ -2973,6 +3882,8 @@ bool Initialize()
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 		"internal stages reached before vglInit return: GXM/context/framebuffer/depth/shader-patcher/clear-program/index-buffer/texture0 attempted; installed NO_DEBUG archive does not expose their individual return codes");
 	Log_System_Memory("after vglInit");
+	// Boot loading time: load previously seen FFP GXPs before any gameplay draw.
+	RenegadeVitaFfpProgramWarm::Prewarm_From_Record("renderer-init");
 	Log_VitaGL_Memory();
 	{
 		const bool vsync_enabled = Read_Vsync_Enabled();
@@ -2981,6 +3892,11 @@ bool Initialize()
 			"vsync: version=1 enabled=%d source=%s", vsync_enabled ? 1 : 0,
 			vsync_enabled ? "default-or-flag" : "vsync-v1.flag");
 	}
+#if RENEGADE_VITA_M00_DEMO
+	Log_VitaGL_Effective_Sizing(Default_VitaGL_Sizing());
+#else
+	Log_VitaGL_Effective_Sizing(vitagl_sizing);
+#endif
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 		"shader compiler init summary: calls=%u last_rc=%08X available=%d",
 		g_shader_init_calls, static_cast<unsigned>(g_shader_init_last_result),
@@ -2990,17 +3906,19 @@ bool Initialize()
 	glGetIntegerv(GL_VIEWPORT, initial_viewport);
 	const GLenum query_error = Log_GL_Result("viewport query");
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
-		"framebuffer/display query: viewport=%d,%d %dx%d expected=960x544",
-		initial_viewport[0], initial_viewport[1], initial_viewport[2], initial_viewport[3]);
+		"framebuffer/display query: viewport=%d,%d %dx%d expected=%ux%u",
+		initial_viewport[0], initial_viewport[1], initial_viewport[2], initial_viewport[3],
+		g_physical_display_width, g_physical_display_height);
 
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "glViewport entry");
-	glViewport(0, 0, 960, 544);
+	glViewport(0, 0, static_cast<GLsizei>(g_physical_display_width),
+		static_cast<GLsizei>(g_physical_display_height));
 	const GLenum viewport_error = Log_GL_Result("glViewport");
 	if (viewport_error == GL_NO_ERROR) {
 		g_current_native_viewport.x = 0U;
 		g_current_native_viewport.y = 0U;
-		g_current_native_viewport.width = DISPLAY_WIDTH;
-		g_current_native_viewport.height = DISPLAY_HEIGHT;
+		g_current_native_viewport.width = g_physical_display_width;
+		g_current_native_viewport.height = g_physical_display_height;
 		g_current_native_viewport.min_depth = 0.0f;
 		g_current_native_viewport.max_depth = 1.0f;
 		g_current_native_viewport_known = true;
@@ -3095,6 +4013,7 @@ void Shutdown()
 	g_lifecycle.logical_session_active = false;
 	Release_Deformed_Skin_Scratch();
 #if defined(__vita__)
+	g_vertex_array_batch.Release();
 	delete[] g_material_color_scratch;
 	g_material_color_scratch = NULL;
 	g_material_color_capacity = 0;
@@ -3105,6 +4024,7 @@ void Shutdown()
 	Release_Static_Mesh_Builder();
 #endif
 	Invalidate_Native_State_Cache();
+	RenegadeVitaFfpProgramWarm::Record_Resident_Keys("renderer-shutdown");
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-lifecycle",
 		"logical shutdown: shutdowns=%u sessions=%u native_calls=%u native_ready=%d",
 		g_lifecycle.logical_shutdowns, g_lifecycle.logical_sessions,
@@ -3139,10 +4059,7 @@ void Begin_Frame(bool clear_color, bool clear_depth, float red, float green,
 			static_cast<unsigned>(error), vglGetFrameNumber());
 		g_logged_first_frame = true;
 	}
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	Shadow_Load_Transforms(NULL, NULL);
 	g_statistics.state_changes += 5U;
 #else
 	(void)red;
@@ -3161,6 +4078,7 @@ void End_Frame(bool present)
 			Vita_Append_A22_Runtime_Breadcrumb("render-frame",
 				"WW3D first End_Frame present entry: frame_before=%u", vglGetFrameNumber());
 		}
+		Sample_VitaGL_Transient_Pools(g_statistics.frames);
 		{
 			// Includes vitaGL scene submission and any wait for a free buffer.
 			RENEGADE_FRAME_PROFILE("Vita Swap Buffers");
@@ -3170,6 +4088,9 @@ void End_Frame(bool present)
 		if (present_error != GL_NO_ERROR) {
 			++g_statistics.backend_errors;
 		}
+#if !RENEGADE_VITA_M00_DEMO
+		Update_Internal_Resolution_After_Present();
+#endif
 		if (!g_logged_first_present) {
 			Vita_Append_A22_Runtime_Breadcrumb("render-frame",
 				"WW3D first End_Frame present return: frame_after=%u glGetError=%08X",
@@ -3203,6 +4124,7 @@ void End_Frame(bool present)
 			}
 		}
 		if (g_statistics.frames % 120U == 0U) {
+			RenegadeVitaFfpProgramWarm::Sample_Window(g_statistics.frames);
 			Vita_Append_A22_Runtime_Breadcrumb("render-work-cache",
 				"version=1 mode=%u frame=%u sampler_writes=%llu material_evaluations=%llu material_hits=%llu fallback_passes=%llu scratch_bytes=%llu object_table_bytes=%u direct_atlas_requests=%llu light_normalizations=%llu mesh_corners=%llu mesh_unique=%llu mesh_batches=%llu mesh_scratch=%u skin_rgb_skips=%llu",
 				g_render_work_cache_mode, g_statistics.frames,
@@ -3219,8 +4141,21 @@ void End_Frame(bool present)
 				static_cast<unsigned long long>(g_mesh_indexed_batches),
 				static_cast<unsigned>(sizeof(g_indexed_mesh_batch)),
 				static_cast<unsigned long long>(g_material_skin_rgb_skips));
+			Log_GL_State_Shadow_Window(g_statistics.frames);
+			Vita_Append_A22_Runtime_Breadcrumb("texture-state",
+				"version=1 frame=%u sampler_updates=%llu sampler_skips=%llu sampler_deferrals=%llu texenv_writes=%llu texenv_skips=%llu binds=%llu bind_skips=%llu",
+				g_statistics.frames,
+				static_cast<unsigned long long>(g_statistics.texture_sampler_updates),
+				static_cast<unsigned long long>(g_statistics.texture_sampler_skips),
+				static_cast<unsigned long long>(g_texture_sampler_deferrals),
+				static_cast<unsigned long long>(g_texture_env_writes),
+				static_cast<unsigned long long>(g_texture_env_skips),
+				static_cast<unsigned long long>(g_statistics.texture_binds),
+				static_cast<unsigned long long>(g_statistics.texture_bind_skips));
 #if !RENEGADE_VITA_M00_DEMO
 			Log_Static_Mesh_Cache_Statistics();
+			Log_Skin_Deform_Cache_Statistics();
+			Log_Vertex_Array_Statistics();
 #if defined(RENEGADE_VITA_DETAILED_TIMING)
 			Vita_Append_A22_Runtime_Breadcrumb("mesh-boundary-time",
 				"frame=%u meshes=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu max_name=%s draw_ends=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu",
@@ -3336,6 +4271,10 @@ bool Bind_Texture(uint32_t native_texture, bool valid)
 	return Bind_Texture_Stage(0U, native_texture, valid);
 }
 
+#if defined(__vita__)
+static bool Flush_Pending_Texture_Sampler(uint32_t stage);
+#endif
+
 bool Bind_Texture_Stage(uint32_t stage, uint32_t native_texture, bool valid)
 {
 	if (stage >= MeshMatDescClass::MAX_TEX_STAGES) {
@@ -3357,6 +4296,12 @@ bool Bind_Texture_Stage(uint32_t stage, uint32_t native_texture, bool valid)
 	if (cache.texture_known && cache.texture == native_texture) {
 		++g_statistics.texture_bind_skips;
 		return true;
+	}
+	// A deferred request still targets the object bound now; finish it before
+	// the stage moves on, exactly where the immediate path wrote it.
+	if (g_pending_texture_samplers[stage].pending &&
+		g_pending_texture_samplers[stage].texture != native_texture) {
+		(void)Flush_Pending_Texture_Sampler(stage);
 	}
 	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
 	glBindTexture(GL_TEXTURE_2D, native_texture);
@@ -3385,21 +4330,12 @@ bool Configure_Texture_Sampler(uint32_t native_texture, bool valid,
 		address_u, address_v, min_filter, mag_filter, mip_filter);
 }
 
-bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
-	bool valid, uint32_t address_u, uint32_t address_v, uint32_t min_filter,
+#if defined(__vita__)
+// Applies one validated sampler request to `native_texture` on `stage` now.
+static bool Apply_Texture_Sampler_Now(uint32_t stage, uint32_t native_texture,
+	uint32_t address_u, uint32_t address_v, uint32_t min_filter,
 	uint32_t mag_filter, uint32_t mip_filter)
 {
-	if (stage >= MeshMatDescClass::MAX_TEX_STAGES) {
-		Record_Texture_Unsupported_Stage(stage);
-		return false;
-	}
-	if (!valid || native_texture == 0U) {
-		if (valid && native_texture == 0U) {
-			++g_statistics.texture_invalid_binds;
-		}
-		return false;
-	}
-#if defined(__vita__)
 	// D3D8's TextureClass owns the state choices.  This narrow translation only
 	// maps its established address/filter contract to VitaGL; it does not add a
 	// Vita sensitivity, cache, or material policy of its own.
@@ -3423,8 +4359,8 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 		native_min = point_min ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR;
 	}
 	const GLenum native_mag = mag_filter == 1U ? GL_NEAREST : GL_LINEAR;
-	NativeTextureObjectSampler &object_sampler = g_texture_object_samplers[
-		(native_texture * 2654435761U) & (TEXTURE_OBJECT_SAMPLER_SLOTS - 1U)];
+	NativeTextureObjectSampler &object_sampler =
+		g_texture_object_samplers[Texture_Object_Sampler_Slot(native_texture)];
 	const bool object_known = (g_render_work_cache_mode & 1U) != 0U &&
 		object_sampler.generation == g_texture_object_sampler_generation &&
 		object_sampler.texture == native_texture;
@@ -3485,6 +4421,84 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 	object_sampler.min_filter = native_min;
 	object_sampler.mag_filter = native_mag;
 	object_sampler.generation = g_texture_object_sampler_generation;
+	return true;
+}
+
+static bool Flush_Pending_Texture_Sampler(uint32_t stage)
+{
+	PendingTextureSampler &pending = g_pending_texture_samplers[stage];
+	if (!pending.pending) return true;
+	pending.pending = false;
+	return Apply_Texture_Sampler_Now(stage, pending.texture, pending.address_u,
+		pending.address_v, pending.min_filter, pending.mag_filter, pending.mip_filter);
+}
+#endif
+
+// Sampler batches bracket one original TextureClass::Apply. Its requests have
+// no draw between them, so only each object's final request is observable.
+void Begin_Texture_Sampler_Batch()
+{
+#if defined(__vita__)
+	++g_texture_sampler_batch_depth;
+#endif
+}
+
+void End_Texture_Sampler_Batch()
+{
+#if defined(__vita__)
+	if (g_texture_sampler_batch_depth == 0U || --g_texture_sampler_batch_depth != 0U) return;
+	for (uint32_t stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+		(void)Flush_Pending_Texture_Sampler(stage);
+	}
+#endif
+}
+
+bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
+	bool valid, uint32_t address_u, uint32_t address_v, uint32_t min_filter,
+	uint32_t mag_filter, uint32_t mip_filter)
+{
+	if (stage >= MeshMatDescClass::MAX_TEX_STAGES) {
+		Record_Texture_Unsupported_Stage(stage);
+		return false;
+	}
+	if (!valid || native_texture == 0U) {
+		if (valid && native_texture == 0U) {
+			++g_statistics.texture_invalid_binds;
+		}
+		return false;
+	}
+#if defined(__vita__)
+	// Defer only inside a batch and only for the object this stage already
+	// binds (TextureClass::Apply binds first), so deferral never changes a
+	// binding; the stage keeps just its final request. Any older request that
+	// this one supersedes, for another object on this stage or for this object
+	// on another stage, is applied first, so each object still ends with its
+	// last request in call order.
+	const NativeTextureStageCache &bound = g_texture_stage_cache[stage];
+	const bool defer = g_texture_sampler_batch_depth != 0U &&
+		(g_render_work_cache_mode & 1U) != 0U &&
+		bound.texture_known && bound.texture == native_texture;
+	for (uint32_t other = 0U; other < MeshMatDescClass::MAX_TEX_STAGES; ++other) {
+		const PendingTextureSampler &queued = g_pending_texture_samplers[other];
+		if (queued.pending && (other == stage ?
+			!defer || queued.texture != native_texture : queued.texture == native_texture)) {
+			(void)Flush_Pending_Texture_Sampler(other);
+		}
+	}
+	if (defer) {
+		PendingTextureSampler &pending = g_pending_texture_samplers[stage];
+		pending.pending = true;
+		pending.texture = native_texture;
+		pending.address_u = address_u;
+		pending.address_v = address_v;
+		pending.min_filter = min_filter;
+		pending.mag_filter = mag_filter;
+		pending.mip_filter = mip_filter;
+		++g_texture_sampler_deferrals;
+		return true;
+	}
+	return Apply_Texture_Sampler_Now(stage, native_texture, address_u, address_v,
+		min_filter, mag_filter, mip_filter);
 #else
 	(void)address_u;
 	(void)address_v;
@@ -3492,8 +4506,8 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 	(void)mag_filter;
 	(void)mip_filter;
 	++g_statistics.texture_sampler_updates;
-#endif
 	return true;
+#endif
 }
 
 bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
@@ -3535,9 +4549,9 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 		return true;
 	}
 	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-	Apply_GL_RGB_Texture_Op(color_op, color_arg1, color_arg2);
-	Apply_GL_Alpha_Texture_Op(alpha_op, alpha_arg1, alpha_arg2);
+	Set_Texture_Env(stage, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+	Apply_GL_RGB_Texture_Op(stage, color_op, color_arg1, color_arg2);
+	Apply_GL_Alpha_Texture_Op(stage, alpha_op, alpha_arg1, alpha_arg2);
 	glActiveTexture(GL_TEXTURE0);
 	cache.combiner_known = true;
 	cache.combiner_texture_enabled = true;
@@ -3549,6 +4563,10 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 	cache.alpha_arg2 = alpha_arg2;
 	++g_statistics.state_changes;
 	if (glGetError() != GL_NO_ERROR) {
+		// Do not let a rejected environment value become a later skip.
+		cache.combiner_known = false;
+		cache.env_known = 0U;
+		cache.env_color_white = false;
 		++g_statistics.backend_errors;
 		return false;
 	}
@@ -3563,6 +4581,13 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 	(void)texture_enabled;
 #endif
 	return true;
+}
+
+void Apply_Platform_Texture_Stage(TextureClass &texture, unsigned stage)
+{
+	Begin_Texture_Sampler_Batch();
+	texture.Apply_For_Platform_Boundary(stage);
+	End_Texture_Sampler_Batch();
 }
 
 bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
@@ -3604,77 +4629,74 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 	bool handled = true;
 	bool shader_state_overlap = false;
 	switch (state) {
+	// GL calls below go through the exact GL-state shadow (same order/values).
 	case D3DRS_ALPHABLENDENABLE:
 		shader_state_overlap = true;
 		if (value != 0U) {
-			glEnable(GL_BLEND);
-			glBlendFunc(g_dx8_source_blend, g_dx8_destination_blend);
+			Shadow_Blend(true);
+			Shadow_Blend_Func(g_dx8_source_blend, g_dx8_destination_blend);
 		} else {
-			glDisable(GL_BLEND);
+			Shadow_Blend(false);
 		}
 		break;
 	case D3DRS_SRCBLEND:
 		shader_state_overlap = true;
 		g_dx8_source_blend = To_GL_DX8_Blend(value);
-		glBlendFunc(g_dx8_source_blend, g_dx8_destination_blend);
+		Shadow_Blend_Func(g_dx8_source_blend, g_dx8_destination_blend);
 		break;
 	case D3DRS_DESTBLEND:
 		shader_state_overlap = true;
 		g_dx8_destination_blend = To_GL_DX8_Blend(value);
-		glBlendFunc(g_dx8_source_blend, g_dx8_destination_blend);
+		Shadow_Blend_Func(g_dx8_source_blend, g_dx8_destination_blend);
 		break;
 	case D3DRS_ALPHATESTENABLE:
 		shader_state_overlap = true;
-		if (value != 0U) {
-			glEnable(GL_ALPHA_TEST);
-		} else {
-			glDisable(GL_ALPHA_TEST);
-		}
+		Shadow_Alpha_Test(value != 0U);
 		break;
 	case D3DRS_ALPHAREF:
 		shader_state_overlap = true;
 		g_dx8_alpha_reference =
 			static_cast<float>(value & 0xffU) / 255.0f;
-		glAlphaFunc(g_dx8_alpha_function, g_dx8_alpha_reference);
+		Shadow_Alpha_Func(g_dx8_alpha_function, g_dx8_alpha_reference);
 		break;
 	case D3DRS_ALPHAFUNC:
 		shader_state_overlap = true;
 		g_dx8_alpha_function = To_GL_DX8_Compare(value);
-		glAlphaFunc(g_dx8_alpha_function, g_dx8_alpha_reference);
+		Shadow_Alpha_Func(g_dx8_alpha_function, g_dx8_alpha_reference);
 		break;
 	case D3DRS_ZFUNC:
 		shader_state_overlap = true;
-		glDepthFunc(To_GL_DX8_Compare(value));
+		Shadow_Depth_Func(To_GL_DX8_Compare(value));
 		break;
 	case D3DRS_ZWRITEENABLE:
 		shader_state_overlap = true;
-		glDepthMask(value != 0U ? GL_TRUE : GL_FALSE);
+		Shadow_Depth_Mask(value != 0U ? GL_TRUE : GL_FALSE);
 		break;
 	case D3DRS_CULLMODE:
 		shader_state_overlap = true;
 		if (value == D3DCULL_NONE) {
-			glDisable(GL_CULL_FACE);
+			Shadow_Cull(false);
 		} else {
-			glEnable(GL_CULL_FACE);
+			Shadow_Cull(true);
 			// The native baseline keeps GL's counterclockwise front faces.
 			// DX8 names the winding to discard, not the winding to retain.
 			// Preserve normal CW culling and distinguish the inverted mode.
-			glCullFace(value == D3DCULL_CCW ? GL_FRONT : GL_BACK);
+			Shadow_Cull_Face(value == D3DCULL_CCW ? GL_FRONT : GL_BACK);
 		}
 		break;
 	case D3DRS_FILLMODE:
-		glPolygonMode(GL_FRONT_AND_BACK, To_GL_DX8_Fill_Mode(value));
+		Shadow_Polygon_Mode(To_GL_DX8_Fill_Mode(value));
 		break;
 	case D3DRS_ZBIAS:
 		// DX8's positive integer bias pulls coplanar decals toward the camera.
 		// OpenGL polygon-offset units use the opposite sign. Keep the mapping
 		// scoped to filled triangles and disable it exactly at the released zero.
 		if (value != 0U) {
-			glEnable(GL_POLYGON_OFFSET_FILL);
-			glPolygonOffset(0.0f, -static_cast<float>(value));
+			Shadow_Polygon_Offset_Fill(true);
+			Shadow_Polygon_Offset(0.0f, -static_cast<float>(value));
 		} else {
-			glPolygonOffset(0.0f, 0.0f);
-			glDisable(GL_POLYGON_OFFSET_FILL);
+			Shadow_Polygon_Offset(0.0f, 0.0f);
+			Shadow_Polygon_Offset_Fill(false);
 		}
 		break;
 	default:
@@ -3697,6 +4719,7 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 	const GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
 		++g_statistics.backend_errors;
+		Invalidate_GL_State_Shadow();
 		return false;
 	}
 	Store_Render_State_Cache(state, value);
@@ -3719,12 +4742,97 @@ void Release_Texture(uint32_t native_texture)
 #if defined(__vita__)
 	if (native_texture != 0U) {
 		glDeleteTextures(1, &native_texture);
-		Invalidate_Texture_State_Cache();
+		Invalidate_Texture_Object_State(native_texture);
 	}
 #else
 	(void)native_texture;
 #endif
 }
+
+#if defined(__vita__)
+// A per-frame batch may use client arrays only when they hand vitaGL exactly
+// what the immediate path would: original pass-through UVs on every stage that
+// carries coordinates (no generated, transformed or projective ones), a UV
+// array behind each such stage, the GL texture units enabled for exactly those
+// stages (vitaGL derives the attribute layout from the enabled units), and no
+// pending first-occurrence coordinate breadcrumb from the per-vertex path.
+static bool Vertex_Array_Batch_Eligible(const OriginalTextureCoordinateState *states,
+	bool texture0, bool detail, const Vector2 *const *uvs)
+{
+	if (detail && !texture0) return false;
+	const bool active[MeshMatDescClass::MAX_TEX_STAGES] = { texture0, detail };
+	for (unsigned stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+		const NativeTextureStageCache &unit = g_texture_stage_cache[stage];
+		if (!unit.enabled_known || unit.enabled != active[stage]) return false;
+		const DWORD flags = states[stage].texture_transform_flags;
+		const DWORD count = flags & 0xffU;
+		if (active[stage] ? Texture_Coordinate_Mode(states[stage]) != D3DTSS_TCI_PASSTHRU ||
+				flags != D3DTTFF_DISABLE :
+			(flags & D3DTTFF_PROJECTED) != 0U && count >= D3DTTFF_COUNT2 &&
+				count <= D3DTTFF_COUNT4) return false;
+	}
+	if (texture0 && uvs[0] == NULL) return false;
+	if (detail && uvs[1] == NULL && uvs[0] == NULL) return false;
+	return !texture0 || g_logged_first_passthrough_texture_v_preserved;
+}
+
+// Draws the batch with one indexed draw, then leaves the final corner's colour
+// and coordinates current exactly as the immediate batch end does. Without a
+// bound buffer vitaGL copies [0, highest index] of each enabled array and the
+// indices into its frame pool, so the scratch is reusable on return.
+static void Draw_Vertex_Array_Batch(VitaVertexArrayBatch &batch, bool texture0,
+	bool detail, const char *mesh_name, bool is_skin)
+{
+	const uint32_t index_count = batch.Count();
+	if (index_count != 0U) {
+		// The FFP program may last have been patched for another layout.
+		vglRenegadeInvalidateVertexAttributes();
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_COLOR_ARRAY);
+		glVertexPointer(3, GL_FLOAT, 0, batch.Positions());
+		glColorPointer(4, GL_FLOAT, 0, batch.Colors());
+		glClientActiveTexture(GL_TEXTURE0);
+		if (texture0) {
+			glTexCoordPointer(2, GL_FLOAT, 0, batch.Uv0s());
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		} else glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE1);
+		if (detail) {
+			glTexCoordPointer(2, GL_FLOAT, 0, batch.Uv1s());
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		} else glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE0);
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(index_count),
+			GL_UNSIGNED_SHORT, batch.Indices());
+		glClientActiveTexture(GL_TEXTURE1);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE0);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+		// Later immediate draws must re-patch for their own layout.
+		vglRenegadeInvalidateVertexAttributes();
+		const uint32_t last = batch.Last_Slot();
+		const float *color = batch.Color(last);
+		glColor4f(color[0], color[1], color[2], color[3]);
+		if (texture0) glMultiTexCoord2f(GL_TEXTURE0, batch.Uv0(last)[0], batch.Uv0(last)[1]);
+		if (detail) glMultiTexCoord2f(GL_TEXTURE1, batch.Uv1(last)[0], batch.Uv1(last)[1]);
+		++g_vertex_array_batches;
+		g_vertex_array_corners += index_count;
+		g_vertex_array_vertices += batch.Vertices();
+		if (!g_logged_first_vertex_array_batch) {
+			Vita_Append_A22_Runtime_Breadcrumb("vertex-array",
+				"first client-array batch: mesh=%s skin=%d vertices=%u indices=%u texture0=%d detail=%d",
+				mesh_name, is_skin ? 1 : 0, batch.Vertices(), index_count,
+				texture0 ? 1 : 0, detail ? 1 : 0);
+			g_logged_first_vertex_array_batch = true;
+		}
+	}
+	batch.Reset();
+}
+#endif
 
 static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 	MaterialPassClass *material_pass)
@@ -3750,7 +4858,11 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 	const uint64_t mesh_boundary_start_us = sample_mesh_boundary ?
 		sceKernelGetProcessTimeWide() : 0U;
 #endif
-	if (is_skin) {
+	if (is_skin && Fetch_Cached_Deformed_Skin(mesh, model, render_info,
+		material_pass != NULL, vertex_count, vertices, normals)) {
+		++g_statistics.skinned_mesh_submissions;
+		g_statistics.deformed_skin_vertices += static_cast<uint32_t>(vertex_count);
+	} else if (is_skin) {
 		if (!Ensure_Deformed_Skin_Scratch(vertex_count)) {
 			++g_statistics.skin_deformation_failures;
 			++g_statistics.backend_errors;
@@ -3865,7 +4977,7 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 				if (texture != bound_textures[stage]) {
 					bound_textures[stage] = texture;
 					if (bound_textures[stage] != NULL) {
-						bound_textures[stage]->Apply_For_Platform_Boundary(
+						Apply_Platform_Texture_Stage(*bound_textures[stage],
 							static_cast<unsigned int>(stage));
 					} else if (stage == 0) {
 						Bind_Texture(0U, false);
@@ -3904,10 +5016,7 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 			"original MeshClass transform conversion failed");
 		return;
 	}
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(transform_matrices.projection);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(transform_matrices.modelview);
+	Shadow_Load_Transforms(transform_matrices.projection, transform_matrices.modelview);
 	g_statistics.state_changes += 4U;
 	TextureClass *first_texture = texture_for(0, 0, 0);
 	if (!g_logged_first_mesh) {
@@ -3979,6 +5088,13 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 				&original_world_transform);
 		}
 		const bool indexed_batch = (g_render_work_cache_mode & 8U) != 0U;
+		// vertex-array-v1: same traversal, state sequence and per-vertex values
+		// as emit_vertex; an eligible batch stores each referenced vertex once
+		// and draws once from client arrays (Draw_Vertex_Array_Batch).
+		const bool array_pass = g_vertex_array_enabled && !procedural_pass &&
+			g_vertex_array_batch.Reserve(static_cast<uint32_t>(vertex_count),
+				static_cast<uint32_t>(submitted_triangle_count) * 3U);
+		bool array_batch = false;
 		bool current_texturing = false;
 		// Per-batch hoists (SKIN_PATH_COST item 6): texture names, the skin
 		// pass-through predicate and the diagnostic-name predicates are constant
@@ -4042,6 +5158,42 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 			if (emit_position) glVertex3f(vertices[vertex_index].X, vertices[vertex_index].Y,
 				vertices[vertex_index].Z);
 		};
+		// emit_vertex's values for one new batch vertex, stored instead of
+		// submitted. Array batches open only after its first-occurrence
+		// breadcrumbs fired, so its pass-through argument reduces to the batch's.
+		auto array_append = [&](unsigned vertex_index) {
+			uint32_t slot = 0U;
+			if (!g_vertex_array_batch.Append(vertex_index, &slot)) return;
+			if (bound_textures[0] != NULL) {
+				float *uv = g_vertex_array_batch.Uv0(slot);
+				uv[0] = current_uvs[0][vertex_index].X;
+				uv[1] = current_uvs[0][vertex_index].Y;
+			}
+			if (current_detail_stage) {
+				const Vector2 *detail_uvs =
+					current_uvs[1] != NULL ? current_uvs[1] : current_uvs[0];
+				float *uv = g_vertex_array_batch.Uv1(slot);
+				uv[0] = detail_uvs[vertex_index].X;
+				uv[1] = detail_uvs[vertex_index].Y;
+			}
+			VertexMaterialClass *material =
+				material_for(static_cast<int>(vertex_index), pass);
+			const MaterialVertexColor vertex_color = Evaluate_Material_Vertex_Color(
+				cache_material_colors, material, color1, color2, vertex_index,
+				normals, original_world_transform, render_info, light_directions,
+				batch_skin_color_passthrough);
+			const Vector3 final_color = batch_skin_color_passthrough ?
+				Vector3(1.0f, 1.0f, 1.0f) : vertex_color.final_color;
+			float *color = g_vertex_array_batch.Color(slot);
+			color[0] = Clamp01(final_color.X);
+			color[1] = Clamp01(final_color.Y);
+			color[2] = Clamp01(final_color.Z);
+			color[3] = Clamp01(vertex_color.alpha);
+			float *position = g_vertex_array_batch.Position(slot);
+			position[0] = vertices[vertex_index].X;
+			position[1] = vertices[vertex_index].Y;
+			position[2] = vertices[vertex_index].Z;
+		};
 		auto end_batch = [&]() {
 #if !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 			const bool sample_draw_end =
@@ -4049,7 +5201,10 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 			const uint64_t draw_end_start_us = sample_draw_end ?
 				sceKernelGetProcessTimeWide() : 0U;
 #endif
-			if (indexed_batch && g_indexed_mesh_batch.Count() != 0U) {
+			if (array_batch) {
+				Draw_Vertex_Array_Batch(g_vertex_array_batch, bound_textures[0] != NULL,
+					current_detail_stage, mesh.Get_Name(), is_skin);
+			} else if (indexed_batch && g_indexed_mesh_batch.Count() != 0U) {
 				// Immediate GL attributes persist across draws. Restore the final
 				// original corner even when its vertex was reused from earlier.
 				emit_vertex(g_indexed_mesh_batch.Last(), false);
@@ -4119,12 +5274,12 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 					// Retain TextureClass as the resource/lifetime owner and invoke its
 					// original filter, mip, wrap, and bind sequence through the narrow
 					// platform bridge.
-					bound_textures[0]->Apply_For_Platform_Boundary(0U);
+					Apply_Platform_Texture_Stage(*bound_textures[0], 0U);
 				} else {
 					Bind_Texture(0U, false);
 				}
 				if (current_detail_stage) {
-					bound_textures[1]->Apply_For_Platform_Boundary(1U);
+					Apply_Platform_Texture_Stage(*bound_textures[1], 1U);
 				} else {
 					Disable_Texture_Stage(1U);
 				}
@@ -4168,8 +5323,12 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 						current_uvs[1] != NULL ? 1 : 0);
 					g_logged_first_stage1_mesh = true;
 				}
-				if (indexed_batch) g_indexed_mesh_batch.Reset();
-				Begin_Texture_Coordinate_Primitive(current_texture_coordinates);
+				array_batch = array_pass && g_logged_first_material_lighting &&
+					!batch_skin_names_recordable &&
+					Vertex_Array_Batch_Eligible(current_texture_coordinates,
+						bound_textures[0] != NULL, current_detail_stage, current_uvs);
+				if (indexed_batch && !array_batch) g_indexed_mesh_batch.Reset();
+				if (!array_batch) Begin_Texture_Coordinate_Primitive(current_texture_coordinates);
 				primitive_open = true;
 			}
 			const TriIndex &triangle = triangles[triangle_index];
@@ -4190,6 +5349,10 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 				vertex_indices[2] >= static_cast<unsigned>(vertex_count)) {
 				continue;
 			}
+			if (array_batch) {
+				for (int corner = 0; corner < 3; ++corner) array_append(vertex_indices[corner]);
+				continue;
+			}
 			if (indexed_batch && g_indexed_mesh_batch.Full()) {
 				end_batch();
 				g_indexed_mesh_batch.Reset();
@@ -4207,12 +5370,9 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 	Disable_Texture_Stage(1U);
 	Apply_Original_Texture_Coordinate_State(NULL);
 	// Submit_Indexed_Triangles may be used later in the same frame by HUD or
-	// native DX8 boundary callers. Restore its explicit identity baseline only
-	// after this homogeneous mesh submission is complete.
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	// native DX8 boundary callers. Every such draw loads its own transforms;
+	// see Release_Submission_Transforms for when the identity baseline is kept.
+	Release_Submission_Transforms();
 	g_statistics.state_changes += 4U;
 	if (!g_logged_first_mesh) {
 		const GLenum error = glGetError();
@@ -4493,10 +5653,7 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 	}
 	// clipping and interpolation.  CPU-dividing to NDC here would turn W into
 	// one, incorrectly draw behind-camera geometry and make UVs affine.
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(transform_matrices.projection);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(transform_matrices.modelview);
+	Shadow_Load_Transforms(transform_matrices.projection, transform_matrices.modelview);
 
 	OriginalTextureCoordinateState texture_coordinates[MAX_TEXTURE_STAGES] = {};
 	for (unsigned stage = 0U; stage < MAX_TEXTURE_STAGES; ++stage) {
@@ -4552,8 +5709,70 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 				submission.texture_names[1]);
 		if (emit_position) glVertex3f(position[0], position[1], position[2]);
 	};
+	// Batched unique vertices of an unlit, non-projective primitive are
+	// appended as packed records (ww3d_vita_indexed_vertex_records.h) instead
+	// of five vitaGL calls each. A record holds the position, coordinates and
+	// colour those calls would leave for glVertex3f; the last corner's calls
+	// are still replayed below, so vitaGL's current attributes are unchanged.
+	static IndexedVertexRecord indexed_records[INDEXED_VERTEX_RECORD_CHUNK];
+	uint32_t indexed_record_sources[INDEXED_VERTEX_RECORD_CHUNK];
+	uint32_t indexed_record_count = 0U;
+	bool record_indexed_vertices = false;
+	auto record_indexed_vertex = [&](uint32_t actual_index) {
+		const unsigned char *vertex = submission.vertex_data +
+			actual_index * submission.vertex_stride;
+		IndexedVertexRecord &record = indexed_records[indexed_record_count];
+		float normal[3];
+		float uv0[2];
+		float uv1[2];
+		uint32_t diffuse = 0;
+		memcpy(record.position, vertex, 3U * sizeof(float));
+		memcpy(&diffuse, vertex + diffuse_offset, sizeof(diffuse));
+		memcpy(normal, vertex + category_layout.normal_offset, 3U * sizeof(float));
+		memcpy(uv0, vertex + uv0_offset, 2U * sizeof(float));
+		memcpy(uv1, vertex + uv1_offset, 2U * sizeof(float));
+		if (!indexed_lighting ||
+			!Evaluate_Indexed_Primary_Color(submission, actual_index, record.color))
+			Decode_Indexed_Record_Color(diffuse, record.color);
+		Record_Indexed_Texture_Coordinate(0U, texture_coordinates[0], uv0, uv1,
+			record.position, normal, submission.world_transform,
+			submission.view_transform, submission.texture_names[0], record.uv0);
+		Record_Indexed_Texture_Coordinate(1U, texture_coordinates[1], uv0, uv1,
+			record.position, normal, submission.world_transform,
+			submission.view_transform, submission.texture_names[1], record.uv1);
+		indexed_record_sources[indexed_record_count++] = actual_index;
+	};
+	auto flush_indexed_records = [&]() {
+		if (indexed_record_count != 0U && !vglRenegadeImmediateVertices(
+			reinterpret_cast<const GLfloat *>(indexed_records),
+			static_cast<GLsizei>(indexed_record_count))) {
+			// vitaGL appended nothing: emit this run through the calls.
+			record_indexed_vertices = false;
+			for (uint32_t record = 0U; record < indexed_record_count; ++record)
+				emit_indexed_vertex(indexed_record_sources[record], true);
+		}
+		indexed_record_count = 0U;
+	};
+	auto emit_batched_vertex = [&](uint32_t actual_index) {
+		if (!record_indexed_vertices) {
+			emit_indexed_vertex(actual_index, true);
+			return;
+		}
+		record_indexed_vertex(actual_index);
+		if (indexed_record_count == INDEXED_VERTEX_RECORD_CHUNK)
+			flush_indexed_records();
+	};
+	auto begin_indexed_primitive = [&]() {
+		Begin_Texture_Coordinate_Primitive(texture_coordinates);
+		// An empty append only asks whether the open primitive's vitaGL state
+		// (unlit, non-projective) takes records; it writes nothing.
+		record_indexed_vertices = RENEGADE_VITA_INDEXED_VERTEX_RECORDS &&
+			indexed_batch && vglRenegadeImmediateVertices(
+				reinterpret_cast<const GLfloat *>(indexed_records), 0);
+	};
 	auto end_indexed_batch = [&]() {
 		if (indexed_batch && g_indexed_mesh_batch.Count()) {
+			flush_indexed_records();
 			emit_indexed_vertex(g_indexed_mesh_batch.Last(), false);
 			vglRenegadeEndIndexed(g_indexed_mesh_batch.Count(), g_indexed_mesh_batch.Indices());
 			g_mesh_expanded_corners += g_indexed_mesh_batch.Count();
@@ -4562,19 +5781,19 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 		} else glEnd();
 	};
 	if (indexed_batch) g_indexed_mesh_batch.Reset();
-	Begin_Texture_Coordinate_Primitive(texture_coordinates);
+	begin_indexed_primitive();
 	for (uint32_t triangle = 0; triangle < submission.triangle_count; ++triangle) {
 		if (indexed_batch && g_indexed_mesh_batch.Full()) {
 			end_indexed_batch();
 			g_indexed_mesh_batch.Reset();
-			Begin_Texture_Coordinate_Primitive(texture_coordinates);
+			begin_indexed_primitive();
 		}
 		for (uint32_t corner = 0; corner < 3U; ++corner) {
 			const uint32_t relative_index = submission.index_data[
 				submission.first_index + triangle * 3U + corner];
 			const uint32_t actual_index = submission.base_vertex_index + relative_index;
 			if (!indexed_batch || g_indexed_mesh_batch.Append(actual_index)) {
-				emit_indexed_vertex(actual_index, true);
+				emit_batched_vertex(actual_index);
 			}
 		}
 	}
@@ -4582,12 +5801,9 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 	const uint32_t emitted_triangles = submission.triangle_count;
 	Disable_Texture_Stage(1U);
 
-	// Restore the shared identity baseline after homogeneous GPU submission.
-	// Both mesh and generic indexed draws load their original transforms.
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	// Both mesh and generic indexed draws load their original transforms, so
+	// the identity baseline is only restored with the shadow disabled.
+	Release_Submission_Transforms();
 	g_statistics.state_changes += 4U;
 #endif
 
@@ -4671,14 +5887,19 @@ bool Capture_Resolved_Frame_RGBA(uint8_t *output, size_t output_bytes,
 	// uses a negative display stride and Dev122 fails inside Vita3K during
 	// this loading capture. Emulator framebuffer screenshots remain separate
 	// evidence until native readback synchronization is validated.
-	glReadPixels(0, 0, static_cast<GLsizei>(DISPLAY_WIDTH),
-		static_cast<GLsizei>(DISPLAY_HEIGHT), GL_RGBA, GL_UNSIGNED_BYTE, output);
+	// A reduced internal resolution reads the smaller physical buffer and
+	// expands it in place so consumers keep the 960x544 logical layout.
+	glReadPixels(0, 0, static_cast<GLsizei>(g_physical_display_width),
+		static_cast<GLsizei>(g_physical_display_height), GL_RGBA, GL_UNSIGNED_BYTE, output);
 	const GLenum error = glGetError();
 	glReadBuffer(GL_BACK);
 	if (error != GL_NO_ERROR) {
 		++g_statistics.backend_errors;
 		return false;
 	}
+	RenegadeVitaInternalResolution::Expand_Capture_In_Place(output,
+		g_physical_display_width, g_physical_display_height,
+		DISPLAY_WIDTH, DISPLAY_HEIGHT);
 #else
 	(void)presented_frame;
 	memset(output, 0, required);
@@ -4747,6 +5968,9 @@ void Invalidate_Static_Mesh_Cache()
 
 void Forget_Static_Mesh_Model(const void *model)
 {
+	// The same original model reset/destruction/geometry-unique hooks retire
+	// deformed-skin entries before that model's arrays change or are reused.
+	g_skin_deform_cache.Forget_Model(model);
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	g_static_mesh_cache.Forget_Model(model);
 #else
@@ -4761,6 +5985,75 @@ void Forget_Static_Mesh_User_Lighting(const void *model, const void *user_lighti
 #else
 	(void)model;
 	(void)user_lighting;
+#endif
+}
+
+// Same eligibility, streams and upload as Submit_Static_Mesh_Cache's first
+// build. Unlit colours are a pure function of the model, its user lighting
+// array and material state, which the first draw re-validates through
+// Static_Mesh_Entry_Current; lit meshes depend on the draw-time light
+// environment and are left to the first draw. Ineligible results record
+// nothing, so the first draw reaches the same verdict itself. Staging stops
+// at three quarters of the cache budget so gameplay-first meshes never
+// trigger an eviction of staged entries before they are drawn.
+StaticMeshPrebuildResult Prebuild_Static_Mesh(MeshClass &mesh, RenderInfoClass &render_info,
+	uint32_t &bytes)
+{
+	bytes = 0U;
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	MeshModelClass *model = mesh.Peek_Model();
+	if (!g_statistics.initialized || !g_static_mesh_cache_enabled || model == NULL ||
+		model->Get_Flag(MeshGeometryClass::SKIN)) return STATIC_MESH_PREBUILD_SKIPPED;
+	const int vertex_count = model->Get_Vertex_Count();
+	const int triangle_count = model->Get_Polygon_Count();
+	const Vector3 *vertices = model->Get_Vertex_Array();
+	const Vector3 *normals = model->Get_Vertex_Normal_Array();
+	const TriIndex *triangles = model->Get_Polygon_Array();
+	if (vertices == NULL || triangles == NULL || vertex_count <= 0 || triangle_count <= 0)
+		return STATIC_MESH_PREBUILD_SKIPPED;
+	const void *user_lighting = mesh.Get_User_Lighting_Array(false);
+	if (g_static_mesh_cache.Find(model, user_lighting) != NULL) return STATIC_MESH_PREBUILD_SKIPPED;
+	if (g_static_mesh_cache.Bytes() >= (STATIC_MESH_CACHE_BUDGET_BYTES / 4U) * 3U)
+		return STATIC_MESH_PREBUILD_BUDGET_FULL;
+	const int model_pass_count = model->Get_Pass_Count();
+	const int base_pass_count = model_pass_count > 0 ? model_pass_count : 1;
+	const Matrix3D &world_transform = mesh.Get_Transform();
+	bool uses_lighting = false;
+	const bool built = Build_Static_Mesh_Streams(mesh, model, render_info, vertices, normals,
+		triangles, vertex_count, triangle_count, base_pass_count, world_transform, uses_lighting);
+	// The build applied material texture-coordinate state outside a draw;
+	// leave the default pass-through stage state for the loading screen.
+	Apply_Original_Texture_Coordinate_State(NULL);
+	for (unsigned stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage)
+		Reset_Texture_Matrix_Stage(stage);
+	if (!built || uses_lighting) return STATIC_MESH_PREBUILD_SKIPPED;
+	const uint32_t staged_bytes = g_static_mesh_builder.Vertices().Count() *
+		STATIC_MESH_VERTEX_STRIDE + g_static_mesh_builder.Indices().Count() * sizeof(uint16_t);
+	if (g_static_mesh_cache.Bytes() + staged_bytes > (STATIC_MESH_CACHE_BUDGET_BYTES / 4U) * 3U)
+		return STATIC_MESH_PREBUILD_BUDGET_FULL;
+	const uint32_t frame = g_statistics.frames;
+	StaticMeshEntry *entry = g_static_mesh_cache.Insert(model, user_lighting);
+	if (entry == NULL) return STATIC_MESH_PREBUILD_BUDGET_FULL;
+	entry->vertex_count = static_cast<uint32_t>(vertex_count);
+	entry->triangle_count = static_cast<uint32_t>(triangle_count);
+	entry->pass_count = static_cast<uint32_t>(base_pass_count);
+	entry->alternate_materials = model->Is_Alternate_Material_Description_Enabled();
+	entry->last_used_frame = frame;
+	if (!Upload_Static_Mesh_Entry(*entry, frame)) {
+		g_static_mesh_cache.Remove(*entry);
+		return STATIC_MESH_PREBUILD_BUDGET_FULL;
+	}
+	entry->state = STATIC_MESH_ENTRY_READY;
+	entry->built_frame = frame;
+	++g_static_mesh_statistics.builds;
+	g_static_mesh_statistics.cached_batches += entry->batch_count;
+	g_static_mesh_statistics.cached_triangles += g_static_mesh_builder.Indices().Count() / 3U;
+	bytes = entry->bytes;
+	return STATIC_MESH_PREBUILD_BUILT;
+#else
+	(void)mesh;
+	(void)render_info;
+	return STATIC_MESH_PREBUILD_SKIPPED;
 #endif
 }
 

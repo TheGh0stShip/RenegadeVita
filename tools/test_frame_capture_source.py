@@ -17,20 +17,22 @@ class FrameCaptureSourceTests(unittest.TestCase):
 #include <cstddef>
 #include <cstring>
 #include <cassert>
+#include "internal_resolution.h"
 #define __vita__ 1
 using GLenum = unsigned; using GLsizei = int;
 constexpr unsigned GL_FRONT=1, GL_BACK=2, GL_RGBA=3, GL_UNSIGNED_BYTE=4, GL_NO_ERROR=0;
 constexpr unsigned DISPLAY_WIDTH=2, DISPLAY_HEIGHT=1;
+uint32_t g_physical_display_width=DISPLAY_WIDTH, g_physical_display_height=DISPLAY_HEIGHT;
 struct { bool initialized=true; unsigned backend_errors=0; } g_statistics;
 unsigned selected=GL_BACK, error=0; bool fail=false;
 unsigned reads=0;
 void glReadBuffer(unsigned value) { selected=value; }
 unsigned glGetError() { unsigned result=error; error=0; return result; }
-void glReadPixels(int,int,int,int,unsigned,unsigned,void* out) {
+void glReadPixels(int,int,int w,int h,unsigned,unsigned,void* out) {
     ++reads;
     if (fail) { error=99; return; }
     // The previous presentation has pixels; the new back buffer is empty.
-    std::memset(out, selected == GL_FRONT ? 123 : 0, 8);
+    std::memset(out, selected == GL_FRONT ? 123 : 0, size_t(w) * size_t(h) * 4U);
 }
 FUNCTION
 int main() {
@@ -46,15 +48,24 @@ int main() {
     assert(!Capture_Resolved_Frame_RGBA(nullptr, 8, true));
     assert(!Capture_Resolved_Frame_RGBA(pixels, 7, true));
     assert(reads == 3);
+    // Reduced internal resolution: half-width physical buffer is read and
+    // expanded to the logical layout.
+    fail=false;
+    g_physical_display_width=1;
+    assert(Capture_Resolved_Frame_RGBA(pixels, sizeof(pixels), true));
+    for (auto p: pixels) assert(p == 123);
+    assert(reads == 4);
+    g_physical_display_width=DISPLAY_WIDTH;
     g_statistics.initialized=false;
     assert(!Capture_Resolved_Frame_RGBA(pixels, 8, true));
-    assert(reads==3 && selected==GL_BACK);
+    assert(reads==4 && selected==GL_BACK);
 }
 '''.replace("FUNCTION", function)
         with tempfile.TemporaryDirectory(prefix="frame-source-") as directory:
             main, exe = Path(directory) / "main.cpp", Path(directory) / "probe"
             main.write_text(program)
             subprocess.run(["g++", "-std=c++17", "-Wall", "-Wextra", "-Werror",
+                            "-I", str(ROOT / "port/renderer/vita"),
                             str(main), "-o", str(exe)], check=True)
             subprocess.run([str(exe)], check=True)
 

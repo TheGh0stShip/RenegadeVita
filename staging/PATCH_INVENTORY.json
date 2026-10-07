@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "4faf09a7f7b148d8ba027ae66f32fe3512a432bb6c0534adf4377d41f65701cc",
-  "patch_count": 545,
+  "stage_script_sha256": "38a84255cb200042577f12b3c83c36211b864c6e68521b34b9c322e53bcc0593",
+  "patch_count": 555,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1750,6 +1750,16 @@
       "sha256": "6732bf9499ac2eae75569904fc06c40b5325a6ed66e9c1e5f2bf692e316e8fad"
     },
     {
+      "path": "port/patches/scripts-a38-m05-deadeye-poke-rearm.patch",
+      "stage_directory": "scripts",
+      "sha256": "af2c1fc2de458998605772b6ee51095a0c6c5aee5279e9e764a5152acdd6f1bf"
+    },
+    {
+      "path": "port/patches/scripts-a38-m05-gunner-poke-rearm.patch",
+      "stage_directory": "scripts",
+      "sha256": "b2161f242e2f76695d1d2a0be0c4a842a520672ab273be05343f999c567adbc1"
+    },
+    {
       "path": "port/patches/scripts-a36-m11-save-variable-ids.patch",
       "stage_directory": "scripts",
       "sha256": "4010ac3b2825d0bcdb333d51b4dd2f5d9109deda3868ea10afa68bbd1bf49d4f"
@@ -1758,6 +1768,21 @@
       "path": "port/patches/scripts-a36-m11-conversation-id-init.patch",
       "stage_directory": "scripts",
       "sha256": "9579e0bd770447ae71d7bccd0247b6147d87191721cc84ec96caa5677b0001ad"
+    },
+    {
+      "path": "port/patches/scripts-a38-m11-end-conversation-replay.patch",
+      "stage_directory": "scripts",
+      "sha256": "88760321c45031ad8e45d701b0a47f31ea33ef819e20951007f56e29badc4bc0"
+    },
+    {
+      "path": "port/patches/scripts-a38-m11-sydney-route-monotonic.patch",
+      "stage_directory": "scripts",
+      "sha256": "da8666806dec3a7444da9067827dfd873c024a1c546c45519449d3b1477c6aa4"
+    },
+    {
+      "path": "port/patches/scripts-a38-m11-cryo-spawn-recursion-bound.patch",
+      "stage_directory": "scripts",
+      "sha256": "1029dcf04828ff3b3e60f56ee8e04236460e46676d22b6bbecde11b38010ab5c"
     },
     {
       "path": "port/patches/scripts-a36-m07-evac-param-id-buffer.patch",
@@ -2695,6 +2720,11 @@
       "sha256": "8696762046ee73979d8e8f279e5cef0b9071054cdbd288251690c96dc935d890"
     },
     {
+      "path": "port/patches/combat-a38-raveshaw-jump-grounded-landing.patch",
+      "stage_directory": "combat",
+      "sha256": "fe1e4eb02e059607f6df29c01c1fbb95aaf739cef53c0a929a7f60d6478def3d"
+    },
+    {
       "path": "port/patches/combat-a36-smart-control-disabled-weapon-guard.patch",
       "stage_directory": "combat",
       "sha256": "82e2110a38e9fdb81c97af66939a407ffe223a8fa3102fa5f38099afafe318d3"
@@ -2725,10 +2755,30 @@
       "sha256": "8344203252d190bbfabc8d76ae51164cabec4a81d780578383284115c478cf5d"
     },
     {
+      "path": "port/patches/scripts-a38-m01-pct-unlock-watchdog.patch",
+      "stage_directory": "scripts",
+      "sha256": "57f1d3c78d910c507377af7f20c05e66708b8ef9077c01815d44e28b50109798"
+    },
+    {
+      "path": "port/patches/scripts-a38-m01-open-gate-objective-fallback.patch",
+      "stage_directory": "scripts",
+      "sha256": "330307d3b7cc4d80176c4fa5c9346d26eac23cfda291b3aba7d1aaff2411835d"
+    },
+    {
       "path": "port/patches/combat-a37-screen-overlay-opacity-clamp.patch",
       "stage_directory": "combat",
       "sha256": "1fd9784eff93c659fa39a08322828cb55ab49dca36582e540f51be432e85a82a"
+    },
+    {
+      "path": "port/patches/combat-a37-pathaction-elevator-entry-timeout.patch",
+      "stage_directory": "combat",
+      "sha256": "3fc0932b5dc0fd1950bfb7c54ee74578ef9d3c75b1762c26641904a0bb4a62b3"
+    },
+    {
+      "path": "port/patches/combat-a37-scriptzone-swept-entry.patch",
+      "stage_directory": "combat",
+      "sha256": "fb83f93007291c4e539c4ecbfcb1857d537732802cddd0330f86a499e13ea332"
     }
   ],
-  "registry_sha256": "25ea4dc53388ee37480ba862c888e2f4bbc02ebf358d3277f8db6181e738e9aa"
+  "registry_sha256": "29c09f6887eb965d76e315411d583a2d397d0bf54217662d1de1937fe6de6b62"
 }

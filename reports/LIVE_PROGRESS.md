@@ -1,5 +1,23 @@
 # Live engineering progress
 
+# Tutorial round 1 (20 agents, no build) — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Completed (source/host evidence only; nothing compiled, emulated or run on hardware):
+- 20 tutorial/dev-loop work items integrated on `tutorial-r1/integration` (base = main 6528a8e + FPS
+  round 4 dev240). Fifteen runtime items; three are default-on and coordinator-reviewed as
+  state-identical (RVPF1 ghost probe skip, RVPE1 undrawn-particle skip, RVAL1 scratch reuse). The rest
+  are behind new switches: RVTX1 RVTP1 RVSC1 RVAU1 RVHD1 RVIO1 RVFR1 RVCK1 RVSO1 RVTB1 RVTC1.
+- Build/dev loop: shared/relocatable ccache opt-ins, gamedata.h direct includes (63 uncached TUs),
+  staging 16.5 s to 5.9 s plus a fingerprint skip, an opt-in dependency cache, a parallel host-test runner,
+  the tutorial perf log analyzer and a fixed tutorial benchmark.
+- Fixed a main defect: M00 demo builds called the undefined Read_Vsync_Enabled() (since 5b25988).
+Evidence: staging 585 patches, inventory PASS, byte-identical regeneration; pure host lane 171 modules /
+1,301 tests PASS (5 known pre-existing failures). See reports/tutorial/TUT_R1_INTEGRATION.md.
+Next: ARM build plus the compiled/sanitizer host lanes, Vita3K install, then the tutorial benchmark A/B.
+Blocker: building was out of scope for this round; merging to main also lands unaccepted dev240.
+
 # Campaign development push 4 (soft-lock hunt) — 2026-10-07
 
 Renegade Vita — v3.5 active

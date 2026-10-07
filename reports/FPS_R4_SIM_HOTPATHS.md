@@ -124,6 +124,10 @@ Consequences:
     cross-fade), each update deletes the old `HAnimComboDataClass` objects and
     allocates new ones, with the malloc lock, per soldier per frame
     (animcontrol.cpp:886-893; hanim.cpp:260).
+  - *Correction (2026-10-07, tutorial round 1):* `HAnimComboDataClass` is an
+    `AutoPoolClass<HAnimComboDataClass,256>` (`hanim.h:176`), so this churn uses the
+    pool free list, not the malloc lock. See
+    [frame allocations](tutorial/TUT_R1_FRAME_ALLOCATIONS.md).
   - Deferred: reusing these objects needs an `Is_Shared`/ownership proof.
     Measure via `Soldier PostThink` first.
 

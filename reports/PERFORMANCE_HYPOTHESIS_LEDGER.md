@@ -1,5 +1,18 @@
 # Performance hypothesis ledger
 
+## 2026-10-07 Tutorial round 1 (unmeasured)
+
+Source evidence and dev230 tutorial logs put render far ahead of simulation
+(about 26–35 ms against 3–6 ms per frame; Gunner range p95 113 ms). Script layer
+estimate 0.03–0.15 ms; pathfinding 6 µs/frame; port-added physics queries
+negligible. Hypotheses, each behind its own switch and none measured:
+pass-major opaque replay RVSO1 (0–0.5 ms), frame pacing RVFR1 (judder, not mean
+FPS), tutorial first-use prewarm RVTP1 (removes 0.5–0.85 s first-select stalls),
+load I/O RVIO1 (sceIoRead 15,293 to 963 in a model of the read path), audio
+reserve/caching RVAU1 (0–4 MiB heap high-water), 16-bit TGA residency RVTX1
+(0.8 MB M00). Measure with RVTB1 and tools/tutorial_perf_report.py. Detail:
+`reports/tutorial/TUT_R1_INTEGRATION.md`.
+
 ## 2026-09-27 TT Audio Reference Check
 
 Reverified the local official TT 4.8.4 revision-9000 archive SHA-256:

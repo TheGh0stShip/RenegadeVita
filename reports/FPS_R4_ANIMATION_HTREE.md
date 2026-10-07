@@ -129,6 +129,10 @@ soldiers blend). Animation is not the dominant Combat cost.
    stays bit-identical.
 2. When more than two anims blend, `HumanAnimControlClass::Update` allocates
    one `HAnimComboDataClass` per anim per frame. This belongs to HEAP_CHURN.
+   *Correction (2026-10-07, tutorial round 1):* `HAnimComboDataClass` derives
+   from `AutoPoolClass<HAnimComboDataClass,256>` (`hanim.h:176`); these `new`/`delete`
+   calls use the object pool's free list, not malloc. See
+   [frame allocations](tutorial/TUT_R1_FRAME_ALLOCATIONS.md).
 
 ## Hardware measurement to take
 

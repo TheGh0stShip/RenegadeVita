@@ -257,3 +257,103 @@ is present.
   ranges with `min == max`.
 - Not checked: a mid-fight save/restore, and the boss landing on Vita
   physics. Both need hardware.
+
+## Soft-lock hunt — 2026-10-07
+
+Evidence class: read-only retail metadata (`m08.ldd` in `M08.mix` and the
+global `conv10.cdb` in `always.dbs`, `ConversationClass` micro-chunk 13 =
+`VARID_ISKEY`; the same parser reproduces the 23 key conversations recorded
+for M10), MIX index lookups, manual staged-source review, zero-fuzz staging
+replay (544 ordered patches, inventory PASS, only `raveshawbossgameobj.cpp`
+changes), ARM `-fsyntax-only` of the patched file (exit 0, no warnings on the
+new lines), `tools/test_m08_readiness.py` (8 tests OK). No build, emulator or
+Vita run. Staged line numbers.
+
+### Conversation-drop pattern (M10) — not reachable in M08
+
+- 801→802 (`M08_CON001`, `mission08.cpp:356-363`) and 802→803
+  (`M08_CON002`, `:415-422`) call `Start_Conversation` before
+  `Monitor_Conversation`, the same order as M10. All 41 `M08_CON*` in
+  `m08.ldd` are **not key** (IsKey 0, stored priority 30), and none of the
+  3,606 global conversations is key. `ActiveConversationClass::Start_Conversation`
+  (activeconversation.cpp:386-401) can therefore never stop them before the
+  monitor is registered. Every later stop (AI-state interrupt, audience,
+  timeout, key preemption) runs after registration, and both scripts accept
+  ENDED and INTERRUPTED. No fix.
+- Even a lost callback would not block completion: the midtro zone
+  (`M08_Activate_Midtro`, `:6813-6846`) and the boss do not read objective
+  state, and `Mission_Complete (true)` comes from the boss class.
+
+### Fixed (one patch)
+
+**Raveshaw jump never lands → boss frozen, death unreachable**
+(`combat-a38-raveshaw-jump-grounded-landing.patch`, staged
+`raveshawbossgameobj.cpp:3036-3070`). `JUMP_STATE_JUMPING` only ends when a
+think sees `velocity.Z < 0` within 2 m of the ground. `PhysicsSceneClass`
+splits any frame longer than 1/15 s (`pscene.cpp:138, 353`; frames are clamped
+at 1/5 s) into several timesteps. If touchdown is not the last of them, the
+following grounded `Normal_Move` leaves `velocity.Z` at exactly 0 while he
+stands still (`humanphys.cpp:422-425`), so the window is never seen.
+`JumpState` then stays JUMPING for ever. `Jump_To_Point` only starts from
+NONE, the action stays paused, `OVERALL_STATE_CHASE_STAR` cannot grab
+(`:1352` needs NONE), and `MOVE_STATE_JUMP_TO_CATWALK` never reaches
+`MOVE_STATE_CIRCLE_CATWALK`. Health is floored at 1 and death needs that state
+(`:1201`), so the mission cannot complete. Reachability: the boss arena on
+Vita, during a hitch of more than 67 ms that coincides with a landing. Fast
+downward jumps (jump-down from the catwalk, jump-to-star) are the most
+exposed. Severity: hard soft-lock (retail PC rarely runs below 15 fps). The
+port's `Jump_To_Point` no-flight-solution early return leaves the same
+grounded state. Fix: after the unchanged original test, a grounded think
+(`Is_In_Contact ()`) with `velocity.Z <= 0` also enters
+`JUMP_STATE_LANDING`. Launches with any horizontal component have
+`velocity.Z > 0`, and the original test runs first, so normal jumps are
+unchanged. It is idempotent: it is evaluated per think and only from
+JUMPING. Breadcrumb (at most 4 per run): `A3.8 Raveshaw jump: grounded
+landing fallback`.
+
+### Reviewed — no blocker (retail-identical or recoverable)
+
+- (b) Midtro relocate: `x8a_midtro.txt` sends `100002, 8047` at frame 1940
+  and `Test_Cinematic` saves and restores Time and slots, so a save during the
+  midtro still relocates. 803 is added (CON002 end) long before the 65 s
+  midtro reaches 1940. Even reversed, only the 803 objective status would be
+  wrong. Completion does not depend on it.
+- (c) No counter on the M08 completion path. The Level 2 keycard drops from
+  `Killed` (`:937-940`, `:5884-5889`), which is retail behaviour.
+- (d) One-shot zones (802, both 803 zones, midtro) latch `already_entered` and
+  save it. The elevator zone (`:6902-6930`) re-fires harmlessly (blocker and
+  no-fall-damage script per entry).
+- (e) Boss loop review. Retail animations `rav_death/jump/heal/grabthrow/
+  throw`, `h_a_bodyslam`, `stl_struggle`, `h_a_fly1-4`, `h_a_a0d0` and
+  `h_c_a0a0_l07` are all in `always.dat`. `ANIM_MODE_TARGET` snaps to the
+  target frame, and a NULL animation reports complete, so the DYING (frame
+  43), LANDING, BODYSLAM (174) and DEATH_LANDING (`:2828`) waits terminate.
+  The FALL state falls monotonically to hard-coded floor Z. A ROAR during a
+  jump re-runs `JUMPING` Begin on resume, which re-launches. Throwing with no
+  `(Raveshaw Ammo)` left (`AC Unit`/`Plastic Drum` presets) falls back to
+  CHASE_STAR.
+- Player out of reach (deferred, retail-identical and player-recoverable):
+  `OVERALL_STATE_CHASE_STAR` sets `OverallStateTimer` (`:1333`) but never reads
+  it. Its only exit is a grab at ≤1.95 m (3D), and the jump-to-star needs more
+  than 8 m. A player standing 2–8 m away but unreachable (for example above
+  him) keeps him chasing, and at ≤5 % health he only retreats to the catwalk
+  after a grab or throw ends. Moving away more than 8 m or down to him
+  resumes the fight. Adding a timeout would change retail pacing.
+- (f) Save/load: all nine state machines (with `IsHalted`), timers,
+  `StartTimer`, `LastMeleeAnimFrame` and the jump target are saved. Load
+  re-collects rods and re-applies the anim override. A save during
+  `HAVOC_STATE_GRABBED` restores the state, and `FLYING` re-enables control on
+  release. Death/restart reloads the level, and the boss has no static
+  gameplay state.
+
+### Deferred
+
+- `ThrownObject` is a raw `SimpleGameObj *` with no liveness check
+  (`:1752-1757`, `:3493-3520`). If a player destroys the `(Raveshaw Ammo)`
+  object Raveshaw is walking to or holding, that is a use-after-free. The
+  `AC Unit`/`Plastic Drum` health and skin were not decoded, so it is not
+  known whether this can happen. This is a crash risk, not a soft-lock.
+- HAVOC_STATE_FLYING and the thrown-object flight end only on a `Fly_Move`
+  hit. The arena is enclosed, so this is retail-identical.
+- Physical check: in the boss fight, look for the fallback breadcrumb and
+  confirm that the catwalk retreat, the collapse and the success flow follow.

@@ -1165,6 +1165,21 @@ DECLARE_SCRIPT(M07_Dead6_Engineer, "")  // Hotwire
 	{
 		ActionParamsStruct params;
 
+		// A failed path must not strand the SAM capture or the inn evacuation.
+		// Treat it like the existing no-progress hack below: capture from where
+		// Hotwire stands, or count him as arrived at the evac spot.
+		bool path_failed = (reason == ACTION_COMPLETE_PATH_BAD_START ||
+			reason == ACTION_COMPLETE_PATH_BAD_DEST);
+		if ((action_id == GO_SAM1 || action_id == GO_SAM2) && !evac &&
+			(path_failed || reason == ACTION_COMPLETE_MOVE_NO_PROGRESS_MADE))
+		{
+			reason = ACTION_COMPLETE_NORMAL;
+		}
+		if (action_id == ARRIVE_EVAC_SPOT && evac && path_failed)
+		{
+			reason = ACTION_COMPLETE_MOVE_NO_PROGRESS_MADE;
+		}
+
 		if (action_id == ARRIVE_EVAC_SPOT && reason == ACTION_COMPLETE_NORMAL && evac)
 		{
 			int dead6_id = Commands->Get_ID(obj);
@@ -1900,22 +1915,34 @@ DECLARE_SCRIPT(M07_Evac_Site_Soldier, "APC_ID=0:int")
 DECLARE_SCRIPT(M07_Activate_Hotwire, "")
 {
 	bool already_entered;
-	
-	enum{HOTWIRE_CAPTURE_SAMS};
+	bool capture_sent;
+
+	enum{HOTWIRE_CAPTURE_SAMS, CAPTURE_SAMS_FALLBACK};
 
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( already_entered, 1 );
+		SAVE_VARIABLE( capture_sent, 2 );
 	}
 
 	void Created (GameObject * obj)
 	{
 		already_entered = false;
+		capture_sent = false;
 	}
 
-	
+	void Send_Capture_Sams (GameObject * obj)
+	{
+		if (capture_sent)
+		{
+			return;
+		}
+		capture_sent = true;
+		Commands->Send_Custom_Event (obj, HOTWIRE, M07_HOTWIRE_CAPTURE_SAMS, 1, 0.0f);
+	}
+
 	void Entered (GameObject * obj, GameObject * enterer)
 	{
 		if(enterer == HOTWIRE && !already_entered)
@@ -1929,15 +1956,28 @@ DECLARE_SCRIPT(M07_Activate_Hotwire, "")
 			Commands->Join_Conversation(HOTWIRE, conv_id, true, true);
 			Commands->Start_Conversation (conv_id, HOTWIRE_CAPTURE_SAMS);
 			Commands->Monitor_Conversation(obj, conv_id);
+			// M07_CON016 is not a key conversation. If a key one is playing,
+			// Start_Conversation stops it before the monitor is registered and
+			// no callback ever arrives, leaving Hotwire idle and the SAM/inn
+			// evacuation chain stalled. Send the capture order anyway.
+			Commands->Start_Timer(obj, this, 15.0f, CAPTURE_SAMS_FALLBACK);
 		}
 
+	}
+
+	void Timer_Expired (GameObject * obj, int timer_id)
+	{
+		if (timer_id == CAPTURE_SAMS_FALLBACK && already_entered)
+		{
+			Send_Capture_Sams(obj);
+		}
 	}
 
 	void Action_Complete(GameObject * obj, int action_id, ActionCompleteReason reason)
 	{
 		if (action_id == HOTWIRE_CAPTURE_SAMS && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
 		{
-			Commands->Send_Custom_Event (obj, HOTWIRE, M07_HOTWIRE_CAPTURE_SAMS, 1, 0.0f);
+			Send_Capture_Sams(obj);
 		}
 	}
 };

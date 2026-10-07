@@ -1104,6 +1104,10 @@ test "$(sha256sum "$rv_stage/scripts/Test_DLS.cpp" | cut -d' ' -f1)" = \
 	"357ac12b67ff3060f20cd0854e2fb60e9926e9fcf86b5f07530d68978263caab"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a37-mx0-area4-controller-id-init.patch"
+test "$(sha256sum "$rv_stage/scripts/Test_RAD.cpp" | cut -d' ' -f1)" = \
+	"5699f1fc5df5441cc33b9ccc50b09d9017068bff776b2a99e98912bf4c87753a"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m13-firehole-engineer-register.patch"
 test "$(sha256sum "$rv_stage/ww3d2/dazzle.cpp" | cut -d' ' -f1)" = \
 	"2bbcba91d75327b7fa35b4c1f50718ab05d3b252a687a78d0b3c62a90dfefd58"
 test "$(sha256sum "$rv_stage/ww3d2/ww3d.cpp" | cut -d' ' -f1)" = \
@@ -1153,6 +1157,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m10-stealth-attack-loc-bounds.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m10-objective-conversation-resend.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m05-dead6-help-failed-text-save.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m05-apc-deploy-param-buffer.patch"
@@ -1169,7 +1175,21 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m03-paradrop-param-buffer.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m03-keycard-objective-late-add.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m03-mainframe-objective-late-add.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m03-shore-sam-objective-late-add.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m03-village-sam-objective-late-add.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m03-village-sam-report-fallback.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m04-save-variable-ids.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m04-torpedo-objective-race.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m04-missile-briefing-drop.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m05-save-variable-ids.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -1177,13 +1197,27 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m05-fire-loc-save.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m05-deadeye-poke-rearm.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m05-gunner-poke-rearm.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m11-save-variable-ids.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m11-conversation-id-init.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m11-end-conversation-replay.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m11-sydney-route-monotonic.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m11-cryo-spawn-recursion-bound.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m07-evac-param-id-buffer.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m07-vehicle-drop-zone-bounds.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m07-hotwire-sam-conversation-fallback.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m07-hotwire-path-failure-fallback.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-save-phase-diagnostics.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -1573,6 +1607,13 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-raveshaw-star-dist-modulo-guard.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-raveshaw-stealth-soldier-create-guard.patch"
+# M08 Raveshaw soft-lock: JUMP_STATE_JUMPING only ends on a descending think
+# within 2 m of the ground.  A frame longer than the 1/15 s physics substep can
+# land and settle him (velocity.Z == 0) between thinks, freezing JumpState and
+# with it the catwalk retreat that the death sequence requires.  Applied after
+# the stealth-soldier guard, the last earlier raveshawbossgameobj.cpp patch.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a38-raveshaw-jump-grounded-landing.patch"
 # VehicleGameObj::Think calls Apply_Control unconditionally, so the original
 # control-disabled branch dereferenced a NULL weapon for weaponless vehicles.
 # Applied after every other smartgameobj.cpp patch so no anchor moves.
@@ -1609,6 +1650,16 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m01-load-position-tables.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m01-controller-id-init.patch"
+# M01 soft-lock hunt: the one-shot PCT poke unlocks the pen only through five
+# chained SOUND_ENDED events, which a save/load (dynamic sounds are not saved)
+# or a sound that never ends can break; a 30 s watchdog finishes the chain once.
+# The non-key "Remove_Unlock_Gate_Objective" conversation is stopped before its
+# monitor exists while a key conversation plays, so the "Open the gate"
+# objective gets a 30 s fallback. Both are no-ops on the normal path.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m01-pct-unlock-watchdog.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m01-open-gate-objective-fallback.patch"
 # Script-supplied overlay opacity was the only unclamped overlay target; clamp
 # it like the color setters (retail scripts only use 0 and 1).
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
@@ -1627,6 +1678,43 @@ test "$(sha256sum "$rv_stage/combat/pathaction.cpp" | cut -d' ' -f1)" = \
 	"aef6e04af1d4ef8099a84e75ac72642f3eb0e1e68856dddcf7548efa3ac1c99f"
 test "$(sha256sum "$rv_stage/combat/pathaction.h" | cut -d' ' -f1)" = \
 	"3b994bd202bec41945900168ceff9f588eaf699bed808a5b43d2874aef09d044"
+# Script zones sample star positions once per Think; at Vita frame rates a
+# star (or star vehicle) can cross a zone thinner than one frame's move without
+# a sample inside.  Fire Entered for a straight crossing between consecutive
+# Thinks only when the move exceeds the zone's thinnest side (unchanged at high
+# frame rates).  See reports/campaign/SCRIPT_ZONE_TUNNELLING.md.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-scriptzone-swept-entry.patch"
+# M09 soft-lock hunt: re-measure Mobius in the keycard-door wait loop, and
+# resume the D07/P01 escort hand-off when an intro conversation ends
+# INTERRUPTED. Anchored to the final Mission09.cpp so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/scripts/Mission09.cpp" | cut -d' ' -f1)" = \
+	"3674367e03284d91c79a6fb49ebae3a567c68308fed10c673e81f567c83af36a"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m09-keycard-zone-distance-recheck.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m09-intro-conversation-resume.patch"
+# Objective/HUD lifecycle: the HUD pog index could outlive the pending HUD
+# objectives (completed last pog, restart) and index a stale list slot, and a
+# save wrote the encyclopedia bit arrays without flushing BooleanVectorClass's
+# one-bit write-back cache.  Both apply to the final hud.cpp/encyclopediamgr.cpp.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-hud-objective-index-bounds.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-encyclopedia-save-bit-cache-flush.patch"
+# Selecting the retail default input profile from any route (Save/Load page,
+# deleting the current custom profile) reloads the keyboard/mouse
+# DEFAULT_INPUT.CFG; reapply the Vita controller bindings on every such load.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a37-default-input-profile-vita-mapping.patch"
+# FaceLocation actions store an absolute TimeManager::Get_Seconds() end stamp
+# (a per-process clock) in saves; bound a restored stamp to the authored
+# duration so a load in a fresh session cannot hold the action for the old
+# session's uptime. Anchored to the final action.cpp so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/combat/action.cpp" | cut -d' ' -f1)" = \
+	"f90761922d80e0795ed3d99f9ce7545561f144d3dbfc52c735c1d1eb4f46edbb"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-face-action-stale-end-time-clamp.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

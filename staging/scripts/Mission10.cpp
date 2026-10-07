@@ -680,15 +680,19 @@ DECLARE_SCRIPT(M10_Turret_Tank, "CheckBlocked=1:int")
 DECLARE_SCRIPT(M10_Power_Plant, "")
 {
 	bool con_yard_destroyed;
+	bool objective_sent;
 
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE(con_yard_destroyed, 1);
+		// Vita: objective 1001 is sent once, from M10CON014's end or its preemption.
+		SAVE_VARIABLE(objective_sent, 2);
 	}
 
 	void Created(GameObject * obj)
 	{
 		con_yard_destroyed = false;
+		objective_sent = false;
 		Commands->Static_Anim_Phys_Goto_Frame ( 1285077, 0, "L10_LASERFENCE1.L10_LASERFENCE1" );
 	}
 
@@ -721,8 +725,9 @@ DECLARE_SCRIPT(M10_Power_Plant, "")
 	{
 		GameObject * obj_con = Commands->Find_Object(1100154);
 
-		if (action_id == 100014)
+		if (action_id == 100014 && !objective_sent)
 		{
+			objective_sent = true;
 			Commands->Send_Custom_Event(obj, obj_con, 1001, 3);
 			Commands->Send_Custom_Event(obj, obj_con, 1001, 1);
 		}
@@ -736,8 +741,14 @@ DECLARE_SCRIPT(M10_Power_Plant, "")
 
 		int id = Commands->Create_Conversation("M10CON014", 99, 2000, false);
 		Commands->Join_Conversation(NULL, id);
-		Commands->Start_Conversation(id, 100014);
+		// Vita: monitor before Start so a key-conversation preemption inside Start
+		// still reaches Action_Complete (and objective 1001).
 		Commands->Monitor_Conversation(obj, id);
+		Commands->Start_Conversation(id, 100014);
+		if (id < 0)
+		{
+			Action_Complete(obj, 100014, ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT);
+		}
 
 		GameObject * obelisk = Commands->Find_Object(1153938);
 		if (obelisk)
@@ -752,12 +763,26 @@ DECLARE_SCRIPT(M10_Power_Plant, "")
 
 DECLARE_SCRIPT(M10_Con_Yard, "")
 {
+	bool objective_sent;
+
+	REGISTER_VARIABLES()
+	{
+		// Vita: objective 1002 is sent once, from M10CON005's end or its preemption.
+		SAVE_VARIABLE(objective_sent, 1);
+	}
+
+	void Created(GameObject * obj)
+	{
+		objective_sent = false;
+	}
+
 	void Action_Complete(GameObject * obj, int action_id, ActionCompleteReason reason)
 	{
 		GameObject * obj_con = Commands->Find_Object(1100154);
 
-		if (action_id == 100005)
+		if (action_id == 100005 && !objective_sent)
 		{
+			objective_sent = true;
 			Commands->Send_Custom_Event(obj, obj_con, 1002, 1);
 		}
 	}
@@ -769,8 +794,14 @@ DECLARE_SCRIPT(M10_Con_Yard, "")
 
 		int id = Commands->Create_Conversation("M10CON005", 99, 2000, false);
 		Commands->Join_Conversation(NULL, id);
-		Commands->Start_Conversation(id, 100005);
+		// Vita: monitor before Start so a key-conversation preemption inside Start
+		// still reaches Action_Complete (and objective 1002).
 		Commands->Monitor_Conversation(obj, id);
+		Commands->Start_Conversation(id, 100005);
+		if (id < 0)
+		{
+			Action_Complete(obj, 100005, ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT);
+		}
 
 		GameObject * power_plant = Commands->Find_Object(1153931);
 		if (power_plant)
@@ -888,12 +919,26 @@ DECLARE_SCRIPT(M10_Con_Yard, "")
 
 DECLARE_SCRIPT(M10_Comm_Center, "")
 {
+	bool objective_sent;
+
+	REGISTER_VARIABLES()
+	{
+		// Vita: objective 1004 is sent once, from M10CON011's end or its preemption.
+		SAVE_VARIABLE(objective_sent, 1);
+	}
+
+	void Created(GameObject * obj)
+	{
+		objective_sent = false;
+	}
+
 	void Action_Complete(GameObject * obj, int action_id, ActionCompleteReason reason)
 	{
 		GameObject * obj_con = Commands->Find_Object(1100154);
 
-		if (action_id == 100011)
+		if (action_id == 100011 && !objective_sent)
 		{
+			objective_sent = true;
 			Commands->Send_Custom_Event(obj, obj_con, 1004, 3);
 			Commands->Send_Custom_Event(obj, obj_con, 1004, 1);
 		}
@@ -907,8 +952,14 @@ DECLARE_SCRIPT(M10_Comm_Center, "")
 		int id = Commands->Create_Conversation("M10CON011", 99, 2000, false);
 		Commands->Join_Conversation(NULL, id);
 		Commands->Join_Conversation(NULL, id);
-		Commands->Start_Conversation(id, 100011);
+		// Vita: monitor before Start so a key-conversation preemption inside Start
+		// still reaches Action_Complete (and objective 1004).
 		Commands->Monitor_Conversation(obj, id);
+		Commands->Start_Conversation(id, 100011);
+		if (id < 0)
+		{
+			Action_Complete(obj, 100011, ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT);
+		}
 
 		//Commands->Give_PowerUp(STAR, "Ion Cannon Powerup");
 	}
@@ -2645,6 +2696,7 @@ DECLARE_SCRIPT (M10_Refinery_Key_Grant, "")
 DECLARE_SCRIPT (M10_Gate_Check, "Objective:int, Gate1:int, Gate2:int")
 {
 	bool already_poked, first, second;
+	bool objective_1005_sent;
 
 	REGISTER_VARIABLES()
 	{
@@ -2652,6 +2704,8 @@ DECLARE_SCRIPT (M10_Gate_Check, "Objective:int, Gate1:int, Gate2:int")
 		// Vita save/load: first/second route objectives 1005/1006/1007 in Poked().
 		SAVE_VARIABLE( first, 2 );
 		SAVE_VARIABLE( second, 3 );
+		// Vita: objective 1005 is sent once, from M10CON002's end or its preemption.
+		SAVE_VARIABLE( objective_1005_sent, 4 );
 	}
 
 	void Created (GameObject *obj)
@@ -2659,6 +2713,7 @@ DECLARE_SCRIPT (M10_Gate_Check, "Objective:int, Gate1:int, Gate2:int")
 		already_poked = false;
 		first = false;
 		second = false;
+		objective_1005_sent = false;
 	}
 
 	void Action_Complete(GameObject * obj, int action_id, ActionCompleteReason reason)
@@ -2668,7 +2723,11 @@ DECLARE_SCRIPT (M10_Gate_Check, "Objective:int, Gate1:int, Gate2:int")
 		if (action_id == 100002)
 		{
 			first = true;
-			Commands->Send_Custom_Event(obj, obj_con, 1005, 1);
+			if (!objective_1005_sent)
+			{
+				objective_1005_sent = true;
+				Commands->Send_Custom_Event(obj, obj_con, 1005, 1);
+			}
 		}
 
 		if (action_id == 100008)
@@ -2706,8 +2765,14 @@ DECLARE_SCRIPT (M10_Gate_Check, "Objective:int, Gate1:int, Gate2:int")
 				{
 					int id = Commands->Create_Conversation("M10CON002", 99, 2000, false);
 					Commands->Join_Conversation(NULL, id);
-					Commands->Start_Conversation(id, 100002);
+					// Vita: monitor before Start so a key-conversation preemption inside
+					// Start still reaches Action_Complete (and objective 1005).
 					Commands->Monitor_Conversation(obj, id);
+					Commands->Start_Conversation(id, 100002);
+					if (id < 0)
+					{
+						Action_Complete(obj, 100002, ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT);
+					}
 				}
 
 				if (objective == 1007 && first)

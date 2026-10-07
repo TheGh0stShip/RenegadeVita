@@ -160,3 +160,75 @@ visual result.
 - Fodder spawner scripts, `X11C_BN_Sydney` bone animations, the
   `M00GCTK_KIOV0004I1MBPT_SND` taunt and missing twiddler choices are
   retail-identical misses. Each one degrades without crashing.
+
+## Soft-lock hunt (2026-10-07)
+
+Evidence class: staged-source review of `Mission11.cpp`, `activeconversation.cpp`,
+`conversationmgr.cpp`, `action.cpp`, `scriptcommands.cpp`, `scriptablegameobj.cpp`,
+plus a read-only parse of `m11.ldd` (`M11.mix`, Vita3K retail copy) for the
+`ConversationClass` key flag. One `arm-vita-eabi-g++ -fsyntax-only` of the patched
+unit (exit 0, no new warnings). No build, emulator or device run. Line numbers are
+staged `Mission11.cpp` after the patches below.
+
+### Key conversations (m11.ldd)
+
+27 level conversations, 3 key: `M11_Initial_Sydney_Conversation_JDG`,
+`M11_Kane_Regarding_Seth_Conversation` (zone 101103, :5267) and
+`M11_KanesRoom_Kane_Conversation` (:5955). Every completion-gating conversation other
+than the initial Sydney one is not key, including `M11_End_Mission_Conversation`.
+Delivery rules that matter here: `Start_Conversation` stops a non-key conversation with
+INTERRUPTED when any key conversation is active, before the script's
+`Monitor_Conversation`, so nobody is told. A newer key conversation that preempts a
+playing one in `ConversationMgrClass::Think` uses the default ENDED reason, so it
+advances the chain early instead of blocking it. Sydney's and the controller's
+`Action_Complete` act only on ENDED.
+
+### Issues
+
+| # | Site | Reachability | Severity | Status |
+| --- | --- | --- | --- | --- |
+| 1 | End conversation started while a Kane key conversation plays (:9805 before the fix) is stopped inside `Start_Conversation`. No H_A_CON2, no `M11_END_MISSION_PASS_JDG`. | Low. The player must trigger Seth's or Kane's room zone in the seconds when Sydney finishes the console animation. Retail behaves the same. | Completion blocker (permanent). | Fixed, patch A. |
+| 2 | `M11_Silo_ElevatorZone01_Top_JDG` (100705, :10300) never resets its flags and is not one-shot. Any later STAR entry re-sends `M01_MODIFY_YOUR_ACTION_JDG` and rewinds Sydney to the elevator-2 leg at priority 100. That cancels the switch walk, the console attack/animation or the H_A_CON2 action (LOW_PRIORITY is ignored). The bottom lift zones are already destroyed, so she cannot come back up. Top zones 02-04 re-send on any Sydney re-entry in the same way. | Low to moderate. The player has to drop back to silo level 2 and walk into the zone after the escort has moved on. | Completion blocker. | Fixed, patch B. |
+| 3 | Cryo controller `M01_SPAWNER_SPAWN_PLEASE_JDG` (:8266) retries with a synchronous `Send_Custom_Event(...,0)`. A caged mutant killed outright (`Killed` with `freed==false`, :8548) sends no death custom, so `deadMutantCount` undercounts. Once all 15 cages are empty below 15, the next spawn request recurses without end (stack overflow). | Low. Needs one-hit kills of caged mutants; the heal-on-`Damaged` handler only stops chip damage. | Crash (mission blocker). | Fixed, patch C. |
+| 4 | Rally legs (`M01_WALKING_WAYPATH_01..04`) leave `sydneys_location` at IDLE, so the PATH_BAD/NO_PROGRESS retry branches ignore them. A failed rally-leg solve leaves Sydney standing. Blocked movement does not fail a goto (`Is_Soldier_Blocked` only waits). | Pathfind-data dependent; same data as retail. | Blocker if it occurs. | Deferred (needs hardware evidence; a retry would change original AI). |
+| 5 | Rally zones need STAR to *enter* after Sydney arrives. If the player already stands inside, nothing happens until they step out and back in. | Common, recoverable by the player. | Confusing, not a lock. | Original; not changed. |
+| 6 | Real Sydney appears only through X11N `send_custom 101449 p1` (frame 494). It needs the Level 3 keycard (`CUSTOM_EVENT_POWERUP_GRANTED`, always granted) and the `Test_Cinematic` dispatch. Custom timers, actions and Test_Cinematic state are saved. | Normal path. | Blocker only if the cinematic aborts. | Covered by the existing cinematic work; not re-verified here. |
+| 7 | Elevator ENTERING has no timeout (`ESCORT_PATHING_REVIEW.md` risk 5). This applies if any Sydney leg crosses an ElevatorPhys. Her silo lifts are StaticAnimPhys driven by `M11_Silo_ElevatorZone0n_JDG` polling every 2 s. | Low FPS only. | Possible stall. | Deferred, as recorded there. |
+
+Other checks: the console attack and the first H_A_CON2 share action id
+`M01_DOING_ANIMATION_01_JDG`, but the replaced attack completes with LOW_PRIORITY, so
+the end conversation is created once. The two-orator end conversation does not take
+over Sydney's action (`OratorList.Count() <= 2`), and damage conversations have one
+orator. The Play_Animation stall watchdog guarantees H_A_CON2 completes. Audience distance
+is 1000 m. Save/load: Sydney's state, active conversations with monitors, the custom
+timers (`scriptablegameobj.cpp` CHUNKID_CUSTOM_TIMER) and the actions are all
+persisted. Death or restart reloads the level, and Sydney's `Killed` sends the
+original fail custom.
+
+### Fixes (scripts-a38, registered after `scripts-a36-m11-conversation-id-init`)
+
+- **A `scripts-a38-m11-end-conversation-replay.patch`**: monitor the end conversation
+  before `Start_Conversation`, so an immediate key-preemption stop reaches Sydney. On
+  INTERRUPTED/UNABLE_TO_INIT for `missionEndConv` (and Sydney alive), clear it and
+  replay the same conversation 2 s later through `M01_MODIFY_YOUR_ACTION_06_JDG`.
+  Guarded by `missionEndConv == 0`, so it is idempotent, and the state is saved. On the
+  normal path the only difference is the registration order before the first `Think`.
+- **B `scripts-a38-m11-sydney-route-monotonic.patch`**: Sydney ignores a route custom
+  for a stage she has already passed (`WAYPATH_05/07` above ELEVATOR01,
+  `MODIFY_YOUR_ACTION`/`_02`/`_03` above ELEVATOR02/03/04). She ignores `_04` once the
+  new saved flag `reachedMissileSwitch` (id 14, set when the switch walk completes) is
+  true. Her own retries re-send the current stage, which is still accepted. Old saves
+  load the flag as false (value-initialised factory).
+- **C `scripts-a38-m11-cryo-spawn-recursion-bound.patch`**: a spawn request is acted on
+  only while at least one caged mutant still resolves. On the normal path a caged
+  mutant always remains, so behaviour is unchanged.
+
+Staging: 546 ordered patches, inventory PASS, zero fuzz; only `Mission11.cpp`
+changes.
+
+### Physical signature
+
+The flight recorder should show a conversation-monitor kind-3 call for
+`M11_End_Mission_Conversation` with reason ENDED, then the H_A_CON2 action completion,
+then `Mission_Complete(true)`. A kind-3 record with reason INTERRUPTED, followed about
+2 s later by a second creation of the same conversation, means patch A fired.

@@ -157,10 +157,15 @@ No patch removes, defers, filters or replaces the observer call.
    immediately with INTERRUPTED if a key conversation is playing
    (:399-401). Nobody is registered yet, and `Register_Monitor` on a finished
    conversation never fires. Retail does the same, so that primary would not
-   count. Not changed: adding a late delivery would depart from original
-   behavior. Whether M10CON005/011/014 are key conversations was not parsed here.
-   Telemetry signature: monitor outcome kind 0 for an `ActionID` whose
-   transition-end record has an earlier timestamp and no kind-3 observer call.
+   count. The engine is not changed: a late delivery would depart from original
+   behavior for every mission. M10CON002/005/011/014 are not key (M10_READINESS
+   full audit). For M10 only, `scripts-a38-m10-objective-conversation-resend`
+   registers the monitor before `Start_Conversation`, so the immediate stop
+   delivers 1001/1002/1004/1005 at once, each behind a saved send-once flag
+   ([M10_READINESS](M10_READINESS.md#key-conversation-preemption-fix-2026-10-07)).
+   Other missions keep the retail order.
+   Telemetry signature (unfixed sites): monitor outcome kind 0 for an `ActionID`
+   whose transition-end record has an earlier timestamp and no kind-3 observer call.
 2. Unresolved conversation on a corrupt save. `Load_Variables` leaves
    `Conversation == NULL` if the ID cannot be resolved, and
    `Stop_Conversation` (:1262), `Say_Next_Remark` (:484),
@@ -179,7 +184,8 @@ No patch removes, defers, filters or replaces the observer call.
 ## Physical validation signature (M10)
 
 For each of 1001, 1002, 1004 expect, in order: Killed on the building; monitor
-registration with outcome 0 and the building's object ID; remark transitions;
+registration with outcome 0 and the building's object ID (its action id is 0
+since the a38 patch, because registration now precedes `Set_Action_ID`); remark transitions;
 `transition end` with reason ENDED; a kind-3 observer call with the same
 `ActionID` (100014, 100005, 100011) and object ID; then the objective custom
 event. Absence of the kind-3 record with a recorded end is the hazard in item 1.

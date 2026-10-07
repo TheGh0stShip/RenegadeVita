@@ -135,3 +135,138 @@ No incorrect hunk was found.
   the `M13 finale:` breadcrumbs in the runtime log.
 - The Score → `R_L01.bik` → M01 handoff depends on the score-screen and movie
   frontend gates (`M13_VIDEO_COVERAGE_AUDIT.md`).
+
+## Soft-lock hunt (2026-10-07)
+
+Evidence class: static source review of staged `MissionX0.cpp`, `Test_RAD.cpp`
+and `Test_DLS.cpp`, the engine paths they call, and read-only parsing of the
+unchanged retail `M13.mix` (`m13.ldd`) and its cinematic text files. Also
+deterministic staging and an `arm-vita-eabi-g++ -fsyntax-only` check of the
+patched TU. No build, no emulator and no device run. Line numbers refer to
+staged files.
+
+Method notes:
+- Key flags come from `ConversationClass` micro-chunk `VARID_ISKEY` (id 13).
+  The same parser reproduces the 23 key conversations listed for M10.
+- Zone bounds are the saved `ScriptZoneGameObj` OBBoxes.
+
+### Key conversations (pattern a)
+
+- Only `MX0_A03_01` through `MX0_A03_10` are key (10 of 564 level
+  conversations). Every A01, A02 and A04 line whose end callback advances the
+  mission is non-key.
+- No key line can be playing when one of those non-key lines starts:
+  - A03 key lines start only after `ENTERED_TANK`. `START_ZONE` follows at
+    +2 s, the humvee drop at frame 148, then `MX0_A03_01`.
+  - The other A03 key lines need zones beyond the A02 rubble.
+  - `MX0_A03_HAVOC_TANK` is never attached, so it cannot send an early
+    `START_ZONE`.
+- A non-key line that is still running when a key line starts is stopped by
+  `ConversationMgrClass::Think` after its monitor is registered. The callback
+  is delivered, and `MX0_A02_ACTOR::Action_Complete` accepts ENDED,
+  INTERRUPTED and UNABLE_TO_INIT.
+- `MX0_GDI_ORCA` acts only on ENDED. Its `MX0_A03_02` line is key, has only
+  NULL orators, and can only be ended by a newer key line, which uses the
+  default reason ENDED. A03 also completes through end zone 1400069.
+- Result: no reachable case of pattern (a).
+
+### Fixed: A02 fire-in-the-hole lost to an engineer registration race
+
+`scripts-a38-m13-firehole-engineer-register.patch` (Test_RAD.cpp :821).
+Reachability: timing-dependent, low probability. Severity: hard soft-lock.
+
+How the race happens:
+- The A02 rubble (`Simple_Level_x0_A02_Blockage`) is removed only by
+  `EXPLODE` (:2162). `EXPLODE` is sent when engineer 2's
+  `MX0_ENGINEER2_123` line ends.
+- That line starts only from `ENTERED_TANK` (:834). The handler sends
+  `SAY_FIREHOLE` to `engineer_02_id`.
+- `X0I_GDI_Drop02_Engineer.txt` creates engineer 1 at frame 401 and
+  engineer 2 at frame 581. Engineer 2 registers 4 s later (:2580), about
+  23.4 s after the drop starts.
+- The replacement tank appears at about 22.4 s plus engineer 1's travel to
+  `MX0_A02_MOVE_OBJ_06` (:2552). `ENGINEER_01_MEDTANK` (:2326) proceeds on
+  any completion reason, including an immediate path failure.
+- If that travel takes under about 1 s and Havoc enters the tank at once,
+  `ENTERED_TANK` finds engineer 0 and the cue is dropped.
+  `MX0_A02_GDI_MEDTANK.entered` (:2945) latches, so re-entering cannot
+  recover it, and the path to A03 stays blocked.
+
+The fix:
+- When `ENGINEER_02_REGISTER` arrives after `ENTERED_TANK` while the engineer
+  was still unregistered, it sends the missed `SAY_FIREHOLE` once, after
+  1.0 s. The delay matches the normal order, in which the engineer's rubble
+  goto has already started.
+- Both inputs are already saved (`engineer_02_id` id 19, `entered_tank`
+  id 22). The delayed custom is a saved object timer.
+- On the normal path `entered_tank` is still false at registration, so
+  nothing changes.
+- Anchor: Test_RAD.cpp SHA-256 `5699f1fc…753a` (pristine; no earlier patch).
+  Staging: 544 ordered patches, PASS, inventory `b351588e…37c8`.
+- The staged TU passes `-fsyntax-only` with 0 errors.
+
+### Races and one-shot triggers (b, d)
+
+- **Unreachable:** STARTUP zone 1100022 arriving before `MAIN_STARTUP`.
+  - The intro sends 99 at frame 1998. The `SNIPER_CREATE` (1 s) and
+    `SNIPER_EXCHANGE` (2 s) timers then send `MAIN_STARTUP` at about frame
+    2088.
+  - The camera returns at frame 2130, and the zone is about 45 m from the
+    start.
+  - Zero-delay customs are synchronous (`Send_Custom_Event`), so the ID
+    replies that `MX0_GDI_ORCA` and `MX0_A03_END_ZONE` request are set
+    before use.
+- **Not a blocker:** an early STARTUP from a non-star enterer. The zone has no
+  `Is_A_Star` check, but the GDI greeting waits on a 50 m distance check and
+  walks to Havoc, so the chain still completes.
+- **Deferred, geometry-dependent:** `MX0_Area4_Zone_DLS` (Test_DLS.cpp:2482)
+  fires once per zone.
+  - The zones are thin plane pairs:
+    - 1500006 (area 0) and 1500001 (area 1), about x 38-41.
+    - 1500003 (area 1) and 1500002 (area 2), about x 83-86.
+    - 1500004 (area 2) and 1500005 (area 3), about x 97-100.
+  - A forward pass fires them in the order 0, 1, 1, 2, 2, 3 and ends at
+    3.
+  - The area-3 pair's north end meets the area-2 pair's plane, and the
+    area-2 pair extends about 17 m beyond that point. A player who reaches
+    area-3 ground without crossing the area-3 pair, then crosses it backward
+    (1500005, then 1500004), ends at `star_area` 2.
+  - In that case the A04 timers loop in `case 2` forever. Every zone is
+    spent and only the area-3 zone could restore progress.
+  - Candidate fix: let the Area 3 zone re-report on re-entry. It is a no-op
+    on the normal path.
+  - Not applied: whether the terrain is walkable there needs runtime
+    evidence.
+  - Telemetry signature: `MEDIUM_TANK`, `OBELISK`, `SAMS` or `A10` timers
+    re-arming every 5 s with no `X0E_Obelisk.txt` start.
+
+### Counters and required units (c, e)
+
+- **A03:** buggie and harvester deaths are an early exit only. End zone
+  1400069 has no star or state gate.
+- **A02 Nod spawning:** it re-polls itself through `PREVENT_SPAWNS` (3 s)
+  after the first Nod kill.
+- **A02 helicopters:** `X0I_Drop02_A02_E02.txt` attaches a second
+  `MX0_A02_HELICOPTER "1"` to the real helicopter. Its 23 s self-kill always
+  sends `HELI_DESTROYED_02`.
+- **A04 SAMs:** they receive `M00_ENABLE_DAMAGE_MOD 0` before the 20 s and
+  24 s `DESTROY_SAM` timers. Neither the 0.10 modifier nor the retail
+  `Killable_ByNotStar` name mismatch (which reads 0) can keep them alive.
+- **Required units:** the A02 GDI actors and both engineers cannot die while
+  `active_actor` is set. `Damaged` restores health before
+  `DamageableGameObj::Apply_Damage` checks for death, and `MAIN_ENDING` is
+  never sent. The replacement tank restores full health. Trooper One and
+  the reinforcement counter are not on the completion chain.
+
+### Save/load and death (f)
+
+- The chain state is registered in `MX0_A02_Controller`, `MX0_A02_ACTOR`,
+  `MX0_A02_GDI_MEDTANK`, `MX0_A03_CONTROLLER_DAK`,
+  `MX0_Area4_Controller_DLS` and the zone `first_time` flags.
+- Unsaved members are not on the chain:
+  - `Trooper_One_Id` in `MX0_GDI_ORCA` and `MX0_A03_END_ZONE` is
+    re-requested synchronously before use.
+  - `MX0_A02_GDI_APC::can_damage` is used only within the same call.
+- With the value-initializing factory, a load restores defined values.
+- Havoc's death goes through `Havoc_Script` to `Mission_Complete(false)`. A
+  restart reloads the level and runs fresh `Created` handlers.

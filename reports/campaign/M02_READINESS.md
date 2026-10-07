@@ -320,3 +320,102 @@ out-of-range area customs, and the chain's 104/105 customs use area 21.
 - Live waypath-ID presence. It is not a crash risk.
 - Whether zone 301601 has `CheckStarsOnly` set.
 - All physical gates in the test route above.
+
+## Soft-lock hunt (2026-10-07)
+
+Host-only source and retail-data review of `staging/scripts/Mission02.cpp` and
+the M02 cinematics. Nothing was built, staged, packaged or run. Retail input
+was the read-only Vita3K copy (`M02.mix` sha256 `f098e919…`, `always.dbs`
+sha256 `4ba605de…`). The parsers were small one-off scratch scans built on
+`tools/audit_m13_level_owners.py` and `tools/audit_deep_saved_content.py`.
+
+**Verdict:** no reachable completion blocker that needs mission-specific code.
+No patch was added and staging is unchanged. M02's only `Mission_Complete(true)`
+is the end zone 400194 (`:856-871`), and `CombatManager::Mission_Complete`
+(combat.cpp:1094) does not check objective states. Pending or stuck
+secondaries, and even a pending primary 203, cannot stop the mission ending.
+
+### Critical path as it appears in level data
+
+| Step | Evidence | Fallback / robustness |
+|---|---|---|
+| Key 6 (bay door) | Only `M02_Dam_MCT::Damaged` (`:4084`) on 1111116 (`Nod MasterControlTerminal`) grants it. The only lock-6 door is `NORADOOR` at (1119.3, 906.6, 33.2) in `m02.lsd`. | `DamageableGameObj::Apply_Damage` (damageablegameobj.cpp:322-334) calls `Damaged` before the death check, so `Set_Health(0.1)` keeps the MCT alive. Any damager counts, there is no `killer==STAR` filter, and the `destroyed` latch and `KeyRing` (soldier.cpp:649) are both saved. |
+| Bay-door warning 301601 | (1116.6, 906.9, 36.0), def 519 `Script_Zone_Star`, `CheckStarsOnly=1` | Player-only, so the deferred question in the Full audit is now answered. It only plays `M02_BAY_DOOR_WARNING` and removes itself when the key is missing. The door's lock code is the real gate. `Has_Key` is null-safe (scriptcommands.cpp:2449). |
+| Midtro 400193 | (1198.5, 563.4, 32.4), stars-only | Timer 9 is saved on the zone. The delayed custom 1000/1002 is held on the receiver as a `GameObjCustomTimerClass` with a `GameObjReference` sender (scriptablegameobj.cpp:229-262, 694). Both are saved, and both survive the zone's self-destruction at timer 9. |
+| Key 1 (HoN doors) | Lock-1 doors: two `DR_1` at (1192.6, 555.9, 23.1) and (1192.7, 569.5, 23.1), plus `HND_FRNT_DOOR2` at (1214.1, 562.5, 25.6). The player's only key-1 source is `Give_PowerUp(STAR, "Level_01_Keycard")` (`:195-198`), 25 s after entering 400193. | The `Nod_Soldier` grant (`:3434`) is AI-only. The timer is saved, as described in the previous row. `Level_01_Keycard` has `AlwaysAllowGrant=1`. |
+| End 400194 | (1162.5, 514.6, 19.7), stars-only, cargo plane | The `was_entered` flag is saved. Mendoza and his rope evac are not prerequisites. |
+
+### Pattern results
+
+- **(a) Conversation-end completion.** Not applicable. `Mission02.cpp` has no
+  `Monitor_Conversation`, and no conversation-driven `Action_Complete`
+  completes an objective. The only `Action_Complete` handlers are Mendoza's
+  goto (`:5124`), the jet and helicopter despawns, and the GDI soldier
+  "cover" line (`:4409`). `m02.ldd` defines 39 key conversations (all
+  priority 30, interruptable). Those include `M02_PRIMARY_01/04_START`, most
+  `SECONDARY_*_START/FINISH`, `M02_BAY_DOOR_WARNING`, `M02_EVAG_SECURE_WARNING`
+  and `MX2DSGN_DSGN0001/0004/0009/0010/0011`. Pre-emption by these key
+  conversations only cuts speech short.
+- **(b) Completion before activation.** This is reachable and identical to
+  retail, but it does not block completion. The controller's `(id, 1)` case
+  (`:118-123`) and the convoy count (`:130-142`) call `Set_Objective_Status`
+  on an id that may not have been added yet. That call does nothing, and a
+  later `(id, 0)` adds the objective as pending, where it stays.
+  - Primary 203 (Dam MCT), secondaries 202 and 217, and convoy secondary 213
+    are added only by zone 400269 at (775.6, 908.9) or zone 400188 at
+    (597.7, 484.1).
+  - If the player destroys the target before crossing that zone, the
+    objective stays pending on the HUD and on the end screen.
+  - Key 6 is still granted, so the run does not soft-lock.
+  - Not patched: a fix would only change HUD and score presentation, not
+    completion.
+- **(c) N-of-M counters.** None of them is on the completion path. Each count
+  is listed below with the event that sends it. None of them filters on the
+  killer.
+
+  | Counter | Sent from |
+  |---|---|
+  | Convoy, 3 trucks (400202-400204), custom 900/3 | `Killed` (`:4187`) |
+  | Bridge SAMs 215/216, custom 115 | Vehicle drop only (`:3231`) |
+  | Hidden silos 222, custom 116 | `Killed` |
+  | Rocket and minigunner reinforcement `count_dead*` | Spawns only |
+  | Area unit counts 101/103 | Spawns only. The area-99 fix is already in `scripts-a36-m02-respawn-area-bounds.patch`. |
+
+  A truck removed without `Killed` would leave 213 pending. No script
+  destroys 400202-400204.
+- **(d) One-shot triggers.**
+  - 301601 is player-only and advisory, as covered in the table above.
+  - 400193 has no latch. Re-entry within the 1 s before timer 9 would need
+    the star to leave and re-enter the 1.5 × 2.3 × 1.3 m box while control is
+    disabled. That would start a second midtro and grant a second keycard,
+    which is harmless. The second timer 9 dies with the zone, and the first
+    timer re-enables control. This is retail-identical and not patched.
+  - 400194 latches once and is saved.
+- **(e) Required actors.** None on the path.
+  - Mendoza is invulnerable (`Set_Health(start_health)`) and optional.
+  - The engineers 400199 and 400200 only repair the Power Plant and Obelisk.
+  - The keycards are granted directly, not dropped. No escort, vehicle or
+    pickup is required.
+- **(f) Save/load and death.**
+  - Every critical-path latch is a registered variable: `was_entered`,
+    `mendoza_id`, `destroyed`, `convoy_trucks` and `count_dead*`.
+  - Zone timers, the receiver-held delayed custom, the zone `InsideList` and
+    the star's `KeyRing` are all saved by the engine.
+  - M02 has no `Mission_Failed`. Death uses the normal reload or restart, and
+    either one restores a consistent state.
+  - Saving mid-midtro (control returns at 1 s, and `Control_Camera -1`
+    arrives at frame 1170) is cinematic and camera persistence that all
+    missions share. It is tracked in `M02_SNIPER_CONTROL.md` and
+    CINEMATIC_PRESENTATION, not here.
+
+### Deferred
+
+- **Pending objectives at mission end (b).** This is cosmetic and identical to
+  retail PC. If it is wanted, a presentation-only fix would latch early
+  completions in the controller and re-apply them when the objective is
+  activated.
+- **Map route reachability.** It is not known whether 400193 or 400194 can be
+  reached without `NORADOOR` or the lock-1 doors. That needs geometry and
+  navigation, and only a physical route can show it.
+- **Physical gates.** All physical gates in the test route above are still
+  open.

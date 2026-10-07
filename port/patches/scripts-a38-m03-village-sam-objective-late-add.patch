@@ -1,0 +1,63 @@
+M03 soft-lock: secondary objective 1002 (village SAM sites) can stay pending
+forever. 1002 is added by 302,3 from M03_Chinook_Fodder_Creator when the star
+crosses zone 1100006. The village SAMs 300056/1100020 send 302,1, and the
+second one starts M03CON020, whose end callback (100020) sets 1002
+accomplished. If both SAMs die (and M03CON020 finishes) before the star
+reaches zone 1100006, the completion is dropped and 1002 is added as pending.
+
+Remember the report in a saved flag (new id 12) and credit it once when 1002
+is added. In the normal order the flag is never consulted. Saves without
+id 12 load with the flag clear, which is the original behaviour.
+
+--- a/Mission03.cpp
++++ b/Mission03.cpp
+@@ -61,6 +61,8 @@
+ 	int mainframe_objective_flags;
+ 	// Vita port: bit 0 = objective 1004 added, bit 1 = both shore SAMs destroyed.
+ 	int shore_sam_objective_flags;
++	// Vita port: bit 0 = objective 1002 added, bit 1 = village SAMs reported.
++	int village_sam_objective_flags;
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+@@ -75,6 +77,7 @@
+ 		SAVE_VARIABLE(keycard_objective_flags, 9);
+ 		SAVE_VARIABLE(mainframe_objective_flags, 10);
+ 		SAVE_VARIABLE(shore_sam_objective_flags, 11);
++		SAVE_VARIABLE(village_sam_objective_flags, 12);
+ 	}
+ 
+ 	void Created(GameObject * obj)
+@@ -90,6 +93,7 @@
+ 		keycard_objective_flags = 0;
+ 		mainframe_objective_flags = 0;
+ 		shore_sam_objective_flags = 0;
++		village_sam_objective_flags = 0;
+ 	//	Commands->Add_Objective(1006, OBJECTIVE_TYPE_TERTIARY, OBJECTIVE_STATUS_HIDDEN, 1008, IDS_Enc_ObjTitle_Hidden_M03_02, NULL, IDS_Enc_Obj_Hidden_M03_02);
+ 	//	Commands->Add_Objective(1007, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_HIDDEN, 1009);
+ 	//	Commands->Add_Objective(1008, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_HIDDEN, 1010);
+@@ -152,6 +156,7 @@
+ 				//Commands->Start_Conversation(id, 100066);
+ 				//Commands->Monitor_Conversation(obj, id);
+ 
++				village_sam_objective_flags |= 2; // Vita port: see Add_Mission_Objective(1002).
+ 				Commands->Set_Objective_Status(1002, OBJECTIVE_STATUS_ACCOMPLISHED);
+ 			}
+ 
+@@ -410,6 +415,16 @@
+ 		case 1002: 
+ 			{
+ 				Commands->Add_Objective(1002, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Secondary_M03_02, NULL, IDS_Enc_Obj_Secondary_M03_02);
++				// Vita port: both village SAMs can die (and M03CON020 can finish) before
++				// zone 1100006 sends 302,3. Credit the earlier report once here.
++				if (!(village_sam_objective_flags & 1))
++				{
++					village_sam_objective_flags |= 1;
++					if (village_sam_objective_flags & 2)
++					{
++						Commands->Set_Objective_Status(1002, OBJECTIVE_STATUS_ACCOMPLISHED);
++					}
++				}
+ 				object = Commands->Find_Object(300056);
+ 				if(object)
+ 				{

@@ -1,0 +1,19 @@
+diff --git a/Test_RAD.cpp b/Test_RAD.cpp
+--- a/Test_RAD.cpp
++++ b/Test_RAD.cpp
+@@ -820,7 +820,15 @@
+ 			}
+ 		case (MX0_A02_CUSTOM_TYPE_ENGINEER_02_REGISTER):
+ 			{
++				// Vita port: if Havoc entered the repaired tank before engineer 2
++				// registered, ENTERED_TANK found no engineer and the rubble was
++				// never cleared. Deliver that one missed cue now (saved flags).
++				bool missed_firehole = entered_tank && (engineer_02_id == 0);
+ 				engineer_02_id = Commands->Get_ID (sender);
++				if (missed_firehole && sender)
++				{
++					Commands->Send_Custom_Event (obj, sender, MX0_A02_CUSTOM_TYPE_SAY_FIREHOLE, MX0_A02_CUSTOM_PARAM_DEFAULT, 1.0f);
++				}
+ 				break;
+ 			}
+ 		case (MX0_A02_CUSTOM_TYPE_ENTERED_TANK):

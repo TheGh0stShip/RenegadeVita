@@ -1,0 +1,67 @@
+M04_Objective_Controller_JDG soft-lock: torpedo objective completed before it
+was announced. M04_TorpedoRoom_Target01/02_JDG are pokable from Created(), but
+M04_Start_TorpedoObjective_Zone_JDG sends announce 450 only after its
+conversation ends. If both torpedoes are sabotaged first (counter reaches 2,
+550 clears torpedo_primary_active), a later 450 set the flag back to true and
+re-added objective 400 as pending, so M01_DO_END_MISSION_CHECK_JDG could never
+pass. Record completion in a new flag (unused save id 47; set by 550) and, when
+450 arrives after completion, add objective 400 and mark it accomplished
+instead of re-activating it. The saved number_torpedos_sabotaged counter
+(id 9) is checked too, so saves written before this patch are also covered.
+When 450 arrives first (the normal order) the original branch runs unchanged.
+
+--- a/Mission04.cpp
++++ b/Mission04.cpp
+@@ -100,6 +100,8 @@
+ 	int firstmateConv;
+ 	
+ 	bool first_mate_primary_triggered;
++	// Vita soft-lock fix: the torpedoes are pokable before param 450 arrives.
++	bool torpedo_objective_completed;
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+@@ -153,6 +155,7 @@
+ 		SAVE_VARIABLE( medlab_conv, 44 );
+ 		SAVE_VARIABLE( firstmateConv, 45 );
+ 		SAVE_VARIABLE( first_mate_primary_triggered, 46 );
++		SAVE_VARIABLE( torpedo_objective_completed, 47 );
+ 	}
+ 
+ 	void Created( GameObject * obj ) 
+@@ -171,6 +174,7 @@
+ 		torpedo_02_sabotaged						= 210;
+ 		number_torpedos_sabotaged					= 0;
+ 		torpedo_primary_active						= false;
++		torpedo_objective_completed					= false;
+ 
+ 		engine_room_01_sabotaged					= 300;
+ 		engine_room_02_sabotaged					= 310;
+@@ -470,6 +474,19 @@
+ 				}
+ 			}
+ 
++			else if (param == announce_torpedo_room_objective &&
++				(torpedo_objective_completed == true || number_torpedos_sabotaged >= 2))
++			{
++				// Vita soft-lock fix: both torpedoes were sabotaged before the
++				// announcement (the zone sends 450 only after its conversation
++				// ends). Do not re-activate torpedo_primary_active, which would
++				// block M01_DO_END_MISSION_CHECK_JDG forever. Record objective
++				// 400 as accomplished instead. The counter also covers saves
++				// written before torpedo_objective_completed existed.
++				Commands->Add_Objective( 400, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M04_04, NULL, IDS_Enc_Obj_Primary_M04_04 );
++				Commands->Set_Objective_Status( 400, OBJECTIVE_STATUS_ACCOMPLISHED );
++			}
++
+ 			else if (param == announce_torpedo_room_objective)
+ 			{
+ 				torpedo_primary_active = true;
+@@ -622,6 +639,7 @@
+ 
+ 			else if (param == completed_torpedo_room_objective)
+ 			{
++				torpedo_objective_completed = true;
+ 				torpedo_primary_active = false;
+ 				Commands->Create_Sound ( "00-n048e", Vector3 (0,0,0), obj);
+ 				Commands->Set_Objective_Status( 400, OBJECTIVE_STATUS_ACCOMPLISHED );

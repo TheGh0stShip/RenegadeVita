@@ -296,7 +296,8 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_LEFT) != 0",
             "(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_RIGHT) != 0",
             "(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_CROSS) != 0",
-            "(ordinary_gameplay_input || dialog_navigation) &&\n\t\t(((buttons & SCE_CTRL_CIRCLE) != 0",
+            # Crouch: raw Circle in dialogs, hold-or-latched Circle in gameplay.
+            "(dialog_navigation && circle_crouch) ||\n\t\t(ordinary_gameplay_input && (crouch_held ||",
             "(ordinary_gameplay_input || dialog_navigation) &&\n\t\t(buttons & SCE_CTRL_TRIANGLE) != 0",
             "(ordinary_gameplay_input || dialog_navigation) &&\n\t\t(buttons & SCE_CTRL_SQUARE) != 0",
             "(ordinary_gameplay_input || dialog_navigation) &&\n\t\t(buttons & SCE_CTRL_LTRIGGER) != 0",

@@ -45,6 +45,9 @@
 #include "translatedb.h"
 #include "string_ids.h"
 #include "a31_slavemaster_stub.h"
+#if defined(RENEGADE_VITA_PORT)
+#include "a31_interactive_runtime_policy.h"
+#endif
 
 
 ////////////////////////////////////////////////////////////////
@@ -388,6 +391,19 @@ InputConfigMgrClass::Load_Configuration (const InputConfigClass &config)
 	//	Load the configuration into memory
 	//
 	Input::Load_Configuration (config.Get_Filename ());
+#if defined(RENEGADE_VITA_PORT)
+	//
+	//	The retail default profile is a keyboard/mouse map (W/A/S/D, mouse
+	// buttons, C crouch, Enter/' weapon cycle, T/G zoom). Every route that
+	// selects it -- startup, Defaults, the Save/Load page, or deleting the
+	// current custom profile -- must reapply the Vita controller bindings;
+	// otherwise stick movement, triggers, crouch, weapon cycling and zoom
+	// are unbound.
+	//
+	if (config.Is_Default ()) {
+		A31_Interactive_Configure_Vita_Controls ();
+	}
+#endif
 
 	//
 	//	Reload the UI (if necessary)

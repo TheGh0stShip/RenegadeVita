@@ -1,0 +1,48 @@
+--- a/Mission01.cpp
++++ b/Mission01.cpp
+@@ -42,6 +42,10 @@
+ 
+ extern int A30_Vita_Log(const char *format, ...);
+ 
++// Vita port: controller self-customs for the PCT unlock watchdog. The
++// mission1.h custom enum stops near 4006, so this value cannot collide.
++#define M01_A38_PCT_UNLOCK_WATCHDOG_JDG			438001
++
+ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
+ {
+ 	typedef enum {
+@@ -1334,11 +1338,34 @@
+ 							eva_comm_center_line_01 = Commands->Create_Sound ( "00-N000E", Vector3 (0,0,0), obj );//accessing
+ 							Commands->Monitor_Sound ( obj, eva_comm_center_line_01 );
+ 
++							// Vita port: the PCT poke is one-shot and the unlock depends on five
++							// chained CUSTOM_EVENT_SOUND_ENDED events (~8.2 s of EVA audio).
++							// Dynamic sounds are not saved, so a save/load mid-chain (or a line
++							// that never ends) leaves the pen locked. Finish the chain once.
++							Commands->Send_Custom_Event( obj, obj, 0, M01_A38_PCT_UNLOCK_WATCHDOG_JDG, 30 );
++
+ 							//Commands->Send_Custom_Event( obj, obj, 0, M01_CLEAR_UNLOCK_GATE_OBJECTIVE_JDG, 0 );
+ 							//player_has_unlocked_pen = true;
+ 						}
+ 					}
+ 					break;
++
++				case M01_A38_PCT_UNLOCK_WATCHDOG_JDG:
++					{
++						if (player_has_unlocked_pen == false)
++						{
++							A30_Vita_Log("A4 M01 PCT unlock watchdog: EVA chain did not finish; unlocking pen\n");
++							// Drop the stale chain so a late line cannot repeat the unlock.
++							eva_comm_center_line_01 = 0;
++							eva_comm_center_line_02 = 0;
++							eva_comm_center_line_03 = 0;
++							eva_comm_center_line_04 = 0;
++							eva_comm_center_line_05 = 0;
++							Commands->Send_Custom_Event( obj, obj, 0, M01_CLEAR_UNLOCK_GATE_OBJECTIVE_JDG, 0 );
++							player_has_unlocked_pen = true;
++						}
++					}
++					break;
+ 
+ 				case M01_PLAYER_HAS_POKED_PEN_GATE_JDG:
+ 					{

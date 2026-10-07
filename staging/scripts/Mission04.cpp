@@ -100,6 +100,11 @@ DECLARE_SCRIPT(M04_Objective_Controller_JDG, "")//this guys ID number is M04_OBJ
 	int firstmateConv;
 	
 	bool first_mate_primary_triggered;
+	// Vita soft-lock fix: the torpedoes are pokable before param 450 arrives.
+	bool torpedo_objective_completed;
+	// Vita soft-lock fix: missiles become pokable only when missileConv ends.
+	bool missile_objective_activated;
+	enum { MISSILE_OBJECTIVE_FALLBACK = 441, MISSILE_OBJECTIVE_FALLBACK_DELAY = 20 };
 
 	REGISTER_VARIABLES()
 	{
@@ -153,6 +158,8 @@ DECLARE_SCRIPT(M04_Objective_Controller_JDG, "")//this guys ID number is M04_OBJ
 		SAVE_VARIABLE( medlab_conv, 44 );
 		SAVE_VARIABLE( firstmateConv, 45 );
 		SAVE_VARIABLE( first_mate_primary_triggered, 46 );
+		SAVE_VARIABLE( torpedo_objective_completed, 47 );
+		SAVE_VARIABLE( missile_objective_activated, 48 );
 	}
 
 	void Created( GameObject * obj ) 
@@ -166,11 +173,13 @@ The following are the custom parameter number values used to control objectives 
 		missile_04_sabotaged						= 130;
 		number_missiles_sabotaged					= 0;
 		missile_primary_active						= false;
+		missile_objective_activated					= false;
 
 		torpedo_01_sabotaged						= 200;
 		torpedo_02_sabotaged						= 210;
 		number_torpedos_sabotaged					= 0;
 		torpedo_primary_active						= false;
+		torpedo_objective_completed					= false;
 
 		engine_room_01_sabotaged					= 300;
 		engine_room_02_sabotaged					= 310;
@@ -231,8 +240,9 @@ The following are the custom parameter number values used to control objectives 
 						Commands->Set_Objective_HUD_Info_Position( 100, 90, "POG_M04_1_01.tga", IDS_POG_RESCUE, prisoner01_position );
 					}
 
-					else if (action_id == missileConv) //sabotage missile racks  M04_Add_MissileRoom_Objective_Conversation_02
+					else if (action_id == missileConv && missile_objective_activated == false) //sabotage missile racks  M04_Add_MissileRoom_Objective_Conversation_02
 					{
+						missile_objective_activated = true;
 						//Commands->Send_Custom_Event( obj, obj, 0, 1, 2 );
 
 						//Commands->Create_Sound ( "00-n040e", Vector3 (0,0,0), obj);
@@ -460,6 +470,10 @@ The following are params for when the individual objectives are activated and an
 				Commands->Join_Conversation( NULL, missileConv, false, false );
 				Commands->Start_Conversation( missileConv,  missileConv );
 				Commands->Monitor_Conversation (obj, missileConv);
+				// Vita soft-lock fix: missileConv is not a key conversation. If a
+				// key one is playing, Start_Conversation ends it before the
+				// monitor is registered and its end callback never arrives.
+				Commands->Send_Custom_Event( obj, obj, 0, MISSILE_OBJECTIVE_FALLBACK, MISSILE_OBJECTIVE_FALLBACK_DELAY );
 
 				missile_primary_active = true;
 
@@ -468,6 +482,31 @@ The following are params for when the individual objectives are activated and an
 				{
 					Commands->Send_Custom_Event( obj, objectiveReminder, M01_ADD_OBJECTIVE_POG_JDG, 1, 0 );
 				}
+			}
+
+			else if (param == MISSILE_OBJECTIVE_FALLBACK)
+			{
+				// The briefing never reported its end (dropped while a key
+				// conversation played). Run the original end-of-briefing step
+				// so objective 300 is added and the missile racks become
+				// pokable. When missileConv ended normally this does nothing.
+				if (missile_objective_activated == false)
+				{
+					Action_Complete( obj, missileConv, ACTION_COMPLETE_CONVERSATION_ENDED );
+				}
+			}
+
+			else if (param == announce_torpedo_room_objective &&
+				(torpedo_objective_completed == true || number_torpedos_sabotaged >= 2))
+			{
+				// Vita soft-lock fix: both torpedoes were sabotaged before the
+				// announcement (the zone sends 450 only after its conversation
+				// ends). Do not re-activate torpedo_primary_active, which would
+				// block M01_DO_END_MISSION_CHECK_JDG forever. Record objective
+				// 400 as accomplished instead. The counter also covers saves
+				// written before torpedo_objective_completed existed.
+				Commands->Add_Objective( 400, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M04_04, NULL, IDS_Enc_Obj_Primary_M04_04 );
+				Commands->Set_Objective_Status( 400, OBJECTIVE_STATUS_ACCOMPLISHED );
 			}
 
 			else if (param == announce_torpedo_room_objective)
@@ -622,6 +661,7 @@ The following are params for when the individual objectives are completed.
 
 			else if (param == completed_torpedo_room_objective)
 			{
+				torpedo_objective_completed = true;
 				torpedo_primary_active = false;
 				Commands->Create_Sound ( "00-n048e", Vector3 (0,0,0), obj);
 				Commands->Set_Objective_Status( 400, OBJECTIVE_STATUS_ACCOMPLISHED );

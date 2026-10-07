@@ -8262,7 +8262,20 @@ DECLARE_SCRIPT(M11_Lab_Cryochamber_Controller_JDG, "")//100910 M11_LABORATORY_MU
 
 			else if (param == M01_SPAWNER_SPAWN_PLEASE_JDG)
 			{
-				if (activeUnitCount <= 6 && deadMutantCount < 15)
+				// Vita port: the retries below are synchronous. A caged mutant
+				// killed outright sends no death custom, so deadMutantCount can
+				// stay below 15 after every cage is empty; stop instead of
+				// recursing until the stack overflows.
+				bool cagedMutantLeft = false;
+				for (int cage = 0; cage < 15 && cagedMutantLeft == false; cage++)
+				{
+					if (simpleMutant_id[cage] != 0 && Commands->Find_Object ( simpleMutant_id[cage] ) != NULL)
+					{
+						cagedMutantLeft = true;
+					}
+				}
+
+				if (cagedMutantLeft && activeUnitCount <= 6 && deadMutantCount < 15)
 				{
 					int random = Commands->Get_Random_Int(0, 15);
 
@@ -9400,6 +9413,7 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 	bool sydney_damaged_conv01_playing;
 	bool sydney_damaged_conv02_playing;
 	bool sydney_damaged_conv03_playing;
+	bool reachedMissileSwitch;
 
 	REGISTER_VARIABLES()
 	{
@@ -9416,6 +9430,7 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 		SAVE_VARIABLE(sydney_damaged_conv01_playing, 11);
 		SAVE_VARIABLE(sydney_damaged_conv02_playing, 12);
 		SAVE_VARIABLE(sydney_damaged_conv03_playing, 13);
+		SAVE_VARIABLE(reachedMissileSwitch, 14);
 	}
 
 	void Created( GameObject * obj ) 
@@ -9438,6 +9453,7 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 		sydney_damaged_conv01_playing = false;
 		sydney_damaged_conv02_playing = false;
 		sydney_damaged_conv03_playing = false;
+		reachedMissileSwitch = false;
 		// Vita port: conversation IDs start at 1000, so 0 never matches the
 		// end-mission conversation before these members are assigned.
 		sydney_conv01 = 0;
@@ -9637,7 +9653,10 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 				Commands->Action_Goto(obj, params);
 			}
 
-			else if (param == M01_WALKING_WAYPATH_05_JDG)//now goto first silo elevator platform
+			// Vita port: the silo top zones are not one-shot. A route custom for a
+			// stage Sydney has already passed is ignored so a late zone re-entry
+			// cannot send her back down or cancel the console sequence.
+			else if (param == M01_WALKING_WAYPATH_05_JDG && sydneys_location <= GOING_TO_ELEVATOR01)//now goto first silo elevator platform
 			{
 				sydneys_location = GOING_TO_ELEVATOR01;
 
@@ -9665,7 +9684,7 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 				}
 			}
 
-			else if (param == M01_WALKING_WAYPATH_07_JDG)//now goto first silo elevator platform
+			else if (param == M01_WALKING_WAYPATH_07_JDG && sydneys_location <= GOING_TO_ELEVATOR01)//now goto first silo elevator platform
 			{
 				sydneys_location = GOING_TO_ELEVATOR01;
 
@@ -9698,7 +9717,7 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 				}
 			}
 
-			else if (param == M01_MODIFY_YOUR_ACTION_JDG)//sydney on level 2--goto next elevator
+			else if (param == M01_MODIFY_YOUR_ACTION_JDG && sydneys_location <= GOING_TO_ELEVATOR02)//sydney on level 2--goto next elevator
 			{
 				sydneys_location = GOING_TO_ELEVATOR02;
 
@@ -9716,7 +9735,7 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 				//}
 			}
 
-			else if (param == M01_MODIFY_YOUR_ACTION_02_JDG)//sydney on level 3--goto next elevator
+			else if (param == M01_MODIFY_YOUR_ACTION_02_JDG && sydneys_location <= GOING_TO_ELEVATOR03)//sydney on level 3--goto next elevator
 			{
 				sydneys_location = GOING_TO_ELEVATOR03;
 
@@ -9740,7 +9759,7 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 				//}
 			}
 
-			else if (param == M01_MODIFY_YOUR_ACTION_03_JDG)//sydney on level 4--goto next elevator
+			else if (param == M01_MODIFY_YOUR_ACTION_03_JDG && sydneys_location <= GOING_TO_ELEVATOR04)//sydney on level 4--goto next elevator
 			{
 				sydneys_location = GOING_TO_ELEVATOR04;
 
@@ -9758,7 +9777,7 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 				//}
 			}
 
-			else if (param == M01_MODIFY_YOUR_ACTION_04_JDG)//sydney on top level 4--goto nuke switch
+			else if (param == M01_MODIFY_YOUR_ACTION_04_JDG && reachedMissileSwitch == false)//sydney on top level 4--goto nuke switch
 			{
 				sydneys_location = GOING_TO_MISSILE_SWITCH;
 
@@ -9778,6 +9797,16 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 				params.Set_Basic( this, 100, M01_DOING_ANIMATION_01_JDG );
 				params.Set_Animation ("S_A_HUMAN.H_A_CON2", false);
 				Commands->Action_Play_Animation (obj, params);
+			}
+
+			else if (param == M01_MODIFY_YOUR_ACTION_06_JDG && missionEndConv == 0 && killedYet == false)
+			{
+				// Vita port: replay of a stopped end-mission conversation.
+				missionEndConv = Commands->Create_Conversation( "M11_End_Mission_Conversation", 100, 1000, false);
+				Commands->Join_Conversation( STAR, missionEndConv, false, false );
+				Commands->Join_Conversation( obj, missionEndConv, false, false, true );
+				Commands->Monitor_Conversation (obj, missionEndConv);
+				Commands->Start_Conversation( missionEndConv,  missionEndConv );
 			}
 		}
 	}
@@ -9837,6 +9866,20 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 						params.Set_Basic( this, 100, M01_DOING_ANIMATION_02_JDG );
 						params.Set_Animation ("S_A_HUMAN.H_A_CON2", false);
 						Commands->Action_Play_Animation (obj, params);
+					}
+				}
+				break;
+
+			// Vita port: the pass chain only continues on ENDED. If the end
+			// conversation was stopped (key conversation playing at start),
+			// replay it once that has cleared instead of waiting forever.
+			case ACTION_COMPLETE_CONVERSATION_INTERRUPTED:
+			case ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT:
+				{
+					if (missionEndConv != 0 && action_id == missionEndConv && killedYet == false)
+					{
+						missionEndConv = 0;
+						Commands->Send_Custom_Event( obj, obj, 0, M01_MODIFY_YOUR_ACTION_06_JDG, 2 );
 					}
 				}
 				break;
@@ -10014,6 +10057,7 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 						GameObject * nukeconsole = Commands->Find_Object ( 100106 );
 						if (nukeconsole != NULL)
 						{
+							reachedMissileSwitch = true;
 							Commands->Set_Innate_Is_Stationary (obj, true);
 							params.Set_Basic( this, 100, M01_DOING_ANIMATION_01_JDG );
 							params.Set_Attack (nukeconsole, 0, 0, true);
@@ -10035,8 +10079,11 @@ DECLARE_SCRIPT(M11_Sydney_Script_JDG, "")//M11_REAL_SYDNEY_MOBIUS_JDG 100644
 						missionEndConv = Commands->Create_Conversation( "M11_End_Mission_Conversation", 100, 1000, false);
 						Commands->Join_Conversation( STAR, missionEndConv, false, false );
 						Commands->Join_Conversation( obj, missionEndConv, false, false, true );
-						Commands->Start_Conversation( missionEndConv,  missionEndConv );
+						// Vita port: monitor before starting. The end conversation is not
+						// key, so Start_Conversation stops it at once when a key
+						// conversation is playing; only a registered monitor sees that.
 						Commands->Monitor_Conversation (obj, missionEndConv);
+						Commands->Start_Conversation( missionEndConv,  missionEndConv );
 					}
 
 					else if (action_id == M01_DOING_ANIMATION_02_JDG)//end mission--success

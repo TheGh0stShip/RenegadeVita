@@ -280,6 +280,30 @@ EncyclopediaMgrClass::Hide_All_Objects (void)
 
 ////////////////////////////////////////////////////////////////
 //
+//	Flush_Bit_Cache
+//
+//	BooleanVectorClass keeps the most recently indexed bit in a write-back
+//	cache and Get_Bit_Array exposes the raw bytes without flushing it, so
+//	the newest Reveal_Object bit is missing from a saved table.  Indexing two
+//	distinct bits through the public interface writes the cached bit back.
+//
+////////////////////////////////////////////////////////////////
+static void
+Flush_Bit_Cache (BooleanVectorClass &known_objects)
+{
+	if (known_objects.Length () > 1) {
+		const bool first_bit = known_objects[0];
+		const bool second_bit = known_objects[1];
+		(void)first_bit;
+		(void)second_bit;
+	}
+
+	return ;
+}
+
+
+////////////////////////////////////////////////////////////////
+//
 //	Save
 //
 ////////////////////////////////////////////////////////////////
@@ -290,6 +314,7 @@ EncyclopediaMgrClass::Save (ChunkSaveClass &csave)
 	//	Loop over and save the bit vector for each type to disk
 	//
 	for (int index = 0; index < TYPE_COUNT; index ++) {
+		Flush_Bit_Cache (KnownObjectVector[index]);
 		csave.Begin_Chunk (CHUNKID_TYPE_DATA);
 			const VectorClass<unsigned char> &bit_vector = KnownObjectVector[index].Get_Bit_Array();
 			if (bit_vector.Length () > 0) {

@@ -325,3 +325,160 @@ section above. Two more points:
 - **The flyover chain** stops when the controller rolls 0 (no case), or 1 or
   2 (the missing texts). This is cosmetic.
 - **Runtime risks** 1, 2, 5 and 6 above are still unverified at runtime.
+
+## Soft-lock hunt (2026-10-07)
+
+Evidence class: staged-source review plus a read-only parse of the retail
+Vita3K `M06.mix:m06.ldd` conversation flags (`ConversationClass` VARID 13 =
+`IsKey`). No build, emulator or Vita run. Result: **no reachable blocker
+found and no patch added.** `Mission06.cpp` is still byte-identical to
+upstream.
+
+Two facts govern every objective race in M06:
+
+- Objectives cannot block success. `Mission_Complete(true)` is owned by the
+  Mendoza boss (`mendozabossgameobj.cpp:1609`). `CombatGameMiscHandlerClass::
+  Mission_Complete` (`combatgmode.cpp:1716-1723`) does not inspect
+  objectives. `Set_Objective_Status` on a missing ID and `Add_Objective` on an
+  existing ID are no-ops (`objectives.cpp:558-561`, `:491-493`).
+- Only three M06 conversations are key: **M06_CON001** (war room hack),
+  **M06_CON059** (intro) and **M06_CON060** (alarm warning). All 61 others are
+  non-key (priority 30, interruptable).
+
+### Objective 601 (hack before M06_CON059 ends): not reachable, not blocking
+
+The earlier note in "Full audit" section 5 is corrected here.
+
+- Poking 106952 starts CON001, which is key (`Mission06.cpp:328-345`).
+  `Start_Conversation` does not stop a key conversation
+  (`activeconversation.cpp:385-391`).
+- On the next frame, `ConversationMgrClass::Think` scans from the newest
+  entry. It keeps the newest key conversation and stops every older one,
+  including older key ones, with ENDED (`conversationmgr.cpp:1134-1175`,
+  identical to upstream `:1058-1075`). CON059 is older, so it is stopped.
+  `Action_Complete(300601, ENDED)` then adds 601 synchronously (`:270-276`,
+  delay 0).
+- CON001 has two remarks and needs several frames to end, so 601 is always
+  added before `601,1` arrives (`:352-356`). If a later key conversation
+  (CON060) preempts CON001, the reason is ENDED, which is also accepted.
+- The order "accomplish, then add" therefore cannot happen through CON059. The
+  original code needs no change.
+
+### (a) Non-key conversation callbacks
+
+Pattern: a non-key conversation started while CON001, CON059 or CON060 is
+active is stopped inside `Start_Conversation` before `Monitor_Conversation`
+registers (`activeconversation.cpp:397-401`), so the callback is lost.
+
+| Script (line) | Conversation | Effect if lost | Impact |
+|---|---|---|---|
+| `M06_GDI_Prisoner` (:866-892) | CON008 | 607 never accomplished; prisoner stays stationary | hidden objective |
+| `M06_Activate_Secret_Door` (:950-969) | CON061 | bookcase 1553207 never opens; 608 lost (`already_poked` set) | hidden objective and loot |
+| `M06_Civ_Prisoner` (:1009-1059) | CON009/CON063 | `conversation` stays true; 605 lost | hidden objective |
+| `M06_Resistance_Raider_DLS` (:3496-3527) | CON045 | no grenade-launcher drop | cosmetic |
+| `M06_KaneHead` (:4289-4309), `M06_Assistance_Farmer_DLS` (:3571-3616) | flavour | none | cosmetic |
+
+- No primary objective and no door, zone or NPC on the success chain depends
+  on a non-key callback.
+- The success-chain links are all callback-free: war room keycard drop
+  (`:343`, inside `Poked`), MidtroB zone, cinematic customs and MidtroC zone.
+- Retail-identical. Deferred.
+
+### (b) Other completion-before-activation races
+
+These are reachable, but neither blocks success. Retail-identical, deferred.
+
+- **609 "Deactivate alarm system" (secondary).**
+  - Order: the player pokes or destroys an `M06_Alarm_Terminal_DLS`
+    (`:1866-1880`) before entering zone 101055 or before CON060 ends.
+  - The Alarm_Controller timer sends `609,1` (`:1474`). The objective does not
+    exist yet, so the status change is a no-op, but `accomplished_609` is set
+    (`:241`).
+  - CON060 later adds 609 as Pending (`:5696-5701`). The guard at `:229` then
+    rejects every later `609,1`.
+  - Result: 609 stays Pending, with a stale HUD pointer to the alarm.
+- **603 "Rescue Scientists" (primary, cosmetic).**
+  - Order: freeing the GDI prisoner grants Havoc key 3 (`:880`). If key 3
+    alone opens the basement route, the player can trigger MidtroB without
+    hacking 106952. Spatial reachability is unverified.
+  - Relocation sends `603,1` before 603 exists (`:471`). A later hack then
+    adds 603, which stays Pending, while 601 stays Pending from CON059.
+  - Neither objective gates the boss.
+
+### (c) N-of-M counters
+
+- The only counters are spawner controllers: `dead_courtyard_eagle`
+  (`:2547`), `dead_hedgemaze_eagle` (`:2594`), `dead_barracks_eagle`
+  (`:2657`) and `dead_interior_patrol` (`:2714`). All use `==` thresholds.
+- They only disable spawners. An undercount keeps reinforcements spawning;
+  it does not lock progress.
+- The objective chain has no counter.
+
+### (d) One-shot triggers in the wrong state
+
+- **Collapse zones 5/6/7/9 are cosmetic (confirmed).** Every `Zone_ID` case
+  (`:5342-5552`) only creates `Invisible_Object` instances with
+  `L6_fall*` models. There is no `Destroy_Object`, door, custom or spawner
+  call. A zone that is never armed means fewer debris props, never a closed
+  path.
+- **`M06_Activate_MidtroC`** starts disarmed (`:5573`). It is armed only by
+  Sydney's relocate param 0 (`:464`, saved flag `:5567`), and that is the
+  only route to it, so it cannot fire early.
+- **`M06_Activate_Midtro`** is one-shot and saved (`:648`). It has no
+  prerequisite beyond reaching it.
+- **Objective controller.** The `type > 611` filter (`:221`) keeps all
+  `mission6.h` customs (6000+, 16600+) away from the objective switch. The
+  destruction stub's `100,100` matches no case.
+
+### (e) Required NPCs stuck or lost
+
+- **The escort is not gating.** MidtroC triggers on Havoc alone
+  (`:5579`). X6C then teleports Sydney to 108277 (`:481`), so Sydney stalling
+  on the escort path cannot soft-lock the mission. Her death fails the mission
+  through 611 (`:610-615`, `:250-254`). That is a failure, not a lock.
+- **Boss end positions.** These states have no timeout or fallback:
+  - Sydney's bolt needs her within 5 m of `SYDNEY_END_POS`
+    (`mendozabossgameobj.cpp:3124-3139`).
+  - Tripping advances only once Mendoza is within 2 m of `MENDOZA_END_POS`
+    (`:3007-3012`, `:3171-3183`).
+  - The death roll needs `SYDNEY_STATE_COWERING` (`:979`).
+- **How those states could stall.**
+  - A body blocking the path only pauses movement until it clears
+    (`action.cpp:1279-1284`).
+  - A permanent stall needs a pathfind error, which completes the goto with
+    `ACTION_COMPLETE_MOVE_NO_PROGRESS_MADE` (`action.cpp:1297-1303`). That
+    depends on data and is retail-identical.
+  - Sydney's own script goto (priority 85, `:525-534`, `:560-567`) cannot
+    override the boss goto (priority 100).
+- Not shown reachable from source. Deferred; no speculative boss fallback was
+  added. Physical signature: overall state stuck in RUN_AFTER_SYDNEY or
+  TOY_WITH_SYDNEY with Sydney in BOLTING or TRIPPING, and an action
+  completion reason of NO_PROGRESS for action 777.
+
+### (f) Save/load and death/restart
+
+- **Saved state on the chain.** The flags MidtroB, MidtroC, war room
+  `already_poked`, Sydney `poke_id`/`dont_move`/`current_move_loc` and
+  objective-controller `accomplished_609` are all `SAVE_VARIABLE`s. Active
+  conversations save their monitors (CONVERSATION_COMPLETION.md section 3).
+- **The boss rebinds Sydney after a load.** `On_Post_Load` calls
+  `Initialize_Boss` (`:680-708`), and the boss state machines are saved.
+- **Death sequence after a load.** `FACE_ZOOM` does not re-run its Begin, so
+  the camera is not re-hosted. Its Think still converges by position
+  (`:1390-1436`) into `WAYPATH_FOLLOW` (scale 1.0), then `LOOK_AT_DEAD_BOSS`
+  (0.5, then 1.0) and `Mission_Complete(true)`. The effect is visual only.
+- **Slow motion.** Every reload, restart and continuation re-enters
+  `A31_Vita_Run_Interactive_Runtime` (`a30_main.cpp:235-243`), which sets the
+  time scale to 1.0 (`a31_vita_runtime.cpp:4653-4657`). Dying during the
+  0.25x window therefore cannot carry slow motion into the restarted mission.
+  Within one session, the original behaviour is unchanged.
+
+### Deferred (no change)
+
+- 609 and 603 can stay Pending (cosmetic).
+- Callbacks for the non-key hidden objectives 605, 607 and 608 can be lost.
+- Boss end-position stalls with no fallback (runtime-only).
+- The camera host is not restored after a load mid death sequence (visual).
+- Any fix for the conversation-drop pattern shares the open design decision
+  recorded in M10_READINESS.md: late `Register_Monitor` delivery versus
+  per-mission resends.

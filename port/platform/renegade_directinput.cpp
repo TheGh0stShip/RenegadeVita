@@ -52,6 +52,7 @@ RenegadeVitaInputTelemetry g_vita_input_telemetry = {};
 long g_vita_joystick_axis[2] = {};
 float g_vita_camera_residual[2] = {};
 RenegadeVitaInput::SelectTap g_select_tap;
+RenegadeVitaInput::CrouchLatch g_crouch_latch;
 bool g_select_capture_enabled = false;
 
 #if !defined(RENEGADE_HOST_ABI_TEST)
@@ -92,6 +93,7 @@ bool g_logged_first_read_controller = false;
 bool g_logged_first_read_touch = false;
 bool g_logged_first_read_complete = false;
 bool g_logged_gameplay_start_esc_suppressed = false;
+bool g_logged_crouch_latch = false;
 const float kLegacyRouteV1SampleRate = 60.0f;
 const float kLegacyRouteV1FrameSeconds = 1.0f / kLegacyRouteV1SampleRate;
 const float kLegacyRouteV1MaximumFrameStep = 0.25f;
@@ -552,6 +554,7 @@ void DirectInput::Unacquire(void) { Captured = false; }
 void DirectInput::Flush(void)
 {
 	g_select_tap.Reset();
+	g_crouch_latch.Reset();
 	memset(DIKeyboardButtons, 0, sizeof(DIKeyboardButtons));
 	memset(DIMouseButtons, 0, sizeof(DIMouseButtons));
 	memset(DIJoystickButtons, 0, sizeof(DIJoystickButtons));
@@ -736,15 +739,34 @@ void DirectInput::Read(void)
 	Set_Button(DIKeyboardButtons, DIK_D, false);
 	Set_Button(DIKeyboardButtons, DIK_SPACE,
 		(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_CROSS) != 0);
-	Set_Button(DIKeyboardButtons, DIK_LCONTROL,
-		(ordinary_gameplay_input || dialog_navigation) &&
-		(((buttons & SCE_CTRL_CIRCLE) != 0 && !team_chat_chord &&
-		!camera_toggle_chord) ||
-		// PSTV DualShock: L3 also drives the original crouch key.
-		(ordinary_gameplay_input && (buttons & SCE_CTRL_L3) != 0)));
 	Set_Button(DIKeyboardButtons, DIK_E,
 		(ordinary_gameplay_input || dialog_navigation) &&
 		(buttons & SCE_CTRL_TRIANGLE) != 0 && !public_chat_chord);
+	// Circle holds the original crouch key; a short solo tap latches it so
+	// the right thumb can return to the camera stick (no L3 on handheld).
+	// Action (vehicle entry, ladder, poke) and any loss of ordinary gameplay
+	// input release the latch.
+	const bool circle_crouch = (buttons & SCE_CTRL_CIRCLE) != 0 &&
+		!team_chat_chord && !camera_toggle_chord;
+	float crouch_frame_seconds = TimeManager::Get_Frame_Real_Seconds();
+	if (crouch_frame_seconds <= 0.0f) crouch_frame_seconds = kLegacyRouteV1FrameSeconds;
+	if (crouch_frame_seconds > 0.25f) crouch_frame_seconds = 0.25f;
+	const bool crouch_held = g_crouch_latch.Sample(circle_crouch,
+		(buttons & (SCE_CTRL_CROSS | SCE_CTRL_SQUARE | SCE_CTRL_SELECT |
+			SCE_CTRL_START)) != 0U,
+		(DIKeyboardButtons[DIK_E] & DI_BUTTON_HIT) != 0,
+		ordinary_gameplay_input,
+		static_cast<uint32_t>(crouch_frame_seconds * 1000000.0f));
+	if (!g_logged_crouch_latch && g_crouch_latch.Latched()) {
+		Vita_Append_A22_Runtime_Breadcrumb("input",
+			"Circle tap latched original crouch key DIK_LCONTROL");
+		g_logged_crouch_latch = true;
+	}
+	Set_Button(DIKeyboardButtons, DIK_LCONTROL,
+		(dialog_navigation && circle_crouch) ||
+		(ordinary_gameplay_input && (crouch_held ||
+		// PSTV DualShock: L3 also drives the original crouch key.
+		(buttons & SCE_CTRL_L3) != 0)));
 	Set_Button(DIKeyboardButtons, DIK_F,
 		ordinary_gameplay_input && (back_touch.down || camera_toggle_chord ||
 		// PSTV DualShock: R3 drives original FirstPersonToggle (no rear touch).

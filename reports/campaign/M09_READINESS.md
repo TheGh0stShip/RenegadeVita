@@ -222,3 +222,68 @@ result (`MISSION_FAILURE_PATHS.md`).
   audit.
 
 No runtime, visual or physical claim follows from this audit.
+
+## Soft-lock hunt — 2026-10-07
+
+Evidence class: staged-source review; host parsing of the Vita3K copy (M09.mix
+`059fc7de…`, always.dbs `objects.ddb`) for conversation flags, zone and powerup
+definitions, and level bindings (receipt under the ignored `build/m09softlock/`);
+`bash tools/stage_sources.sh` exit 0 (545 patches, zero fuzz);
+`arm-vita-eabi-g++ -fsyntax-only` on the patched `Mission09.cpp` (0 errors, only
+pre-existing warnings). Nothing was built, linked, packaged or run. Line numbers
+are the staged file after this pass.
+
+### Data facts used
+
+- `m09.ldd` conversation `IsKey`: D07, P01, D01–D04, D10, D12–D14, D17, D18
+  are key. D05, D06, D08, D09, D11, D15, D16, D19, D20 and M09CON014 are not.
+- Zone definitions: 519 is `Script_Zone_Star` (stars only). The evac zone
+  1202054 is 82060002 `Script_Zone_All`, so Mobius's own entry registers. Every
+  other chain zone (suit, surface, keycard, lift, exit, Goto) is star-only.
+- `Level_01_Keycard`/`Level_02_Keycard`: `Persistent` 0, `AlwaysAllowGrant` 1,
+  `GrantKey` 1/2. Only human soldiers collect powerups
+  (`SoldierGameObj::Wants_Powerups`).
+- Scripted lifts: only `M09_Elevator_All_Zone` (6) and `_Controller` (7) are
+  bound. `M09_Elevator_Movement_Zone` is unbound.
+
+### Findings
+
+| # | Issue | Location | Reachability | Severity | Action |
+|---|---|---|---|---|---|
+| 1 | D07 (900) and P01 (903) continue only on `ENDED`. Being more than 200 m from the conversation centre (Mobius's start point, Z halved) at a remark boundary ends them `INTERRUPTED`. Objective 901 and `M09_Mobius_Follow` then never start. Mobius stays alive, so the mission can neither complete nor fail. | `Mission09.cpp:800-966` | Low: the player has to leave Mobius during the first minute | High if hit (hard soft-lock) | **Fixed** (`scripts-a38-m09-intro-conversation-resume.patch`) |
+| 2 | Keycard-door wait loop (zone 2000458): `DIST_CHECK` re-tests the distance measured on entry and never re-measures it. A player who enters ahead of Mobius and waits never gets the door check. | `:4424` | Common, because Mobius trails | Medium (stepping out and back in recovers) | **Fixed** (`scripts-a38-m09-keycard-zone-distance-recheck.patch`) |
+| 3 | M10-style key-preempts-non-key loss | n/a | Not present on the chain: D07/P01 are key, and key-on-key preemption ends the older one `ENDED`, so the chain advances. D11 (non-key, 901 → re-add 902) starts from the zone's `Animation_Complete`, which a script zone never receives, and 902 is already added in `Entered` (`:425`). Every other non-key conversation has no completion consequence. | None | No change |
+| 4 | Completion before activation | `:246-287`, `:3485-3573`, `:2965-3046` | The key counter (2000452) exists from load and counts whether or not an objective is active. A lift moves only from `SET_MOBIUS`, which needs Mobius at the waypoint while STAR is inside, so a late Mobius does not move it, and STAR exiting and re-entering resends `ELEVATOR`. No lift is one-shot. `mobius_in_zone` stays set, but only that same `ACTIVATE` reads it. Objective order cannot block, because `Mission_Complete(true)` ignores objective status. With value-initialised scripts, `M09_Innate_Enable_Zone` now always sends its 4 s second pulse (enemy AI only). | None | No change |
+| 5 | Counter under- or over-count | `:2965-3046`, `:4473-4519` | Each keycard grants once and is deleted. Mobius cannot consume one. The door opens on exactly 2, after which the count goes to 3 and is idle. CheckpointA feeds only the tertiary objective 904. | None | No change |
+| 6 | Mobius left behind on a one-way lift (1265150, 1265149, 1265126; direction 0 only) if he is not carried during the ride | lift controllers `:3385-3577` | Physics only: script logic cannot move a lift without Mobius at its waypoint, and Havoc cannot ride one alone | High if hit; nothing in the game recovers it | Deferred (needs a hardware repro; a fallback would teleport Mobius to `Mobius_exit_goto`) |
+| 7 | The `TOO_FAR` catch-up loop (5 s, at 25 m or more) dies for good after `NO_FOLLOW ON` (zone 1100238): it only re-arms while `!nofollow`, and `NO_FOLLOW OFF` (zone 2000991) does not restart it | `:1331-1348`, `:4384`, `:4755` | Every playthrough, unless OFF arrives within 5 s | Low (Mobius still follows the 56 re-firing `M09_Mobius_Goto` zones, the 4 exit zones, the suit-zone teleport resync `:386/:411` and the evac `FOLLOW` `:565`; walking back through the last Goto zone recovers him) | Deferred: matches retail, and a fix would change following on the normal path. Proposed if hardware shows a lost Mobius: restart `TOO_FAR` on `NO_FOLLOW OFF`. |
+| 8 | Save/load and death | n/a | Chain state is saved: follow vars, evac flags, the suit/surface/exit/lift flags, the key counter, and the keycard-zone pointer refetch (a36). The new `escort_started` is save id 2; old saves read it as false, and P01 has already ended in them, so there is no double attach. The lift `mobius` pointers are never read. If a pending `ELEV_WAYPOINT` goto is lost across a load, the lift waits until STAR re-enters. Death restart reloads the level. | Low | No change |
+
+### Fix details
+
+- Intro resume: on `INTERRUPTED` or `UNABLE_TO_INIT` for 900 or 903, start a 1 s
+  timer. The 900 path then starts P01 as the original does (P01 waits for the
+  audience and has no timeout). The 903 path runs the original hand-off, moved
+  unchanged into `Start_Escort`. Both are skipped if Mobius or Havoc is dead,
+  and the hand-off runs once (saved flag). The timer, not a synchronous call,
+  keeps level-release `Reset_Active_Conversations` (which also delivers
+  `INTERRUPTED`) from acting on the outgoing world. The `ENDED` path is
+  unchanged.
+- Keycard re-check: refresh `mobius` and `mobius_distance` at the top of each
+  `DIST_CHECK` pass. Entering with Mobius close, the reply handling and exit
+  behaviour are unchanged.
+- Both patches are registered after `combat-a37-screen-overlay-opacity-clamp`,
+  behind a new anchor on the final pre-pass `Mission09.cpp` (`3674367e…`). No
+  existing anchor moved.
+
+### Hardware signatures
+
+- Fix 1: a conversation transition end for action 900 or 903 with reason
+  `INTERRUPTED`, followed about 1 s later by objective 901 and the
+  `M09_Mobius_Follow` attach. It should never appear on a normal run.
+- Fix 2: a `CHECK` from 2000458 to 2000452 while STAR is still inside the zone,
+  2 s or more after entry.
+- Deferred 6: STAR at the top of a lift while Mobius's Z stays at the lower
+  floor after `Static_Anim_Phys_Goto_Frame`.
+
+No runtime, visual or physical claim follows from this pass.

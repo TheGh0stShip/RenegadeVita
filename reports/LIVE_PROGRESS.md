@@ -1,5 +1,36 @@
 # Live engineering progress
 
+# Campaign control coverage audit — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Completed (source audit, ARM -fsyntax-only and host tests only; nothing linked, emulated or run on hardware):
+- Every campaign action (poke, vehicles, ladders, jump/crouch, C4 place/detonate, beacon deploy/cancel,
+  scope/zoom, weapon cycle, reload, EVA/pause, quicksave, death dialog, movie skip) mapped to a produced Vita
+  control; table in reports/VITA_CONTROLS.md, locked by tools/test_vita_campaign_control_coverage.py.
+- Fix: choosing the default profile on the Controls Save/Load page, or deleting the current custom profile,
+  reloaded the retail keyboard map and left stick/triggers/crouch/weapon cycle/zoom unbound;
+  commando-a37-default-input-profile-vita-mapping.patch reapplies the Vita mapping. Staging: 544 patches, PASS.
+- Handheld crouch: a quick solo Circle tap now latches the original crouch key (hold still works); Action,
+  another Circle press or any dialog releases it.
+
+Next: hardware check of the crouch tap window and the Save/Load default-profile route.
+
+# M10 objective conversation preemption fix — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Now: the owner-approved, M10-only fix for the open decision below is staged.
+Completed: `scripts-a38-m10-objective-conversation-resend.patch` registers the monitor before
+`Start_Conversation` at the four follow-up sites (M10CON014/005/011/002). A key-conversation preemption
+then delivers 1001/1002/1004/1005 at once. Each send is behind a saved send-once flag. The normal path,
+the engine and other missions are unchanged.
+Evidence: staging 544 patches, inventory PASS, only `Mission10.cpp` changed; ARM `-fsyntax-only` exit 0
+with unchanged warnings; `tools/test_m10_objective_conversation_resend.py` 5/5 OK.
+Details: reports/campaign/M10_READINESS.md "Key-conversation preemption fix".
+Next: an ARM build, then a physical M10 run that pokes the SE gate during a key conversation.
+Blocker: none (no build or device in this unit).
+
 # Campaign development push 3 (full mission audits) — 2026-10-07
 
 Renegade Vita — v3.5 active

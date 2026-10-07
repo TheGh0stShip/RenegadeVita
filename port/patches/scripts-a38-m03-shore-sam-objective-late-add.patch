@@ -1,0 +1,64 @@
+M03 soft-lock: secondary objective 1004 (shore SAM sites) can stay pending
+forever. 1004 is added only when the key conversation M03CON026, started from
+zone 1100007/1100015 (304,3), ends (Action_Complete action 2). The shore SAMs
+300058/300059 send 304,1 when killed, and the second one sets 1004
+accomplished immediately. If both SAMs die before M03CON026 ends (destroyed
+from range or by the gunboat before the zone is entered, or during the
+conversation), the completion is dropped and 1004 is added as pending.
+
+Remember the second SAM kill in a saved flag (new id 11) and credit it once
+when 1004 is added. In the normal order the flag is never consulted. Saves
+without id 11 load with the flag clear, which is the original behaviour.
+
+--- a/Mission03.cpp
++++ b/Mission03.cpp
+@@ -59,6 +59,8 @@
+ 	int keycard_objective_flags;
+ 	// Vita port: bit 0 = objective 1008 added, bit 1 = mainframe poked.
+ 	int mainframe_objective_flags;
++	// Vita port: bit 0 = objective 1004 added, bit 1 = both shore SAMs destroyed.
++	int shore_sam_objective_flags;
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+@@ -72,6 +74,7 @@
+ 		SAVE_VARIABLE(gunboat3, 8);
+ 		SAVE_VARIABLE(keycard_objective_flags, 9);
+ 		SAVE_VARIABLE(mainframe_objective_flags, 10);
++		SAVE_VARIABLE(shore_sam_objective_flags, 11);
+ 	}
+ 
+ 	void Created(GameObject * obj)
+@@ -86,6 +89,7 @@
+ 		rain = true;
+ 		keycard_objective_flags = 0;
+ 		mainframe_objective_flags = 0;
++		shore_sam_objective_flags = 0;
+ 	//	Commands->Add_Objective(1006, OBJECTIVE_TYPE_TERTIARY, OBJECTIVE_STATUS_HIDDEN, 1008, IDS_Enc_ObjTitle_Hidden_M03_02, NULL, IDS_Enc_Obj_Hidden_M03_02);
+ 	//	Commands->Add_Objective(1007, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_HIDDEN, 1009);
+ 	//	Commands->Add_Objective(1008, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_HIDDEN, 1010);
+@@ -117,6 +121,16 @@
+ 			if (action_id == 2)
+ 			{
+ 				Commands->Add_Objective(1004, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Secondary_M03_03, NULL, IDS_Enc_Obj_Secondary_M03_03);
++				// Vita port: both shore SAMs can die before M03CON026 ends and adds
++				// 1004 (or before its zone is entered). Credit them once here.
++				if (!(shore_sam_objective_flags & 1))
++				{
++					shore_sam_objective_flags |= 1;
++					if (shore_sam_objective_flags & 2)
++					{
++						Commands->Set_Objective_Status(1004, OBJECTIVE_STATUS_ACCOMPLISHED);
++					}
++				}
+ 				object = Commands->Find_Object(1205777);
+ 				if(object)
+ 				{
+@@ -644,6 +658,7 @@
+ 			if (sam_count_2 >= 2)
+ 			{
+ 				gunboat3 = true;
++				shore_sam_objective_flags |= 2; // Vita port: see Action_Complete(2).
+ 
+ 				Commands->Set_Objective_Status(1004, OBJECTIVE_STATUS_ACCOMPLISHED);
+ 

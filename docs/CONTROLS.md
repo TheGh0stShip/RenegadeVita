@@ -7,7 +7,7 @@ The mapping below is the current source intent. Its complete physical behavior i
 | Left stick | Original movement sliders: forward/back and strafe |
 | Right stick | Original camera/look sliders |
 | Cross | Jump / confirm |
-| Circle | Crouch / back in UI contexts |
+| Circle | Crouch (hold, or quick tap to toggle) / back in UI contexts |
 | Square | Reload |
 | Triangle | Action/use/interact |
 | D-pad Left / Right | Previous / next weapon in gameplay; WWUI focus navigation in menus and open dialogs |

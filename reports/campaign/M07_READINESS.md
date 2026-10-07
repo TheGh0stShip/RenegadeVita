@@ -244,3 +244,105 @@ No earlier patch touches `Mission07.cpp`. Reviewed and consistent for M07:
 - Raveshaw music playback.
 - A >7-vehicle-loss park entry.
 - `para_drop` after a mid-mission load.
+
+## Soft-lock hunt (2026-10-07)
+
+Evidence class: source review of staged `Mission07.cpp` and the conversation and
+action engine (`activeconversation.cpp`, `conversationmgr.cpp`, `action.cpp`,
+`spawn.cpp`), plus a read-only parse of `VARID_ISKEY` in the retail `m07.ldd`.
+Checks: ARM `-fsyntax-only` of the patched file (rc 0, 0 errors, no diagnostics in
+the new code), `bash tools/stage_sources.sh` (exit 0, zero fuzz, 545 ordered
+patches) and `renegade_patch_inventory.py --check-staging` PASS. No build,
+emulator or physical Vita run. Line numbers below are for the staged file after
+the patches.
+
+### Where completion is really gated
+
+`Mission_Complete(true)` needs only the two park SSM kills (100796/100798 →
+100799 `== 2` → 703/param 1, `:3385`). Nothing makes the SSMs invulnerable.
+However, the `M07_Hotwire_Help`/`M07_Hotwire_Dead` zones (100971/100987,
+`:6719`) play M07_CON029 while Hotwire (100658) still exists, and its ENDED
+callback fails 709 (`:6759`). Hotwire is removed only by the inn-evac rope climb.
+So any stall in the chain from SAM capture to inn evacuation leaves the player
+two choices: wait forever, or go past and fail. The hunt therefore follows the
+chain from M07_CON002 through Hotwire to M07_CON017.
+
+### Key flags (retail m07.ldd)
+
+- Key: 001, 002, 013, 014, 017, 018, 019, 020, 021, 022, 028, 029.
+- Not key: 003–012 (nuke countdown), 015, 016, 023–027.
+
+A non-key conversation started while a key one plays is stopped with INTERRUPTED
+inside `Start_Conversation` (`activeconversation.cpp:399`), before
+`Monitor_Conversation`, so no callback is delivered. When a newer key
+conversation preempts, `ConversationMgrClass::Think` stops the older one with the
+default reason, ENDED.
+
+### Fixed
+
+| Patch | Issue | Reachability / severity |
+|---|---|---|
+| `scripts-a38-m07-hotwire-sam-conversation-fallback.patch` | `M07_Activate_Hotwire` (`:1915`) sends `M07_HOTWIRE_CAPTURE_SAMS` only from the ENDED callback of **non-key** M07_CON016. If a key conversation is playing when Hotwire enters zone 100684, no callback arrives. `already_entered` stays set, so Hotwire never captures the SAMs: 702, the inn evac, M07_CON017 and 703 never happen, and M07_Hotwire_Dead later fails the mission. | Reachable. The player triggers `M07_Move_Hotwire` 9 in the same zone, so the player is nearby. Key M07_CON013/014 (blast zones, until impact), M07_CON018–022 (objective zones) and M07_CON028 each run 2–15 s. Same on retail PC. **High** (mission becomes unwinnable). Fix: a saved once-only `capture_sent` (ID 2) and a 15 s `CAPTURE_SAMS_FALLBACK` timer (`:1963`/`:1970`). On the normal path the one-line conversation ends first, so the timer is a no-op. Saves made before this patch load `capture_sent=false` and have no timer pending, so they behave as before. |
+| `scripts-a38-m07-hotwire-path-failure-fallback.patch` | Hotwire (`:1168`) continues GO_SAM1/GO_SAM2 only on NORMAL, and counts as the fifth inn evacuee only on NORMAL or MOVE_NO_PROGRESS_MADE, through the designers' own "pathfinding around dec_phys vehicles at inn" hack (`:1189`). PATH_BAD_START/PATH_BAD_DEST on the evac goto, or a failed or no-progress SAM goto, leaves Hotwire idle. The SAMs are never converted, or the evac stops at 4 of 5. | Reachable only if pathfinding fails, which is unproven. The designers saw NO_PROGRESS at the inn. **High** if it happens. Fix: map these failures onto the existing branches. A SAM goto failure takes the NORMAL branch (attack plus the timer-driven conversion). An evac goto path failure takes the no-progress branch. `ActionClass::Done` clears the action before notifying, so there is never a second notification. LOW_PRIORITY is deliberately not remapped, because a rejected request notifies synchronously inside `M07_Inn_Evac::Custom`, and re-entering it would start M07_CON017 twice. |
+
+### Reviewed, not changed
+
+- **(a) Other conversation gates.**
+  - 300701 (M07_CON001, key, ENDED only, `:308`). INTERRUPTED comes only from a
+    dead orator (Gunner or Havoc, both of which already fail the mission) or from
+    Havoc being more than 200 m from the centre during the briefing. In that case
+    the nuke, 701 and 710 are skipped, but M07_CON002 still drives the chain
+    (`M07_Move_To_Evac` moves the team). Not a completion blocker. Same on retail.
+    Low.
+  - 300702, 300703 and 300704–300708 accept ENDED or INTERRUPTED, and all are key.
+  - M07_CON015's monitor checks 300702, so 707 is never added from Havoc. This is
+    a dead branch in the original; 707 comes from zone 100804.
+- **(b) Order.**
+  - 703/param 1 does not need 703 to have been added.
+  - 701/709/710/702 accomplish events can only come after their adds.
+  - Secondary 704–708 can be accomplished before their briefing zone adds them,
+    and then stay pending. Same on retail; secondary only.
+  - If the SAMs are captured before nuke impact, the ESCAPED check (`:1560`)
+    sees `SYDNEY` already destroyed, so 710 stays pending. This does not block
+    completion.
+- **(c) Counters.**
+  - Inn evac (5, `:5984`/`:5989`): Sydney2 and the three DEAD-6 "2" units send on
+    **any** completion reason of their waypath. If one is killed, the mission
+    fails (710/701 param 2), so the count is never stuck short. If a spawn point
+    is blocked, `Check_Auto_Spawn` retries every frame. Hotwire's `Destroyed`
+    sends a sixth event (Find_Object(1) is NULL), which is harmless. Duplicate
+    events can only overcount, and `== 4`/`== 5` then fire early, which does not
+    block.
+  - Evac site (`:1792`, needs 4): 2 APCs plus 6 gun emplacements, counted on
+    any killer.
+  - SAM (`:2129`): converted `== 1`. Killed `== 2` fails the mission.
+  - Park (`== 2`): placed SSMs, counted on any killer, with no STAR filter.
+  - No M07 counter filters `Killed` by killer.
+- **(d) One-shot triggers.**
+  - `TANK_STILL_THERE` (`:1157`) retries until 100905 (a killable light tank) is
+    gone. That is by design.
+  - Entering `M07_Hotwire_Dead` while Hotwire is still climbing fails the
+    mission. Same on retail.
+- **(e) Lost units.**
+  - Player vehicles and para drops are optional. `para_drop[]` is still not
+    saved, so after a load the drops fall back to the origin (enemy-only, known
+    lead). `vehicle_drop[]` is saved.
+  - Hotwire has no damage path other than mission failure.
+- **(f) Save/load.**
+  - All chain counters and flags are saved: `dead6_cnt`, `already_entered`,
+    Hotwire's `evac`/`dont_move`, the inn/park/evac-site counters, and the new
+    `capture_sent`.
+  - Script timers and delayed customs persist (`GameObjObserverTimerClass` /
+    `GameObjCustomTimerClass`). That includes the 5 s 703 delay and the new
+    fallback timer.
+  - Death or restart reloads the level from scratch.
+
+### Deferred (physical)
+
+- The inn evac with a key briefing overlapping Hotwire's zone entry (the patched
+  path). Expected telemetry: a conversation start/stop for M07_CON016 with no
+  kind-3 observer call, then Hotwire moving to the SAMs about 15 s later.
+- Save/load during the rope climb (bone attachment persistence). If Hotwire
+  survives a load still attached to the rope, M07_Hotwire_Dead would fail the
+  mission.
+- M07_CON001 audience distance (200 m) during the opening briefing.

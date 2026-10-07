@@ -2306,6 +2306,18 @@ public:
 			obj->Set_Targeting( face_location, false );
 		}
 
+		// EndTime is an absolute TimeManager::Get_Seconds() stamp, and that
+		// clock restarts with every process.  A face action restored from a
+		// save written later in an earlier session would otherwise hold until
+		// this session's clock reaches the stale stamp (minutes or hours).
+		// Never wait longer than the authored duration from now; a stamp
+		// set by Init() in this session is always within that bound.
+		const float longest_end_time = TimeManager::Get_Seconds() +
+			MAX(Action->Get_Parameters().FaceDuration, Action->Get_Parameters().LookDuration);
+		if ( EndTime > longest_end_time ) {
+			EndTime = longest_end_time;
+		}
+
 		//
 		//	Have we timed out yet?
 		//

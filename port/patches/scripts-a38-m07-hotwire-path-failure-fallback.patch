@@ -1,0 +1,36 @@
+M07_Dead6_Engineer (Hotwire, 100658) drives the SAM capture and is the fifth
+inn evacuee. GO_SAM1/GO_SAM2 only continue on NORMAL (and GO_SAM1 retries on
+LOW_PRIORITY), and ARRIVE_EVAC_SPOT only counts on NORMAL or, through the
+original "pathfinding around dec_phys vehicles at inn" hack, on
+MOVE_NO_PROGRESS_MADE. A PATH_BAD_START/PATH_BAD_DEST evac goto, or a failed
+or no-progress SAM goto, leaves Hotwire idle: no SAM conversion, or a 4-of-5
+inn evacuation count, so M07_CON017/703 never come and M07_Hotwire_Dead fails
+the mission later. Map those failures onto the branches the designers already
+use: a failed SAM goto captures from where Hotwire stands (the conversion is
+timer driven), and a failed evac goto takes the no-progress branch. Successful
+paths are unchanged.
+
+--- a/Mission07.cpp
++++ b/Mission07.cpp
+@@ -1165,6 +1165,21 @@
+ 	{
+ 		ActionParamsStruct params;
+ 
++		// A failed path must not strand the SAM capture or the inn evacuation.
++		// Treat it like the existing no-progress hack below: capture from where
++		// Hotwire stands, or count him as arrived at the evac spot.
++		bool path_failed = (reason == ACTION_COMPLETE_PATH_BAD_START ||
++			reason == ACTION_COMPLETE_PATH_BAD_DEST);
++		if ((action_id == GO_SAM1 || action_id == GO_SAM2) && !evac &&
++			(path_failed || reason == ACTION_COMPLETE_MOVE_NO_PROGRESS_MADE))
++		{
++			reason = ACTION_COMPLETE_NORMAL;
++		}
++		if (action_id == ARRIVE_EVAC_SPOT && evac && path_failed)
++		{
++			reason = ACTION_COMPLETE_MOVE_NO_PROGRESS_MADE;
++		}
++
+ 		if (action_id == ARRIVE_EVAC_SPOT && reason == ACTION_COMPLETE_NORMAL && evac)
+ 		{
+ 			int dead6_id = Commands->Get_ID(obj);

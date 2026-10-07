@@ -42,6 +42,12 @@
 
 extern int A30_Vita_Log(const char *format, ...);
 
+// Vita port: controller self-customs for the PCT unlock watchdog. The
+// mission1.h custom enum stops near 4006, so this value cannot collide.
+#define M01_A38_PCT_UNLOCK_WATCHDOG_JDG			438001
+// Fallback for the "Open the gate" objective (see its controller case).
+#define M01_A38_OPEN_GATE_OBJECTIVE_FALLBACK_JDG	438002
+
 DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 {
 	typedef enum {
@@ -158,6 +164,7 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 	bool player_has_reached_grunt_level;
 	bool civs_scattered;
 	bool commcenter_sam_destroyed;
+	bool open_gate_objective_added;
 
 	M01_Building_State hand_of_nod_state, comm_center_state;
 	M01_Location players_location;
@@ -261,6 +268,26 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 		SAVE_VARIABLE(player_has_reached_grunt_level, 87);
 		SAVE_VARIABLE(civs_scattered, 88);
 		SAVE_VARIABLE(commcenter_sam_destroyed, 89);
+		SAVE_VARIABLE(open_gate_objective_added, 90);
+	}
+
+	// Vita port: "Open the gate" objective, shared by the conversation-end
+	// callback and its fallback. Adds it at most once.
+	void A38_Add_Open_Gate_Objective( void )
+	{
+		if (open_gate_objective_added == true)
+		{
+			return;
+		}
+		open_gate_objective_added = true;
+
+		Vector3 radarMarker (-310.727f, 571.824f, 28.484f);
+		Commands->Add_Objective( M01_OPEN_THE_GATE_JDG, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M01_03, NULL, IDS_Enc_Obj_Primary_M01_03 );
+		Commands->Set_Objective_Radar_Blip( M01_OPEN_THE_GATE_JDG, radarMarker );
+		Commands->Set_Objective_HUD_Info_Position( M01_OPEN_THE_GATE_JDG, 95, "POG_M01_1_03.tga", IDS_POG_OPEN, radarMarker );
+
+		//Vector3 green (0,1,0);
+		Commands->Set_HUD_Help_Text ( IDS_Enc_ObjTitle_Primary_M01_03, TEXT_COLOR_OBJECTIVE_PRIMARY );
 	}
 
 	void Created( GameObject * obj ) 
@@ -353,6 +380,7 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 		player_has_reached_grunt_level = false;
 		civs_scattered = false;
 		commcenter_sam_destroyed = false;
+		open_gate_objective_added = false;
 
 		m01_hon_chinook_guys_killed = 0;
 		m01_hon_spawners_tally = 0;
@@ -819,6 +847,10 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 							Commands->Start_Conversation( unlocked_gate_conv, unlocked_gate_conv );
 
 							Commands->Monitor_Conversation(  obj, unlocked_gate_conv );
+							// Vita port: this non-key conversation is stopped before the monitor
+							// exists if a key one is playing, so no end callback adds the gate
+							// objective. Add it later if the callback has not.
+							Commands->Send_Custom_Event( obj, obj, 0, M01_A38_OPEN_GATE_OBJECTIVE_FALLBACK_JDG, 30 );
 						}
 
 						//Commands->Send_Custom_Event( obj, obj, 0, M01_ANNOUNCE_REINFORCEMENTS_JDG, 5 );
@@ -1334,8 +1366,41 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 							eva_comm_center_line_01 = Commands->Create_Sound ( "00-N000E", Vector3 (0,0,0), obj );//accessing
 							Commands->Monitor_Sound ( obj, eva_comm_center_line_01 );
 
+							// Vita port: the PCT poke is one-shot and the unlock depends on five
+							// chained CUSTOM_EVENT_SOUND_ENDED events (~8.2 s of EVA audio).
+							// Dynamic sounds are not saved, so a save/load mid-chain (or a line
+							// that never ends) leaves the pen locked. Finish the chain once.
+							Commands->Send_Custom_Event( obj, obj, 0, M01_A38_PCT_UNLOCK_WATCHDOG_JDG, 30 );
+
 							//Commands->Send_Custom_Event( obj, obj, 0, M01_CLEAR_UNLOCK_GATE_OBJECTIVE_JDG, 0 );
 							//player_has_unlocked_pen = true;
+						}
+					}
+					break;
+
+				case M01_A38_OPEN_GATE_OBJECTIVE_FALLBACK_JDG:
+					{
+						if (open_gate_objective_added == false && gate_objective_done == false)
+						{
+							A30_Vita_Log("A4 M01 open-gate objective fallback: unlock conversation gave no end callback\n");
+							A38_Add_Open_Gate_Objective();
+						}
+					}
+					break;
+
+				case M01_A38_PCT_UNLOCK_WATCHDOG_JDG:
+					{
+						if (player_has_unlocked_pen == false)
+						{
+							A30_Vita_Log("A4 M01 PCT unlock watchdog: EVA chain did not finish; unlocking pen\n");
+							// Drop the stale chain so a late line cannot repeat the unlock.
+							eva_comm_center_line_01 = 0;
+							eva_comm_center_line_02 = 0;
+							eva_comm_center_line_03 = 0;
+							eva_comm_center_line_04 = 0;
+							eva_comm_center_line_05 = 0;
+							Commands->Send_Custom_Event( obj, obj, 0, M01_CLEAR_UNLOCK_GATE_OBJECTIVE_JDG, 0 );
+							player_has_unlocked_pen = true;
 						}
 					}
 					break;
@@ -1455,6 +1520,10 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 							Commands->Start_Conversation( unlocked_gate_conv, unlocked_gate_conv );
 
 							Commands->Monitor_Conversation(  obj, unlocked_gate_conv );
+							// Vita port: this non-key conversation is stopped before the monitor
+							// exists if a key one is playing, so no end callback adds the gate
+							// objective. Add it later if the callback has not.
+							Commands->Send_Custom_Event( obj, obj, 0, M01_A38_OPEN_GATE_OBJECTIVE_FALLBACK_JDG, 30 );
 						}
 
 						else if (commcenter_sam_destroyed == false)//
@@ -2513,13 +2582,7 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 
 					else if (action_id == unlocked_gate_conv) //
 					{
-						Vector3 radarMarker (-310.727f, 571.824f, 28.484f);
-						Commands->Add_Objective( M01_OPEN_THE_GATE_JDG, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_PENDING, IDS_Enc_ObjTitle_Primary_M01_03, NULL, IDS_Enc_Obj_Primary_M01_03 );
-						Commands->Set_Objective_Radar_Blip( M01_OPEN_THE_GATE_JDG, radarMarker );
-						Commands->Set_Objective_HUD_Info_Position( M01_OPEN_THE_GATE_JDG, 95, "POG_M01_1_03.tga", IDS_POG_OPEN, radarMarker );
-
-						//Vector3 green (0,1,0);
-						Commands->Set_HUD_Help_Text ( IDS_Enc_ObjTitle_Primary_M01_03, TEXT_COLOR_OBJECTIVE_PRIMARY );
+						A38_Add_Open_Gate_Objective();
 					}
 
 					else if (action_id == endMission_conv) 

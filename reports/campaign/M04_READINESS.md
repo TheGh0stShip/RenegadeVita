@@ -311,3 +311,109 @@ One save-state gap remains open and is not patched: `M04_BigSam_Script_JDG`
 has no REGISTER block (`:10197`, `SCRIPT_SAVE_STATE_GAPS.md`). If the game is
 saved during the Big SAM sound sequence, the cosmetic gun animation can stall
 after a load. No objective depends on it.
+
+## Soft-lock hunt — 2026-10-07
+
+Evidence class: staged source, read-only retail data (Vita3K
+`ux0:data/renegade/retail/Data`: `M04.mix` `m04.ldd`, `always.dbs`
+`conv10.cdb`, `strings.tdb` and wave headers), the binding receipt
+`build/s4-all-map-bindings/m04-bindings.json`, one `arm-vita-eabi-g++
+-fsyntax-only` of the patched `Mission04.cpp` (exit 0, only pre-existing
+warnings) and a full `tools/stage_sources.sh` run (PASS, 545 ordered patches,
+only `Mission04.cpp` and the inventory change). Nothing was built, linked,
+packaged, launched in Vita3K or run on a Vita. Line numbers refer to the newly
+staged `staging/scripts/Mission04.cpp` (sha256 `48dcc115…36c0e6`). This
+section supersedes the "differs from upstream by one line" note and the
+"not patched" decision in item 5 of the full audit above.
+
+### Key conversations in M04 (m04.ldd, `ConversationClass::VARID_ISKEY`, micro-chunk 13)
+
+Key: `M04_Prisoner_Guard_is_in_Medlab_Conversation`,
+`M04_MissileRack_01/02/03_Sabotaged_Conversation` and
+`M04_Add_Captains_Key_Objective_Conversation`. The other 24 level
+conversations are not key, and none of the 3,606 global conversations in
+`conv10.cdb` is key. `ActiveConversationClass::Start_Conversation`
+(`staging/combat/activeconversation.cpp:399`) stops a non-key conversation
+with INTERRUPTED while any key conversation plays. That happens before the
+script's `Monitor_Conversation`, so no callback arrives. A key conversation
+that starts later stops a running non-key one with the default reason ENDED
+(`conversationmgr.cpp` Think), which M04 handles. Every M04 `Action_Complete`
+acts on ENDED only.
+
+### Issues fixed
+
+| # | Issue | Where | Reachability | Severity | Fix |
+|---|---|---|---|---|---|
+| 1 | Torpedo objective completed before its announcement. The racks are pokable from `Created` (`:9585`). Announce 450 is sent only after the zone's conversation ends (`:10150`). A late 450 set `torpedo_primary_active` back to true and re-added 400 as pending, so the end check (`:753`) could never pass. | `:499`–`:525`, `:662` | Reaching both torpedoes before crossing announce zones 105238/105239, then crossing one. Or poking both inside the ~2 s window of the voiceless one-remark announce conversation. Zone/torpedo geometry was not measured. | Hard soft-lock | `scripts-a38-m04-torpedo-objective-race.patch`: new flag `torpedo_objective_completed` (save id 47) set by 550. When 450 arrives after completion (flag, or saved counter `number_torpedos_sabotaged >= 2` for older saves), objective 400 is added and marked accomplished and the flag is left false. The normal order runs the original branch unchanged. |
+| 2 | Missile briefing dropped. 440 sets `missile_primary_active` and starts the non-key `M04_Add_MissileRoom_Objective_Conversation`. Only its ENDED callback adds objective 300 and sends `M01_START_ACTING_JDG` to racks 100420–100423, which ignore pokes until then (`:7951`). Zones 100429/100431 send 440 once and are destroyed (`:7880`). | `:243`, `:467`–`:497` | Entering the missile-room zone while a key conversation plays: the captain-key line (4.8 s; 10 s after the key-2 pickup, with post-first-mate patrols spawned on the route back past the missile room), or the prisoner-1 medlab line (7.8 s). | Hard soft-lock | `scripts-a38-m04-missile-briefing-drop.patch`: 440 also schedules self-custom 441 after 20 s (the briefing is two remarks, about 8.2 s of wave data). If the end callback has not run by then, 441 runs the original end-of-briefing branch through `Action_Complete(obj, missileConv, ENDED)`. A new flag `missile_objective_activated` (save id 48) makes that branch run once. On the normal path the callback runs first and 441 does nothing. |
+
+Both patches are registered after `scripts-a36-m04-save-variable-ids.patch`
+in `tools/stage_sources.sh` and apply with zero fuzz. Save ids 47 and 48 were
+unused (the controller used 1–46). Custom timers are saved
+(`scriptablegameobj.cpp` `CHUNKID_CUSTOM_TIMER`) and fire even when the sender
+is gone, so the fallback survives save/load. Saves written before these
+patches load the new flags as false. Issue 1 is still covered for them
+through the counter. Issue 2 is covered unless the briefing had already been
+dropped before the save.
+
+### Reviewed, no soft-lock (retail-identical, not changed)
+
+- **(a) Other non-key monitored conversations** (dropped the same way):
+  mission start (objective 100 HUD/markers; `prisoner_primary_active` is set
+  at announce and cannot be dropped in the first 3 s), engine room (430,
+  secondary 200 entry only), prison key (401, objective 110 entry only; the
+  warden still drops key 1 on death, `:7767`), Eva guard hint (marker 111),
+  first mate (600 entry only; the flag is set at 410), protect POWs (800 entry
+  only), firefight reminder (`missionIntroConv_playing`, `:9365`, reminder
+  silenced). None of them gates a flag in the end check, so a drop only hides
+  an objective entry. The torpedo announce zone (`:10134`) is the same
+  pattern: a dropped announce leaves `conversationPlaying` true and 450 is
+  never sent. The torpedoes then stop being required (the flag stays false),
+  which is permissive, not blocking. Prisoner 1's key medlab conversation
+  (`:3291`) is key, so it cannot be dropped at start; a newer key
+  conversation ends it through Think with ENDED.
+- **(b) Other completion-before-activation orders**: first mate is guarded by
+  `first_mate_primary_triggered` (`:537`, set again by 510). If the captain
+  dies first, 510 takes the 520 path (`:683`). Captain 420 after 520 needs the
+  captain killed and key 3 collected within 10 s of the key-2 pickup at the
+  opposite end of the ship. Not reachable, so it is not patched. Missiles
+  cannot complete before 440 (racks are gated). The prisoner announce comes
+  3 s after start.
+- **(c) Counters**: missiles 4/4 and torpedoes 2/2 are poke-once (`poked_yet`
+  saved). Engines 4/4 count `Killed` from any killer (secondary). No
+  objective filters on `killer == STAR`. The rally zone's `Exited` bug
+  (`:9545`, all three use `prisoner01_ID`) can only keep prisoners 2 and 3
+  marked, so it cannot undercount. The end check is sent only from
+  `Entered`, so a player who arrives before the last objective re-enters the
+  zone afterwards.
+- **(d) One-shot triggers**: battle-music zones latch key 3 and resend 100 on
+  every entry until the firefight starts (`:5525`). A key-3 pickup before the
+  rescue only plays a reminder. The mission is still completable after the
+  rescue.
+- **(e) Required NPCs**: warden, first mate and captain drop keycards on
+  death from any cause. `Create_Object` powerups do not expire, because only
+  `Expire_Powerup` expires them and M04 never calls it. Prison prisoners are
+  not needed (the midtro and firefight create new actors). A dead firefight
+  prisoner fails the mission on purpose (`:9197`). Prisoner 3 on Normal/Hard
+  still depends on pathfinding to zone 101194 (remaining risk 1). The midtro
+  sends its custom to 104514, which the receipt confirms is bound to
+  `M04_Prisoners_Rescued_Controller_JDG`.
+- **(f) Save/load**: the controller saves `firstmateConv` twice (ids 37 and
+  45). That is the same variable, so it is harmless. `Test_Cinematic` saves its
+  state. All objective-chain state named above is registered.
+  Death/restart reloads the whole level.
+
+### Deferred
+
+- Partial torpedo race (one torpedo sabotaged before 450): 450 re-adds radar
+  marker 401 or 402 for the sabotaged torpedo, and the pog controller labels
+  100410 as "target01". Both are cosmetic.
+- Objective-list entries that disappear when a non-key briefing is dropped (see (a)).
+  They are cosmetic, and fixing them would add fallbacks to seven more call
+  sites.
+- Physical check: in M04, kill the first mate, collect key 2, then enter the
+  missile-room zone about 10 s later while the captain-key line plays. Expect
+  objective 300 about 20 s after entry, and pokable racks. To check the torpedo
+  race, poke both torpedoes before crossing 105238/105239, then cross. Expect
+  objective 400 to appear already accomplished, and the rally-zone end check to
+  pass.

@@ -1,0 +1,25 @@
+diff --git a/Mission11.cpp b/Mission11.cpp
+--- a/Mission11.cpp
++++ b/Mission11.cpp
+@@ -8262,7 +8262,20 @@
+ 
+ 			else if (param == M01_SPAWNER_SPAWN_PLEASE_JDG)
+ 			{
+-				if (activeUnitCount <= 6 && deadMutantCount < 15)
++				// Vita port: the retries below are synchronous. A caged mutant
++				// killed outright sends no death custom, so deadMutantCount can
++				// stay below 15 after every cage is empty; stop instead of
++				// recursing until the stack overflows.
++				bool cagedMutantLeft = false;
++				for (int cage = 0; cage < 15 && cagedMutantLeft == false; cage++)
++				{
++					if (simpleMutant_id[cage] != 0 && Commands->Find_Object ( simpleMutant_id[cage] ) != NULL)
++					{
++						cagedMutantLeft = true;
++					}
++				}
++
++				if (cagedMutantLeft && activeUnitCount <= 6 && deadMutantCount < 15)
+ 				{
+ 					int random = Commands->Get_Random_Int(0, 15);
+ 

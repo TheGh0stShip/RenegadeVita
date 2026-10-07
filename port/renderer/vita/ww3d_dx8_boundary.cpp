@@ -1698,10 +1698,17 @@ void Submit_Bound_Triangles(const RenderStateStruct &state,
 	submission.index_capacity = index_handle->Get_Size() / sizeof(uint16_t);
 	submission.first_index = static_cast<uint32_t>(start_index) + state.iba_offset;
 	submission.triangle_count = polygon_count;
-	std::unique_ptr<uint16_t[]> expanded_indices;
+	// Strip expansion scratch is reused across draws: Submit_Indexed_Triangles
+	// consumes the indices synchronously and never retains this pointer, so a
+	// grow-only buffer replaces one heap allocation per strip draw.
+	static std::unique_ptr<uint16_t[]> expanded_indices;
+	static size_t expanded_capacity = 0U;
 	if (strip) {
 		const size_t expanded_count = static_cast<size_t>(polygon_count) * 3U;
-		expanded_indices.reset(new (std::nothrow) uint16_t[expanded_count]);
+		if (expanded_count > expanded_capacity) {
+			expanded_indices.reset(new (std::nothrow) uint16_t[expanded_count]);
+			expanded_capacity = expanded_indices ? expanded_count : 0U;
+		}
 		if (!expanded_indices || !RenegadeVitaRenderer::Expand_Triangle_Strip(
 			submission.index_data, submission.index_capacity, submission.first_index,
 			polygon_count, expanded_indices.get(), expanded_count)) {

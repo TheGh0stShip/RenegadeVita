@@ -1382,3 +1382,22 @@ and back model, through a one-line read-only `Get_Weapon_Def_ID` staging
 accessor (`combat-a36-armed-def-weapon-id.patch`). Tracked staging is
 refreshed: 499 patches, inventory PASS, including the earlier
 `wwdebug-a36-vita-frame-profile.patch`, which had not yet been staged.
+
+## Indexed boundary per-draw/per-vertex overhead (2026-10-06, source only)
+
+Context: physical M13 ambush frames cost ~190 ms. Audit of the Vita indexed
+path used by particles (PointGroup/part_buf) and sorted geometry.
+Hypotheses, none measured:
+1. `ww3d_dx8_boundary.cpp` strip draws heap-allocated an expanded index array
+   per draw. Change: grow-only static scratch (consumed synchronously by
+   `Submit_Indexed_Triangles`, never retained). Identical indices emitted.
+2. `ww3d_vita_renderer.cpp` re-evaluated the draw-invariant
+   `material->Get_Lighting()` predicate per emitted vertex. Change: hoisted to
+   one `const bool` per draw. Identical colour path.
+Larger suspected cost, deliberately not changed: non-batched draws (cache mode
+bit 8 clear) still issue immediate-mode glColor/glNormal/2x texcoord/glVertex
+per corner (6+ vitaGL calls per vertex, with shared vertices re-emitted), and
+lit draws call `Evaluate_Indexed_Primary_Color` per vertex. Sorting already uses
+the A36 O(n) radix `Depth_Sort`. Risk: negligible for both changes; the strip
+scratch is never freed (bounded by the largest strip). Decision: deferred until
+a fixed-camera M13 physical run reports median/p95/p99/worst.

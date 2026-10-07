@@ -4343,6 +4343,10 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 		category_layout.uv_offsets[1] : uv0_offset;
 
 	const bool indexed_batch = fused_index_preparation;
+	// Loop-invariant for the draw: hoisted out of the per-vertex lambda.
+	const bool indexed_lighting = submission.draw_state != NULL &&
+		submission.draw_state->material != NULL &&
+		submission.draw_state->material->Get_Lighting();
 	auto emit_indexed_vertex = [&](uint32_t actual_index, bool emit_position) {
 		const unsigned char *vertex = submission.vertex_data +
 			actual_index * submission.vertex_stride;
@@ -4360,8 +4364,7 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 		memcpy(uv0, vertex + uv0_offset, 2U * sizeof(float));
 		memcpy(uv1, vertex + uv1_offset, 2U * sizeof(float));
 		float primary[4];
-		if (submission.draw_state != NULL && submission.draw_state->material != NULL &&
-			submission.draw_state->material->Get_Lighting() &&
+		if (indexed_lighting &&
 			Evaluate_Indexed_Primary_Color(submission, actual_index, primary)) {
 			glColor4f(primary[0], primary[1], primary[2], primary[3]);
 		} else glColor4ub(static_cast<GLubyte>((diffuse >> 16U) & 0xffU),

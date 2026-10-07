@@ -175,10 +175,15 @@ one trailing newline):
 | --- | --- | --- |
 | `static-mesh-cache-v1.flag` | `RVSM1 0` | Disable the static mesh cache (per-frame path for every mesh). |
 | `msaa-v1.flag` | `RVMSAA1 0`, `RVMSAA1 2` or `RVMSAA1 4` | Framebuffer MSAA samples. |
+| `vsync-v1.flag` | `RVVS1 0` or `RVVS1 1` | `0` disables vblank wait via `vglWaitVblankStart(GL_FALSE)`; default on. Logged as `renderer-init vsync: enabled=`. |
 | `render-work-cache-v1.flag` | `RVRC1 0` .. `RVRC1 F` | Existing render-work cache bits (unchanged). |
 
 Build-time: `-DRENEGADE_VITA_HOT_PATH_O3=OFF` restores `-O2` everywhere;
 `-DRENEGADE_VITA_CAMPAIGN_MSAA_SAMPLES=0|2|4` sets the default MSAA.
+
+The runtime log prints a `frame-vblank` line every 120 frames
+(`missed_vblanks` = sum over the window of `sceDisplayGetVcount` delta minus
+one per presented frame, plus `max_delta`); game thread only.
 
 The audio log line reports `pcm=decodes/hits/evictions/entries/bytes`.
 The runtime log prints a `static-mesh-cache` line every 120 frames (entries,

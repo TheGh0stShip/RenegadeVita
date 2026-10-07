@@ -54,6 +54,7 @@ void RenegadeVita_Release_DX8_Render_Target();
 #include "vita_runtime_log.h"
 #include "renegade_vita_text_entry.h"
 
+#include <psp2/display.h>
 #include <psp2/io/stat.h>
 #include <psp2/kernel/cpu.h>
 #include <psp2/kernel/processmgr.h>
@@ -1954,6 +1955,25 @@ unsigned Read_Campaign_MSAA_Samples()
 	return samples;
 }
 
+// Default on; a user config file containing exactly "RVVS1 0\n" disables
+// vitaGL vblank waiting (frame pacing experiment 1). "RVVS1 1\n" is explicit on.
+bool Read_Vsync_Enabled()
+{
+	bool enabled = true;
+	FILE *file = fopen("ux0:data/renegade/user/config/vsync-v1.flag", "rb");
+	if (file != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok && size == 8U && memcmp(value, "RVVS1 ", 6U) == 0 &&
+			value[7] == '\n' && (value[6] == '0' || value[6] == '1')) {
+			enabled = value[6] == '1';
+		}
+	}
+	return enabled;
+}
+
 StaticMeshMaterialSnapshot Snapshot_Static_Mesh_Material(VertexMaterialClass *material)
 {
 	StaticMeshMaterialSnapshot snapshot;
@@ -2939,6 +2959,13 @@ bool Initialize()
 		"internal stages reached before vglInit return: GXM/context/framebuffer/depth/shader-patcher/clear-program/index-buffer/texture0 attempted; installed NO_DEBUG archive does not expose their individual return codes");
 	Log_System_Memory("after vglInit");
 	Log_VitaGL_Memory();
+	{
+		const bool vsync_enabled = Read_Vsync_Enabled();
+		vglWaitVblankStart(vsync_enabled ? GL_TRUE : GL_FALSE);
+		Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
+			"vsync: version=1 enabled=%d source=%s", vsync_enabled ? 1 : 0,
+			vsync_enabled ? "default-or-flag" : "vsync-v1.flag");
+	}
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 		"shader compiler init summary: calls=%u last_rc=%08X available=%d",
 		g_shader_init_calls, static_cast<unsigned>(g_shader_init_last_result),
@@ -3129,6 +3156,32 @@ void End_Frame(bool present)
 				"WW3D first End_Frame present return: frame_after=%u glGetError=%08X",
 				vglGetFrameNumber(), static_cast<unsigned>(present_error));
 			g_logged_first_present = true;
+		}
+		{
+			// Experiment 6: vblanks elapsed beyond one per presented frame.
+			static unsigned s_last_vcount = 0U;
+			static bool s_have_vcount = false;
+			static unsigned s_window_missed = 0U;
+			static unsigned s_window_max_delta = 0U;
+			const unsigned vcount = static_cast<unsigned>(sceDisplayGetVcount());
+			if (s_have_vcount) {
+				const unsigned delta = vcount - s_last_vcount;
+				if (delta > 1U) {
+					s_window_missed += delta - 1U;
+				}
+				if (delta > s_window_max_delta) {
+					s_window_max_delta = delta;
+				}
+			}
+			s_last_vcount = vcount;
+			s_have_vcount = true;
+			if (g_statistics.frames % 120U == 0U) {
+				Vita_Append_A22_Runtime_Breadcrumb("frame-vblank",
+					"version=1 frame=%u window=120 missed_vblanks=%u max_delta=%u vcount=%u",
+					g_statistics.frames, s_window_missed, s_window_max_delta, vcount);
+				s_window_missed = 0U;
+				s_window_max_delta = 0U;
+			}
 		}
 		if (g_statistics.frames % 120U == 0U) {
 			Vita_Append_A22_Runtime_Breadcrumb("render-work-cache",

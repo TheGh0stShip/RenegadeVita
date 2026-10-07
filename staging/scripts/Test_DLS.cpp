@@ -1871,6 +1871,27 @@ DECLARE_SCRIPT (MX0_Area4_Controller_DLS, "")
 	{
 		star_area = 0;
 		area4_activated = false;
+		// Vita port: several of these IDs are never sent by released data
+		// (4, 11, 19, 20) yet are read through Find_Object. Start from the
+		// invalid ID 0 instead of indeterminate heap contents.
+		humvee_id = 0;
+		medium_tank_blasted_id = 0;
+		medium_tank_escort_id = 0;
+		light_tank_a_id = 0;
+		light_tank_b_id = 0;
+		nod_base_rocketsoldier_a_id = 0;
+		nod_base_rocketsoldier_b_id = 0;
+		player_tank_id = 0;
+		gdi_trooper1_id = 0;
+		gdi_trooper2_id = 0;
+		gdi_trooper3_id = 0;
+		obelisk_id = 0;
+		obelisk_weapon_id = 0;
+		obelisk_orca_id = 0;
+		mobile_artillery_id = 0;
+		basewall_id = 0;
+		gdi_reinforcement1_id = 0;
+		gdi_reinforcement2_id = 0;
 		// Scale up the sight range of all units in game
 		Commands->Scale_AI_Awareness(3.0f, 1.0f);
 		say_take_out_sams = false;

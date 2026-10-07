@@ -1047,7 +1047,7 @@
     {
       "path": "port/patches/scripts-a35-cinematic-command-timing.patch",
       "stage_directory": "scripts",
-      "sha256": "1a24fc6c5bbb5d2f6d2eed6d8d14ec47baa9dbec548d0510ab96118ec5a7663a"
+      "sha256": "60174011ac1f5ef228c758105da2daa8191d9c7b896348f98ca3920fdaa308ef"
     },
     {
       "path": "port/patches/scripts-a35-m13-slot19-phases.patch",
@@ -2535,5 +2535,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "c2483ed3eff85328f5ffa6be155959634009534ab3a5325f0123549a0a63f7bb"
+  "registry_sha256": "1ae0f5aba8698d59290aaa71063eee83409ce593cecc329f9ad61505229cb6ab"
 }

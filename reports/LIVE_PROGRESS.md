@@ -1,5 +1,26 @@
 # Live engineering progress
 
+# Campaign M01–M11 readiness push — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Completed (source/data evidence only; nothing ARM-linked, emulated or run on hardware):
+- Per-mission readiness traces for M01–M11 in reports/campaign/Mxx_READINESS.md,
+  each with the objective chain to Mission_Complete(true) and a physical test route.
+  No port blocker found; every level-data script binding resolves.
+- Campaign chain M13 → M01…M11 → R_Finale → main menu traced (CAMPAIGN_CHAIN_READINESS.md).
+- Fixes: boss classes (void Load used as bool), M01 duplicate save-variable ids,
+  M05/M09/M10 save-state, M08 mobile-vehicle out-of-bounds slot, session time-scale
+  reset after Mendoza slow motion, PrimitiveAnimation Set_Time return, restored 3D pan,
+  archive TGA CPU copy dropped (M08/M09 memory), per-level loading preparation for all
+  missions (and after campaign restarts).
+- ARM -fsyntax-only sweep of every compiled unit (scripts 44, combat 125, ww3d2/wwphys 174,
+  core libs 131, commando/wwui 159, port 58): first-compile breaks from the 10-05/06
+  patch batch fixed (combat.cpp include, control-label header, translatedb access,
+  port headers/defines, LAN frontend sources). Staging: 513 patches, inventory PASS.
+
+Next: full ARM link + VPK, Vita3K install, then physical campaign routes per report.
+
 # Source-only hardening since 2026-10-05 — 2026-10-06
 
 The 54 commits since 2026-10-05 change only source, host tests and reports.

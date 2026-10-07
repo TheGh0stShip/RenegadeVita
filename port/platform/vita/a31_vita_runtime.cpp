@@ -3977,6 +3977,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	A30_Vita_Log("A3.5 startup: pre-cache visibility before MIX factory construction display=%d\n",
 		startup_screen_result >= 0 ? 1 : 0);
 	Renegade_Set_Find_Roots(kVitaRoots);
+	Renegade_File_Factory_Set_Atomic_Write_Report_Hook(Report_Atomic_Write);
 	RenegadeRootedFileFactoryClass root_factory(kVitaRoots);
 #if defined(RENEGADE_VITA_FRAME_PROFILE)
 	Renegade_Frame_Profile_Configure();

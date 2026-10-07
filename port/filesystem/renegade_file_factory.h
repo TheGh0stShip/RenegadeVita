@@ -98,9 +98,18 @@ private:
 	bool AtomicWrite;
 	// Set while RawFileClass::Open runs its leading virtual Close().
 	bool NativeOpening;
+	unsigned long long AtomicStartUs;
+	int AtomicBytes;
 	char AtomicTarget[1024];
 	char AtomicTemporary[1024];
 };
+
+// Called once per committed-or-failed atomic (write-only) session, e.g. each
+// quicksave, manual save, autosave or config write. The platform runtime sets
+// it to route the line into its log; NULL disables reporting.
+typedef void (*RenegadeAtomicWriteReportHook)(const char *target_path, int bytes,
+	unsigned long long elapsed_us, bool success);
+void Renegade_File_Factory_Set_Atomic_Write_Report_Hook(RenegadeAtomicWriteReportHook hook);
 
 class RenegadeRootedFileFactoryClass : public FileFactoryClass
 {

@@ -5,10 +5,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <atomic>
+#include <chrono>
 #include <string.h>
 #include <sys/stat.h>
 
 namespace {
+
+std::atomic<RenegadeAtomicWriteReportHook> g_atomic_write_report_hook(NULL);
+
+unsigned long long Monotonic_Us(void)
+{
+	return static_cast<unsigned long long>(std::chrono::duration_cast<std::chrono::microseconds>(
+		std::chrono::steady_clock::now().time_since_epoch()).count());
+}
 
 struct FileFactoryCounters
 {
@@ -163,6 +172,15 @@ bool Replace_File(const char *source, const char *destination)
 	return Renegade_Replace_File(source, destination);
 }
 
+}  // namespace
+
+void Renegade_File_Factory_Set_Atomic_Write_Report_Hook(RenegadeAtomicWriteReportHook hook)
+{
+	g_atomic_write_report_hook.store(hook, std::memory_order_release);
+}
+
+namespace {
+
 void Reset(std::atomic<uint32_t> &counter)
 {
 	counter.store(0U, std::memory_order_relaxed);
@@ -240,7 +258,7 @@ RenegadeRootedFileClass::RenegadeRootedFileClass(const RenegadePathRoots &roots,
 	PhysicalNamePrepared(false), PreparedAccess(RENEGADE_PATH_READ),
 	NativeProbeForced(false), StagedData(NULL), StagedSize(0), StagedCapacity(0),
 	StagedPosition(0), Staging(false), WriteFailed(false), AtomicWrite(false),
-	NativeOpening(false)
+	NativeOpening(false), AtomicStartUs(0), AtomicBytes(0)
 {
 	LogicalName[0] = 0;
 	AtomicTarget[0] = 0;
@@ -362,6 +380,8 @@ int RenegadeRootedFileClass::Open(int rights)
 		}
 		BufferedFileClass::Set_Name(AtomicTemporary);
 		AtomicWrite = true;
+		AtomicStartUs = Monotonic_Us();
+		AtomicBytes = 0;
 	}
 	// Any previous use was committed above. RawFileClass::Open begins with a
 	// virtual Close(); without this guard that Close would treat the session
@@ -461,13 +481,21 @@ void RenegadeRootedFileClass::Close(void)
 		BufferedFileClass::Close();
 		return;
 	}
-	if (Staging) (void)Flush_Staged_Writes();
+	if (Staging) {
+		if (AtomicWrite) AtomicBytes = StagedSize;
+		(void)Flush_Staged_Writes();
+	}
 	BufferedFileClass::Close();
 	if (AtomicWrite) {
 		if (!WriteFailed && !Replace_File(AtomicTemporary, AtomicTarget)) {
 			WriteFailed = true;
 		}
 		if (WriteFailed) remove(AtomicTemporary);
+		const RenegadeAtomicWriteReportHook hook =
+			g_atomic_write_report_hook.load(std::memory_order_acquire);
+		if (hook != NULL) {
+			hook(AtomicTarget, AtomicBytes, Monotonic_Us() - AtomicStartUs, !WriteFailed);
+		}
 		BufferedFileClass::Set_Name(AtomicTarget);
 		AtomicWrite = false;
 	}

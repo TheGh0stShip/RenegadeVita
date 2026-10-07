@@ -367,7 +367,7 @@ void Queue_Audio(const int16_t *samples, size_t sample_count)
 	** buzzy audio.  This keeps a bounded 128 ms cushion of original decoded
 	** samples; it never inserts synthetic silence. */
 	if (start_output && !Start_Audio_Output_Thread()) {
-		A30_Vita_Log("A4 Bink: audio output worker start failed; video continues\\n");
+		A30_Vita_Log("A4 Bink: audio output worker start failed; video continues\n");
 		g_audio_enabled = false;
 		g_audio_drained.store(true, std::memory_order_release);
 	}
@@ -477,7 +477,7 @@ bool Start_Audio_Output_Thread()
 		return false;
 	}
 	g_audio_thread_running = true;
-	A30_Vita_Log("A4 Bink: audio output worker armed after decoded startup samples=%u movie=%s\\n",
+	A30_Vita_Log("A4 Bink: audio output worker armed after decoded startup samples=%u movie=%s\n",
 		static_cast<unsigned>(kAudioStartupSamples), g_movie_name);
 	return true;
 }
@@ -496,7 +496,7 @@ void Drain_Deferred_Audio_Output()
 	** At EOF it is still real movie audio, so drain it as a recorded partial
 	** final buffer rather than leaving the original MovieGameMode waiting. */
 	if (!Start_Audio_Output_Thread()) {
-		A30_Vita_Log("A4 Bink: final audio drain worker start failed; video continues\\n");
+		A30_Vita_Log("A4 Bink: final audio drain worker start failed; video continues\n");
 		g_audio_enabled = false;
 		g_audio_drained.store(true, std::memory_order_release);
 	}
@@ -1200,6 +1200,9 @@ void BINKMovie::Update()
 			g_texture_allocated ? 1 : 0);
 		g_update_entry_logged = true;
 		}
+		/* Movies take no gameplay input; keep the display from dimming. */
+		sceKernelPowerTick(SCE_KERNEL_POWER_TICK_DISABLE_AUTO_SUSPEND);
+		sceKernelPowerTick(SCE_KERNEL_POWER_TICK_DISABLE_OLED_DIMMING);
 		if (Check_Skip_Request()) return;
 		const int64_t update_start_us = static_cast<int64_t>(sceKernelGetProcessTimeWide());
 		for (unsigned iteration = 0U; iteration < kMaxBinkUpdateIterations;

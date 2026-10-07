@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "4c8599f9414e25ff9eec51478c99267207511b109c81a0ef9159528719f0811f",
-  "patch_count": 514,
+  "stage_script_sha256": "05e7b973317a60f0a044fb69421422453e74afba416708119ef680923d51cbb2",
+  "patch_count": 525,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1680,6 +1680,46 @@
       "sha256": "e5c6f8fde4b5325ebf559015fb593cc1feec2fdd4605c417dae835e817b6cf8a"
     },
     {
+      "path": "port/patches/scripts-a36-m05-apc-deploy-param-buffer.patch",
+      "stage_directory": "scripts",
+      "sha256": "8c14d72b4fd282fdb905846d49c71db9b895995f76620d548b65292589362db1"
+    },
+    {
+      "path": "port/patches/scripts-a36-m09-objective-controller-objective-save.patch",
+      "stage_directory": "scripts",
+      "sha256": "c0e04e05df40b80dfddb8a7ebdbcbe9e6da5b9f75e85ce419c7c22b204d6a23f"
+    },
+    {
+      "path": "port/patches/scripts-a36-m02-objective-controller-speech-save.patch",
+      "stage_directory": "scripts",
+      "sha256": "96e0c369aa693e5c91118f63802233f9adbc1d5c6c8371419d58c811bc1d937b"
+    },
+    {
+      "path": "port/patches/scripts-a36-mx0-save-variable-ids.patch",
+      "stage_directory": "scripts",
+      "sha256": "d64ed5c8485bd81670ab5a50e849a8e5090bbfc9d36f97ea584c34b56bb0468b"
+    },
+    {
+      "path": "port/patches/scripts-a36-m03-save-variable-ids.patch",
+      "stage_directory": "scripts",
+      "sha256": "3750e35be83bf56556f5f2f2f9cea705363d677975e6f1b457090c15969ac795"
+    },
+    {
+      "path": "port/patches/scripts-a36-m04-save-variable-ids.patch",
+      "stage_directory": "scripts",
+      "sha256": "745c985344466f36002809c8309182527a92f844a17f2b1bbefa9df7c38615c0"
+    },
+    {
+      "path": "port/patches/scripts-a36-m05-save-variable-ids.patch",
+      "stage_directory": "scripts",
+      "sha256": "0bd30fe32e8dfd82138ed75c9bb18d1881b54f5e5ad3a39a02eb43b1f07201b0"
+    },
+    {
+      "path": "port/patches/scripts-a36-m11-save-variable-ids.patch",
+      "stage_directory": "scripts",
+      "sha256": "4010ac3b2825d0bcdb333d51b4dd2f5d9109deda3868ea10afa68bbd1bf49d4f"
+    },
+    {
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
       "stage_directory": "combat",
       "sha256": "0698dde47d7dcf9d381f46134f90fdf878d997026d668ce3c574d32d613b1f2e"
@@ -2570,10 +2610,25 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     },
     {
+      "path": "port/patches/combat-a36-raveshaw-arc-effect-null-guards.patch",
+      "stage_directory": "combat",
+      "sha256": "54c4c8a909705d8dd5ef58860c48e8d5a8c3d7131343434572a57b73a421a63a"
+    },
+    {
+      "path": "port/patches/combat-a47-ccamera-cinematic-sniper-handoff.patch",
+      "stage_directory": "combat",
+      "sha256": "6ab27330bf06c73f7d788da097d5422f1bc4514da175fd510162cab160078f67"
+    },
+    {
+      "path": "port/patches/combat-a36-boss-waypath-release-guard.patch",
+      "stage_directory": "combat",
+      "sha256": "71433b8b6e1764ad0707ba04f95022a43fa54fb1dd0d0156a0c538cfdc324301"
+    },
+    {
       "path": "port/patches/scripts-a36-m01-intro-command-breadcrumbs.patch",
       "stage_directory": "scripts",
       "sha256": "30f0ad3ed7b87ca32095d32d6f800ae73043544a75cd96a5d2d0272cba7c3f73"
     }
   ],
-  "registry_sha256": "bafa7497471084e7436967843591da4ec76b93a213a99bf7431ce7bcb572157e"
+  "registry_sha256": "91c1f08d66dd3d5bfa8e9ab32f85e83c7403cb68f34d71a56bb966619e76ec60"
 }

@@ -1891,6 +1891,8 @@ bool Warm_Original_M00_Referenced_Textures(A31VitaLoadingPresenter &presenter)
 	SaveLoadStatus::Set_Status_Text("Preparing M00 textures", 0);
 	const uint64_t start_bytes = RenegadeVitaRenderer::Get_Statistics().texture_bytes_resident;
 	const uint64_t additional_budget = 32ULL * 1024ULL * 1024ULL;
+	const uint64_t free_memory_floor = 24ULL * 1024ULL * 1024ULL;
+	bool memory_floor_reached = false;
 	unsigned prepared = 0U;
 	bool presented = Present_M00_Prewarm_Progress(presenter, 0.90f);
 	for (; presented && prepared < count; ++prepared) {
@@ -1898,6 +1900,14 @@ bool Warm_Original_M00_Referenced_Textures(A31VitaLoadingPresenter &presenter)
 		// Soft incremental residency budget, checked between indivisible original
 		// decodes. One texture can exceed it. Remaining textures stay lazy.
 		if (resident >= start_bytes && resident - start_bytes >= additional_budget) break;
+		if (prepared % 8U == 0U) {
+			RenegadeVitaRenderer::BackendMemoryStatistics memory = {};
+			if (RenegadeVitaRenderer::Query_Backend_Memory(memory) &&
+				memory.all_free < free_memory_floor) {
+				memory_floor_reached = true;
+				break;
+			}
+		}
 		pending[prepared]->Init();
 		if ((prepared + 1U) % 8U == 0U || prepared + 1U == count) {
 			presented = Present_M00_Prewarm_Progress(presenter,
@@ -1905,9 +1915,10 @@ bool Warm_Original_M00_Referenced_Textures(A31VitaLoadingPresenter &presenter)
 		}
 	}
 	for (unsigned i = 0U; i < count; ++i) pending[i]->Release_Ref();
-	A30_Vita_Log("A3.5 prewarm: original referenced textures attempted=%u deferred=%u soft_extra_budget_bytes=%llu whole_archive_scan=0 readiness_unassessed=1\n",
+	A30_Vita_Log("A3.5 prewarm: original referenced textures attempted=%u deferred=%u soft_extra_budget_bytes=%llu memory_floor_reached=%d whole_archive_scan=0 readiness_unassessed=1\n",
 		prepared, count - prepared + overflow,
-		static_cast<unsigned long long>(additional_budget));
+		static_cast<unsigned long long>(additional_budget),
+		memory_floor_reached ? 1 : 0);
 	return presented;
 }
 

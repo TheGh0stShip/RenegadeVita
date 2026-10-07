@@ -1,6 +1,6 @@
 --- a/ww3d.cpp
 +++ b/ww3d.cpp
-@@ -1114,6 +1114,8 @@
+@@ -1112,6 +1112,8 @@
  void WW3D::Flush(RenderInfoClass & rinfo)
  {
  #if defined(RENEGADE_VITA_PORT)

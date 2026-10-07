@@ -5,8 +5,10 @@ built, launched in Vita3K or run on a Vita. No physical M04 result exists, so
 this report does not claim that M04 is completable on hardware. It records
 which source and data paths can complete the mission, and which risks remain.
 
-Inputs: `staging/scripts/Mission04.cpp` (10,518 lines; identical to upstream
-`Code/Scripts/Mission04.cpp`, so no staging patch is applied). Retail data:
+Inputs: `staging/scripts/Mission04.cpp` (10,518 lines). It differs from upstream
+`Code/Scripts/Mission04.cpp` by one line, from
+`port/patches/scripts-a36-m04-save-variable-ids.patch` (see "Full audit"
+below). Retail data:
 Vita3K `ux0:data/renegade/retail/Data` (M04.mix
 `1d084c90…30ffa`, plus always.dbs `objects.ddb` and the `always*` archives).
 
@@ -157,3 +159,155 @@ the existing parsers (`tools/audit_m13_level_owners.chunks`,
 `tools/renegade_cinematic_dependency_scan.MixArchive`) and the private
 binding receipt `build/s4-all-map-bindings/m04-bindings.json`. Retail data
 was not modified and no payloads were exported.
+
+## Full audit — 2026-10-07
+
+Evidence class: source plus read-only retail data (Vita3K
+`ux0:data/renegade/retail/Data`, M04.mix `1d084c90…30ffa`). Nothing was built,
+launched or run on a Vita. The checks were scratch scripts that reuse
+`tools/audit_m13_level_owners`, `tools/audit_mission_conversations`,
+`tools/audit_mission_event_routes.numeric_constants`,
+`tools/renegade_cinematic_dependency_scan` and the private receipt
+`build/s4-all-map-bindings/m04-bindings.json`. Line numbers refer to
+`staging/scripts/Mission04.cpp`.
+
+**Result: no new defect needs a patch.** Every finding below either resolves,
+or fails the same way as retail PC and cannot crash or block completion. There
+is one upstream ordering race (item 5). It is recorded and not patched, because
+fixing it would change the original design.
+
+### 1. Script bindings and parameter counts
+
+- There are 322 level and definition bindings and 150 distinct scripts. All
+  are registered and linked. The dev238 symbol list contains, for example,
+  `M04_Firefight_Prisoner`, `M04_EngineRoom_Stationary_Tech_JDG`,
+  `M00_5MetalBarrels_ChainRxn_Controller_JDG` and `Test_Cinematic`. The
+  compdb compiles `Mission00/01/04.cpp`, `Toolkit*.cpp` and
+  `Test_Cinematic.cpp`.
+- Parameter shape (`live_script_parameters.json`): 34 equal counts and 288
+  "excess" counts. Every excess is the editor's default `"0"` value on a
+  script that takes no parameters. `Set_Parameters_String` ignores values
+  past the descriptor, so these are benign.
+- The parameterised bindings all match their descriptors:
+  - `M00_5MetalBarrels_ChainRxn_Controller_JDG`: 15 of 15 values. The barrel
+    types are 4, 6, 3, 5 and 3, which keeps the indexes into
+    `simple_barrels[8]` within bounds (`Toolkit.cpp:386`). The descriptor is
+    under the 511-byte truncation limit, and `Get_Parameter_Index` trims
+    `"Barrel01_Type (1-8)"` correctly (`scripts.cpp:535`).
+  - `M04_EngineRoom_Stationary_Tech_JDG` (`Console_ID`, `:6063`): the values
+    100416–100419 are all serialized objects.
+  - `M04_PlaySound_OnZoneEntry_OneTime_JDG` (`:10265`): 8 sound presets
+    (`M04DSGN_DSGN0085/86/92/93/96/97/98/100I1EVAN_SND`). All resolve to a
+    definition with a present wave.
+  - `M00_Play_Sound` and `M00_Play_Sound_Object_Bone_DAY`: 6 and 4 distinct
+    presets. All resolve except `SFX.Nod_Visceroid_Twiddler`, which is an
+    empty twiddler in retail and is silent and safe (see above).
+- Every `Attach_Script` literal in Mission04 exists with a matching parameter
+  count, including `Test_Cinematic("X4A_MIDTRO.txt")`, with one exception:
+  `M04_ForeDeck_Reinforcement_03_JDG` (`:5352`). That script is missing from
+  the released source, so retail fails the same way.
+
+### 2. Custom events, timers and Find_Object IDs
+
+- 87 self-sent events. 85 have a handler. The 2 without one are
+  `M04_TorpedoRoom_Target01/02_JDG` sending `M01_MODIFY_YOUR_ACTION_JDG` to
+  themselves (`:9599`, `:9664`). Those scripts have no `Custom` method, so the
+  event is a no-op. Retail behaves the same way.
+- 1 `Start_Timer` (`M04_Ships_Captain_JDG`, `STATIONARY_DELAY_TIMER`). It is
+  handled.
+- 211 events sent to `Find_Object` targets:
+  - All 23 distinct (type, param) pairs sent to objective controller 100424
+    are handled. These are 4, 100–130, 200/210, 300–330, 401, 410, 430–470,
+    500–590 and `DO_END_MISSION_CHECK`.
+  - Targets created at runtime (via `Create_Object`, then `Attach_Script`,
+    then `Get_ID`) were resolved to their attached scripts, and the handler
+    was found for: the missile upper guards, the first-mate bodyguards, the
+    Apache, the closet and mess-hall guys, the mutant chambers, and firefight
+    prisoners (666 and 1).
+- Events with no receiver. All are no-ops and match retail:
+  - 700 to cargo controller 100558 (`:2164`; the comment says "turn off
+    spawners", but no handler exists).
+  - 100 to first mate 100400 (`:3991`) and captain 100401 (`:5283`). Neither
+    script has a `Custom` method.
+  - 2000 to Tiberium-hold controller 100572 (`:7552`).
+  - Type 200 to the missile-room guards (`:1289`, `:1294`).
+  - Apache `MODIFY_YOUR_ACTION_04..09` from the rocket emplacements and the
+    hangar zones (`:5952`, `:6049`, `:8429`–`:8678`). The Apache's ID is held
+    in another script's variable, so this route was not resolved
+    statically.
+  - The 7 absent sub-bay music zones (`:7598`–`:7608`, already listed above).
+- Several members are never initialised: the cargo controller guard IDs, the
+  rally-zone prisoner IDs before custom types 1–3 arrive, and
+  `M04_BigSam_Script_JDG` sound IDs. The original
+  `ScriptRegistrant::Create` uses `new T` (`scriptregistrant.h:52`), so
+  these values start as heap garbage. They only ever reach
+  `Find_Object`/`==`, which are safe. Retail is the same.
+
+### 3. Content resolution (retail archives)
+
+| Kind | Checked | Unresolved |
+|---|---|---|
+| `Create_Object` presets | 29 | 0 |
+| Sound literals (`Create_Sound`/`Create_2D_Sound`/…) | 35 | 2. Both are the known `steam_med_pressure_01.wav`, missing on PC too. |
+| Animations (`Set_Animation*`/`Set_Animation` params) | 25 | 1. `H_A_J06C` (`:3221`, prisoner 1 "hanging head" idle, action id 102 with no completion consumer). No `h_a_j06c.w3d` in M04/always/Always2. The original anim lookup returns NULL and nothing plays, the same as retail. |
+| String IDs (`IDS_*`) against `strings.tdb` | 26 | 0 |
+| Conversations | 26 | 0 (previous section) |
+| `x4a_midtro.txt` (the only M04 cinematic, 60 commands) | 27 deps (models, real-object presets, animations, audio) | 0 |
+| Keycard definitions `M04_L01/L02/L03_Keycard` (81950043/44/45) | 3 | 0. Their definition scripts `M04_Keycard_0N_Script_JDG` are bound. |
+
+M04.mix has no `.ddb` overlay, so all presets come from `always.dbs`.
+
+### 4. Crash review (script layer)
+
+- The analysis recomputed the NULL guards of every `scriptcommands.cpp`
+  command that takes a `GameObject *`. The swept
+  `script_command_bodies.json` under-reports these guards because it misses
+  `SCRIPT_PTR_CHECK_RET`. Only 5 commands dereference without a guard:
+  `Has_Key`, `Create_3D_Sound_At_Bone`, `Create_3D_WAV_Sound_At_Bone`,
+  `Create_Logical_Sound` and `Monitor_Sound`.
+- Mission04 uses `Has_Key(STAR)` only when `enterer == STAR` (`:3057`,
+  `:3497`), so STAR is not NULL there. It calls `Monitor_Sound` only with
+  `obj`. `Create_Logical_Sound` appears only in commented-out code.
+- Every other `Find_Object`, `Create_Object` and `Trigger_Spawner` result
+  either goes to a guarded command or is checked against NULL first.
+  Mission04 dereferences no pointers directly. `Join_Conversation(NULL, …)`
+  is handled.
+- Random indexes stay in bounds. `Get_Random_Int(min, max)` returns values
+  in [min, max) (`crandom.h:87`), so `powerups[2]`, `mutantAnimations[4]`
+  and `M01_Choose_Cheer_Animation` cannot overflow. The hazing
+  `conversations[counter]` index is reset when it reaches 3 (`:2889`).
+- No `sprintf`/`strcpy`/fixed buffers. The single division is a float
+  (`last_health` ratio, `:9014`) on a soldier with non-zero max health.
+
+### 5. Objective chain (re-verified) and the residual race
+
+The chain in the first section holds. Only `Mission_Complete(false)` (`:9157`)
+and `Mission_Complete(true)` (`:710`) end the mission.
+
+There is one upstream race, retail-identical and not patched:
+`announce_torpedo_room_objective` (450) sets `torpedo_primary_active = true`
+without checking whether it already completed. The trigger zone sends 450
+only after `M04_Add_Torpedo_Objective_Conversation` ends (`:10110`). The
+torpedoes are pokable from `Created`, without waiting for the announcement.
+So a player who sabotages both torpedoes while that conversation is playing
+would leave the flag stuck at true, and `DO_END_MISSION_CHECK` (`:713`) would
+never pass.
+
+The missile announce (440) fires immediately when the player enters the zone
+(`:7840`), which makes the same race much narrower. Watch for this race on
+hardware. Do not change it without physical evidence that it is reachable.
+
+### 6. Port patches touching M04
+
+Only `port/patches/scripts-a36-m04-save-variable-ids.patch` touches M04. It is
+registered at `tools/stage_sources.sh:1153` and listed in
+`staging/PATCH_INVENTORY.json`. It changes `M04_Firefight_Prisoner`'s
+`warningPlayed` save ID from 3, which duplicated `pokable`, to 4 (`:8996`).
+The staging diff against upstream is exactly that one line. The patch is
+correct, and it is backward compatible with older saves: a missing chunk
+leaves the value as initialised by `Created`.
+
+One save-state gap remains open and is not patched: `M04_BigSam_Script_JDG`
+has no REGISTER block (`:10197`, `SCRIPT_SAVE_STATE_GAPS.md`). If the game is
+saved during the Big SAM sound sequence, the cosmetic gun animation can stall
+after a load. No objective depends on it.

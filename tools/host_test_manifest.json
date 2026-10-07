@@ -1,0 +1,3322 @@
+{
+ "schema": 1,
+ "generated_by": "tools/run_host_tests.py",
+ "regenerate": "python3 tools/run_host_tests.py --write-manifest",
+ "note": "Static classification only; lanes: pure, retail, artifact, compiled, sanitizer, device.",
+ "counts": {
+  "modules": 283,
+  "lanes": {
+   "pure": 176,
+   "retail": 3,
+   "artifact": 6,
+   "compiled": 39,
+   "sanitizer": 59,
+   "device": 0
+  },
+  "kinds": {
+   "cli-driver": 3,
+   "functions": 2,
+   "script": 1,
+   "unittest": 277
+  },
+  "tags": {
+   "compiles-host-c++": 98,
+   "compiles-vita-arm": 6,
+   "kind:cli-driver": 3,
+   "kind:functions": 2,
+   "kind:script": 1,
+   "needs-build-artifact": 10,
+   "needs-module:yaml": 1,
+   "needs-retail-data": 4,
+   "needs-upstream": 39,
+   "optional-build-artifact": 3,
+   "override": 3,
+   "pure-python": 176,
+   "sanitizer": 59,
+   "sanitizer-optional": 12,
+   "skips-without-retail": 4,
+   "tsan": 4,
+   "uses-repo-build-dir": 1
+  }
+ },
+ "tests": {
+  "tools/diagnostics/test_renegade_vita_performance_ledger.py": {
+   "module": "tools.diagnostics.test_renegade_vita_performance_ledger",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/diagnostics/test_renegade_vita_postrun.py": {
+   "module": "tools.diagnostics.test_renegade_vita_postrun",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/diagnostics/test_summarize_warning_signatures.py": {
+   "module": "tools.diagnostics.test_summarize_warning_signatures",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/diagnostics/test_verify_candidate_provenance.py": {
+   "module": "tools.diagnostics.test_verify_candidate_provenance",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_a35_flight_background_flush.py": {
+   "module": "tools.test_a35_flight_background_flush",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer",
+    "tsan"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_a4_original_frontend_contract.py": {
+   "module": "tools.test_a4_original_frontend_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_action_observer_miss_telemetry.py": {
+   "module": "tools.test_action_observer_miss_telemetry",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_adpcm_block_decoder.py": {
+   "module": "tools.test_adpcm_block_decoder",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_analyze_runtime_gaps.py": {
+   "module": "tools.test_analyze_runtime_gaps",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_animation_action_completion_contract.py": {
+   "module": "tools.test_animation_action_completion_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_archive_literal_references.py": {
+   "module": "tools.test_archive_literal_references",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_archive_name_presence.py": {
+   "module": "tools.test_archive_name_presence",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_all_hlod_names.py": {
+   "module": "tools.test_audit_all_hlod_names",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_all_wave_headers.py": {
+   "module": "tools.test_audit_all_wave_headers",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_campaign_asset_closure.py": {
+   "module": "tools.test_audit_campaign_asset_closure",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_campaign_script_closure.py": {
+   "module": "tools.test_audit_campaign_script_closure",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_campaign_source_surface.py": {
+   "module": "tools.test_audit_campaign_source_surface",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_conversation_gated_objectives.py": {
+   "module": "tools.test_audit_conversation_gated_objectives",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_d3d8_enum_values.py": {
+   "module": "tools.test_audit_d3d8_enum_values",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_database_chunk_inventory.py": {
+   "module": "tools.test_audit_database_chunk_inventory",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_database_definition_closure.py": {
+   "module": "tools.test_audit_database_definition_closure",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_dds_format_inventory.py": {
+   "module": "tools.test_audit_dds_format_inventory",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_definition_instance_references.py": {
+   "module": "tools.test_audit_definition_instance_references",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_level_chunk_inventory.py": {
+   "module": "tools.test_audit_level_chunk_inventory",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_level_persist_closure.py": {
+   "module": "tools.test_audit_level_persist_closure",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_level_spatial_presence.py": {
+   "module": "tools.test_audit_level_spatial_presence",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_level_static_sounds.py": {
+   "module": "tools.test_audit_level_static_sounds",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_live_script_bindings.py": {
+   "module": "tools.test_audit_live_script_bindings",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_live_script_parameters.py": {
+   "module": "tools.test_audit_live_script_parameters",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_missing_definition_callers.py": {
+   "module": "tools.test_audit_missing_definition_callers",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_script_load_destinations.py": {
+   "module": "tools.test_audit_script_load_destinations",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_script_parameter_reads.py": {
+   "module": "tools.test_audit_script_parameter_reads",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_script_parameter_surface.py": {
+   "module": "tools.test_audit_script_parameter_surface",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_sweep_external.py": {
+   "module": "tools.test_audit_sweep_external",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_sweep_link.py": {
+   "module": "tools.test_audit_sweep_link",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_sweep_performance.py": {
+   "module": "tools.test_audit_sweep_performance",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_sweep_port_guards.py": {
+   "module": "tools.test_audit_sweep_port_guards",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_sweep_renderer.py": {
+   "module": "tools.test_audit_sweep_renderer",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_sweep_retail.py": {
+   "module": "tools.test_audit_sweep_retail",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_sweep_scripts.py": {
+   "module": "tools.test_audit_sweep_scripts",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_sweep_systems.py": {
+   "module": "tools.test_audit_sweep_systems",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_text_conversation_closure.py": {
+   "module": "tools.test_audit_text_conversation_closure",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_tt_reference.py": {
+   "module": "tools.test_audit_tt_reference",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_visibility_bounds.py": {
+   "module": "tools.test_audit_visibility_bounds",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_w3d_chunk_consumers.py": {
+   "module": "tools.test_audit_w3d_chunk_consumers",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_audit_w3d_loader_coverage.py": {
+   "module": "tools.test_audit_w3d_loader_coverage",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_bounded_3d_audio_contract.py": {
+   "module": "tools.test_bounded_3d_audio_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_build_cache_opt_in_contract.py": {
+   "module": "tools.test_build_cache_opt_in_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_build_stamp.py": {
+   "module": "tools.test_build_stamp",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_campaign_autosave_chain.py": {
+   "module": "tools.test_campaign_autosave_chain",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_campaign_discovery_handoff.py": {
+   "module": "tools.test_campaign_discovery_handoff",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_campaign_flight_recorder_contract.py": {
+   "module": "tools.test_campaign_flight_recorder_contract",
+   "kind": "functions",
+   "run": "functions",
+   "lane": "pure",
+   "tags": [
+    "kind:functions",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_campaign_profile_defaults.py": {
+   "module": "tools.test_campaign_profile_defaults",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_canonical_retry_directory.py": {
+   "module": "tools.test_canonical_retry_directory",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_category_fvf_layout.py": {
+   "module": "tools.test_category_fvf_layout",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "compiles-vita-arm",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: /usr/local/vitasdk/bin/arm-vita-eabi-g++, g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_chunk_peek_speculative.py": {
+   "module": "tools.test_chunk_peek_speculative",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_cinematic_command_coverage.py": {
+   "module": "tools.test_cinematic_command_coverage",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_cinematic_control_reference.py": {
+   "module": "tools.test_cinematic_control_reference",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_cinematic_dispatch.py": {
+   "module": "tools.test_cinematic_dispatch",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_cinematic_dispatch_dependencies.py": {
+   "module": "tools.test_cinematic_dispatch_dependencies",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_cinematic_filename_diagnostics.py": {
+   "module": "tools.test_cinematic_filename_diagnostics",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_cinematic_low_fps.py": {
+   "module": "tools.test_cinematic_low_fps",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-retail-data",
+    "sanitizer",
+    "skips-without-retail"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on",
+    "retail: <absolute>/retail/Data, RENEGADE_RETAIL_DATA"
+   ]
+  },
+  "tools/test_cinematic_presentation_contract.py": {
+   "module": "tools.test_cinematic_presentation_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_cinematic_save.py": {
+   "module": "tools.test_cinematic_save",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_cinematic_slots.py": {
+   "module": "tools.test_cinematic_slots",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_client_identity.py": {
+   "module": "tools.test_client_identity",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: c++"
+   ]
+  },
+  "tools/test_collect_latest_vita_crash_dump.py": {
+   "module": "tools.test_collect_latest_vita_crash_dump",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_collect_pstv_runtime_log.py": {
+   "module": "tools.test_collect_pstv_runtime_log",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_compare_capture_bundles.py": {
+   "module": "tools.test_compare_capture_bundles",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_consolidate_sweep_gaps.py": {
+   "module": "tools.test_consolidate_sweep_gaps",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_conversation_transition_analysis.py": {
+   "module": "tools.test_conversation_transition_analysis",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_conversation_transition_telemetry.py": {
+   "module": "tools.test_conversation_transition_telemetry",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_custom_event_delivery.py": {
+   "module": "tools.test_custom_event_delivery",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_deep_content_audit.py": {
+   "module": "tools.test_deep_content_audit",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_definition_factory_audit.py": {
+   "module": "tools.test_definition_factory_audit",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_demo_menu_return.py": {
+   "module": "tools.test_demo_menu_return",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_demo_recorder_workflow.py": {
+   "module": "tools.test_demo_recorder_workflow",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_dependency_cache.py": {
+   "module": "tools.test_dependency_cache",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_development_checkpoint.py": {
+   "module": "tools.test_development_checkpoint",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: c++, g++"
+   ]
+  },
+  "tools/test_excluded_source_compilation.py": {
+   "module": "tools.test_excluded_source_compilation",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: c++"
+   ]
+  },
+  "tools/test_excluded_source_link_closure.py": {
+   "module": "tools.test_excluded_source_link_closure",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_explosion_effect_recycler_patch.py": {
+   "module": "tools.test_explosion_effect_recycler_patch",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_fail_and_retry_flow.py": {
+   "module": "tools.test_fail_and_retry_flow",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_fast_candidate_build_contract.py": {
+   "module": "tools.test_fast_candidate_build_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_frame_allocation_guard.py": {
+   "module": "tools.test_frame_allocation_guard",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_frame_capture_source.py": {
+   "module": "tools.test_frame_capture_source",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_frame_profile.py": {
+   "module": "tools.test_frame_profile",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_game_thread_heap_retention.py": {
+   "module": "tools.test_game_thread_heap_retention",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_historical_screenshot_timeline.py": {
+   "module": "tools.test_historical_screenshot_timeline",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_hlod_dependencies.py": {
+   "module": "tools.test_hlod_dependencies",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_host_test_manifest.py": {
+   "module": "tools.test_host_test_manifest",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "override",
+    "pure-python"
+   ],
+   "reasons": [
+    "reads: build/host-test-manifest-cache.json",
+    "override: the build/ path it reaches is the runner's optional classification cache, which is rebuilt when absent"
+   ]
+  },
+  "tools/test_hud_cost_textwindow.py": {
+   "module": "tools.test_hud_cost_textwindow",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_hud_powerup_text_once.py": {
+   "module": "tools.test_hud_powerup_text_once",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_hud_text_build_once.py": {
+   "module": "tools.test_hud_text_build_once",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_input_route_contract.py": {
+   "module": "tools.test_input_route_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_integration_source_inventory.py": {
+   "module": "tools.test_integration_source_inventory",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_loading_animation_abi.py": {
+   "module": "tools.test_loading_animation_abi",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_logical_stimulus_telemetry.py": {
+   "module": "tools.test_logical_stimulus_telemetry",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_m03_pointer_exchange.py": {
+   "module": "tools.test_m03_pointer_exchange",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_m04_conversation_gate_preempt.py": {
+   "module": "tools.test_m04_conversation_gate_preempt",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_m08_readiness.py": {
+   "module": "tools.test_m08_readiness",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_m09_camera.py": {
+   "module": "tools.test_m09_camera",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_m10_follow_up_fixes.py": {
+   "module": "tools.test_m10_follow_up_fixes",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_m10_objective_conversation_resend.py": {
+   "module": "tools.test_m10_objective_conversation_resend",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_m13_level_owners.py": {
+   "module": "tools.test_m13_level_owners",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_m13_mission_inventory.py": {
+   "module": "tools.test_m13_mission_inventory",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_m13_script_coverage.py": {
+   "module": "tools.test_m13_script_coverage",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_mission_completion_contract.py": {
+   "module": "tools.test_mission_completion_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_mission_content_bindings.py": {
+   "module": "tools.test_mission_content_bindings",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_mission_conversation_diagnostics_contract.py": {
+   "module": "tools.test_mission_conversation_diagnostics_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_mission_conversations.py": {
+   "module": "tools.test_mission_conversations",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_mission_event_routes.py": {
+   "module": "tools.test_mission_event_routes",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_mission_research.py": {
+   "module": "tools.test_mission_research",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_mission_teardown_contract.py": {
+   "module": "tools.test_mission_teardown_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_mission_text_routes.py": {
+   "module": "tools.test_mission_text_routes",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_mission_voice_routes.py": {
+   "module": "tools.test_mission_voice_routes",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_mission_wave_headers.py": {
+   "module": "tools.test_mission_wave_headers",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_mix_text_command_expectations.py": {
+   "module": "tools.test_mix_text_command_expectations",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_nested_w3d_references.py": {
+   "module": "tools.test_nested_w3d_references",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_network_crc.py": {
+   "module": "tools.test_network_crc",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_network_data_crc.py": {
+   "module": "tools.test_network_data_crc",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_ninja_log_report.py": {
+   "module": "tools.test_ninja_log_report",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_npc_path_frame.py": {
+   "module": "tools.test_npc_path_frame",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_objective_early_status.py": {
+   "module": "tools.test_objective_early_status",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_objective_message_abi.py": {
+   "module": "tools.test_objective_message_abi",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_objective_state_lifecycle.py": {
+   "module": "tools.test_objective_state_lifecycle",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_objective_text_readiness.py": {
+   "module": "tools.test_objective_text_readiness",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_observer_timer_miss_telemetry.py": {
+   "module": "tools.test_observer_timer_miss_telemetry",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_original_dazzle_lifecycle.py": {
+   "module": "tools.test_original_dazzle_lifecycle",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_original_decal_submission.py": {
+   "module": "tools.test_original_decal_submission",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_original_dx8_statistics.py": {
+   "module": "tools.test_original_dx8_statistics",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_original_light_environment.py": {
+   "module": "tools.test_original_light_environment",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_original_renderer_fvf_selection.py": {
+   "module": "tools.test_original_renderer_fvf_selection",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "compiles-vita-arm",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: /usr/local/vitasdk/bin/arm-vita-eabi-g++, g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_parse_psp2_core.py": {
+   "module": "tools.test_parse_psp2_core",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_pathfind_cost_contract.py": {
+   "module": "tools.test_pathfind_cost_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_physics_cost_tooling.py": {
+   "module": "tools.test_physics_cost_tooling",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_prelit_material_candidates.py": {
+   "module": "tools.test_prelit_material_candidates",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_probe_host_definition_registry.py": {
+   "module": "tools.test_probe_host_definition_registry",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_probe_host_network_registry.py": {
+   "module": "tools.test_probe_host_network_registry",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_probe_host_persist_registry.py": {
+   "module": "tools.test_probe_host_persist_registry",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_probe_host_script_registry.py": {
+   "module": "tools.test_probe_host_script_registry",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_procedural_material_queue.py": {
+   "module": "tools.test_procedural_material_queue",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "compiles-vita-arm",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: /usr/local/vitasdk/bin/arm-vita-eabi-g++, g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_query_renegade_server.py": {
+   "module": "tools.test_query_renegade_server",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_raw_animation.py": {
+   "module": "tools.test_raw_animation",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: c++"
+   ]
+  },
+  "tools/test_rejected_load_discard.py": {
+   "module": "tools.test_rejected_load_discard",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_remote_world.py": {
+   "module": "tools.test_remote_world",
+   "kind": "cli-driver",
+   "run": "none",
+   "lane": "pure",
+   "tags": [
+    "kind:cli-driver",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_render_livearea.py": {
+   "module": "tools.test_render_livearea",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_renegade_asset_cache_audit.py": {
+   "module": "tools.test_renegade_asset_cache_audit",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_renegade_asset_cache_key.py": {
+   "module": "tools.test_renegade_asset_cache_key",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_renegade_asset_cache_metadata.py": {
+   "module": "tools.test_renegade_asset_cache_metadata",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_renegade_asset_cache_verify.py": {
+   "module": "tools.test_renegade_asset_cache_verify",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_renegade_asset_manifest.py": {
+   "module": "tools.test_renegade_asset_manifest",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_renegade_asset_manifest_delta.py": {
+   "module": "tools.test_renegade_asset_manifest_delta",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_renegade_async_log.py": {
+   "module": "tools.test_renegade_async_log",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer",
+    "tsan"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_renegade_file_factory_availability.py": {
+   "module": "tools.test_renegade_file_factory_availability",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer",
+    "tsan"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_renegade_file_factory_staging.py": {
+   "module": "tools.test_renegade_file_factory_staging",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_renegade_paths_cache.py": {
+   "module": "tools.test_renegade_paths_cache",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer",
+    "tsan"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_renegade_script_dsp_cmake.py": {
+   "module": "tools.test_renegade_script_dsp_cmake",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream"
+   ],
+   "reasons": [
+    "compiler: cmake"
+   ]
+  },
+  "tools/test_requested_mission_owner_contract.py": {
+   "module": "tools.test_requested_mission_owner_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_required_level_load_failure.py": {
+   "module": "tools.test_required_level_load_failure",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_run_host_tests.py": {
+   "module": "tools.test_run_host_tests",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "override",
+    "pure-python"
+   ],
+   "reasons": [
+    "compiler: cc, cmake, compiles-host-c++, gmake, llvm-rc, make, ninja, windres",
+    "-fsanitize always on",
+    "device: RENEGADE_VITA_IP, VITA_IP, Vita3K.exe, VitaCompanion, vitadevbridge",
+    "reads: build/host-test-durations.json, build/host-test-logs, build/host-test-manifest-cache.json, build/host-test-summary.json",
+    "override: imports this runner, whose compiler and device names are classification data; its fixtures only start Python unittest children"
+   ]
+  },
+  "tools/test_runtime_log_contract.py": {
+   "module": "tools.test_runtime_log_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_script_binding_occurrences.py": {
+   "module": "tools.test_script_binding_occurrences",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_script_call_defaults.py": {
+   "module": "tools.test_script_call_defaults",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_script_command_bodies.py": {
+   "module": "tools.test_script_command_bodies",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_script_command_port_dependencies.py": {
+   "module": "tools.test_script_command_port_dependencies",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_script_command_table.py": {
+   "module": "tools.test_script_command_table",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_script_compiler_diagnostics.py": {
+   "module": "tools.test_script_compiler_diagnostics",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: /usr/bin/c++, c++, g++"
+   ]
+  },
+  "tools/test_script_load_capacity.py": {
+   "module": "tools.test_script_load_capacity",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_script_lookup_telemetry.py": {
+   "module": "tools.test_script_lookup_telemetry",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python",
+    "uses-repo-build-dir"
+   ],
+   "reasons": []
+  },
+  "tools/test_script_parameter_names.py": {
+   "module": "tools.test_script_parameter_names",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_script_portability.py": {
+   "module": "tools.test_script_portability",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_script_provider_contract.py": {
+   "module": "tools.test_script_provider_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_script_text_file_boundary.py": {
+   "module": "tools.test_script_text_file_boundary",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_script_warning_routes.py": {
+   "module": "tools.test_script_warning_routes",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_script_zones.py": {
+   "module": "tools.test_script_zones",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_sim_hotpaths_contract.py": {
+   "module": "tools.test_sim_hotpaths_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: c++, g++"
+   ]
+  },
+  "tools/test_sorting_depth_sort.py": {
+   "module": "tools.test_sorting_depth_sort",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_stage_sources_incremental_contract.py": {
+   "module": "tools.test_stage_sources_incremental_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_staging_fingerprint.py": {
+   "module": "tools.test_staging_fingerprint",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_suspend_resume_frame_clock.py": {
+   "module": "tools.test_suspend_resume_frame_clock",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_sweep_cpp_functions.py": {
+   "module": "tools.test_sweep_cpp_functions",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_sync_staged_tree.py": {
+   "module": "tools.test_sync_staged_tree",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_thread_publication_contract.py": {
+   "module": "tools.test_thread_publication_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_trackedvehicle_uv_time_units.py": {
+   "module": "tools.test_trackedvehicle_uv_time_units",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_triangle_strip_indices.py": {
+   "module": "tools.test_triangle_strip_indices",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "compiles-vita-arm",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: /usr/local/vitasdk/bin/arm-vita-eabi-g++, g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_tt_c4.py": {
+   "module": "tools.test_tt_c4",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "artifact",
+   "tags": [
+    "needs-build-artifact"
+   ],
+   "reasons": [
+    "reads: build/host-a31-asan/a31_m00_interactive_runtime"
+   ]
+  },
+  "tools/test_tt_client_control.py": {
+   "module": "tools.test_tt_client_control",
+   "kind": "cli-driver",
+   "run": "none",
+   "lane": "pure",
+   "tags": [
+    "kind:cli-driver",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_tt_client_greeting.py": {
+   "module": "tools.test_tt_client_greeting",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "artifact",
+   "tags": [
+    "needs-build-artifact"
+   ],
+   "reasons": [
+    "reads: build/host-a31-asan/a31_m00_interactive_runtime"
+   ]
+  },
+  "tools/test_tt_physical_rare.py": {
+   "module": "tools.test_tt_physical_rare",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "artifact",
+   "tags": [
+    "needs-build-artifact"
+   ],
+   "reasons": [
+    "reads: build/host-a31-asan/a31_m00_interactive_runtime"
+   ]
+  },
+  "tools/test_tt_purchase_catalog.py": {
+   "module": "tools.test_tt_purchase_catalog",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "artifact",
+   "tags": [
+    "needs-build-artifact"
+   ],
+   "reasons": [
+    "reads: build/host-a31-asan/a31_m00_interactive_runtime"
+   ]
+  },
+  "tools/test_tt_resource_preparation.py": {
+   "module": "tools.test_tt_resource_preparation",
+   "kind": "cli-driver",
+   "run": "none",
+   "lane": "pure",
+   "tags": [
+    "kind:cli-driver",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_tt_resources.py": {
+   "module": "tools.test_tt_resources",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_tt_soldier_rare.py": {
+   "module": "tools.test_tt_soldier_rare",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "artifact",
+   "tags": [
+    "needs-build-artifact"
+   ],
+   "reasons": [
+    "reads: build/host-a31-asan/a31_m00_interactive_runtime"
+   ]
+  },
+  "tools/test_tt_vehicle.py": {
+   "module": "tools.test_tt_vehicle",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "artifact",
+   "tags": [
+    "needs-build-artifact"
+   ],
+   "reasons": [
+    "reads: build/host-a31-asan/a31_m00_interactive_runtime"
+   ]
+  },
+  "tools/test_ttfs.py": {
+   "module": "tools.test_ttfs",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize behind a condition or in an invoked script"
+   ]
+  },
+  "tools/test_ttfs_https_platform.py": {
+   "module": "tools.test_ttfs_https_platform",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: cc",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_tut1_script_think_cost.py": {
+   "module": "tools.test_tut1_script_think_cost",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_tutorial_bench.py": {
+   "module": "tools.test_tutorial_bench",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_tutorial_checkpoints.py": {
+   "module": "tools.test_tutorial_checkpoints",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_tutorial_perf_report.py": {
+   "module": "tools.test_tutorial_perf_report",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_tutorial_prewarm_list.py": {
+   "module": "tools.test_tutorial_prewarm_list",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "retail",
+   "tags": [
+    "needs-retail-data",
+    "skips-without-retail"
+   ],
+   "reasons": [
+    "retail: RENEGADE_RETAIL_DATA"
+   ]
+  },
+  "tools/test_tutorial_texture_budget.py": {
+   "module": "tools.test_tutorial_texture_budget",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_upload_dev82_current_vpk.py": {
+   "module": "tools.test_upload_dev82_current_vpk",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_validate_a35_physical_gate.py": {
+   "module": "tools.test_validate_a35_physical_gate",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_validate_campaign_flight_bundle.py": {
+   "module": "tools.test_validate_campaign_flight_bundle",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_validate_vita_input_route.py": {
+   "module": "tools.test_validate_vita_input_route",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_validate_vita_loading_capture.py": {
+   "module": "tools.test_validate_vita_loading_capture",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vdb_crash_snapshot_delta.py": {
+   "module": "tools.test_vdb_crash_snapshot_delta",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_verify_candidate_identity.py": {
+   "module": "tools.test_verify_candidate_identity",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_verify_public_docs.py": {
+   "module": "tools.test_verify_public_docs",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_verify_repo_hygiene.py": {
+   "module": "tools.test_verify_repo_hygiene",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vis_culling_contract.py": {
+   "module": "tools.test_vis_culling_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita3k_build_install_contract.py": {
+   "module": "tools.test_vita3k_build_install_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita3k_runner_launch_proof.py": {
+   "module": "tools.test_vita3k_runner_launch_proof",
+   "kind": "functions",
+   "run": "functions",
+   "lane": "pure",
+   "tags": [
+    "kind:functions",
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_animation_clock.py": {
+   "module": "tools.test_vita_animation_clock",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_audio_cost_contract.py": {
+   "module": "tools.test_vita_audio_cost_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "retail",
+   "tags": [
+    "needs-retail-data",
+    "skips-without-retail"
+   ],
+   "reasons": [
+    "retail: RENEGADE_RETAIL_DATA, retail-pc/Data"
+   ]
+  },
+  "tools/test_vita_audio_cost_equivalence.py": {
+   "module": "tools.test_vita_audio_cost_equivalence",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_audio_deferred_position.py": {
+   "module": "tools.test_vita_audio_deferred_position",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_audio_mixer_equivalence.py": {
+   "module": "tools.test_vita_audio_mixer_equivalence",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_audio_provider.py": {
+   "module": "tools.test_vita_audio_provider",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_bink_audio_output.py": {
+   "module": "tools.test_vita_bink_audio_output",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_bink_scheduler.py": {
+   "module": "tools.test_vita_bink_scheduler",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize behind a condition or in an invoked script"
+   ]
+  },
+  "tools/test_vita_camera_input_contract.py": {
+   "module": "tools.test_vita_camera_input_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_vita_campaign_control_coverage.py": {
+   "module": "tools.test_vita_campaign_control_coverage",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_clocks_threads.py": {
+   "module": "tools.test_vita_clocks_threads",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_codegen_flags.py": {
+   "module": "tools.test_vita_codegen_flags",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "compiles-vita-arm"
+   ],
+   "reasons": [
+    "compiler: /usr/local/vitasdk/bin/arm-vita-eabi-g++, cmake"
+   ]
+  },
+  "tools/test_vita_datasafe_crash_contract.py": {
+   "module": "tools.test_vita_datasafe_crash_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_demo_ending.py": {
+   "module": "tools.test_vita_demo_ending",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_vita_diagnostic_hotpath.py": {
+   "module": "tools.test_vita_diagnostic_hotpath",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_vita_ffp_program_cache.py": {
+   "module": "tools.test_vita_ffp_program_cache",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "optional-build-artifact",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++, gcc",
+    "-fsanitize always on",
+    "reads when present (module uses skips): build/deps/vitagl-demo/source.tar.gz"
+   ]
+  },
+  "tools/test_vita_frame_pacing.py": {
+   "module": "tools.test_vita_frame_pacing",
+   "kind": "unittest",
+   "run": "discover",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_gxm_tuning.py": {
+   "module": "tools.test_vita_gxm_tuning",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "optional-build-artifact",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize behind a condition or in an invoked script",
+    "reads when present (module uses skips): <absolute>/build/deps/vitagl-demo/source/source, <absolute>/build/deps/vitagl-demo/source/source/gxm.c"
+   ]
+  },
+  "tools/test_vita_hanim_combo_guard.py": {
+   "module": "tools.test_vita_hanim_combo_guard",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_index_preparation.py": {
+   "module": "tools.test_vita_index_preparation",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_indexed_state_contract.py": {
+   "module": "tools.test_vita_indexed_state_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_indexed_vertex_records.py": {
+   "module": "tools.test_vita_indexed_vertex_records",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "optional-build-artifact",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on",
+    "reads when present (module uses skips): build/deps/vitagl-demo/source.tar.gz"
+   ]
+  },
+  "tools/test_vita_internal_resolution.py": {
+   "module": "tools.test_vita_internal_resolution",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_load_io.py": {
+   "module": "tools.test_vita_load_io",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "retail",
+   "tags": [
+    "needs-retail-data",
+    "skips-without-retail"
+   ],
+   "reasons": [
+    "retail: <absolute>/Data"
+   ]
+  },
+  "tools/test_vita_loading_screen_contract.py": {
+   "module": "tools.test_vita_loading_screen_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_m13_cinematic_preparation.py": {
+   "module": "tools.test_vita_m13_cinematic_preparation",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_vita_material_cache.py": {
+   "module": "tools.test_vita_material_cache",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize behind a condition or in an invoked script"
+   ]
+  },
+  "tools/test_vita_mesh_batch.py": {
+   "module": "tools.test_vita_mesh_batch",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize behind a condition or in an invoked script"
+   ]
+  },
+  "tools/test_vita_mission_ranks.py": {
+   "module": "tools.test_vita_mission_ranks",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_mp3_decode.py": {
+   "module": "tools.test_vita_mp3_decode",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize behind a condition or in an invoked script"
+   ]
+  },
+  "tools/test_vita_opaque_sort.py": {
+   "module": "tools.test_vita_opaque_sort",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_opaque_sort_native.py": {
+   "module": "tools.test_vita_opaque_sort_native",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize behind a condition or in an invoked script"
+   ]
+  },
+  "tools/test_vita_open_source_references.py": {
+   "module": "tools.test_vita_open_source_references",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-module:yaml",
+    "override",
+    "pure-python"
+   ],
+   "reasons": [
+    "device: Vita3K.exe (via tools/run_vita3k_candidate.py)",
+    "override: runs tools/run_vita3k_candidate.py only with --dry-run, which writes a receipt and returns before Vita3K is launched"
+   ]
+  },
+  "tools/test_vita_particle_cost.py": {
+   "module": "tools.test_vita_particle_cost",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_particle_keyframe_guard.py": {
+   "module": "tools.test_vita_particle_keyframe_guard",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_performance_defaults.py": {
+   "module": "tools.test_vita_performance_defaults",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_projective_coordinates.py": {
+   "module": "tools.test_vita_projective_coordinates",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-build-artifact",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on",
+    "reads: build/deps/vitagl-demo/source.tar.gz"
+   ]
+  },
+  "tools/test_vita_raw_anim_sampler_identity.py": {
+   "module": "tools.test_vita_raw_anim_sampler_identity",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize behind a condition or in an invoked script"
+   ]
+  },
+  "tools/test_vita_render_state_shadow.py": {
+   "module": "tools.test_vita_render_state_shadow",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_route_session_runner.py": {
+   "module": "tools.test_vita_route_session_runner",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_sampler_cache.py": {
+   "module": "tools.test_vita_sampler_cache",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize behind a condition or in an invoked script"
+   ]
+  },
+  "tools/test_vita_select_tap.py": {
+   "module": "tools.test_vita_select_tap",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_short_wchar_boundary_contract.py": {
+   "module": "tools.test_vita_short_wchar_boundary_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_skin_deform_cache.py": {
+   "module": "tools.test_vita_skin_deform_cache",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize behind a condition or in an invoked script"
+   ]
+  },
+  "tools/test_vita_skin_submission_contract.py": {
+   "module": "tools.test_vita_skin_submission_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_socket_boundary.py": {
+   "module": "tools.test_vita_socket_boundary",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: c++"
+   ]
+  },
+  "tools/test_vita_static_mesh_cache.py": {
+   "module": "tools.test_vita_static_mesh_cache",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize behind a condition or in an invoked script"
+   ]
+  },
+  "tools/test_vita_static_mesh_equivalence.py": {
+   "module": "tools.test_vita_static_mesh_equivalence",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_surface_lock.py": {
+   "module": "tools.test_vita_surface_lock",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_target_abi.py": {
+   "module": "tools.test_vita_target_abi",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "compiles-vita-arm"
+   ],
+   "reasons": [
+    "compiler: bin/arm-vita-eabi-g++, c++"
+   ]
+  },
+  "tools/test_vita_text_entry.py": {
+   "module": "tools.test_vita_text_entry",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_text_readiness.py": {
+   "module": "tools.test_vita_text_readiness",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_texture_packing_contract.py": {
+   "module": "tools.test_vita_texture_packing_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_texture_provenance_contract.py": {
+   "module": "tools.test_vita_texture_provenance_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_texture_surface_contract.py": {
+   "module": "tools.test_vita_texture_surface_contract",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_vita_touch_presentation.py": {
+   "module": "tools.test_vita_touch_presentation",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_tutorial_help.py": {
+   "module": "tools.test_vita_tutorial_help",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_vita_user_settings.py": {
+   "module": "tools.test_vita_user_settings",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_vita_vertex_array_submission.py": {
+   "module": "tools.test_vita_vertex_array_submission",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer-optional"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize behind a condition or in an invoked script"
+   ]
+  },
+  "tools/test_vitagl_compact_vertices.py": {
+   "module": "tools.test_vitagl_compact_vertices",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-build-artifact",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on",
+    "reads: build/deps/vitagl-demo/source.tar.gz"
+   ]
+  },
+  "tools/test_vitagl_dds_chain.py": {
+   "module": "tools.test_vitagl_dds_chain",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-build-artifact",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on",
+    "reads: build/deps/vitagl-demo/source.tar.gz"
+   ]
+  },
+  "tools/test_vitagl_full_upload.py": {
+   "module": "tools.test_vitagl_full_upload",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "needs-build-artifact",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on",
+    "reads: build/deps/vitagl-demo/source.tar.gz"
+   ]
+  },
+  "tools/test_w3d_animation_channel_audit.py": {
+   "module": "tools.test_w3d_animation_channel_audit",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
+  },
+  "tools/test_wave_archive_probe.py": {
+   "module": "tools.test_wave_archive_probe",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_weaponview_animation_abi.py": {
+   "module": "tools.test_weaponview_animation_abi",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_win32_time_compat.py": {
+   "module": "tools.test_win32_time_compat",
+   "kind": "script",
+   "run": "script",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "kind:script"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_wwmath_arm_equivalence.py": {
+   "module": "tools.test_wwmath_arm_equivalence",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
+   ]
+  },
+  "tools/test_wwui_resource_styles.py": {
+   "module": "tools.test_wwui_resource_styles",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream"
+   ],
+   "reasons": [
+    "compiler: llvm-rc"
+   ]
+  }
+ }
+}

@@ -24,7 +24,10 @@ void A30_Vita_Log(const char *, ...) {}
 int mode, calls;
 A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
     int, bool menu, bool lan_menu, const char *reload, const char *campaign_source,
-    const uint8_t *campaign_state, uint32_t campaign_state_size, int replay_difficulty) {
+    const uint8_t *campaign_state, uint32_t campaign_state_size, int replay_difficulty,
+    const char *frontend_source, bool frontend_skirmish) {
+    assert(frontend_source == nullptr);
+    assert(!frontend_skirmish);
     assert(calls < 3);
     assert(menu == (calls > 0));
     assert(!lan_menu);
@@ -42,6 +45,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
         r.first_frame_completed = r.first_frame_geometry = r.clean_exit_requested = true;
         r.mission_completion_observed = r.mission_succeeded = true;
         r.return_to_menu_requested = true;
+        r.world_generations_started = r.world_generations_bound = r.world_generations_rendered = 1U;
         r.teardown_completed = mode != 1;
         r.render_error = mode == 2;
         if (mode >= 3) {

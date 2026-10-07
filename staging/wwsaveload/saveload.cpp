@@ -35,6 +35,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 
+extern int A30_Vita_Log(const char *format, ...) __attribute__((weak));
 #include "saveload.h"
 #include "saveloadsubsystem.h"
 #include "persist.h"
@@ -109,11 +110,20 @@ bool SaveLoadSystemClass::Load (ChunkLoadClass &cload,bool auto_post_load,
 					sys->PlayerSaveLoadSeen = true;
 				}
 				INIT_SUB_STATUS(sys->Name());
-				ok &= sys->Load(cload);
+				const bool rv_sys_ok = sys->Load(cload);
+				if (!rv_sys_ok && A30_Vita_Log != NULL) {
+					A30_Vita_Log("A3.9 saveload: subsystem load=false name=%s chunk=%08X chunk_error=%d reported=%d\n",
+						sys->Name(), (unsigned)sys->Chunk_ID(), cload.Has_Error() ? 1 : 0, ReportedLoadFailure ? 1 : 0);
+				}
+				ok &= rv_sys_ok;
 				WWLOG_INTERMEDIATE(sys->Name());
 			}
 		}
 		cload.Close_Chunk();
+	}
+	if (A30_Vita_Log != NULL && (cload.Has_Error() || ReportedLoadFailure)) {
+		A30_Vita_Log("A3.9 saveload: load status chunk_error=%d reported=%d ok_before=%d\n",
+			cload.Has_Error() ? 1 : 0, ReportedLoadFailure ? 1 : 0, ok ? 1 : 0);
 	}
 	ok = !cload.Has_Error() && ok;
 

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "f2e34fa82245bbe9d2919c720d082dbb4ecf917f51a282a3e35f515b9e2d2719",
-  "patch_count": 571,
+  "stage_script_sha256": "dea2e3fc5d3f890d9fa981619e1d50b09ffbe5ed28eb7c535dbc4ef40b25ae0a",
+  "patch_count": 576,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -2840,6 +2840,21 @@
       "sha256": "c336c47ccb99cb526384a9db2ff94f82429deea43ee1ff520fcfedfe6d8e039d"
     },
     {
+      "path": "port/patches/scripts-a39-m09-one-way-lift-mobius-recovery.patch",
+      "stage_directory": "scripts",
+      "sha256": "c0998f4467c85e162077b351acaf29f1dcdbb50a2f47e1557784ba62605e9e14"
+    },
+    {
+      "path": "port/patches/scripts-a39-m09-catchup-timer-restart.patch",
+      "stage_directory": "scripts",
+      "sha256": "60de143423b3a0fbcf2092b99248c63f4c1810ea21692be546e7f63588daa4db"
+    },
+    {
+      "path": "port/patches/scripts-a39-m09-midtro-reposition-fallback.patch",
+      "stage_directory": "scripts",
+      "sha256": "f5e37c991c91fc8e0df8c3c71a4d66510edeab15cbb7503c9c995ea795cbb5be"
+    },
+    {
       "path": "port/patches/combat-a37-hud-objective-index-bounds.patch",
       "stage_directory": "combat",
       "sha256": "ae406f0dd7173d744a1d84105b2b6518b88c1446a0ebf9260b23ecaf8363805f"
@@ -2858,7 +2873,17 @@
       "path": "port/patches/combat-a37-face-action-stale-end-time-clamp.patch",
       "stage_directory": "combat",
       "sha256": "fc6b37a6f0f9ef5136fbe67e950835ee8b2084fb57f42d6611599f96636e3a56"
+    },
+    {
+      "path": "port/patches/wwsaveload-a37-pointer-remap-release-capacity.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "69a26e968797d5ea204f0d2dc4efafb955a89712c9d3288f66e8e5080c8f07c4"
+    },
+    {
+      "path": "port/patches/ww3d2-a37-asset-status-release-elision.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "655052350331b17f714876c89289f7e9dae41cfc40d5f57181f80375664f62fa"
     }
   ],
-  "registry_sha256": "52b90d8613d8064fabc60c19c1be7294f2fc30bcf0486a81f7373e33ba6898c4"
+  "registry_sha256": "ed5c591aa34ea1dd0cebedd694f1f6d741d2d69d0424c400c32a684f4ba9edc1"
 }

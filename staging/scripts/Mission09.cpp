@@ -42,6 +42,8 @@
 #include <string.h>
 #include <stdio.h>
 
+extern int A30_Vita_Log(const char *format, ...);
+
 
 DECLARE_SCRIPT(M09_Objective_Controller, "") // Object Controller id: 2000071
 {
@@ -359,18 +361,52 @@ DECLARE_SCRIPT (M09_Havoc_Script, "")
 DECLARE_SCRIPT (M09_Mobius_Suit_Objective, "")
 {
 	bool already_entered;
-	
+	// Vita guard: set once Havoc and Mobius are placed at the post-midtro points.
+	bool vita_midtro_placed;
+
+	enum { VITA_MIDTRO_CHECK = 9041 };
 		
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( already_entered, 1 );
+		SAVE_VARIABLE( vita_midtro_placed, 2 );
 	}
 
 	void Created (GameObject * obj)
 	{
 		already_entered = false;			
+		vita_midtro_placed = false;
+	}
+
+	// Vita guard: X9C_MIDTRO.txt line 361 (Send_Custom 2000612 8888) is the
+	// only thing that moves Havoc and Mobius off their +7 m hold to the
+	// authored points 1100497/2002239. If the cinematic never sends it (the
+	// file fails to open or its controller dies early), do the same move.
+	void Timer_Expired (GameObject * obj, int timer_id)
+	{
+		if ((timer_id == VITA_MIDTRO_CHECK) && !vita_midtro_placed)
+		{
+			GameObject *mobius = Commands->Find_Object (2000010);
+			GameObject *star = STAR;
+			GameObject *havoc_point = Commands->Find_Object (1100497);
+			GameObject *mobius_point = Commands->Find_Object (2002239);
+
+			vita_midtro_placed = true;
+			A30_Vita_Log("A4 M09 midtro reposition fallback v1: no 8888 after 20 s star=%d mobius=%d points=%d/%d\n",
+				(star != NULL) ? 1 : 0, (mobius != NULL) ? 1 : 0,
+				(havoc_point != NULL) ? 1 : 0, (mobius_point != NULL) ? 1 : 0);
+
+			if ((star != NULL) && (havoc_point != NULL))
+			{
+				Commands->Set_Position (star, Commands->Get_Position (havoc_point));
+			}
+			if ((mobius != NULL) && (mobius_point != NULL))
+			{
+				Commands->Set_Position (mobius, Commands->Get_Position (mobius_point));
+			}
+		}
 	}
 
 	void Custom (GameObject *obj, int type, int param, GameObject *sender)
@@ -378,6 +414,7 @@ DECLARE_SCRIPT (M09_Mobius_Suit_Objective, "")
 		if (type == 8888)
 		{
 			GameObject *mobius = Commands->Find_Object (2000010);
+			vita_midtro_placed = true;
 
 			Vector3 havoc_loc = Commands->Get_Position (Commands->Find_Object (1100497));
 			Vector3 mobius_loc = Commands->Get_Position (Commands->Find_Object (2002239));
@@ -416,6 +453,8 @@ DECLARE_SCRIPT (M09_Mobius_Suit_Objective, "")
 				GameObject * powermob = Commands->Create_Object ( "Invisible_Object", Vector3(0.0f, 0.0f, 0.0f));
 				Commands->Set_Facing(powermob, 0.0f);
 				Commands->Attach_Script(powermob, "Test_Cinematic", "X9C_MIDTRO.txt");
+				// Line 361 is 12.0 s in; both clocks are simulation time.
+				Commands->Start_Timer (obj, this, 20.0f, VITA_MIDTRO_CHECK);
 				
 				Commands->Set_Model ( mobius, "c_ag_gdi_pmob" );
 				Commands->Give_PowerUp(mobius, "POW_LaserChaingun_AI");
@@ -977,6 +1016,8 @@ DECLARE_SCRIPT (M09_Mobius_Follow, "")  //Mobius (Pre-Suit): 2000010
 	float last_health, damage_tally;
 	bool stationary;
 	bool nofollow;
+	// Vita escort guard: set when the TOO_FAR catch-up loop ends on nofollow.
+	bool too_far_stopped;
 
 	
 
@@ -993,6 +1034,7 @@ DECLARE_SCRIPT (M09_Mobius_Follow, "")  //Mobius (Pre-Suit): 2000010
 		SAVE_VARIABLE( attack_path, 9 );
 		SAVE_VARIABLE( nofollow, 10 );
 		SAVE_VARIABLE( elev_num, 11 );
+		SAVE_VARIABLE( too_far_stopped, 12 );
 	}
 	
 	void Follow_Function (GameObject * obj, int waypath_id)
@@ -1063,6 +1105,16 @@ DECLARE_SCRIPT (M09_Mobius_Follow, "")  //Mobius (Pre-Suit): 2000010
 			if (param == OFF)
 			{
 				nofollow = false;
+
+				// Vita escort guard: the TOO_FAR loop re-arms only while
+				// following, so NO_FOLLOW ON (zone 1100238) ended it for good.
+				// Restart it once here; a loop that is still running is left
+				// alone, so a repeated OFF cannot start a second loop.
+				if (too_far_stopped)
+				{
+					too_far_stopped = false;
+					Commands->Start_Timer (obj, this, 5.0f, TOO_FAR);
+				}
 			}
 		}
 
@@ -1167,6 +1219,7 @@ DECLARE_SCRIPT (M09_Mobius_Follow, "")  //Mobius (Pre-Suit): 2000010
 		stationary = false;
 
 		nofollow = false;
+		too_far_stopped = false;
 		
 		closest = 0;
 		
@@ -1346,6 +1399,10 @@ DECLARE_SCRIPT (M09_Mobius_Follow, "")  //Mobius (Pre-Suit): 2000010
 				}
 
 				Commands->Start_Timer (obj, this, 5.0f, TOO_FAR);
+			}
+			else
+			{
+				too_far_stopped = true;
 			}
 		}
 
@@ -3388,7 +3445,11 @@ DECLARE_SCRIPT (M09_Elevator_All_Controller, "Waypoint_num:int, Elev_obj_num:int
 	bool mobius_in_zone;
 	bool transition;
 	int block1, block2, block3, block4;
-	
+	// Vita escort guard: one-way lift recovery state (see Vita_Lift_Check).
+	int vita_lift_checks_left;
+	bool vita_lift_recovered;
+
+	enum { VITA_LIFT_CHECK = 9031 };
 
 	GameObject *mobius;
 
@@ -3401,6 +3462,112 @@ DECLARE_SCRIPT (M09_Elevator_All_Controller, "Waypoint_num:int, Elev_obj_num:int
 		SAVE_VARIABLE( block2, 5 );
 		SAVE_VARIABLE( block3, 6 );
 		SAVE_VARIABLE( block4, 7 );
+		SAVE_VARIABLE( vita_lift_checks_left, 8 );
+		SAVE_VARIABLE( vita_lift_recovered, 9 );
+	}
+
+	// Vita escort guard. Lifts 1265150, 1265149 and 1265126 have only a
+	// Direction 0 controller: once the car reaches frame 0 nothing moves it
+	// back, so a Mobius the car did not carry (rider separation at low frame
+	// rates) is stranded and the escort can never finish. These three only.
+	bool Vita_Is_One_Way_Lift (void)
+	{
+		int lift = Get_Int_Parameter("Elev_obj_num");
+		return (Get_Int_Parameter("Direction") == 0) &&
+			((lift == 1265150) || (lift == 1265149) || (lift == 1265126));
+	}
+
+	// At most 16 breadcrumbs per process across all three controllers.
+	static bool Vita_Lift_Log_Budget (void)
+	{
+		static int budget = 16;
+		if (budget <= 0)
+		{
+			return false;
+		}
+		budget--;
+		return true;
+	}
+
+	static float Vita_Abs (float value)
+	{
+		return (value < 0.0f) ? -value : value;
+	}
+
+	// Runs from VITA_LIFT_CHECK after the ride. Levels come from the
+	// controller's own authored points: Waypoint_num (boarding point, origin
+	// level) and Mobius_exit_goto (the ELEVATOR_EXIT target, destination
+	// level). Acts only when Havoc is at the destination level and Mobius is
+	// still at the origin level; a carried Mobius is left untouched.
+	void Vita_Lift_Check (GameObject *obj)
+	{
+		GameObject *mob = Commands->Find_Object (2000010);
+		GameObject *star = STAR;
+		GameObject *origin = Commands->Find_Object (Get_Int_Parameter("Waypoint_num"));
+		GameObject *exit_point = Commands->Find_Object (Get_Int_Parameter("Mobius_exit_goto"));
+
+		if (vita_lift_checks_left > 0)
+		{
+			vita_lift_checks_left--;
+		}
+
+		if ((mob == NULL) || (star == NULL) || (origin == NULL) || (exit_point == NULL) ||
+			(Commands->Get_Health (mob) <= 0.0f) || (Commands->Get_Health (star) <= 0.0f))
+		{
+			vita_lift_checks_left = 0;
+			return;
+		}
+
+		Vector3 mob_pos = Commands->Get_Position (mob);
+		Vector3 star_pos = Commands->Get_Position (star);
+		Vector3 exit_pos = Commands->Get_Position (exit_point);
+		float origin_z = Commands->Get_Position (origin).Z;
+		float exit_z = exit_pos.Z;
+
+		if (Vita_Abs (exit_z - origin_z) < 2.0f)
+		{
+			vita_lift_checks_left = 0;
+			return;
+		}
+
+		bool mobius_up = Vita_Abs (mob_pos.Z - exit_z) < Vita_Abs (mob_pos.Z - origin_z);
+		bool star_up = Vita_Abs (star_pos.Z - exit_z) < Vita_Abs (star_pos.Z - origin_z);
+
+		if (mobius_up)
+		{
+			vita_lift_checks_left = 0;
+			return;
+		}
+
+		if (star_up)
+		{
+			vita_lift_checks_left = 0;
+			vita_lift_recovered = true;
+
+			if (Vita_Lift_Log_Budget ())
+			{
+				A30_Vita_Log("A4 M09 lift recovery v1: controller=%d lift=%d exit=%d action=teleport mobius_z=%.2f star_z=%.2f origin_z=%.2f exit_z=%.2f\n",
+					Commands->Get_ID (obj), Get_Int_Parameter("Elev_obj_num"), Get_Int_Parameter("Mobius_exit_goto"),
+					mob_pos.Z, star_pos.Z, origin_z, exit_z);
+			}
+
+			Commands->Action_Reset (mob, 100);
+			Commands->Set_Position (mob, exit_pos);
+			// The original resume after a ride (M09_Elevator_Exit's message).
+			Commands->Send_Custom_Event (obj, mob, ELEVATOR_EXIT, Get_Int_Parameter("Mobius_exit_goto"));
+			return;
+		}
+
+		if (vita_lift_checks_left > 0)
+		{
+			Commands->Start_Timer (obj, this, 5.0f, VITA_LIFT_CHECK);
+		}
+		else if (Vita_Lift_Log_Budget ())
+		{
+			A30_Vita_Log("A4 M09 lift recovery v1: controller=%d lift=%d exit=%d action=none star_not_at_exit_level mobius_z=%.2f star_z=%.2f origin_z=%.2f exit_z=%.2f\n",
+				Commands->Get_ID (obj), Get_Int_Parameter("Elev_obj_num"), Get_Int_Parameter("Mobius_exit_goto"),
+				mob_pos.Z, star_pos.Z, origin_z, exit_z);
+		}
 	}
 
 	void Created (GameObject *obj)
@@ -3409,6 +3576,8 @@ DECLARE_SCRIPT (M09_Elevator_All_Controller, "Waypoint_num:int, Elev_obj_num:int
 		mobius_in_zone = false;
 
 		block1 = block2 = block3 = block4 = 0;
+		vita_lift_checks_left = 0;
+		vita_lift_recovered = false;
 
 		char *elevators[9] = 
 		{
@@ -3438,6 +3607,11 @@ DECLARE_SCRIPT (M09_Elevator_All_Controller, "Waypoint_num:int, Elev_obj_num:int
 			Commands->Destroy_Object (Commands->Find_Object (block2));
 			Commands->Destroy_Object (Commands->Find_Object (block3));
 			Commands->Destroy_Object (Commands->Find_Object (block4));
+		}
+
+		if (timer_id == VITA_LIFT_CHECK)
+		{
+			Vita_Lift_Check (obj);
 		}
 	}
 //
@@ -3561,6 +3735,15 @@ DECLARE_SCRIPT (M09_Elevator_All_Controller, "Waypoint_num:int, Elev_obj_num:int
 				block4 = Commands->Get_ID (rub4);
 				Commands->Set_Is_Rendered( rub4, false );
 */				Commands->Static_Anim_Phys_Goto_Frame ( Get_Int_Parameter("Elev_obj_num"), 0, elevators [Get_Int_Parameter("Anim_num")] );
+
+				// Vita escort guard: check once the ride is over. The longest
+				// of these rides is 70 frames at 15 fps (4.7 s); both the car
+				// and this timer advance on simulation time.
+				if (Vita_Is_One_Way_Lift () && !vita_lift_recovered && (vita_lift_checks_left == 0))
+				{
+					vita_lift_checks_left = 6;
+					Commands->Start_Timer (obj, this, 10.0f, VITA_LIFT_CHECK);
+				}
 			}
 		}
 

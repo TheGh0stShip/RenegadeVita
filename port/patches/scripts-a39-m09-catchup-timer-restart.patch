@@ -1,0 +1,62 @@
+M09_Mobius_Follow catch-up loop restart. The 5 s TOO_FAR loop (walk to
+Havoc when 25 m or more away) re-arms only while following, so NO_FOLLOW ON
+from zone 1100238 ends it for good unless OFF arrives inside 5 s. Record the
+stop and restart the loop once on NO_FOLLOW OFF (zone 2000991). A loop that
+is still running is left alone, so repeated OFF events cannot start a second
+loop. Saved as id 12; older saves read false and keep the retail behaviour.
+
+--- a/Mission09.cpp
++++ b/Mission09.cpp
+@@ -979,6 +979,8 @@
+ 	float last_health, damage_tally;
+ 	bool stationary;
+ 	bool nofollow;
++	// Vita escort guard: set when the TOO_FAR catch-up loop ends on nofollow.
++	bool too_far_stopped;
+ 
+ 	
+ 
+@@ -995,6 +997,7 @@
+ 		SAVE_VARIABLE( attack_path, 9 );
+ 		SAVE_VARIABLE( nofollow, 10 );
+ 		SAVE_VARIABLE( elev_num, 11 );
++		SAVE_VARIABLE( too_far_stopped, 12 );
+ 	}
+ 	
+ 	void Follow_Function (GameObject * obj, int waypath_id)
+@@ -1065,6 +1068,16 @@
+ 			if (param == OFF)
+ 			{
+ 				nofollow = false;
++
++				// Vita escort guard: the TOO_FAR loop re-arms only while
++				// following, so NO_FOLLOW ON (zone 1100238) ended it for good.
++				// Restart it once here; a loop that is still running is left
++				// alone, so a repeated OFF cannot start a second loop.
++				if (too_far_stopped)
++				{
++					too_far_stopped = false;
++					Commands->Start_Timer (obj, this, 5.0f, TOO_FAR);
++				}
+ 			}
+ 		}
+ 
+@@ -1169,6 +1182,7 @@
+ 		stationary = false;
+ 
+ 		nofollow = false;
++		too_far_stopped = false;
+ 		
+ 		closest = 0;
+ 		
+@@ -1349,6 +1363,10 @@
+ 
+ 				Commands->Start_Timer (obj, this, 5.0f, TOO_FAR);
+ 			}
++			else
++			{
++				too_far_stopped = true;
++			}
+ 		}
+ 
+ 

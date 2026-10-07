@@ -1679,6 +1679,15 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m09-keycard-zone-distance-recheck.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m09-intro-conversation-resume.patch"
+# M09 escort follow-ups: recover a Mobius stranded at the origin of a one-way
+# lift, restart the catch-up loop on NO_FOLLOW OFF, and repeat the midtro 8888
+# reposition when the cinematic never sends it. See M09_READINESS.md.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a39-m09-one-way-lift-mobius-recovery.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a39-m09-catchup-timer-restart.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a39-m09-midtro-reposition-fallback.patch"
 # Objective/HUD lifecycle: the HUD pog index could outlive the pending HUD
 # objectives (completed last pog, restart) and index a stale list slot, and a
 # save wrote the encyclopedia bit arrays without flushing BooleanVectorClass's

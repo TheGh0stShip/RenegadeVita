@@ -1,5 +1,18 @@
 # Live engineering progress
 
+# Cross-session integration A3.5-dev241 — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Completed: campaign pushes 1–5 (main), FPS round 4 (dev240) and tutorial round 1 merged on one tree;
+merge and host-test regressions fixed; staging 623 patches PASS; pure lane PASS; 97 compiled/sanitizer
+modules pass apart from pre-existing failures; ARM fast-candidate build, package, identity PASS.
+Evidence: VPK `67860e22…952603`, ELF `5d6348ca…755b62`; Vita3K installed, hash verified, not launched.
+See [session integration](SESSION_INTEGRATION_2026-10-07.md).
+Next: physical Vita run of A3.5-dev241 (dev240 FPS plan + tutorial benchmark A/B).
+Blocker: physical evidence. Pre-existing gaps: canonical `tools/build.sh` host self-test no longer links;
+the M00 demo profile (`RENEGADE_M00_DEMO=1`) does not compile on main.
+
 # Tutorial round 1 (20 agents, no build) — 2026-10-07
 
 Renegade Vita — v3.5 active

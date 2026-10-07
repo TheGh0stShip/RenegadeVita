@@ -1,4 +1,20 @@
 {
+  "session_integration_dev241_20261007": {
+    "candidate": "A3.5-dev241",
+    "state": "HOST_ARM_PACKAGE_VITA3K_INSTALLED_PHYSICAL_PENDING",
+    "includes": [
+      "campaign push 1-5 (main abdae90)",
+      "FPS round 4 (A3.5-dev240)",
+      "tutorial round 1"
+    ],
+    "staging_patches": 623,
+    "vpk_sha256": "67860e22f64b496a80ccae531fc0f250a645fd35f804a0044740c3a892952603",
+    "elf_sha256": "5d6348ca9220cc844cc1e5d8eb44375df015b8307702010144b2f16939755b62",
+    "vita3k": "INSTALLED_NOT_LAUNCHED",
+    "builder": "tools/build_fast_candidate.sh",
+    "canonical_build_sh": "a22_asset_selftest host link failure (pre-existing)",
+    "report": "reports/SESSION_INTEGRATION_2026-10-07.md"
+  },
   "m13_normal_preparation_20261004": {
     "objective": "development builds; original M13 combat performance",
     "physical_baseline": "A3.5-dev236",
@@ -466,8 +482,23 @@
     "source_python_tests_passed": 218,
     "source_python_modules": 16,
     "registered_staging_patches": 301,
-    "coverage": ["authored_bindings", "script_zones", "cinematic_slots_and_events", "conversations_and_voice", "wave_headers", "text_routes", "command_table", "research_and_source_selection", "required_load_failure", "cinematic_diagnostics"],
-    "new_dependency_roots": ["general_settings", "hud_settings", "default_loiter"],
+    "coverage": [
+      "authored_bindings",
+      "script_zones",
+      "cinematic_slots_and_events",
+      "conversations_and_voice",
+      "wave_headers",
+      "text_routes",
+      "command_table",
+      "research_and_source_selection",
+      "required_load_failure",
+      "cinematic_diagnostics"
+    ],
+    "new_dependency_roots": [
+      "general_settings",
+      "hud_settings",
+      "default_loiter"
+    ],
     "cinematic_primary_id_buffer_fix_compiled": false,
     "staging_receipt_regenerated": false,
     "build_or_launch_performed": false,
@@ -544,8 +575,16 @@
   "mission_wave_bounds_20261003": {
     "state": "BOUNDED_3D_SAMPLE_SOURCE_CORRECTION_COMPILED_PASS_COMPATIBILITY_OPEN",
     "report": "reports/MISSION_WAVE_HEADER_COVERAGE.md",
-    "candidate_wavs": [221, 566, 122],
-    "complete_header_admitted": [221, 566, 111],
+    "candidate_wavs": [
+      221,
+      566,
+      122
+    ],
+    "complete_header_admitted": [
+      221,
+      566,
+      111
+    ],
     "m01_oversized_riff_candidates": 11,
     "focused_source_python_tests_passed": 245,
     "publication_and_future_entry_tests_passed": 38,
@@ -557,23 +596,67 @@
   "mission_voice_routes_20261003": {
     "state": "READ_ONLY_ORIGINAL_SOLDIER_DIALOGUE_OPTIONS_AND_EVENT_CALLERS_TRACED_RUNTIME_OPEN",
     "report": "reports/MISSION_VOICE_ROUTE_COVERAGE.md",
-    "maps": ["M00_Tutorial.mix", "M13.mix", "M01.mix"],
+    "maps": [
+      "M00_Tutorial.mix",
+      "M13.mix",
+      "M01.mix"
+    ],
     "soldier_definition_records": 217,
     "all_preset_option_records": 8111,
     "all_positive_conversation_ids": 2025,
     "preset_voice_finding_option_records": 1231,
     "preset_voice_finding_conversation_ids": 244,
     "preset_voice_finding_definition_ids": 92,
-    "preset_voice_finding_events": {"DIE": 1222, "IDLE_TO_SEARCH": 6, "TAKE_DAMAGE_FROM_ENEMY": 3},
-    "partial_binding_soldier_definitions": [12, 18, 24],
-    "partial_binding_option_records": [335, 1340, 1082],
-    "partial_binding_voice_finding_option_records": [42, 170, 155],
-    "serialized_soldier_records": [22, 13, 152],
-    "serialized_zero_id_records": [13, 9, 40],
-    "serialized_option_records": [1521, 1267, 13588],
-    "serialized_voice_finding_option_records": [196, 168, 1863],
-    "serialized_voice_finding_conversation_ids": [28, 28, 127],
-    "serialized_non_die_voice_finding_options": [0, 0, 1],
+    "preset_voice_finding_events": {
+      "DIE": 1222,
+      "IDLE_TO_SEARCH": 6,
+      "TAKE_DAMAGE_FROM_ENEMY": 3
+    },
+    "partial_binding_soldier_definitions": [
+      12,
+      18,
+      24
+    ],
+    "partial_binding_option_records": [
+      335,
+      1340,
+      1082
+    ],
+    "partial_binding_voice_finding_option_records": [
+      42,
+      170,
+      155
+    ],
+    "serialized_soldier_records": [
+      22,
+      13,
+      152
+    ],
+    "serialized_zero_id_records": [
+      13,
+      9,
+      40
+    ],
+    "serialized_option_records": [
+      1521,
+      1267,
+      13588
+    ],
+    "serialized_voice_finding_option_records": [
+      196,
+      168,
+      1863
+    ],
+    "serialized_voice_finding_conversation_ids": [
+      28,
+      28,
+      127
+    ],
+    "serialized_non_die_voice_finding_options": [
+      0,
+      0,
+      1
+    ],
     "m01_idle_to_search_object_id": 106050,
     "m01_idle_to_search_unlocated_sound_id": 163842970,
     "literal_event_caller_sites": 11,
@@ -596,18 +679,58 @@
   "cinematic_event_routes_20261003": {
     "state": "READ_ONLY_SOURCE_CALLERS_AND_PARAMETER_EVENT_CANDIDATES_TRACED_RUNTIME_OPEN",
     "report": "reports/CINEMATIC_EVENT_ROUTES.md",
-    "maps": ["M00_Tutorial.mix", "M13.mix", "M01.mix"],
-    "source_custom_event_call_sites": [147, 242, 751],
-    "event_binding_contexts": [1834, 508, 889],
-    "resolved_slot_fill_candidate_contexts": [0, 0, 0],
-    "unresolved_type_contexts": [1, 3, 1],
-    "cinematic_caller_sites": [1, 23, 42],
-    "cinematic_text_custom_events": [0, 7, 3],
-    "cinematic_text_slot_fill_candidates": [0, 0, 0],
+    "maps": [
+      "M00_Tutorial.mix",
+      "M13.mix",
+      "M01.mix"
+    ],
+    "source_custom_event_call_sites": [
+      147,
+      242,
+      751
+    ],
+    "event_binding_contexts": [
+      1834,
+      508,
+      889
+    ],
+    "resolved_slot_fill_candidate_contexts": [
+      0,
+      0,
+      0
+    ],
+    "unresolved_type_contexts": [
+      1,
+      3,
+      1
+    ],
+    "cinematic_caller_sites": [
+      1,
+      23,
+      42
+    ],
+    "cinematic_text_custom_events": [
+      0,
+      7,
+      3
+    ],
+    "cinematic_text_slot_fill_candidates": [
+      0,
+      0,
+      0
+    ],
     "retained_normal_slot_leads": 4,
     "derived_toolkit_send_object_id": 9035,
-    "binding_identity_checks": ["objects_ddb_member", "mission_archive", "cinematic_members"],
-    "callback_lifetime_findings": ["active_created_and_immediate_custom_are_synchronous", "scriptable_lookup_membership_is_not_health", "dead_or_destroyed_soldier_interrupts_conversation"],
+    "binding_identity_checks": [
+      "objects_ddb_member",
+      "mission_archive",
+      "cinematic_members"
+    ],
+    "callback_lifetime_findings": [
+      "active_created_and_immediate_custom_are_synchronous",
+      "scriptable_lookup_membership_is_not_health",
+      "dead_or_destroyed_soldier_interrupts_conversation"
+    ],
     "new_python_counterexample_tests_passed": 21,
     "focused_python_source_tests_passed": 191,
     "publication_guard_tests_passed": 32,
@@ -631,9 +754,31 @@
     "port_checklist_items_accounted": 11,
     "profiling_priorities_accounted": 4,
     "caveat_groups_accounted": 9,
-    "source_count_discrepancies": {"Find_Object": [3478, 3480], "Send_Custom_Event": [2991, 2994]},
-    "uncertified_aggregate_claims": ["conversation_keys", "string_ids", "objective_images", "preset_names", "sound_names", "assembly_files"],
-    "thread_boundary_changes": ["acquire_completion_poll", "completion_published_last", "parent_owned_run_request", "atomic_texture_cancellation", "create_failure_flag_cleanup"],
+    "source_count_discrepancies": {
+      "Find_Object": [
+        3478,
+        3480
+      ],
+      "Send_Custom_Event": [
+        2991,
+        2994
+      ]
+    },
+    "uncertified_aggregate_claims": [
+      "conversation_keys",
+      "string_ids",
+      "objective_images",
+      "preset_names",
+      "sound_names",
+      "assembly_files"
+    ],
+    "thread_boundary_changes": [
+      "acquire_completion_poll",
+      "completion_published_last",
+      "parent_owned_run_request",
+      "atomic_texture_cancellation",
+      "create_failure_flag_cleanup"
+    ],
     "thread_cpp_probe": "ORIGINAL_THREADCLASS_GATED_START_VISIBILITY_REUSE_FAILURE_COMPILED_PASS",
     "new_python_source_checks_passed": 13,
     "focused_python_source_tests_passed": 170,
@@ -641,8 +786,12 @@
     "publication_guard_tests_passed": 32,
     "public_document_validation": "PASS_24_DOCUMENTS",
     "pthread_archive_inspected_members": 134,
-    "pthread_reported_cpu_arch": ["v7"],
-    "pthread_reported_float_arguments": ["VFP registers"],
+    "pthread_reported_cpu_arch": [
+      "v7"
+    ],
+    "pthread_reported_float_arguments": [
+      "VFP registers"
+    ],
     "native_or_host_cpp_build_performed": false,
     "device_action_performed": false,
     "retail_modified": false,
@@ -653,8 +802,17 @@
   "script_lookup_diagnostics_20261003": {
     "state": "BOUNDED_ORIGINAL_OWNER_LOOKUP_HOOKS_AND_LOAD_BOUNDARY_RECORDER_IMPLEMENTED_COMPILED_PASS",
     "report": "reports/SCRIPT_LOOKUP_DIAGNOSTICS.md",
-    "maps": ["M00_Tutorial.mix", "M13.mix", "M01.mix"],
-    "channels": ["script_factory", "object", "conversation_name", "text_file_available"],
+    "maps": [
+      "M00_Tutorial.mix",
+      "M13.mix",
+      "M01.mix"
+    ],
+    "channels": [
+      "script_factory",
+      "object",
+      "conversation_name",
+      "text_file_available"
+    ],
     "opt_in_flag": "ux0:data/renegade/user/config/script-coverage.flag",
     "default_enabled": false,
     "retained_missing_samples_per_channel": 16,
@@ -681,12 +839,36 @@
   "cinematic_slot_lifetimes_20261003": {
     "state": "READ_ONLY_ORIGINAL_ORDER_AND_SLOT_CANDIDATES_TRACED_RUNTIME_UNVERIFIED",
     "report": "reports/CINEMATIC_SLOT_LIFETIMES.md",
-    "maps": ["M00_Tutorial.mix", "M13.mix", "M01.mix"],
-    "text_candidates": [1, 18, 147],
-    "normal_command_records": [53, 857, 1816],
-    "primary_killed_tail_records": [10, 72, 88],
-    "typed_slot_uses": [61, 884, 1703],
-    "normal_slot_uses_without_local_producer": [0, 2, 2],
+    "maps": [
+      "M00_Tutorial.mix",
+      "M13.mix",
+      "M01.mix"
+    ],
+    "text_candidates": [
+      1,
+      18,
+      147
+    ],
+    "normal_command_records": [
+      53,
+      857,
+      1816
+    ],
+    "primary_killed_tail_records": [
+      10,
+      72,
+      88
+    ],
+    "typed_slot_uses": [
+      61,
+      884,
+      1703
+    ],
+    "normal_slot_uses_without_local_producer": [
+      0,
+      2,
+      2
+    ],
     "tail_start_snapshot": "UNKNOWN_PRIMARY_DEATH_TIME_NOT_NORMAL_END_STATE",
     "custom_event_inventory": "CORRECTED_DESTINATION_TYPE_PARAMETER_ARGUMENT_ROLES",
     "literal_cinematic_custom_destinations_located": 10,
@@ -708,18 +890,69 @@
   "mission_text_prompt_coverage_20261003": {
     "state": "ELEVEN_PROMPT_HINTS_RESTORED_COMPILED_PASS_COMPUTED_DIALOGUE_CANDIDATES_AUDITED",
     "report": "reports/MISSION_TEXT_AND_PROMPT_COVERAGE.md",
-    "maps": ["M00_Tutorial.mix", "M13.mix", "M01.mix"],
-    "new_english_hint_ids": [8576, 8577, 8578, 8579, 8273, 8274, 8277, 8279, 8280, 8281, 8282],
-    "direct_text_argument_references": [98, 5, 76],
-    "unique_nonclear_text_ids": [54, 5, 54],
-    "unlocated_direct_text_ids_per_translation_candidate": [0, 0, 0],
-    "objective_texture_calls": [6, 0, 16],
-    "unlocated_objective_texture_candidates": [0, 0, 0],
+    "maps": [
+      "M00_Tutorial.mix",
+      "M13.mix",
+      "M01.mix"
+    ],
+    "new_english_hint_ids": [
+      8576,
+      8577,
+      8578,
+      8579,
+      8273,
+      8274,
+      8277,
+      8279,
+      8280,
+      8281,
+      8282
+    ],
+    "direct_text_argument_references": [
+      98,
+      5,
+      76
+    ],
+    "unique_nonclear_text_ids": [
+      54,
+      5,
+      54
+    ],
+    "unlocated_direct_text_ids_per_translation_candidate": [
+      0,
+      0,
+      0
+    ],
+    "objective_texture_calls": [
+      6,
+      0,
+      16
+    ],
+    "unlocated_objective_texture_candidates": [
+      0,
+      0,
+      0
+    ],
     "texture_resolution": "ORIGINAL_DDS_ATTEMPT_AND_TARGA_FALLBACK_WITH_COLLISION_PROVENANCE",
-    "computed_conversation_calls": [2, 28, 0],
-    "computed_calls_without_any_candidate": [0, 0, 0],
+    "computed_conversation_calls": [
+      2,
+      28,
+      0
+    ],
+    "computed_calls_without_any_candidate": [
+      0,
+      0,
+      0
+    ],
     "computed_calls_fully_proven": false,
-    "m13_unlocated_conversation_candidates": ["MX0_A02_PREAMB_01", "MX0_A02_SPEECH_WRONGWAY_01", "MX0_A02_SPEECH_WRONGWAY_02", "MX0_A02_SPEECH_WRONGWAY_03", "MX0_ENGINEER1_048", "MX0_GDITROOPER4_HIT6"],
+    "m13_unlocated_conversation_candidates": [
+      "MX0_A02_PREAMB_01",
+      "MX0_A02_SPEECH_WRONGWAY_01",
+      "MX0_A02_SPEECH_WRONGWAY_02",
+      "MX0_A02_SPEECH_WRONGWAY_03",
+      "MX0_ENGINEER1_048",
+      "MX0_GDITROOPER4_HIT6"
+    ],
     "m13_generic_conversation_cinematic_parameter_leads": 27,
     "m13_intro_unlocated_bark": "x00_intro.txt:468 attaches M00_Generic_Conv_DME with MX0_GDITROOPER4_HIT6",
     "compiled_hint_test": "EXTENDED_NOT_COMPILED_OR_RUN",
@@ -737,15 +970,46 @@
   "mission_conversation_coverage_20261003": {
     "state": "GLOBAL_DATABASE_STARTUP_RESTORED_COMPILED_PASS_METADATA_AUDIT_INCOMPLETE",
     "report": "reports/MISSION_CONVERSATION_COVERAGE.md",
-    "maps": ["M00_Tutorial.mix", "M13.mix", "M01.mix"],
+    "maps": [
+      "M00_Tutorial.mix",
+      "M13.mix",
+      "M01.mix"
+    ],
     "global_conversations": 3606,
-    "level_conversations": [65, 570, 89],
-    "level_remarks": [228, 582, 147],
-    "source_name_leads": [57, 117, 94],
-    "computed_source_calls": [2, 28, 0],
-    "unlocated_literal_name_leads": [1, 1, 1],
-    "translation_candidates": {"always.dat": 11655, "always.dbs": 11678},
-    "authored_level_text_sound_file_findings_per_candidate": [0, 0, 0],
+    "level_conversations": [
+      65,
+      570,
+      89
+    ],
+    "level_remarks": [
+      228,
+      582,
+      147
+    ],
+    "source_name_leads": [
+      57,
+      117,
+      94
+    ],
+    "computed_source_calls": [
+      2,
+      28,
+      0
+    ],
+    "unlocated_literal_name_leads": [
+      1,
+      1,
+      1
+    ],
+    "translation_candidates": {
+      "always.dat": 11655,
+      "always.dbs": 11678
+    },
+    "authored_level_text_sound_file_findings_per_candidate": [
+      0,
+      0,
+      0
+    ],
     "global_unlocated_sound_reference_findings": 499,
     "global_distinct_unlocated_sound_definition_ids": 439,
     "global_unlocated_voice_files": 4,
@@ -765,16 +1029,52 @@
   "authored_mission_bindings_20261003": {
     "state": "PARAMETERS_AND_ID_PROVENANCE_AUDITED_REFERENCE_GATES_INCOMPLETE",
     "report": "reports/AUTHORED_MISSION_BINDINGS.md",
-    "maps": ["M00_Tutorial.mix", "M13.mix", "M01.mix"],
-    "level_bindings": [60, 100, 528],
-    "bindings_with_reached_definitions": [72, 144, 573],
-    "discovered_scripts": [25, 67, 275],
-    "cinematic_candidates": [1, 18, 147],
-    "unlocated_definition_reference_ids": [11, 20, 14],
+    "maps": [
+      "M00_Tutorial.mix",
+      "M13.mix",
+      "M01.mix"
+    ],
+    "level_bindings": [
+      60,
+      100,
+      528
+    ],
+    "bindings_with_reached_definitions": [
+      72,
+      144,
+      573
+    ],
+    "discovered_scripts": [
+      25,
+      67,
+      275
+    ],
+    "cinematic_candidates": [
+      1,
+      18,
+      147
+    ],
+    "unlocated_definition_reference_ids": [
+      11,
+      20,
+      14
+    ],
     "unlocated_definition_reference_categories": {
-      "shell_eject_physics": [4, 6, 6],
-      "muzzle_flash_physics": [6, 10, 7],
-      "sound_twiddler_alternatives": [1, 4, 1]
+      "shell_eject_physics": [
+        4,
+        6,
+        6
+      ],
+      "muzzle_flash_physics": [
+        6,
+        10,
+        7
+      ],
+      "sound_twiddler_alternatives": [
+        1,
+        4,
+        1
+      ]
     },
     "binding_decode_findings": 0,
     "unknown_discovered_shipped_script_names": 0,
@@ -793,7 +1093,10 @@
     "state": "SOURCE_LINK_COLLISION_ISOLATED_RANK_STORAGE_IMPLEMENTED_COMPILED_PASS",
     "report": "reports/STATIC_SCRIPT_LINK_AND_MISSION_RANKS.md",
     "script_trim_collision": "Scripts/strtrim.cpp and wwlib/trim.cpp both define strtrim(char*)",
-    "source_local_trim_rename": ["Scripts/scripts.cpp", "Scripts/strtrim.cpp"],
+    "source_local_trim_rename": [
+      "Scripts/scripts.cpp",
+      "Scripts/strtrim.cpp"
+    ],
     "actual_target_manifest_attachment_negative_controls": "PASS",
     "compiler_free_source_property_negative_controls": "PASS",
     "integration_inventory_expands_dsp_sources": true,
@@ -824,13 +1127,44 @@
     "original_scripts_dsp_cpp_entries": 45,
     "statically_selected_dsp_units": 44,
     "dllmain_replaced_by_static_provider": true,
-    "newly_selected_mission_units": ["Mission02.cpp", "Mission04.cpp", "Mission05.cpp", "Mission06.cpp", "Mission07.cpp", "Mission09.cpp", "Mission10.cpp"],
-    "cpp_files_outside_dsp": ["Common.cpp", "Group.cpp", "GroupControl.cpp", "GroupScript.cpp", "MissionS04.cpp", "PRDemo.cpp", "Test_DEL.cpp", "Test_DLS_M03.cpp", "unitcombat.cpp"],
+    "newly_selected_mission_units": [
+      "Mission02.cpp",
+      "Mission04.cpp",
+      "Mission05.cpp",
+      "Mission06.cpp",
+      "Mission07.cpp",
+      "Mission09.cpp",
+      "Mission10.cpp"
+    ],
+    "cpp_files_outside_dsp": [
+      "Common.cpp",
+      "Group.cpp",
+      "GroupControl.cpp",
+      "GroupScript.cpp",
+      "MissionS04.cpp",
+      "PRDemo.cpp",
+      "Test_DEL.cpp",
+      "Test_DLS_M03.cpp",
+      "unitcombat.cpp"
+    ],
     "retail_campaign_ini": {
       "source": "user-owned Steam E:/Command & Conquer Renegade/Data/always.dat:campaign.ini",
       "always_dat_sha256": "f1fa13ed10d0b09fea999660cff71dc784a01a22cdc3e4f0041720ca67dfa29a",
       "flow_entries": 36,
-      "campaign_maps": ["M13.mix", "M01.mix", "M02.mix", "M03.mix", "M04.mix", "M05.mix", "M06.mix", "M07.mix", "M08.mix", "M09.mix", "M10.mix", "M11.mix"],
+      "campaign_maps": [
+        "M13.mix",
+        "M01.mix",
+        "M02.mix",
+        "M03.mix",
+        "M04.mix",
+        "M05.mix",
+        "M06.mix",
+        "M07.mix",
+        "M08.mix",
+        "M09.mix",
+        "M10.mix",
+        "M11.mix"
+      ],
       "M09_source": "Steam backup snapshot; archive hash is in reconciliation report"
     },
     "level_object_id_comparison": "read-only LDD/LSD instance IDs compared with literal mission Find_Object IDs; apparent differences need dynamic/spawner/call-site classification and are not asserted missing",
@@ -882,8 +1216,18 @@
     "w3d_entries_inspected": 3330,
     "missing_bootstrap_loader_registrations": 4,
     "w3d_entries_requiring_those_loaders": 429,
-    "unselected_w3d_owners": ["sphereobj.cpp", "ringobj.cpp", "soundrobj.cpp"],
-    "unselected_required_script_owners": ["Mission03.cpp", "Mission11.cpp", "Test_DAK.cpp", "Test_RMV_Toolkit.cpp", "Toolkit_Sounds.cpp"],
+    "unselected_w3d_owners": [
+      "sphereobj.cpp",
+      "ringobj.cpp",
+      "soundrobj.cpp"
+    ],
+    "unselected_required_script_owners": [
+      "Mission03.cpp",
+      "Mission11.cpp",
+      "Test_DAK.cpp",
+      "Test_RMV_Toolkit.cpp",
+      "Toolkit_Sounds.cpp"
+    ],
     "existing_arm_missing_distinct_script_factories": 39,
     "python_tests_passed": 77,
     "standalone_gate_status": "INCOMPLETE",
@@ -894,8 +1238,18 @@
   "source_only_followup_20261002": {
     "state": "OWNERS_AND_OPTIONS_ROUTE_SELECTED_NOT_COMPILED",
     "report": "reports/CROSS_SYSTEM_DEEP_AUDIT.md",
-    "script_units_added": ["Mission03.cpp", "Mission11.cpp", "Test_DAK.cpp", "Test_RMV_Toolkit.cpp", "Toolkit_Sounds.cpp"],
-    "w3d_owners_added": ["sphereobj.cpp", "ringobj.cpp", "soundrobj.cpp"],
+    "script_units_added": [
+      "Mission03.cpp",
+      "Mission11.cpp",
+      "Test_DAK.cpp",
+      "Test_RMV_Toolkit.cpp",
+      "Toolkit_Sounds.cpp"
+    ],
+    "w3d_owners_added": [
+      "sphereobj.cpp",
+      "ringobj.cpp",
+      "soundrobj.cpp"
+    ],
     "original_prototype_loaders_registered": 4,
     "particle_lod_defaults_restored": 17,
     "options_template_added": 135,
@@ -907,7 +1261,9 @@
   },
   "m00_aggressive_discovery": {
     "state": "TEST_DAK_MISSING_NOT_INTEGRATED",
-    "missing_original_units": ["Test_DAK.cpp"],
+    "missing_original_units": [
+      "Test_DAK.cpp"
+    ],
     "existing_arm_missing_script_factories": 3,
     "typed_presets": 301,
     "required_scripts": 27,
@@ -935,7 +1291,11 @@
   },
   "m13_additional_level_owner_audit": {
     "state": "THREE_ADDITIONAL_ORIGINAL_SCRIPT_UNITS_MISSING_NOT_INTEGRATED",
-    "missing_original_units": ["Mission03.cpp", "Test_RMV_Toolkit.cpp", "Toolkit_Sounds.cpp"],
+    "missing_original_units": [
+      "Mission03.cpp",
+      "Test_RMV_Toolkit.cpp",
+      "Toolkit_Sounds.cpp"
+    ],
     "saved_script_records": 94,
     "spawner_script_bindings": 6,
     "distinct_level_script_names": 34,
@@ -957,7 +1317,13 @@
     "required_factory_count": 62,
     "existing_host_missing_factory_count": 15,
     "existing_dev207_arm_missing_factory_count": 15,
-    "added_original_units": ["Test_RAD.cpp", "Toolkit.cpp", "Toolkit_Objects.cpp", "Test_DAY.cpp", "mission08.cpp"],
+    "added_original_units": [
+      "Test_RAD.cpp",
+      "Toolkit.cpp",
+      "Toolkit_Objects.cpp",
+      "Test_DAY.cpp",
+      "mission08.cpp"
+    ],
     "python_tests_passed": 28,
     "source_selection_gate": "PASS",
     "existing_binary_negative_controls": "BOTH_REJECTED_AS_EXPECTED",
@@ -1649,7 +2015,10 @@
     "date": "2026-09-24",
     "state": "HOST_ORIGINAL_UDP_ACCEPT_REFUSE_CLEANUP_ASAN_LSAN_PASS_ARM_OBJECTS_PASS",
     "repeated_sessions_passed": 18,
-    "fixes": ["absent_optional_lan_wol_dereferences", "disconnect_before_server_fps_replication"],
+    "fixes": [
+      "absent_optional_lan_wol_dereferences",
+      "disconnect_before_server_fps_replication"
+    ],
     "tutorial_and_skirmish_two_cycle_regressions_passed": true,
     "arm_changed_objects_passed": 4,
     "staging_patch_count": 214,
@@ -1665,7 +2034,10 @@
     "date": "2026-09-24",
     "state": "HOST_HTTP_HTTPS_CACHE_ORIGINAL_FACTORY_ASAN_UBSAN_LSAN_PASS_ARM_BOUNDARIES_PASS",
     "official_editor_revision": "4.8.4 b9000",
-    "asset_free_oracles": ["2b1cb7bd", "fb41cad5"],
+    "asset_free_oracles": [
+      "2b1cb7bd",
+      "fb41cad5"
+    ],
     "oracle_reproduction_passed": true,
     "host_tests_passed": 11,
     "truncated_manifest_cases": 266,
@@ -1832,7 +2204,7 @@
     "candidate": "A3.5-dev190",
     "state": "CANONICAL_HOST_UBSAN_ARM_PACKAGE_PASS_VITA3K_INSTALLED_NOT_LAUNCHED",
     "profile": "RENEGADE_VITA_M00_DEMO=0",
-    "runtime_basis": "Matching Dev189 user run: M13 average 35.747 FPS, frame p95/p99/max 206.4/384.7/2486.1 ms; M01 first frame 5.66 s total. Its 443-object Post_Think instrumentation made two process-timer calls per object. Engineers remain registered after intro; GDI_RocketSoldier_0 id 1500000039 stays stationary in ANIMATION after its action becomes inactive.",
+    "runtime_basis": "Dev189 matching installed log: M13 avg 35.747 FPS, p95/p99/max 206.4/384.7/2486.1 ms; M01 frame 1 took 5.66 s (4.82 s simulation), its 443-object Post_Think took 1.72 s under per-object diagnostic timers, and the log stops at frame 5. It does not locate the later user-reported plane freeze.",
     "fix_scope": "Restore original fresh volatile projectile/particle creation and original explosion spawn path; sample Post_Think object timing at rotating 1/16 stride; register direct W3D tread names and invalid HUD target-box guard in canonical staging.",
     "patch_count": 200,
     "patch_inventory_registry_sha256": "f5c3989ff12fa4991fa028547c9f6d6f8e02deebf9136bd86147f821ae68b3fd",
@@ -1848,7 +2220,6 @@
     "self_sha256": "04b96b70df0724c85eb603af5e08356d6d72bbd4aae39df3a316f9c44ca32e05",
     "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev190-setup-20260923T234508866640Z/setup-receipt.json",
     "focused_tests": "Canonical retained host/sanitizer checks PASS; 173 tests PASS; M00 original-world and interactive runtime PASS; focused M13/M01 and effect-path contracts PASS; ARM/SELF/VPK identity PASS.",
-    "runtime_basis": "Dev189 matching installed log: M13 avg 35.747 FPS, p95/p99/max 206.4/384.7/2486.1 ms; M01 frame 1 took 5.66 s (4.82 s simulation), its 443-object Post_Think took 1.72 s under per-object diagnostic timers, and the log stops at frame 5. It does not locate the later user-reported plane freeze.",
     "vita3k_installed": true,
     "vita3k_launch_verified": false,
     "m13_performance_verified": false,
@@ -2171,7 +2542,10 @@
     "elf_sha256": "9310788a7ff81191ff15b683ff031095db3321aa0e39da65ef0cef3793bd3555",
     "self_sha256": "a6e7068885f0f7a40f4e496bd9b71286a3811c6980e8955de72a5d4b2748131c",
     "param_sfo_sha256": "9839109e3024d31da252ea5b9c0cdc142b02fab8c3d6f60bd004fc4eee28aa9e",
-    "vpk_contents": ["sce_sys/param.sfo", "eboot.bin"],
+    "vpk_contents": [
+      "sce_sys/param.sfo",
+      "eboot.bin"
+    ],
     "vita3k_app_root": "<vita3k-vfs>/ux0/app/RNEGA3101",
     "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev177-20260923T113422/install-receipt.txt",
     "profile_evidence": "CMakeCache has RENEGADE_VITA_M00_DEMO:BOOL=0; build.ninja generated dialog templates with --campaign-dialogs; ELF strings contain A3.5-dev177 and FULL-PORT-DEVELOPMENT; packaged param.sfo title is Renegade Vita A3.5-dev177 with TITLE_ID RNEGA3101.",
@@ -2197,7 +2571,10 @@
     "vpk_sha256": "a5cf72f639ff609e0bbcc052c4ef5a889c591136884404a35b75a1597378e1b1",
     "elf_sha256": "ce9a4f7396bee76dc17bc5fd928d8a6608bff2e0381ea2592966e4380e9e3d20",
     "self_sha256": "62b3ea7ed502ca1ce192404a64aebd06d7f486887788132dc6e2919c95af0df3",
-    "vpk_contents": ["sce_sys/param.sfo", "eboot.bin"],
+    "vpk_contents": [
+      "sce_sys/param.sfo",
+      "eboot.bin"
+    ],
     "vita3k_app_root": "<vita3k-vfs>/ux0/app/RNEGA3101",
     "vita3k_install_receipt": "build/vita3k-backups/A3.5-dev176-20260923T111427/install-receipt.txt",
     "focused_tests": "tools.test_script_provider_contract PASS; git diff --check PASS",
@@ -2324,7 +2701,10 @@
     "inventory_json": "build/dev166-m13-mission-inventory.json",
     "source_chunk_symbols": 191,
     "persist_factories": 127,
-    "m13_ldd_top_level": ["CHUNKID_LEVEL_INFO", "CHUNKID_LEVEL_DATA"],
+    "m13_ldd_top_level": [
+      "CHUNKID_LEVEL_INFO",
+      "CHUNKID_LEVEL_DATA"
+    ],
     "m13_lsd_top_level": [
       "PHYSICS_CHUNKID_STATIC_DATA_SUBSYSTEM",
       "PHYSICS_CHUNKID_STATIC_OBJECTS_SUBSYSTEM",
@@ -2350,10 +2730,21 @@
     "self_sha256": "b55dfad403dc05dfbdf830268355f6cc087a130981cdb623a5374328e5e01136",
     "vpk_sha256": "39e1ab980f36b41e72473346a4e8430b734f490eef8ff336034a7555e4c60ff9",
     "m13_vita3k_evidence": "managed AppData: campaign-dev159-persistent-all-logs-m13-installedtitle-1/",
-    "runtime_log_open_records_dev158_dev159": [52, 2],
-    "stdout_export_sceIoOpen_dev158_dev159": [1061, 888],
+    "runtime_log_open_records_dev158_dev159": [
+      52,
+      2
+    ],
+    "stdout_export_sceIoOpen_dev158_dev159": [
+      1061,
+      888
+    ],
     "frame720_avg_fps": 15.266,
-    "frame720_p50_p95_p99_worst_us": [68666, 178292, 397428, 2028056],
+    "frame720_p50_p95_p99_worst_us": [
+      68666,
+      178292,
+      397428,
+      2028056
+    ],
     "audio_sync_verified": false,
     "overall_performance_accepted": false,
     "physical_acceptance": false
@@ -2370,7 +2761,12 @@
     "fiery_loading_prepare_us": 92263,
     "fiery_live_slow_create_removed": true,
     "frame720_avg_fps": 18.744,
-    "frame720_p50_p95_p99_worst_ms": [44.333, 137.973, 148.609, 1927.981],
+    "frame720_p50_p95_p99_worst_ms": [
+      44.333,
+      137.973,
+      148.609,
+      1927.981
+    ],
     "audio_sync_verified": false,
     "overall_performance_accepted": false,
     "physical_acceptance": false
@@ -2385,7 +2781,10 @@
     "vpk_sha256": "8079be905602ad33e0c6a0406784f49c422b792369035305ab559508ae664058",
     "m13_vita3k_evidence": "managed AppData: campaign-dev156-final-m13-1/",
     "rocket_loading_prepare_us": 134190,
-    "rocket_live_clone_us": [162, 81],
+    "rocket_live_clone_us": [
+      162,
+      81
+    ],
     "explosion_live_set_model_us": 7090,
     "event_local_performance_win": true,
     "overall_performance_accepted": false,
@@ -2695,7 +3094,10 @@
   "active_dev130": {
     "candidate": "A3.5-dev130",
     "state": "TWO_VITA3K_NATIVE_CLEAN_EXITS_PAUSE_ROUNDTRIP_PASS_CONTROLLER_BUTTON_FOCUS_FAILED",
-    "runtime_returns": ["build/dev130-fresh-return/return-receipt.json", "build/dev130-mobius-return/return-receipt.json"],
+    "runtime_returns": [
+      "build/dev130-fresh-return/return-receipt.json",
+      "build/dev130-mobius-return/return-receipt.json"
+    ],
     "report": "reports/DEV129_PAUSE_MENU_AUDIT.md",
     "build_complete": true,
     "canonical_build": false,

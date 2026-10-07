@@ -3932,8 +3932,8 @@ DECLARE_SCRIPT(M09_Evac_Transport, "")  //2000969
 			GameObject * troop = Commands->Create_Object_At_Bone( bone, "GDI_RocketSoldier_2SF", "SPAWNER" );
 			Commands->Attach_Script(troop, "M00_Damage_Modifier_DME", "0.05f, 1, 1, 0, 0");
 			
-			char param1[10];
-			sprintf(param1, "%d", Commands->Get_ID(troop));
+			char param1[16];
+			snprintf(param1, sizeof(param1), "%d", Commands->Get_ID(troop));
 			
 			Commands->Set_Facing(chinook, facing);
 			Commands->Attach_Script(chinook, "M09_Evac_Helicopter", param1);

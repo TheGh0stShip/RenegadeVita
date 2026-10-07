@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "59a5ea779517a92459a3df74de7301561ef0c542aaef60f98bf0fcd80f7badd1",
-  "patch_count": 533,
+  "stage_script_sha256": "b0f1b7130e7b27cb9deca047c96e0ed49ff9545386995c5ea83fef115cb89c7f",
+  "patch_count": 534,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -2668,7 +2668,12 @@
       "path": "port/patches/combat-a36-scriptcommands-null-guards.patch",
       "stage_directory": "combat",
       "sha256": "d41a91caa9052ce951998d269fbc92bbfe1b0b3ac9e9a7ce449bed502118cef5"
+    },
+    {
+      "path": "port/patches/scripts-a36-m09-evac-gunner-param-buffer.patch",
+      "stage_directory": "scripts",
+      "sha256": "f156a69252fe516ec6b649dd2d11bd5f1c0661635885a1b8753f59763a60c1cc"
     }
   ],
-  "registry_sha256": "4d044a2af3c8a2a87913b908dc296631539bba5a009d9ec46a55225e2370a945"
+  "registry_sha256": "dd6b27c527682300c01830be89708f492aa921ddd0639c76c764cd89de069fda"
 }

@@ -1567,6 +1567,10 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-scriptcommands-null-guards.patch"
 test "$(sha256sum "$rv_stage/combat/scriptcommands.cpp" | cut -d' ' -f1)" = \
 	"c6c127c54ac6689703f62612206935da98bd870866148587e2e818a032f61985"
+# M09 full audit: bound the evac gunner id buffer (dynamic ids are ten digits).
+# The scripted-lift last-frame guard lives in combat-a36-scriptcommands-null-guards.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m09-evac-gunner-param-buffer.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

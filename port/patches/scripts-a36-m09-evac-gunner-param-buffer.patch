@@ -1,0 +1,22 @@
+M09_Evac_Transport::Entered formatted the evac gunner's object id into
+char param1[10] with sprintf. The gunner is created by Create_Object_At_Bone,
+so it carries a dynamic id (NETID_DYNAMIC_OBJECT_MIN = 1500000000, ten digits);
+the text plus terminator is 11 bytes, one past the buffer. This runs on the
+M09 evac path that leads to Mission_Complete(true). Enlarge the buffer to 16
+bytes and bound the write with snprintf, as in
+scripts-a36-m05-apc-deploy-param-buffer. The formatted text and the
+M09_Evac_Helicopter "Gunner" parameter are unchanged.
+
+--- a/Mission09.cpp
++++ b/Mission09.cpp
+@@ -3932,8 +3932,8 @@
+ 			GameObject * troop = Commands->Create_Object_At_Bone( bone, "GDI_RocketSoldier_2SF", "SPAWNER" );
+ 			Commands->Attach_Script(troop, "M00_Damage_Modifier_DME", "0.05f, 1, 1, 0, 0");
+ 			
+-			char param1[10];
+-			sprintf(param1, "%d", Commands->Get_ID(troop));
++			char param1[16];
++			snprintf(param1, sizeof(param1), "%d", Commands->Get_ID(troop));
+ 			
+ 			Commands->Set_Facing(chinook, facing);
+ 			Commands->Attach_Script(chinook, "M09_Evac_Helicopter", param1);

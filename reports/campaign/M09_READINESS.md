@@ -118,3 +118,107 @@ without native evidence.
    to M10.
 6. Negative check: let Mobius die. `Mission_Complete(false)` should fire and
    the replay prompt should appear.
+
+## Full audit — 2026-10-07
+
+Evidence class: source review, host parsing of the Vita3K retail copy
+(M09.mix `059fc7de…`, objects.ddb `98253406…`) with the existing
+`tools/audit_mission_content_bindings.py` and
+`tools/renegade_cinematic_dependency_scan.py`, `arm-vita-eabi-g++
+-fsyntax-only` on the two patched files, and `nm` on the existing
+fast-candidate `Mission09.cpp.obj`. Nothing was built, linked, packaged or
+run. Detailed receipts stay under the ignored `build/m09audit/`.
+
+### 1. Script bindings and parameters
+
+- 564 bindings (523 persisted in m09.ldd, 39 definition, 2 spawner) name 56
+  scripts. All 56 are in the 1,636-name host registry and their sources are in
+  the compiled set (`Mission09.cpp.obj` carries 96 `ScriptRegistrant<M09_*>`,
+  one per `DECLARE_SCRIPT`). No unknown shipped script, 0 binding decode
+  findings.
+- Parameter shape: 235 bindings match their descriptor count exactly; 329
+  pass a single `"0"` to an empty descriptor (never read). No binding passes
+  fewer values than its descriptor. Every `Attach_Script` call outside comments
+  (45; two pass a formatted object id) matches its descriptor count, except `M09_Nod_Damage_Mod_1`
+  (`Mission09.cpp:2227`), which is undeclared in the original source and
+  returns null without effect (retail behaviour).
+
+### 2. Events, timers and object IDs
+
+- Every custom type sent on the chain has a receiver: 900–904 and
+  `check`/`MOBIUS_KILLED`/`BLOCK_ON/OFF` (controller 2000071), `FOLLOW`,
+  `ELEVATOR(_DOWN)`, `ELEVATOR_EXIT`, `NO_FOLLOW` and the 901–903 replies
+  (Mobius 2000010), `SET_STAR`/`SET_MOBIUS`/`CHECK_STAR`/`STAR_STATUS`
+  (controllers), `CHECK`/`COUNT`/`KEY_COUNTER` (2000452 and the keycard zone),
+  `FLYOVER` (2000955), `8888` and `666` from `X9C_MIDTRO.txt` (2000612 suit
+  zone, 1202323 `M09_PSuitAnim`; both placed). Every timer id started is handled in the same script.
+- Literal `Find_Object` IDs not placed in m09.ldd: 2000259 (unreachable
+  `TIMER_RESET`), 2000599/2000607 (compared against the controller's own id
+  only; neither controller exists, so the generic branch always runs), and
+  2000626 (`M09_Mutant_Attack` attack target; `Set_Attack(NULL)` falls back to
+  a location attack). All retail-identical, none on the objective chain.
+- Parameter-supplied IDs: every `M09_Mobius_Goto`, `M09_Elevator_Exit`,
+  `M09_Zone_Enabled_Mobius`, lift waypoint and zone→controller target is a
+  placed object. Controller 2000592 (`Anim_num` 1, waypoint 2000593, lift
+  2051108) is orphaned: no zone names it, and neither 2000593 nor static
+  object 2051108 exists, so its `Created` lift call is a no-op. Its `Custom`
+  table typo `res_elev01.res_elev01` (no such `.w3d` in any archive) is
+  therefore unreachable. Unplaced IDs 1101300/1101301 (cameras) and
+  1101835–1101837 (innate targets) hit null-safe commands.
+- `M09_Key_Box` `FOLLOW 2000860` (unplaced) is unreachable: `VERIFY GO` is
+  only sent from commented-out code.
+
+### 3. Assets
+
+All cinematic and script dependencies resolve in M09.mix/always.dat/
+Always2.dat: X9C models, facial/body animations and camera; the eight
+X9A flyover files and their models; `c_ag_gdi_pmob`, `h_a_a0a0_l26d*`,
+`XG_TransprtBone`/`XG_EV2_*`, `v_GDI_trnspt` and `h_a_x9c_suit`. Presets,
+sound and explosion definitions (`GDI_Transport_Helicopter`,
+`GDI_RocketSoldier_2SF`, `Nod_Apache`, `Nod_Transport_Helicopter`,
+`POW_LaserChaingun_AI`, `Air Explosions Twiddler`, the seven ambient sounds,
+`09_A`, three `M09DSGN_*_SND`) are in objects.ddb. `POG_M09_1_0*.tga` and
+`POG_M08_1_03.tga` ship as `.dds`. Lift animations for `Anim_num`
+0/3/5/6/8 resolve; `cent_elev01` (7) and `res_elev01` are absent from retail
+and unused by live bindings. Retail-identical misses: `M09_XG_EV4.txt`
+(unreachable) and 15 weapon eject/muzzle-flash and twiddler definition IDs
+in the global objects.ddb (not M09-specific).
+
+### 4. Defects and fixes
+
+| Defect | Location | Severity | Fix |
+|---|---|---|---|
+| Gunner id formatted into `char param1[10]`; dynamic ids are 10 digits, so the write is 11 bytes | `Mission09.cpp:3935` (`M09_Evac_Transport::Entered`, on the evac path) | Medium (UB on the completion path; in the current fast-candidate frame the extra NUL lands in padding at `sp+26`) | `scripts-a36-m09-evac-gunner-param-buffer.patch` (16 bytes + `snprintf`, same text) |
+| `Static_Anim_Phys_Goto_Last_Frame` dereferences `Peek_Animation()` unchecked | `scriptcommands.cpp:2279` (every M09 lift `Created`, `ACTIVATEDOWN`) | Medium-latent (all live M09 names resolve; a failed on-demand load on Vita would crash) | `combat-a36-static-anim-last-frame-null-guard.patch` (skip only the target when no animation; unchanged when it loads) |
+
+Both patches are registered last in `tools/stage_sources.sh`; staging exited
+0 at zero fuzz and no existing anchor moved.
+
+### 5. Objective chain
+
+Re-verified: 900 (Mobius created) → D07/P01 → 901 + `M09_Mobius_Follow` →
+suit zone 2000612 (X9C midtro, 901 done, 902) → surface zones
+2000614/2000954 (902 done, 903, flyover) → evac zone 1202054 with STAR and
+Mobius → 1 s → `Mission_Complete(true)`. Every hop's object is placed and
+its script bound. Repeated `Mission_Complete` calls keep the first terminal
+result (`MISSION_FAILURE_PATHS.md`).
+
+### 6. Deferred (retail-identical, no change)
+
+- `M09_Innate_Enable_Zone::all_checked_in` (`:4122`, assigned only in
+  commented-out code) is never initialised;
+  the 4 s second innate pulse is indeterminate.
+- `M09_Gunner::full_health` is not saved; after a load during the evac
+  window `Damaged` restores an indeterminate value (gunner only).
+- `M09_Chinook_ParaDrop` has the same `char params[10]` pattern (`:2324`) but
+  is not bound in M09 and formats its placed owner id (7 digits).
+- `M09_Objective_Controller` `BLOCK_ON` requires all four block ids non-zero,
+  so rubble is never spawned (original logic).
+- `tools/test_m09_camera.py` already fails at HEAD: it expects the staged
+  file to equal upstream plus the camera fix only, which stopped being true
+  with the keycard and objective-save patches. Not changed here.
+  `test_script_load_capacity` and `test_logical_stimulus_telemetry` also fail
+  with the HEAD `scriptcommands.cpp` restored (checked), so they predate this
+  audit.
+
+No runtime, visual or physical claim follows from this audit.

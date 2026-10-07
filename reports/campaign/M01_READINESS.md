@@ -254,3 +254,97 @@ changed (new SHA-256 `21e55a66...faea`).
 - Runtime evidence is still needed for everything listed under the residual
   risks above. After a mid-mission load, run the save/load test-route step
   near the GDI base artillery and the detention pen.
+
+## Soft-lock hunt (2026-10-07)
+
+Evidence class: static source review, retail metadata (Vita3K retail copy, read-only:
+`m01.ldd` conversation key flags, `always.dat` EVA wave headers, the existing
+`s4-all-map-bindings/m01-bindings.json`), deterministic staging (rc 0, fuzz 0,
+545 ordered patches) and `arm-vita-eabi-g++ -fsyntax-only` of the patched
+`Mission01.cpp` (rc 0, no new warnings). No build, no Vita3K, no hardware. Line
+numbers are `staging/scripts/Mission01.cpp` after this change.
+
+Success needs only `prisoners_are_freed && !commcenter_sam_objective_active`
+(:1610). No objective status, counter or secondary gates it.
+
+### Fixed
+
+1. **PCT unlock lost after save/load (or a stuck EVA line). Reachable, high.**
+   The PCT poke is one-shot (`poked`, :11620). The unlock is driven only by
+   five chained `CUSTOM_EVENT_SOUND_ENDED` events (:431-459). Those lines are
+   IMA ADPCM `00-n000e/002e/026e/028e/030e.wav` in `always.dat`, about 8.2 s
+   in total. Dynamic sounds are not saved (`SoundSceneClass::Save_Dynamic`
+   writes nothing), and `Update_Play_Position` never ends a sound whose
+   `m_Length` is 0. So a save taken during the chain and then loaded, or a line
+   that fails to decode, leaves `player_has_unlocked_pen` false for good. The
+   only way out is to destroy the Comm Center, which the game never suggests.
+   This is retail-identical, but it is a real soft-lock.
+   Fix: `port/patches/scripts-a38-m01-pct-unlock-watchdog.patch`. The poke also
+   arms a 30 s controller custom (:1373; custom timers are saved). When it
+   fires (:1391) with the pen still locked, it zeroes the five line IDs so a
+   late line cannot repeat the unlock, then runs the exact
+   line-5 action (`M01_CLEAR_UNLOCK_GATE_OBJECTIVE_JDG` and
+   `player_has_unlocked_pen = true`). On the normal path the chain finishes
+   first and the watchdog does nothing. Log: `A4 M01 PCT unlock watchdog`.
+2. **"Open the gate" objective never added. Reachable, medium (guidance, not a
+   hard blocker).** `M01_Remove_Unlock_Gate_Objective` is **not key** in
+   `m01.ldd`. The key conversations that can be playing at that moment include
+   `Kane_and_Havoc`, `Kane_and_Number02_01` (both in the Comm Center where the
+   PCT is), `Add_Unlock_Gate_Objective` and `Radar_Scrambled`. If one of them
+   is playing, `ActiveConversationClass::Start_Conversation` stops the new
+   conversation with INTERRUPTED before `Monitor_Conversation` runs. M01's
+   `Action_Complete` is also limited to `ACTION_COMPLETE_CONVERSATION_ENDED`.
+   As a result `M01_OPEN_THE_GATE_JDG`, its radar blip and its POG are never
+   added. A typical trigger is killing the SAM first, then poking the PCT during
+   the Kane hologram talk. The gate still works, but no primary objective points
+   at it. Fix: `port/patches/scripts-a38-m01-open-gate-objective-fallback.patch`.
+   The original objective block moves into `A38_Add_Open_Gate_Objective` (:276),
+   which adds it at most once and records `open_gate_objective_added` (new
+   save ID 90). Both start sites (:853, :1526) arm a 30 s fallback (:1381). The
+   fallback adds the objective only if the callback has not and the gate is
+   still closed. The conversation has 2 remarks, so on the normal path the
+   callback adds the objective first. Log: `A4 M01 open-gate objective fallback`.
+
+Both patches are registered after `scripts-a36-m01-controller-id-init.patch`.
+The existing `3e873be0…dba1` anchor is unchanged. Staging was regenerated and
+only `Mission01.cpp` (SHA-256 `c05156b1…fff5`) and `PATCH_INVENTORY.json`
+changed. Saves made before this change carry no watchdog or fallback timer, so
+an old save already stuck in the EVA chain stays stuck.
+
+### Checked, not reachable or retail-identical (no change)
+
+- `endMission_conv` (:2588 branch) is never assigned. With the controller-ID
+  init it stays 0, so the branch is dead and `Mission_Complete(true)` comes only from
+  :468 (X1Z frame 618) or :1695 (`END_MISSION_PASS`).
+- SAM-pass 60 s branch (:1548): the pen gate accepts a poke only after
+  `samDead` (:15774), which is set 5 s after the SAM's `Killed` (:15791). The
+  synchronous SAM pass therefore always runs before the prisoners can be freed,
+  and the 60 s delay is unreachable. This corrects residual risk 6 and test
+  route step 5 above: the prisoners cannot be freed before the SAM dies.
+- Gate poke re-announcing the SAM objective after the SAM is dead
+  (`Find_Object(M01_COMMCENTER_SAM_JDG)` at the gate): `PhysicalGameObj::
+  Completely_Damaged` sets the SAM delete-pending, and the 5 s `samDead` delay
+  covers it. Not reachable.
+- Completion before activation: the SAM dying before its objective
+  (`commcenter_sam_destroyed`), and the Comm Center dying before or during the
+  PCT chain, are both latched by the original code. The SAM `Killed` receivers
+  (controller 100376, pen gate 101117) are persisted level objects.
+- Counters (prisoners, HON, church, barn, turrets): none gates success.
+  Undercounts only affect secondaries. They were not exhaustively traced in
+  this timebox.
+- Lost actors: no NPC, vehicle or item is on the primary chain. The detention
+  prisoners can die without blocking the gate, and the finale destroys any
+  survivors (:1610 onward).
+- Save/load: delayed customs (`samDead` 5 s, finale 20 s, the new 30 s timers)
+  are saved by `ScriptableGameObj` `CHUNKID_CUSTOM_TIMER`, and conversation
+  monitors are relinked. A save made mid-finale still reaches
+  `Mission_Complete` through the saved 20 s timer.
+- Comm Center destroyed during the PCT chain: `CLEAR_UNLOCK_GATE` runs twice
+  (duplicate SAM announcement or objective), as in retail and cosmetic. The
+  watchdog adds no third run.
+- Still deferred: `Has_Key(NULL)` (see Full audit).
+
+Physical check: poke the PCT, quicksave within about 5 s, load, and wait. The
+unlock should arrive about 30 s after the poke, with the watchdog log line.
+Then kill the SAM first and poke the PCT during the Kane talk. The "Open the
+gate" objective should appear within 30 s.

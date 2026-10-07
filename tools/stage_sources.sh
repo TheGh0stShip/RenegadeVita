@@ -1594,6 +1594,16 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m01-load-position-tables.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m01-controller-id-init.patch"
+# M01 soft-lock hunt: the one-shot PCT poke unlocks the pen only through five
+# chained SOUND_ENDED events, which a save/load (dynamic sounds are not saved)
+# or a sound that never ends can break; a 30 s watchdog finishes the chain once.
+# The non-key "Remove_Unlock_Gate_Objective" conversation is stopped before its
+# monitor exists while a key conversation plays, so the "Open the gate"
+# objective gets a 30 s fallback. Both are no-ops on the normal path.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m01-pct-unlock-watchdog.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m01-open-gate-objective-fallback.patch"
 # Script-supplied overlay opacity was the only unclamped overlay target; clamp
 # it like the color setters (retail scripts only use 0 and 1).
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \

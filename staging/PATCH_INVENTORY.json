@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "349ec29324ae48c4fce153258e26b268389a1672060bf9020534f879abe965c9",
+  "stage_script_sha256": "c65b1ea67506c9492cfb3e10040b70f6be6728c83ced94602762c52ec943b9d7",
   "patch_count": 545,
   "patches": [
     {
@@ -2715,20 +2715,20 @@
       "sha256": "8344203252d190bbfabc8d76ae51164cabec4a81d780578383284115c478cf5d"
     },
     {
+      "path": "port/patches/scripts-a38-m01-pct-unlock-watchdog.patch",
+      "stage_directory": "scripts",
+      "sha256": "57f1d3c78d910c507377af7f20c05e66708b8ef9077c01815d44e28b50109798"
+    },
+    {
+      "path": "port/patches/scripts-a38-m01-open-gate-objective-fallback.patch",
+      "stage_directory": "scripts",
+      "sha256": "330307d3b7cc4d80176c4fa5c9346d26eac23cfda291b3aba7d1aaff2411835d"
+    },
+    {
       "path": "port/patches/combat-a37-screen-overlay-opacity-clamp.patch",
       "stage_directory": "combat",
       "sha256": "1fd9784eff93c659fa39a08322828cb55ab49dca36582e540f51be432e85a82a"
-    },
-    {
-      "path": "port/patches/combat-a37-pathaction-elevator-entry-timeout.patch",
-      "stage_directory": "combat",
-      "sha256": "3fc0932b5dc0fd1950bfb7c54ee74578ef9d3c75b1762c26641904a0bb4a62b3"
-    },
-    {
-      "path": "port/patches/combat-a37-scriptzone-swept-entry.patch",
-      "stage_directory": "combat",
-      "sha256": "fb83f93007291c4e539c4ecbfcb1857d537732802cddd0330f86a499e13ea332"
     }
   ],
-  "registry_sha256": "8c8d82c47de556bd0e2cd0608d04811cdbc481c68bef5b0bcb76e118ef66ff6a"
+  "registry_sha256": "6c309e733ae3c6887f9b68c8866c3dc9bda1247cf70502ae01aec70e93fd6ee6"
 }

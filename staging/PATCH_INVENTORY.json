@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "8e1ceb21258cb33cadc3f6faf75f26e5d33e2e85d1ad1648e799816f6c37eb3c",
-  "patch_count": 608,
+  "stage_script_sha256": "0365506722ce0735a1bd51cbd015f38113534572fc3660335d3315b3f5d89d6d",
+  "patch_count": 623,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -18,6 +18,11 @@
       "path": "port/patches/wwdebug-a36-vita-frame-profile.patch",
       "stage_directory": "wwdebug",
       "sha256": "3c508221457f5aacf069c6cc6a6e78fb0c104f77d04a38ac564f87f7de80a5f7"
+    },
+    {
+      "path": "port/patches/wwdebug-a36-frame-profile-tu-opt-out.patch",
+      "stage_directory": "wwdebug",
+      "sha256": "4d186d2712291119990f54e94e88c39fe21a2e98a250d5ec435c83b8455bae70"
     },
     {
       "path": "port/patches/wwlib-a21-posix.patch",
@@ -263,6 +268,11 @@
       "path": "port/patches/wwphys-a36-grid-texture-release.patch",
       "stage_directory": "wwphys",
       "sha256": "ac44a8ebfd105fba9ef4ef0ca5b9479ebf33b0a15e11c2e9ceb8eb2ec6cfb3ab"
+    },
+    {
+      "path": "port/patches/wwphys-a36-scene-cast-counters.patch",
+      "stage_directory": "wwphys",
+      "sha256": "f5f35644c07df0fc305da339aefb254a8567756636164355780563d9ac07499d"
     },
     {
       "path": "port/patches/combat-a30-pointer-tokens.patch",
@@ -743,6 +753,11 @@
       "path": "port/patches/wwaudio-a35-flush-enqueue-order.patch",
       "stage_directory": "wwaudio",
       "sha256": "b4a157a340fae36337718099db8cb5dca6b19adb5d693457ccc657111620151a"
+    },
+    {
+      "path": "port/patches/wwaudio-a36-completed-sounds-retain.patch",
+      "stage_directory": "wwaudio",
+      "sha256": "7e608cdc0989b551b45ad4346304f6eb318b2918d6fcf6f80562f8d5397448ef"
     },
     {
       "path": "port/patches/wwnet-a30-gcc15.patch",
@@ -1960,9 +1975,24 @@
       "sha256": "88b2e61f05ad7b39a641f273e0db818834462af3dd1bf305898ff10a32dc571f"
     },
     {
+      "path": "port/patches/wwmath-a36-arm-int-floor-helpers.patch",
+      "stage_directory": "wwmath",
+      "sha256": "f117f4eca0e2fa965556fd94eb933aba596488f8bc27e3e4bf12fd9a080e2ce8"
+    },
+    {
+      "path": "port/patches/wwmath-a36-quat-matrix-single-precision.patch",
+      "stage_directory": "wwmath",
+      "sha256": "64517e68670ffba2266189d2dc979dea25c87d8b49c475c80526d82fdc3361ba"
+    },
+    {
       "path": "port/patches/ww3d2-a36-sorting-depth-sort-and-runs.patch",
       "stage_directory": "ww3d2",
       "sha256": "0bfc987809d41e001e72b4c744ec38086c7d5920e5186b0de77907187557cf4a"
+    },
+    {
+      "path": "port/patches/ww3d2-a36-raw-anim-sampler-inline.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "10b045af705f5904788b3cafde31db176ccc33d97a88157b880c0e0d37b17d39"
     },
     {
       "path": "port/patches/combat-a36-powerup-text-once.patch",
@@ -2433,6 +2463,11 @@
       "path": "port/patches/combat-a36-hud-load-admission.patch",
       "stage_directory": "combat",
       "sha256": "d21f401349fb1618417e9cdb77f69e6117f45222da4c1f376c1856ed48018368"
+    },
+    {
+      "path": "port/patches/combat-a36-hud-text-build-once.patch",
+      "stage_directory": "combat",
+      "sha256": "5bb82ce986b838bfa1e56569d5a60df93e87e93286eb52897ca6a625ece40786"
     },
     {
       "path": "port/patches/combat-a36-screen-fade-admission.patch",
@@ -3043,7 +3078,47 @@
       "path": "port/patches/scripts-a39-m09-keycard-single-dist-loop.patch",
       "stage_directory": "scripts",
       "sha256": "b40963eb5d8552130f0a5bf28c025677d593bce46a6b261fdf73688903e5fa90"
+    },
+    {
+      "path": "port/patches/wwlib-a39-peek-next-chunk-speculative.patch",
+      "stage_directory": "wwlib",
+      "sha256": "060a957c7fbacfec20c8e8f90107589710f2e6ffb2b4b3436b94027f3a8b6c3a"
+    },
+    {
+      "path": "port/patches/wwlib-a39-chunk-unopened-file.patch",
+      "stage_directory": "wwlib",
+      "sha256": "cf64ec72813584287ca9e9cd50a3375803548feb2754fdf437ea2667c7146f0f"
+    },
+    {
+      "path": "port/patches/wwsaveload-a39-skip-unregistered-definition-factories.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "5643d5a3752ccf9005e4173593abfce5847eefac88eba6f9b9316c1ea29ba184"
+    },
+    {
+      "path": "port/patches/wwsaveload-a39-remap-miss-continue-and-load-diagnostics.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "bddf3c610397f3d0a29f51411ad9a49017673380b8f66798a1858d790cbeeaf9"
+    },
+    {
+      "path": "port/patches/wwphys-a39-retail-load-original-semantics.patch",
+      "stage_directory": "wwphys",
+      "sha256": "96be67c6a64d074e06e3de396aa90855e07b339088eeb1b70329bda284947c6f"
+    },
+    {
+      "path": "port/patches/combat-a39-retail-load-original-semantics.patch",
+      "stage_directory": "combat",
+      "sha256": "43e10a3216b3d1fe271ef03d1a24998e21ddd3f8377047730efefa37feb65150"
+    },
+    {
+      "path": "port/patches/wwsaveload-a39-retail-load-original-semantics.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "f697933c14cfbaea2b4275ce6e30a77ebe8d855b0e831d7dc9baee00e2dae265"
+    },
+    {
+      "path": "port/patches/combat-a39-level-data-not-player-save.patch",
+      "stage_directory": "combat",
+      "sha256": "d129c75128ac6eb5808c861b6c1a8890e7dcb6c582f4d9a083fe06b8a1f0e9b9"
     }
   ],
-  "registry_sha256": "385c21c18da33da2016d0274f4fc3b713b79501ae1a720bbcade62344d413402"
+  "registry_sha256": "c035f960d6f9f06359aa128d6741f9a9a66ac9b64666f7d9c183ca299d28c5bc"
 }

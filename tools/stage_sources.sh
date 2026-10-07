@@ -1857,6 +1857,69 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a39-m05-deadeye-rearm-alive-only.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a39-m09-keycard-single-dist-loop.patch"
+# Peek_Next_Chunk is speculative (upstream never set Error there). The
+# structural-admission patch made an implausible peeked header poison the
+# whole load, so ConversationMgr's legacy one-byte category probe rejected the
+# retail CONV10.CDB and the runtime stopped before the frontend. Anchored to
+# the final staged chunkio.cpp so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/wwlib/chunkio.cpp" | cut -d' ' -f1)" = \
+	"f46db2e3834aa7db01b6dcb7573bf63f0de26e80c3ee41021daf994460a610ae"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a39-peek-next-chunk-speculative.patch"
+# ChunkLoadClass on an unopened file: the structural-admission patch calls
+# Tell/Size at the top level, which seeks a closed handle (host fseek(NULL)).
+# The original read simply returned no chunk; restore that.
+test "$(sha256sum "$rv_stage/wwlib/chunkio.cpp" | cut -d' ' -f1)" = \
+	"7cbe13e4bb106cbe60a91c6b2c1935ec3ef10940228b0d0163c5e0aa197d1070"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a39-chunk-unopened-file.patch"
+# DefinitionMgr::Load_Objects: skip records whose factory is not registered,
+# as the original loader does. Retail objects.ddb contains level-editor-only
+# definitions (Commando editor chunk range); treating them as corruption made
+# every retail level load fail at "Load definition databases".
+test "$(sha256sum "$rv_stage/wwsaveload/definitionmgr.cpp" | cut -d' ' -f1)" = \
+	"a4edc83c5654b7c3c38d8c3023c0754af862f15381c40ee9de35089c90c5ecf0"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwsaveload" -p1 < "$rv_root/port/patches/wwsaveload-a39-skip-unregistered-definition-factories.patch"
+# Pointer remap misses follow the original release path again (NULL, warn,
+# continue) instead of failing every retail level load; SaveLoadSystem logs
+# the subsystem/check that rejects a load (weak Vita log hook, inert on host).
+test "$(sha256sum "$rv_stage/wwsaveload/pointerremap.cpp" | cut -d' ' -f1)" = \
+	"3f87df033a61ba5d9acb587eb883e20239f01a64ca0e3c0c74c05253e0628d09"
+test "$(sha256sum "$rv_stage/wwsaveload/saveload.cpp" | cut -d' ' -f1)" = \
+	"84701cc49320050f6d83587f1d1fb4f0db522cc7780ed9e2eee78402182f7479"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwsaveload" -p1 < "$rv_root/port/patches/wwsaveload-a39-remap-miss-continue-and-load-diagnostics.patch"
+# Retail level/definition loads follow the original release: A36 admission
+# results are player-save rules, advisory (logged) for shipped data, and
+# post-load callbacks register unconditionally (a rejected load discards them).
+# Without this every retail mission returned to the menu (code=13).
+test "$(sha256sum "$rv_stage/wwphys/pathsolve.cpp" | cut -d' ' -f1)" = \
+	"489e7b797925cdece0955e1f942d30360dc789df14d815e2c2b814c97ce9b40f"
+test "$(sha256sum "$rv_stage/wwphys/physdynamicsavesystem.cpp" | cut -d' ' -f1)" = \
+	"409af792f65436ab9b4a5f4a9c8d3dbc6610c57523f997d17296bc7a3309d95f"
+test "$(sha256sum "$rv_stage/combat/scriptablegameobj.cpp" | cut -d' ' -f1)" = \
+	"7841b28875c61057141826e1e4609b353ce863857779332322ea31910a712740"
+test "$(sha256sum "$rv_stage/combat/combatsaveload.cpp" | cut -d' ' -f1)" = \
+	"960f98d9a5bea2ff12d1629d11945444296e9ba45d80a6d4d02a272b7d99ec3e"
+test "$(sha256sum "$rv_stage/combat/bullet.cpp" | cut -d' ' -f1)" = \
+	"592f7f3d5cbc72a0a518faf1687ccba2845ad9a6ffb578364cb751626f87f105"
+test "$(sha256sum "$rv_stage/combat/evasettings.cpp" | cut -d' ' -f1)" = \
+	"0f4d41155a5ca60e7fcbe5b6575ecb3b3720d249fc3b7986d46130ff10d4671f"
+test "$(sha256sum "$rv_stage/wwsaveload/saveload.cpp" | cut -d' ' -f1)" = \
+	"c56918299201a21de5709e2914b999900f482931b528d20dff0f8bce2ba1e8fc"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a39-retail-load-original-semantics.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a39-retail-load-original-semantics.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwsaveload" -p1 < "$rv_root/port/patches/wwsaveload-a39-retail-load-original-semantics.patch"
+# Load_Game reads retail .ldd and player .sav alike; only .sav uses the
+# player-save admission mode.
+test "$(sha256sum "$rv_stage/combat/savegame.cpp" | cut -d' ' -f1)" = \
+	"c19cc7fbee0086e43d59fb222f309f71908530c18a2d8641fba390218ee3113a"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a39-level-data-not-player-save.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

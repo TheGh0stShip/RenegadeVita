@@ -232,6 +232,9 @@ void Record_Texture_Checkerboard_Bind();
 void Record_Texture_Upload(uint64_t resident_bytes);
 void Record_Texture_Release(uint64_t resident_bytes);
 void Invalidate_Texture_State_Cache();
+// A GL_TEXTURE matrix load outside the renderer (the DX8 boundary's
+// D3DTS_TEXTUREn path) ends the renderer's known-identity state for that stage.
+void Invalidate_Texture_Matrix_Shadow(uint32_t stage);
 bool Bind_Offscreen_Render_Target(uint32_t framebuffer, uint32_t width,
 	uint32_t height);
 bool Restore_Default_Render_Target();

@@ -420,6 +420,7 @@ bool Apply_Texture_Stage_Transform(DWORD stage)
 	} else {
 		glLoadMatrixf(&transform.m[0][0]);
 	}
+	RenegadeVitaRenderer::Invalidate_Texture_Matrix_Shadow(stage);
 	glMatrixMode(GL_MODELVIEW);
 	glActiveTexture(GL_TEXTURE0);
 	if (glGetError() != GL_NO_ERROR) {

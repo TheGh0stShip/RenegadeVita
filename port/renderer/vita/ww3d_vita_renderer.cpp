@@ -432,9 +432,318 @@ struct AppliedFogStateCache {
 };
 AppliedFogStateCache g_applied_fog_state = {};
 
+// Exact GL-level shadow of the fixed-function raster state and FFP transforms
+// set on the per-batch path (Apply_Original_Shader_State, Apply_DX8_Render_State,
+// mesh/indexed submission transforms and the per-stage texture-matrix reset).
+// A call is skipped only when vitaGL already holds the bitwise-identical
+// argument. vitaGL derives its GXM depth/cull/bias state, blend key and FFP
+// shader key from these arguments alone, so the skipped call would rewrite
+// identical values; a skipped matrix load also avoids an MVP rebuild and a
+// vertex-uniform re-upload of identical data. Every field starts unknown and
+// becomes unknown again on Invalidate_Native_State_Cache (initialization,
+// reactivation, render-target switches) and after a GL error. Code that changes
+// this state behind the shadow must restore it exactly (the Bink presenter
+// does) or invalidate it (the DX8 boundary's GL_TEXTURE matrix load calls
+// Invalidate_Texture_Matrix_Shadow). vitaGL's own clear/blit paths restore
+// GXM state from the same variables these calls set. RVGS1 0 in
+// user/config/gl-state-shadow-v1.flag restores the unshadowed call sequence.
+enum NativeGLStateShadowField {
+	NATIVE_SHADOW_BLEND = 1U << 0,
+	NATIVE_SHADOW_BLEND_FUNC = 1U << 1,
+	NATIVE_SHADOW_ALPHA_TEST = 1U << 2,
+	NATIVE_SHADOW_ALPHA_FUNC = 1U << 3,
+	NATIVE_SHADOW_DEPTH_FUNC = 1U << 4,
+	NATIVE_SHADOW_DEPTH_MASK = 1U << 5,
+	NATIVE_SHADOW_COLOR_MASK = 1U << 6,
+	NATIVE_SHADOW_CULL = 1U << 7,
+	NATIVE_SHADOW_CULL_FACE = 1U << 8,
+	NATIVE_SHADOW_POLYGON_OFFSET_FILL = 1U << 9,
+	NATIVE_SHADOW_POLYGON_OFFSET = 1U << 10,
+	NATIVE_SHADOW_POLYGON_MODE = 1U << 11,
+	NATIVE_SHADOW_PROJECTION = 1U << 12,
+	NATIVE_SHADOW_MODELVIEW = 1U << 13,
+	// One identity bit per texture stage, starting here.
+	NATIVE_SHADOW_TEXTURE_IDENTITY = 1U << 14
+};
+
+struct NativeGLStateShadow {
+	uint32_t known;
+	bool blend;
+	bool alpha_test;
+	bool cull;
+	bool polygon_offset_fill;
+	GLenum blend_source;
+	GLenum blend_destination;
+	GLenum alpha_function;
+	GLfloat alpha_reference;
+	GLenum depth_function;
+	GLboolean depth_mask;
+	GLboolean color_mask[4];
+	GLenum cull_face;
+	GLfloat polygon_offset_factor;
+	GLfloat polygon_offset_units;
+	GLenum polygon_mode;
+	GLfloat projection[16];
+	GLfloat modelview[16];
+};
+
+struct NativeGLStateShadowCounters {
+	uint64_t raster_calls;
+	uint64_t raster_skips;
+	uint64_t transform_loads;
+	uint64_t transform_skips;
+	uint64_t texture_matrix_loads;
+	uint64_t texture_matrix_skips;
+};
+
+bool g_gl_state_shadow_enabled = true;
+NativeGLStateShadow g_gl_state_shadow = {};
+NativeGLStateShadowCounters g_gl_state_shadow_counters = {};
+
+void Invalidate_GL_State_Shadow()
+{
+	memset(&g_gl_state_shadow, 0, sizeof(g_gl_state_shadow));
+}
+
+bool Same_Float_Bits(GLfloat left, GLfloat right)
+{
+	return memcmp(&left, &right, sizeof(left)) == 0;
+}
+
+// Returns false when the field is known to hold the requested value already.
+bool Shadow_Needs_Call(uint32_t field, bool same)
+{
+	if (g_gl_state_shadow_enabled && (g_gl_state_shadow.known & field) != 0U && same) {
+		++g_gl_state_shadow_counters.raster_skips;
+		return false;
+	}
+	g_gl_state_shadow.known |= field;
+	++g_gl_state_shadow_counters.raster_calls;
+	return true;
+}
+
+void Shadow_Capability(GLenum capability, uint32_t field, bool &current, bool enabled)
+{
+	if (!Shadow_Needs_Call(field, current == enabled)) return;
+	if (enabled) glEnable(capability);
+	else glDisable(capability);
+	current = enabled;
+}
+
+void Shadow_Blend(bool enabled)
+{
+	Shadow_Capability(GL_BLEND, NATIVE_SHADOW_BLEND, g_gl_state_shadow.blend, enabled);
+}
+
+void Shadow_Alpha_Test(bool enabled)
+{
+	Shadow_Capability(GL_ALPHA_TEST, NATIVE_SHADOW_ALPHA_TEST,
+		g_gl_state_shadow.alpha_test, enabled);
+}
+
+void Shadow_Cull(bool enabled)
+{
+	Shadow_Capability(GL_CULL_FACE, NATIVE_SHADOW_CULL, g_gl_state_shadow.cull, enabled);
+}
+
+void Shadow_Polygon_Offset_Fill(bool enabled)
+{
+	Shadow_Capability(GL_POLYGON_OFFSET_FILL, NATIVE_SHADOW_POLYGON_OFFSET_FILL,
+		g_gl_state_shadow.polygon_offset_fill, enabled);
+}
+
+void Shadow_Blend_Func(GLenum source, GLenum destination)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_BLEND_FUNC,
+		shadow.blend_source == source && shadow.blend_destination == destination)) return;
+	glBlendFunc(source, destination);
+	shadow.blend_source = source;
+	shadow.blend_destination = destination;
+}
+
+void Shadow_Alpha_Func(GLenum function, GLfloat reference)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_ALPHA_FUNC, shadow.alpha_function == function &&
+		Same_Float_Bits(shadow.alpha_reference, reference))) return;
+	glAlphaFunc(function, reference);
+	shadow.alpha_function = function;
+	shadow.alpha_reference = reference;
+}
+
+void Shadow_Depth_Func(GLenum function)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_DEPTH_FUNC, shadow.depth_function == function)) return;
+	glDepthFunc(function);
+	shadow.depth_function = function;
+}
+
+void Shadow_Depth_Mask(GLboolean mask)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_DEPTH_MASK, shadow.depth_mask == mask)) return;
+	glDepthMask(mask);
+	shadow.depth_mask = mask;
+}
+
+void Shadow_Color_Mask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_COLOR_MASK, shadow.color_mask[0] == red &&
+		shadow.color_mask[1] == green && shadow.color_mask[2] == blue &&
+		shadow.color_mask[3] == alpha)) return;
+	glColorMask(red, green, blue, alpha);
+	shadow.color_mask[0] = red;
+	shadow.color_mask[1] = green;
+	shadow.color_mask[2] = blue;
+	shadow.color_mask[3] = alpha;
+}
+
+void Shadow_Cull_Face(GLenum face)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_CULL_FACE, shadow.cull_face == face)) return;
+	glCullFace(face);
+	shadow.cull_face = face;
+}
+
+void Shadow_Polygon_Offset(GLfloat factor, GLfloat units)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_POLYGON_OFFSET,
+		Same_Float_Bits(shadow.polygon_offset_factor, factor) &&
+		Same_Float_Bits(shadow.polygon_offset_units, units))) return;
+	glPolygonOffset(factor, units);
+	shadow.polygon_offset_factor = factor;
+	shadow.polygon_offset_units = units;
+}
+
+void Shadow_Polygon_Mode(GLenum mode)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	if (!Shadow_Needs_Call(NATIVE_SHADOW_POLYGON_MODE, shadow.polygon_mode == mode)) return;
+	glPolygonMode(GL_FRONT_AND_BACK, mode);
+	shadow.polygon_mode = mode;
+}
+
+// Matrices compare bitwise (memcmp), never with a tolerance. A null matrix
+// requests identity through glLoadIdentity, as the unshadowed callers did.
+bool Shadow_Matrix_Needs_Load(uint32_t field, const GLfloat *current,
+	const GLfloat *requested)
+{
+	if (g_gl_state_shadow_enabled && (g_gl_state_shadow.known & field) != 0U &&
+		memcmp(current, requested, 16U * sizeof(GLfloat)) == 0) {
+		++g_gl_state_shadow_counters.transform_skips;
+		return false;
+	}
+	++g_gl_state_shadow_counters.transform_loads;
+	return true;
+}
+
+void Shadow_Load_Matrix(uint32_t field, GLfloat *current, const GLfloat *matrix)
+{
+	static const GLfloat identity[16] = {
+		1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
+	};
+	const GLfloat *requested = matrix != NULL ? matrix : identity;
+	if (!Shadow_Matrix_Needs_Load(field, current, requested)) return;
+	if (field == NATIVE_SHADOW_PROJECTION) glMatrixMode(GL_PROJECTION);
+	if (matrix != NULL) glLoadMatrixf(matrix);
+	else glLoadIdentity();
+	memcpy(current, requested, 16U * sizeof(GLfloat));
+	g_gl_state_shadow.known |= field;
+}
+
+// Leaves GL_MODELVIEW selected, exactly as the unshadowed sequence did.
+void Shadow_Load_Transforms(const GLfloat *projection, const GLfloat *modelview)
+{
+	NativeGLStateShadow &shadow = g_gl_state_shadow;
+	Shadow_Load_Matrix(NATIVE_SHADOW_PROJECTION, shadow.projection, projection);
+	glMatrixMode(GL_MODELVIEW);
+	Shadow_Load_Matrix(NATIVE_SHADOW_MODELVIEW, shadow.modelview, modelview);
+}
+
+// Mesh and indexed submissions used to reload identity transforms after every
+// draw. No draw consumes that baseline: every FFP draw site loads its own
+// projection and modelview first (Submit_Mesh_Internal, including the static
+// replay, and Submit_Indexed_Triangles), the Bink presenter pushes and loads
+// its own, and glClear uses vitaGL's clear program. With the shadow active the
+// reload is omitted, so an identical projection or modelview in the next
+// submission is not reloaded. Begin_Frame still requests identity every frame
+// through the shadow.
+void Release_Submission_Transforms()
+{
+	if (g_gl_state_shadow_enabled) return;
+	Shadow_Load_Transforms(NULL, NULL);
+}
+
+// The caller has selected GL_TEXTURE0 + stage and the GL_TEXTURE matrix mode.
+void Shadow_Load_Texture_Identity(unsigned stage)
+{
+	const uint32_t field = stage < MeshMatDescClass::MAX_TEX_STAGES ?
+		static_cast<uint32_t>(NATIVE_SHADOW_TEXTURE_IDENTITY) << stage : 0U;
+	if (g_gl_state_shadow_enabled && field != 0U &&
+		(g_gl_state_shadow.known & field) != 0U) {
+		++g_gl_state_shadow_counters.texture_matrix_skips;
+		return;
+	}
+	glLoadIdentity();
+	g_gl_state_shadow.known |= field;
+	++g_gl_state_shadow_counters.texture_matrix_loads;
+}
+
+void Invalidate_Texture_Identity_Shadow(unsigned stage)
+{
+	if (stage < MeshMatDescClass::MAX_TEX_STAGES) {
+		g_gl_state_shadow.known &=
+			~(static_cast<uint32_t>(NATIVE_SHADOW_TEXTURE_IDENTITY) << stage);
+	}
+}
+
+void Read_GL_State_Shadow_Mode()
+{
+	g_gl_state_shadow_enabled = true;
+	FILE *file = fopen("ux0:data/renegade/user/config/gl-state-shadow-v1.flag", "rb");
+	if (file != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok && size == 8U && memcmp(value, "RVGS1 ", 6U) == 0 &&
+			value[7] == '\n' && (value[6] == '0' || value[6] == '1')) {
+			g_gl_state_shadow_enabled = value[6] == '1';
+		}
+	}
+	Invalidate_GL_State_Shadow();
+	memset(&g_gl_state_shadow_counters, 0, sizeof(g_gl_state_shadow_counters));
+	Vita_Append_A22_Runtime_Breadcrumb("gl-state-shadow",
+		"version=1 enabled=%d default=1 acceptance=unassessed",
+		g_gl_state_shadow_enabled ? 1 : 0);
+}
+
+// Called once per 120-frame End_Frame window.
+void Log_GL_State_Shadow_Window(uint32_t frame)
+{
+	const NativeGLStateShadowCounters &counters = g_gl_state_shadow_counters;
+	Vita_Append_A22_Runtime_Breadcrumb("gl-state-shadow",
+		"version=1 frame=%u window=120 enabled=%d raster_calls=%llu raster_skips=%llu transform_loads=%llu transform_skips=%llu texture_matrix_loads=%llu texture_matrix_skips=%llu",
+		frame, g_gl_state_shadow_enabled ? 1 : 0,
+		static_cast<unsigned long long>(counters.raster_calls),
+		static_cast<unsigned long long>(counters.raster_skips),
+		static_cast<unsigned long long>(counters.transform_loads),
+		static_cast<unsigned long long>(counters.transform_skips),
+		static_cast<unsigned long long>(counters.texture_matrix_loads),
+		static_cast<unsigned long long>(counters.texture_matrix_skips));
+	memset(&g_gl_state_shadow_counters, 0, sizeof(g_gl_state_shadow_counters));
+}
+
 void Invalidate_Native_State_Cache()
 {
 	memset(&g_applied_fog_state, 0, sizeof(g_applied_fog_state));
+	Invalidate_GL_State_Shadow();
 	memset(g_texture_stage_cache, 0, sizeof(g_texture_stage_cache));
 	Invalidate_Texture_Object_Samplers();
 	memset(&g_render_state_cache, 0, sizeof(g_render_state_cache));
@@ -722,7 +1031,7 @@ void Reset_Texture_Matrix_Stage(unsigned stage)
 {
 	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
 	glMatrixMode(GL_TEXTURE);
-	glLoadIdentity();
+	Shadow_Load_Texture_Identity(stage);
 	glMatrixMode(GL_MODELVIEW);
 	RenegadeVita_Invalidate_DX8_Texture_Stage_Transform(stage);
 	glActiveTexture(GL_TEXTURE0);
@@ -1125,28 +1434,30 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 		glDisable(GL_TEXTURE_2D);
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	}
+	// Raster calls go through the exact GL-state shadow: only values vitaGL does
+	// not already hold are issued, in the original order.
 	if (state.alpha_test) {
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(To_GL_Depth_Function(state.alpha_compare),
+		Shadow_Alpha_Test(true);
+		Shadow_Alpha_Func(To_GL_Depth_Function(state.alpha_compare),
 			static_cast<float>(state.alpha_reference) / 255.0f);
 	} else {
-		glDisable(GL_ALPHA_TEST);
+		Shadow_Alpha_Test(false);
 	}
 	const GLenum source = To_GL_Source_Blend(shader.Get_Src_Blend_Func());
 	const GLenum destination = To_GL_Destination_Blend(shader.Get_Dst_Blend_Func());
-	if (!state.blend) glDisable(GL_BLEND);
+	if (!state.blend) Shadow_Blend(false);
 	else {
-		glEnable(GL_BLEND);
-		glBlendFunc(source, destination);
+		Shadow_Blend(true);
+		Shadow_Blend_Func(source, destination);
 	}
-	glDepthFunc(To_GL_Depth_Function(state.depth_compare));
-	glDepthMask(state.depth_write ? GL_TRUE : GL_FALSE);
-	glColorMask(state.color_write ? GL_TRUE : GL_FALSE, state.color_write ? GL_TRUE : GL_FALSE,
+	Shadow_Depth_Func(To_GL_Depth_Function(state.depth_compare));
+	Shadow_Depth_Mask(state.depth_write ? GL_TRUE : GL_FALSE);
+	Shadow_Color_Mask(state.color_write ? GL_TRUE : GL_FALSE, state.color_write ? GL_TRUE : GL_FALSE,
 		state.color_write ? GL_TRUE : GL_FALSE, state.color_write ? GL_TRUE : GL_FALSE);
 	if (state.cull) {
-		glEnable(GL_CULL_FACE);
-		glCullFace(culling_inverted ? GL_FRONT : GL_BACK);
-	} else glDisable(GL_CULL_FACE);
+		Shadow_Cull(true);
+		Shadow_Cull_Face(culling_inverted ? GL_FRONT : GL_BACK);
+	} else Shadow_Cull(false);
 	g_texture_stage_cache[0].enabled_known = true;
 	g_texture_stage_cache[0].enabled =
 		shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE;
@@ -1945,6 +2256,9 @@ bool Reactivate_Native_Backend_State()
 		g_lifecycle.native_initialization_calls,
 		g_lifecycle.logical_sessions);
 	(void)glGetError();
+	// The raw state calls below bypass the GL-state shadow, including on the
+	// error return that skips Invalidate_Native_State_Cache.
+	Invalidate_GL_State_Shadow();
 	glViewport(0, 0, static_cast<GLsizei>(g_physical_display_width),
 		static_cast<GLsizei>(g_physical_display_height));
 	glDepthRangef(0.0f, 1.0f);
@@ -2864,6 +3178,15 @@ bool Use_Native_DDS_Upload()
 #endif
 }
 
+void Invalidate_Texture_Matrix_Shadow(uint32_t stage)
+{
+#if defined(__vita__)
+	Invalidate_Texture_Identity_Shadow(stage);
+#else
+	(void)stage;
+#endif
+}
+
 void Invalidate_Texture_State_Cache()
 {
 #if defined(__vita__)
@@ -3330,6 +3653,7 @@ bool Initialize()
 	g_shader_init_calls = 0;
 	g_shader_init_last_result = -1;
 	Read_Render_Work_Cache_Mode();
+	Read_GL_State_Shadow_Mode();
 #if !RENEGADE_VITA_M00_DEMO
 	Read_Static_Mesh_Cache_Mode();
 	Read_Skin_Deform_Cache_Mode();
@@ -3531,10 +3855,7 @@ void Begin_Frame(bool clear_color, bool clear_depth, float red, float green,
 			static_cast<unsigned>(error), vglGetFrameNumber());
 		g_logged_first_frame = true;
 	}
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	Shadow_Load_Transforms(NULL, NULL);
 	g_statistics.state_changes += 5U;
 #else
 	(void)red;
@@ -3615,6 +3936,7 @@ void End_Frame(bool present)
 				static_cast<unsigned long long>(g_mesh_indexed_batches),
 				static_cast<unsigned>(sizeof(g_indexed_mesh_batch)),
 				static_cast<unsigned long long>(g_material_skin_rgb_skips));
+			Log_GL_State_Shadow_Window(g_statistics.frames);
 #if !RENEGADE_VITA_M00_DEMO
 			Log_Static_Mesh_Cache_Statistics();
 			Log_Skin_Deform_Cache_Statistics();
@@ -4001,77 +4323,74 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 	bool handled = true;
 	bool shader_state_overlap = false;
 	switch (state) {
+	// GL calls below go through the exact GL-state shadow (same order/values).
 	case D3DRS_ALPHABLENDENABLE:
 		shader_state_overlap = true;
 		if (value != 0U) {
-			glEnable(GL_BLEND);
-			glBlendFunc(g_dx8_source_blend, g_dx8_destination_blend);
+			Shadow_Blend(true);
+			Shadow_Blend_Func(g_dx8_source_blend, g_dx8_destination_blend);
 		} else {
-			glDisable(GL_BLEND);
+			Shadow_Blend(false);
 		}
 		break;
 	case D3DRS_SRCBLEND:
 		shader_state_overlap = true;
 		g_dx8_source_blend = To_GL_DX8_Blend(value);
-		glBlendFunc(g_dx8_source_blend, g_dx8_destination_blend);
+		Shadow_Blend_Func(g_dx8_source_blend, g_dx8_destination_blend);
 		break;
 	case D3DRS_DESTBLEND:
 		shader_state_overlap = true;
 		g_dx8_destination_blend = To_GL_DX8_Blend(value);
-		glBlendFunc(g_dx8_source_blend, g_dx8_destination_blend);
+		Shadow_Blend_Func(g_dx8_source_blend, g_dx8_destination_blend);
 		break;
 	case D3DRS_ALPHATESTENABLE:
 		shader_state_overlap = true;
-		if (value != 0U) {
-			glEnable(GL_ALPHA_TEST);
-		} else {
-			glDisable(GL_ALPHA_TEST);
-		}
+		Shadow_Alpha_Test(value != 0U);
 		break;
 	case D3DRS_ALPHAREF:
 		shader_state_overlap = true;
 		g_dx8_alpha_reference =
 			static_cast<float>(value & 0xffU) / 255.0f;
-		glAlphaFunc(g_dx8_alpha_function, g_dx8_alpha_reference);
+		Shadow_Alpha_Func(g_dx8_alpha_function, g_dx8_alpha_reference);
 		break;
 	case D3DRS_ALPHAFUNC:
 		shader_state_overlap = true;
 		g_dx8_alpha_function = To_GL_DX8_Compare(value);
-		glAlphaFunc(g_dx8_alpha_function, g_dx8_alpha_reference);
+		Shadow_Alpha_Func(g_dx8_alpha_function, g_dx8_alpha_reference);
 		break;
 	case D3DRS_ZFUNC:
 		shader_state_overlap = true;
-		glDepthFunc(To_GL_DX8_Compare(value));
+		Shadow_Depth_Func(To_GL_DX8_Compare(value));
 		break;
 	case D3DRS_ZWRITEENABLE:
 		shader_state_overlap = true;
-		glDepthMask(value != 0U ? GL_TRUE : GL_FALSE);
+		Shadow_Depth_Mask(value != 0U ? GL_TRUE : GL_FALSE);
 		break;
 	case D3DRS_CULLMODE:
 		shader_state_overlap = true;
 		if (value == D3DCULL_NONE) {
-			glDisable(GL_CULL_FACE);
+			Shadow_Cull(false);
 		} else {
-			glEnable(GL_CULL_FACE);
+			Shadow_Cull(true);
 			// The native baseline keeps GL's counterclockwise front faces.
 			// DX8 names the winding to discard, not the winding to retain.
 			// Preserve normal CW culling and distinguish the inverted mode.
-			glCullFace(value == D3DCULL_CCW ? GL_FRONT : GL_BACK);
+			Shadow_Cull_Face(value == D3DCULL_CCW ? GL_FRONT : GL_BACK);
 		}
 		break;
 	case D3DRS_FILLMODE:
-		glPolygonMode(GL_FRONT_AND_BACK, To_GL_DX8_Fill_Mode(value));
+		Shadow_Polygon_Mode(To_GL_DX8_Fill_Mode(value));
 		break;
 	case D3DRS_ZBIAS:
 		// DX8's positive integer bias pulls coplanar decals toward the camera.
 		// OpenGL polygon-offset units use the opposite sign. Keep the mapping
 		// scoped to filled triangles and disable it exactly at the released zero.
 		if (value != 0U) {
-			glEnable(GL_POLYGON_OFFSET_FILL);
-			glPolygonOffset(0.0f, -static_cast<float>(value));
+			Shadow_Polygon_Offset_Fill(true);
+			Shadow_Polygon_Offset(0.0f, -static_cast<float>(value));
 		} else {
-			glPolygonOffset(0.0f, 0.0f);
-			glDisable(GL_POLYGON_OFFSET_FILL);
+			Shadow_Polygon_Offset(0.0f, 0.0f);
+			Shadow_Polygon_Offset_Fill(false);
 		}
 		break;
 	default:
@@ -4094,6 +4413,7 @@ bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 	const GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
 		++g_statistics.backend_errors;
+		Invalidate_GL_State_Shadow();
 		return false;
 	}
 	Store_Render_State_Cache(state, value);
@@ -4305,10 +4625,7 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 			"original MeshClass transform conversion failed");
 		return;
 	}
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(transform_matrices.projection);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(transform_matrices.modelview);
+	Shadow_Load_Transforms(transform_matrices.projection, transform_matrices.modelview);
 	g_statistics.state_changes += 4U;
 	TextureClass *first_texture = texture_for(0, 0, 0);
 	if (!g_logged_first_mesh) {
@@ -4608,12 +4925,9 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 	Disable_Texture_Stage(1U);
 	Apply_Original_Texture_Coordinate_State(NULL);
 	// Submit_Indexed_Triangles may be used later in the same frame by HUD or
-	// native DX8 boundary callers. Restore its explicit identity baseline only
-	// after this homogeneous mesh submission is complete.
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	// native DX8 boundary callers. Every such draw loads its own transforms;
+	// see Release_Submission_Transforms for when the identity baseline is kept.
+	Release_Submission_Transforms();
 	g_statistics.state_changes += 4U;
 	if (!g_logged_first_mesh) {
 		const GLenum error = glGetError();
@@ -4894,10 +5208,7 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 	}
 	// clipping and interpolation.  CPU-dividing to NDC here would turn W into
 	// one, incorrectly draw behind-camera geometry and make UVs affine.
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(transform_matrices.projection);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(transform_matrices.modelview);
+	Shadow_Load_Transforms(transform_matrices.projection, transform_matrices.modelview);
 
 	OriginalTextureCoordinateState texture_coordinates[MAX_TEXTURE_STAGES] = {};
 	for (unsigned stage = 0U; stage < MAX_TEXTURE_STAGES; ++stage) {
@@ -4983,12 +5294,9 @@ IndexedSubmissionResult Submit_Indexed_Triangles(
 	const uint32_t emitted_triangles = submission.triangle_count;
 	Disable_Texture_Stage(1U);
 
-	// Restore the shared identity baseline after homogeneous GPU submission.
-	// Both mesh and generic indexed draws load their original transforms.
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	// Both mesh and generic indexed draws load their original transforms, so
+	// the identity baseline is only restored with the shadow disabled.
+	Release_Submission_Transforms();
 	g_statistics.state_changes += 4U;
 #endif
 

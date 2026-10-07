@@ -138,7 +138,8 @@ class VitaIndexedStateContractTests(unittest.TestCase):
         ):
             self.assertIn(needle, contract)
 
-        self.assertIn("glAlphaFunc(To_GL_Depth_Function(state.alpha_compare),", renderer)
+        # Issued through the exact GL-state shadow (tools/test_vita_render_state_shadow.py).
+        self.assertIn("Shadow_Alpha_Func(To_GL_Depth_Function(state.alpha_compare),", renderer)
         self.assertIn("static_cast<float>(state.alpha_reference) / 255.0f", renderer)
         self.assertNotIn("glAlphaFunc(GL_GREATER, 0.0f);", renderer)
         self.assertIn('"inverse alpha cutout"', host)

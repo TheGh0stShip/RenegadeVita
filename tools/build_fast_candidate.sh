@@ -115,8 +115,9 @@ rv_revision_actual=$(git -C "$rv_upstream" rev-parse HEAD)
 echo "Upstream revision: $rv_revision_actual"
 
 if [[ "${RENEGADE_FAST_RESTAGE:-0}" == "1" ]] || [[ ! -f "$rv_root/staging/wwlib/mixfile.cpp" ]] || \
-	! python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --check-staging > /dev/null 2>&1; then
-	echo "Fast restage requested, missing, or patch identity changed: running deterministic staging."
+	! python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --check-staging > /dev/null 2>&1 || \
+	! python3 "$rv_root/tools/staging_fingerprint.py" --root "$rv_root" check; then
+	echo "Fast restage requested, missing, or staging inputs/outputs changed: running deterministic staging."
 	RENEGADE_INCREMENTAL_STAGE="${RENEGADE_INCREMENTAL_STAGE:-1}" bash "$rv_root/tools/stage_sources.sh"
 else
 	echo "Fast restage skipped: reusing current staged source pool."
@@ -197,6 +198,7 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_input_route_contract \
 		tools.test_validate_vita_input_route \
 		tools.test_stage_sources_incremental_contract \
+		tools.test_staging_fingerprint \
 		tools.test_vita_audio_provider \
 		tools.test_validate_campaign_flight_bundle \
 		tools.test_explosion_effect_recycler_patch \

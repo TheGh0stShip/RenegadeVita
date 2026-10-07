@@ -25,6 +25,7 @@
 #include "vertmaterial.h"
 #include "ww3d_vita_render_state_contract.h"
 #include "internal_resolution.h"
+#include "frame_pacing.h"
 
 // The per-index geometry checksum hashes every referenced vertex of every
 // indexed draw (HUD, text, particles, sorted geometry). It is a host/test
@@ -78,7 +79,8 @@ extern "C" void vglRenegadeInvalidateVertexAttributes(void);
 #include "ww3d_vita_gxm_tuning.h"
 // Read-only views of pinned vitaGL (6e7fe40) internals for the init sizing
 // log and the per-frame transient pool peaks (gxm.c, vgl.c, ffp.c,
-// utils/mem_utils.c). Never written by the port.
+// utils/mem_utils.c). Never written by the port (frame-pacing-v1.flag changes
+// vsync_interval only through the public eglSwapInterval).
 extern "C" {
 extern int legacy_pool_size;
 extern float *legacy_pool_ptr;
@@ -2699,6 +2701,133 @@ bool Read_Vsync_Enabled()
 	return enabled;
 }
 
+// frame-pacing-v1.flag (RVFR1, see frame_pacing.h). Without the file nothing
+// below runs and the present path is unchanged. "RVFR1 off\n" keeps the
+// current presentation and only logs cadence; "RVFR1 30\n" and "RVFR1 auto\n"
+// set the vitaGL swap interval (eglSwapInterval), which only changes how many
+// vblanks the display queue callback holds each frame (gxm.c:261-262).
+// Simulation time is untouched: TimeManager still reads real elapsed time.
+bool g_frame_pacing_enabled = false;
+uint32_t g_frame_pacing_mode = RenegadeVitaFramePacing::MODE_OFF;
+RenegadeVitaFramePacing::Controller g_frame_pacing;
+RenegadeVitaFramePacing::Cadence g_frame_pacing_cadence;
+uint64_t g_frame_pacing_swap_begin_us = 0U;
+uint64_t g_frame_pacing_last_present_us = 0U;
+uint32_t g_frame_pacing_last_vcount = 0U;
+uint32_t g_frame_pacing_applied_interval = 1U;
+uint32_t g_frame_pacing_transitions = 0U;
+uint32_t g_frame_pacing_suspended_frames = 0U;
+
+void Read_Frame_Pacing_Mode(bool vsync_enabled)
+{
+	using namespace RenegadeVitaFramePacing;
+	uint32_t mode = MODE_OFF;
+	bool accepted = false;
+	FILE *file = fopen("ux0:data/renegade/user/config/frame-pacing-v1.flag", "rb");
+	if (file != NULL) {
+		char value[12] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		accepted = read_ok && size < sizeof(value) && Parse_Flag(value, size, mode);
+		if (!accepted) {
+			mode = MODE_OFF;
+			Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
+				"frame-pacing-v1.flag rejected: read_ok=%d size=%u; pacing off",
+				read_ok ? 1 : 0, static_cast<unsigned>(size));
+		}
+	}
+	// Pacing holds frames on vblanks; the "RVVS1 0" no-vblank diagnostic wins.
+	const bool vsync_conflict = accepted && mode != MODE_OFF && !vsync_enabled;
+	if (vsync_conflict) mode = MODE_OFF;
+	g_frame_pacing_enabled = accepted;
+	g_frame_pacing_mode = mode;
+	g_frame_pacing.Reset(mode);
+	g_frame_pacing_cadence.Reset();
+	g_frame_pacing_cadence.Break();
+	g_frame_pacing_swap_begin_us = 0U;
+	g_frame_pacing_last_present_us = 0U;
+	g_frame_pacing_last_vcount = 0U;
+	g_frame_pacing_applied_interval = 1U;  // vglWaitVblankStart(GL_TRUE)
+	g_frame_pacing_transitions = 0U;
+	g_frame_pacing_suspended_frames = 0U;
+	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
+		"frame-pacing: version=1 mode=%s enabled=%d source=%s vsync=%d vsync_conflict=%d window=%u down_p95_us=%u up_busy_p95_us=%u up_dwell=%u stall_us=%u arm_frames=%u",
+		Mode_Name(mode), accepted ? 1 : 0,
+		accepted ? "frame-pacing-v1.flag" : "default",
+		vsync_enabled ? 1 : 0, vsync_conflict ? 1 : 0,
+		static_cast<unsigned>(Controller::WINDOW),
+		static_cast<unsigned>(Controller::DOWN_P95_US),
+		static_cast<unsigned>(Controller::UP_BUSY_P95_US),
+		static_cast<unsigned>(Controller::UP_DWELL),
+		static_cast<unsigned>(Controller::STALL_US),
+		static_cast<unsigned>(Controller::ARM_FRAMES));
+}
+
+void Frame_Pacing_Before_Present()
+{
+	if (g_frame_pacing_enabled) g_frame_pacing_swap_begin_us = sceKernelGetProcessTimeWide();
+}
+
+// Runs right after vglSwapBuffers returns. busy = present-to-present interval
+// minus the time spent inside the swap (submission plus vsync/queue wait). A
+// new interval reaches the display queue callback for queued frames too.
+void Frame_Pacing_After_Present()
+{
+	using namespace RenegadeVitaFramePacing;
+	if (!g_frame_pacing_enabled) return;
+	const uint64_t now_us = sceKernelGetProcessTimeWide();
+	const uint32_t vcount = static_cast<uint32_t>(sceDisplayGetVcount());
+	const uint64_t previous_us = g_frame_pacing_last_present_us;
+	const uint32_t previous_vcount = g_frame_pacing_last_vcount;
+	g_frame_pacing_last_present_us = now_us;
+	g_frame_pacing_last_vcount = vcount;
+	if (previous_us == 0U || now_us <= previous_us) return;
+	const uint64_t interval_us = now_us - previous_us;
+	const uint64_t swap_us = now_us > g_frame_pacing_swap_begin_us ?
+		now_us - g_frame_pacing_swap_begin_us : 0U;
+	const uint64_t busy_us = interval_us > swap_us ? interval_us - swap_us : 0U;
+	// The IME common dialog draws inside vglSwapBuffers: never judged.
+	const bool text_entry = RenegadeVitaTextEntry::Active();
+	if (text_entry || interval_us > Controller::STALL_US) {
+		g_frame_pacing_cadence.Break();
+		++g_frame_pacing_suspended_frames;
+	} else {
+		g_frame_pacing_cadence.Record(vcount - previous_vcount);
+	}
+	const Decision decision = g_frame_pacing.Record_Frame(
+		interval_us > 0xFFFFFFFFULL ? 0xFFFFFFFFU : static_cast<uint32_t>(interval_us),
+		busy_us > 0xFFFFFFFFULL ? 0xFFFFFFFFU : static_cast<uint32_t>(busy_us),
+		text_entry);
+	if (g_frame_pacing_mode != MODE_OFF &&
+		decision.interval != g_frame_pacing_applied_interval) {
+		(void)eglSwapInterval(NULL, static_cast<EGLint>(decision.interval));
+		g_frame_pacing_applied_interval = decision.interval;
+		++g_frame_pacing_transitions;
+		if (g_frame_pacing_transitions <= 32U || (g_frame_pacing_transitions % 32U) == 0U) {
+			Vita_Append_A22_Runtime_Breadcrumb("frame-pacing",
+				"version=1 frame=%u event=%s interval=%u->%u p95_interval_us=%u p95_busy_us=%u headroom=%u up_lock=%u transitions=%u",
+				g_statistics.frames, Decision_Name(decision.kind),
+				decision.previous_interval, decision.interval,
+				decision.p95_interval_us, decision.p95_busy_us,
+				decision.headroom_windows, decision.up_lock,
+				g_frame_pacing_transitions);
+		}
+	}
+	if (g_frame_pacing_cadence.frames >= 1200U) {
+		Vita_Append_A22_Runtime_Breadcrumb("frame-pacing-cadence",
+			"version=1 frame=%u mode=%s interval=%u frames=%u vblanks0=%u vblanks1=%u vblanks2=%u vblanks3plus=%u cadence_changes=%u transitions=%u suspended=%u",
+			g_statistics.frames, Mode_Name(g_frame_pacing_mode),
+			g_frame_pacing_applied_interval, g_frame_pacing_cadence.frames,
+			g_frame_pacing_cadence.zero, g_frame_pacing_cadence.one,
+			g_frame_pacing_cadence.two, g_frame_pacing_cadence.three_plus,
+			g_frame_pacing_cadence.changes, g_frame_pacing_transitions,
+			g_frame_pacing_suspended_frames);
+		g_frame_pacing_cadence.Reset();
+		g_frame_pacing_suspended_frames = 0U;
+	}
+}
+
 // Defaults reproduce the shipped vitaGL/sceGxm sizes; an exactly valid
 // vitagl-sizing-v1.flag (see ww3d_vita_gxm_tuning.h) overrides named fields.
 VitaGLSizing Read_VitaGL_Sizing()
@@ -3891,6 +4020,9 @@ bool Initialize()
 		Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 			"vsync: version=1 enabled=%d source=%s", vsync_enabled ? 1 : 0,
 			vsync_enabled ? "default-or-flag" : "vsync-v1.flag");
+#if !RENEGADE_VITA_M00_DEMO
+		Read_Frame_Pacing_Mode(vsync_enabled);
+#endif
 	}
 #if RENEGADE_VITA_M00_DEMO
 	Log_VitaGL_Effective_Sizing(Default_VitaGL_Sizing());
@@ -4079,6 +4211,9 @@ void End_Frame(bool present)
 				"WW3D first End_Frame present entry: frame_before=%u", vglGetFrameNumber());
 		}
 		Sample_VitaGL_Transient_Pools(g_statistics.frames);
+#if !RENEGADE_VITA_M00_DEMO
+		Frame_Pacing_Before_Present();
+#endif
 		{
 			// Includes vitaGL scene submission and any wait for a free buffer.
 			RENEGADE_FRAME_PROFILE("Vita Swap Buffers");
@@ -4089,6 +4224,7 @@ void End_Frame(bool present)
 			++g_statistics.backend_errors;
 		}
 #if !RENEGADE_VITA_M00_DEMO
+		Frame_Pacing_After_Present();
 		Update_Internal_Resolution_After_Present();
 #endif
 		if (!g_logged_first_present) {

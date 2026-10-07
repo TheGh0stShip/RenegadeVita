@@ -120,7 +120,9 @@ class RuntimeLogContractTest(unittest.TestCase):
         self.assertIn("encode that SELECT edge at the fixed checkpoint", interactive)
         self.assertIn("reason=pre-clean-exit", interactive)
         self.assertIn("reason=best-effort-fatal-snapshot", interactive)
-        self.assertIn("[LIFECYCLE] END status=clean", main)
+        # Clean exit is formatted: status=%s with "clean" when no load failures were recovered.
+        self.assertIn('"[LIFECYCLE] END status=%s candidate=%s', main)
+        self.assertIn('recovered_load_failures == 0U ? "clean" :', main)
 
 
 if __name__ == "__main__":

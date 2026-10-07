@@ -1152,6 +1152,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m10-objective-conversation-resend.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m06-conversation-preempt-rearm.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m05-dead6-help-failed-text-save.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m05-apc-deploy-param-buffer.patch"
@@ -1586,6 +1588,11 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 # waypath. Apply after the boss Save/Load status patches that share these files.
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-boss-waypath-release-guard.patch"
+# M06 Mendoza fight: Sydney's bolt (5 m) and Mendoza's chase (2 m) end-position
+# waits gate the only death path; give each a bounded sim-time fallback on
+# Vita. Applied after the waypath guard, the last mendozabossgameobj.cpp patch.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a38-mendoza-end-position-timeout.patch"
 # M08 Raveshaw boss fight: the lightning-rod strike roll is a modulo by zero
 # when the player stands within 1 m of TIBERIUM_POS, and the "Raveshaw Boss
 # Fodder" create was only WWASSERTed.  Both run in release builds on the path

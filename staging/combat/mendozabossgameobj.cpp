@@ -91,6 +91,13 @@ static const AABoxClass BOSS_AREA_BOX03 (Vector3 (-64.4650F, 29.5306F, 0.434677F
 
 static Vector3		MENDOZA_END_POS (-58.088F, 15.389F, 0.334F);
 static Vector3		SYDNEY_END_POS (-57.931F, 12.133F, 0.412F);
+#if defined(__vita__)
+//	Vita: bounded sim-time fallback for the two end-position waits below.  A
+//	goto that fails (pathfind error, NO_PROGRESS) never reaches its end
+//	position, and Mendoza cannot die until Sydney is cowering, so the fight
+//	would stall.  After this many seconds the state proceeds as if arrived.
+static const float	VITA_END_POS_TIMEOUT = 15.0F;
+#endif
 static Vector3		HELIPAD_CENTER_POS (-43.329F, 30.796F, 1.605F);
 
 static const float	UNINITIALIZED_TIMER	= -5000.0F;
@@ -2986,6 +2993,12 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_RUN_AFTER_SYDNEY) (void)
 	CameraState.Set_State (CAMERA_STATE_NORMAL);
 	MoveState.Set_State (MOVE_STATE_CHASE_SYDNEY);
 	HeadState.Set_State (HEAD_STATE_LOOKING_AT_SYDNEY);
+#if defined(__vita__)
+	//	Vita: OverallStateTimer (saved, unused in this state) counts up the time
+	//	spent chasing.  Counting up keeps an older save, whose timer is just
+	//	below zero here, on the full timeout.
+	OverallStateTimer = 0.0F;
+#endif
 
 	//
 	//	Clue the player in that they need to assist Sydney
@@ -3007,6 +3020,14 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(OVERALL_STATE_RUN_AFTER_SYDNEY) (void)
 	//	If Mendoza is within 2 meters of his goal, then switch to his "toying" state...
 	//
 	float dist = (MendozaPos - MENDOZA_END_POS).Length ();
+#if defined(__vita__)
+	OverallStateTimer += TimeManager::Get_Frame_Seconds ();
+	if (dist >= 2.0F && OverallStateTimer >= VITA_END_POS_TIMEOUT) {
+		A30_Vita_Log ("A3.8 Mendoza chase: end position not reached after %.1f s (dist=%.2f m); proceeding to TOY_WITH_SYDNEY\n",
+			(double)OverallStateTimer, (double)dist);
+		dist = 0.0F;
+	}
+#endif
 	if (dist < 2.0F) {
 		OverallState.Set_State (OVERALL_STATE_TOY_WITH_SYDNEY);
 	}
@@ -3111,6 +3132,11 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(SYDNEY_STATE_BOLTING) (void)
 	params.Set_Basic ((long)0, 100, 777);
 	params.Set_Movement (SYDNEY_END_POS, 1.0F, 0.5F);
 	Sydney.Get_Ptr ()->As_PhysicalGameObj ()->As_SoldierGameObj ()->Get_Action ()->Goto (params);
+#if defined(__vita__)
+	//	Vita: SydneyStateTimer (saved, first used later by COWERING) counts up
+	//	the time spent bolting.
+	SydneyStateTimer = 0.0F;
+#endif
 	return ;
 }
 
@@ -3130,6 +3156,14 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(SYDNEY_STATE_BOLTING) (void)
 	//	Determine how far away Sydney is from her goal...
 	//
 	float dist = (SYDNEY_END_POS - syd_pos).Length ();
+#if defined(__vita__)
+	SydneyStateTimer += TimeManager::Get_Frame_Seconds ();
+	if (dist > 5.0F && SydneyStateTimer >= VITA_END_POS_TIMEOUT) {
+		A30_Vita_Log ("A3.8 Mendoza boss: Sydney end position not reached after %.1f s (dist=%.2f m); tripping in place\n",
+			(double)SydneyStateTimer, (double)dist);
+		dist = 0.0F;
+	}
+#endif
 
 	//
 	//	If Sydney is within a few meters of her goal, then make her trip.  :)

@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "02c47ee7cf2cd8c0f6e4d8cddff5378b924083d69271c5617f45bdf4611d8a82",
+  "stage_script_sha256": "302273aa1100ae6dd541c0def2d8ac12f68ac96bfb2a9e9f90a38ed5cff04411",
   "patch_count": 572,
   "patches": [
     {
@@ -1700,6 +1700,11 @@
       "sha256": "67b439e68bf42f766741f8983ea2a895390509f0710785bab8f376642dee67f3"
     },
     {
+      "path": "port/patches/scripts-a38-m06-conversation-preempt-rearm.patch",
+      "stage_directory": "scripts",
+      "sha256": "6855d02838ee11cbee87a5308c8cfba94639a88e3ed0f06eea38d6ccdb2a50a1"
+    },
+    {
       "path": "port/patches/scripts-a36-m05-dead6-help-failed-text-save.patch",
       "stage_directory": "scripts",
       "sha256": "e5c6f8fde4b5325ebf559015fb593cc1feec2fdd4605c417dae835e817b6cf8a"
@@ -2755,6 +2760,11 @@
       "sha256": "71433b8b6e1764ad0707ba04f95022a43fa54fb1dd0d0156a0c538cfdc324301"
     },
     {
+      "path": "port/patches/combat-a38-mendoza-end-position-timeout.patch",
+      "stage_directory": "combat",
+      "sha256": "6dbf6aef73a3fc58b4335484670e6514660bff040630fd2d8be688927dc38fe1"
+    },
+    {
       "path": "port/patches/combat-a36-raveshaw-star-dist-modulo-guard.patch",
       "stage_directory": "combat",
       "sha256": "8db90499831ea7491c2e6486d4094ccda4c5774ed04d7582149e83b58038e73b"
@@ -2853,17 +2863,7 @@
       "path": "port/patches/combat-a37-face-action-stale-end-time-clamp.patch",
       "stage_directory": "combat",
       "sha256": "fc6b37a6f0f9ef5136fbe67e950835ee8b2084fb57f42d6611599f96636e3a56"
-    },
-    {
-      "path": "port/patches/wwphys-a38-missing-model-keeps-current.patch",
-      "stage_directory": "wwphys",
-      "sha256": "fb1dd060778e70425eec1c39bcb02809b7935d39d3a8e65b3ff57d1eb5d87321"
-    },
-    {
-      "path": "port/patches/combat-a38-modelless-animation-guard.patch",
-      "stage_directory": "combat",
-      "sha256": "a845fe32df7c8572e9005febeac42eac90b7c441de2c218c5c17a71cdf6f2168"
     }
   ],
-  "registry_sha256": "0c7a22bf95f0cf2976b62487c48db3f5eb1fc2a6fdd60e827ed1fa0ba11dfec4"
+  "registry_sha256": "6ec025aea933934b7893262982569c21f17583432ffbd2f1a57cb7a06d931783"
 }

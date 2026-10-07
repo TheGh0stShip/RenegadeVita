@@ -482,3 +482,68 @@ These are reachable, but neither blocks success. Retail-identical, deferred.
 - Any fix for the conversation-drop pattern shares the open design decision
   recorded in M10_READINESS.md: late `Register_Monitor` delivery versus
   per-mission resends.
+
+## Follow-up fixes (2026-10-07)
+
+Evidence class: staged-source change, `arm-vita-eabi-g++ -fsyntax-only` on
+both files, `tools/stage_sources.sh` exit 0 with zero fuzz and no offsets,
+and a re-run of `tools.audit_conversation_gated_objectives --mission M06`
+(M06: 3 FIXED, 0 REVIEW, 0 AT RISK). No build, emulator or Vita run.
+This supersedes the Summary note that `Mission06.cpp` is byte-identical to
+upstream, and the deferred items for 605/607/608, the boss end positions and
+603/609 in the soft-lock hunt.
+
+**`scripts-a38-m06-conversation-preempt-rearm.patch`** (applied after the M10
+resend patch). Each site now registers `Monitor_Conversation` before
+`Start_Conversation`, with the poke state set first. A start refused by a
+playing key conversation (CON001/059/060) then reaches `Action_Complete`
+synchronously with INTERRUPTED. Without a key conversation, Start never
+touches the monitor array, so the ENDED path and its timing are unchanged.
+
+| Script (staged line) | Fix |
+|---|---|
+| `M06_GDI_Prisoner` (:890-899, :906-912) | INTERRUPTED of 300607 re-arms `conversation`/`poked` and the indicator; key 3 is still granted at the poke, as in retail |
+| `M06_Activate_Secret_Door` (:982-986, :994-998) | INTERRUPTED of 300608 clears `already_poked`, so the bookcase can be poked again and 608 and the stash stay reachable |
+| `M06_Civ_Prisoner` (:1053-1062, :1081-1084, :1099-1104) | the existing INTERRUPTED branch clears `conversation`; the health drop and indicator-off are skipped when the start is refused; INTERRUPTED of 300123 re-shows the indicator |
+| `M06_Resistance_Raider_DLS` (:3556-3561, :3567-3573) | INTERRUPTED of 100823 re-arms `talking` and the indicator |
+| `M06_Assistance_Farmer_DLS` (:3595, :3636-3642, :3665-3670) | an INTERRUPTED raised inside Start (transient, unsaved `talk_starting`) runs the ENDED branch once: grenade launcher and the custom to zone 101357 |
+| `M06_KaneHead` (:4361-4364, :4377-4379) | reorder only; the existing INTERRUPTED branches start CON064 and then remove the head |
+
+Poke re-arms also fire on a later INTERRUPTED (player left range, AI state
+change), as in the M05 Deadeye patch. Retail lost the objective in that case
+too.
+
+**Cosmetic 603/609** (same patch, `M06_Objective_Controller` :52, :63,
+:247-250, :267-274). When 603 or 609 is added after its `,1` custom has
+already arrived, it is marked accomplished at once. 609 reuses
+`accomplished_609`. 603 adds `accomplished_603` on unused save id 3, which
+older saves load as false.
+
+**`combat-a38-mendoza-end-position-timeout.patch`** (applied after
+`combat-a36-boss-waypath-release-guard.patch`; `__vita__` only).
+`VITA_END_POS_TIMEOUT` = 15 s of `TimeManager::Get_Frame_Seconds` sim time
+(`mendozabossgameobj.cpp:99`).
+
+- In RUN_AFTER_SYDNEY (:3022-3030), Mendoza proceeds to TOY_WITH_SYDNEY as
+  if within 2 m.
+- In SYDNEY_STATE_BOLTING (:3158-3166), Sydney trips in place as if within
+  5 m.
+- Each fallback writes one `A3.8 Mendoza ...` log line, once per state entry.
+- The counters reuse saved timers that are idle in those states. They count
+  up from 0 (`OverallStateTimer` at RUN_AFTER Begin, `SydneyStateTimer` at
+  BOLTING Begin; COWERING re-initialises the latter), so the save format is
+  unchanged.
+- Arrival before 15 s behaves exactly as in retail. The death sequence still
+  snaps Mendoza to `MENDOZA_END_POS` (:1418).
+
+Physical signature if a fallback fires: the log line above, then
+TOY_WITH_SYDNEY, COWERING and the normal death sequence.
+
+### Still deferred
+
+- Runtime confirmation of all of the above, on Vita3K or hardware.
+- Camera host after a load mid death sequence (visual).
+- Unsaved `M06_Barracks_Patrol` arrays, collapse zones 5/6/7/9 and the
+  flyover chain (cosmetic).
+- The engine-level design choice (late `Register_Monitor` delivery) is still
+  open. These per-script fixes do not depend on it.

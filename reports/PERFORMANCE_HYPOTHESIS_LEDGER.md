@@ -1478,3 +1478,31 @@ value-exact, but no TGA produces it, and Vita filtering precision for U4
 compared with U8 is unproven. A 16-bit path would be closer to PC DX8, which
 sampled A1R5G5B5 natively. It is a separate fidelity decision that needs
 capture comparison.
+
+## 2026-10-07 Campaign texture prepare budget scales with pool headroom (unbuilt)
+
+Hypothesis: M08's 48 MiB fixed prepare budget leaves about 15 MiB of its
+62.88 MiB closure (about 59 archive 256x256 TGA lightmaps) to upload lazily
+mid-gameplay. The budget counts `texture_bytes_resident`, which is GPU bytes
+(native DXT block bytes; TGA decoded RGBA8888, level 0 only, `w*h*4`), not
+compressed or file bytes. The closure estimate is therefore in the budget's
+own unit, and the shortfall is real for M08 only (M09 is 40.06 MiB, every
+other mapped level at most 20.48 MiB). Change: the budget is now
+`clamp(0.75 * (vitaGL RAM free + VRAM free - 24 MiB floor), 48 MiB, 96 MiB)`,
+read once when the prepare starts (`Select_Campaign_Texture_Prepare_Budget`).
+The 48 MiB value is the minimum, so a failed query, or a pool that reports
+free greater than total (Vita3K does), behaves exactly as before. The per
+batch 24 MiB `all_free` floor is unchanged and still stops the loop. SLOW and
+BUDGET pools are excluded from the budget input. The `A4 ... referenced
+textures` log line gains `base_budget_bytes` and `texture_pool_free_bytes`.
+Pool evidence: physical dev5 (128 MiB heap) RAM/VRAM/SLOW/ALL free were
+52.4/76.4/26.0/154.9 MiB; dev230 RAM pool 86 MiB; physical pool totals with
+the 192 MiB heap and ATTRIBUTE2=12 are unmeasured (expected RAM pool about 28
+MiB if extended memory is not granted, about 105 MiB if it is). On the dev5
+numbers the budget would be 78.6 MiB and M08 would finish with about 66 MiB of
+RAM+VRAM free; in the no-extended-memory case it is about 60 MiB. Risk: higher
+steady GPU residency in M08 (up to about 63 MiB) and a longer loading screen
+(209 more TGA decodes); the heap is unaffected because archive TGAs no longer
+retain a CPU copy. Before/after: unmeasured; no M08 has run on physical
+hardware. Decision: adopted pending a physical M08 run that shows
+`texture_pool_free_bytes`, deferred count and post-prepare pool free.

@@ -1935,6 +1935,33 @@ bool Warm_Original_M00_Referenced_Textures(A31VitaLoadingPresenter &presenter)
 	return presented;
 }
 
+// Extra texture residency the loading-time prepare may add, measured in the
+// same unit as texture_bytes_resident (GPU bytes: DXT blocks for native DXT,
+// w*h*4 level 0 for TGA). The historic fixed budget is the policy minimum, so
+// a failed or implausible pool query changes nothing. When the vitaGL RAM and
+// VRAM pools report real headroom, three quarters of the space above the free
+// floor may be used (the rest stays for meshes, dynamic textures and effects),
+// capped so load time and residency stay bounded. The floor itself is still
+// enforced per texture batch by the caller. SLOW/BUDGET pools are excluded.
+uint64_t Select_Campaign_Texture_Prepare_Budget(uint64_t base_budget,
+	uint64_t free_floor, uint64_t &texture_pool_free)
+{
+	const uint64_t budget_cap = 96ULL * 1024ULL * 1024ULL;
+	texture_pool_free = 0U;
+	RenegadeVitaRenderer::BackendMemoryStatistics memory = {};
+	if (!RenegadeVitaRenderer::Query_Backend_Memory(memory)) return base_budget;
+	// Some environments report free > total; treat that as no measurement.
+	if (memory.ram_free > memory.ram_total || memory.vram_free > memory.vram_total) {
+		return base_budget;
+	}
+	texture_pool_free = memory.ram_free + memory.vram_free;
+	if (texture_pool_free <= free_floor) return base_budget;
+	uint64_t budget = (texture_pool_free - free_floor) / 4ULL * 3ULL;
+	if (budget < base_budget) budget = base_budget;
+	if (budget > budget_cap) budget = budget_cap;
+	return budget;
+}
+
 void Warm_Original_Campaign_Referenced_Textures(A31VitaLoadingPresenter &presenter,
 	const char *mission)
 {
@@ -1959,10 +1986,16 @@ void Warm_Original_Campaign_Referenced_Textures(A31VitaLoadingPresenter &present
 	SaveLoadStatus::Set_Status_Text("Preparing mission textures", 0);
 	const uint64_t start_bytes = RenegadeVitaRenderer::Get_Statistics().texture_bytes_resident;
 	// Native DXT textures count their compressed size, so this covers far more
-	// textures than the former decode-path budget. A vitaGL free-memory floor
-	// keeps room for later dynamic textures, cached geometry and effects.
-	const uint64_t additional_budget = 48ULL * 1024ULL * 1024ULL;
+	// textures than the former decode-path budget. TGA textures count their
+	// decoded RGBA8888 GPU size (level 0 only; M08's 209 lightmaps are ~53 MiB),
+	// which can exceed the fixed base budget. The budget therefore scales with
+	// measured vitaGL pool headroom, never below the base. A vitaGL free-memory
+	// floor keeps room for later dynamic textures, cached geometry and effects.
+	const uint64_t base_budget = 48ULL * 1024ULL * 1024ULL;
 	const uint64_t free_memory_floor = 24ULL * 1024ULL * 1024ULL;
+	uint64_t texture_pool_free = 0U;
+	const uint64_t additional_budget = Select_Campaign_Texture_Prepare_Budget(
+		base_budget, free_memory_floor, texture_pool_free);
 	bool memory_floor_reached = false;
 	unsigned prepared = 0U;
 	for (; prepared < count; ++prepared) {
@@ -1983,11 +2016,13 @@ void Warm_Original_Campaign_Referenced_Textures(A31VitaLoadingPresenter &present
 	}
 	for (unsigned i = 0U; i < count; ++i) pending[i]->Release_Ref();
 	const uint64_t end_bytes = RenegadeVitaRenderer::Get_Statistics().texture_bytes_resident;
-	A30_Vita_Log("A4 %s referenced textures: prepared=%u deferred=%u resident_before=%llu resident_after=%llu soft_extra_budget_bytes=%llu memory_floor_reached=%d\n",
+	A30_Vita_Log("A4 %s referenced textures: prepared=%u deferred=%u resident_before=%llu resident_after=%llu soft_extra_budget_bytes=%llu base_budget_bytes=%llu texture_pool_free_bytes=%llu memory_floor_reached=%d\n",
 		mission, prepared, count - prepared + overflow,
 		static_cast<unsigned long long>(start_bytes),
 		static_cast<unsigned long long>(end_bytes),
 		static_cast<unsigned long long>(additional_budget),
+		static_cast<unsigned long long>(base_budget),
+		static_cast<unsigned long long>(texture_pool_free),
 		memory_floor_reached ? 1 : 0);
 }
 

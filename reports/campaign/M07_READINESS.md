@@ -346,3 +346,40 @@ default reason, ENDED.
   survives a load still attached to the rope, M07_Hotwire_Dead would fail the
   mission.
 - M07_CON001 audience distance (200 m) during the opening briefing.
+
+## Follow-up fixes (2026-10-07)
+
+Evidence class: source review of the staged `Mission07.cpp` and of the engine
+save state (`physicalgameobj.cpp`, `animcontrol.cpp`, `action.cpp`,
+`activeconversation.cpp`, `conversationmgr.cpp`), plus a read-only parse of the
+retail `always.dat` animation headers. Checks: `bash tools/stage_sources.sh`
+(exit 0, zero fuzz, 571 ordered patches), `renegade_patch_inventory.py
+--check-staging` PASS, ARM `-fsyntax-only` of the patched file (rc 0, no
+diagnostics in the new code). `audit_script_save_state_gaps.py` no longer
+lists `para_drop`. No build, emulator or physical Vita run. Patch:
+`scripts-a38-m07-followup-climb-briefing-evac-paradrop.patch`, registered after
+`scripts-a38-m07-hotwire-path-failure-fallback.patch`. Line numbers are for the
+staged file.
+
+| # | Issue | Decision / fix |
+|---|---|---|
+| 1 | **Rope climb across save/load.** The engine saves everything the climb needs: Hotwire's bone attachment (`HostGameObj` and bone index), both animation channels (name, frame and mode), the `PlayAnimation` action code and its parameters (observer id and action id), and script timers. After a load the climb resumes. It completes NORMAL when the animation finishes, or through the port's 5 s stall guard. The retail animations are short: `XG_EV5_Troop` is 30 frames at 15 fps (2 s), and so is `XG_EV5_troopBN`. The remaining hole is in the script. `M07_Climb_Rope` only finishes on a NORMAL completion, so a preempted climb (LOW_PRIORITY) or one that is lost leaves Hotwire on the rope, and `M07_Hotwire_Dead` then fails the mission. | Added a saved, once-only `climb_finished` (ID 1) and a 10 s `CLIMB_ROPE_FALLBACK` timer (`:6203`, `:6227`, `:6230`, `:6251`). Timers are saved, so a mid-climb save keeps it. On the normal path the evacuee is destroyed at 2 s and the timer never fires. It applies to all five climbers. |
+| 2 | **M07_CON001 / 300701 cut short.** INTERRUPTED (Havoc more than 200 m from the centre, or a dead orator) or UNABLE_TO_INIT skipped the whole ENDED block. Besides 701/710 and the nuke countdown, this also skipped the `M07_GO_ASSEMBLY` order to the team. That hides two primary objectives and the countdown guidance; 709's blip at 100717 is the only pointer left. It does not block completion. | Hidden guidance, so I added a minimal fallback. The ENDED block moved unchanged into `Briefing_Ended` (`:335`), which runs once under a saved `briefing_done` flag (ID 3). INTERRUPTED/UNABLE_TO_INIT start a 1 s `BRIEFING_FALLBACK` timer (`:331`). The timer runs the block only if Havoc and Gunner are alive (`:304`). If an orator died, the mission has already failed. Stops during level teardown never fire the timer. ENDED behaves as before. |
+| 3 | **LOW_PRIORITY on ARRIVE_EVAC_SPOT.** A rejected or preempted evac goto left Hotwire idle at 4 of 5 evacuees. A rejection is notified synchronously inside `M07_Inn_Evac::Custom`, so reporting from there could start M07_CON017 twice. | Added a saved `evac_reported` (ID 9). `Report_Evac` (`:1041`) sends `M07_DEAD6_EVAC` at most once. LOW_PRIORITY never reports; instead it starts a 2 s `ARRIVE_EVAC_RETRY` timer (`:1260`) that repeats the same goto through `Go_Evac_Spot` (`:1033`, `:1218`) until she reports. This is the designers' GO_SAM1 retry pattern. NORMAL and NO_PROGRESS report exactly as before. |
+| 4 | **`para_drop` not saved.** It was assigned only in `Created`, so after a load the drops looked up id 0 and landed at the origin. | Saved under unused ID 8 (`:5511`). The literals moved unchanged into `Init_Para_Drop` (`:5514`). A save from before this change restores nothing, and the table is then re-seeded at the drop site (`:5565`). Drop behavior on the normal path is identical. |
+
+Compatibility: all new members are zero-initialized by the script factory, and
+each fallback timer is only ever started by the new code. Saves made before
+this patch therefore load with the old behavior, except that `para_drop` is now
+re-seeded.
+
+### Deferred
+
+- Physical check of a mid-climb save/load: Hotwire should vanish within 2 s of
+  the load, or at the latest within 10 s.
+- Physical check of the CON001 fallback (leave the audience radius during the
+  opening briefing). Expect 701, then 710 2 s later, the countdown, and the
+  team's assembly move.
+- `apc_id` in eight soldier scripts and `M07_Encounter_Unit::stationary` are
+  still Created-only according to `audit_script_save_state_gaps.py`. These are
+  optional enemy counters, unchanged here.

@@ -1212,6 +1212,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m07-hotwire-path-failure-fallback.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m07-followup-climb-briefing-evac-paradrop.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-save-phase-diagnostics.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a36-static-mesh-cache-lifetime.patch"

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "bda3c2413e35e76eda9ab6b85015b17bdbf2a6e1cb9285b2f8596f0d21a788f6",
-  "patch_count": 573,
+  "stage_script_sha256": "f2e34fa82245bbe9d2919c720d082dbb4ecf917f51a282a3e35f515b9e2d2719",
+  "patch_count": 571,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1850,6 +1850,11 @@
       "sha256": "52ad8739d4d43d04d37087b30b3734d01fa9822427cd00a771e31543182d1122"
     },
     {
+      "path": "port/patches/scripts-a38-m07-followup-climb-briefing-evac-paradrop.patch",
+      "stage_directory": "scripts",
+      "sha256": "ceb14b7f194d1c7931618439891462827bd345d883f6ae55a5dcc0b120525808"
+    },
+    {
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
       "stage_directory": "combat",
       "sha256": "0698dde47d7dcf9d381f46134f90fdf878d997026d668ce3c574d32d613b1f2e"
@@ -2835,21 +2840,6 @@
       "sha256": "c336c47ccb99cb526384a9db2ff94f82429deea43ee1ff520fcfedfe6d8e039d"
     },
     {
-      "path": "port/patches/scripts-a39-m09-one-way-lift-mobius-recovery.patch",
-      "stage_directory": "scripts",
-      "sha256": "c0998f4467c85e162077b351acaf29f1dcdbb50a2f47e1557784ba62605e9e14"
-    },
-    {
-      "path": "port/patches/scripts-a39-m09-catchup-timer-restart.patch",
-      "stage_directory": "scripts",
-      "sha256": "60de143423b3a0fbcf2092b99248c63f4c1810ea21692be546e7f63588daa4db"
-    },
-    {
-      "path": "port/patches/scripts-a39-m09-midtro-reposition-fallback.patch",
-      "stage_directory": "scripts",
-      "sha256": "f5e37c991c91fc8e0df8c3c71a4d66510edeab15cbb7503c9c995ea795cbb5be"
-    },
-    {
       "path": "port/patches/combat-a37-hud-objective-index-bounds.patch",
       "stage_directory": "combat",
       "sha256": "ae406f0dd7173d744a1d84105b2b6518b88c1446a0ebf9260b23ecaf8363805f"
@@ -2870,5 +2860,5 @@
       "sha256": "fc6b37a6f0f9ef5136fbe67e950835ee8b2084fb57f42d6611599f96636e3a56"
     }
   ],
-  "registry_sha256": "a79986429a0de5042acd30cbe329d743a974265f18567d94a9ea779476787af4"
+  "registry_sha256": "52b90d8613d8064fabc60c19c1be7294f2fc30bcf0486a81f7373e33ba6898c4"
 }

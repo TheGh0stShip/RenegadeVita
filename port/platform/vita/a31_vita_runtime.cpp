@@ -5534,10 +5534,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						// Core_Shutdown already released Radar. The required-load
 						// guard skipped new Radar/building/game-begin finalization.
 						radar_initialized = false;
-						result.level_load_failure = static_cast<uint32_t>(restart_failure);
-						result.return_to_menu_requested = true;
-						result.return_to_lan_menu_requested = lan_session;
-						result.start_exit_requested = true;
+						// Shared recovery also drops an abandoned campaign autosave
+						// request so it cannot apply to the next menu selection.
+						Queue_Local_Load_Failure_Recovery(result, restart_failure,
+							reload_owner, lan_session);
 						last_render_trace = {};
 						if (capture_history != NULL) capture_history->Reset();
 						A30_Vita_Log("A4 %s: required reload failed code=%u; session cleanup\n",

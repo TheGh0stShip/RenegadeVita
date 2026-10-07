@@ -1663,6 +1663,14 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m09-keycard-zone-distance-recheck.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m09-intro-conversation-resume.patch"
+# Objective/HUD lifecycle: the HUD pog index could outlive the pending HUD
+# objectives (completed last pog, restart) and index a stale list slot, and a
+# save wrote the encyclopedia bit arrays without flushing BooleanVectorClass's
+# one-bit write-back cache.  Both apply to the final hud.cpp/encyclopediamgr.cpp.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-hud-objective-index-bounds.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-encyclopedia-save-bit-cache-flush.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

@@ -2053,6 +2053,17 @@ static	void	Objective_Update( void )
 
 	int objective_count = ObjectiveManager::Get_Num_HUD_Objectives();
 	if ( objective_count > 0 ) {
+		// The index only addresses the leading pending HUD objectives.  A just
+		// completed objective keeps its list slot, and a restart or load rebuilds
+		// the list, so a stale index can sit at or beyond the HUD count while the
+		// pointer test below still matches a completed or stale objective.  Drop
+		// it before it is used to index the list.
+		if ( CurrentObjectiveIndex < 0 || CurrentObjectiveIndex >= objective_count ) {
+			CurrentObjectiveIndex = 0;
+			CurrentObjective = NULL;
+			rebuild = true;
+		}
+
 		// maintain the index
 		if ( CurrentObjective != ObjectiveManager::Get_Objective( CurrentObjectiveIndex ) ) {
 			CurrentObjectiveIndex = 0;

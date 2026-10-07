@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "e0d557c188be77d1178f762218b1f2df0acf41f0f284120b80004764708e8e74",
+  "stage_script_sha256": "23930b2db14ae031b16191b55d5af35617d4ea4a58589aa67762bc12bbcd6ff3",
   "patch_count": 545,
   "patches": [
     {
@@ -2720,15 +2720,15 @@
       "sha256": "1fd9784eff93c659fa39a08322828cb55ab49dca36582e540f51be432e85a82a"
     },
     {
-      "path": "port/patches/scripts-a38-m09-keycard-zone-distance-recheck.patch",
-      "stage_directory": "scripts",
-      "sha256": "830d2aa7af952d0594a1c8debb21d808d8baecbd2fe8cabc2a5e5d7e4303b06e"
+      "path": "port/patches/combat-a37-hud-objective-index-bounds.patch",
+      "stage_directory": "combat",
+      "sha256": "ae406f0dd7173d744a1d84105b2b6518b88c1446a0ebf9260b23ecaf8363805f"
     },
     {
-      "path": "port/patches/scripts-a38-m09-intro-conversation-resume.patch",
-      "stage_directory": "scripts",
-      "sha256": "c336c47ccb99cb526384a9db2ff94f82429deea43ee1ff520fcfedfe6d8e039d"
+      "path": "port/patches/combat-a37-encyclopedia-save-bit-cache-flush.patch",
+      "stage_directory": "combat",
+      "sha256": "5a443ebf6a3eb814d1e19af9afe44985ea9958b82bf3e026425cb86ce04a9d2f"
     }
   ],
-  "registry_sha256": "1059d93f2f7d6499e0f2c40d709002d6e8ecf5e43ea386771e8e93fd4579d5fd"
+  "registry_sha256": "25e690af7e52c97679aa512223e07301b525ca21483b881c38e5773f47dfd595"
 }

@@ -34,9 +34,11 @@
 #include <string.h>
 #include <vector>
 
+// Host-safe: RENEGADE_FRAME_PROFILE is a no-op without RENEGADE_VITA_FRAME_PROFILE.
+#include "renegade_vita_frame_profile.h"
+
 #if defined(__vita__)
 #include "vita_runtime_log.h"
-#include "renegade_vita_frame_profile.h"
 #include <psp2/kernel/processmgr.h>
 #include <vitaGL.h>
 // One-shot pool-gating probe (reports/VITAGL_POOL_GATING.md): logs vitaGL

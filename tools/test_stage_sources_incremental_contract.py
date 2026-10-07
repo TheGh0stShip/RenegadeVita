@@ -81,6 +81,32 @@ class StageSourcesIncrementalContractTests(unittest.TestCase):
         self.assertIn("A31_Vita_Begin_Original_HUD_Render();", message_window)
         self.assertIn("A31_Vita_End_Original_HUD_Render();", message_window)
 
+    def test_staging_avoids_per_file_subprocesses(self):
+        script = (ROOT / "tools" / "stage_sources.sh").read_text(encoding="utf-8")
+        # Upstream pools copy with one cp per find, not one cp process per file.
+        self.assertNotRegex(script, re.compile(r"-exec cp \{\} .*\\;"))
+        self.assertEqual(script.count("-exec cp -t "), 13)
+        # The lower-case alias pass derives names with parameter expansion.
+        self.assertNotIn('$(dirname "$rv_header")', script)
+        self.assertNotIn('$(basename "$rv_header")', script)
+        self.assertNotIn('$(basename "$rv_audio_header" .h)', script)
+        self.assertIn("rv_header_lower=${rv_header_name,,}", script)
+        self.assertIn('if [[ "$rv_header_name" == *[![:ascii:]]* ]]; then', script)
+
+    def test_staging_fingerprint_brackets_every_run_and_skip_is_opt_in(self):
+        script = (ROOT / "tools" / "stage_sources.sh").read_text(encoding="utf-8")
+        helper = 'python3 "$rv_root/tools/staging_fingerprint.py" --root "$rv_root"'
+        self.assertIn("rv_stage_if_changed=${RENEGADE_STAGE_IF_CHANGED:-0}", script)
+        self.assertIn(f'if [[ "$rv_stage_if_changed" == "1" ]] && \\\n\t{helper} check; then', script)
+        self.assertLess(script.index(f"{helper} check"), script.index(f"{helper} begin"))
+        self.assertLess(script.index(f"{helper} begin"), script.index("rv_managed_stage_dirs=("))
+        self.assertLess(script.index(f"{helper} begin"), script.index("patch --batch"))
+        self.assertLess(script.index("--write-staging-receipt"), script.index(f"{helper} record"))
+        canonical = (ROOT / "tools" / "build.sh").read_text(encoding="utf-8")
+        self.assertNotIn("RENEGADE_STAGE_IF_CHANGED", canonical)
+        fast = (ROOT / "tools" / "build_fast_candidate.sh").read_text(encoding="utf-8")
+        self.assertLess(fast.index(f"{helper} check"), fast.index('bash "$rv_root/tools/stage_sources.sh"'))
+
     def test_fast_candidate_restages_incrementally_by_default(self):
         script = (ROOT / "tools" / "build_fast_candidate.sh").read_text(encoding="utf-8")
         self.assertIn('RENEGADE_INCREMENTAL_STAGE="${RENEGADE_INCREMENTAL_STAGE:-1}"', script)

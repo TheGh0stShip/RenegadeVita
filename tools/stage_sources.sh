@@ -8,6 +8,18 @@ rv_stage="$rv_stage_target"
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --count > /dev/null
 rv_incremental_stage=${RENEGADE_INCREMENTAL_STAGE:-0}
 case "$rv_incremental_stage" in 0|1) ;; *) echo "Invalid RENEGADE_INCREMENTAL_STAGE: $rv_incremental_stage" >&2; exit 2 ;; esac
+# Opt-in skip: only when the inputs (script, ordered patches, named upstream and
+# helper files, tool versions) and every staged byte still match the stamp that
+# the last successful run recorded. The canonical default always restages.
+rv_stage_if_changed=${RENEGADE_STAGE_IF_CHANGED:-0}
+case "$rv_stage_if_changed" in 0|1) ;; *) echo "Invalid RENEGADE_STAGE_IF_CHANGED: $rv_stage_if_changed" >&2; exit 2 ;; esac
+if [[ "$rv_stage_if_changed" == "1" ]] && \
+	python3 "$rv_root/tools/staging_fingerprint.py" --root "$rv_root" check; then
+	echo "Staging skipped: inputs and staged outputs match the last successful staging."
+	exit 0
+fi
+python3 "$rv_root/tools/staging_fingerprint.py" --root "$rv_root" begin || \
+	echo "Staging fingerprint unavailable; fast builds will restage until one is recorded." >&2
 
 rv_managed_stage_dirs=(
 	wwbitpack wwutil wwdebug wwlib wwmath wwsaveload ww3d2 wwphys combat
@@ -42,7 +54,7 @@ for rv_file in BitPacker.cpp BitPacker.h bitstream.cpp bitstream.h encoderlist.c
 done
 cp "$rv_upstream/Code/wwutil/mathutil.cpp" "$rv_stage/wwutil/mathutil.cpp"
 find "$rv_upstream/Code/wwdebug" -maxdepth 1 -type f \
-	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/wwdebug/" \;
+	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp -t "$rv_stage/wwdebug/" -- {} +
 
 # Stage the complete source/header pools for the coherent WW3D dependency
 # slice, while omitting headers deliberately supplied by the centralized
@@ -51,45 +63,45 @@ find "$rv_upstream/Code/wwdebug" -maxdepth 1 -type f \
 find "$rv_upstream/Code/wwlib" -maxdepth 1 -type f \
 	\( -iname '*.cpp' -o -name '*.h' \) \
 	! -name 'bittype.h' ! -name 'mutex.h' ! -name 'osdep.h' \
-	! -name 'win.h' -exec cp {} "$rv_stage/wwlib/" \;
+	! -name 'win.h' -exec cp -t "$rv_stage/wwlib/" -- {} +
 # The original uppercase Targa header carries on-disk structure declarations.
 cp "$rv_upstream/Code/wwlib/TARGA.H" "$rv_stage/wwlib/TARGA.H"
 find "$rv_upstream/Code/WWMath" -maxdepth 1 -type f \
-	\( -iname '*.cpp' -o -name '*.h' \) -exec cp {} "$rv_stage/wwmath/" \;
+	\( -iname '*.cpp' -o -name '*.h' \) -exec cp -t "$rv_stage/wwmath/" -- {} +
 find "$rv_upstream/Code/wwsaveload" -maxdepth 1 -type f \
-	\( -iname '*.cpp' -o -name '*.h' \) -exec cp {} "$rv_stage/wwsaveload/" \;
+	\( -iname '*.cpp' -o -name '*.h' \) -exec cp -t "$rv_stage/wwsaveload/" -- {} +
 find "$rv_upstream/Code/ww3d2" -maxdepth 1 -type f \
-	\( -iname '*.cpp' -o -name '*.h' \) -exec cp {} "$rv_stage/ww3d2/" \;
+	\( -iname '*.cpp' -o -name '*.h' \) -exec cp -t "$rv_stage/ww3d2/" -- {} +
 # Stage the complete original WWPhys source/header pool. The A3.0 manifest is
 # intentionally derived from the original wwphys.dsp runtime source list and
 # excludes only its editor-only PathfindSectorBuilder.cpp translation unit.
 find "$rv_upstream/Code/wwphys" -maxdepth 1 -type f \
-	\( -iname '*.cpp' -o -name '*.h' \) -exec cp {} "$rv_stage/wwphys/" \;
+	\( -iname '*.cpp' -o -name '*.h' \) -exec cp -t "$rv_stage/wwphys/" -- {} +
 # Stage the coherent Combat/Commando declaration and first-world factory pool.
 # CMake remains authoritative: staging a complete source pool never causes it
 # to be compiled implicitly. WWAudio and WWNet are present here so the original
 # Combat headers reach their real subsystem boundaries; behavior remains
 # excluded until explicit original translation units are selected.
 find "$rv_upstream/Code/Combat" -maxdepth 1 -type f \
-	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/combat/" \;
+	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp -t "$rv_stage/combat/" -- {} +
 find "$rv_upstream/Code/Commando" -maxdepth 1 -type f \
-	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/commando/" \;
+	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp -t "$rv_stage/commando/" -- {} +
 cp "$rv_upstream/Code/WWOnline/WOLLangCodes.h" "$rv_stage/commando/wollangcodes.h"
 find "$rv_upstream/Code/WWAudio" -maxdepth 1 -type f \
-	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/wwaudio/" \;
+	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp -t "$rv_stage/wwaudio/" -- {} +
 find "$rv_upstream/Code/wwnet" -maxdepth 1 -type f \
-	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/wwnet/" \;
+	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp -t "$rv_stage/wwnet/" -- {} +
 find "$rv_upstream/Code/wwtranslatedb" -maxdepth 1 -type f \
-	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/wwtranslatedb/" \;
+	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp -t "$rv_stage/wwtranslatedb/" -- {} +
 # The A4 frontend must use the original WWUI stack.  Keep its source pool
 # deterministic and separate from the selected runtime manifest until the
 # DirectInput/message bridge is deliberately closed.
 find "$rv_upstream/Code/wwui" -maxdepth 1 -type f \
-	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/wwui/" \;
+	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp -t "$rv_stage/wwui/" -- {} +
 # Stage the official mission-script source pool so the selected provider can
 # receive deterministic portability fixes without modifying upstream.
 find "$rv_upstream/Code/Scripts" -maxdepth 1 -type f \
-	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp {} "$rv_stage/scripts/" \;
+	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp -t "$rv_stage/scripts/" -- {} +
 
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwbitpack" -p1 < "$rv_root/port/patches/wwbitpack-gcc15.patch"
@@ -452,9 +464,16 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 # patches have applied. This is a filesystem compatibility boundary, not a
 # source rewrite; manifests retain their original canonical filenames.
 while IFS= read -r -d '' rv_header; do
-	rv_header_dir=$(dirname "$rv_header")
-	rv_header_name=$(basename "$rv_header")
-	rv_header_lower=$(printf '%s' "$rv_header_name" | tr '[:upper:]' '[:lower:]')
+	# Parameter expansion instead of dirname/basename/tr subprocesses for each
+	# of ~1,000 headers; it lower-cases ASCII names identically, and any
+	# non-ASCII name keeps the original tr mapping.
+	rv_header_dir=${rv_header%/*}
+	rv_header_name=${rv_header##*/}
+	if [[ "$rv_header_name" == *[![:ascii:]]* ]]; then
+		rv_header_lower=$(printf '%s' "$rv_header_name" | tr '[:upper:]' '[:lower:]')
+	else
+		rv_header_lower=${rv_header_name,,}
+	fi
 	if [[ "$rv_header_name" != "$rv_header_lower" && ! -e "$rv_header_dir/$rv_header_lower" ]]; then
 		cp -- "$rv_header" "$rv_header_dir/$rv_header_lower"
 	fi
@@ -486,7 +505,8 @@ cp -- "$rv_stage/combat/viseme.h" "$rv_stage/combat/Viseme.h"
 cp -- "$rv_stage/wwtranslatedb/translateobj.h" "$rv_stage/wwtranslatedb/TranslateObj.h"
 cp -- "$rv_stage/wwtranslatedb/translatedb.h" "$rv_stage/wwtranslatedb/TranslateDB.h"
 for rv_audio_header in "$rv_stage/wwaudio"/*.h; do
-	rv_audio_base=$(basename "$rv_audio_header" .h)
+	rv_audio_base=${rv_audio_header##*/}
+	rv_audio_base=${rv_audio_base%.h}
 	cp -- "$rv_audio_header" "$rv_stage/wwaudio/$rv_audio_base.H"
 done
 touch "$rv_stage/wwbitpack"/* "$rv_stage/wwutil/mathutil.cpp" "$rv_stage/wwdebug"/* \
@@ -1732,3 +1752,5 @@ if [[ "$rv_incremental_stage" == "1" ]]; then
 	rv_stage="$rv_stage_target"
 fi
 python3 "$rv_root/tools/renegade_patch_inventory.py" --root "$rv_root" --write-staging-receipt
+python3 "$rv_root/tools/staging_fingerprint.py" --root "$rv_root" record || \
+	echo "Staging fingerprint not recorded; the next fast build will restage." >&2

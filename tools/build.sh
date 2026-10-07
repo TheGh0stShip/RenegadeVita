@@ -298,6 +298,7 @@ python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_
 	tools.test_vita_indexed_state_contract \
 	tools.test_validate_vita_input_route tools.test_vita_route_session_runner \
 	tools.test_stage_sources_incremental_contract \
+	tools.test_staging_fingerprint \
 	tools.test_mission_conversation_diagnostics_contract \
 	tools.test_vita3k_build_install_contract \
 	tools.test_vita_loading_screen_contract \

@@ -5662,6 +5662,22 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						result.frames);
 					g_b_core_restart = false;
 				}
+				// An owned Practice/LAN request can also arrive while Combat is not
+				// Active: Practice is IS_SOLOPLAY, so the original in-game help and
+				// C&C reference dialogs suspend Combat, and the original main loop
+				// keeps running cNetwork::Update while Combat is not Active, letting
+				// the intermission expiry (messages.cpp) set the request. The round
+				// block above needs Combat Active and the guard below skips the frame
+				// that would resume it, so route this through failed-load cleanup.
+				if (g_b_core_restart && !direct_client && !combat_mode->Is_Active() &&
+					(selected_source.skirmish_selected || lan_host || lan_client)) {
+					A30_Vita_Log("A4 round: core restart with inactive Combat state suspended=%d frame=%u\n",
+						combat_mode->Is_Suspended() ? 1 : 0, result.frames);
+					g_b_core_restart = false;
+					Queue_Local_Load_Failure_Recovery(result, A35_LOAD_SOURCE_REJECTED,
+						"round-restart-inactive-combat", lan_session);
+					break;
+				}
 				if (g_client_quit && !multiplayer_client) {
 					A30_Vita_Log("A4 round: unowned client quit request dropped frame=%u\n",
 						result.frames);

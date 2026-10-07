@@ -1288,7 +1288,10 @@ DECLARE_SCRIPT(M05_DEAD6_MiniGunner, "") // deadeye
 		}
 		// Vita: an interrupted rescue talk re-arms the poke instead of
 		// leaving 502 pending forever.
-		if(action_id == 300004 && reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED && poke_id == 3)
+		// Not on a dying Deadeye or during level release (conversations reset
+		// before objects are destroyed): no poke icon on a corpse.
+		if(action_id == 300004 && reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED && poke_id == 3 &&
+			Commands->Get_Health(obj) > 0.0f)
 		{
 			conversation = false;
 			poke_id = 1;

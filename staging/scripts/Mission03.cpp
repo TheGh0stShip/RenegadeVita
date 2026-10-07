@@ -2337,7 +2337,9 @@ DECLARE_SCRIPT(M03_Announce_Refinery_Controller_JDG, "")
 		SAVE_VARIABLE( spkr_6_spot, 16 );
 		SAVE_VARIABLE( spkr_7_spot, 17 );
 		SAVE_VARIABLE( spkr_8_spot, 18 );
-		SAVE_VARIABLE( spkr_8_spot, 19 );
+		// Vita save/load: retail registered spkr_8_spot twice (18 and 19), so
+		// spkr_9_spot was never saved and its klaxon played at the origin after a load.
+		SAVE_VARIABLE( spkr_9_spot, 19 );
 		SAVE_VARIABLE( spkr_10_spot, 20 );
 		SAVE_VARIABLE( spkr_11_spot, 21 );
 		SAVE_VARIABLE( spkr_12_spot, 22 );

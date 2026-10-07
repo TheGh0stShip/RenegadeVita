@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "bdfa52c54e993928bc2cd403a0741b52578b3d5eae517b1e6f70fc837fcc0691",
-  "patch_count": 605,
+  "stage_script_sha256": "8e1ceb21258cb33cadc3f6faf75f26e5d33e2e85d1ad1648e799816f6c37eb3c",
+  "patch_count": 608,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -3028,7 +3028,22 @@
       "path": "port/patches/wwphys-a37-rejected-load-carrier-discard.patch",
       "stage_directory": "wwphys",
       "sha256": "eea439cd189d569c5fc40c8cf902765d74c471376b7929812c7d6b742b1d4fe6"
+    },
+    {
+      "path": "port/patches/scripts-a39-m03-speaker9-save-id.patch",
+      "stage_directory": "scripts",
+      "sha256": "f14a6eebda6b08d7bb4fb78e60080b7bdafd2473ca24d1e5cf3475d774a23807"
+    },
+    {
+      "path": "port/patches/scripts-a39-m05-deadeye-rearm-alive-only.patch",
+      "stage_directory": "scripts",
+      "sha256": "8ff979cfaad9c07e0e05913b26abca94af2667f433059d78dc92264609335138"
+    },
+    {
+      "path": "port/patches/scripts-a39-m09-keycard-single-dist-loop.patch",
+      "stage_directory": "scripts",
+      "sha256": "b40963eb5d8552130f0a5bf28c025677d593bce46a6b261fdf73688903e5fa90"
     }
   ],
-  "registry_sha256": "05052e208c110c360b031bf96870e4753b8444989b27266f991485b8c34a628b"
+  "registry_sha256": "385c21c18da33da2016d0274f4fc3b713b79501ae1a720bbcade62344d413402"
 }

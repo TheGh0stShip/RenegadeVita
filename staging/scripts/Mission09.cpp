@@ -4584,6 +4584,10 @@ DECLARE_SCRIPT (M09_KeyCard_Zone, "")
 	float mobius_distance;
 	bool star_in_zone;
 	bool fired_off;
+	// Vita: one DIST_CHECK loop at a time. Re-entering within 2 s used to start
+	// another loop, and with the per-pass re-measure each loop could repeat the
+	// door check (and Mobius's "need a keycard" line).
+	bool dist_check_pending;
 
 	REGISTER_VARIABLES()
 	{
@@ -4591,6 +4595,7 @@ DECLARE_SCRIPT (M09_KeyCard_Zone, "")
 		SAVE_VARIABLE( mobius_distance, 2 );
 		SAVE_VARIABLE( star_in_zone, 3 );
 		SAVE_VARIABLE( fired_off, 4 );
+		SAVE_VARIABLE( dist_check_pending, 5 );
 	}
 	
 	void Created (GameObject *obj)
@@ -4604,6 +4609,11 @@ DECLARE_SCRIPT (M09_KeyCard_Zone, "")
 
 	void Timer_Expired(GameObject * obj, int timer_id)
 	{
+		if (timer_id == DIST_CHECK)
+		{
+			dist_check_pending = false;
+		}
+
 		if (timer_id == DIST_CHECK && star_in_zone)
 		{
 			// Vita soft-lock guard: the original re-check only compared the
@@ -4625,6 +4635,7 @@ DECLARE_SCRIPT (M09_KeyCard_Zone, "")
 
 			else
 			{
+				dist_check_pending = true;
 				Commands->Start_Timer (obj, this, 2.0f, DIST_CHECK);
 			}
 		}
@@ -4645,8 +4656,9 @@ DECLARE_SCRIPT (M09_KeyCard_Zone, "")
 			Commands->Send_Custom_Event( obj, Commands->Find_Object (2000452), CHECK, 0, 0.0f );
 		}
 
-		else
+		else if (!dist_check_pending)
 		{
+			dist_check_pending = true;
 			Commands->Start_Timer (obj, this, 2.0f, DIST_CHECK);
 		}
 	}

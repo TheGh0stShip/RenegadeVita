@@ -89,9 +89,12 @@ cinematic command bounds/timing.
 
 - Raveshaw needs `DamageableStaticPhys` lightning rods with bone `BBZZZT`
   within 40 m of `TIBERIUM_POS`, the `CAMBONE` and `bluetibeffect.tga`
-  assets, and original static-scene `Collect_Objects`. `Prepare_Arc_Effect_Data`
-  dereferences `Arc Effect` objects without a null check (original). If the
-  preset failed to create on Vita, this would crash at boss spawn.
+  assets, and original static-scene `Collect_Objects`. Upstream
+  `Prepare_Arc_Effect_Data` dereferenced `Arc Effect` objects without a null
+  check; `combat-a36-raveshaw-arc-effect-null-guards.patch` now skips the
+  cosmetic lightning effect when the helper objects, their models, or fewer
+  than two lightning rods are missing (behaviour unchanged when they exist).
+  ARM syntax-checked only; not exercised on the Vita.
 - Death needs the boss to reach `MOVE_STATE_CIRCLE_CATWALK` with health <= 20,
   and a 1-in-5 random roll per hit. Untested on Vita physics or pathfinding.
 - The midtro is 1945 cinematic frames. Relocation depends on Test_Cinematic

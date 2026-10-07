@@ -3550,6 +3550,27 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(LIGHTNING_ROD_STATE_ACTIVE) (void)
 
 ///////////////////////////////////////////////////////////////////////////
 //
+//	Peek_Arc_Effect_Model
+//
+//	Vita guard: the "Arc Effect" helper object (or its physics object or
+//	model) can be missing when the preset failed to create.  Return NULL so
+//	callers skip the cosmetic lightning effect instead of dereferencing it.
+//
+///////////////////////////////////////////////////////////////////////////
+static RenderObjClass *
+Peek_Arc_Effect_Model (SimpleGameObj *arc_obj)
+{
+	if (arc_obj == NULL) {
+		return NULL;
+	}
+
+	PhysClass *phys_obj = arc_obj->Peek_Physical_Object ();
+	return (phys_obj != NULL) ? phys_obj->Peek_Model () : NULL;
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+//
 //	STATE_IMPL_END(LIGHTNING_ROD_STATE_ACTIVE)
 //
 ///////////////////////////////////////////////////////////////////////////
@@ -3560,8 +3581,10 @@ RaveshawBossGameObjClass::STATE_IMPL_END(LIGHTNING_ROD_STATE_ACTIVE) (void)
 	//	Hide all the arc effects
 	//
 	for (int index = 0; index < ARC_OBJ_COUNT; index ++) {
-		PhysClass *phys_obj = ArcObjects[index]->Peek_Physical_Object ();
-		phys_obj->Peek_Model ()->Set_Hidden (true);
+		RenderObjClass *arc_model = Peek_Arc_Effect_Model (ArcObjects[index]);
+		if (arc_model != NULL) {
+			arc_model->Set_Hidden (true);
+		}
 		ArcLifeRemaining[index] = 0;
 	}
 	
@@ -3578,7 +3601,13 @@ void
 RaveshawBossGameObjClass::STATE_IMPL_THINK(LIGHTNING_ROD_STATE_ACTIVE) (void)
 {
 	LightningRodStateTimer -= TimeManager::Get_Frame_Seconds ();
-	if (LightningRodStateTimer <= 0) {
+
+	//
+	//	An arc spans two lightning rods.  If the rods were not found in the
+	//	static scene (fewer than two), skip the effect rather than index past
+	//	the list.
+	//
+	if (LightningRodStateTimer <= 0 && LightningRodList.Count () >= 2) {
 		LightningRodStateTimer = 0.125F;
 		
 		int count	= LightningRodList.Count ();
@@ -3629,8 +3658,10 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(LIGHTNING_ROD_STATE_ACTIVE) (void)
 		if (ArcLifeRemaining[index] > 0) {
 			ArcLifeRemaining[index]	-= TimeManager::Get_Frame_Seconds ();
 			if (ArcLifeRemaining[index] <= 0) {
-				PhysClass *phys_obj = ArcObjects[index]->Peek_Physical_Object ();
-				phys_obj->Peek_Model ()->Set_Hidden (true);
+				RenderObjClass *arc_model = Peek_Arc_Effect_Model (ArcObjects[index]);
+				if (arc_model != NULL) {
+					arc_model->Set_Hidden (true);
+				}
 			}
 		}
 	}
@@ -4273,7 +4304,7 @@ RaveshawBossGameObjClass::Collect_Lightning_Rods (void)
 		//	Add this object to our list
 		//
 		if (phys_obj != NULL) {
-			if (phys_obj->Peek_Model ()->Get_Bone_Index ("BBZZZT") > 0) {
+			if (phys_obj->Peek_Model () != NULL && phys_obj->Peek_Model ()->Get_Bone_Index ("BBZZZT") > 0) {
 				LightningRodList.Add (phys_obj);
 			}
 		}
@@ -4319,13 +4350,21 @@ void
 RaveshawBossGameObjClass::Prepare_Arc_Effect_Data (void)
 {
 	//
+	//	Start from a known state so that a failed lookup below leaves the
+	//	effect disabled (Add_Lightning_Arc skips a zero-length end bone).
+	//
+	EndTM.Make_Identity ();
+	for (int bone_index = 0; bone_index < BONE_COUNT; bone_index ++) {
+		Bones[bone_index].Make_Identity ();
+	}
+
+	//
 	//	Create the simple game object's that we'll use to display the lightning effect
 	//
 	for (int index = 0; index < ARC_OBJ_COUNT; index ++) {
-		if (	ArcObjects[index]->Peek_Physical_Object () != NULL &&
-				ArcObjects[index]->Peek_Physical_Object ()->Peek_Model () != NULL)
-		{
-			ArcObjects[index]->Peek_Physical_Object ()->Peek_Model ()->Set_Hidden (true);
+		RenderObjClass *arc_model = Peek_Arc_Effect_Model (ArcObjects[index]);
+		if (arc_model != NULL) {
+			arc_model->Set_Hidden (true);
 		}
 		
 		ArcLifeRemaining[index]	= 0;
@@ -4356,6 +4395,8 @@ RaveshawBossGameObjClass::Prepare_Arc_Effect_Data (void)
 		//
 		temp_obj->Peek_Model ()->Set_Hidden (true);
 		temp_obj->Set_Delete_Pending ();
+	} else if (temp_obj != NULL) {
+		temp_obj->Set_Delete_Pending ();
 	}
 
 	return ;
@@ -4373,6 +4414,14 @@ void
 RaveshawBossGameObjClass::Add_Lightning_Arc (const Vector3 &start_point, const Vector3 &end_point)
 {
 	//
+	//	The arc bones are scaled by the end-bone offset; if the "Arc Effect"
+	//	model data was never captured there is nothing to display.
+	//
+	if (EndTM.Get_Translation ().X == 0.0F) {
+		return ;
+	}
+
+	//
 	//	Try to find an available welding-arc
 	//
 	for (int index = 0; index < ARC_OBJ_COUNT; index ++) {
@@ -4381,7 +4430,10 @@ RaveshawBossGameObjClass::Add_Lightning_Arc (const Vector3 &start_point, const V
 			//
 			//	Get the model of the object we'll be displaying
 			//
-			RenderObjClass *model = ArcObjects[index]->Peek_Physical_Object ()->Peek_Model ();
+			RenderObjClass *model = Peek_Arc_Effect_Model (ArcObjects[index]);
+			if (model == NULL) {
+				continue;
+			}
 
 			//
 			//	Make the object "look" at its endpoint

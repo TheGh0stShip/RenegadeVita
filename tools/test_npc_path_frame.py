@@ -19,6 +19,7 @@ class NpcPathFrameTests(unittest.TestCase):
 #include <string>
 #define RENEGADE_A4_ORIGINAL_GAMEMODE 1
 #define RENEGADE_HOST_ABI_TEST 1
+#define RENEGADE_FRAME_PROFILE(name) do {} while (0)
 std::string events;
 bool toggle = false;
 enum { INPUT_FUNCTION_MENU_TOGGLE };
@@ -61,7 +62,7 @@ struct A31SimulationStageTotals {
     uint64_t real_us;
 };
 void A31_Interactive_Apply_Render_Capabilities() { events += 'R'; }
-void A31_Interactive_Run_Simulation_Frame() FRAME
+void A31_Interactive_Run_Simulation_Frame() @FRAME_BODY@
 int main() {
     A31_Interactive_Run_Simulation_Frame();
     assert(events == "TIPCNSR");
@@ -75,7 +76,7 @@ int main() {
     A31_Interactive_Run_Simulation_Frame();
     assert(events == "TIN");
 }
-'''.replace("FRAME", frame)
+'''.replace("@FRAME_BODY@", frame)
         with tempfile.TemporaryDirectory(prefix="npc-path-frame-") as folder:
             cpp, exe = Path(folder) / "test.cpp", Path(folder) / "test"
             cpp.write_text(program)

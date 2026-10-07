@@ -233,7 +233,8 @@ def audit_map(root, data_root, map_name, scripts=None):
         row = scripts.get(binding['name'].lower())
         binding['source_owner'] = row['owner'] if row else None
         binding['parameter_fields'] = parameter_fields(row['descriptor'] if row else None, binding['parameters'])
-    own_file = {'M00_Tutorial.mix': 'Mission00.cpp', 'M13.mix': 'MissionX0.cpp', 'M01.mix': 'Mission01.cpp'}.get(map_name)
+    own_file = {'M00_Tutorial.mix': 'Mission00.cpp', 'M13.mix': 'MissionX0.cpp', 'M01.mix': 'Mission01.cpp',
+                'M08.mix': 'mission08.cpp'}.get(map_name)
     lookups = lookup_rows(scripts, reached_scripts, objects, spawners, {own_file} if own_file else set())
     findings = structural_findings(members, reached_defs, defs, unknown, missing_defs)
     media = scanner.receipt()

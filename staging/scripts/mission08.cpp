@@ -5988,6 +5988,18 @@ DECLARE_SCRIPT (M08_Mobile_Vehicle, "CheckBlocked=1:int, Attack_Loc0=0:int, Atta
 
 	}
 
+	// Created seeds loc with the sentinel 100 until the first GOTO_LOC timer
+	// selects a slot. Treat an unselected slot as no attack location instead
+	// of reading past the eleven authored entries.
+	int Current_Attack_Location_ID(void)
+	{
+		if (loc < 0 || loc > 10)
+		{
+			return 0;
+		}
+		return attack_loc[loc];
+	}
+
 	void Enemy_Seen(GameObject * obj, GameObject *enemy )
 	{
 		bool blocked;
@@ -6004,9 +6016,9 @@ DECLARE_SCRIPT (M08_Mobile_Vehicle, "CheckBlocked=1:int, Attack_Loc0=0:int, Atta
 
 		ActionParamsStruct params;
 
-		Commands->Debug_Message("Attack_Loc = %d /n", attack_loc[loc]);
+		Commands->Debug_Message("Attack_Loc = %d /n", Current_Attack_Location_ID());
 		params.Set_Basic( this, INNATE_PRIORITY_ENEMY_SEEN + 5, 10 );
-		params.Set_Movement( Commands->Get_Position (Commands->Find_Object (attack_loc [loc])), 1.0f, 5.0f );
+		params.Set_Movement( Commands->Get_Position (Commands->Find_Object (Current_Attack_Location_ID())), 1.0f, 5.0f );
 		params.Set_Attack(enemy, 100.0f, 5.0f, true);
 		params.AttackCheckBlocked = blocked;
 		
@@ -6041,7 +6053,7 @@ DECLARE_SCRIPT (M08_Mobile_Vehicle, "CheckBlocked=1:int, Attack_Loc0=0:int, Atta
 			
 			ActionParamsStruct params;
 			params.Set_Basic( this, INNATE_PRIORITY_ENEMY_SEEN +5, 10 );
-			params.Set_Movement( Commands->Get_Position (Commands->Find_Object (attack_loc [loc])), 1.0f, 5.0f );
+			params.Set_Movement( Commands->Get_Position (Commands->Find_Object (Current_Attack_Location_ID())), 1.0f, 5.0f );
 			
 			Commands->Action_Attack(obj, params);
 			

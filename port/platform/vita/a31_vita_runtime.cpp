@@ -1604,6 +1604,9 @@ public:
 		}
 		const bool progress_changed =
 			LastMirroredLoadProgress != mirrored_progress;
+		// Long loads receive no button input; keep the Vita idle/auto-off
+		// and screen-dim timers from expiring while progress is shown.
+		sceKernelPowerTick(SCE_KERNEL_POWER_TICK_DEFAULT);
 		Apply_Original_Loading_Presentation_Rect(
 			"loading_presenter_render", false);
 		Commando_Render_Original_Loading_Screen(Screen, update_network);

@@ -124,9 +124,14 @@ public:
 
 	bool Poll(DiscoveryRecord &record) {
 		if (Transport == NULL) return false;
-		LanBeacon beacon;
+		// Receive into one spare byte so an oversized datagram, which
+		// recvfrom truncates to the capacity, is rejected rather than parsed.
+		unsigned char datagram[sizeof(LanBeacon) + 1];
 		Endpoint sender;
-		if (Transport->Receive(&beacon, sizeof(beacon), sender) != (int)sizeof(beacon)) return false;
+		if (Transport->Receive(datagram, sizeof(datagram), sender) != (int)sizeof(LanBeacon)) return false;
+		LanBeacon beacon;
+		memcpy(&beacon, datagram, sizeof(beacon));
+		if (sender.Address == 0 || sender.Address == 0xffffffffU) return false;
 		if (ntohl(beacon.Magic) != LAN_MAGIC || ntohl(beacon.Version) != LAN_PROTOCOL) return false;
 		record.Host = sender;
 		record.Host.PortNumber = ntohs(beacon.GamePort);

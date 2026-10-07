@@ -1404,3 +1404,11 @@ expected well under 0.1 ms/frame. Decision: adopted as hygiene; look for the
 real cost in original Think/pathfind/physics via the A3.6 frame-profile lines
 (and optionally disable the profiler with frame-profile-v1.flag `RVFP1 0` to
 bound its own overhead).
+
+- Fog state GL call cache (ww3d_vita_renderer.cpp Apply_Current_Fog_State):
+  hypothesis that reissuing glFogi/glFogf x2/glFogfv/glEnable|glDisable on
+  every fog render-state change costs vitaGL driver time; now skips calls whose
+  last applied value is identical (cache invalidated by
+  Invalidate_Native_State_Cache on init/reactivation and on GL error). Risk:
+  behaviour-preserving only. Before/after: unmeasured. Decision: adopted as
+  hygiene pending fixed-benchmark measurement.

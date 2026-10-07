@@ -329,8 +329,18 @@ void Invalidate_Original_Shader_State_Cache()
 	g_original_shader_culling_inverted = false;
 }
 
+struct AppliedFogStateCache {
+	bool valid;
+	bool enabled;
+	GLfloat start;
+	GLfloat end;
+	GLfloat color[3];
+};
+AppliedFogStateCache g_applied_fog_state = {};
+
 void Invalidate_Native_State_Cache()
 {
+	memset(&g_applied_fog_state, 0, sizeof(g_applied_fog_state));
 	memset(g_texture_stage_cache, 0, sizeof(g_texture_stage_cache));
 	Invalidate_Texture_Object_Samplers();
 	memset(&g_render_state_cache, 0, sizeof(g_render_state_cache));
@@ -495,19 +505,42 @@ bool Apply_Current_Fog_State()
 		D3D_Color_Blue_Unit(g_fog_state.color),
 		1.0f
 	};
-	glFogi(GL_FOG_MODE, GL_LINEAR);
-	glFogf(GL_FOG_START, g_fog_state.start);
-	glFogf(GL_FOG_END, g_fog_state.end);
-	glFogfv(GL_FOG_COLOR, color);
-	if (g_fog_state.enabled) {
-		glEnable(GL_FOG);
-	} else {
-		glDisable(GL_FOG);
+	// Skip GL calls whose value already matches the last applied value;
+	// the cache is cleared by Invalidate_Native_State_Cache (init/reactivation).
+	AppliedFogStateCache &applied = g_applied_fog_state;
+	const bool valid = applied.valid;
+	if (!valid) {
+		glFogi(GL_FOG_MODE, GL_LINEAR);
 	}
+	if (!valid || applied.start != g_fog_state.start) {
+		glFogf(GL_FOG_START, g_fog_state.start);
+	}
+	if (!valid || applied.end != g_fog_state.end) {
+		glFogf(GL_FOG_END, g_fog_state.end);
+	}
+	if (!valid || applied.color[0] != color[0] || applied.color[1] != color[1] ||
+		applied.color[2] != color[2]) {
+		glFogfv(GL_FOG_COLOR, color);
+	}
+	if (!valid || applied.enabled != g_fog_state.enabled) {
+		if (g_fog_state.enabled) {
+			glEnable(GL_FOG);
+		} else {
+			glDisable(GL_FOG);
+		}
+	}
+	applied.valid = true;
+	applied.enabled = g_fog_state.enabled;
+	applied.start = g_fog_state.start;
+	applied.end = g_fog_state.end;
+	applied.color[0] = color[0];
+	applied.color[1] = color[1];
+	applied.color[2] = color[2];
 	++g_statistics.state_changes;
 	const GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
 		++g_statistics.backend_errors;
+		applied.valid = false;
 	}
 	if (!g_logged_first_fog_state) {
 		Vita_Append_A22_Runtime_Breadcrumb("render-state",

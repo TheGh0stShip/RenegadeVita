@@ -100,6 +100,13 @@ Commands->Set_HUD_Help_Text(0,color); Commands->Display_Text(variable);''')
         self.assertTrue(routes['media_calls'][0]['null_argument'])
         self.assertEqual(routes['media_calls'][1]['name'], 'icon.tga')
 
+    def test_defaulted_trailing_add_objective_arguments_are_not_indexed(self):
+        # Original Add_Objective(id,type,status,short_id,sound=NULL,long_id=0): four-argument calls are valid.
+        row = script('Commands->Add_Objective(7,1,2,TITLE);')
+        routes = source_routes({'used': row}, binding(), {'TITLE': '1001'})
+        self.assertEqual([r['text_id'] for r in routes['text_calls']], [1001])
+        self.assertEqual(routes['media_calls'], [])
+
     def test_direct_conversation_literals_and_computed_candidates_remain_distinct(self):
         row = script('name="Missing"; Commands->Create_Conversation(name); Commands->Create_Conversation("Known");')
         routes = source_routes({'used': row}, binding(), {})

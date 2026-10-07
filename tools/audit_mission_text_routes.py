@@ -228,6 +228,8 @@ def source_routes(scripts, binding_audit, ids):
                       'script_in_discovered_closure': key in discovered,
                       'line': row['body_start_line'] + row['body'].count('\n', 0, call['offset'])}
             for index in TEXT_ARGUMENTS.get(command, ()):
+                if index >= len(args):
+                    continue  # Optional trailing argument (Add_Objective long ID) left at its default.
                 expression = args[index][1]
                 value = constant_id(expression, ids)
                 text.append({**origin, 'argument_index': index, 'expression': expression, 'text_id': value,
@@ -236,6 +238,8 @@ def source_routes(scripts, binding_audit, ids):
                              'unresolved_or_out_of_range_expression'})
             if command in MEDIA_ARGUMENTS:
                 index, kind = MEDIA_ARGUMENTS[command]
+                if index >= len(args):
+                    continue  # Optional description-sound argument left at its default (NULL).
                 expression = args[index][1]
                 media.append({**origin, 'kind': kind, 'expression': expression,
                               'name': literal_string(expression), 'null_argument': expression.strip() in ('NULL', '0', 'nullptr')})

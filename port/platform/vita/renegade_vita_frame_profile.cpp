@@ -1,4 +1,5 @@
 #include "renegade_vita_frame_profile.h"
+#include "renegade_vita_script_cost.h"
 
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
@@ -15,6 +16,8 @@
 int A30_Vita_Log(const char *format, ...) __attribute__((format(printf, 1, 2)));
 
 bool g_renegade_frame_profile_active = false;
+// RVSC1 script-cost scopes and window line; see renegade_vita_script_cost.h.
+bool g_renegade_script_cost_active = false;
 
 namespace {
 
@@ -63,6 +66,18 @@ uint64_t g_window_timed = 0U;
 uint32_t g_frame_scopes = 0U;
 uint32_t g_frame_timed = 0U;
 uint32_t g_total_windows = 0U;
+
+// RVSC1 script-cost watch (TUT-R1-03). The window report names only the top
+// kReportedScopes scopes; with RVSC1 on each window also logs these scopes
+// whatever their rank, from the window totals already accumulated. The first
+// three are once-per-frame denominators; the RVSC1 scopes (Objective Update,
+// Conversation Think, Spawn Update) exist only while RVSC1 is on.
+const char *const kScriptCostScopes[] = {
+	"CombatManager Think", "Game Obj Think", "Post Think",
+	"Objective Update", "Conversation Think", "Spawn Update",
+	"ScriptZone Think", "Star Enter", "All Enter", "Scriptable PostThink",
+	"Smart Think", "See"
+};
 
 inline uint32_t Read_Clock_Us()
 {
@@ -156,6 +171,36 @@ void Appendf(char *line, size_t size, size_t &length, const char *format, ...)
 	}
 }
 
+// Same window estimates as the report line. A name entered through several
+// pointers (one per translation unit) is summed by string comparison.
+void Report_Script_Cost_Window()
+{
+	char line[1024];
+	size_t length = 0U;
+	line[0] = 0;
+	Appendf(line, sizeof(line), length,
+		"A3.6 script-cost: version=1 window=%u frames=%u avg_frame_us=%llu inclusive=1 avg_us/calls_per_frame:",
+		g_total_windows, g_window_frames,
+		static_cast<unsigned long long>(g_window_frame_us / g_window_frames));
+	for (const char *watched : kScriptCostScopes) {
+		uint64_t window_us = 0U;
+		uint64_t window_calls = 0U;
+		for (unsigned index = 0U; index < kSlots; ++index) {
+			const ProfileSlot &slot = g_slots[index];
+			if (slot.name != NULL && strcmp(slot.name, watched) == 0) {
+				window_us += slot.window_us;
+				window_calls += slot.window_calls;
+			}
+		}
+		Appendf(line, sizeof(line), length, " ");
+		Append_Name(line, sizeof(line), length, watched);
+		Appendf(line, sizeof(line), length, "=%llu/%.1f",
+			static_cast<unsigned long long>(window_us / g_window_frames),
+			static_cast<double>(window_calls) / g_window_frames);
+	}
+	A30_Vita_Log("%s\n", line);
+}
+
 void Report_Window()
 {
 	unsigned order[kReportedScopes];
@@ -224,6 +269,7 @@ void Report_Window()
 		Appendf(line, sizeof(line), length, "=%u", g_slots[best].worst_frame_us);
 	}
 	A30_Vita_Log("%s\n", line);
+	if (g_renegade_script_cost_active) Report_Script_Cost_Window();
 
 	for (unsigned index = 0U; index < kSlots; ++index) {
 		g_slots[index].window_us = 0U;
@@ -332,6 +378,16 @@ void Renegade_Frame_Profile_Configure(void)
 			enabled = value[6] == '1';
 		}
 	}
+	bool script_cost_enabled = false;
+	FILE *script_cost = fopen("ux0:data/renegade/user/config/script-cost-v1.flag", "rb");
+	if (script_cost != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), script_cost);
+		const bool read_ok = !ferror(script_cost);
+		fclose(script_cost);
+		script_cost_enabled = read_ok && size == 8U &&
+			memcmp(value, "RVSC1 ", 6U) == 0 && value[7] == '\n' && value[6] == '1';
+	}
 	g_profiled_thread = sceKernelGetThreadId();
 	// Use the stack range only if it really contains this thread's frame.
 	g_profiled_stack_low = 0U;
@@ -351,10 +407,16 @@ void Renegade_Frame_Profile_Configure(void)
 	}
 	Calibrate_Clock_Cost();
 	g_renegade_frame_profile_active = enabled;
+	g_renegade_script_cost_active = script_cost_enabled;
 	A30_Vita_Log("A3.6 frame-profile: configured enabled=%d window_frames=%u slots=%u thread=%08X thread_test=%s exact_calls=%u sample=1/%u\n",
 		enabled ? 1 : 0, kWindowFrames, kSlots, static_cast<unsigned>(g_profiled_thread),
 		g_profiled_stack_size != 0U ? "stack-range" : "thread-id",
 		static_cast<unsigned>(kExactCallsPerFrame), 1U << kSampleShift);
+	if (script_cost_enabled) {
+		A30_Vita_Log("A3.6 script-cost: configured enabled=1 collection=%d scopes=%u\n",
+			enabled ? 1 : 0,
+			static_cast<unsigned>(sizeof(kScriptCostScopes) / sizeof(kScriptCostScopes[0])));
+	}
 }
 
 void Renegade_Frame_Profile_Begin_Frame(void)

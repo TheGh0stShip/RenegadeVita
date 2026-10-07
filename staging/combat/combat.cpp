@@ -112,6 +112,13 @@ void A31_Vita_Render_Original_Loading_Callback(const char *phase, int minimum_pr
 #if defined(RENEGADE_VITA_PORT)
 #include "a31_vita_hud_presentation.h"
 #endif
+#if defined(RENEGADE_VITA_PORT) && defined(RENEGADE_VITA_FRAME_PROFILE)
+// RVSC1: profile scopes for the script-driven once-per-frame calls below,
+// open only while script-cost-v1.flag is on (diagnostics only).
+#include "renegade_vita_script_cost.h"
+#else
+#define RENEGADE_SCRIPT_COST_SCOPE( name )
+#endif
 
 
 const int DEFAULT_MAX_SHADOWS = 4;
@@ -755,10 +762,14 @@ void 	CombatManager::Think()
 	BulletManager::Update();
 }
 
+{	RENEGADE_SCRIPT_COST_SCOPE( "Objective Update" );
 	ObjectiveManager::Update( TimeManager::Get_Frame_Seconds() );
+}
 
 	// Now, Process all objects logically
+{	RENEGADE_SCRIPT_COST_SCOPE( "Conversation Think" );
 	ConversationMgrClass::Think();
+}
 {	WWPROFILE( "Game Obj Think" );
 	GameObjManager::Think();
 
@@ -795,7 +806,9 @@ void 	CombatManager::Think()
 	MessageWindow->On_Frame_Update();
 }
 
+{	RENEGADE_SCRIPT_COST_SCOPE( "Spawn Update" );
 	SpawnManager::Update();
+}
 
 {	WWPROFILE( "Sound Environment" );
 

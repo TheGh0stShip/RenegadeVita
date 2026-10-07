@@ -223,6 +223,9 @@ protected:
 		ID_MAX	= 999999
 	};
 
+	// Vita port: TDBObjClass::Load admission uses the same ID range.
+	friend class TDBObjClass;
+
 private:
 
 	//////////////////////////////////////////////////////////////

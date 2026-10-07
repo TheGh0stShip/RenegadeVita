@@ -294,6 +294,18 @@
  }
  
  
+--- a/translatedb.h
++++ b/translatedb.h
+@@ -223,6 +223,9 @@
+ 		ID_MAX	= 999999
+ 	};
+
++	// Vita port: TDBObjClass::Load admission uses the same ID range.
++	friend class TDBObjClass;
++
+ private:
+
+ 	//////////////////////////////////////////////////////////////
 --- a/translatedb.cpp
 +++ b/translatedb.cpp
 @@ -278,7 +278,10 @@

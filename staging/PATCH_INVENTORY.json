@@ -127,7 +127,7 @@
     {
       "path": "port/patches/wwtranslatedb-a36-load-admission.patch",
       "stage_directory": "wwtranslatedb",
-      "sha256": "3d5633dcc722fbe531461fbd40c7d9334e00774dc355735cdbcf41efa244e9a9"
+      "sha256": "4edfd782d4e17c4e4708dd2c46a76c3e9b992d447fa3655cc571eb94adb13d92"
     },
     {
       "path": "port/patches/ww3d2-a22-gcc15.patch",
@@ -2407,7 +2407,7 @@
     {
       "path": "port/patches/combat-a36-definition-load-admission.patch",
       "stage_directory": "combat",
-      "sha256": "b25144f542209a0f0b88f471014f7961cbae94277ebf9b78051ab396c3eee919"
+      "sha256": "9a52a9fa01801f7647044401b6a1c12b6a95fa6179a5e8fcd197ab929832884f"
     },
     {
       "path": "port/patches/combat-a36-corrupt-ddb-rejects-level-data.patch",
@@ -2560,5 +2560,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "15e54f131d5c87b8c9343aed13ed8aefd386ed15bc6b9c980e147032fd0a45e4"
+  "registry_sha256": "cc4081c4c8ff449932a7bdbd33377c9ecf6e372c72e1efe909fc78f6290277a8"
 }

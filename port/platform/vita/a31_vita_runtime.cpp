@@ -2442,13 +2442,27 @@ void Reassert_Performance_Clocks(uint32_t frame)
 // pause owner (same path as the menu button), never a new pause mechanism.
 std::atomic<uint32_t> g_power_resume_events(0U);
 std::atomic<uint32_t> g_power_suspend_events(0U);
+std::atomic<uint32_t> g_power_system_suspends(0U);
+std::atomic<uint32_t> g_power_thermal_suspends(0U);
+std::atomic<uint32_t> g_power_low_battery_suspends(0U);
+std::atomic<uint32_t> g_power_low_battery_events(0U);
 
+// Runs on the callback thread: atomic counters only, no logging or locks.
 int Power_Event_Callback(int, int, int power_info, void *)
 {
+	if ((power_info & SCE_POWER_CB_SYSTEM_SUSPEND) != 0)
+		g_power_system_suspends.fetch_add(1U, std::memory_order_relaxed);
+	if ((power_info & SCE_POWER_CB_THERMAL_SUSPEND) != 0)
+		g_power_thermal_suspends.fetch_add(1U, std::memory_order_relaxed);
+	if ((power_info & SCE_POWER_CB_LOW_BATTERY_SUSPEND) != 0)
+		g_power_low_battery_suspends.fetch_add(1U, std::memory_order_relaxed);
 	if ((power_info & (SCE_POWER_CB_SYSTEM_SUSPEND |
 		SCE_POWER_CB_THERMAL_SUSPEND | SCE_POWER_CB_LOW_BATTERY_SUSPEND)) != 0) {
 		g_power_suspend_events.fetch_add(1U, std::memory_order_relaxed);
 	}
+// SCE_POWER_CB_LOW_BATTERY (0x800) is an enumerator in psp2common/power.h.
+	if ((power_info & SCE_POWER_CB_LOW_BATTERY) != 0)
+		g_power_low_battery_events.fetch_add(1U, std::memory_order_release);
 	if ((power_info & SCE_POWER_CB_SYSTEM_RESUME) != 0) {
 		g_power_resume_events.fetch_add(1U, std::memory_order_release);
 	}
@@ -2480,11 +2494,20 @@ void Ensure_Power_Callback_Registered()
 bool Consume_Power_Resume(uint32_t frame)
 {
 	static uint32_t seen = 0U;
+	static uint32_t low_battery_seen = 0U;
+	const uint32_t low_battery = g_power_low_battery_events.load(std::memory_order_acquire);
+	if (low_battery != low_battery_seen) {
+		low_battery_seen = low_battery;
+		A30_Vita_Log("A3.6 power: WARNING low battery frame=%u events=%u\n", frame, low_battery);
+	}
 	const uint32_t now = g_power_resume_events.load(std::memory_order_acquire);
 	if (now == seen) return false;
 	seen = now;
-	A30_Vita_Log("A3.6 power: resume observed frame=%u suspends=%u resumes=%u\n",
-		frame, g_power_suspend_events.load(std::memory_order_relaxed), now);
+	A30_Vita_Log("A3.6 power: resume observed frame=%u suspends=%u (system=%u thermal=%u low_battery=%u) resumes=%u\n",
+		frame, g_power_suspend_events.load(std::memory_order_relaxed),
+		g_power_system_suspends.load(std::memory_order_relaxed),
+		g_power_thermal_suspends.load(std::memory_order_relaxed),
+		g_power_low_battery_suspends.load(std::memory_order_relaxed), now);
 	Reassert_Performance_Clocks(frame);
 	return true;
 }

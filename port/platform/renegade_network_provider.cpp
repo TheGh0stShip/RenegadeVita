@@ -4,6 +4,7 @@
 
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -82,12 +83,25 @@ private:
 	Port BoundPort;
 };
 
+// LAN beacon wire layout (sent/received as the raw struct, 76 bytes):
+//   offset  0  uint32_t Magic       (host byte order)
+//   offset  4  uint32_t Version     (host byte order)
+//   offset  8  uint16_t GamePort    (host byte order)
+//   offset 10  char     ServerName[64]
+//   offset 74  2 bytes implicit tail padding (uint32_t alignment)
+// The asserts below pin this layout; changing it is a protocol change.
 struct LanBeacon {
 	uint32_t Magic;
 	uint32_t Version;
 	uint16_t GamePort;
 	char ServerName[64];
 };
+
+static_assert(sizeof(LanBeacon) == 76, "LanBeacon wire size changed");
+static_assert(offsetof(LanBeacon, Magic) == 0, "LanBeacon::Magic offset changed");
+static_assert(offsetof(LanBeacon, Version) == 4, "LanBeacon::Version offset changed");
+static_assert(offsetof(LanBeacon, GamePort) == 8, "LanBeacon::GamePort offset changed");
+static_assert(offsetof(LanBeacon, ServerName) == 10, "LanBeacon::ServerName offset changed");
 
 class LanDiscovery : public DiscoveryProvider {
 public:

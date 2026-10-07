@@ -36,9 +36,44 @@
 #include "vita_runtime_log.h"
 #include "renegade_vita_frame_profile.h"
 #include <vitaGL.h>
+// One-shot pool-gating probe (reports/VITAGL_POOL_GATING.md): logs vitaGL
+// pool free bytes around the first texture upload of the process.
+static bool g_texture_pool_probe_logged = false;
+static bool Texture_Pool_Probe_Begin(unsigned width, unsigned height)
+{
+	if (g_texture_pool_probe_logged) return false;
+	g_texture_pool_probe_logged = true;
+	Vita_Append_A22_Runtime_Breadcrumb("pool-probe",
+		"first texture upload before %ux%u: RAM=%llu VRAM=%llu ALL=%llu", width, height,
+		static_cast<unsigned long long>(vglMemFree(VGL_MEM_RAM)),
+		static_cast<unsigned long long>(vglMemFree(VGL_MEM_VRAM)),
+		static_cast<unsigned long long>(vglMemFree(VGL_MEM_ALL)));
+	return true;
+}
+static void Texture_Pool_Probe_End(bool active, unsigned width, unsigned height)
+{
+	if (!active) return;
+	Vita_Append_A22_Runtime_Breadcrumb("pool-probe",
+		"first texture upload after %ux%u: RAM=%llu VRAM=%llu ALL=%llu", width, height,
+		static_cast<unsigned long long>(vglMemFree(VGL_MEM_RAM)),
+		static_cast<unsigned long long>(vglMemFree(VGL_MEM_VRAM)),
+		static_cast<unsigned long long>(vglMemFree(VGL_MEM_ALL)));
+}
 extern "C" GLboolean vglRenegadeUploadDXTChain(GLuint id, GLenum format,
 	GLsizei width, GLsizei height, GLsizei levels,
 	const void *const *pixels, const GLsizei *sizes);
+static GLboolean Probed_Upload_DXT_Chain(GLuint id, GLenum format,
+	GLsizei width, GLsizei height, GLsizei levels,
+	const void *const *pixels, const GLsizei *sizes)
+{
+	const bool pool_probe = Texture_Pool_Probe_Begin(static_cast<unsigned>(width),
+		static_cast<unsigned>(height));
+	const GLboolean ok = vglRenegadeUploadDXTChain(id, format, width, height, levels,
+		pixels, sizes);
+	Texture_Pool_Probe_End(pool_probe, static_cast<unsigned>(width),
+		static_cast<unsigned>(height));
+	return ok;
+}
 #endif
 
 bool DX8Wrapper::_EnableTriangleDraw = true;
@@ -952,7 +987,7 @@ bool Upload_Retained_DDS_Chain(IDirect3DTexture8 *texture, bool replace,
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	if (!vglRenegadeUploadDXTChain(native, GL_BGRA, texture->Width,
+	if (!Probed_Upload_DXT_Chain(native, GL_BGRA, texture->Width,
 		texture->Height, texture->MipLevels, pixels, sizes) || glGetError() != GL_NO_ERROR) {
 		if (replace) RenegadeVitaRenderer::Release_Texture(native);
 		return false;
@@ -1018,8 +1053,12 @@ bool Upload_Texture_Level_From_Surface(IDirect3DTexture8 *texture, UINT level)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	{
+	const bool pool_probe = Texture_Pool_Probe_Begin(static_cast<unsigned>(description.Width), static_cast<unsigned>(description.Height));
 	glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, description.Width,
 		description.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba.data());
+	Texture_Pool_Probe_End(pool_probe, static_cast<unsigned>(description.Width), static_cast<unsigned>(description.Height));
+	}
 	if (glGetError() != GL_NO_ERROR) return false;
 #else
 	if (texture->NativeTexture == 0U) texture->NativeTexture = 1U;
@@ -1175,8 +1214,12 @@ IDirect3DTexture8 *Create_Texture_From_Surface(IDirect3DSurface8 *surface,
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	{
+	const bool pool_probe = Texture_Pool_Probe_Begin(static_cast<unsigned>(description.Width), static_cast<unsigned>(description.Height));
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, description.Width, description.Height,
 		0, GL_RGBA, GL_UNSIGNED_BYTE, rgba.data());
+	Texture_Pool_Probe_End(pool_probe, static_cast<unsigned>(description.Width), static_cast<unsigned>(description.Height));
+	}
 	if (glGetError() != GL_NO_ERROR) {
 		RenegadeVitaRenderer::Release_Texture(native);
 		delete texture;
@@ -1436,7 +1479,7 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			const GLenum fast_format = dds.Get_Format() == WW3D_FORMAT_DXT1 ?
 				GL_COMPRESSED_RGBA_S3TC_DXT1_EXT : GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-			if (vglRenegadeUploadDXTChain(fast_native, fast_format, texture->Width,
+			if (Probed_Upload_DXT_Chain(fast_native, fast_format, texture->Width,
 				texture->Height, native_levels, fast_pixels, fast_sizes) &&
 				glGetError() == GL_NO_ERROR) {
 				// Identity checksum of the uploaded level-0 blocks (diagnostic).
@@ -1576,15 +1619,19 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 		bytes += rgba.size();
 #if defined(__vita__)
 		if (!native_dxt) {
+			{
+			const bool pool_probe = Texture_Pool_Probe_Begin(static_cast<unsigned>(width), static_cast<unsigned>(height));
 			glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, width, height, 0,
 				GL_RGBA, GL_UNSIGNED_BYTE, rgba.data());
+			Texture_Pool_Probe_End(pool_probe, static_cast<unsigned>(width), static_cast<unsigned>(height));
+			}
 		}
 #endif
 	}
 #if defined(__vita__)
 	bool native_upload_ok = true;
 	if (native_dxt) {
-		if (vglRenegadeUploadDXTChain(native, native_format, texture->Width,
+		if (Probed_Upload_DXT_Chain(native, native_format, texture->Width,
 			texture->Height, mip_count, native_pixels, native_sizes)) {
 			texture->NativeCompressed = true;
 			bytes = compressed_bytes;

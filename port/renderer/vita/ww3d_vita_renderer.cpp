@@ -2234,7 +2234,23 @@ bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
 	// Allocate without data first: vitaGL copies unconditionally into the
 	// new storage, so mapping is the only failure-safe way to fill it.
 	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+	// One-shot pool-gating probe (reports/VITAGL_POOL_GATING.md).
+	static bool s_pool_probe_logged = false;
+	const bool pool_probe = !s_pool_probe_logged;
+	s_pool_probe_logged = true;
+	if (pool_probe) Vita_Append_A22_Runtime_Breadcrumb("pool-probe",
+		"static-mesh glBufferData before bytes=%u: RAM=%llu VRAM=%llu ALL=%llu",
+		static_cast<unsigned>(vertex_bytes),
+		static_cast<unsigned long long>(vglMemFree(VGL_MEM_RAM)),
+		static_cast<unsigned long long>(vglMemFree(VGL_MEM_VRAM)),
+		static_cast<unsigned long long>(vglMemFree(VGL_MEM_ALL)));
 	glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizei>(vertex_bytes), NULL, GL_STATIC_DRAW);
+	if (pool_probe) Vita_Append_A22_Runtime_Breadcrumb("pool-probe",
+		"static-mesh glBufferData after bytes=%u: RAM=%llu VRAM=%llu ALL=%llu",
+		static_cast<unsigned>(vertex_bytes),
+		static_cast<unsigned long long>(vglMemFree(VGL_MEM_RAM)),
+		static_cast<unsigned long long>(vglMemFree(VGL_MEM_VRAM)),
+		static_cast<unsigned long long>(vglMemFree(VGL_MEM_ALL)));
 	void *vertex_storage = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 	if (vertex_storage != NULL) {
 		memcpy(vertex_storage, builder.Vertices().Data(), vertex_bytes);

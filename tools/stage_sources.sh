@@ -1705,6 +1705,12 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-hud-objective-index-bounds.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-encyclopedia-save-bit-cache-flush.patch"
+# Objective completion before activation: remember an accomplished/failed status
+# set on a not-yet-added objective ID and replay it when the ID is added as
+# pending (bounded, cleared by Reset, saved as an optional micro-chunk).  See
+# reports/campaign/OBJECTIVE_EARLY_STATUS.md.  Applies to the final objectives.cpp.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a38-objective-early-status.patch"
 # Selecting the retail default input profile from any route (Save/Load page,
 # deleting the current custom profile) reloads the keyboard/mouse
 # DEFAULT_INPUT.CFG; reapply the Vita controller bindings on every such load.

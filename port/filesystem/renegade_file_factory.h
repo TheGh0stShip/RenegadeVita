@@ -41,6 +41,12 @@ struct RenegadeFileFactoryStatistics
 	uint32_t staged_write_files;
 	uint32_t staged_write_bytes;
 	uint32_t staged_write_fallbacks;
+	// RVIO1 (renegade_load_io.h): read-only retail streams switched to
+	// unbuffered stdio, MIX member Bias calls that reused a measured archive
+	// size, and archive sizes recorded from original Bias probes.
+	uint32_t direct_read_streams;
+	uint32_t archive_size_reuses;
+	uint32_t archive_size_probes;
 };
 
 void Renegade_File_Factory_Reset_Statistics(void);
@@ -51,6 +57,10 @@ bool Renegade_Replace_File(const char *source, const char *destination);
 // "<destination>.previous". Moves it back; returns true when it restored it.
 bool Renegade_Recover_Interrupted_Replace(const char *destination);
 RenegadeFileFactoryStatistics Renegade_File_Factory_Get_Statistics(void);
+// RVIO1 load-time I/O mask (renegade_load_io.h). 0, the default, keeps every
+// original path; set once before the retail MIX factories are constructed.
+void Renegade_File_Factory_Set_Load_Io_Mode(unsigned mode);
+unsigned Renegade_File_Factory_Get_Load_Io_Mode(void);
 
 class RenegadeRootedFileClass : public BufferedFileClass
 {
@@ -71,6 +81,7 @@ public:
 	virtual int Write(void const *buffer, int size);
 	virtual void Close(void);
 	virtual void Error(int error, int canretry = false, char const *filename = NULL);
+	virtual void Bias(int start, int length = -1);
 
 	const RenegadeResolvedPath &Get_Last_Resolution(void) const { return LastResolution; }
 	bool Has_Write_Failed(void) const { return WriteFailed; }
@@ -80,6 +91,8 @@ private:
 	bool Resolve_And_Set_Physical_Name(int rights);
 	bool Stage_Write(void const *buffer, int size);
 	bool Flush_Staged_Writes(void);
+	bool Is_Immutable_Retail_Read(void) const;
+	void Apply_Direct_Reads(void);
 
 	RenegadePathRoots Roots;
 	char LogicalName[768];
@@ -98,6 +111,10 @@ private:
 	bool AtomicWrite;
 	// Set while RawFileClass::Open runs its leading virtual Close().
 	bool NativeOpening;
+	// RVIO1 bit 0: switch the stream to unbuffered before its first operation.
+	bool DirectReadPending;
+	// RVIO1 bit 1: an original Bias is measuring this retail archive's size.
+	bool ArchiveSizeProbe;
 	unsigned long long AtomicStartUs;
 	int AtomicBytes;
 	char AtomicTarget[1024];

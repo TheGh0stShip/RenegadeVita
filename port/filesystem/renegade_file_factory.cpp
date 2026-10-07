@@ -1,4 +1,5 @@
 #include "renegade_file_factory.h"
+#include "renegade_load_io.h"
 
 #include <limits.h>
 #include <pthread.h>
@@ -46,9 +47,13 @@ struct FileFactoryCounters
 	std::atomic<uint32_t> staged_write_files;
 	std::atomic<uint32_t> staged_write_bytes;
 	std::atomic<uint32_t> staged_write_fallbacks;
+	std::atomic<uint32_t> direct_read_streams;
+	std::atomic<uint32_t> archive_size_reuses;
+	std::atomic<uint32_t> archive_size_probes;
 };
 
 FileFactoryCounters g_file_factory_counters = {};
+std::atomic<unsigned> g_load_io_mode(RENEGADE_LOAD_IO_DEFAULT);
 
 // The retail root is never written while the game runs. Once a native probe
 // has opened a physical file there, later non-forced availability checks of
@@ -103,6 +108,57 @@ void Remember_Available(const char *path)
 		}
 	}
 	pthread_mutex_unlock(&g_available_retail_mutex);
+}
+
+// RVIO1 bit 1. Whole-archive sizes measured by an original RawFileClass::Bias
+// probe of an immutable retail path (one entry per mounted MIX archive). Only
+// positive sizes from a successful native open are kept.
+enum { kRetailSizeCapacity = 32 };
+struct RetailSizePath {
+	uint32_t hash;
+	int size;
+	char *path;
+};
+RetailSizePath g_retail_sizes[kRetailSizeCapacity];
+unsigned g_retail_size_count = 0;
+pthread_mutex_t g_retail_size_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+bool Find_Retail_Size(const char *path, int *size)
+{
+	const uint32_t hash = Path_Hash(path);
+	pthread_mutex_lock(&g_retail_size_mutex);
+	bool found = false;
+	for (unsigned index = 0; index < g_retail_size_count && !found; ++index) {
+		if (g_retail_sizes[index].hash == hash &&
+			strcmp(g_retail_sizes[index].path, path) == 0) {
+			*size = g_retail_sizes[index].size;
+			found = true;
+		}
+	}
+	pthread_mutex_unlock(&g_retail_size_mutex);
+	return found;
+}
+
+void Remember_Retail_Size(const char *path, int size)
+{
+	if (size <= 0) return;
+	const uint32_t hash = Path_Hash(path);
+	pthread_mutex_lock(&g_retail_size_mutex);
+	bool found = false;
+	for (unsigned index = 0; index < g_retail_size_count && !found; ++index) {
+		found = g_retail_sizes[index].hash == hash &&
+			strcmp(g_retail_sizes[index].path, path) == 0;
+	}
+	if (!found && g_retail_size_count < kRetailSizeCapacity) {
+		char *copy = strdup(path);
+		if (copy != NULL) {
+			g_retail_sizes[g_retail_size_count].hash = hash;
+			g_retail_sizes[g_retail_size_count].size = size;
+			g_retail_sizes[g_retail_size_count].path = copy;
+			++g_retail_size_count;
+		}
+	}
+	pthread_mutex_unlock(&g_retail_size_mutex);
 }
 
 } // namespace
@@ -179,6 +235,16 @@ void Renegade_File_Factory_Set_Atomic_Write_Report_Hook(RenegadeAtomicWriteRepor
 	g_atomic_write_report_hook.store(hook, std::memory_order_release);
 }
 
+void Renegade_File_Factory_Set_Load_Io_Mode(unsigned mode)
+{
+	g_load_io_mode.store(mode & RENEGADE_LOAD_IO_ALL, std::memory_order_relaxed);
+}
+
+unsigned Renegade_File_Factory_Get_Load_Io_Mode(void)
+{
+	return g_load_io_mode.load(std::memory_order_relaxed);
+}
+
 namespace {
 
 void Reset(std::atomic<uint32_t> &counter)
@@ -220,6 +286,9 @@ void Renegade_File_Factory_Reset_Statistics(void)
 	Reset(g_file_factory_counters.staged_write_files);
 	Reset(g_file_factory_counters.staged_write_bytes);
 	Reset(g_file_factory_counters.staged_write_fallbacks);
+	Reset(g_file_factory_counters.direct_read_streams);
+	Reset(g_file_factory_counters.archive_size_reuses);
+	Reset(g_file_factory_counters.archive_size_probes);
 }
 
 RenegadeFileFactoryStatistics Renegade_File_Factory_Get_Statistics(void)
@@ -250,6 +319,9 @@ RenegadeFileFactoryStatistics Renegade_File_Factory_Get_Statistics(void)
 	result.staged_write_files = Snapshot(g_file_factory_counters.staged_write_files);
 	result.staged_write_bytes = Snapshot(g_file_factory_counters.staged_write_bytes);
 	result.staged_write_fallbacks = Snapshot(g_file_factory_counters.staged_write_fallbacks);
+	result.direct_read_streams = Snapshot(g_file_factory_counters.direct_read_streams);
+	result.archive_size_reuses = Snapshot(g_file_factory_counters.archive_size_reuses);
+	result.archive_size_probes = Snapshot(g_file_factory_counters.archive_size_probes);
 	return result;
 }
 
@@ -258,7 +330,8 @@ RenegadeRootedFileClass::RenegadeRootedFileClass(const RenegadePathRoots &roots,
 	PhysicalNamePrepared(false), PreparedAccess(RENEGADE_PATH_READ),
 	NativeProbeForced(false), StagedData(NULL), StagedSize(0), StagedCapacity(0),
 	StagedPosition(0), Staging(false), WriteFailed(false), AtomicWrite(false),
-	NativeOpening(false), AtomicStartUs(0), AtomicBytes(0)
+	NativeOpening(false), DirectReadPending(false), ArchiveSizeProbe(false),
+	AtomicStartUs(0), AtomicBytes(0)
 {
 	LogicalName[0] = 0;
 	AtomicTarget[0] = 0;
@@ -388,7 +461,15 @@ int RenegadeRootedFileClass::Open(int rights)
 	// being opened as finished, drop AtomicWrite and restore the target name,
 	// so the open landed directly on (and truncated) the destination.
 	NativeOpening = true;
+	// RVIO1 bit 0: retail data is read through BufferedFileClass, which
+	// already buffers small reads; switch its stdio stream to unbuffered so
+	// newlib does not split every refill into 1 KiB sceIoRead calls.
+	DirectReadPending = rights == FileClass::READ && Is_Immutable_Retail_Read() &&
+		(g_load_io_mode.load(std::memory_order_relaxed) &
+			RENEGADE_LOAD_IO_DIRECT_READS) != 0U;
 	const int opened = BufferedFileClass::Open(rights);
+	if (opened && DirectReadPending) Apply_Direct_Reads();
+	DirectReadPending = false;
 	NativeOpening = false;
 	if (opened) WriteFailed = false;
 	if (!opened) {
@@ -457,8 +538,56 @@ bool RenegadeRootedFileClass::Flush_Staged_Writes(void)
 	return written;
 }
 
+bool RenegadeRootedFileClass::Is_Immutable_Retail_Read(void) const
+{
+	return PhysicalNamePrepared && PreparedAccess == RENEGADE_PATH_READ &&
+		!LastResolution.writable_namespace;
+}
+
+// setvbuf must precede every other operation on the stream. RawFileClass::Open
+// seeks a biased file before returning, so the switch also happens here.
+void RenegadeRootedFileClass::Apply_Direct_Reads(void)
+{
+	DirectReadPending = false;
+#if defined(_UNIX)
+	FILE *handle = static_cast<FILE *>(Get_File_Handle());
+	if (handle != NULL && setvbuf(handle, NULL, _IONBF, 0) == 0) {
+		g_file_factory_counters.direct_read_streams.fetch_add(1U,
+			std::memory_order_relaxed);
+	}
+#endif
+}
+
+void RenegadeRootedFileClass::Bias(int start, int length)
+{
+	// RVIO1 bit 1. Original RawFileClass::Bias calls RawFileClass::Size(),
+	// which opens, measures and closes this closed archive file before every
+	// MIX member open. For a fresh immutable retail archive whose size an
+	// earlier probe measured, apply the same arithmetic without that open.
+	const bool eligible = start != 0 && BiasStart == 0 && BiasLength == -1 &&
+		!Is_Open() && Is_Immutable_Retail_Read() && !LastResolution.confirmed_missing &&
+		(g_load_io_mode.load(std::memory_order_relaxed) &
+			RENEGADE_LOAD_IO_ARCHIVE_SIZE_REUSE) != 0U;
+	int archive_size = 0;
+	if (eligible && Find_Retail_Size(LastResolution.physical, &archive_size)) {
+		// RawFileClass::Bias with Size() == archive_size and BiasStart 0; the
+		// file is closed, so no repositioning seek follows.
+		BiasStart = start;
+		int bias_length = archive_size;
+		if (length != -1) bias_length = bias_length < length ? bias_length : length;
+		BiasLength = bias_length > 0 ? bias_length : 0;
+		g_file_factory_counters.archive_size_reuses.fetch_add(1U,
+			std::memory_order_relaxed);
+		return;
+	}
+	ArchiveSizeProbe = eligible;
+	BufferedFileClass::Bias(start, length);
+	ArchiveSizeProbe = false;
+}
+
 int RenegadeRootedFileClass::Seek(int pos, int dir)
 {
+	if (DirectReadPending) Apply_Direct_Reads();
 	if (!Staging) return BufferedFileClass::Seek(pos, dir);
 	long long base = -1;
 	if (dir == SEEK_SET) base = 0;
@@ -472,7 +601,16 @@ int RenegadeRootedFileClass::Seek(int pos, int dir)
 
 int RenegadeRootedFileClass::Size(void)
 {
-	return Staging ? StagedSize : BufferedFileClass::Size();
+	if (Staging) return StagedSize;
+	const int size = BufferedFileClass::Size();
+	// Within an original Bias probe, RawFileClass::Size has just opened the
+	// unbiased archive and measured the whole file; keep that size.
+	if (ArchiveSizeProbe && size > 0 && BiasStart == 0 && Is_Open()) {
+		Remember_Retail_Size(LastResolution.physical, size);
+		g_file_factory_counters.archive_size_probes.fetch_add(1U,
+			std::memory_order_relaxed);
+	}
+	return size;
 }
 
 void RenegadeRootedFileClass::Close(void)

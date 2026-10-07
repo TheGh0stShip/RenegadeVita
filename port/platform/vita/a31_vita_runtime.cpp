@@ -20,6 +20,7 @@
 #endif
 #include "renegade_cache_health.h"
 #include "renegade_file_factory.h"
+#include "renegade_load_io.h"
 #include "renegade_find_files.h"
 #include "renegade_mission_ranks.h"
 #include "renegade_movie_unlocks.h"
@@ -2922,6 +2923,9 @@ void Log_File_Factory_Statistics(uint32_t frame = 0U)
 		statistics.readonly_availability_skips, statistics.readonly_open_skips,
 		statistics.readonly_availability_hits, statistics.staged_write_files,
 		statistics.staged_write_bytes, statistics.staged_write_fallbacks);
+	A30_Vita_Log("A3.6 load-io: frame=%u mask=%u direct_read_streams=%u archive_size reuse/probe=%u/%u\n",
+		frame, Renegade_File_Factory_Get_Load_Io_Mode(), statistics.direct_read_streams,
+		statistics.archive_size_reuses, statistics.archive_size_probes);
 	A35_Campaign_Flight_Record_Resource_Snapshot(frame,
 		statistics.open_attempts, statistics.open_failures,
 		statistics.availability_attempts, statistics.availability_failures,
@@ -5016,7 +5020,9 @@ void A31_Vita_Render_Original_Loading_Callback(const char *phase,
 	// Status callbacks may fire during asset creation inside a loading draw.
 	// Keep the original renderer on this thread and never recurse into it.
 	if (rendering) return;
-	if (minimum_progress < 0 && now_us - last_render_us < 50000U) return;
+	if (minimum_progress < 0 && now_us - last_render_us <
+		Renegade_Load_Io_Substatus_Repaint_Interval_Us(
+			Renegade_File_Factory_Get_Load_Io_Mode())) return;
 	if (g_active_loading_presenter == NULL
 #if !RENEGADE_VITA_M00_DEMO
 		&& g_original_reload_loading_screen == NULL
@@ -5068,6 +5074,16 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	result.attempted = true;
 	Ensure_Power_Callback_Registered();
 	Renegade_File_Factory_Reset_Statistics();
+	// RVIO1 load-io-v1.flag: set before the retail MIX factories open.
+	Renegade_File_Factory_Set_Load_Io_Mode(
+		Renegade_Load_Io_Read_Flag_File(RENEGADE_LOAD_IO_FLAG_PATH));
+	const unsigned load_io_mode = Renegade_File_Factory_Get_Load_Io_Mode();
+	A30_Vita_Log("A3.6 load-io: version=1 mask=%u direct_reads=%d archive_size_reuse=%d substatus_repaint_us=%u default=%u flag=load-io-v1.flag acceptance=unassessed\n",
+		load_io_mode, (load_io_mode & RENEGADE_LOAD_IO_DIRECT_READS) != 0U ? 1 : 0,
+		(load_io_mode & RENEGADE_LOAD_IO_ARCHIVE_SIZE_REUSE) != 0U ? 1 : 0,
+		Renegade_Load_Io_Substatus_Repaint_Interval_Us(load_io_mode),
+		RENEGADE_LOAD_IO_DEFAULT);
+	uint64_t load_io_level_load_begin_us = 0U;
 	A31ScopedStartupStatusRepaint startup_status_repaint(startup_screen_result);
 
 	Draw_Engine_Setup_Screen(startup_screen_result,
@@ -5778,6 +5794,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #endif
 					load_source, lookup_enabled);
 				A35_Campaign_Flight_Flush("level-load-begin");
+				load_io_level_load_begin_us = sceKernelGetProcessTimeWide();
 				loading_presenter.Render_Original_Progress("before_pre_load");
 			CombatGameModeClass::Vita_Begin_Level_Load(
 				loading_presenter.Peek_Screen(), true);
@@ -5828,7 +5845,16 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #endif
 			A30_Vita_Log("A3.5 level load: original source=%s checkpoint=%d preload_always=0 campaign_mission_dep=%d\n",
 				load_source, loading_checkpoint ? 1 : 0, !RENEGADE_VITA_M00_DEMO);
+			const uint64_t load_io_sync_started_us = sceKernelGetProcessTimeWide();
 			CombatManager::Load_Level_Threaded(load_source, false);
+			// On Vita the original loader routine runs synchronously inside this
+			// call, so the polling loop below measures almost nothing.
+			A30_Vita_Log("A3.6 load-io: level load sync_ms=%llu since_begin_ms=%llu mask=%u\n",
+				static_cast<unsigned long long>(
+					(sceKernelGetProcessTimeWide() - load_io_sync_started_us) / 1000ULL),
+				static_cast<unsigned long long>(load_io_level_load_begin_us != 0U ?
+					(sceKernelGetProcessTimeWide() - load_io_level_load_begin_us) / 1000ULL : 0ULL),
+				Renegade_File_Factory_Get_Load_Io_Mode());
 			int last_load_progress = -1;
 			int last_load_status_count = -1;
 			StringClass last_load_sub_status;
@@ -7242,6 +7268,12 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					A30_Vita_Log("A3.1 breadcrumb: first original render frame PASS meshes=%u vertices=%u triangles=%u\n",
 						result.mesh_submissions, result.vertex_submissions,
 						result.triangle_submissions);
+					if (load_io_level_load_begin_us != 0U) {
+						A30_Vita_Log("A3.6 load-io: level load begin_to_first_frame_ms=%llu mask=%u\n",
+							static_cast<unsigned long long>((sceKernelGetProcessTimeWide() -
+								load_io_level_load_begin_us) / 1000ULL),
+							Renegade_File_Factory_Get_Load_Io_Mode());
+					}
 				}
 		if ((result.frames % kTimingWindowFrames) == 0U) {
 			Log_File_Factory_Statistics(result.frames);

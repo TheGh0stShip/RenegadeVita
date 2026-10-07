@@ -48,11 +48,10 @@ void Reference_Mix_Locked(int16_t *output, size_t frames)
 		const double step = static_cast<double>(
 			sample->playback_rate > 0 ? sample->playback_rate :
 			static_cast<S32>(sample->wave.sample_rate)) / kOutputRate;
-		const S32 effective_pan = sample->spatial ? 64 : sample->pan;
-		const float left_pan_gain = effective_pan <= 64 ? 1.0F :
-			static_cast<float>(127 - effective_pan) / 63.0F;
-		const float right_pan_gain = effective_pan >= 64 ? 1.0F :
-			static_cast<float>(effective_pan) / 64.0F;
+		const float left_pan_gain = sample->pan <= 64 ? 1.0F :
+			static_cast<float>(127 - sample->pan) / 63.0F;
+		const float right_pan_gain = sample->pan >= 64 ? 1.0F :
+			static_cast<float>(sample->pan) / 64.0F;
 		const float volume = std::max(0.0F, std::min(1.0F,
 			static_cast<float>(sample->volume) / 127.0F));
 		float distance_gain = 1.0F;

@@ -47,6 +47,15 @@
 #include "scene.h"
 #include "rendobj.h"
 #include "stylemgr.h"
+#if defined(RENEGADE_VITA_PORT)
+#include "renegade_vita_hud_cost.h"
+#include "dx8wrapper.h"
+#include "ww3d.h"
+#include "wwprofile.h"
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
+#endif
 
 
 ////////////////////////////////////////////////////////////////
@@ -59,6 +68,30 @@ SceneClass *TextWindowClass::Scene	= NULL;
 //	Local constants
 ////////////////////////////////////////////////////////////////
 static const char *	FONT_NAME	= "Arial MT";
+
+#if defined(RENEGADE_VITA_PORT)
+////////////////////////////////////////////////////////////////
+//	Text build counters for the hud-cost A/B (all windows). Logged when
+// their total reaches a power of two, so the log stays bounded.
+////////////////////////////////////////////////////////////////
+static unsigned	TextWindowFullBuilds		= 0;
+static unsigned	TextWindowMeasureBuilds	= 0;
+static unsigned	TextWindowKeptBuilds		= 0;
+
+static void Note_Text_Window_Build (unsigned &counter)
+{
+	counter ++;
+#if defined(__vita__)
+	const unsigned total = TextWindowFullBuilds + TextWindowMeasureBuilds + TextWindowKeptBuilds;
+	if ((total & (total - 1)) == 0) {
+		A30_Vita_Log ("A4 hud-cost: textwindow mode=%u full_builds=%u measure_builds=%u kept_measured=%u\n",
+			Renegade_Vita_HUD_Cost_Mode (), TextWindowFullBuilds, TextWindowMeasureBuilds,
+			TextWindowKeptBuilds);
+	}
+#endif
+	return ;
+}
+#endif
 
 
 ////////////////////////////////////////////////////////////////
@@ -78,6 +111,33 @@ TextWindowClass::TextWindowClass (void) :
 {	
 	TextRenderers[0] = NULL;
 	TextRenderers[1] = NULL;	
+#if defined(RENEGADE_VITA_PORT)
+	MeasuredBuildValid			= false;
+	MeasuredFirstLineIndex		= 0;
+	MeasuredRowCount				= 0;
+	MeasuredHasInnerRows			= false;
+	MeasuredInnerRowBottom		= 0;
+	MeasuredTextRect.Set (0, 0, 0, 0);
+	MeasuredColumnsDisplayed	= false;
+	MeasuredResolution.Set (0, 0, 0, 0);
+	MeasuredUVBias					= false;
+
+	//
+	//	Read the hud-cost flag while the level loads, not at the first message.
+	//
+	static bool logged_mode = false;
+	const unsigned mode = Renegade_Vita_HUD_Cost_Mode ();
+	if (logged_mode == false) {
+		logged_mode = true;
+#if defined(__vita__)
+		A30_Vita_Log ("A4 hud-cost: version=1 mode=%u textwindow_measured_build=%u default=%u flag=hud-cost-v1.flag acceptance=unassessed\n",
+			mode, mode & RENEGADE_VITA_HUD_COST_TEXTWINDOW_MEASURED_BUILD,
+			(unsigned)RENEGADE_VITA_HUD_COST_DEFAULT);
+#else
+		(void)mode;
+#endif
+	}
+#endif
 	return ;
 }
 
@@ -176,6 +236,9 @@ TextWindowClass::Free_Renderers (void)
 	delete TextRenderers[1];
 	TextRenderers[0] = NULL;
 	TextRenderers[1] = NULL;
+#if defined(RENEGADE_VITA_PORT)
+	Forget_Measured_Build ();
+#endif
 	return ;
 }
 
@@ -392,6 +455,9 @@ TextWindowClass::Add_Column (const WCHAR *column_name, float width, const Vector
 	column->Set_Color (color);
 	Columns.Add (column);
 	IsViewDirty = true;
+#if defined(RENEGADE_VITA_PORT)
+	Forget_Measured_Build ();
+#endif
 	return ;
 }
 
@@ -419,6 +485,9 @@ TextWindowClass::Remove_Column (int index)
 	//
 	Columns.Delete (index);
 	IsViewDirty = true;
+#if defined(RENEGADE_VITA_PORT)
+	Forget_Measured_Build ();
+#endif
 	return true;
 }
 
@@ -438,6 +507,9 @@ TextWindowClass::Delete_All_Columns (void)
 
 	Columns.Delete_All ();
 	IsViewDirty = true;
+#if defined(RENEGADE_VITA_PORT)
+	Forget_Measured_Build ();
+#endif
 	return ;
 }
 
@@ -485,6 +557,9 @@ TextWindowClass::Delete_Item (int index)
 	}
 
 	IsViewDirty = true;
+#if defined(RENEGADE_VITA_PORT)
+	Forget_Measured_Build ();
+#endif
 	return retval;
 }
 
@@ -515,6 +590,9 @@ TextWindowClass::Insert_Item (int index, const WCHAR *text)
 	}
 
 	IsViewDirty = true;
+#if defined(RENEGADE_VITA_PORT)
+	Forget_Measured_Build ();
+#endif
 	return index;
 }
 
@@ -536,6 +614,9 @@ TextWindowClass::Set_Item_Text (int index, int col_index, const WCHAR *text)
 	//
 	Columns[col_index]->Set_Item_Text (index, text);
 	IsViewDirty = true;
+#if defined(RENEGADE_VITA_PORT)
+	Forget_Measured_Build ();
+#endif
 	return true;
 }
 
@@ -557,6 +638,9 @@ TextWindowClass::Set_Item_Color (int index, int col_index, const Vector3 &color)
 	//
 	Columns[col_index]->Set_Item_Color (index, color);
 	IsViewDirty = true;
+#if defined(RENEGADE_VITA_PORT)
+	Forget_Measured_Build ();
+#endif
 	return true;
 }
 
@@ -605,6 +689,9 @@ TextWindowClass::Delete_All_Items (void)
 	}
 	
 	IsViewDirty = true;
+#if defined(RENEGADE_VITA_PORT)
+	Forget_Measured_Build ();
+#endif
 	return ;
 }
 
@@ -663,6 +750,28 @@ TextWindowClass::Update_View (float *total_height, bool info_only)
 	if (TextRenderers[0] == NULL || TextRenderers[1] == NULL) {
 		Build_View ();
 	}
+
+#if defined(RENEGADE_VITA_PORT)
+	//
+	//	A height measurement (info_only) builds every row without stopping at
+	// the bottom of the text area, and the message window takes one right
+	// before the view update that draws the same rows. When that update would
+	// rebuild exactly what the measurement left in the renderers, keep it
+	// (hud-cost bit 0). Each rebuild costs a new text atlas surface, glyph
+	// blits and renderers, and the texture is only made when rendered.
+	//
+	if (info_only == false && total_height == NULL && Can_Keep_Measured_Build ()) {
+		CurrentDisplayCount	= MeasuredRowCount;
+		IsViewDirty				= false;
+		Note_Text_Window_Build (TextWindowKeptBuilds);
+		return ;
+	}
+	Forget_Measured_Build ();
+	Note_Text_Window_Build (info_only ? TextWindowMeasureBuilds : TextWindowFullBuilds);
+	WWPROFILE( "TextWindow Build" );
+	bool	has_inner_rows		= false;
+	float	inner_row_bottom	= 0;
+#endif
 	
 	TextRenderers[0]->Reset ();
 	TextRenderers[1]->Reset ();
@@ -705,6 +814,21 @@ TextWindowClass::Update_View (float *total_height, bool info_only)
 		float row_height = 0;
 		Update_Row (item_index, y_pos, &row_height);
 		CurrentDisplayCount ++;
+
+#if defined(RENEGADE_VITA_PORT)
+		//
+		//	Remember the largest bottom of the rows before the last one: a view
+		// update stops after the first of them below the text area. A NaN
+		// bottom never stops it (the comparison below is false), so skip it.
+		//
+		if (item_index + 1 < item_count) {
+			const float row_bottom = (y_pos + row_height);
+			if (row_bottom == row_bottom && (has_inner_rows == false || row_bottom > inner_row_bottom)) {
+				inner_row_bottom	= row_bottom;
+				has_inner_rows		= true;
+			}
+		}
+#endif
 		
 		//
 		//	Check to see if we've gone outside the client area of the text window
@@ -722,6 +846,24 @@ TextWindowClass::Update_View (float *total_height, bool info_only)
 	if (info_only == false) {
 		IsViewDirty = false;
 	}
+
+#if defined(RENEGADE_VITA_PORT)
+	//
+	//	Record what this measurement built and everything it was built from.
+	// Without a device Build_Sentence builds nothing, so nothing is kept.
+	//
+	if (info_only && Renegade_Vita_HUD_Cost_Enabled (RENEGADE_VITA_HUD_COST_TEXTWINDOW_MEASURED_BUILD)) {
+		MeasuredBuildValid			= DX8Wrapper::Is_Initted ();
+		MeasuredFirstLineIndex		= FirstLineIndex;
+		MeasuredRowCount				= CurrentDisplayCount;
+		MeasuredHasInnerRows			= has_inner_rows;
+		MeasuredInnerRowBottom		= inner_row_bottom;
+		MeasuredTextRect				= TextRect;
+		MeasuredColumnsDisplayed	= AreColumnsDisplayed;
+		MeasuredResolution			= Render2DClass::Get_Screen_Resolution ();
+		MeasuredUVBias					= WW3D::Is_Screen_UV_Biased ();
+	}
+#endif
 
 	//
 	//	Return the height to the caller (if necessary)
@@ -748,6 +890,48 @@ TextWindowClass::Get_Total_Display_Height (void)
 
 	return total_height;
 }
+
+
+#if defined(RENEGADE_VITA_PORT)
+////////////////////////////////////////////////////////////////
+//
+//	Can_Keep_Measured_Build
+//
+//	True when the renderers hold a height measurement's build that a view
+// update would reproduce exactly. The rows are built by Render2DSentenceClass
+// from their text, colours and column widths (unchanged: every content,
+// column and renderer change forgets the build), the renderers' fixed fonts,
+// the first line, the text area's left, top and right edges, the column
+// header setting, the 2D resolution and the screen UV bias. The bottom edge
+// only decides where a view update stops: it would build the same rows when
+// no row before the last ends below it.
+//
+////////////////////////////////////////////////////////////////
+bool
+TextWindowClass::Can_Keep_Measured_Build (void)
+{
+	if (	MeasuredBuildValid == false ||
+			Renegade_Vita_HUD_Cost_Enabled (RENEGADE_VITA_HUD_COST_TEXTWINDOW_MEASURED_BUILD) == false ||
+			TextRenderers[0] == NULL || TextRenderers[1] == NULL ||
+			Columns.Count () <= 0 || DX8Wrapper::Is_Initted () == false)
+	{
+		return false;
+	}
+
+	int item_count	= Columns[0]->Get_Item_Count ();
+	int row_count	= (item_count > FirstLineIndex) ? (item_count - FirstLineIndex) : 0;
+
+	return (	MeasuredFirstLineIndex == FirstLineIndex &&
+				MeasuredRowCount == row_count &&
+				MeasuredColumnsDisplayed == AreColumnsDisplayed &&
+				MeasuredTextRect.Left == TextRect.Left &&
+				MeasuredTextRect.Top == TextRect.Top &&
+				MeasuredTextRect.Right == TextRect.Right &&
+				(MeasuredHasInnerRows == false || (MeasuredInnerRowBottom > TextRect.Bottom) == false) &&
+				MeasuredResolution == Render2DClass::Get_Screen_Resolution () &&
+				MeasuredUVBias == WW3D::Is_Screen_UV_Biased ());
+}
+#endif
 
 
 ////////////////////////////////////////////////////////////////

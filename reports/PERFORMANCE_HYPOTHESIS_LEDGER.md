@@ -1506,3 +1506,21 @@ steady GPU residency in M08 (up to about 63 MiB) and a longer loading screen
 retain a CPU copy. Before/after: unmeasured; no M08 has run on physical
 hardware. Decision: adopted pending a physical M08 run that shows
 `texture_pool_free_bytes`, deferred count and post-prepare pool free.
+
+## FPS round 4 integrated candidate A3.5-dev240 (2026-10-07, ARM + Vita3K install only)
+
+Hypothesis: dev238 physical M13 (render ~41 ms, mesh boundary ~24–29 ms for
+~41 meshes / ~5k triangles, sim ~14 ms) is dominated by per-vertex vitaGL
+immediate submission, redundant GL/texture state, first-use hitches and
+port-side game-thread overhead, which exact (bit-identical or state-identical)
+changes can remove. Changes: vertex arrays for per-frame batches, packed DX8
+vertex records (vitaGL patch), lit static-cache instances, skin deform reuse,
+GL raster/transform and texture-state shadows, HUD text build-once, loading
+prewarm (animations, PCM, geometry, FFP programs), audio lock relief, exact
+WWMath/animation codegen, original slow-PC LOD defaults, sampled profiler with
+engine scopes now live; internal resolution and SIM -O3 are opt-in only. Risk:
+vitaGL re-patch cost of array draws, immediate-pool overrun (now logged), LOD
+visual change, first-launch shader recompile. Before: dev238 p50 39–58 ms.
+After: unmeasured. Decision: adopted behind per-feature switches pending a
+physical A/B on the fixed M13/M01 route; see
+[round-4 integration](FPS_ROUND4_INTEGRATION.md).

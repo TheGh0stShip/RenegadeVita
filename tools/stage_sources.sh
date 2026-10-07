@@ -1154,6 +1154,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m03-save-variable-ids.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m03-paradrop-param-buffer.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m04-save-variable-ids.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m05-save-variable-ids.patch"

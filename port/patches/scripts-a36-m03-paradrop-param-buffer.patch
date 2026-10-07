@@ -1,0 +1,22 @@
+M03_Chinook_ParaDrop::Created formatted its owner's object id into
+char params[10] with sprintf before handing it to M03_Reinforcement_Chinook.
+In retail M03 the owner is always an "Invisible_Object" created at runtime by
+M03_Beach_Reinforce (Reinforce_Beach/Inlet/Base) or
+M03_Inlet_Nod_Reinforcements, so its id is a dynamic id (>= 1500000000, ten
+digits). Ten digits plus the terminator need 11 bytes, so every paradrop wrote
+one byte past the stack buffer. Enlarge it to 16 bytes and bound the write
+with snprintf. The formatted text is unchanged for every id.
+
+--- a/Mission03.cpp
++++ b/Mission03.cpp
+@@ -4709,8 +4709,8 @@
+ 
+ 		dead = false;
+ 		out = 0;
+-		char params[10];
+-		sprintf(params, "%d", Commands->Get_ID(obj));
++		char params[16];
++		snprintf(params, sizeof(params), "%d", Commands->Get_ID(obj));
+ 		Commands->Attach_Script(chinook, "M03_Reinforcement_Chinook", params);
+ 
+ 		chinook_id = Commands->Get_ID(chinook);

@@ -5862,6 +5862,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						cGod::Mission_Failed();
 					}
 					if (!multiplayer_client && result.mission_succeeded) {
+						// Continue() runs original End_Game/Core_Shutdown, like the
+						// pending-exit and reload owners. Drop level-scoped retained
+						// render objects first so none outlive their level assets
+						// through the score/movie intermission.
+						A35_Vita_Clear_Prepared_Render_Objs();
 						original_end_game_consumed =
 							Run_Original_Campaign_Intermission(audio, result);
 						if (original_end_game_consumed) {

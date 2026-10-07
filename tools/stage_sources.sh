@@ -1842,36 +1842,6 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a39-m05-deadeye-rearm-alive-only.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a39-m09-keycard-single-dist-loop.patch"
-# RVPF1 (pathfind-cost-v1.flag) bit 0: skip SoldierGameObj's per-frame
-# personal-space probe while the soldier is not ghosted, where the original
-# Enable_Ghost_Collision(false) would discard its answer. Vita-only.
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-tut1-pathfind-cost.patch"
-# TUT-R1-03 script-cost attribution: RVSC1-gated profile scopes around the
-# script-driven once-per-frame calls in CombatManager::Think that had none
-# (ObjectiveManager::Update, ConversationMgrClass::Think, SpawnManager::Update).
-# Diagnostics only; off unless script-cost-v1.flag = "RVSC1 1".
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-tut1-script-cost-scopes.patch"
-# Message window text: a height measurement builds every row right before the
-# view update that rebuilds the same rows; hud-cost-v1.flag ("RVHD1 1") keeps
-# the measured build when nothing it depends on changed. Default off.
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-tut1-textwindow-measured-build.patch"
-# The HUD target-name comparison copy runs every frame the target box shows a
-# named object; RVAL1 bit 1 passes the original WideStringClass temp hint.
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-tut1-hud-target-name-temp.patch"
-# Dev-only tutorial benchmark (tutorial-bench-v1.flag, RVTB1): after the
-# original CCameraClass::Update, an armed fixed viewpoint replaces the camera
-# transform through CameraClass::Set_Transform. Inert unless the native loop
-# arms it for one simulation frame.
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-tut1-bench-camera.patch"
-# render-sort-v1 (RVSO1, default off): open the Vita renderer's pass-major
-# replay window around the world-space-mesh loop of Render_Objects only.
-patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
-	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-tut1-render-sort.patch"
 # Peek_Next_Chunk is speculative (upstream never set Error there). The
 # structural-admission patch made an implausible peeked header poison the
 # whole load, so ConversationMgr's legacy one-byte category probe rejected the

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "8e1ceb21258cb33cadc3f6faf75f26e5d33e2e85d1ad1648e799816f6c37eb3c",
-  "patch_count": 608,
+  "stage_script_sha256": "2e4d400cd9d0dd2048c3c08f3e448496ba80e1131aaa5b18ab8839d7f4ee07cf",
+  "patch_count": 616,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -3043,7 +3043,47 @@
       "path": "port/patches/scripts-a39-m09-keycard-single-dist-loop.patch",
       "stage_directory": "scripts",
       "sha256": "b40963eb5d8552130f0a5bf28c025677d593bce46a6b261fdf73688903e5fa90"
+    },
+    {
+      "path": "port/patches/wwlib-a39-peek-next-chunk-speculative.patch",
+      "stage_directory": "wwlib",
+      "sha256": "060a957c7fbacfec20c8e8f90107589710f2e6ffb2b4b3436b94027f3a8b6c3a"
+    },
+    {
+      "path": "port/patches/wwlib-a39-chunk-unopened-file.patch",
+      "stage_directory": "wwlib",
+      "sha256": "cf64ec72813584287ca9e9cd50a3375803548feb2754fdf437ea2667c7146f0f"
+    },
+    {
+      "path": "port/patches/wwsaveload-a39-skip-unregistered-definition-factories.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "5643d5a3752ccf9005e4173593abfce5847eefac88eba6f9b9316c1ea29ba184"
+    },
+    {
+      "path": "port/patches/wwsaveload-a39-remap-miss-continue-and-load-diagnostics.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "bddf3c610397f3d0a29f51411ad9a49017673380b8f66798a1858d790cbeeaf9"
+    },
+    {
+      "path": "port/patches/wwphys-a39-retail-load-original-semantics.patch",
+      "stage_directory": "wwphys",
+      "sha256": "96be67c6a64d074e06e3de396aa90855e07b339088eeb1b70329bda284947c6f"
+    },
+    {
+      "path": "port/patches/combat-a39-retail-load-original-semantics.patch",
+      "stage_directory": "combat",
+      "sha256": "43e10a3216b3d1fe271ef03d1a24998e21ddd3f8377047730efefa37feb65150"
+    },
+    {
+      "path": "port/patches/wwsaveload-a39-retail-load-original-semantics.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "f697933c14cfbaea2b4275ce6e30a77ebe8d855b0e831d7dc9baee00e2dae265"
+    },
+    {
+      "path": "port/patches/combat-a39-level-data-not-player-save.patch",
+      "stage_directory": "combat",
+      "sha256": "d129c75128ac6eb5808c861b6c1a8890e7dcb6c582f4d9a083fe06b8a1f0e9b9"
     }
   ],
-  "registry_sha256": "385c21c18da33da2016d0274f4fc3b713b79501ae1a720bbcade62344d413402"
+  "registry_sha256": "c13aa935461fb1561a958fa02500b7d298a35d74f76955f126a43a29fa9ceb3a"
 }

@@ -39,6 +39,8 @@ int sceAudioOutOutput(int port,const void *pointer) {
     } else drained=true;
     return 1024; // Success is nonnegative, not necessarily zero.
 }
+// RVCK1 thread placement is a Vita kernel affinity call; a no-op on the host.
+namespace RenegadeVitaClocks { inline void Place_Audio_Worker_Thread() {} }
 #include "bink-audio-production.inc"
 int main() {
     // Both producer and consumer wrap; final hardware block is partial/padded.

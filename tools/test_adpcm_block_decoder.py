@@ -127,7 +127,10 @@ class AdpcmBlockDecoderTests(unittest.TestCase):
                                           f"{rev}:{src.relative_to(ROOT)}"], capture_output=True)
                     (base_dir / dst).write_bytes(out.stdout)
                 baseline = work / "baseline"
-                subprocess.run(["g++", "-std=c++17", "-O1", f"-I{base_dir}", str(work / "probe.cpp"),
+                # Headers the baseline revision includes but does not copy resolve
+                # from the current tree, after the baseline copies.
+                subprocess.run(["g++", "-std=c++17", "-O1", f"-I{base_dir}", f"-I{HEADER.parent}",
+                                str(work / "probe.cpp"),
                                 str(base_dir / "d.cpp"), "-o", str(baseline)], check=True)
             rng = random.Random(1234)
             cases = []

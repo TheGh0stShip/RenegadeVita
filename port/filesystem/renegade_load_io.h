@@ -63,7 +63,8 @@ inline unsigned Renegade_Load_Io_Read_Flag_File(const char *path)
 	const size_t size = fread(value, 1U, sizeof(value), file);
 	const bool read_ok = !ferror(file);
 	fclose(file);
-	return read_ok ? Renegade_Load_Io_Parse_Flag(value, size) : RENEGADE_LOAD_IO_DEFAULT;
+	return read_ok ? Renegade_Load_Io_Parse_Flag(value, size) :
+		static_cast<unsigned>(RENEGADE_LOAD_IO_DEFAULT);
 }
 
 inline unsigned Renegade_Load_Io_Substatus_Repaint_Interval_Us(unsigned mask)

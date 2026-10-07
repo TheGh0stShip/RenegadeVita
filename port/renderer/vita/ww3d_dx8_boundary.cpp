@@ -8,6 +8,7 @@
 #include "decalmsh.h"
 #include "ww3d_vita_renderer.h"
 #include "ddsfile.h"
+#include "ffactory.h"
 #include "dx8rendererdebugger.h"
 #include "D3dx8core.h"
 #include "formconv.h"
@@ -1328,6 +1329,29 @@ bool Materialize_Lazy_DDS_Surface_Levels(IDirect3DTexture8 *texture)
 }
 #endif
 
+// The original DDSFileClass derives every level offset/size from the header's
+// MipMapCount and dimensions, then Load() allocates only what the file holds.
+// A truncated archive member would make the level pointers run past
+// DDSMemory. The data block follows the 4-byte magic and the fixed 124-byte
+// descriptor (the constructor rejects any other descriptor size).
+bool DDS_Chain_Fits_Loaded_Data(DDSFileClass &dds, const char *filename)
+{
+	const unsigned levels = dds.Get_Mip_Level_Count();
+	if (levels == 0U || dds.Get_Memory_Pointer(0U) == NULL) return false;
+	uint64_t required = 0U;
+	for (unsigned level = 0U; level < levels; ++level) required += dds.Get_Level_Size(level);
+	char name[256];
+	strncpy(name, filename, sizeof(name) - 1U);
+	name[sizeof(name) - 1U] = 0;
+	const size_t length = strlen(name);
+	if (length < 3U) return false;
+	memcpy(name + length - 3U, "dds", 3U);
+	file_auto_ptr file(_TheFileFactory, name);
+	if (!file->Is_Available()) return false;
+	const uint64_t size = static_cast<uint64_t>(file->Size());
+	return size >= 128U && size - 128U >= required;
+}
+
 IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 	TextureClass::MipCountType requested_mips, bool *dds_available)
 {
@@ -1341,6 +1365,11 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 	if (!dds.Load()) {
 		Log_Texture_Fallback("dds-decode", filename);
 		RenegadeVitaRenderer::Record_Texture_Decode_Failure();
+		return Create_Checkerboard_Fallback();
+	}
+	if (!DDS_Chain_Fits_Loaded_Data(dds, filename)) {
+		Log_Texture_Fallback("dds-truncated", filename);
+		RenegadeVitaRenderer::Record_Texture_Invalid_Data();
 		return Create_Checkerboard_Fallback();
 	}
 	if (!Texture_Format_Is_Supported(dds.Get_Format())) {

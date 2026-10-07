@@ -1,0 +1,31 @@
+--- a/raveshawbossgameobj.cpp
++++ b/raveshawbossgameobj.cpp
+@@ -3043,6 +3043,28 @@
+ 	//
+ 	if (velocity.Z < 0 && Get_Distance_From_Ground () < 2.0F) {
+ 		JumpState.Set_State (JUMP_STATE_LANDING);
++	} else if (velocity.Z <= 0 && Peek_Human_Phys ()->Is_In_Contact ()) {
++
++		//
++		//	Already standing on something and not rising: the descent window
++		//	above was missed.  PhysicsSceneClass splits a frame longer than
++		//	1/15 s into several timesteps, so the touchdown step and a grounded
++		//	step (which leaves velocity.Z at exactly 0) can both run before
++		//	this think.  A launch with no flight solution also leaves him
++		//	grounded.  Without this, JumpState never returns to NONE and the
++		//	catwalk, jump-to-star and jump-down moves (and so the death
++		//	sequence) stall forever.  The original test above runs first, and
++		//	Jump_To_Point gives any jump with a horizontal component an upward
++		//	launch velocity, so normal take-offs and landings are unchanged.
++		//
++#if defined(__vita__)
++		static int reported = 0;
++		if (reported < 4) {
++			reported ++;
++			A30_Vita_Log ("A3.8 Raveshaw jump: grounded landing fallback (vz=%.3f)\n", (double)velocity.Z);
++		}
++#endif
++		JumpState.Set_State (JUMP_STATE_LANDING);
+ 	}
+ 
+ 	return ;

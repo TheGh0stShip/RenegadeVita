@@ -1568,6 +1568,13 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-raveshaw-star-dist-modulo-guard.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-raveshaw-stealth-soldier-create-guard.patch"
+# M08 Raveshaw soft-lock: JUMP_STATE_JUMPING only ends on a descending think
+# within 2 m of the ground.  A frame longer than the 1/15 s physics substep can
+# land and settle him (velocity.Z == 0) between thinks, freezing JumpState and
+# with it the catwalk retreat that the death sequence requires.  Applied after
+# the stealth-soldier guard, the last earlier raveshawbossgameobj.cpp patch.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a38-raveshaw-jump-grounded-landing.patch"
 # VehicleGameObj::Think calls Apply_Control unconditionally, so the original
 # control-disabled branch dereferenced a NULL weapon for weaponless vehicles.
 # Applied after every other smartgameobj.cpp patch so no anchor moves.

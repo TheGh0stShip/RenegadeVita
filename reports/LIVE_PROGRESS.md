@@ -1,5 +1,20 @@
 # Live engineering progress
 
+# A3.5-dev243 — retail level-load fix — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+dev242 in Vita3K (user): main menu reached; Tutorial and Campaign returned to the menu (level load
+code=13 at "Load definition databases"); main-menu Renegade logo missing.
+Cause: A36 DefinitionMgr admission rejected records without a registered factory, but retail
+objects.ddb carries ~1,350 level-editor-only definitions the original game skips. Also: chunk
+structural admission seeked a closed handle when a missing optional file was loaded.
+Fix: wwsaveload-a39-skip-unregistered-definition-factories, wwlib-a39-chunk-unopened-file (626 patches).
+Evidence: repaired host original M00 world runtime loads retail definitions + M00 and renders 652
+meshes / 16,939 triangles PASS; VPK `f328bea8…54f3eb`; eboot `585ad6a5…46fad4` installed and hash
+verified on Vita3K and on the physical Vita (VPK also in ux0:/data/renegade/user/). Not launched.
+Open: missing main-menu logo — first mesh through the round-4 static-mesh cache; A/B RVSM1/RVVA1/RVGS1.
+
 # A3.5-dev242 — CONV10.CDB startup fix — 2026-10-07
 
 Renegade Vita — v3.5 active

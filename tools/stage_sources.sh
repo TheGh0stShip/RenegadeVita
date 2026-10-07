@@ -1942,6 +1942,15 @@ test "$(sha256sum "$rv_stage/wwsaveload/definitionmgr.cpp" | cut -d' ' -f1)" = \
 	"a4edc83c5654b7c3c38d8c3023c0754af862f15381c40ee9de35089c90c5ecf0"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwsaveload" -p1 < "$rv_root/port/patches/wwsaveload-a39-skip-unregistered-definition-factories.patch"
+# Pointer remap misses follow the original release path again (NULL, warn,
+# continue) instead of failing every retail level load; SaveLoadSystem logs
+# the subsystem/check that rejects a load (weak Vita log hook, inert on host).
+test "$(sha256sum "$rv_stage/wwsaveload/pointerremap.cpp" | cut -d' ' -f1)" = \
+	"3f87df033a61ba5d9acb587eb883e20239f01a64ca0e3c0c74c05253e0628d09"
+test "$(sha256sum "$rv_stage/wwsaveload/saveload.cpp" | cut -d' ' -f1)" = \
+	"84701cc49320050f6d83587f1d1fb4f0db522cc7780ed9e2eee78402182f7479"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwsaveload" -p1 < "$rv_root/port/patches/wwsaveload-a39-remap-miss-continue-and-load-diagnostics.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

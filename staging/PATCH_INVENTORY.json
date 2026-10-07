@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "da809a9e10eb561b48824053f14e6fd2ca45e3818844bf522ff331924b6221eb",
-  "patch_count": 626,
+  "stage_script_sha256": "8e10748cad0b0998e488f0e235a781600b79c19e45854df5fc07a3367c417f31",
+  "patch_count": 627,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -3133,7 +3133,12 @@
       "path": "port/patches/wwsaveload-a39-skip-unregistered-definition-factories.patch",
       "stage_directory": "wwsaveload",
       "sha256": "5643d5a3752ccf9005e4173593abfce5847eefac88eba6f9b9316c1ea29ba184"
+    },
+    {
+      "path": "port/patches/wwsaveload-a39-remap-miss-continue-and-load-diagnostics.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "bddf3c610397f3d0a29f51411ad9a49017673380b8f66798a1858d790cbeeaf9"
     }
   ],
-  "registry_sha256": "15c06fdcad538d2cc4bc9554651dad36339e2a15b045135138dd47297a633f2e"
+  "registry_sha256": "49b042026804069bab9a796b5de193a34ab16a275edb458328f90e1d42a09abe"
 }

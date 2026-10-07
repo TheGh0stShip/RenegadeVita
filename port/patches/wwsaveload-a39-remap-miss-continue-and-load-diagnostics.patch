@@ -1,0 +1,61 @@
+--- a/pointerremap.cpp
++++ b/pointerremap.cpp
+@@ -36,6 +36,8 @@
+ 
+ 
+ #include "pointerremap.h"
++#include <stdint.h>
++extern int A30_Vita_Log(const char *format, ...) __attribute__((weak));
+ #include "refcount.h"
+ #include "wwdebug.h"
+ 
+@@ -123,7 +125,15 @@
+ 			// If this happens, things could be going very wrong.  (find out why its happening!)
+ 			pair_index = pre_search_index;
+ 			*request_table[pointer_index].PointerToRemap = NULL;
+-			remapped = false;
++			// Original release behavior: warn and continue with NULL. Retail
++			// level data contains such references; failing the whole load
++			// rejected every shipped mission on the Vita.
++			static unsigned rv_remap_miss_logs = 0U;
++			if (A30_Vita_Log != NULL && rv_remap_miss_logs < 16U) {
++				++rv_remap_miss_logs;
++				A30_Vita_Log("A3.9 saveload: pointer remap miss old=%08X refcount=%d (set NULL, original warn-and-continue)\n",
++					(unsigned)(uintptr_t)pointer_to_remap, refcount ? 1 : 0);
++			}
+ #ifdef WWDEBUG			
+ 			const char * file = request_table[pointer_index].File;
+ 			int line = request_table[pointer_index].Line;
+--- a/saveload.cpp
++++ b/saveload.cpp
+@@ -35,6 +35,7 @@
+  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ 
+ 
++extern int A30_Vita_Log(const char *format, ...) __attribute__((weak));
+ #include "saveload.h"
+ #include "saveloadsubsystem.h"
+ #include "persist.h"
+@@ -109,12 +110,21 @@
+ 					sys->PlayerSaveLoadSeen = true;
+ 				}
+ 				INIT_SUB_STATUS(sys->Name());
+-				ok &= sys->Load(cload);
++				const bool rv_sys_ok = sys->Load(cload);
++				if (!rv_sys_ok && A30_Vita_Log != NULL) {
++					A30_Vita_Log("A3.9 saveload: subsystem load=false name=%s chunk=%08X chunk_error=%d reported=%d\n",
++						sys->Name(), (unsigned)sys->Chunk_ID(), cload.Has_Error() ? 1 : 0, ReportedLoadFailure ? 1 : 0);
++				}
++				ok &= rv_sys_ok;
+ 				WWLOG_INTERMEDIATE(sys->Name());
+ 			}
+ 		}
+ 		cload.Close_Chunk();
+ 	}
++	if (A30_Vita_Log != NULL && (cload.Has_Error() || ReportedLoadFailure)) {
++		A30_Vita_Log("A3.9 saveload: load status chunk_error=%d reported=%d ok_before=%d\n",
++			cload.Has_Error() ? 1 : 0, ReportedLoadFailure ? 1 : 0, ok ? 1 : 0);
++	}
+ 	ok = !cload.Has_Error() && ok;
+ 
+ 	if (require_player_save_subsystems) {

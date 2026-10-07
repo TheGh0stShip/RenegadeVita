@@ -1454,11 +1454,14 @@ def render_markdown(reports: list[dict], comparison: dict | None) -> str:
     return "\n".join(out) + "\n"
 
 
-def build_report(paths: list[Path], *, labels: list[str] | None = None, session: str = "auto",
-                 hitch_ms: float = 50.0, top_scopes: int = 8, top_hitches: int = 30) -> dict:
+def build_report(paths: list[Path], *, labels: list[str] | None = None,
+                 sessions: list[str] | None = None, hitch_ms: float = 50.0, top_scopes: int = 8,
+                 top_hitches: int = 30) -> dict:
+    """``sessions`` holds one selector per log (the last one repeats)."""
     reports = []
     for index, path in enumerate(paths):
         label = labels[index] if labels and index < len(labels) else ("A" if index == 0 else "B")
+        session = (sessions[min(index, len(sessions) - 1)] if sessions else "auto")
         reports.append(analyze_log(path, session=session, hitch_ms=hitch_ms, top_scopes=top_scopes,
                                    top_hitches=top_hitches, label=label))
     comparison = compare(reports[0], reports[1]) if len(reports) == 2 else None
@@ -1472,8 +1475,10 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser.add_argument("--label", action="append", dest="labels", help="label per log (repeat)")
     parser.add_argument("--out-md", type=Path, help="write Markdown here (default: stdout)")
     parser.add_argument("--out-json", type=Path, help="write JSON here")
-    parser.add_argument("--session", default="auto",
-                        help="session index when a log holds several launches (default: auto)")
+    parser.add_argument("--session", action="append", dest="sessions",
+                        help="session per log when a log holds several launches (the runtime log is "
+                             "opened for append): index, negative from the end, or auto (default); "
+                             "repeat for B, e.g. one log twice with --session 0 --session 1")
     parser.add_argument("--hitch-ms", type=float, default=50.0, help="hitch threshold (default 50)")
     parser.add_argument("--top-scopes", type=int, default=8, help="profiler scopes per segment")
     parser.add_argument("--top-hitches", type=int, default=30, help="hitch rows to list")
@@ -1485,7 +1490,7 @@ def main(argv: Iterable[str] | None = None) -> int:
             print(f"error: {path} is not a readable file", file=sys.stderr)
             return 2
     try:
-        report = build_report(args.logs, labels=args.labels, session=args.session, hitch_ms=args.hitch_ms,
+        report = build_report(args.logs, labels=args.labels, sessions=args.sessions, hitch_ms=args.hitch_ms,
                               top_scopes=args.top_scopes, top_hitches=args.top_hitches)
     except ValueError as error:
         print(f"error: {error}", file=sys.stderr)

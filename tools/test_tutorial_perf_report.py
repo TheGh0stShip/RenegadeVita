@@ -491,6 +491,17 @@ class RobustnessTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             tpr.analyze_log(log, session="5")
 
+    def test_one_appended_log_compares_two_sessions(self):
+        log = self.logs.write("appended.log", tutorial_log({"gunner": 45.0}) + tutorial_log({"gunner": 30.0}))
+        report = tpr.build_report([log, log], sessions=["0", "1"])
+        self.assertEqual([r["integrity"]["session_analyzed"] for r in report["reports"]], [0, 1])
+        rows = {row["segment"]: row for row in report["comparison"]["rows"]}
+        self.assertEqual(rows["gunner"]["noise"]["verdict"], "B faster")
+        stdout = io.StringIO()
+        with redirect_stdout(stdout):
+            self.assertEqual(tpr.main([str(log), str(log), "--session", "0", "--session", "1"]), 0)
+        self.assertIn("B faster", stdout.getvalue())
+
 
 class ABTests(unittest.TestCase):
     def setUp(self):

@@ -60,6 +60,24 @@ int main() {
     assert(!A31DevelopmentCheckpoint::Parse(valid[0], strlen(valid[0]), output, 5));
     assert(!A31DevelopmentCheckpoint::Parse(NULL, 12, output, sizeof(output)));
     assert(!A31DevelopmentCheckpoint::Parse(valid[0], strlen(valid[0]), NULL, 0));
+    // RVTC1 sticky tutorial request: same slot grammar, distinct prefix.
+    const char *sticky[] = {"RVTC1 rv_cp_m00-gunner.sav\n", "RVTC1 M00-1_OK.SAV\r\n"};
+    for (auto value : sticky) {
+        assert(A31DevelopmentCheckpoint::Parse_Tutorial_Sticky(value, strlen(value), output, sizeof(output)));
+        assert(strncmp(output, "save/", 5) == 0);
+        assert(!A31DevelopmentCheckpoint::Parse(value, strlen(value), output, sizeof(output)));
+    }
+    for (auto value : valid) {
+        assert(!A31DevelopmentCheckpoint::Parse_Tutorial_Sticky(value, strlen(value), output, sizeof(output)));
+        assert(output[0] == 0);
+    }
+    const char *bad_sticky[] = {"RVTC1 ../a.sav\n", "RVTC1 a/b.sav\n", "RVTC1 _a.sav\n",
+        "RVTC1 a.sav", "RVTC1 a.txt\n", "RVTC2 a.sav\n", "RVTC1 a.sav\nextra"};
+    for (auto value : bad_sticky) {
+        assert(!A31DevelopmentCheckpoint::Parse_Tutorial_Sticky(value, strlen(value), output, sizeof(output)));
+        assert(output[0] == 0);
+    }
+    assert(!A31DevelopmentCheckpoint::Parse_Tutorial_Sticky(NULL, 12, output, sizeof(output)));
     const char *missions[] = {"RVMS1 M13.mix\n", "RVMS1 M01.mix\r\n", "RVMS1 M00_Tutorial.mix\n"};
     for (auto value : missions) {
         assert(A31DevelopmentCheckpoint::Parse_Mission(value, strlen(value), output, sizeof(output)));

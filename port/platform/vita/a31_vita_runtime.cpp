@@ -3120,6 +3120,60 @@ bool Try_Latch_Development_Save()
 #endif
 }
 
+// RVTC1 tester loop: tutorial-checkpoint-v1.flag names an original M00 save
+// that every process start re-enters through the same original load handoff.
+// The flag is never consumed; deleting it restores normal startup.
+bool Try_Latch_Sticky_Tutorial_Checkpoint()
+{
+#if RENEGADE_VITA_DEVELOPMENT_CHECKPOINT
+	const char *const request_path =
+		"ux0:data/renegade/user/config/tutorial-checkpoint-v1.flag";
+	FILE *file = fopen(request_path, "rb");
+	if (file == NULL) return false;
+	char request[77];
+	const size_t bytes = fread(request, 1U, sizeof(request), file);
+	const bool read_failed = ferror(file) != 0;
+	const bool close_failed = fclose(file) != 0;
+	char source[96];
+	bool valid_source = false;
+	if (!read_failed && !close_failed &&
+		A31DevelopmentCheckpoint::Parse_Tutorial_Sticky(request, bytes, source,
+			sizeof(source))) {
+#if RENEGADE_VITA_M00_DEMO
+		valid_source = A4_Frontend_Is_Tutorial_Source(source);
+#else
+		char archive[96];
+		bool is_save = false;
+		valid_source = A4_Frontend_Resolve_Single_Player_Archive(source,
+			archive, sizeof(archive), &is_save) && is_save &&
+			stricmp(archive, "M00_Tutorial.mix") == 0;
+#endif
+	}
+	if (!valid_source) {
+		A30_Vita_Log("A4 checkpoint: RVTC1 sticky request rejected; valid original M00 save required\n");
+		return false;
+	}
+	A4_Frontend_Latch_Start_Game(source, -1, 0UL);
+	const bool latched = A4_Frontend_Get_Trace().tutorial_start_latched;
+	A30_Vita_Log("A4 checkpoint: RVTC1 sticky tutorial handoff latched=%d source=%s; flag retained, once per process; original reload unassessed\n",
+		latched ? 1 : 0, source);
+	return latched;
+#else
+	return false;
+#endif
+}
+
+// A one-shot request wins. The sticky request applies only to the first
+// frontend entry of a process, so quitting to the original menu stays there.
+bool Try_Latch_Startup_Development_Checkpoint()
+{
+	static bool first_frontend_entry = true;
+	const bool sticky_allowed = first_frontend_entry;
+	first_frontend_entry = false;
+	return Try_Latch_Development_Save() ||
+		(sticky_allowed && Try_Latch_Sticky_Tutorial_Checkpoint());
+}
+
 #if !RENEGADE_VITA_M00_DEMO
 bool Try_Latch_Development_Campaign_Mission()
 {
@@ -4678,7 +4732,7 @@ bool Run_Original_Frontend_Intro_And_Menu(MenuGameModeClass2 &menu_mode,
 		A30_Vita_Log("A4 campaign diagnostic: original frontend selected standalone mission\n");
 	}
 #endif
-	else if (!Try_Latch_Development_Save()) {
+	else if (!Try_Latch_Startup_Development_Checkpoint()) {
 		movie_mode.Activate();
 		movie_mode.Startup_Movies();
 		A30_Vita_Log("A4 frontend: original MovieGameMode startup sequence entered; Bink provider owns decode or per-movie fail-closed skip\n");

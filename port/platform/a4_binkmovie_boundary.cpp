@@ -22,6 +22,7 @@
 #include <psp2/ctrl.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
+#include "vita/renegade_vita_clocks.h"
 #include <vitaGL.h>
 
 extern "C" {
@@ -380,6 +381,9 @@ void Queue_Audio(const int16_t *samples, size_t sample_count)
 
 void *Audio_Output_Thread(void *)
 {
+	// RVCK1 mask 2: join the Miles mixer on user core 1 instead of inheriting
+	// the creating game thread's core 0, where the video decode runs.
+	RenegadeVitaClocks::Place_Audio_Worker_Thread();
 	if (!g_audio_thread_entry_logged) {
 		A30_Vita_Log("A4 Bink: audio output thread entry port=%d ring_samples=%u\n",
 			g_audio_port, static_cast<unsigned>(g_audio_ring.size()));

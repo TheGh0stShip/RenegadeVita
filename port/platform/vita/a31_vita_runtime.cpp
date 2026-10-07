@@ -148,6 +148,7 @@
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
 #include <psp2/power.h>
+#include "renegade_vita_clocks.h"
 
 #include <debugScreen.h>
 
@@ -877,7 +878,8 @@ public:
 			"verbose status repaints until visible pre-cache starts");
 		g_startup_status_repaint_active.store(1, std::memory_order_release);
 		Thread = sceKernelCreateThread("RenegadeStartupStatus",
-			Startup_Status_Repaint_Thread, 0x10000100, 0x4000, 0, 0, NULL);
+			Startup_Status_Repaint_Thread, 0x10000100, 0x4000, 0,
+			RenegadeVitaClocks::Helper_Thread_Affinity(), NULL);
 		if (Thread >= 0) {
 			const int start_result = sceKernelStartThread(Thread, 0, NULL);
 			if (start_result < 0) {
@@ -2507,6 +2509,9 @@ std::atomic<uint32_t> g_power_system_suspends(0U);
 std::atomic<uint32_t> g_power_thermal_suspends(0U);
 std::atomic<uint32_t> g_power_low_battery_suspends(0U);
 std::atomic<uint32_t> g_power_low_battery_events(0U);
+// Any resume-type callback (system, after-system or application resume);
+// read by the RVCK1 clock watchdog on the callback thread.
+std::atomic<uint32_t> g_power_clock_events(0U);
 
 // Runs on the callback thread: atomic counters only, no logging or locks.
 int Power_Event_Callback(int, int, int power_info, void *)
@@ -2527,6 +2532,8 @@ int Power_Event_Callback(int, int, int power_info, void *)
 	if ((power_info & SCE_POWER_CB_SYSTEM_RESUME) != 0) {
 		g_power_resume_events.fetch_add(1U, std::memory_order_release);
 	}
+	if ((power_info & RenegadeVitaClocks::kResumeEventMask) != 0)
+		g_power_clock_events.fetch_add(1U, std::memory_order_release);
 	return 0;
 }
 
@@ -2535,7 +2542,15 @@ int Power_Callback_Thread(SceSize, void *)
 	const SceUID callback = sceKernelCreateCallback("RenegadePowerCb", 0,
 		Power_Event_Callback, NULL);
 	if (callback < 0 || scePowerRegisterCallback(callback) < 0) return 0;
-	for (;;) sceKernelDelayThreadCB(1000000U);
+	// RVCK1 clock watchdog (clocks-v1.flag). This runs outside the callback,
+	// so it may log; with no flag both calls return immediately.
+	RenegadeVitaClocks::WatchdogState clocks = {};
+	RenegadeVitaClocks::Power_Thread_Armed();
+	for (;;) {
+		sceKernelDelayThreadCB(1000000U);
+		RenegadeVitaClocks::Power_Thread_Wake(clocks,
+			g_power_clock_events.load(std::memory_order_acquire));
+	}
 	return 0;
 }
 
@@ -2545,7 +2560,9 @@ void Ensure_Power_Callback_Registered()
 	if (registered) return;
 	registered = true;
 	const SceUID thread = sceKernelCreateThread("RenegadePowerCbThread",
-		Power_Callback_Thread, 0x10000100, 0x1000, 0, 0, NULL);
+		Power_Callback_Thread, 0x10000100,
+		RenegadeVitaClocks::Power_Thread_Stack_Size(), 0,
+		RenegadeVitaClocks::Helper_Thread_Affinity(), NULL);
 	const int start = thread >= 0 ? sceKernelStartThread(thread, 0, NULL) : thread;
 	A30_Vita_Log("A3.6 power: suspend/resume callback thread=%08X start=%08X\n",
 		static_cast<unsigned>(thread), static_cast<unsigned>(start));
@@ -2571,6 +2588,29 @@ bool Consume_Power_Resume(uint32_t frame)
 		g_power_low_battery_suspends.load(std::memory_order_relaxed), now);
 	Reassert_Performance_Clocks(frame);
 	return true;
+}
+
+// RVCK1 keep-awake (clocks-v1.flag, mask 4). Original cinematics and
+// conversations play without button input, so the Vita dimming and
+// auto-suspend timers keep running while the player watches or listens.
+// Tick them, as the BINK boundary does for movies, only while one is active.
+void Tick_Presentation_Keep_Awake(uint32_t frame)
+{
+	static uint32_t last_frame = 0xFFFFFFFFU;
+	if (!RenegadeVitaClocks::Enabled(RenegadeVitaClocks::MODE_KEEP_AWAKE) ||
+		!RenegadeVitaClocks::Keep_Awake_Due(frame, last_frame)) return;
+	const bool cinematic = COMBAT_CAMERA != NULL && COMBAT_CAMERA->Is_In_Cinematic();
+	const int conversations = ConversationMgrClass::Get_Active_Conversation_Count();
+	if (!cinematic && conversations <= 0) return;
+	sceKernelPowerTick(SCE_KERNEL_POWER_TICK_DISABLE_AUTO_SUSPEND);
+	sceKernelPowerTick(SCE_KERNEL_POWER_TICK_DISABLE_OLED_DIMMING);
+	static bool logged = false;
+	if (!logged) {
+		logged = true;
+		A30_Vita_Log("RVCK1 keep-awake: first tick frame=%u cinematic=%d conversations=%d interval_frames=%u\n",
+			frame, cinematic ? 1 : 0, conversations,
+			static_cast<unsigned>(RenegadeVitaClocks::kKeepAwakeFrameInterval));
+	}
 }
 
 void Copy_Flight_Memory(A31MemoryTelemetry &output)
@@ -6655,6 +6695,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					}
 				}
 #endif
+				Tick_Presentation_Keep_Awake(result.frames);
 				if (Consume_Power_Resume(result.frames)) {
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 					// Hand the resumed player the original EVA pause menu.

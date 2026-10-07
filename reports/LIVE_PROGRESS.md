@@ -16,6 +16,21 @@ Completed (source audit, ARM -fsyntax-only and host tests only; nothing linked, 
 
 Next: hardware check of the crouch tap window and the Save/Load default-profile route.
 
+# M10 objective conversation preemption fix — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Now: the owner-approved, M10-only fix for the open decision below is staged.
+Completed: `scripts-a38-m10-objective-conversation-resend.patch` registers the monitor before
+`Start_Conversation` at the four follow-up sites (M10CON014/005/011/002). A key-conversation preemption
+then delivers 1001/1002/1004/1005 at once. Each send is behind a saved send-once flag. The normal path,
+the engine and other missions are unchanged.
+Evidence: staging 544 patches, inventory PASS, only `Mission10.cpp` changed; ARM `-fsyntax-only` exit 0
+with unchanged warnings; `tools/test_m10_objective_conversation_resend.py` 5/5 OK.
+Details: reports/campaign/M10_READINESS.md "Key-conversation preemption fix".
+Next: an ARM build, then a physical M10 run that pokes the SE gate during a key conversation.
+Blocker: none (no build or device in this unit).
+
 # Campaign development push 3 (full mission audits) — 2026-10-07
 
 Renegade Vita — v3.5 active

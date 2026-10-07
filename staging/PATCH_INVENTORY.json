@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "054c8509df5ee1dd9bb45f86e5282b0e341d45f05e35412cb12a5ed10ba8170a",
-  "patch_count": 624,
+  "stage_script_sha256": "da809a9e10eb561b48824053f14e6fd2ca45e3818844bf522ff331924b6221eb",
+  "patch_count": 626,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -3123,7 +3123,17 @@
       "path": "port/patches/wwlib-a39-peek-next-chunk-speculative.patch",
       "stage_directory": "wwlib",
       "sha256": "060a957c7fbacfec20c8e8f90107589710f2e6ffb2b4b3436b94027f3a8b6c3a"
+    },
+    {
+      "path": "port/patches/wwlib-a39-chunk-unopened-file.patch",
+      "stage_directory": "wwlib",
+      "sha256": "cf64ec72813584287ca9e9cd50a3375803548feb2754fdf437ea2667c7146f0f"
+    },
+    {
+      "path": "port/patches/wwsaveload-a39-skip-unregistered-definition-factories.patch",
+      "stage_directory": "wwsaveload",
+      "sha256": "5643d5a3752ccf9005e4173593abfce5847eefac88eba6f9b9316c1ea29ba184"
     }
   ],
-  "registry_sha256": "c80ee9f7cc1236d7276309d0e47b40fc85f303629b9036c45f17d0db553283ab"
+  "registry_sha256": "15c06fdcad538d2cc4bc9554651dad36339e2a15b045135138dd47297a633f2e"
 }

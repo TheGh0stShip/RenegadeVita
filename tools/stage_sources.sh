@@ -1927,6 +1927,21 @@ test "$(sha256sum "$rv_stage/wwlib/chunkio.cpp" | cut -d' ' -f1)" = \
 	"f46db2e3834aa7db01b6dcb7573bf63f0de26e80c3ee41021daf994460a610ae"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a39-peek-next-chunk-speculative.patch"
+# ChunkLoadClass on an unopened file: the structural-admission patch calls
+# Tell/Size at the top level, which seeks a closed handle (host fseek(NULL)).
+# The original read simply returned no chunk; restore that.
+test "$(sha256sum "$rv_stage/wwlib/chunkio.cpp" | cut -d' ' -f1)" = \
+	"7cbe13e4bb106cbe60a91c6b2c1935ec3ef10940228b0d0163c5e0aa197d1070"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a39-chunk-unopened-file.patch"
+# DefinitionMgr::Load_Objects: skip records whose factory is not registered,
+# as the original loader does. Retail objects.ddb contains level-editor-only
+# definitions (Commando editor chunk range); treating them as corruption made
+# every retail level load fail at "Load definition databases".
+test "$(sha256sum "$rv_stage/wwsaveload/definitionmgr.cpp" | cut -d' ' -f1)" = \
+	"a4edc83c5654b7c3c38d8c3023c0754af862f15381c40ee9de35089c90c5ecf0"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwsaveload" -p1 < "$rv_root/port/patches/wwsaveload-a39-skip-unregistered-definition-factories.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

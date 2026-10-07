@@ -33,10 +33,8 @@
 
 #include "wwdebug.h"
 #include "always.h"
-#include "refcount.h"
-
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include <WWOnline\RefPtr.h>
+#include "refcount.h"
 
 namespace WWOnline
 {
@@ -47,7 +45,6 @@ namespace WOL
 {
 struct Channel;
 }
-#endif
 
 class cGameData;
 
@@ -58,23 +55,15 @@ class cGameChannel : public RefCountClass
 
 	public:
 		cGameData* Get_Game_Data(void) {WWASSERT(PGameData != NULL); return PGameData;}
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 		RefPtr<WWOnline::ChannelData>& Get_Channel(void) {return WolChannel;}
 		WOL::Channel* Get_Wol_Channel(void);
-#endif
 
 	private:
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-		cGameChannel(cGameData * p_game_data);
-#else
 		cGameChannel(cGameData * p_game_data, const RefPtr<WWOnline::ChannelData>& channel);
-#endif
 		~cGameChannel(void);
 
 		cGameData* PGameData;
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 		RefPtr<WWOnline::ChannelData> WolChannel;
-#endif
 };
 
 #endif // GAMECHANNEL_H

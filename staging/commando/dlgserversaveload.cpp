@@ -47,11 +47,7 @@
 #include "assets.h"
 #include "dlgmplanhostoptions.h"
 #include "renegadedialogmgr.h"
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "dlgmpslaveservers.h"
-#endif
-#include "renegade_server_config.h"
-#include "renegade_ui_pointer_tokens.h"
 
 
 DynamicVectorClass<ServerSettingsClass*> ServerSettingsManagerClass::ServerSettingsList;
@@ -190,7 +186,7 @@ ServerSaveLoadMenuClass::Delete_Config (void)
 		//
 		//	Get the configuration object associated with this entry
 		//
-		ServerSettingsClass *config = (ServerSettingsClass *)Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (curr_sel, 0));
+		ServerSettingsClass *config = (ServerSettingsClass *)list_ctrl->Get_Entry_Data (curr_sel, 0);
 		if (config != NULL) {
 
 			//
@@ -228,18 +224,15 @@ ServerSaveLoadMenuClass::Load_Config (void)
 		//
 		//	Get the configuration object associated with this entry
 		//
-		ServerSettingsClass *config = (ServerSettingsClass *)Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data(curr_sel, 0));
+		ServerSettingsClass *config = (ServerSettingsClass *)list_ctrl->Get_Entry_Data(curr_sel, 0);
 		if (config != NULL) {
 
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 			if (FromSlaveConfig) {
 				//
 				// Inform the slave settings dialog of the choice.
 				//
 				SlaveServerDialogClass::Set_Slave_Settings(&config->RawFileName);
-			} else
-#endif
-			{
+			} else {
 
 				//
 				//	Load this configuration
@@ -276,7 +269,7 @@ ServerSaveLoadMenuClass::Save_Config (bool prompt)
 		//
 		//	Get the configuration object associated with this entry
 		//
-		ServerSettingsClass *config = (ServerSettingsClass *)Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data(curr_sel, 0));
+		ServerSettingsClass *config = (ServerSettingsClass *)list_ctrl->Get_Entry_Data(curr_sel, 0);
 		if (config != NULL) {
 
 			//
@@ -340,11 +333,8 @@ ServerSaveLoadMenuClass::Save_Config (bool prompt)
 				config = ServerSettingsManagerClass::Add_Configuration(&name);
 				if (config != NULL) {
 					Insert_Configuration(config);
-					if (ServerSettingsManagerClass::Save_Configuration(config)) {
-						list_ctrl->Sort (ListSortCallback, 0);
-					} else {
-						DlgMsgBox::DoDialog(IDS_MENU_SAVE_NO_DISK_SPACE_TITLE, IDS_MENU_SAVE_NO_DISK_SPACE_MSG);
-					}
+					ServerSettingsManagerClass::Save_Configuration(config);
+					list_ctrl->Sort (ListSortCallback, 0);
 				}
 			} else {
 
@@ -374,7 +364,7 @@ ServerSaveLoadMenuClass::On_ListCtrl_Delete_Entry
 	//
 	//	Remove the data we associated with this entry
 	//
-	ServerSettingsClass *config = (ServerSettingsClass *)Renegade_Ui_Take_Pointer_Token(list_ctrl->Get_Entry_Data (item_index, 0));
+	ServerSettingsClass *config = (ServerSettingsClass *)list_ctrl->Get_Entry_Data (item_index, 0);
 	list_ctrl->Set_Entry_Data (item_index, 0, NULL);
 
 	//
@@ -411,7 +401,7 @@ ServerSaveLoadMenuClass::Insert_Configuration (ServerSettingsClass *config)
 		//	Make a copy of the config object and store it with the entry
 		//
 		ServerSettingsClass *local_copy = new ServerSettingsClass(config);
-		list_ctrl->Set_Entry_Data (item_index, 0, Renegade_Ui_Pointer_To_Token(local_copy));
+		list_ctrl->Set_Entry_Data (item_index, 0, (DWORD)local_copy);
 
 		//
 		//	Change the color of this configuration if the user cannot edit it
@@ -444,7 +434,7 @@ ServerSaveLoadMenuClass::On_ListCtrl_Sel_Change
 	//
 	//	Remove the data we associated with this entry
 	//
-	ServerSettingsClass *config = (ServerSettingsClass *)Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data(new_index, 0));
+	ServerSettingsClass *config = (ServerSettingsClass *)list_ctrl->Get_Entry_Data(new_index, 0);
 	if (config != NULL) {
 
 		//
@@ -489,8 +479,8 @@ ServerSaveLoadMenuClass::ListSortCallback
 )
 {
 
-	ServerSettingsClass *config1 = (ServerSettingsClass *)Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index1, 0));
-	ServerSettingsClass *config2 = (ServerSettingsClass *)Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index2, 0));
+	ServerSettingsClass *config1 = (ServerSettingsClass *)list_ctrl->Get_Entry_Data (item_index1, 0);
+	ServerSettingsClass *config2 = (ServerSettingsClass *)list_ctrl->Get_Entry_Data (item_index2, 0);
 
 	if (config1 == NULL) {
 		return(1);
@@ -577,7 +567,7 @@ void ServerSaveLoadMenuClass::Save_Now(void)
 		//
 		//	Get the configuration object associated with this entry
 		//
-		ServerSettingsClass *config = (ServerSettingsClass *)Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data(curr_sel, 0));
+		ServerSettingsClass *config = (ServerSettingsClass *)list_ctrl->Get_Entry_Data(curr_sel, 0);
 
 		if (config != NULL) {
 			//
@@ -602,12 +592,9 @@ void ServerSaveLoadMenuClass::Save_Now(void)
 						//
 						//	Save the configuration
 						//
-						if (ServerSettingsManagerClass::Save_Configuration(config)) {
-							End_Dialog ();
-							Next_Dialog();
-						} else {
-							DlgMsgBox::DoDialog(IDS_MENU_SAVE_NO_DISK_SPACE_TITLE, IDS_MENU_SAVE_NO_DISK_SPACE_MSG);
-						}
+						ServerSettingsManagerClass::Save_Configuration(config);
+						End_Dialog ();
+						Next_Dialog();
 					}
 				}
 			}
@@ -736,15 +723,10 @@ void ServerSettingsManagerClass::Scan(void)
 	for (int i=2 ; i<MAX_SETTINGS_FILES ; i++) {
 
 		sprintf(file_name, DEFAULT_SERVER_SETTINGS_FILE_NAME, i);
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-		if (Renegade_User_Server_Config_Is_Available(file_name)) {
-			INIClass *ini = Renegade_Load_Server_Config(file_name);
-#else
 		sprintf(whole_file_name, "data\\%s", file_name);
 		RawFileClass file(whole_file_name);
 		if (file.Is_Available()) {
 			INIClass *ini = Get_INI(file_name);
-#endif
 			if (ini) {
 				description = ini->Get_Wide_String(description, "Settings", "wConfigName", L"");	//(unsigned short *)TRANSLATE(IDS_SERVER_SAVELOAD_DEFAULT));
 				if (description.Get_Length()) {
@@ -754,7 +736,6 @@ void ServerSettingsManagerClass::Scan(void)
 					ini->Get_String("Settings", "bConfigName", defaultstr.Peek_Buffer(), char_description.Peek_Buffer(), 128);
 					ServerSettingsList.Add(new ServerSettingsClass(file_name, WideStringClass(char_description, true).Peek_Buffer(), i));
 				}
-				Release_INI(ini);
 			}
 		}
 	}
@@ -807,14 +788,10 @@ void ServerSettingsManagerClass::Load_Settings(ServerSettingsClass *settings)
 	WWASSERT(The_Game() != NULL);
 
 	if (settings && The_Game()) {
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-		if (Renegade_Server_Config_Is_Available(settings->RawFileName)) {
-#else
 		char filename[MAX_PATH];
 		sprintf(filename, "data\\%s", settings->RawFileName);
 		RawFileClass file(filename);
 		if (file.Is_Available()) {
-#endif
 			The_Game()->Set_Ini_Filename(settings->RawFileName);
 			The_Game()->Load_From_Server_Config();
 			settings->ConfigName = The_Game()->Get_Settings_Description();
@@ -840,15 +817,9 @@ void ServerSettingsManagerClass::Load_Settings(ServerSettingsClass *settings)
 void ServerSettingsManagerClass::Delete_Configuration(ServerSettingsClass *settings)
 {
 	if (!settings->Is_Default()) {
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-		if (!Renegade_Delete_User_Server_Config(settings->RawFileName)) {
-			return;
-		}
-#else
 		char filename[MAX_PATH];
 		sprintf(filename, "data\\%s", settings->RawFileName);
 		DeleteFile(filename);
-#endif
 		for (int i=0 ; i<ServerSettingsList.Count() ; i++) {
 			if (strcmp(settings->RawFileName, ServerSettingsList[i]->RawFileName) == 0) {
 				delete ServerSettingsList[i];
@@ -875,19 +846,12 @@ void ServerSettingsManagerClass::Delete_Configuration(ServerSettingsClass *setti
  * HISTORY:                                                                                    *
  *   12/17/2001 5:14PM ST : Created                                                            *
  *=============================================================================================*/
-bool ServerSettingsManagerClass::Save_Configuration(ServerSettingsClass *settings)
+void ServerSettingsManagerClass::Save_Configuration(ServerSettingsClass *settings)
 {
 	WWASSERT(settings != NULL);
 	WWASSERT(The_Game() != NULL);
 
 	if (settings && The_Game()) {
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-		The_Game()->Set_Settings_Description(settings->ConfigName);
-		The_Game()->Set_Ini_Filename(settings->RawFileName);
-		Renegade_Reset_Server_Config_Save_Status();
-		The_Game()->Save_To_Server_Config();
-		return Renegade_Last_Server_Config_Save_Succeeded();
-#else
 		char filename[MAX_PATH];
 		sprintf(filename, "data\\%s", settings->RawFileName);
 		RawFileClass file(filename);
@@ -901,11 +865,8 @@ bool ServerSettingsManagerClass::Save_Configuration(ServerSettingsClass *setting
 			The_Game()->Set_Settings_Description(settings->ConfigName);
 			The_Game()->Set_Ini_Filename(settings->RawFileName);
 			The_Game()->Save_To_Server_Config();
-			return true;
 		}
-#endif
 	}
-	return false;
 }
 
 

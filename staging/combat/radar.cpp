@@ -254,43 +254,25 @@ bool	RadarManager::Save( ChunkSaveClass &csave )
 
 	for ( int i = 0; i < Markers.Count(); i++ ) {
 		csave.Begin_Chunk( CHUNKID_MARKER_ENTRY );
-			if (!Markers[i].Save(csave)) csave.Report_Error();
+			Markers[i].Save( csave );
 		csave.End_Chunk();
 	}
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	RadarManager::Load( ChunkLoadClass &cload )
 {
 	WWASSERT( Markers.Count() == 0 );
-	bool variables_seen = false;
-	bool loaded = true;
-	bool is_hidden = false;
-	float hidden_timer = 0.0F;
-	uint32 loaded_values = 0U;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_MANAGER_VARIABLES:
-				if (variables_seen) {
-					loaded = false;
-					break;
-				}
-				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						case MICROCHUNKID_IS_HIDDEN:
-							if ((loaded_values & 1U) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(is_hidden) ||
-								cload.Read(&is_hidden, sizeof(is_hidden)) != sizeof(is_hidden)) loaded = false;
-							else loaded_values |= 1U;
-							break;
-						case MICROCHUNKID_HIDDEN_TIMER:
-							if ((loaded_values & 2U) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(hidden_timer) ||
-								cload.Read(&hidden_timer, sizeof(hidden_timer)) != sizeof(hidden_timer)) loaded = false;
-							else loaded_values |= 2U;
-							break;
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_IS_HIDDEN,	IsHidden );
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_HIDDEN_TIMER,	HiddenTimer );
 						default:
 							Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 							break;
@@ -302,8 +284,8 @@ bool	RadarManager::Load( ChunkLoadClass &cload )
 			case CHUNKID_MARKER_ENTRY:
 			{
 				RadarMarkerClass marker;
-				if (marker.Load(cload)) Add_Marker(marker);
-				else loaded = false;
+				marker.Load( cload );
+				Add_Marker( marker );
 				break;
 			}
 
@@ -314,14 +296,7 @@ bool	RadarManager::Load( ChunkLoadClass &cload )
 		}
 		cload.Close_Chunk();
 	}
-	loaded = loaded && variables_seen && loaded_values == 3U && !cload.Has_Error();
-	if (loaded) {
-		IsHidden = is_hidden;
-		HiddenTimer = hidden_timer;
-	} else {
-		Markers.Delete_All();
-	}
-	return loaded;
+	return true;
 }
 
 /*
@@ -712,31 +687,16 @@ bool	RadarMarkerClass::Save( ChunkSaveClass & csave )
 
 bool	RadarMarkerClass::Load( ChunkLoadClass &cload )
 {
-	bool variables_seen = false;
-	bool loaded = true;
-	uint32 loaded_values = 0U;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
-				if (variables_seen) {
-					loaded = false;
-					break;
-				}
-				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-#define READ_REQUIRED_RADAR_VALUE(id, value, bit) \
-						case (id): \
-							if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
-								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
-							else loaded_values |= (bit); \
-							break
-						READ_REQUIRED_RADAR_VALUE(MICROCHUNKID_ID, ID, 1U);
-						READ_REQUIRED_RADAR_VALUE(MICROCHUNKID_POSITION, Position, 2U);
-						READ_REQUIRED_RADAR_VALUE(MICROCHUNKID_TYPE, Type, 4U);
-						READ_REQUIRED_RADAR_VALUE(MICROCHUNKID_COLOR, Color, 8U);
-#undef READ_REQUIRED_RADAR_VALUE
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_ID, ID );
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_POSITION, Position );                    
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_TYPE, Type );                  
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_COLOR, Color );                  
 
 						default:
 							Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
@@ -753,5 +713,6 @@ bool	RadarMarkerClass::Load( ChunkLoadClass &cload )
 		}
 		cload.Close_Chunk();
 	}
-	return loaded && variables_seen && loaded_values == 15U && !cload.Has_Error();
+	return true;
 }
+

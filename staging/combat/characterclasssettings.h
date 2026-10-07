@@ -98,7 +98,6 @@ public:
 	virtual PersistClass *					Create (void) const ;
 	virtual bool								Save (ChunkSaveClass &csave);
 	virtual bool								Load (ChunkLoadClass &cload);
-	virtual void								On_Load_Rejected (void);
 	virtual const PersistFactoryClass &	Get_Factory (void) const;	
 
 	static CharacterClassSettingsDefClass *			Get_Instance (void)	{ return GlobalInstance; }	
@@ -125,7 +124,6 @@ protected:
 	int					DefinitionTable[CLASS_COUNT][RANK_COUNT][TEAM_COUNT];
 
 	static CharacterClassSettingsDefClass *			GlobalInstance;
-	CharacterClassSettingsDefClass *				PreviousInstance;
 };
 
 

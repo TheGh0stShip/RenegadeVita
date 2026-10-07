@@ -124,25 +124,24 @@ const PersistFactoryClass & TimedDecorationPhysClass::Get_Factory (void) const
 bool TimedDecorationPhysClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(TIMEDDECOPHYS_CHUNK_DECOPHYS);
-	if (!DecorationPhysClass::Save(csave)) csave.Report_Error();
+	DecorationPhysClass::Save(csave);
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(TIMEDDECOPHYS_CHUNK_VARIABLES);
 	WRITE_MICRO_CHUNK(csave,TIMEDDECOPHYS_VARIABLE_LIFETIME,Lifetime);
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool TimedDecorationPhysClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case TIMEDDECOPHYS_CHUNK_DECOPHYS:
-				if (!DecorationPhysClass::Load(cload)) loaded = false;
+				DecorationPhysClass::Load(cload);
 				break;
 
 			case TIMEDDECOPHYS_CHUNK_VARIABLES:
@@ -161,7 +160,7 @@ bool TimedDecorationPhysClass::Load (ChunkLoadClass &cload)
 		
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 /****************************************************************************************************
@@ -248,13 +247,12 @@ bool TimedDecorationPhysDefClass::Save(ChunkSaveClass &csave)
 
 bool TimedDecorationPhysDefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case TIMEDDECORATIONPHYSDEF_CHUNK_DECORATIONPHYSDEF:
-				if (!DecorationPhysDefClass::Load(cload)) loaded = false;
+				DecorationPhysDefClass::Load(cload);
 				break;
 
 			case TIMEDDECORATIONPHYSDEF_CHUNK_VARIABLES:
@@ -273,5 +271,6 @@ bool TimedDecorationPhysDefClass::Load(ChunkLoadClass &cload)
 
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
+	return true;
 }
+

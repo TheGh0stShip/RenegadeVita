@@ -103,25 +103,20 @@ bool	TransitionGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	TransitionGameObjDef::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	Free_Transition_List ();
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!BaseGameObjDef::Load( cload )) loaded = false;
+				BaseGameObjDef::Load( cload );
 				break;
 
 			case CHUNKID_DEF_TRANSITION:
 			{
 				TransitionDataClass *transition = new TransitionDataClass;
-				if (transition->Load(cload)) {
-					Transitions.Add(transition);
-				} else {
-					delete transition;
-					loaded = false;
-				}
+				transition->Load( cload );
+				Transitions.Add( transition );
 			}
 			break;
 								
@@ -133,7 +128,7 @@ bool	TransitionGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 /*
@@ -215,7 +210,7 @@ enum	{
 bool	TransitionGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	if (!BaseGameObj::Save(csave)) csave.Report_Error();
+	BaseGameObj::Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -223,17 +218,16 @@ bool	TransitionGameObj::Save( ChunkSaveClass & csave )
 	WRITE_MICRO_CHUNK( csave, MICROCHUNKID_LADDER_INDEX,	LadderIndex );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	TransitionGameObj::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				if (!BaseGameObj::Load(cload)) loaded = false;
+				BaseGameObj::Load( cload );
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -261,7 +255,7 @@ bool	TransitionGameObj::Load( ChunkLoadClass &cload )
 	}
 	
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void	TransitionGameObj::On_Post_Load( void )

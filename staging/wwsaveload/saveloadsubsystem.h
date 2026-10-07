@@ -78,7 +78,6 @@ public:
 protected:
 
 	virtual bool				Contains_Data(void) const						{ return true; }
-	virtual bool				Required_For_Player_Save(void) const			{ return false; }
 	virtual bool				Save (ChunkSaveClass &csave) = 0;
 	virtual bool				Load (ChunkLoadClass &cload) = 0;
 
@@ -87,7 +86,6 @@ protected:
 private:
 
 	SaveLoadSubSystemClass *	NextSubSystem;			// managed by SaveLoadSystem
-	bool						PlayerSaveLoadSeen;		// transient validation state
 
 	friend class SaveLoadSystemClass;
 };

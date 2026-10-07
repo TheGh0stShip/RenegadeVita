@@ -193,25 +193,24 @@ const PersistFactoryClass & DecorationPhysClass::Get_Factory (void) const
 bool DecorationPhysClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(DECOPHYS_CHUNK_DYNAMICPHYS);
-	if (!DynamicPhysClass::Save(csave)) csave.Report_Error();
+	DynamicPhysClass::Save(csave);
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool DecorationPhysClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case DECOPHYS_CHUNK_PHYS:
-				if (!PhysClass::Load(cload)) loaded = false;
+				PhysClass::Load(cload);
 				break;
 
 			case DECOPHYS_CHUNK_DYNAMICPHYS:
-				if (!DynamicPhysClass::Load(cload)) loaded = false;
+				DynamicPhysClass::Load(cload);
 				break;
 
 			default:
@@ -222,7 +221,7 @@ bool DecorationPhysClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void DecorationPhysClass::On_Post_Load(void)
@@ -312,17 +311,16 @@ bool DecorationPhysDefClass::Save(ChunkSaveClass &csave)
 
 bool DecorationPhysDefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case DECORATIONPHYSDEF_CHUNK_PHYSDEF:
-				if (!PhysDefClass::Load(cload)) loaded = false;
+				PhysDefClass::Load(cload);
 				break;
 
 			case DECORATIONPHYSDEF_CHUNK_DYNAMICPHYSDEF:
-				if (!DynamicPhysDefClass::Load(cload)) loaded = false;
+				DynamicPhysDefClass::Load(cload);
 				break;
 
 			default:
@@ -332,5 +330,6 @@ bool DecorationPhysDefClass::Load(ChunkLoadClass &cload)
 
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
+	return true;
 }
+

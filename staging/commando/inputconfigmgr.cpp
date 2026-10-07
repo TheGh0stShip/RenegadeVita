@@ -50,11 +50,7 @@
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
-#if defined(RENEGADE_VITA_PORT)
-static const char *CFG_DICTIONARY_FILENAME = "user/config/CONFIG.DAT";
-#else
 static const char *CFG_DICTIONARY_FILENAME = "CONFIG.DAT";
-#endif
 
 ////////////////////////////////////////////////////////////////
 //	Registry key names
@@ -113,13 +109,9 @@ InputConfigMgrClass::Shutdown (void)
 	//
 	//	Save our current configuration list
 	//
-#if defined(RENEGADE_VITA_PORT)
-	Save ();
-#else
 	if (!SlaveMaster.Am_I_Slave()) {
 		Save ();
 	}
-#endif
 
 	//
 	//	Reset our data
@@ -147,12 +139,6 @@ InputConfigMgrClass::Get_Current_Configuration (InputConfigClass &config)
 	//
 	config = ConfigList[CurrentConfigIndex];
 	return true;
-}
-
-bool InputConfigMgrClass::Current_Configuration_Is_Custom (void)
-{
-	return CurrentConfigIndex >= 0 && CurrentConfigIndex < ConfigList.Count() &&
-		ConfigList[CurrentConfigIndex].Is_Custom();
 }
 
 
@@ -262,15 +248,6 @@ InputConfigMgrClass::Delete_Configuration (int index)
 	//
 	//	Get the local path of the configuration files
 	//
-#if defined(RENEGADE_VITA_PORT)
-	StringClass full_path;
-	full_path.Format("user/config/%s", ConfigList[index].Get_Filename());
-	FileClass *file = _TheWritingFileFactory->Get_File(full_path);
-	if (file != NULL) {
-		file->Delete();
-		_TheWritingFileFactory->Return_File(file);
-	}
-#else
 	StringClass config_path;
 	Get_Config_Path (config_path);
 
@@ -281,7 +258,6 @@ InputConfigMgrClass::Delete_Configuration (int index)
 	//	Delete the configuration file
 	//
 	::DeleteFile (full_path);
-#endif
 
 	//
 	//	Now remove this entry from the list
@@ -457,9 +433,7 @@ InputConfigMgrClass::Get_Unique_Config_Filename (StringClass &filename)
 	//	Get the local path of the configuration files
 	//
 	StringClass config_path;
-#if !defined(RENEGADE_VITA_PORT)
 	Get_Config_Path (config_path);
-#endif
 
 	int slot	= 1;
 
@@ -474,17 +448,9 @@ InputConfigMgrClass::Get_Unique_Config_Filename (StringClass &filename)
 		//
 		//	Check to see if this file exists
 		//
-#if defined(RENEGADE_VITA_PORT)
-		full_path.Format("user/config/%s", (const char *)filename);
-		FileClass *probe = _TheWritingFileFactory->Get_File(full_path);
-		const bool exists = probe != NULL && probe->Is_Available();
-		if (probe != NULL) _TheWritingFileFactory->Return_File(probe);
-		if (!exists) break;
-#else
 		full_path.Format ("%s\\%s", (const char *)config_path, filename);
-		if (::GetFileAttributes (full_path) == 0xFFFFFFFF) break;
-#endif
-	} while (true);
+
+	} while (::GetFileAttributes (full_path) != 0xFFFFFFFF);
 
 	return ;
 }
@@ -498,11 +464,7 @@ InputConfigMgrClass::Get_Unique_Config_Filename (StringClass &filename)
 void
 InputConfigMgrClass::Save (void)
 {
-#if defined(RENEGADE_VITA_PORT)
-	FileClass *file = _TheWritingFileFactory->Get_File (CFG_DICTIONARY_FILENAME);
-#else
 	FileClass *file = _TheFileFactory->Get_File (CFG_DICTIONARY_FILENAME);
-#endif
 	WWASSERT (file != NULL);
 	if (file == NULL) {
 		return ;
@@ -532,11 +494,7 @@ InputConfigMgrClass::Save (void)
 	//	Close the file
 	//
 	file->Close ();
-#if defined(RENEGADE_VITA_PORT)
-	_TheWritingFileFactory->Return_File (file);
-#else
 	_TheFileFactory->Return_File (file);
-#endif
 	return ;
 }
 
@@ -549,11 +507,7 @@ InputConfigMgrClass::Save (void)
 void
 InputConfigMgrClass::Load (void)
 {
-#if defined(RENEGADE_VITA_PORT)
-	FileClass *file = _TheWritingFileFactory->Get_File (CFG_DICTIONARY_FILENAME);
-#else
 	FileClass *file = _TheFileFactory->Get_File (CFG_DICTIONARY_FILENAME);
-#endif
 	WWASSERT (file != NULL);
 	if (file == NULL) {
 		return ;
@@ -605,11 +559,7 @@ InputConfigMgrClass::Load (void)
 	//	Close the file
 	//
 	file->Close ();
-#if defined(RENEGADE_VITA_PORT)
-	_TheWritingFileFactory->Return_File (file);
-#else
 	_TheFileFactory->Return_File (file);
-#endif
 	return ;
 }
 
@@ -661,13 +611,6 @@ InputConfigMgrClass::Load_Config_List (ChunkLoadClass &cload)
 				//
 				//	Add the object to our list
 				//
-#if defined(RENEGADE_VITA_PORT)
-				// Load_Variables clears a damaged or non-leaf filename; such a
-				// record has no file to load, save or delete under user/config.
-				if (config.Get_Filename ()[0] == 0) {
-					break;
-				}
-#endif
 				ConfigList.Add (config);
 				break;
 			}

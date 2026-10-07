@@ -176,20 +176,19 @@ void DynamicPhysClass::Internal_Update_Visibility_Status(void)
 bool DynamicPhysClass::Save(ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(DYNAMICPHYS_CHUNK_PHYS);
-	if (!PhysClass::Save(csave)) csave.Report_Error();
+	PhysClass::Save(csave);
 	csave.End_Chunk();
-	return !csave.Has_Error();
+	return true;
 }
 
 bool DynamicPhysClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case DYNAMICPHYS_CHUNK_PHYS:
-				if (!PhysClass::Load(cload)) loaded = false;
+				PhysClass::Load(cload);
 				break;
 
 			default:
@@ -200,7 +199,7 @@ bool DynamicPhysClass::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void DynamicPhysClass::On_Post_Load(void)
@@ -256,17 +255,17 @@ bool DynamicPhysDefClass::Save(ChunkSaveClass &csave)
 
 bool DynamicPhysDefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {			
 
 			case DYNAMICPHYSDEF_CHUNK_PHYSDEF:
-				if (!PhysDefClass::Load(cload)) loaded = false;
+				PhysDefClass::Load(cload);
 				break;
 		}
 
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
+	return true;
 }
+

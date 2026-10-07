@@ -266,13 +266,13 @@ bool	WeaponClass::Save( ChunkSaveClass & csave )
 
 	if ( Owner != NULL ) {
 		csave.Begin_Chunk( CHUNKID_OWNER_REF );
-		if (!Owner.Save(csave)) csave.Report_Error();
+		Owner.Save( csave );
 		csave.End_Chunk();
 	}
 
 	if ( TargetObject != NULL ) {
 		csave.Begin_Chunk( CHUNKID_TARGET_OBJECT );
-		if (!TargetObject.Save(csave)) csave.Report_Error();
+		TargetObject.Save( csave );
 		csave.End_Chunk();
 	}
 
@@ -283,20 +283,16 @@ bool	WeaponClass::Save( ChunkSaveClass & csave )
 	// Don't need to save FiringSound;
 	// Dont need to save BulletBumpTime
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	WeaponClass::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
-	bool variables_seen = false;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
 			{
-				if (variables_seen) loaded = false;
-				variables_seen = true;
 				int def_id = 0;
 
 				while (cload.Open_Micro_Chunk()) {
@@ -349,23 +345,17 @@ bool	WeaponClass::Load( ChunkLoadClass &cload )
 					cload.Close_Micro_Chunk();
 				}
 
-				const WeaponDefinitionClass *definition = WeaponManager::Find_Weapon_Definition(def_id);
-				if (definition != NULL) {
-					Init(definition);
-					if (PrimaryAmmoDefinition == NULL || SecondaryAmmoDefinition == NULL) loaded = false;
-				} else {
-					loaded = false;
-				}
+				Init( WeaponManager::Find_Weapon_Definition( def_id ) );
 
 				break;
 			}
 
 			case CHUNKID_OWNER_REF:
-				if (!Owner.Load(cload)) loaded = false;
+				Owner.Load( cload );
 				break;
 
 			case CHUNKID_TARGET_OBJECT:
-				if (!TargetObject.Load(cload)) loaded = false;
+				TargetObject.Load( cload );
 				break;
 
 			default:
@@ -381,11 +371,11 @@ bool	WeaponClass::Load( ChunkLoadClass &cload )
 	}
 
 	// Legacy
-	if (Definition != NULL && ClipRounds == 0 && InventoryRounds < 0) {
+	if ( ClipRounds == 0 && InventoryRounds < 0 ) {
 		ClipRounds = Definition->ClipSize;
 	}
 
-	return loaded && variables_seen && !cload.Has_Error();
+	return true;
 }
 
 

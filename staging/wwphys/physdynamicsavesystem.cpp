@@ -66,61 +66,43 @@ bool PhysDynamicSaveSystemClass::Contains_Data(void) const
 bool PhysDynamicSaveSystemClass::Save(ChunkSaveClass &csave)
 {	
 	WWMEMLOG(MEM_GAMEDATA);
-	bool saved = true;
 
 	csave.Begin_Chunk(PDSSC_CHUNKID_SCENE);
 	PhysicsSceneClass::Get_Instance()->Save_Level_Dynamic_Data(csave);
-	saved = csave.End_Chunk() && saved;
+	csave.End_Chunk();
 
 	csave.Begin_Chunk(PDSSC_CHUNKID_CONSTANTS);
 	PhysicsConstants::Save(csave);
-	saved = csave.End_Chunk() && saved;
+	csave.End_Chunk();
 
 	csave.Begin_Chunk(PDSSC_CHUNKID_PATHMGR);
 	PathMgrClass::Save(csave);
-	saved = csave.End_Chunk() && saved;
+	csave.End_Chunk();
 
-	return saved && !csave.Has_Error();
+	return true;
 }
 
 bool PhysDynamicSaveSystemClass::Load(ChunkLoadClass &cload)
 {
 	WWMEMLOG(MEM_GAMEDATA);
-	uint32 loaded_chunks = 0U;
-	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 		switch (cload.Cur_Chunk_ID()) {
 		case PDSSC_CHUNKID_SCENE:
-			if ((loaded_chunks & 1U) != 0U) loaded = false;
-			else {
-				loaded_chunks |= 1U;
-				loaded = PhysicsSceneClass::Get_Instance()->Load_Level_Dynamic_Data(cload) && loaded;
-			}
+			PhysicsSceneClass::Get_Instance()->Load_Level_Dynamic_Data(cload);
 			break;
 		case PDSSC_CHUNKID_CONSTANTS:
-			if ((loaded_chunks & 2U) != 0U) loaded = false;
-			else {
-				loaded_chunks |= 2U;
-				loaded = PhysicsConstants::Load(cload) && loaded;
-			}
+			PhysicsConstants::Load(cload);
 			break;
 		case PDSSC_CHUNKID_PATHMGR:
-			if ((loaded_chunks & 4U) != 0U) loaded = false;
-			else {
-				loaded_chunks |= 4U;
-				loaded = PathMgrClass::Load(cload) && loaded;
-			}
+			PathMgrClass::Load(cload);
 			break;
 		}
 		cload.Close_Chunk();
 	}
 	
-	loaded = loaded && loaded_chunks == 7U;
-	if (loaded) {
-		SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	}
-	return loaded;
+	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+	return true;
 }
 
 

@@ -42,7 +42,6 @@
 #include "_globals.h"
 #include "string_ids.h"
 #include "wwaudio.h"
-#include "renegade_ui_pointer_tokens.h"
 
 ////////////////////////////////////////////////////////////////
 //
@@ -54,19 +53,6 @@ MovieOptionsMenuClass::MovieOptionsMenuClass (void)	:
 	MenuDialogClass (IDD_OPTIONS_MOVIES)
 {
 	return ;
-}
-
-MovieOptionsMenuClass::~MovieOptionsMenuClass (void)
-{
-	// A frontend flush or session transition can destroy the dialog without
-	// delivering Escape or another render pass. Keep the original movie and
-	// main-audio owners balanced on that path as well.
-	if (IsPlaying) {
-		BINKMovie::Stop ();
-		IsPlaying = false;
-		WWAudioClass *audio = WWAudioClass::Get_Instance ();
-		if (audio != NULL) audio->Temp_Disable_Audio (false);
-	}
 }
 
 
@@ -102,8 +88,7 @@ MovieOptionsMenuClass::On_Init_Dialog (void)
 			//
 			int item_index = list_ctrl->Insert_Entry (0xFF, TRANSLATE (IDS_INTRO_MOVIE));
 			if (item_index != -1) {
-				list_ctrl->Set_Entry_Data (item_index, 0,
-					Renegade_Ui_Pointer_To_Token(new StringClass (INTRO_MOVIE)));
+				list_ctrl->Set_Entry_Data (item_index, 0, (DWORD)new StringClass (INTRO_MOVIE));
 			}
 
 			//
@@ -125,8 +110,7 @@ MovieOptionsMenuClass::On_Init_Dialog (void)
 				const WCHAR *wide_desc = TRANSLATE_BY_DESC(string_id_des);
 				int item_index = list_ctrl->Insert_Entry (0xFF, wide_desc);
 				if (item_index != -1) {
-					list_ctrl->Set_Entry_Data (item_index, 0,
-						Renegade_Ui_Pointer_To_Token(new StringClass (list[index])));
+					list_ctrl->Set_Entry_Data (item_index, 0, (DWORD)new StringClass (list[index]));
 				}
 			}
 		}
@@ -183,8 +167,7 @@ MovieOptionsMenuClass::On_ListCtrl_Delete_Entry
 		//
 		//	Remove the data we associated with this entry
 		//
-		StringClass *filename = static_cast<StringClass *>(
-			Renegade_Ui_Take_Pointer_Token(list_ctrl->Get_Entry_Data (item_index, 0)));
+		StringClass *filename = (StringClass *)list_ctrl->Get_Entry_Data (item_index, 0);
 		list_ctrl->Set_Entry_Data (item_index, 0, 0);
 		if (filename != NULL) {
 			delete filename;
@@ -238,16 +221,7 @@ MovieOptionsMenuClass::Begin_Play_Movie (void)
 	//
 	int curr_sel = list_ctrl->Get_Curr_Sel ();
 	if (curr_sel != -1) {
-		StringClass *filename = static_cast<StringClass *>(
-			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (curr_sel, 0)));
-		if (filename == NULL) return;
-
-#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
-		// The native BINK provider resolves the original logical movie name
-		// against the rooted retail tree and reports missing/corrupt media as
-		// immediate completion. Vita has no removable Renegade movie CD.
-		Play_Movie(filename->Peek_Buffer());
-#else
+		StringClass *filename = (StringClass *)list_ctrl->Get_Entry_Data (curr_sel, 0);
 		
 		//
 		//	Play the movie (if it exists locally)
@@ -285,7 +259,6 @@ MovieOptionsMenuClass::Begin_Play_Movie (void)
 				CDVerifier.Display_UI (this);
 			}
 		}
-#endif
 	}
 
 	return ;

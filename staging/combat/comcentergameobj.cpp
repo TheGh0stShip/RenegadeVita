@@ -155,13 +155,12 @@ ComCenterGameObjDef::Save (ChunkSaveClass &csave)
 bool
 ComCenterGameObjDef::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk ())
 	{
 		switch (cload.Cur_Chunk_ID ())
 		{
 			case CHUNKID_DEF_PARENT:
-				if (!BuildingGameObjDef::Load (cload)) loaded = false;
+				BuildingGameObjDef::Load (cload);
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -176,7 +175,7 @@ ComCenterGameObjDef::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -294,12 +293,12 @@ bool
 ComCenterGameObj::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		if (!BuildingGameObj::Save(csave)) csave.Report_Error();
+		BuildingGameObj::Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
 	csave.End_Chunk ();
-	return !csave.Has_Error();
+	return true;
 }
 
 
@@ -311,12 +310,11 @@ ComCenterGameObj::Save (ChunkSaveClass &csave)
 bool
 ComCenterGameObj::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				if (!BuildingGameObj::Load(cload)) loaded = false;
+				BuildingGameObj::Load (cload);
 				break;
 								
 			case CHUNKID_VARIABLES:
@@ -331,7 +329,7 @@ ComCenterGameObj::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 

@@ -85,7 +85,6 @@ public:
 	WeaponClass	*	Get_Next_Weapon( void );
 
 	void				Import_Weapon_List(BitStreamClass & packet);
-	bool Import_TT_Weapon_Selection(BitStreamClass &packet, bool has_selection = true);
 	void				Export_Weapon_List(BitStreamClass & packet);
 
 	int				Get_Index( void )					{ return WeaponIndex; }

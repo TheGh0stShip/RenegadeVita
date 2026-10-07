@@ -307,9 +307,7 @@ HarvesterClass::Detach (GameObject * /*game_obj*/)
 		Refinery->Set_Harvester (NULL);
 	}
 
-	Refinery = NULL;
 	Vehicle = NULL;
-	GameObjObserverManager::Delete_Register(this);
 	return ;
 }
 

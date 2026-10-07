@@ -117,15 +117,9 @@ static void			Shutdown(void);
 // These are meant to be a collection of small math utility functions to be optimized at some point.
 static WWINLINE float Fabs(float val)
 {
-#if defined(RENEGADE_VITA_PORT)
-	// One VABS instead of a VFP->core->VFP round trip; it clears only the
-	// sign bit, exactly like the original integer mask (NaN payloads kept).
-	return __builtin_fabsf(val);
-#else
 	int value=*(int*)&val;
 	value&=0x7fffffff;
 	return *(float*)&value;
-#endif
 }
 
 static WWINLINE int Float_To_Int_Chop(const float& f);

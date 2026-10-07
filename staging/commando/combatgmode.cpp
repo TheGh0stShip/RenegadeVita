@@ -103,12 +103,6 @@
 #include "dlgcncserverinfo.h"
 #include "radiocommanddisplay.h"
 #include "hudinfo.h"
-#if defined(__vita__)
-#include "a35_level_load_status.h"
-#endif
-#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-#include "a31_interactive_runtime_policy.h"
-#endif
 #include "string_ids.h"
 #include "radiocommanddisplay.h"
 #include "a31_console_stub.h"
@@ -120,9 +114,6 @@
 #include "dialogtests.h"
 #include "dialogmgr.h"
 #include "a4_gameinit_online_boundary.h"
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-#include "a31_vita_runtime.h"
-#endif
 
 /*
 **
@@ -130,7 +121,6 @@
 extern bool g_is_loading;
 bool g_b_core_restart;//TSS081401
 bool g_client_quit = false;
-static bool CoreShutdownComplete = true;
 
 AudibleSoundClass	*	CombatGameModeClass::BackgroundMusic	= NULL;
 int						CombatGameModeClass::IsHudShown			= true;
@@ -198,83 +188,6 @@ static void Start_In_Game_Help(void)
 
 		RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_IN_GAME_HELP);
 	}
-}
-
-void CombatGameModeClass::Process_Multiplayer_Info_Input()
-{
-	if (IS_MISSION) return;
-	if (Input::Get_State(INPUT_FUNCTION_SERVER_INFO_TOGGLE)) {
-		START_DIALOG(CNCServerInfoDialogClass);
-	}
-	if (cNetwork::I_Am_Client() && COMBAT_STAR != NULL) {
-		if (Input::Get_State(INPUT_FUNCTION_TEAM_INFO_TOGGLE)) {
-			START_DIALOG(CNCTeamInfoDialogClass);
-		} else if (Input::Get_State(INPUT_FUNCTION_BATTLE_INFO_TOGGLE)) {
-			START_DIALOG(CNCBattleInfoDialogClass);
-		}
-	}
-}
-
-void CombatGameModeClass::Process_Radio_Command_Input()
-{
-	if (IS_MISSION || !cNetwork::I_Am_Client() || COMBAT_STAR == NULL) return;
-	// Handle radio commands
-	for (int radioCmdIndex = INPUT_FUNCTION_RADIO_CMD_01; radioCmdIndex <= INPUT_FUNCTION_RADIO_CMD_30; ++radioCmdIndex) {
-		if (Input::Get_State((InputFunction)radioCmdIndex)) {
-			CNCModeSettingsDef* cncDef = CNCModeSettingsDef::Get_Instance();
-
-			if (cncDef) {
-				int radioCmdNum = (radioCmdIndex - INPUT_FUNCTION_RADIO_CMD_01);
-				int radioCmd = cncDef->Get_Radio_Command(radioCmdNum);
-
-				if (radioCmd) {
-					CSAnnouncement* announce = new CSAnnouncement;
-					assert(announce != NULL);
-					announce->Init(cNetwork::Get_My_Team_Number(), radioCmd, ANNOUNCEMENT_TEAM, radioCmdNum);
-					RadioCommandDisplayClass::Reset_Display_Timer();
-				}
-			}
-
-			break;
-		}
-	}
-}
-
-void CombatGameModeClass::Process_Chat_Input()
-{
-	if (	(The_Game() != NULL &&
-		    (Input::Get_State(INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE) ||
-		     (Input::Get_State(INPUT_FUNCTION_BEGIN_TEAM_MESSAGE) && cNetwork::I_Am_Client()))) &&
-			!IS_MISSION)
-	{
-		MPIngameChatPopupClass * p_dialog = new MPIngameChatPopupClass;
-		WWASSERT(p_dialog != NULL);
-
-		//
-		//	Configure the dialog
-		//
-		if (Input::Get_State(INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE)) {
-			p_dialog->Set_Default_Type(TEXT_MESSAGE_PUBLIC);
-		} else {
-			p_dialog->Set_Default_Type(TEXT_MESSAGE_TEAM);
-		}
-
-		p_dialog->Start_Dialog();
-		REF_PTR_RELEASE (p_dialog);
-	}
-}
-
-void CombatGameModeClass::Process_Player_List_Input()
-{
-	if (IS_MISSION) return;
-	bool cycle_list =
-		Input::Get_State(INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE);
-#if defined(__vita__)
-	// Vita Select release already owns CyclePog in missions. In multiplayer
-	// it is otherwise unused, so preserve the original list-format action.
-	cycle_list = cycle_list || Input::Get_State(INPUT_FUNCTION_CYCLE_POG);
-#endif
-	if (cycle_list) MultiHUDClass::Next_Playerlist_Format();
 }
 
 void	CombatGameModeClass::Combat_Keyboard( void )
@@ -349,13 +262,11 @@ void	CombatGameModeClass::Combat_Keyboard( void )
 	if (!IS_MISSION && Input::Get_State( INPUT_FUNCTION_SERVER_INFO_TOGGLE )) {
 		START_DIALOG (CNCServerInfoDialogClass);
 	}
-#endif // service/UI exclusions do not disable original radio commands
 
 	//
 	//	Display the team information page
 	//
 	if (!IS_MISSION && cNetwork::I_Am_Client() && COMBAT_STAR != NULL) {
-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 		if (Input::Get_State( INPUT_FUNCTION_TEAM_INFO_TOGGLE )) {
 			START_DIALOG (CNCTeamInfoDialogClass);
 		} else if (Input::Get_State( INPUT_FUNCTION_BATTLE_INFO_TOGGLE )) {
@@ -363,13 +274,33 @@ void	CombatGameModeClass::Combat_Keyboard( void )
 		}/* else if (Input::Get_State( INPUT_FUNCTION_SERVER_INFO_TOGGLE )) {
 			START_DIALOG (CNCServerInfoDialogClass);
 		}*/
-#endif
 
-		Process_Radio_Command_Input();
+		// Handle radio commands
+		for (int radioCmdIndex = INPUT_FUNCTION_RADIO_CMD_01; radioCmdIndex <= INPUT_FUNCTION_RADIO_CMD_30; ++radioCmdIndex) {
+			if (Input::Get_State((InputFunction)radioCmdIndex)) {
+				CNCModeSettingsDef* cncDef = CNCModeSettingsDef::Get_Instance();
+
+				if (cncDef) {
+					int radioCmdNum = (radioCmdIndex - INPUT_FUNCTION_RADIO_CMD_01);
+					int radioCmd = cncDef->Get_Radio_Command(radioCmdNum);
+
+					if (radioCmd) {
+						CSAnnouncement* announce = new CSAnnouncement;
+						assert(announce != NULL);
+						announce->Init(cNetwork::Get_My_Team_Number(), radioCmd, ANNOUNCEMENT_TEAM, radioCmdNum);
+						RadioCommandDisplayClass::Reset_Display_Timer();
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
-	Process_Player_List_Input();
+	if (!IS_MISSION && Input::Get_State( INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE )) {
+		//MultiHUDClass::Toggle_Verbose_Lists();
+		MultiHUDClass::Next_Playerlist_Format();
+	}
 
 #ifdef WWDEBUG
    if ( Input::Get_State( INPUT_FUNCTION_QUICK_FULL_EXIT ) ) {
@@ -387,7 +318,26 @@ void	CombatGameModeClass::Combat_Keyboard( void )
 	}
 #endif
 
-	Process_Chat_Input();
+	if (	(The_Game() != NULL &&
+		    (Input::Get_State(INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE) ||
+		     (Input::Get_State(INPUT_FUNCTION_BEGIN_TEAM_MESSAGE) && cNetwork::I_Am_Client()))) &&
+			!IS_MISSION)
+	{
+		MPIngameChatPopupClass * p_dialog = new MPIngameChatPopupClass;
+		WWASSERT(p_dialog != NULL);
+
+		//
+		//	Configure the dialog
+		//
+		if (Input::Get_State(INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE)) {
+			p_dialog->Set_Default_Type(TEXT_MESSAGE_PUBLIC);
+		} else {
+			p_dialog->Set_Default_Type(TEXT_MESSAGE_TEAM);
+		}
+
+		p_dialog->Start_Dialog();
+		REF_PTR_RELEASE (p_dialog);
+	}
 #endif // !RENEGADE_VITA_FRONTEND_SINGLEPLAYER
 
 	if ( Input::Get_State( INPUT_FUNCTION_QUICKSAVE )) {
@@ -414,9 +364,9 @@ void	CombatGameModeClass::Init()
 	//
 	//	Initialize the radio command display window
 	//
-	if (!IS_MISSION) {
-		RadioCommandDisplayClass::Initialize ();
-	}
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	RadioCommandDisplayClass::Initialize ();
+#endif
 
 	//
 	// Notify combat about the state of the CameraLockedToTurret user option.
@@ -436,7 +386,9 @@ void 	CombatGameModeClass::Shutdown()
 	//
 	//	Shutdown the radio command display window
 	//
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 	RadioCommandDisplayClass::Shutdown ();
+#endif
 	return ;
 }
 
@@ -747,16 +699,6 @@ void CombatGameModeClass::Vita_Begin_Level_Load(void *loading_screen,
 	SystemSettings::Apply_All();
 }
 
-void CombatGameModeClass::Vita_Abort_Level_Load(void)
-{
-	// No loader remains active; any queued post-load references are resolved.
-	// Release loading-only gates before original partial-level teardown.
-	g_is_loading = false;
-	if (cNetwork::PServerConnection) {
-		cNetwork::PServerConnection->Allow_Packet_Processing(true);
-	}
-}
-
 void CombatGameModeClass::Vita_Finalize_Loaded_Level(void *loading_screen,
 	bool update_network)
 {
@@ -836,12 +778,6 @@ void CombatGameModeClass::Vita_Finalize_Loaded_Level(void *loading_screen,
 */
 void CombatGameModeClass::Load_Level( void )
 {
-	// A failed load still owns a partially initialized core which must be
-	// released exactly once by the normal shutdown path.
-	CoreShutdownComplete = false;
-#if defined(__vita__)
-	A35_Level_Load_Reset_Failure();
-#endif
 	WWLOG_PREPARE_TIME_AND_MEMORY("CombatGameModeClass::Load_Level");
 	WWMEMLOG(MEM_GAMEDATA);
 	Debug_Say(("CombatGameModeClass::Load_Level\n"));
@@ -850,10 +786,6 @@ void CombatGameModeClass::Load_Level( void )
 
 	CombatManager::Set_Load_Progress(0);
 	LoadingScreenClass loading_screen;	// Try moving this to very start of loading
-#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
-	A31VitaScopedOriginalLoadingScreenCallback reload_loading_callback(
-		&loading_screen);
-#endif
 	loading_screen.Render(true);
 
 	// Hack load reg for default first person.  Is dont again later.
@@ -895,15 +827,7 @@ void CombatGameModeClass::Load_Level( void )
 	INIT_STATUS("Apply system settings");
 	SystemSettings::Apply_All();
 
-#if defined(__vita__) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	// Preserve the native callback observer through load and start-script
-	// creation. Non-native sessions retain their original misc handler.
-	if (!A31_Interactive_Restart_Mission_Completion_Observation()) {
-		CombatManager::Set_Combat_Misc_Handler( &GameMiscHandler );
-	}
-#else
 	CombatManager::Set_Combat_Misc_Handler( &GameMiscHandler );
-#endif
 
 	// Flush out current level
 //	INIT_STATUS("Release current level");
@@ -946,19 +870,6 @@ void CombatGameModeClass::Load_Level( void )
 	INIT_STATUS("Post_Load_Processing");
 	loading_screen.Render(true);
    Windows_Message_Handler();
-#if defined(__vita__)
-	if (A35_Level_Load_Get_Failure() != A35_LOAD_NO_FAILURE) {
-		SaveLoadSystemClass::Discard_Post_Load_Callbacks();
-		NetworkObjectMgrClass::Set_Is_Level_Loading (false);
-		g_is_loading = false;
-		if (cNetwork::PServerConnection) {
-			cNetwork::PServerConnection->Allow_Packet_Processing(true);
-		}
-		Debug_Say(("Required level reload failed code=%u; finalization skipped\n",
-			static_cast<unsigned>(A35_Level_Load_Get_Failure())));
-		return;
-	}
-#endif
 	SaveLoadSystemClass::Post_Load_Processing(IS_SOLOPLAY ? NULL : &cNetwork::Update);
 	NetworkObjectMgrClass::Set_Is_Level_Loading (false);
 	WWLOG_INTERMEDIATE("SaveLoadSystemClass::Post_Load_Processing(&cNetwork::Update)");
@@ -1115,8 +1026,6 @@ void CombatGameModeClass::Load_Level( void )
 void 	CombatGameModeClass::Core_Shutdown()
 {
 	Debug_Say(("CombatGameModeClass::Core_Shutdown\n"));
-	if (CoreShutdownComplete) return;
-	CoreShutdownComplete = true;
 
 	//
 	// Switch to the in-game sound page to ensure all those sounds get freed
@@ -1375,15 +1284,11 @@ void CombatGameModeClass::Spawn_Point_Validation(void)
 
 //-----------------------------------------------------------------------------
 
-bool CombatGameModeClass::Core_Restart(CoreRestartResourceCallback resource_callback,
-	void *resource_context)
+void CombatGameModeClass::Core_Restart(void)
 {
 	Debug_Say(("CombatGameModeClass::Core_Restart\n"));
 
 	Core_Shutdown();
-	// The old level is now fully released. Platform archive providers may be
-	// replaced here without invalidating files still owned by Core_Shutdown.
-	if (resource_callback != NULL && !resource_callback(resource_context)) return false;
 
 	GameModeManager::Safely_Deactivate();
 
@@ -1448,7 +1353,6 @@ bool CombatGameModeClass::Core_Restart(CoreRestartResourceCallback resource_call
 #ifdef WW3D_COMPILE_WITH_DX8__
 	DX8MeshRendererContainerClass::Invalidate_All();
 #endif
-	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -1489,54 +1393,6 @@ void CombatGameModeClass::Save_Registry_Keys(void)
 /*
 ** called each time through the main loop when active
 */
-bool CombatGameModeClass::Process_Core_Restart_Request(
-	CoreRestartResourceCallback resource_callback, void *resource_context)
-{
-	if (!g_b_core_restart) return false;
-	WWPROFILE( "g_b_core_restart" );
-	g_b_core_restart = false;
-	cPlayer *p_me = cNetwork::Get_My_Player_Object();
-	if (p_me != NULL) {
-		p_me->Set_Is_In_Game(false);
-		cLoadingEvent *p_loading_1 = new cLoadingEvent;
-		p_loading_1->Init(true);
-		if (!Core_Restart(resource_callback, resource_context)) return true;
-#if defined(__vita__)
-		if (A35_Level_Load_Get_Failure() != A35_LOAD_NO_FAILURE) return true;
-#endif
-		p_me->Set_Is_In_Game(true);
-		cLoadingEvent *p_loading_2 = new cLoadingEvent;
-		p_loading_2->Init(false);
-	} else {
-		if (!Core_Restart(resource_callback, resource_context)) return true;
-#if defined(__vita__)
-		if (A35_Level_Load_Get_Failure() != A35_LOAD_NO_FAILURE) return true;
-#endif
-	}
-	if (!IS_MISSION) {
-		MultiHUDClass::Init();
-	}
-	cNetwork::Enable_Waiting_Players();
-	return true;
-}
-
-void CombatGameModeClass::Process_Overlay_Update()
-{
-	MultiHUDClass::Think();
-	cPlayerManager::Think();
-	cTeamManager::Think();
-}
-
-void CombatGameModeClass::Render_Overlays()
-{
-	MultiHUDClass::Render();
-	cBandwidthGraph::Render();
-	cPlayerManager::Render();
-	cTeamManager::Render();
-	WWASSERT(PTheGameData != NULL);
-	The_Game()->Render();
-}
-
 void 	CombatGameModeClass::Think()
 {
 	WWPROFILE( "Combat Think" );
@@ -1596,7 +1452,9 @@ void 	CombatGameModeClass::Think()
 
 	}
 
-	Process_Overlay_Update();
+	MultiHUDClass::Think();
+	cPlayerManager::Think();
+	cTeamManager::Think();
 
 	if ( PendingCampaignContinue ) {
 		WWPROFILE( "Stuff 2" );
@@ -1622,9 +1480,63 @@ void 	CombatGameModeClass::Think()
 #endif // MULTIPLAYERDEMO
 
 
-	Process_Core_Restart_Request();
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+	if (g_b_core_restart)	{
+		WWPROFILE( "g_b_core_restart" );
 
-	Process_Autosave_Request();
+		g_b_core_restart = false;
+
+		//Core_Restart();
+
+		cPlayer * p_me = cNetwork::Get_My_Player_Object();
+
+		if (p_me != NULL) {// && cNetwork::I_Am_Only_Client()) {
+
+			p_me->Set_Is_In_Game(false);
+			cLoadingEvent * p_loading_1 = new cLoadingEvent;
+			p_loading_1->Init(true);
+
+			Core_Restart();
+
+			p_me->Set_Is_In_Game(true);
+			cLoadingEvent * p_loading_2 = new cLoadingEvent;
+			p_loading_2->Init(false);
+
+		} else {
+			Core_Restart();
+		}
+
+		if (!IS_MISSION) {
+			MultiHUDClass::Init();
+		}
+
+		cNetwork::Enable_Waiting_Players();
+
+/*
+#if(0)
+		WWDEBUG_SAY(("****** CombatGameModeClass::Think On_Game_Begin()\n"));
+		WWASSERT(The_Game() != NULL);
+
+		//		The_Game()->On_Game_End();
+		The_Game()->Reset_Game(false);
+		The_Game()->On_Game_Begin();//TSS091201
+#endif
+*/
+	}
+#endif // !RENEGADE_VITA_FRONTEND_SINGLEPLAYER
+
+	// Autosave, after one run throught main loop
+	if ( CombatManager::Is_Autosave_Requested() ) {
+		WWPROFILE( "Autosaving" );
+		Debug_Say(( "Autosaving\n" ));
+		int time=TIMEGETTIME();
+		CombatManager::Request_Autosave( false );
+		SaveGameManager::Set_Description( TRANSLATE( IDS_SAVE_AUTOSAVE ) );
+		SaveGameManager::Save_Game( "save\\autosave.sav", &_CommandoSaveLoad, NULL );
+		time=TIMEGETTIME()-time;
+		Debug_Say(( "Autosaving Complete, took %d.%2.2d seconds\n",time/1000,(time/10)%100 ));
+	}
+
 	//TSS090401
 	if (g_client_quit)
 	{
@@ -1656,29 +1568,6 @@ void 	CombatGameModeClass::Think()
 	}
 }
 
-void CombatGameModeClass::Process_Autosave_Request()
-{
-	if (!CombatManager::Is_Autosave_Requested()) return;
-	if (!cGod::Can_Save_Current_State()) {
-		Debug_Say(( "Autosave deferred until the single-player simulation is running\n" ));
-		return;
-	}
-	WWPROFILE( "Autosaving" );
-	Debug_Say(( "Autosaving\n" ));
-	int time=TIMEGETTIME();
-	CombatManager::Request_Autosave( false );
-	SaveGameManager::Set_Description( TRANSLATE( IDS_SAVE_AUTOSAVE ) );
-	SaveGameManager::Save_Game( "save\\autosave.sav", &_CommandoSaveLoad, NULL );
-#if defined(RENEGADE_VITA_PORT)
-	if (!SaveGameManager::Last_Save_Write_Succeeded()) {
-		Debug_Say(( "Autosaving failed; recovery file unverified\n" ));
-		return;
-	}
-#endif
-	time=TIMEGETTIME()-time;
-	Debug_Say(( "Autosaving Complete, took %d.%2.2d seconds\n",time/1000,(time/10)%100 ));
-}
-
 void 	CombatGameModeClass::Render()
 {
 	if ( !Is_Active() ) {
@@ -1701,8 +1590,15 @@ void 	CombatGameModeClass::Render()
 		}
    }
 
-	Render_Overlays();
+	MultiHUDClass::Render();
+	cBandwidthGraph::Render();
+	cPlayerManager::Render();
+	cTeamManager::Render();
+	WWASSERT(PTheGameData != NULL);
+	The_Game()->Render();
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 	RadioCommandDisplayClass::Render ();
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1766,11 +1662,7 @@ void	CombatGameModeClass::Suspend(void)
 	//
 	//	Hide the objective viewer
 	//
-	// Native frontend can suspend Combat before its first level initializes
-	// the viewer. A hidden viewer needs no window access during that edge.
-	if (ObjectiveManager::Is_Viewer_Displayed()) {
-		ObjectiveManager::Display_Viewer (false);
-	}
+	ObjectiveManager::Display_Viewer (false);
 
 	GameMajorModeClass::Suspend();
 	return ;
@@ -1782,11 +1674,6 @@ void	CombatGameModeClass::Suspend(void)
 */
 void	CombatGameModeClass::Quick_Save( void )
 {
-	if (!cGod::Can_Save_Current_State()) {
-		Debug_Say(( "Quicksave rejected outside the running single-player state\n" ));
-		return;
-	}
-
 	bool	saveA = true;
 
 	RegistryClass * registry = new RegistryClass( APPLICATION_SUB_KEY_NAME_OPTIONS );
@@ -1809,22 +1696,10 @@ void	CombatGameModeClass::Quick_Save( void )
 	if ( saveA ) {
 		SaveGameManager::Set_Description( TRANSLATE(IDS_SAVE_QUICKSAVE_A) );
 		SaveGameManager::Save_Game( SAVEGAME_NAME_A, &_CommandoSaveLoad, NULL );
-#if defined(RENEGADE_VITA_PORT)
-		if (!SaveGameManager::Last_Save_Write_Succeeded()) {
-			delete registry;
-			return;
-		}
-#endif
 		Debug_Say(( "Quicksaved A\n" ));
 	} else {
 		SaveGameManager::Set_Description( TRANSLATE(IDS_SAVE_QUICKSAVE_B) );
 		SaveGameManager::Save_Game( SAVEGAME_NAME_B, &_CommandoSaveLoad, NULL );
-#if defined(RENEGADE_VITA_PORT)
-		if (!SaveGameManager::Last_Save_Write_Succeeded()) {
-			delete registry;
-			return;
-		}
-#endif
 		Debug_Say(( "Quicksaved B\n" ));
 	}
 	saveA = !saveA;

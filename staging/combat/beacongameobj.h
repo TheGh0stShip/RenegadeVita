@@ -161,7 +161,6 @@ public:
 	//
 	bool				Save (ChunkSaveClass & csave);
 	bool				Load (ChunkLoadClass & cload);
-	virtual void	On_Post_Load (void);
 	const				PersistFactoryClass & Get_Factory (void) const;
 
 	//
@@ -197,8 +196,6 @@ private:
 	////////////////////////////////////////////////////////////////
 	void							Load_Variables (ChunkLoadClass &cload);
 	void							Stop_Armed_Sound (void);
-	void							Start_Armed_Sound (void);
-	void							Restore_Weapon_Definition (void);
 	void							Stop_Current_Message_Sound (void);
 	void							Display_Message (int text_id);
 	void							Start_Owner_Animation (void);
@@ -241,8 +238,6 @@ private:
 	AudibleSoundClass *				MessageSound;
 	bool									IsArmed;
 	const WeaponDefinitionClass *	WeaponDefinition;
-	bool							LoadedWeaponDefinition;
-	bool							LoadedWarningTimer;
 
 	GameObjReference					CinematicObject;
 
@@ -252,3 +247,5 @@ private:
 };
 
 #endif	// __BEACONGAMEOBJ_H
+
+

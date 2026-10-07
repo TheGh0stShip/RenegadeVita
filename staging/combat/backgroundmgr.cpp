@@ -3943,22 +3943,17 @@ bool BackgroundMgrClass::Load_Dynamic (ChunkLoadClass &cload)
 	WWMEMLOG (MEM_GAMEDATA);
 
 	bool retval = true;
-	bool dynamic_seen = false;
 
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_DYNAMIC_MICRO_CHUNKS:
-				if (dynamic_seen) retval = false;
-				else {
-					dynamic_seen = true;
-					retval = Load_Dynamic_Micro_Chunks(cload) && retval;
-				}
+				retval &= Load_Dynamic_Micro_Chunks (cload);
 				break;
 		}
 		cload.Close_Chunk ();
 	}
-	return (retval && dynamic_seen && !cload.Has_Error());
+	return (retval);
 }
 
 
@@ -3999,7 +3994,7 @@ bool BackgroundMgrClass::Load_Dynamic_Micro_Chunks (ChunkLoadClass &cload)
 		cload.Close_Micro_Chunk ();
 	}
 
-	return (!cload.Has_Error());
+	return (true);
 }
 
 

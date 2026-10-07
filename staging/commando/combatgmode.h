@@ -72,15 +72,10 @@ public:
 
 				void	Load_Level();
 				void 	Core_Shutdown();
-				typedef bool (*CoreRestartResourceCallback)(void *context);
-				bool 	Core_Restart(CoreRestartResourceCallback resource_callback = NULL,
-					void *resource_context = NULL);
-				bool Process_Core_Restart_Request(CoreRestartResourceCallback resource_callback = NULL,
-					void *resource_context = NULL);
+				void 	Core_Restart();
 
 #if defined(RENEGADE_VITA_PORT)
 	static	void	Vita_Begin_Level_Load(void *loading_screen, bool update_network);
-	static	void	Vita_Abort_Level_Load(void);
 	static	void	Vita_Finalize_Loaded_Level(void *loading_screen, bool update_network);
 #endif
 
@@ -89,13 +84,6 @@ public:
 	static	AudibleSoundClass	* BackgroundMusic;
 
 	static	void	Quick_Save( void );
-	static	void	Process_Overlay_Update();
-	static	void	Render_Overlays();
-	static	void	Process_Player_List_Input();
-	static	void	Process_Multiplayer_Info_Input();
-	static	void	Process_Autosave_Request();
-	static	void	Process_Radio_Command_Input();
-	static	void	Process_Chat_Input();
 
 private:
 

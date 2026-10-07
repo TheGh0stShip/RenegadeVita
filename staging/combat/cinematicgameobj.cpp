@@ -131,12 +131,11 @@ bool	CinematicGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	CinematicGameObjDef::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!ArmedGameObjDef::Load( cload )) loaded = false;
+				ArmedGameObjDef::Load( cload );
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -163,7 +162,7 @@ bool	CinematicGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 /*
@@ -240,22 +239,21 @@ enum	{
 bool	CinematicGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	if (!ArmedGameObj::Save(csave)) csave.Report_Error();
+	ArmedGameObj::Save( csave );
 	csave.End_Chunk();
 
 	// We don't need to save the sound
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	CinematicGameObj::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				if (!ArmedGameObj::Load(cload)) loaded = false;
+				ArmedGameObj::Load( cload );
 				break;
 
 			default:
@@ -267,7 +265,7 @@ bool	CinematicGameObj::Load( ChunkLoadClass &cload )
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void	CinematicGameObj::On_Post_Load( void )

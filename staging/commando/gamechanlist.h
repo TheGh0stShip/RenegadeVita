@@ -33,19 +33,15 @@
 
 #include "always.h"
 #include "bittype.h"
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include <WWOnline\RefPtr.h>
-#endif
 
 class cGameData;
 class cGameChannel;
 
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 namespace WWOnline
 {
 class ChannelData;
 }
-#endif
 
 #include "slist.h"
 
@@ -55,11 +51,7 @@ class WideStringClass;
 class cGameChannelList
 {
    public:
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-		 static void Add_Channel(cGameData * p_game_data);
-#else
 		 static void Add_Channel(cGameData * p_game_data, const RefPtr<WWOnline::ChannelData>& channel = RefPtr<WWOnline::ChannelData>());
-#endif
 		static void Remove_Channel(const WideStringClass & owner);
 		static void Remove_All(void);
 		static cGameChannel * Find_Channel(const WideStringClass & owner);

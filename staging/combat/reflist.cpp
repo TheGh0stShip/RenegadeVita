@@ -48,40 +48,29 @@ bool	ReferencerClass::Save( ChunkSaveClass & csave )
 	csave.Begin_Chunk( CHUNKID_REF_VARIABLES );
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_TARGET, target_token );
 	csave.End_Chunk();
-	return !csave.Has_Error();
+	return true;
 }
 
 
 bool	ReferencerClass::Load( ChunkLoadClass & cload )
 {
 	uint32 target_token = 0;
-	bool variables_seen = false;
-	bool target_seen = false;
-	bool loaded = true;
+	cload.Open_Chunk();
+	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_REF_VARIABLES );
 
 	WWASSERT( ReferenceTarget == NULL );
 	WWASSERT( TargetReferencerListNext == NULL );
 
-	while (cload.Open_Chunk()) {
-		if (cload.Cur_Chunk_ID() != CHUNKID_REF_VARIABLES || variables_seen) {
-			loaded = false;
-		} else {
-			variables_seen = true;
-			while (cload.Open_Micro_Chunk()) {
-				if (cload.Cur_Micro_Chunk_ID() != MICROCHUNKID_TARGET || target_seen ||
-					cload.Cur_Micro_Chunk_Length() != sizeof(target_token) ||
-					cload.Read(&target_token, sizeof(target_token)) != sizeof(target_token)) {
-					loaded = false;
-				} else {
-					target_seen = true;
-				}
-				cload.Close_Micro_Chunk();
-			}
+	while (cload.Open_Micro_Chunk()) {
+		switch(cload.Cur_Micro_Chunk_ID()) {
+			READ_MICRO_CHUNK( cload, MICROCHUNKID_TARGET, target_token );
+			default:
+//				Debug_Say(( "Unrecognized REFLIST Variable chunkID\n" ));
+				break;
 		}
-		cload.Close_Chunk();
+		cload.Close_Micro_Chunk();
 	}
-	loaded = loaded && variables_seen && target_seen && !cload.Has_Error();
-	if (!loaded) return false;
+	cload.Close_Chunk();
 
 	ReferenceTarget = target_token != 0
 		? reinterpret_cast<ReferenceableClass<ScriptableGameObj> *>(
@@ -90,8 +79,9 @@ bool	ReferencerClass::Load( ChunkLoadClass & cload )
 
 	if ( ReferenceTarget != NULL ) {
 		REQUEST_POINTER_REMAP( (void **)&ReferenceTarget );
-		SaveLoadSystemClass::Register_Post_Load_Callback( this );
 	}
+
+	SaveLoadSystemClass::Register_Post_Load_Callback( this );
 
 	return true;
 }

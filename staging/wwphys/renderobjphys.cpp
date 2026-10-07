@@ -163,25 +163,24 @@ const PersistFactoryClass & RenderObjPhysClass::Get_Factory (void) const
 bool RenderObjPhysClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(RENDEROBJPHYS_CHUNK_DYNAMICPHYS);
-	if (!DynamicPhysClass::Save(csave)) csave.Report_Error();
+	DynamicPhysClass::Save(csave);
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool RenderObjPhysClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case RENDEROBJPHYS_CHUNK_PHYS:
-				if (!PhysClass::Load(cload)) loaded = false;		// note, legacy loading here... file must be old.
+				PhysClass::Load(cload);		// note, legacy loading here... file must be old.
 				break;
 			
 			case RENDEROBJPHYS_CHUNK_DYNAMICPHYS:
-				if (!DynamicPhysClass::Load(cload)) loaded = false;
+				DynamicPhysClass::Load(cload);
 				break;
 
 			default:
@@ -192,7 +191,7 @@ bool RenderObjPhysClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void RenderObjPhysClass::On_Post_Load (void)

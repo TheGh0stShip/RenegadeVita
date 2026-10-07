@@ -129,7 +129,6 @@ private:
 	//
 	//	Inherited
 	//
-	bool					Required_For_Player_Save (void) const	{ return true; }
 	bool					Save (ChunkSaveClass &csave);
 	bool					Load (ChunkLoadClass &cload);
 	const char *		Name (void) const					{ return "EncyclopediaMgrClass"; }

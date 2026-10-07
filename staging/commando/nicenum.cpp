@@ -31,9 +31,7 @@
 #include "wwdebug.h"
 #include "netutil.h"
 #include "useroptions.h"
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "GameSpy_QnR.h"
-#endif
 
 //
 // Class statics

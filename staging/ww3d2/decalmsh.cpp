@@ -293,7 +293,7 @@ RigidDecalMeshClass::~RigidDecalMeshClass(void)
  *=============================================================================================*/
 void RigidDecalMeshClass::Render(void)
 {
-#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)
+#if defined(RENEGADE_VITA_PORT)
 	RenegadeVitaRenderer::Submit_Decals_Unsupported();
 	return;
 #else
@@ -663,10 +663,10 @@ bool RigidDecalMeshClass::Delete_Decal(uint32 id)
 	/*
 	** Remove all materials used by this decal (remember to release refs!)
 	*/
-	for (int fi=decal->FaceStartIndex; fi<decal->FaceStartIndex + decal->FaceCount; fi++) {
+	for (int fi=decal->FaceStartIndex; fi<decal->FaceCount; fi++) {
 		REF_PTR_RELEASE(Textures[fi]);
 	}
-	for (int vi=decal->VertexStartIndex; vi<decal->VertexStartIndex + decal->VertexCount; vi++) {
+	for (int vi=decal->VertexStartIndex; vi<decal->VertexCount; vi++) {
 		REF_PTR_RELEASE(VertexMaterials[vi]);
 	}
 	Shaders.Delete_Range(decal->FaceStartIndex,decal->FaceCount);
@@ -781,7 +781,7 @@ SkinDecalMeshClass::~SkinDecalMeshClass(void)
  *=============================================================================================*/
 void SkinDecalMeshClass::Render(void)
 {
-#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)
+#if defined(RENEGADE_VITA_PORT)
 	RenegadeVitaRenderer::Submit_Decals_Unsupported();
 	return;
 #else
@@ -1084,10 +1084,10 @@ bool SkinDecalMeshClass::Delete_Decal(uint32 id)
 	/*
 	** Remove all materials used by this decal (remember to release refs!)
 	*/
-	for (int fi = decal->FaceStartIndex; fi < decal->FaceStartIndex + decal->FaceCount; fi++) {
+	for (int fi = decal->FaceStartIndex; fi < decal->FaceCount; fi++) {
 		REF_PTR_RELEASE(Textures[fi]);
 	}
-	for (int vi=decal->VertexStartIndex; vi<decal->VertexStartIndex + decal->VertexCount; vi++) {
+	for (int vi=decal->VertexStartIndex; vi<decal->VertexCount; vi++) {
 		REF_PTR_RELEASE(VertexMaterials[vi]);
 	}
 	Shaders.Delete_Range(decal->FaceStartIndex,decal->FaceCount);

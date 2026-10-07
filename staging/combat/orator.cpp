@@ -211,10 +211,10 @@ OratorClass::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_GAMEOBJ);
-		if (!GameObj.Save(csave)) csave.Report_Error();
+		GameObj.Save (csave);
 	csave.End_Chunk ();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 

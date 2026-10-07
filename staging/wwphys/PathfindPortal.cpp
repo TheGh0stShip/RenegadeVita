@@ -193,7 +193,7 @@ PathfindActionPortalClass::Save (ChunkSaveClass &csave)
 	//	Save the parent to its own chunk
 	//
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		if (!PathfindPortalClass::Save(csave)) csave.Report_Error();
+		PathfindPortalClass::Save (csave);
 	csave.End_Chunk ();
 
 	//
@@ -207,7 +207,7 @@ PathfindActionPortalClass::Save (ChunkSaveClass &csave)
 		WRITE_MICRO_CHUNK (csave, ACTION_VARID_ENTER_PORTAL,	enter_portal_token);
 	csave.End_Chunk ();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 
@@ -317,7 +317,7 @@ PathfindWaypathPortalClass::Save (ChunkSaveClass &csave)
 	//	Save the parent to its own chunk
 	//
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		if (!PathfindPortalClass::Save(csave)) csave.Report_Error();
+		PathfindPortalClass::Save (csave);
 	csave.End_Chunk ();
 
 	//
@@ -327,7 +327,7 @@ PathfindWaypathPortalClass::Save (ChunkSaveClass &csave)
 		WRITE_MICRO_CHUNK (csave, WPATH_VARID_WAYPATH_POS,	WaypathPos);
 	csave.End_Chunk ();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 

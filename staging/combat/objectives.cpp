@@ -246,67 +246,34 @@ bool	Objective::Save( ChunkSaveClass & csave )
 
 	if ( Object.Get_Ptr() != NULL ) {
 		csave.Begin_Chunk( CHUNKID_OBJECT );
-		if (!Object.Save(csave)) csave.Report_Error();
+		Object.Save( csave );
 		csave.End_Chunk();
 	}
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	Objective::Load( ChunkLoadClass &cload )
 {
-	bool variables_seen = false;
-	bool object_seen = false;
-	bool loaded = true;
-	uint32 loaded_values = 0;
-	const uint32 required_values = (1U << 13) - 1U;
-	float objective_age = 0.0F;
-	float hud_age = 0.0F;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
-				if (variables_seen) {
-					loaded = false;
-					break;
-				}
-				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-#define READ_REQUIRED_OBJECTIVE_VALUE(id, value, bit) \
-						case (id): \
-							if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
-								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
-							else loaded_values |= (bit); \
-							break
-						READ_REQUIRED_OBJECTIVE_VALUE(MICROCHUNKID_ID, ID, 1U << 0);
-						READ_REQUIRED_OBJECTIVE_VALUE(MICROCHUNKID_TYPE, Type, 1U << 1);
-						READ_REQUIRED_OBJECTIVE_VALUE(MICROCHUNKID_STATUS, Status, 1U << 2);
-						READ_REQUIRED_OBJECTIVE_VALUE(MICROCHUNKID_DESCRIPTION_ID, ShortDescriptionID, 1U << 3);
-						READ_REQUIRED_OBJECTIVE_VALUE(MICROCHUNKID_LONG_DESCRIPTION_ID, LongDescriptionID, 1U << 4);
-						case MICROCHUNKID_DESCRIPTION_SOUND:
-						case MICROCHUNKID_HUD_POG_TEXTURE_NAME:
-						{
-							const uint32 bit = cload.Cur_Micro_Chunk_ID() == MICROCHUNKID_DESCRIPTION_SOUND ? (1U << 5) : (1U << 9);
-							const uint32 length = cload.Cur_Micro_Chunk_Length();
-							char value[256];
-							if ((loaded_values & bit) != 0U || length == 0U || length > sizeof(value) ||
-								cload.Read(value, length) != length || value[length - 1U] != '\0') {
-								loaded = false;
-							} else {
-								if (bit == (1U << 5)) DescriptionSoundFilename = value;
-								else HUDPogTextureName = value;
-								loaded_values |= bit;
-							}
-							break;
-						}
-						READ_REQUIRED_OBJECTIVE_VALUE(MICROCHUNKID_DRAW_BLIP, DrawBlip, 1U << 6);
-						READ_REQUIRED_OBJECTIVE_VALUE(MICROCHUNKID_POSITION, Position, 1U << 7);
-						READ_REQUIRED_OBJECTIVE_VALUE(MICROCHUNKID_AGE, objective_age, 1U << 8);
-						READ_REQUIRED_OBJECTIVE_VALUE(MICROCHUNKID_HUD_MESSAGE_STRING_ID, HUDMessageStringID, 1U << 10);
-						READ_REQUIRED_OBJECTIVE_VALUE(MICROCHUNKID_HUD_PRIORITY, HUDPriority, 1U << 11);
-						READ_REQUIRED_OBJECTIVE_VALUE(MICROCHUNKID_HUD_AGE, hud_age, 1U << 12);
-#undef READ_REQUIRED_OBJECTIVE_VALUE
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_ID, ID );
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_TYPE, Type );                    
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_STATUS, Status );                  
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_DESCRIPTION_ID, ShortDescriptionID );
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_LONG_DESCRIPTION_ID, LongDescriptionID );
+						READ_MICRO_CHUNK_WWSTRING( cload, 	MICROCHUNKID_DESCRIPTION_SOUND, DescriptionSoundFilename );
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_DRAW_BLIP, DrawBlip );
+   						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_POSITION, Position );
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_AGE, Age );
+						READ_MICRO_CHUNK_WWSTRING( cload, 	MICROCHUNKID_HUD_POG_TEXTURE_NAME, HUDPogTextureName );
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_HUD_MESSAGE_STRING_ID, HUDMessageStringID );
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_HUD_PRIORITY, HUDPriority );
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_HUD_AGE, Age );
 
 						default:
 							Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
@@ -317,11 +284,7 @@ bool	Objective::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_OBJECT:
-				if (object_seen) loaded = false;
-				else {
-					object_seen = true;
-					loaded = Object.Load(cload) && loaded;
-				}
+				Object.Load( cload );
 				break;
 
 			default:
@@ -331,12 +294,7 @@ bool	Objective::Load( ChunkLoadClass &cload )
 		}
 		cload.Close_Chunk();
 	}
-	loaded = loaded && variables_seen && loaded_values == required_values &&
-		objective_age == hud_age && ID > 0 && Type >= ObjectiveManager::TYPE_PRIMARY &&
-		Type <= ObjectiveManager::TYPE_TERTIARY && Status >= ObjectiveManager::STATUS_IS_PENDING &&
-		Status <= ObjectiveManager::STATUS_HIDDEN && !cload.Has_Error();
-	if (loaded) Age = objective_age;
-	return loaded;
+	return true;
 }
 
 /*
@@ -402,12 +360,8 @@ enum	{
 bool	ObjectiveManager::Save( ChunkSaveClass &csave )
 {
 	for ( int i = 0; i < ObjectiveList.Count(); i++ ) {
-		if (ObjectiveList[i] == NULL) {
-			csave.Report_Error();
-			continue;
-		}
 		csave.Begin_Chunk( CHUNKID_OBJECTIVE_ENTRY );
-			if (!ObjectiveList[i]->Save(csave)) csave.Report_Error();
+			ObjectiveList[i]->Save( csave );
 		csave.End_Chunk();
 	}
 
@@ -415,33 +369,20 @@ bool	ObjectiveManager::Save( ChunkSaveClass &csave )
 		WRITE_MICRO_CHUNK( csave, 	MICROCHUNKID_NUM_SPECIFIED_TERTIARY_OBJECTIVES,	NumSpecifiedTertiaryObjectives );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	ObjectiveManager::Load( ChunkLoadClass &cload )
 {
 	WWASSERT( ObjectiveList.Count() == 0 );
-	bool variables_seen = false;
-	bool loaded = true;
-	int tertiary_objectives = 0;
-	bool tertiary_seen = false;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_MANAGER_VARIABLES:
-				if (variables_seen) {
-					loaded = false;
-					break;
-				}
-				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						case MICROCHUNKID_NUM_SPECIFIED_TERTIARY_OBJECTIVES:
-							if (tertiary_seen || cload.Cur_Micro_Chunk_Length() != sizeof(tertiary_objectives) ||
-								cload.Read(&tertiary_objectives, sizeof(tertiary_objectives)) != sizeof(tertiary_objectives)) loaded = false;
-							else tertiary_seen = true;
-							break;
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_NUM_SPECIFIED_TERTIARY_OBJECTIVES,	NumSpecifiedTertiaryObjectives );
 						default:
 							Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 							break;
@@ -453,16 +394,7 @@ bool	ObjectiveManager::Load( ChunkLoadClass &cload )
 			case CHUNKID_OBJECTIVE_ENTRY:
 			{
 				Objective * objective = Add_Loadable_Objective();
-				if (!objective->Load(cload)) {
-					loaded = false;
-				} else {
-					for (int index = 0; index + 1 < ObjectiveList.Count(); ++index) {
-						if (ObjectiveList[index]->ID == objective->ID) {
-							loaded = false;
-							break;
-						}
-					}
-				}
+				objective->Load( cload );
 				break;
 			}
 
@@ -474,13 +406,11 @@ bool	ObjectiveManager::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	loaded = loaded && variables_seen && tertiary_seen && !cload.Has_Error();
-	if (loaded) {
-		NumSpecifiedTertiaryObjectives = tertiary_objectives;
-		Viewer.Update ();
-		HUDUpdate = true;
-	}
-	return loaded;
+	Viewer.Update ();
+
+	HUDUpdate = true;
+
+	return true;
 }
 
 /*

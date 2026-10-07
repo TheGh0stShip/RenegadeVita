@@ -162,19 +162,18 @@ const PersistFactoryClass & DynamicAnimPhysClass::Get_Factory(void) const
 bool DynamicAnimPhysClass::Save(ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(DYNAMICANIMPHYS_CHUNK_DECOPHYS);
-	if (!DecorationPhysClass::Save(csave)) csave.Report_Error();
+	DecorationPhysClass::Save(csave);
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(DYNAMICANIMPHYS_CHUNK_ANIMMANAGER);
-	if (!AnimManager.Save(csave)) csave.Report_Error();
+	AnimManager.Save(csave);
 	csave.End_Chunk();
 	
-	return !csave.Has_Error();
+	return true;
 }
 
 bool DynamicAnimPhysClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	/*
 	** Read in the chunks from the file
 	*/
@@ -183,11 +182,11 @@ bool DynamicAnimPhysClass::Load(ChunkLoadClass &cload)
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case DYNAMICANIMPHYS_CHUNK_DECOPHYS:
-				if (!DecorationPhysClass::Load(cload)) loaded = false;
+				DecorationPhysClass::Load(cload);
 				break;
 
 			case DYNAMICANIMPHYS_CHUNK_ANIMMANAGER:
-				if (!AnimManager.Load(cload)) loaded = false;
+				AnimManager.Load(cload);
 				break;
 
 			default:
@@ -199,7 +198,7 @@ bool DynamicAnimPhysClass::Load(ChunkLoadClass &cload)
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void DynamicAnimPhysClass::On_Post_Load(void)
@@ -312,17 +311,16 @@ bool DynamicAnimPhysDefClass::Save(ChunkSaveClass &csave)
 
 bool DynamicAnimPhysDefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case DYNAMICANIMPHYSDEF_CHUNK_DECOPHYSDEF:
-				if (!DecorationPhysDefClass::Load(cload)) loaded = false;
+				DecorationPhysDefClass::Load(cload);
 				break;
 
 			case DYNAMICANIMPHYSDEF_CHUNK_ANIMMANAGERDEF:
-				if (!AnimManagerDef.Load(cload)) loaded = false;
+				AnimManagerDef.Load(cload);
 				break;
 
 			case DYNAMICANIMPHYSDEF_CHUNK_VARIABLES:
@@ -343,5 +341,6 @@ bool DynamicAnimPhysDefClass::Load(ChunkLoadClass &cload)
 
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
+	return true;
 }
+

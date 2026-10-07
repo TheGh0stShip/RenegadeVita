@@ -954,8 +954,7 @@ VehicleDriverClass::Load_Variables (ChunkLoadClass &cload)
 	//	Request that the path ptr gets remapped
 	//
 	if (m_CurrentPath != NULL) {
-		// Initialize borrows the action's path; Reset does not release it.
-		REQUEST_POINTER_REMAP ((void **)&m_CurrentPath);
+		REQUEST_REF_COUNTED_POINTER_REMAP ((RefCountClass **)&m_CurrentPath);
 	}
 
 	return ;

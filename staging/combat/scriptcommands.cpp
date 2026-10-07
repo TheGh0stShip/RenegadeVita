@@ -36,12 +36,6 @@
 
 #include "scriptcommands.h"
 #if defined(RENEGADE_VITA_PORT)
-#include "a35_campaign_flight_recorder.h"
-#endif
-#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
-#include "a35_script_lookup_telemetry.h"
-#endif
-#if defined(RENEGADE_VITA_PORT)
 #include "renegade_vita_tutorial_help.h"
 #endif
 #include "debug.h"
@@ -432,12 +426,7 @@ void	Destroy_Object( GameObject * obj )
 
 GameObject * Find_Object( int obj_id )
 {
-	GameObject *object = GameObjManager::Find_ScriptableGameObj( obj_id );
-#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
-	A35_Script_Lookup_Record(A35_LOOKUP_OBJECT, NULL,
-		static_cast<int32_t>(obj_id), object != NULL);
-#endif
-	return object;
+	return GameObjManager::Find_ScriptableGameObj( obj_id );
 }
 
 int	Get_ID( GameObject * obj )
@@ -1069,11 +1058,6 @@ int Create_Logical_Sound( GameObject * creator, int type, const Vector3 & positi
 			sound->Set_Single_Shot( true );
 			sound->Set_DropOff_Radius( radius );
 			sound->Set_Position( position );
-
-#if defined(RENEGADE_VITA_PORT)
-			A35_Campaign_Flight_Logical_Stimulus(false, sound_id, type, 0,
-				creator ? static_cast<int32_t>(creator->Get_ID()) : 0, false);
-#endif
 			sound->Add_To_Scene ();
 			sound->Release_Ref();
 		}
@@ -1605,10 +1589,6 @@ void	Display_Int( int value, const char * format )
 */
 void	Save_Data( ScriptSaver & saver, int id, int size, void * data )
 {
-	if (data == NULL || size < 0 || size > 250) {
-		saver.CSave.Report_Error();
-		return;
-	}
 	SCRIPT_PTR_CHECK( data );
 	saver.CSave.Begin_Micro_Chunk(id);
 	saver.CSave.Write(data,size);
@@ -1636,17 +1616,8 @@ bool	Load_Begin( ScriptLoader & loader, int * id )
 
 void	Load_Data( ScriptLoader & loader, int size, void * data )
 {
-	if (data == NULL) {
-		loader.CLoad.Report_Error();
-		return;
-	}
 	SCRIPT_PTR_CHECK( data );
 	unsigned int chunkSize = loader.CLoad.Cur_Micro_Chunk_Length();
-	if (size < 0 || chunkSize > static_cast<unsigned int>(size)) {
-		fprintf(stderr, "script load: field exceeds destination capacity\n");
-		loader.CLoad.Report_Error();
-		return;
-	}
 	WWASSERT((unsigned)size >= chunkSize);
 	loader.CLoad.Read(data, chunkSize);
 	WWASSERT((unsigned)size <= 250);		// Make sure we don't save too much
@@ -2462,10 +2433,6 @@ int	Create_Conversation( const char *conversation_name, int priority, float max_
 	//	Try to find the requested conversation
 	//
 	ConversationClass *conversation = ConversationMgrClass::Find_Conversation( conversation_name );
-#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
-	A35_Script_Lookup_Record(A35_LOOKUP_CONVERSATION, conversation_name,
-		0, conversation != NULL);
-#endif
 	if ( conversation != NULL ) {
 
 		//
@@ -3090,10 +3057,6 @@ void	Cinematic_Sniper_Control(bool enabled, float zoom)
 /*
 **
 */
-#if defined(RENEGADE_HOST_ABI_TEST)
-#include "renegade_ui_pointer_tokens.h"
-#endif
-
 int	Text_File_Open( const char * filename )
 {
 	FileClass * file = _TheFileFactory->Get_File( filename );
@@ -3104,25 +3067,12 @@ int	Text_File_Open( const char * filename )
 			file = NULL;
 		}
 	}
-#if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
-	A35_Script_Lookup_Record(A35_LOOKUP_TEXT_FILE, filename,
-		0, file != NULL);
-#endif
-#if defined(RENEGADE_HOST_ABI_TEST)
-	return static_cast<int>(Renegade_Ui_Pointer_To_Token(file));
-#else
 	return (int)( file );
-#endif
 }
 
 bool	Text_File_Get_String( int handle, char * buffer, int size )
 {
-#if defined(RENEGADE_HOST_ABI_TEST)
-	FileClass * file = static_cast<FileClass *>(Renegade_Ui_Pointer_From_Token(handle));
-	if (file == NULL) return false;
-#else
 	FileClass * file = (FileClass *)handle;
-#endif
 	char ch[4];
 	char *b = buffer;
 	while ( file->Read( &ch[0], 1 ) == 1 ) {
@@ -3140,11 +3090,7 @@ bool	Text_File_Get_String( int handle, char * buffer, int size )
 
 void	Text_File_Close( int handle )
 {
-#if defined(RENEGADE_HOST_ABI_TEST)
-	FileClass * file = static_cast<FileClass *>(Renegade_Ui_Take_Pointer_Token(handle));
-#else
 	FileClass * file = (FileClass *)handle;
-#endif
 	if ( file != NULL ) {
 		file->Close();
 		_TheFileFactory->Return_File( file );

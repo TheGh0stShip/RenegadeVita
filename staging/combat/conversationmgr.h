@@ -175,7 +175,6 @@ protected:
 	//	From SaveLoadSubSystemClass
 	//
 	bool						Contains_Data (void) const			{ return true; }
-	bool						Required_For_Player_Save (void) const	{ return true; }
 	const char *			Name (void) const						{ return "ConversationMgrClass"; }
 	bool						Save (ChunkSaveClass &csave);
 	bool						Load (ChunkLoadClass &cload);

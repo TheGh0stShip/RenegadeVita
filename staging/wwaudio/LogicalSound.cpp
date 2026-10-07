@@ -199,7 +199,7 @@ bool
 LogicalSoundClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk (CHUNKID_BASE_CLASS);
-		if (!SoundSceneObjClass::Save(csave)) csave.Report_Error();
+		SoundSceneObjClass::Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_VARIABLES);		
@@ -213,7 +213,7 @@ LogicalSoundClass::Save (ChunkSaveClass &csave)
 		WRITE_MICRO_CHUNK (csave, VARID_LAST_NOTIFY, m_LastNotification);
 
 	csave.End_Chunk ();
-	return !csave.Has_Error();
+	return true;
 }
 
 

@@ -693,7 +693,7 @@ DefinitionMgrClass::Save
 	retval &= Save_Objects (csave);
 	csave.End_Chunk ();
 
-	return retval && !csave.Has_Error();
+	return retval;
 }
 
 
@@ -707,8 +707,6 @@ DefinitionMgrClass::Load (ChunkLoadClass &cload)
 {
 	WWMEMLOG(MEM_GAMEDATA);
 	bool retval = true;
-	bool variables_seen = false;
-	bool objects_seen = false;
 
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
@@ -718,29 +716,21 @@ DefinitionMgrClass::Load (ChunkLoadClass &cload)
 			// loop through and read each microchunk
 			//
 			case CHUNKID_VARIABLES:
-				if (variables_seen) retval = false;
-				else {
-					variables_seen = true;
-					retval &= Load_Variables(cload);
-				}
+				retval &= Load_Variables (cload);
 				break;
 
 			//
 			//	Load all the definition objects from this chunk
 			//
 			case CHUNKID_OBJECTS:
-				if (objects_seen) retval = false;
-				else {
-					objects_seen = true;
-					retval &= Load_Objects(cload);
-				}
+				retval &= Load_Objects (cload);
 				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return retval && variables_seen && objects_seen && !cload.Has_Error();
+	return retval;
 }
 
 
@@ -803,7 +793,6 @@ bool
 DefinitionMgrClass::Load_Objects (ChunkLoadClass &cload)
 {
 	bool retval = true;
-	DynamicVectorClass<DefinitionClass *> pending_definitions;
 
 	while (cload.Open_Chunk ()) {
 
@@ -815,48 +804,30 @@ DefinitionMgrClass::Load_Objects (ChunkLoadClass &cload)
 			
 			DefinitionClass *definition = (DefinitionClass *)factory->Load (cload);
 			if (definition != NULL) {
-				pending_definitions.Add(definition);
-			} else {
-				retval = false;
+
+				//
+				//	Add this definition to our array
+				//				
+				Prepare_Definition_Array ();
+				_SortedDefinitionArray[_DefinitionCount ++] = definition;				
 			}
-		} else {
-			retval = false;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	retval = retval && !cload.Has_Error() && !SaveLoadSystemClass::Has_Reported_Load_Failure();
-	if (pending_definitions.Count() > 1) {
-		::qsort(&pending_definitions[0], pending_definitions.Count(),
-			sizeof(DefinitionClass *), fnCompareDefinitionsCallback);
-	}
-	for (int index = 0; index < pending_definitions.Count(); ++index) {
-		DefinitionClass *definition = pending_definitions[index];
-		if (definition->Get_ID() == 0 ||
-			(index > 0 && pending_definitions[index - 1]->Get_ID() == definition->Get_ID()) ||
-			Find_Definition(definition->Get_ID(), false) != NULL) {
-			retval = false;
-		}
+	//
+	//	Sort the definitions
+	//
+	if (_DefinitionCount > 0) {
+		::qsort (_SortedDefinitionArray, _DefinitionCount, sizeof (DefinitionClass *), fnCompareDefinitionsCallback);
 	}
 
-	if (retval) {
-		for (int index = 0; index < pending_definitions.Count(); ++index) {
-			Prepare_Definition_Array();
-			_SortedDefinitionArray[_DefinitionCount++] = pending_definitions[index];
-		}
-		if (_DefinitionCount > 1) {
-			::qsort(_SortedDefinitionArray, _DefinitionCount,
-				sizeof(DefinitionClass *), fnCompareDefinitionsCallback);
-		}
-		for (int index = 0; index < _DefinitionCount; ++index) {
-			_SortedDefinitionArray[index]->m_DefinitionMgrLink = index;
-		}
-	} else {
-		for (int index = pending_definitions.Count() - 1; index >= 0; --index) {
-			pending_definitions[index]->On_Load_Rejected();
-			SaveLoadSystemClass::Retain_Rejected_Object_Until_Next_Load(pending_definitions[index]);
-		}
+	//
+	//	Assign a mgr link to each definition
+	//
+	for (int index = 0; index < _DefinitionCount; index ++) {
+		_SortedDefinitionArray[index]->m_DefinitionMgrLink = index;
 	}
 
 	return retval;
@@ -886,7 +857,7 @@ DefinitionMgrClass::Load_Variables (ChunkLoadClass &cload)
 		cload.Close_Micro_Chunk ();
 	}
 
-	return retval && !cload.Has_Error();
+	return retval;
 }
 
 

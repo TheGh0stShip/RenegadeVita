@@ -1710,33 +1710,23 @@ AudibleSoundDefinitionClass::Load (ChunkLoadClass &cload)
 {
 	using namespace AUDIBLE_SOUND_DEF_SAVELOAD;
 	bool retval = true;
-	bool variables_seen = false;
-	bool base_seen = false;
 
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_VARIABLES:
-				if (variables_seen) retval = false;
-				else {
-					variables_seen = true;
-					retval &= Load_Variables (cload);
-				}
+				retval &= Load_Variables (cload);
 				break;
 
 			case CHUNKID_BASE_CLASS:
-				if (base_seen) retval = false;
-				else {
-					base_seen = true;
-					retval &= DefinitionClass::Load (cload);
-				}
+				retval &= DefinitionClass::Load (cload);
 				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return retval && variables_seen && base_seen && !cload.Has_Error();
+	return retval;
 }
 
 
@@ -1777,7 +1767,7 @@ AudibleSoundDefinitionClass::Save_Variables (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK (csave, VARID_CREATE_LOGICAL,				m_CreateLogical)
 	WRITE_MICRO_CHUNK (csave, VARID_LOGICAL_DROP_OFF,			m_LogicalDropOffRadius)
 	WRITE_MICRO_CHUNK (csave, VARID_SPHERE_COLOR,				m_AttenuationSphereColor)
-	return !csave.Has_Error();
+	return true;
 }
 
 
@@ -1822,7 +1812,7 @@ AudibleSoundDefinitionClass::Load_Variables (ChunkLoadClass &cload)
 		cload.Close_Micro_Chunk ();
 	}
 
-	return !cload.Has_Error();
+	return true;
 }
 
 
@@ -1956,7 +1946,7 @@ AudibleSoundClass::Save (ChunkSaveClass &csave)
 	using namespace AUDIBLE_SOUND_SAVELOAD;
 
 	csave.Begin_Chunk (CHUNKID_BASE_CLASS);
-		if (!SoundSceneObjClass::Save(csave)) csave.Report_Error();
+		SoundSceneObjClass::Save (csave);
 	csave.End_Chunk ();
 
 	uint32 temp_position = 0;
@@ -1990,7 +1980,7 @@ AudibleSoundClass::Save (ChunkSaveClass &csave)
 
 	csave.End_Chunk ();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 

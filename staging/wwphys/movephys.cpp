@@ -408,7 +408,7 @@ bool MoveablePhysClass::Cinematic_Move_To(const Matrix3D &new_tm)
 bool MoveablePhysClass::Save(ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(MOVEABLE_CHUNK_DYNAMICPHYS);
-	if (!DynamicPhysClass::Save(csave)) csave.Report_Error();
+	DynamicPhysClass::Save(csave);
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(MOVEABLE_CHUNK_VARIABLES);
@@ -427,7 +427,7 @@ bool MoveablePhysClass::Save(ChunkSaveClass &csave)
 	}
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 
@@ -445,7 +445,6 @@ bool MoveablePhysClass::Save(ChunkSaveClass &csave)
  *=============================================================================================*/
 bool MoveablePhysClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	Controller = NULL;
 	Carrier = NULL;
 	uint32 controller_token = 0;
@@ -456,11 +455,11 @@ bool MoveablePhysClass::Load(ChunkLoadClass &cload)
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case MOVEABLE_CHUNK_PHYS:
-				if (!PhysClass::Load(cload)) loaded = false;
+				PhysClass::Load(cload);
 				break;
 
 			case MOVEABLE_CHUNK_DYNAMICPHYS:
-				if (!DynamicPhysClass::Load(cload)) loaded = false;
+				DynamicPhysClass::Load(cload);
 				break;
 
 			case MOVEABLE_CHUNK_VARIABLES:
@@ -505,7 +504,7 @@ bool MoveablePhysClass::Load(ChunkLoadClass &cload)
 		Mass = 0.01f;
 	}
 	MassInv = 1.0f / Mass;
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -596,17 +595,16 @@ bool MoveablePhysDefClass::Save(ChunkSaveClass &csave)
 
 bool MoveablePhysDefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case MOVEABLEPHYSDEF_CHUNK_PHYSDEF:
-				if (!PhysDefClass::Load(cload)) loaded = false;
+				PhysDefClass::Load(cload);
 				break;
 
 			case MOVEABLEPHYSDEF_CHUNK_DYNAMICPHYSDEF:
-				if (!DynamicPhysDefClass::Load(cload)) loaded = false;
+				DynamicPhysDefClass::Load(cload);
 				break;
 
 			case MOVEABLEPHYSDEF_CHUNK_VARIABLES:
@@ -629,7 +627,7 @@ bool MoveablePhysDefClass::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 bool MoveablePhysDefClass::Is_Type(const char * type_name)

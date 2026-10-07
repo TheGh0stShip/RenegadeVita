@@ -180,13 +180,6 @@ bool DDSFileClass::Load()
 	}
 
 	file->Open();
-#if defined(__vita__)
-	/* Vita: reject files shorter than the header instead of wrapping size. */
-	if (file->Size()<0 || (unsigned)file->Size()<(unsigned)SurfaceDesc.Size+4) {
-		file->Close();
-		return false;
-	}
-#endif
 	// Data size is file size minus the header and info block
 	unsigned size=file->Size()-SurfaceDesc.Size-4;
 	// Skip mip levels if reduction factor is not zero
@@ -194,12 +187,6 @@ bool DDSFileClass::Load()
 	unsigned skipped_offset=0;
 	for (unsigned i=0;i<ReductionFactor;++i) {
 		skipped_offset+=level_size;
-#if defined(__vita__)
-		if (level_size>size) {
-			file->Close();
-			return false;
-		}
-#endif
 		size-=level_size;
 		if (level_size>16) {	// If surface is bigger than one block (8 or 16 bytes)...
 			level_size/=4;

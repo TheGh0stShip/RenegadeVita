@@ -54,9 +54,6 @@
 #include "a31_messagebox_stub.h"
 #include "a31_console_stub.h"
 #include "mpsettingsmgr.h"
-#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-#include "a31_client_connect_boundary.h"
-#endif
 
 DECLARE_NETWORKOBJECT_FACTORY(cScTextObj, NETCLASSID_SCTEXTOBJ);
 
@@ -289,13 +286,13 @@ cScTextObj::Act(void)
 			if (Type == TEXT_MESSAGE_PRIVATE)
 			{
 				formatted_text.Format(L"%s (%s %s): ",
-					(const WCHAR *)sender_name,
+					sender_name,
 					TRANSLATION(IDS_MP_TO),
-					(const WCHAR *)recipient_name);
+					recipient_name);
 			}
 			else
 			{
-				formatted_text.Format(L"%s: ", (const WCHAR *)sender_name);
+				formatted_text.Format(L"%s: ", sender_name);
 			}
 
 			//
@@ -326,7 +323,7 @@ cScTextObj::Act(void)
 				DlgMsgBox::DoDialog(TRANSLATE(IDS_MENU_ADMIN_MESSAGE), Text);
 			} else {
 				WideStringClass message;
-				message.Format(L"%s\n", (const WCHAR *)Text);
+				message.Format(L"%s\n", Text);
 				formatted_text += message;
 				if (CombatManager::Get_Message_Window() != NULL) {
 					CombatManager::Get_Message_Window()->Add_Message(formatted_text, text_color);
@@ -383,9 +380,6 @@ cScTextObj::Import_Creation(BitStreamClass & packet)
 	packet.Get(RecipientId);
 	packet.Get(IsHostAdminMessage);
 	packet.Get_Wide_Terminated_String(Text.Get_Buffer(256), 256);
-	#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-	if (SenderId == HOST_TEXT_SENDER) A31ClientConnect::Server_Message(Text);
-	#endif
 
 	Act();
 }

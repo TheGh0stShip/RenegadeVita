@@ -151,12 +151,11 @@ bool	ScriptZoneGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	ScriptZoneGameObjDef::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!ScriptableGameObjDef::Load( cload )) loaded = false;
+				ScriptableGameObjDef::Load( cload );
 				break;
 								
 			case CHUNKID_DEF_VARIABLES:
@@ -184,7 +183,7 @@ bool	ScriptZoneGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -253,7 +252,7 @@ enum	{
 bool	ScriptZoneGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-		if (!ScriptableGameObj::Save(csave)) csave.Report_Error();
+		ScriptableGameObj::Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -265,29 +264,26 @@ bool	ScriptZoneGameObj::Save( ChunkSaveClass & csave )
 	SLNode<GameObjReference> *pobjrefnode;
 	for (	pobjrefnode = InsideList.Head(); pobjrefnode; pobjrefnode = pobjrefnode->Next() ) {
 		GameObjReference *ref = pobjrefnode->Data();
-		if (ref == NULL) {
-			csave.Report_Error();
-		} else if ( *ref != NULL ) {
+		if ( *ref != NULL ) {
 			csave.Begin_Chunk( CHUNKID_INSIDE_LIST_ENTRY );
-			if (!ref->Save(csave)) csave.Report_Error();
+			ref->Save( csave );
 			csave.End_Chunk();
 		}
 	}
 
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 
 bool	ScriptZoneGameObj::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				if (!ScriptableGameObj::Load(cload)) loaded = false;
+				ScriptableGameObj::Load( cload );
 				break;
 								
 			case CHUNKID_VARIABLES:
@@ -308,7 +304,7 @@ bool	ScriptZoneGameObj::Load( ChunkLoadClass &cload )
 				while (cload.Open_Chunk()) {
 					WWASSERT(  cload.Cur_Chunk_ID() == CHUNKID_INSIDE_LIST_ENTRY );
 					GameObjReference * ref = new GameObjReference;
-					if (!ref->Load(cload)) loaded = false;
+					ref->Load( cload );
 					InsideList.Add_Head( ref );
 					cload.Close_Chunk();
 				}
@@ -330,7 +326,7 @@ bool	ScriptZoneGameObj::Load( ChunkLoadClass &cload )
 		case 5: PlayerType = PLAYERTYPE_GDI; break;		// Remap GDI
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 /*

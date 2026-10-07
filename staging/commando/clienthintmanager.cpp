@@ -173,7 +173,6 @@ cClientHintManager::Think
 		}
 	}
 
-	REF_PTR_RELEASE(pvs);
 	if (num_objects < 2) {
 		return;
 	}

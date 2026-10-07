@@ -69,8 +69,6 @@ public:
 	virtual PersistClass *					Create (void) const ;
 	virtual bool								Save (ChunkSaveClass &csave);
 	virtual bool								Load (ChunkLoadClass &cload);
-	virtual void								On_Load_Rejected (void);
-	virtual void								On_Post_Load (void);
 	virtual const PersistFactoryClass &	Get_Factory (void) const;	
 
 	static EvaSettingsDefClass *			Get_Instance (void)	{ return EvaSettings; }	
@@ -120,7 +118,6 @@ protected:
 	Vector2										MessagesIconPos;
 	
 	static EvaSettingsDefClass *			EvaSettings;
-	EvaSettingsDefClass *					PreviousSettings;
 };
 
 

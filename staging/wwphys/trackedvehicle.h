@@ -97,8 +97,6 @@ protected:
 	float								RightTrackMovement;
 	Vector3							LeftTrackLastPosition;
 	Vector3							RightTrackLastPosition;
-	unsigned int					LastTrackSyncTime;
-	bool								TrackPositionsInitialized;
 
 	struct TrackMapperStruct
 	{

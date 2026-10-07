@@ -35,22 +35,13 @@
 #include "gametype.h"
 #include "a31_god_ui_stub.h"
 #include "combatgmode.h"
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-#include "gameinitmgr.h"
-#include "a35_level_load_status.h"
-#else
 #include "a31_gameinit_stub.h"
-#endif
 #include "scripts.h"
 #include "debug.h"
 // cGod dialog transitions are supplied by a31_god_ui_stub.h.
 #include "cheatmgr.h"
 #include "wwmemlog.h"
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-#include "dialogmgr.h"
-#else
 #include "a31_dialogmgr_stub.h"
-#endif
 #include "encyclopediamgr.h"
 #include "a31_wol_stub.h"
 #include "specialbuilds.h"
@@ -72,9 +63,6 @@ typedef enum {
 
 int		cGod::State		= GOD_STATE_UNINITIALIZED;
 InventoryClass	cGod::LevelStartInventory;
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-static bool NativeRestartPending = false;
-#endif
 
 //-----------------------------------------------------------------------------
 enum	{
@@ -84,52 +72,24 @@ enum	{
 };
 
 //-----------------------------------------------------------------------------
-bool cGod::Can_Save_Current_State( void )
-{
-	// SINGLE_DEAD represents both player death and mission failure in the
-	// original runtime. Neither terminal popup state has enough serialized
-	// identity to be reconstructed faithfully, so admit saves only while the
-	// original single-player simulation is running.
-	return State == GOD_STATE_SINGLE_RUNNING;
-}
-
-//-----------------------------------------------------------------------------
 bool cGod::Save(ChunkSaveClass & csave)
 {
-	if (!Can_Save_Current_State()) return false;
 	csave.Begin_Chunk(CHUNKID_VARIABLES);
 	WRITE_MICRO_CHUNK(csave, MICROCHUNK_STATE, State);
 	csave.End_Chunk();
-	return !csave.Has_Error();
+	return true;
 }
 
 //-----------------------------------------------------------------------------
 bool cGod::Load(ChunkLoadClass &cload)
 {
-	int loaded_state = GOD_STATE_UNINITIALIZED;
-	bool variables_seen = false;
-	bool state_seen = false;
-	bool loaded = true;
-
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
-				if (variables_seen) {
-					loaded = false;
-				}
-				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-						case MICROCHUNK_STATE:
-							if (state_seen || cload.Cur_Micro_Chunk_Length() != sizeof(loaded_state)) {
-								loaded = false;
-							} else {
-								state_seen = true;
-								loaded = cload.Read(&loaded_state, sizeof(loaded_state)) ==
-									sizeof(loaded_state) && loaded;
-							}
-							break;
+						READ_MICRO_CHUNK(cload, MICROCHUNK_STATE, State);
 						default:
 							Debug_Say(( "Unrecognized cGod Variable chunkID\n" ));
 							break;
@@ -145,17 +105,6 @@ bool cGod::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	const bool state_valid =
-#if defined(__vita__)
-		loaded_state == GOD_STATE_SINGLE_RUNNING;
-#else
-		loaded_state >= GOD_STATE_UNINITIALIZED && loaded_state <= GOD_STATE_SINGLE_DEAD;
-#endif
-	if (!loaded || !variables_seen || !state_seen || !state_valid) {
-		return false;
-	}
-
-	State = loaded_state;
 	return true;
 }
 
@@ -518,17 +467,11 @@ InventoryClass	_DeathInventory;
 void cGod::Reset( void )
 {
 	State = GOD_STATE_UNINITIALIZED;
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	NativeRestartPending = false;
-#endif
 }
 
 void cGod::Exit( void )
 {
 	State = GOD_STATE_EXITING;
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	NativeRestartPending = false;
-#endif
 }
 
 void cGod::Star_Killed( void )
@@ -572,33 +515,13 @@ void cGod::Respawn( void )
 	State = GOD_STATE_SINGLE_RUNNING;
 }
 
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-void cGod::Request_Restart( void )
-{
-	// UI dispatch must not unload a world retained by the native frame.
-	if (State == GOD_STATE_SINGLE_DEAD) NativeRestartPending = true;
-}
-
-bool cGod::Has_Pending_Restart( void )
-{
-	return NativeRestartPending && State == GOD_STATE_SINGLE_DEAD;
-}
-#endif
-
 void cGod::Restart( void )
 {
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	NativeRestartPending = false;
-#endif
 	if ( State == GOD_STATE_SINGLE_DEAD ) {
 //		WWASSERT( State == GOD_STATE_SINGLE_DEAD );
 
 		State = GOD_STATE_SINGLE_RUNNING;	// Incase we get a second call!
 		((CombatGameModeClass *)GameModeManager::Find("Combat"))->Core_Restart();
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-		// Preserve known load failure; never create a player in a partial world.
-		if (A35_Level_Load_Get_Failure() != A35_LOAD_NO_FAILURE) return;
-#endif
 
 		//
 		//	Reset the player's stats
@@ -623,14 +546,7 @@ void cGod::Restart( void )
 void cGod::Load_Game( void )
 {
 	WWASSERT( State == GOD_STATE_SINGLE_DEAD );
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	// Keep the original load menu over the suspended world. Its Start_Game
-	// request is consumed only after the native session has released it.
-	GameModeClass *combat_mode = GameModeManager::Find("Combat");
-	if (combat_mode != NULL && combat_mode->Is_Active()) combat_mode->Suspend();
-#else
 	GameInitMgrClass::End_Game();
-#endif
 	RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_LOAD_GAME);
 }
 

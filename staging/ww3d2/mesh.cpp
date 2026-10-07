@@ -228,11 +228,6 @@ MeshClass & MeshClass::operator = (const MeshClass & that)
 
 #if !defined(RENEGADE_VITA_PORT)
 		TheDX8MeshRenderer.Unregister_Mesh_Type(this);
-#else
-		// Key by the outgoing model before the shared model is replaced.
-		if (UserLighting != NULL) {
-			RenegadeVitaRenderer::Forget_Static_Mesh_User_Lighting(Model, UserLighting);
-		}
 #endif
 
 		RenderObjClass::operator = (that);
@@ -310,11 +305,6 @@ bool MeshClass::Contains(const Vector3 &point)
  *=============================================================================================*/
 void MeshClass::Free(void)
 {
-#if defined(RENEGADE_VITA_PORT)
-	if (UserLighting != NULL) {
-		RenegadeVitaRenderer::Forget_Static_Mesh_User_Lighting(Model, UserLighting);
-	}
-#endif
 	REF_PTR_RELEASE(Model);
 	REF_PTR_RELEASE(DecalMesh);
 	if (UserLighting != NULL) {
@@ -748,27 +738,12 @@ void MeshClass::Render(RenderInfoClass & rinfo)
 			if (render_base_passes) {
 				RenegadeVitaRenderer::Submit_Mesh(*this, rinfo);
 			}
-			if (	(DecalMesh != NULL) &&
-					((rinfo.Current_Override_Flags() & RenderInfoClass::RINFO_OVERRIDE_ADDITIONAL_PASSES_ONLY) == 0))
-			{
-				const SphereClass & ws_sphere = Get_Bounding_Sphere();
-				Vector3 cam_space_sphere_center;
-				rinfo.Camera.Transform_To_View_Space(cam_space_sphere_center,ws_sphere.Center);
-				if (-cam_space_sphere_center.Z - ws_sphere.Radius < WW3D::Get_Decal_Rejection_Distance()) {
-					TheDX8MeshRenderer.Add_To_Render_List(DecalMesh);
-				}
-			}
-			for (int i = 0; i < rinfo.Additional_Pass_Count(); ++i) {
-				MaterialPassClass *matpass = rinfo.Peek_Additional_Pass(i);
-				if ((!Is_Translucent()) || matpass->Is_Enabled_On_Translucent_Meshes()) {
-					const bool skin = Model->Get_Flag(MeshGeometryClass::SKIN);
-					const bool delayed = !skin &&
-						(rinfo.Current_Override_Flags() &
-						 RenderInfoClass::RINFO_OVERRIDE_ADDITIONAL_PASSES_ONLY);
-					if (!TheDX8MeshRenderer.Queue_Material_Pass(matpass, this, skin, delayed)) {
-						RenegadeVitaRenderer::Submit_Unsupported(this);
-					}
-				}
+			/* A retained but empty decal mesh is a no-op in the original
+			** DecalMeshClass::Render path.  Do not classify that no-op as an
+			** unsupported draw; an actual decal remains explicit. */
+			if (rinfo.Additional_Pass_Count() > 0 ||
+				(DecalMesh != NULL && DecalMesh->Decal_Count() > 0)) {
+				RenegadeVitaRenderer::Submit_Unsupported(this);
 			}
 #else
 			bool rendered_something = false;
@@ -1573,11 +1548,6 @@ DX8FVFCategoryContainer* MeshClass::Peek_FVF_Category_Container()
 
 void MeshClass::Install_User_Lighting_Array(Vector4 * lighting)
 {
-#if defined(RENEGADE_VITA_PORT)
-	// Invalidate the key that was used for the preceding draw. On first
-	// installation that key contains a null lighting pointer.
-	RenegadeVitaRenderer::Forget_Static_Mesh_User_Lighting(Model, UserLighting);
-#endif
 	Get_User_Lighting_Array(true);
 	
 	for (int vi=0; vi<Model->Get_Vertex_Count(); vi++) {

@@ -143,12 +143,6 @@ void BitStreamClass::Get_Terminated_String(char * buffer, USHORT buffer_size, bo
 
 	USHORT len;
 	Get(len);
-	if (Has_Read_Error() || !buffer || !buffer_size || len >= buffer_size ||
-		(!permit_empty && !len) || len > (Get_Bit_Write_Position() - Get_Bit_Read_Position()) / 8) {
-		if (buffer && buffer_size) buffer[0] = 0;
-		Mark_Read_Error();
-		return;
-	}
 	WWASSERT(len < buffer_size);
 	if (!permit_empty) {
 		WWASSERT(len > 0);
@@ -199,12 +193,6 @@ void BitStreamClass::Get_Wide_Terminated_String(WCHAR *buffer, USHORT buffer_len
 
 	USHORT len;
 	Get(len);
-	if (Has_Read_Error() || !buffer || !buffer_len || len >= buffer_len ||
-		(!permit_empty && !len) || len > (Get_Bit_Write_Position() - Get_Bit_Read_Position()) / 16) {
-		if (buffer && buffer_len) buffer[0] = 0;
-		Mark_Read_Error();
-		return;
-	}
 	WWASSERT(len < buffer_len && "String length exceeds provided buffer");
 	if (!permit_empty) {
 		WWASSERT(len > 0 && "Empty string not permitted");

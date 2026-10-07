@@ -113,12 +113,6 @@ NullPrototypeClass::NullPrototypeClass (const W3dNullObjectStruct &null)
 PrototypeClass * NullLoaderClass::Load_W3D (ChunkLoadClass &cload)
 {
 	W3dNullObjectStruct null;
-	if (cload.Cur_Chunk_Length() != sizeof(null) ||
-		cload.Read(&null, sizeof(null)) != sizeof(null) ||
-		cload.Has_Error() ||
-		::memchr(null.Name, '\0', sizeof(null.Name)) == NULL ||
-		null.Name[0] == '\0') {
-		return NULL;
-	}
+	cload.Read(&null,sizeof(null));
 	return new NullPrototypeClass(null);
 }

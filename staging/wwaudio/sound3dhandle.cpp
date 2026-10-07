@@ -79,8 +79,7 @@ Sound3DHandleClass::Initialize (SoundBufferClass *buffer)
 		//
 		//	Configure the 3D sample
 		//
-		U32 success = ::AIL_set_3D_sample_file_bounded (SampleHandle,
-			Buffer->Get_Raw_Buffer (), static_cast<size_t>(Buffer->Get_Raw_Length ()));
+		U32 success = ::AIL_set_3D_sample_file (SampleHandle, Buffer->Get_Raw_Buffer ());
 
 		S32 test1 = 0;
 		S32 test2 = 0;

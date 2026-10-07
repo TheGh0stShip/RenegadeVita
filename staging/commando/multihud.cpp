@@ -44,7 +44,6 @@
 #include "playermanager.h"
 #include "teammanager.h"
 #include "cnetwork.h"
-#include "renegade_optional_network_modes.h"
 #include "timemgr.h"
 #include "miscutil.h"
 #include "gamedata.h"
@@ -416,7 +415,7 @@ void MultiHUDClass::Show_Player_Names(void)
 			//
 			// WOL game newbies get a "recruit" tag
 			//
-			if (Renegade_Network_Mode_Active("WOL") &&
+			if (GameModeManager::Find("WOL")->Is_Active() &&
 				 COMBAT_STAR != NULL &&
 				 p_soldier->Is_Teammate(COMBAT_STAR) &&
 				 p_player->Get_Num_Wol_Games() <= cPlayer::NUM_NEWBIE_GAMES) {

@@ -59,10 +59,6 @@
 #include "bitpackids.h"
 #include "surfaceeffects.h"
 #include "gametype.h"
-#include "renegade_c4_state.h"
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-#include "renegade_client_effects.h"
-#endif
 
 /*
 ** C4GameObjDef
@@ -114,12 +110,11 @@ bool	C4GameObjDef::Save( ChunkSaveClass & csave )
 
 bool	C4GameObjDef::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!PhysicalGameObjDef::Load( cload )) loaded = false;
+				PhysicalGameObjDef::Load( cload );
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -142,7 +137,7 @@ bool	C4GameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 const PersistFactoryClass & C4GameObjDef::Get_Factory (void) const 
@@ -407,7 +402,7 @@ enum	{
 bool	C4GameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	if (!SimpleGameObj::Save(csave)) csave.Report_Error();
+	SimpleGameObj::Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -429,22 +424,21 @@ bool	C4GameObj::Save( ChunkSaveClass & csave )
 
 	if ( Owner != NULL ) {
 		csave.Begin_Chunk( CHUNKID_OWNER );
-		if (!Owner.Save(csave)) csave.Report_Error();
+		Owner.Save( csave );
 		csave.End_Chunk();
 	}
 
 	if ( StuckObject != NULL ) {
 		csave.Begin_Chunk( CHUNKID_STUCK_OBJECT );
-		if (!StuckObject.Save(csave)) csave.Report_Error();
+		StuckObject.Save( csave );
 		csave.End_Chunk();
 	}
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	C4GameObj::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	REF_PTR_RELEASE(StuckStaticAnimObj);
 	uint32 static_anim_obj_id = 0xFFFFFFFF;
 
@@ -452,7 +446,7 @@ bool	C4GameObj::Load( ChunkLoadClass &cload )
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				if (!SimpleGameObj::Load(cload)) loaded = false;
+				SimpleGameObj::Load( cload );
 				break;
 								
 			case CHUNKID_VARIABLES:
@@ -486,11 +480,11 @@ bool	C4GameObj::Load( ChunkLoadClass &cload )
 			}	
 
 			case CHUNKID_OWNER:
-				if (!Owner.Load(cload)) loaded = false;
+				Owner.Load( cload );
 				break;
 
 			case CHUNKID_STUCK_OBJECT:
-				if (!StuckObject.Load(cload)) loaded = false;
+				StuckObject.Load( cload );
 				break;
 
 			default:
@@ -509,7 +503,7 @@ bool	C4GameObj::Load( ChunkLoadClass &cload )
 		REF_PTR_RELEASE(pobj);
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void C4GameObj::Think( void )
@@ -749,25 +743,10 @@ void	C4GameObj::Export_Rare( BitStreamClass &packet )
 void	C4GameObj::Import_Rare( BitStreamClass &packet )
 {
 	SimpleGameObj::Import_Rare( packet );
-    if (packet.Has_Read_Error()) return;
-    bool modern = false;
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-    modern = Renegade_Client_Uses_TT_Replication();
-#endif
-    // Validate the entire subclass payload before changing charge/attachment state.
-    BitStreamClass scan;
-    scan = packet;
-    RenegadeC4RareState checked;
-    if (!Renegade_Read_C4_Rare(scan, checked, modern) ||
-        (checked.AmmoID != 0 && !WeaponManager::Find_Ammo_Definition(checked.AmmoID))) {
-        packet.Mark_Read_Error();
-        return;
-    }
-    const int velocity_packing = modern ? BitStreamClass::NO_ENCODER : BITPACK_VEHICLE_VELOCITY;
 
 	int ammo_def_id = packet.Get( ammo_def_id );
 	if ( ammo_def_id != 0 ) {
-		AmmoDefinition = WeaponManager::Find_Ammo_Definition( ammo_def_id );
+		AmmoDefinition = (AmmoDefinitionClass *)DefinitionMgrClass::Find_Definition( ammo_def_id );
 		if ( !AmmoDefinition->ModelName.Is_Empty() ) {
 			Peek_Physical_Object()->Set_Model_By_Name( AmmoDefinition->ModelName ) ;
 		}
@@ -781,9 +760,9 @@ void	C4GameObj::Import_Rare( BitStreamClass &packet )
 	}
 
 	Vector3 vel;
-	packet.Get(vel.X, velocity_packing);
-	packet.Get(vel.Y, velocity_packing);
-	packet.Get(vel.Z, velocity_packing);
+	packet.Get(vel.X, BITPACK_VEHICLE_VELOCITY);
+	packet.Get(vel.Y, BITPACK_VEHICLE_VELOCITY);
+	packet.Get(vel.Z, BITPACK_VEHICLE_VELOCITY);
 
 	ProjectileClass * po = Peek_Physical_Object()->As_ProjectileClass();
 	if ( po ) {
@@ -800,9 +779,9 @@ void	C4GameObj::Import_Rare( BitStreamClass &packet )
 
 		// Update the position
 		Vector3 pos;
-		packet.Get(pos.X, modern ? BitStreamClass::NO_ENCODER : BITPACK_WORLD_POSITION_X);
-		packet.Get(pos.Y, modern ? BitStreamClass::NO_ENCODER : BITPACK_WORLD_POSITION_Y);
-		packet.Get(pos.Z, modern ? BitStreamClass::NO_ENCODER : BITPACK_WORLD_POSITION_Z);
+		packet.Get(pos.X, BITPACK_WORLD_POSITION_X);
+		packet.Get(pos.Y, BITPACK_WORLD_POSITION_Y);
+		packet.Get(pos.Z, BITPACK_WORLD_POSITION_Z);
 		ProjectileClass * po = Peek_Physical_Object()->As_ProjectileClass();
 		if ( po )  {
 			Vector3 local_pos;
@@ -821,9 +800,9 @@ void	C4GameObj::Import_Rare( BitStreamClass &packet )
 		StuckObject = GameObjManager::Find_ScriptableGameObj(stuck_object_id);
 
 		if (StuckToObject) {
-			packet.Get(StuckOffset.X, velocity_packing);
-			packet.Get(StuckOffset.Y, velocity_packing);
-			packet.Get(StuckOffset.Z, velocity_packing);
+			packet.Get(StuckOffset.X, BITPACK_VEHICLE_VELOCITY);	// offset, using velocity packing...
+			packet.Get(StuckOffset.Y, BITPACK_VEHICLE_VELOCITY);
+			packet.Get(StuckOffset.Z, BITPACK_VEHICLE_VELOCITY);
 			packet.Get(StuckBone);
 		} 
 

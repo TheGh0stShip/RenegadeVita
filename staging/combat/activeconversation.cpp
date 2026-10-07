@@ -36,9 +36,6 @@
 
 
 #include "activeconversation.h"
-#if defined(RENEGADE_VITA_PORT)
-#include "a35_campaign_flight_recorder.h"
-#endif
 #include "soldier.h"
 #include "chunkio.h"
 #include "actionparams.h"
@@ -110,9 +107,6 @@ ActiveConversationClass::ActiveConversationClass (void)	:
 	IsInterruptable (true),
 	CurrentSound (NULL)
 {
-#if defined(RENEGADE_VITA_PORT)
-	DiagnosticInstance = A35_Campaign_Flight_Allocate_Conversation_Instance();
-#endif
 	return ;
 }
 
@@ -541,11 +535,6 @@ ActiveConversationClass::Say_Next_Remark (void)
 			//	Determine when we should switch to the next remark
 			//
 			NextRemarkTimer = duration;
-#if defined(RENEGADE_VITA_PORT)
-			A35_Campaign_Flight_Conversation_Transition(false, DiagnosticInstance, static_cast<int32_t>(Get_ID()),
-				static_cast<int32_t>(ActionID), static_cast<int32_t>(CurrentRemark),
-				static_cast<int32_t>(text_id), duration, 0);
-#endif
 		}
 
 	} else {
@@ -696,16 +685,12 @@ ActiveConversationClass::Save (ChunkSaveClass &csave)
 	//	Save each of the orators
 	//
 	for (int index = 0; index < OratorList.Count (); index ++) {
-		if (OratorList[index] == NULL) {
-			csave.Report_Error();
-			continue;
-		}
 		csave.Begin_Chunk (CHUNKID_ORATOR);
-			if (!OratorList[index]->Save(csave)) csave.Report_Error();
+			OratorList[index]->Save (csave);
 		csave.End_Chunk ();
 	}
 
-	return !csave.Has_Error();
+	return true;
 }
 
 
@@ -719,18 +704,12 @@ ActiveConversationClass::Load (ChunkLoadClass &cload)
 {
 	Free_Orator_List ();
 	int monitor_index = 0;
-	bool variables_seen = false;
-	bool loaded = true;
 
 	while (cload.Open_Chunk ()) {		
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_VARIABLES:
-				if (variables_seen) loaded = false;
-				else {
-					variables_seen = true;
-					Load_Variables (cload);
-				}
+				Load_Variables (cload);
 				break;
 
 			case CHUNKID_ORATOR:
@@ -753,23 +732,15 @@ ActiveConversationClass::Load (ChunkLoadClass &cload)
 				//
 				//	Load the monitor's reference from the chunk
 				//
-				if (monitor_index >= MAX_MONITORS) {
-					loaded = false;
-				} else {
-					loaded = MonitorArray[monitor_index++].Load(cload) && loaded;
-				}
+				MonitorArray[monitor_index++].Load (cload);
 			}
 			break;
-
-			default:
-				loaded = false;
-				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return loaded && variables_seen && !cload.Has_Error();
+	return true;
 }
 
 
@@ -1028,11 +999,6 @@ ActiveConversationClass::Register_Monitor (ScriptableGameObj *game_obj)
 		}
 	}
 
-#if defined(RENEGADE_VITA_PORT)
-	A35_Campaign_Flight_Conversation_Monitor(found ? 1U : (empty_index != -1 ? 0U : 2U),
-		DiagnosticInstance, static_cast<int32_t>(Get_ID()), static_cast<int32_t>(ActionID),
-		game_obj != NULL ? static_cast<int32_t>(game_obj->Get_ID()) : 0, -1, 0);
-#endif
 	return ;
 }
 
@@ -1080,11 +1046,6 @@ ActiveConversationClass::Notify_Monitors_On_End (ActionCompleteReason reason)
 		if (game_obj != NULL) {
 			const GameObjObserverList &observer_list = game_obj->Get_Observers ();
 			for (int observer_index = 0; observer_index < observer_list.Count (); observer_index ++) {
-#if defined(RENEGADE_VITA_PORT)
-				A35_Campaign_Flight_Conversation_Monitor(3U, DiagnosticInstance,
-					static_cast<int32_t>(Get_ID()), static_cast<int32_t>(ActionID),
-					static_cast<int32_t>(game_obj->Get_ID()), observer_index, static_cast<int32_t>(reason));
-#endif
 				observer_list[observer_index]->Action_Complete (game_obj, ActionID, reason);
 			}
 		}
@@ -1282,11 +1243,6 @@ ActiveConversationClass::Stop_Conversation (ActionCompleteReason reason)
 	
 	Free_Orator_List ();
 
-#if defined(RENEGADE_VITA_PORT)
-	A35_Campaign_Flight_Conversation_Transition(true, DiagnosticInstance, static_cast<int32_t>(Get_ID()),
-		static_cast<int32_t>(ActionID), static_cast<int32_t>(CurrentRemark),
-		0, NextRemarkTimer, static_cast<int32_t>(reason));
-#endif
 	Notify_Monitors_On_End (reason);
 
 	return ;

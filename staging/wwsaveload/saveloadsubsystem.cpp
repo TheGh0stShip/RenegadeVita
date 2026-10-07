@@ -40,8 +40,7 @@
 
 
 SaveLoadSubSystemClass::SaveLoadSubSystemClass(void) :
-	NextSubSystem(NULL),
-	PlayerSaveLoadSeen(false)
+	NextSubSystem(NULL)
 {
 	// All Sub-Systems are automatically registered with the SaveLoadSystem
 	SaveLoadSystemClass::Register_Sub_System (this);

@@ -286,17 +286,6 @@ WW3DErrorType WW3D::Init(void *hwnd, char *defaultpal, bool lite)
 	Render2DClass::Set_Screen_Resolution(RectClass(0, 0,
 		RenegadeVitaRenderer::DISPLAY_WIDTH, RenegadeVitaRenderer::DISPLAY_HEIGHT));
 	VertexMaterialClass::Init();
-	// Restore the original device-dependent particle tables and index buffers.
-	// PointGroup initialization requires the material preset pool above.
-	PointGroupClass::_Init();
-	if (!lite) {
-		FileClass * dazzle_ini_file = _TheFileFactory->Get_File(DAZZLE_INI_FILENAME);
-		if (dazzle_ini_file) {
-			INIClass dazzle_ini(*dazzle_ini_file);
-			DazzleRenderObjClass::Init_From_INI(&dazzle_ini);
-			_TheFileFactory->Return_File(dazzle_ini_file);
-		}
-	}
 
 	IsInitted = true;
 	return WW3D_ERROR_OK;
@@ -367,16 +356,9 @@ WW3DErrorType WW3D::Shutdown(void)
 
 #if defined(RENEGADE_VITA_PORT)
 	PredictiveLODOptimizerClass::Free();
-#if defined(RENEGADE_ORIGINAL_SORTING)
-	SortingRendererClass::Deinit();
-#endif
-	if (!Lite) {
-		DazzleRenderObjClass::Deinit();
-	}
 	if (WW3DAssetManager::Get_Instance()) {
 		WW3DAssetManager::Get_Instance()->Free_Assets();
 	}
-	PointGroupClass::_Shutdown();
 	RenegadeVita_Font_Shutdown();
 	VertexMaterialClass::Shutdown();
 	delete [] DefaultStaticSortLists;
@@ -853,9 +835,6 @@ WW3DErrorType WW3D::Begin_Render(bool clear,bool clearz,const Vector3 & color, v
 	WWASSERT(!IsRendering);
 	IsRendering = true;
 	RenegadeVitaRenderer::Begin_Frame(clear, clearz, color.X, color.Y, color.Z);
-#if defined(RENEGADE_ORIGINAL_SORTING)
-	Debug_Statistics::Begin_Statistics();
-#endif
 	return WW3D_ERROR_OK;
 #else
 
@@ -1119,12 +1098,7 @@ WW3DErrorType WW3D::Render(
 void WW3D::Flush(RenderInfoClass & rinfo)
 {
 #if defined(RENEGADE_VITA_PORT)
-	TheDX8MeshRenderer.Set_Camera(&rinfo.Camera);
-	TheDX8MeshRenderer.Flush();
 	WW3D::Render_And_Clear_Static_Sort_Lists(rinfo);
-#if defined(RENEGADE_ORIGINAL_SORTING)
-	SortingRendererClass::Flush();
-#endif
 #else
 	TheDX8MeshRenderer.Flush();
 	WW3D::Render_And_Clear_Static_Sort_Lists(rinfo);
@@ -1158,15 +1132,9 @@ WW3DErrorType WW3D::End_Render(bool flip_frame)
 	assert(IsInitted);
 
 #if defined(RENEGADE_VITA_PORT)
-#if defined(RENEGADE_ORIGINAL_SORTING)
-	SortingRendererClass::Flush();
-#endif
 	IsRendering = false;
 	RenegadeVitaRenderer::End_Frame(flip_frame);
 	FrameCount++;
-#if defined(RENEGADE_ORIGINAL_SORTING)
-	Debug_Statistics::End_Statistics();
-#endif
 	return WW3D_ERROR_OK;
 #else
 
@@ -2001,8 +1969,9 @@ void WW3D::Render_And_Clear_Static_Sort_Lists(RenderInfoClass & rinfo)
 			render=true;
 		}
 		if (render) {
-			TheDX8MeshRenderer.Set_Camera(&rinfo.Camera);
+#if !defined(RENEGADE_VITA_PORT)
 			TheDX8MeshRenderer.Flush();
+#endif
 		}
 	}
 	AreStaticSortListsEnabled = old_enable;

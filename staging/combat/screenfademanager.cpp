@@ -93,30 +93,15 @@ bool	FloatInterpolatorClass::Save( ChunkSaveClass &csave )
 
 bool	FloatInterpolatorClass::Load( ChunkLoadClass &cload )
 {
-	bool variables_seen = false;
-	bool loaded = true;
-	uint32 loaded_values = 0U;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
-				if (variables_seen) {
-					loaded = false;
-					break;
-				}
-				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-#define READ_REQUIRED_FADE_VALUE(id, value, bit) \
-						case (id): \
-							if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
-								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
-							else loaded_values |= (bit); \
-							break
-						READ_REQUIRED_FADE_VALUE(MICROCHUNKID_VALUE, Value, 1U);
-						READ_REQUIRED_FADE_VALUE(MICROCHUNKID_TARGET_VALUE, TargetValue, 2U);
-						READ_REQUIRED_FADE_VALUE(MICROCHUNKID_RATE, Rate, 4U);
-#undef READ_REQUIRED_FADE_VALUE
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_VALUE,			Value );
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_TARGET_VALUE,	TargetValue );
+						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_RATE,			Rate );
 						default:
 							Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 							break;
@@ -132,7 +117,7 @@ bool	FloatInterpolatorClass::Load( ChunkLoadClass &cload )
 		}
 		cload.Close_Chunk();
 	}
-	return loaded && variables_seen && loaded_values == 7U && !cload.Has_Error();
+	return true;
 }
 
 void FloatInterpolatorClass::Set_Target_Value(float new_val,float time)
@@ -275,59 +260,51 @@ enum	{
 bool	ScreenFadeManager::Save( ChunkSaveClass &csave )
 {
 	csave.Begin_Chunk( CHUNKID_LETTERBOX_FRACTION );
-		if (!_LetterboxFraction.Save(csave)) csave.Report_Error();
+		_LetterboxFraction.Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_OVERLAY_OPACITY );
-		if (!_OverlayOpacity.Save(csave)) csave.Report_Error();
+		_OverlayOpacity.Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_OVERLAY_RED );
-		if (!_OverlayRed.Save(csave)) csave.Report_Error();
+		_OverlayRed.Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_OVERLAY_GREEN );
-		if (!_OverlayGreen.Save(csave)) csave.Report_Error();
+		_OverlayGreen.Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_OVERLAY_BLUE );
-		if (!_OverlayBlue.Save(csave)) csave.Report_Error();
+		_OverlayBlue.Save( csave );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	ScreenFadeManager::Load( ChunkLoadClass &cload )
 {
-	uint32 loaded_chunks = 0U;
-	bool loaded = true;
-#define LOAD_REQUIRED_FADE_CHUNK(bit, object) \
-	do { \
-		const uint32 chunk_bit = 1U << (bit); \
-		if ((loaded_chunks & chunk_bit) != 0U) loaded = false; \
-		else { loaded_chunks |= chunk_bit; loaded = (object).Load(cload) && loaded; } \
-	} while (0)
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_LETTERBOX_FRACTION:
-				LOAD_REQUIRED_FADE_CHUNK(0, _LetterboxFraction);
+				_LetterboxFraction.Load( cload );
 				break;
 
 			case 	CHUNKID_OVERLAY_OPACITY:
-				LOAD_REQUIRED_FADE_CHUNK(1, _OverlayOpacity);
+				_OverlayOpacity.Load( cload );
 				break;
 
 			case 	CHUNKID_OVERLAY_RED:
-				LOAD_REQUIRED_FADE_CHUNK(2, _OverlayRed);
+				_OverlayRed.Load( cload );
 				break;
 
 			case 	CHUNKID_OVERLAY_GREEN:
-				LOAD_REQUIRED_FADE_CHUNK(3, _OverlayGreen);
+				_OverlayGreen.Load( cload );
 				break;
 
 			case 	CHUNKID_OVERLAY_BLUE:
-				LOAD_REQUIRED_FADE_CHUNK(4, _OverlayBlue);
+				_OverlayBlue.Load( cload );
 				break;
 
 			default:
@@ -337,6 +314,6 @@ bool	ScreenFadeManager::Load( ChunkLoadClass &cload )
 		}
 		cload.Close_Chunk();
 	}
-	#undef LOAD_REQUIRED_FADE_CHUNK
-	return loaded && loaded_chunks == 31U && !cload.Has_Error();
+	return true;
 }
+

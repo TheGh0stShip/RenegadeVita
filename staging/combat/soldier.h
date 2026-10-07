@@ -59,7 +59,6 @@
 
 
 struct TransitionCompletionDataStruct;
-#include "renegade_soldier_rare.h"
 class	PrivateTimerClass;
 class DynamicSpeechAnimClass;
 class	TransitionEffectClass;
@@ -348,16 +347,8 @@ public:
 
 	// Stealth
 	virtual float		Get_Stealth_Fade_Distance(void) const;
-	bool Can_Steal_Vehicles() const { return !TTStateActive || TTState.CanStealVehicles; }
-	bool Can_Drive_Vehicles() const { return !TTStateActive || TTState.CanDriveVehicles; }
-	const RenegadeSoldierRareState *Get_TT_State() const { return TTStateActive ? &TTState : NULL; }
 
 protected:
-	RenegadeSoldierRareState TTState;
-	bool TTStateActive = false;
-	bool NetworkDoTilt = true;
-	bool NetworkTargetUpdated = false;
-	void Update_TT_Skeleton(float seconds);
 	RenderObjClass		*	WeaponRenderModel;
 	RenderObjClass		*	BackWeaponRenderModel;
 	RenderObjClass		*	BackFlagRenderModel;
@@ -453,3 +444,4 @@ protected:
 };
 
 #endif	//	SOLDIER_H
+

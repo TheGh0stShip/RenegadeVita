@@ -895,9 +895,12 @@ RenderObjClass* DazzleRenderObjClass::Clone(void) const
 // ----------------------------------------------------------------------------
 void DazzleRenderObjClass::Render(RenderInfoClass & rinfo)
 {
-#if defined(RENEGADE_VITA_PORT) && !defined(__vita__)
-	/* Headless host validation has no native dazzle framebuffer.
-	** Physical Vita executes the original visibility and layer path below. */
+#if defined(RENEGADE_VITA_PORT)
+	/* The original Dazzle renderer delegates lens-flare geometry to a DX8
+	** DazzleLayer that the Vita boundary does not yet provide.  Retaining the
+	** BackgroundMgr-owned object is still required for authentic sky
+	** construction, but an absent optional presentation layer is a bounded
+	** no-op rather than an unsupported world submission. */
 	(void)rinfo;
 	return;
 #else
@@ -1499,10 +1502,6 @@ PersistClass *	DazzlePersistFactoryClass::Load(ChunkLoadClass & cload) const
 
 void DazzlePersistFactoryClass::Save(ChunkSaveClass & csave,PersistClass * obj)	const
 {
-	if (obj == NULL) {
-		csave.Report_Error();
-		return;
-	}
 	DazzleRenderObjClass * robj = (DazzleRenderObjClass *)obj;
 	unsigned int dazzle_type = robj->Get_Dazzle_Type();
 	const char * dazzle_type_name = DazzleRenderObjClass::Get_Type_Name(dazzle_type);
@@ -1681,44 +1680,21 @@ RenderObjClass * DazzlePrototypeClass::Create(void)
 WW3DErrorType DazzlePrototypeClass::Load_W3D(ChunkLoadClass & cload)
 {
 	StringClass dazzle_type;
-	bool name_seen = false;
-	bool type_seen = false;
-	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 		switch (cload.Cur_Chunk_ID())
 		{
-			case W3D_CHUNK_DAZZLE_NAME:
-				if (name_seen || cload.Cur_Chunk_Length() <= 0) {
-					loaded = false;
-				} else {
-					name_seen = true;
-					loaded = cload.Read(Name.Get_Buffer(cload.Cur_Chunk_Length()),
-						cload.Cur_Chunk_Length()) == cload.Cur_Chunk_Length() && loaded;
-				}
-				break;
-			case W3D_CHUNK_DAZZLE_TYPENAME:
-				if (type_seen || cload.Cur_Chunk_Length() <= 0) {
-					loaded = false;
-				} else {
-					type_seen = true;
-					loaded = cload.Read(dazzle_type.Get_Buffer(cload.Cur_Chunk_Length()),
-						cload.Cur_Chunk_Length()) == cload.Cur_Chunk_Length() && loaded;
-				}
-				break;
+			READ_WWSTRING_CHUNK(cload,W3D_CHUNK_DAZZLE_NAME,Name);
+			READ_WWSTRING_CHUNK(cload,W3D_CHUNK_DAZZLE_TYPENAME,dazzle_type);
 			default:
 				break;
 		}
 		cload.Close_Chunk();
 	}
 
-	if (!loaded || cload.Has_Error() || !name_seen || !type_seen ||
-		Name.Is_Empty() || dazzle_type.Is_Empty()) {
-		return WW3D_ERROR_LOAD_FAILED;
-	}
 	DazzleType = DazzleRenderObjClass::Get_Type_ID(dazzle_type);
 	if (DazzleType == UINT_MAX) {
-		return WW3D_ERROR_LOAD_FAILED;
+		DazzleType = 0;
 	}
 
 	return WW3D_ERROR_OK;
@@ -1734,10 +1710,6 @@ WW3DErrorType DazzlePrototypeClass::Load_W3D(ChunkLoadClass & cload)
 PrototypeClass * DazzleLoaderClass::Load_W3D(ChunkLoadClass & cload)
 {
 	DazzlePrototypeClass * new_proto = new DazzlePrototypeClass;
-	if (new_proto == NULL ||
-		new_proto->Load_W3D(cload) != WW3D_ERROR_OK) {
-		delete new_proto;
-		return NULL;
-	}
+	new_proto->Load_W3D(cload);
 	return new_proto;
 }

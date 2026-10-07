@@ -80,7 +80,6 @@ public:
       const char * default_string = NULL );
 	void	Get_String( const char * name, StringClass &string, const char *default_string = NULL);
 	void	Set_String( const char * name, const char *value );
-	bool	Set_String_Checked( const char * name, const char *value );
 
 	// Wide string data type access
 	void	Get_String( const WCHAR * name, WideStringClass &string, const WCHAR *default_string = NULL);

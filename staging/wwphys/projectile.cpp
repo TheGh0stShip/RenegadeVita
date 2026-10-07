@@ -451,7 +451,7 @@ const PersistFactoryClass & ProjectileClass::Get_Factory (void) const
 bool ProjectileClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(PROJECTILE_CHUNK_MOVEABLEPHYS);
-	if (!MoveablePhysClass::Save(csave)) csave.Report_Error();
+	MoveablePhysClass::Save(csave);
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(PROJECTILE_CHUNK_VARIABLES);
@@ -465,18 +465,17 @@ bool ProjectileClass::Save (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK(csave,PROJECTILE_VARIABLE_BOUNCECOUNT,BounceCount);
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool ProjectileClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case PROJECTILE_CHUNK_MOVEABLEPHYS:
-				if (!MoveablePhysClass::Load(cload)) loaded = false;
+				MoveablePhysClass::Load(cload);
 				break;
 
 			case PROJECTILE_CHUNK_VARIABLES:
@@ -502,7 +501,7 @@ bool ProjectileClass::Load (ChunkLoadClass &cload)
 		
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -605,13 +604,12 @@ bool ProjectileDefClass::Save(ChunkSaveClass &csave)
 
 bool ProjectileDefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case PROJECTILEDEF_CHUNK_MOVEABLEPHYSDEF:
-				if (!MoveablePhysDefClass::Load(cload)) loaded = false;
+				MoveablePhysDefClass::Load(cload);
 				break;
 
 			case PROJECTILEDEF_CHUNK_VARIABLES:
@@ -635,7 +633,7 @@ bool ProjectileDefClass::Load(ChunkLoadClass &cload)
 
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 bool ProjectileDefClass::Is_Type(const char * type_name)

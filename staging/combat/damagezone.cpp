@@ -113,12 +113,11 @@ bool	DamageZoneGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	DamageZoneGameObjDef::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!BaseGameObjDef::Load( cload )) loaded = false;
+				BaseGameObjDef::Load( cload );
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -142,7 +141,7 @@ bool	DamageZoneGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 const PersistFactoryClass & DamageZoneGameObjDef::Get_Factory (void) const
@@ -188,7 +187,7 @@ enum	{
 bool	DamageZoneGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-		if (!BaseGameObj::Save(csave)) csave.Report_Error();
+		BaseGameObj::Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -196,17 +195,16 @@ bool	DamageZoneGameObj::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DAMAGE_TIMER, DamageTimer );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	DamageZoneGameObj::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				if (!BaseGameObj::Load(cload)) loaded = false;
+				BaseGameObj::Load( cload );
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -229,7 +227,7 @@ bool	DamageZoneGameObj::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 SimplePersistFactoryClass<DamageZoneGameObj, CHUNKID_GAME_OBJECT_DAMAGE_ZONE>	_DamageZonePersistFactory;

@@ -36,8 +36,6 @@
 
 
 #include "weaponbag.h"
-#include <vector>
-#include "renegade_client_effects.h"
 #include "weapons.h"
 #include "debug.h"
 #include "weaponmanager.h"
@@ -88,28 +86,21 @@ bool	WeaponBagClass::Save( ChunkSaveClass & csave )
 	csave.Begin_Chunk( CHUNKID_WEAPON_LIST );
 	for( i = 1; i < WeaponList.Count(); i++ ) {
 		csave.Begin_Chunk( CHUNKID_WEAPON_ENTRY );
-		if (WeaponList[i] == NULL || !WeaponList[i]->Save(csave)) {
-			csave.Report_Error();
-		}
+		WeaponList[i]->Save( csave );
 		csave.End_Chunk();
 	}
 	csave.End_Chunk();
 
 	// Don't need to save Owner or IsChanged;
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	WeaponBagClass::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
-	bool variables_seen = false;
-	bool weapon_list_seen = false;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
-				if (variables_seen) loaded = false;
-				variables_seen = true;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_WEAPON_INDEX, WeaponIndex );
@@ -122,17 +113,12 @@ bool	WeaponBagClass::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_WEAPON_LIST:
-				if (weapon_list_seen || WeaponList.Count() != 1) loaded = false;
-				weapon_list_seen = true;
+				WWASSERT( WeaponList.Count() == 1 );
 				while (cload.Open_Chunk()) {
 					WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_WEAPON_ENTRY );
 					WeaponClass *weapon = new WeaponClass;
-					if (weapon->Load(cload)) {
-						WeaponList.Add(weapon);
-					} else {
-						delete weapon;
-						loaded = false;
-					}
+					weapon->Load( cload );
+					WeaponList.Add( weapon );
 					cload.Close_Chunk();
 				}
 				break;
@@ -147,8 +133,7 @@ bool	WeaponBagClass::Load( ChunkLoadClass &cload )
 
 	IsChanged = true;
 	HUDIsChanged = true;
-	if (WeaponIndex < 0 || WeaponIndex >= WeaponList.Count()) loaded = false;
-	return loaded && variables_seen && weapon_list_seen && !cload.Has_Error();
+	return true;
 }
 
 
@@ -176,15 +161,9 @@ void	WeaponBagClass::Remove_Weapon( int index )
 	//
 	//	Simply destroy the weapon if its in our list
 	//
-	if ( index > 0 && index < WeaponList.Count() ) {
-		// Deselect while the weapon still exists; preserve the selected object
-		// when removing a preceding slot. Slot zero is the permanent sentinel.
-		if (WeaponIndex == index) Select_Index(0);
+	if ( index >= 0 && index < WeaponList.Count() ) {
 		delete	WeaponList[index];
-		WeaponList.Delete( index );
-		if (WeaponIndex > index) --WeaponIndex;
-		IsChanged = HUDIsChanged = true;
-		Mark_Owner_Dirty();
+		WeaponList.Delete( index );		
 	}
 
 	return ;
@@ -195,7 +174,6 @@ void	WeaponBagClass::Remove_Weapon( int index )
 */
 void	WeaponBagClass::Clear_Weapons( void )
 {
-	Select_Index(0);
 	// find the next existing weapons
 	while ( WeaponList.Count() > 1 ) {
 		int index = WeaponList.Count()-1;
@@ -203,6 +181,7 @@ void	WeaponBagClass::Clear_Weapons( void )
 		WeaponList.Delete( index );		
 	}
 
+	Select_Index( 0 );
 	return ;
 }
 
@@ -409,84 +388,13 @@ void WeaponBagClass::Deselect( void )
 
 
 //-----------------------------------------------------------------------------
-bool WeaponBagClass::Import_TT_Weapon_Selection(BitStreamClass &packet, bool has_selection)
-{
-	int count = 0, selected = 0;
-	packet.Get(count);
-	if (packet.Has_Read_Error() || count < 0 ||
-		unsigned(count) > (packet.Get_Bit_Write_Position() - packet.Get_Bit_Read_Position()) / 32) {
-		packet.Mark_Read_Error();
-		return false;
-	}
-	std::vector<int> ids;
-	for (int i = 0; i < count; ++i) {
-		int id = 0;
-		packet.Get(id);
-		if (packet.Has_Read_Error() || !WeaponManager::Find_Weapon_Definition(id)) {
-			packet.Mark_Read_Error(); return false;
-		}
-		for (unsigned j = 0; j < ids.size(); ++j)
-			if (ids[j] == id) { packet.Mark_Read_Error(); return false; }
-		ids.push_back(id);
-	}
-	if (has_selection) packet.Get(selected);
-	if (packet.Has_Read_Error() || (has_selection && (selected < 0 || selected > count))) {
-		packet.Mark_Read_Error(); return false;
-	}
-	// Modern occasional updates reconcile membership, not ammunition. Keep
-	// existing weapon instances/rounds and let the original bag own changes.
-	for (int i = WeaponList.Count() - 1; i > 0; --i) {
-		int match = -1;
-		for (unsigned j = 0; j < ids.size(); ++j)
-			if (WeaponList[i]->Get_ID() == ids[j]) { match = j; break; }
-		if (match < 0) Remove_Weapon(i);
-		else ids.erase(ids.begin() + match);
-	}
-	for (unsigned i = 0; i < ids.size(); ++i) {
-		Add_Weapon(ids[i], 0);
-		if (WeaponIndex == 0 && WeaponList.Count() > 1) Select_Index(1);
-	}
-	const bool changed = has_selection && WeaponIndex != selected;
-	if (changed) Select_Index(selected);
-	return changed;
-}
-
 void WeaponBagClass::Import_Weapon_List(BitStreamClass & packet)
 {
-	bool modern = false;
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	modern = Renegade_Client_Uses_TT_Replication();
-#endif
-	// Validate the whole list before changing inventory. A mismatched protocol
-	// must not reinterpret a physics definition as a weapon definition.
-	BitStreamClass scan;
-	scan = packet;
-	int count = 0;
-	scan.Get(count);
-	if (scan.Has_Read_Error() || count < 0 ||
-		static_cast<unsigned>(count) > (scan.Get_Bit_Write_Position() - scan.Get_Bit_Read_Position()) / 64) {
-		packet.Mark_Read_Error();
-		return;
-	}
-	for (int i = 0; i < count; ++i) {
-		int id = 0, rounds = 0;
-		scan.Get(id);
-		scan.Get(rounds);
-		if (scan.Has_Read_Error() || !WeaponManager::Find_Weapon_Definition(id)) {
-			packet.Mark_Read_Error();
-			return;
-		}
-	}
 	int weapon_count = packet.Get(weapon_count);
 	int weapon_id;
 	for (int weapon = 0; weapon < weapon_count; weapon++) {
 		weapon_id = packet.Get(weapon_id);
-		int total_rounds = 0;
-		USHORT clip = 0, inventory = 0;
-		if (modern) {
-			packet.Get(clip);
-			packet.Get(inventory);
-		} else packet.Get(total_rounds);
+		int total_rounds = packet.Get(total_rounds);
 		Add_Weapon(weapon_id, 0);
 
 		WeaponClass * weapon_instance = NULL;
@@ -496,10 +404,7 @@ void WeaponBagClass::Import_Weapon_List(BitStreamClass & packet)
 			}
 		}
 		if ( weapon_instance != NULL ) {
-			if (modern) {
-				weapon_instance->Set_Clip_Rounds(clip < 0x8000 ? int(clip) : int(clip) - 0x10000);
-				weapon_instance->Set_Inventory_Rounds(inventory < 0x8000 ? int(inventory) : int(inventory) - 0x10000);
-			} else weapon_instance->Set_Total_Rounds( total_rounds );
+			weapon_instance->Set_Total_Rounds( total_rounds );
 		}
 	}
 }

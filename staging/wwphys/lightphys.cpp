@@ -109,7 +109,7 @@ const PersistFactoryClass & LightPhysClass::Get_Factory (void) const
 bool LightPhysClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(LIGHTPHYS_CHUNK_DECOPHYS);
-	if (!DecorationPhysClass::Save(csave)) csave.Report_Error();
+	DecorationPhysClass::Save(csave);
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(LIGHTPHYS_CHUNK_VARIABLES);
@@ -117,17 +117,16 @@ bool LightPhysClass::Save (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK(csave,LIGHTPHYS_VARIABLE_GROUPID,GroupID);
 	csave.End_Chunk();
 	
-	return !csave.Has_Error();
+	return true;
 }
 
 bool LightPhysClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case LIGHTPHYS_CHUNK_DECOPHYS:
-				if (!DecorationPhysClass::Load(cload)) loaded = false;
+				DecorationPhysClass::Load(cload);
 				break;
 
 			case LIGHTPHYS_CHUNK_VARIABLES:
@@ -151,7 +150,7 @@ bool LightPhysClass::Load (ChunkLoadClass &cload)
 	Set_Disabled(false);
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void LightPhysClass::On_Post_Load(void)

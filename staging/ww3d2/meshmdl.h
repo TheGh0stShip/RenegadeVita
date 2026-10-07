@@ -127,7 +127,6 @@ public:
 	
 	MeshModelClass & operator = (const MeshModelClass & that);
 	void							Reset(int polycount,int vertcount,int passcount);
-	void							Vita_Invalidate_Static_Cache(void);
 	void							Register_For_Rendering();
 	void							Shadow_Render(SpecialRenderInfoClass & rinfo,const Matrix3D & tm,const HTreeClass * htree);	
 
@@ -135,7 +134,7 @@ public:
 	// Material interface, All of these functions call through to the current
 	// material decription.
 	/////////////////////////////////////////////////////////////////////////////////////
-	void							Set_Pass_Count(int passes)														{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Pass_Count(passes); }
+	void							Set_Pass_Count(int passes)														{ CurMatDesc->Set_Pass_Count(passes); }
 	int							Get_Pass_Count(void) const														{ return CurMatDesc->Get_Pass_Count(); }
 	
 	const Vector2 *			Get_UV_Array(int pass = 0, int stage = 0)									{ return CurMatDesc->Get_UV_Array(pass,stage); }
@@ -147,11 +146,11 @@ public:
 	VertexMaterialClass::ColorSourceType Get_DCG_Source(int pass)										{ return CurMatDesc->Get_DCG_Source(pass); }
 	VertexMaterialClass::ColorSourceType Get_DIG_Source(int pass)										{ return CurMatDesc->Get_DIG_Source(pass); }
 
-	unsigned *					Get_Color_Array(int array_index,bool create = true)					{ if (create) Vita_Invalidate_Static_Cache(); return CurMatDesc->Get_Color_Array(array_index,create); }
+	unsigned *					Get_Color_Array(int array_index,bool create = true)					{ return CurMatDesc->Get_Color_Array(array_index,create); }
 
-	void							Set_Single_Material(VertexMaterialClass * vmat,int pass=0)			{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Single_Material(vmat,pass); }
-	void							Set_Single_Texture(TextureClass * tex,int pass=0,int stage=0)		{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Single_Texture(tex,pass,stage); }
-	void							Set_Single_Shader(ShaderClass shader,int pass=0)						{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Single_Shader(shader,pass); }
+	void							Set_Single_Material(VertexMaterialClass * vmat,int pass=0)			{ CurMatDesc->Set_Single_Material(vmat,pass); }
+	void							Set_Single_Texture(TextureClass * tex,int pass=0,int stage=0)		{ CurMatDesc->Set_Single_Texture(tex,pass,stage); }
+	void							Set_Single_Shader(ShaderClass shader,int pass=0)						{ CurMatDesc->Set_Single_Shader(shader,pass); }
 
 	// the "Get" functions add a reference before returning the pointer (if appropriate)
 	VertexMaterialClass *	Get_Single_Material(int pass=0) const										{ return CurMatDesc->Get_Single_Material(pass); }
@@ -163,9 +162,9 @@ public:
 	VertexMaterialClass *	Peek_Single_Material(int pass=0) const										{ return CurMatDesc->Peek_Single_Material(pass); }
 	TextureClass *				Peek_Single_Texture(int pass=0,int stage=0) const						{ return CurMatDesc->Peek_Single_Texture(pass,stage); }
 
-	void							Set_Material(int vidx,VertexMaterialClass * vmat,int pass=0)		{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Material(vidx,vmat,pass); }
-	void							Set_Shader(int pidx,ShaderClass shader,int pass=0)						{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Shader(pidx,shader,pass); }
-	void							Set_Texture(int pidx,TextureClass * tex,int pass=0,int stage=0)	{ Vita_Invalidate_Static_Cache(); CurMatDesc->Set_Texture(pidx,tex,pass,stage); }
+	void							Set_Material(int vidx,VertexMaterialClass * vmat,int pass=0)		{ CurMatDesc->Set_Material(vidx,vmat,pass); }
+	void							Set_Shader(int pidx,ShaderClass shader,int pass=0)						{ CurMatDesc->Set_Shader(pidx,shader,pass); }
+	void							Set_Texture(int pidx,TextureClass * tex,int pass=0,int stage=0)	{ CurMatDesc->Set_Texture(pidx,tex,pass,stage); }
 
 	// Queries for determining whether this model has per-polygon arrays of Materials, Shaders, or Textures
 	bool							Has_Material_Array(int pass) const											{ return CurMatDesc->Has_Material_Array(pass); }
@@ -224,17 +223,14 @@ public: // Jani: I need to have an access to these for now...
 
 	TexBufferClass *			Get_Texture_Array(int pass,int stage,bool create = true)
 	{
-		if (create) Vita_Invalidate_Static_Cache();
 		return CurMatDesc->Get_Texture_Array(pass,stage,create);
 	}
 	MatBufferClass *			Get_Material_Array(int pass,bool create = true)
 	{
-		if (create) Vita_Invalidate_Static_Cache();
 		return CurMatDesc->Get_Material_Array(pass,create);
 	}
 	ShaderClass *				Get_Shader_Array(int pass,bool create = true)
 	{
-		if (create) Vita_Invalidate_Static_Cache();
 		return CurMatDesc->Get_Shader_Array(pass,create);
 	}
 

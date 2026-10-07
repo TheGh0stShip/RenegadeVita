@@ -61,7 +61,6 @@ public:
 	virtual uint32	Chunk_ID (void) const { return CHUNKID_COMMANDO; }
 
 protected:
-	virtual bool	Required_For_Player_Save(void) const { return true; }
 	virtual bool	Save( ChunkSaveClass &csave );
 	virtual bool	Load( ChunkLoadClass &cload );
 	virtual const char* Name() const { return "CommandoSaveLoadClass"; }

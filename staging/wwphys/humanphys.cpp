@@ -542,14 +542,14 @@ const PersistFactoryClass & HumanPhysClass::Get_Factory(void) const
 bool HumanPhysClass::Save(ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(HUMANPHYS_CHUNK_PHYS3);
-	if (!Phys3Class::Save(csave)) csave.Report_Error();
+	Phys3Class::Save(csave);
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(HUMANPHYS_CHUNK_VARIABLES);
 	WRITE_MICRO_CHUNK(csave,HUMANPHYS_VARIABLE_JUSTJUMPED,JustJumped);
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 
@@ -567,13 +567,12 @@ bool HumanPhysClass::Save(ChunkSaveClass &csave)
  *=============================================================================================*/
 bool HumanPhysClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case HUMANPHYS_CHUNK_PHYS3:
-				if (!Phys3Class::Load(cload)) loaded = false;
+				Phys3Class::Load(cload);
 				break;
 
 			case HUMANPHYS_CHUNK_VARIABLES:
@@ -593,7 +592,7 @@ bool HumanPhysClass::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 		
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -622,13 +621,6 @@ void HumanPhysClass::Jump_To_Point (const Vector3 &dest_pos)
 	acceleration.Set (0.0f, 0.0f, gravity);
 	displacement = (dest_pos - Get_Transform().Get_Translation());
 	
-	// A jump to the current point has no flight solution.
-	if (!WWMath::Is_Valid_Float(displacement.X) ||
-		!WWMath::Is_Valid_Float(displacement.Y) ||
-		!WWMath::Is_Valid_Float(displacement.Z) ||
-		displacement.Length2() <= 0.000001f ||
-		!WWMath::Is_Valid_Float(gravity) || gravity >= -0.000001f) return;
-
 	// Calculate a launch/landing angle most appropriate for the jump to be made.
 	// Horizontal jumps will use the minimum launch angle, nera vertical jumps will
 	// use the maximum launch/landing angle.
@@ -692,7 +684,6 @@ void HumanPhysClass::Jump_To_Point (const Vector3 &dest_pos)
 		// t = sqrt (2.0 * (y - x * tan(theta)) / g).
 		time = sqrt (2.0f * (-y - (x * tanf (theta))) / gravity);
 	}
-	if (!WWMath::Is_Valid_Float(time) || time <= 0.000001f) return;
 
 	// Calculate velocity vector using standard projectile math.
 	velocity = (displacement / time) - ((0.5f * acceleration) * time);
@@ -771,12 +762,11 @@ bool HumanPhysDefClass::Save(ChunkSaveClass &csave)
 
 bool HumanPhysDefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case HUMANPHYSDEF_CHUNK_PHYS3DEF:
-				if (!Phys3DefClass::Load(cload)) loaded = false;
+				Phys3DefClass::Load(cload);
 				break;
 
 			default:
@@ -785,7 +775,7 @@ bool HumanPhysDefClass::Load(ChunkLoadClass &cload)
 		}
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 

@@ -42,7 +42,6 @@
 #include "inputconfigmgr.h"
 #include "string_ids.h"
 #include "translatedb.h"
-#include "renegade_ui_pointer_tokens.h"
 
 ////////////////////////////////////////////////////////////////
 //	Local constants
@@ -164,8 +163,7 @@ ControlSaveLoadMenuClass::Delete_Config (void)
 		//
 		//	Get the configuration object associated with this entry
 		//
-		InputConfigClass *config = static_cast<InputConfigClass *>(
-			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (curr_sel, 0)));
+		InputConfigClass *config = (InputConfigClass *)list_ctrl->Get_Entry_Data (curr_sel, 0);
 		if (config != NULL) {
 
 			//
@@ -220,8 +218,7 @@ ControlSaveLoadMenuClass::HandleNotification (DlgMsgBoxEvent &event)
 					//
 					//	Get the configuration object associated with this entry
 					//
-					InputConfigClass *config = static_cast<InputConfigClass *>(
-						Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (curr_sel, 0)));
+					InputConfigClass *config = (InputConfigClass *)list_ctrl->Get_Entry_Data (curr_sel, 0);
 					if (config != NULL) {
 						InputConfigMgrClass::Delete_Configuration (config->Get_Filename ());
 						list_ctrl->Delete_Entry (curr_sel);
@@ -266,8 +263,7 @@ ControlSaveLoadMenuClass::Load_Config (void)
 		//
 		//	Get the configuration object associated with this entry
 		//
-		InputConfigClass *config = static_cast<InputConfigClass *>(
-			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (curr_sel, 0)));
+		InputConfigClass *config = (InputConfigClass *)list_ctrl->Get_Entry_Data (curr_sel, 0);
 		if (config != NULL) {
 			
 			//
@@ -304,8 +300,7 @@ ControlSaveLoadMenuClass::Save_Config (bool prompt)
 		//
 		//	Get the configuration object associated with this entry
 		//
-		InputConfigClass *config = static_cast<InputConfigClass *>(
-			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (curr_sel, 0)));
+		InputConfigClass *config = (InputConfigClass *)list_ctrl->Get_Entry_Data (curr_sel, 0);
 		if (config != NULL) {
 			
 			//
@@ -398,9 +393,8 @@ ControlSaveLoadMenuClass::On_ListCtrl_Delete_Entry
 	//
 	//	Remove the data we associated with this entry
 	//
-	InputConfigClass *config = static_cast<InputConfigClass *>(
-		Renegade_Ui_Take_Pointer_Token(list_ctrl->Get_Entry_Data (item_index, 0)));
-	list_ctrl->Set_Entry_Data (item_index, 0, 0U);
+	InputConfigClass *config = (InputConfigClass *)list_ctrl->Get_Entry_Data (item_index, 0);
+	list_ctrl->Set_Entry_Data (item_index, 0, NULL);
 
 	//
 	//	Free the config object
@@ -436,7 +430,7 @@ ControlSaveLoadMenuClass::Insert_Configuration (const InputConfigClass &config)
 		//	Make a copy of the config object and store it with the entry
 		//
 		InputConfigClass *local_copy = new InputConfigClass (config);
-		list_ctrl->Set_Entry_Data (item_index, 0, Renegade_Ui_Pointer_To_Token(local_copy));
+		list_ctrl->Set_Entry_Data (item_index, 0, (DWORD)local_copy);
 
 		//
 		//	Change the color of this configuration if the user cannot edit it
@@ -469,8 +463,7 @@ ControlSaveLoadMenuClass::On_ListCtrl_Sel_Change
 	//
 	//	Remove the data we associated with this entry
 	//
-	InputConfigClass *config = static_cast<InputConfigClass *>(
-		Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (new_index, 0)));
+	InputConfigClass *config = (InputConfigClass *)list_ctrl->Get_Entry_Data (new_index, 0);
 	if (config != NULL) {
 		
 		//
@@ -516,16 +509,14 @@ ControlSaveLoadMenuClass::ListSortCallback
 {
 	int retval = 0;
 
-	if (list_ctrl->Get_Entry_Data (item_index1, 0) == 0U) {
+	if (list_ctrl->Get_Entry_Data (item_index1, 0) == NULL) {
 		retval = 1;
-	} else if (list_ctrl->Get_Entry_Data (item_index2, 0) == 0U) {
+	} else if (list_ctrl->Get_Entry_Data (item_index2, 0) == NULL) {
 		retval = -1;
 	} else {
 
-		InputConfigClass *config1 = static_cast<InputConfigClass *>(
-			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index1, 0)));
-		InputConfigClass *config2 = static_cast<InputConfigClass *>(
-			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data (item_index2, 0)));
+		InputConfigClass *config1 = (InputConfigClass *)list_ctrl->Get_Entry_Data (item_index1, 0);
+		InputConfigClass *config2 = (InputConfigClass *)list_ctrl->Get_Entry_Data (item_index2, 0);
 
 		//
 		//	Sort based on the type of configuration

@@ -82,7 +82,6 @@
 #include	"wwmath.h"
 #include "assetmgr.h"
 #include "wwstring.h"
-#include <string.h>
 #include "camera.h"
 #include "statistics.h"
 #include "dx8wrapper.h"
@@ -1062,10 +1061,7 @@ void RingRenderObjClass::animate()
 PrototypeClass * RingLoaderClass::Load_W3D(ChunkLoadClass & cload)
 {
 	RingPrototypeClass *prototype = new RingPrototypeClass ();
-	if (prototype == NULL || !prototype->Load(cload)) {
-		delete prototype;
-		return NULL;
-	}
+	prototype->Load (cload);
 	return prototype;
 }
 
@@ -1151,12 +1147,6 @@ enum
 
 bool RingPrototypeClass::Load (ChunkLoadClass &cload)
 {
-	bool definition_seen = false;
-	bool color_seen = false;
-	bool alpha_seen = false;
-	bool inner_scale_seen = false;
-	bool outer_scale_seen = false;
-	bool loaded = true;
 	ColorChannel.Reset ();
 	AlphaChannel.Reset ();
 	InnerScaleChannel.Reset ();
@@ -1166,58 +1156,30 @@ bool RingPrototypeClass::Load (ChunkLoadClass &cload)
 		switch (cload.Cur_Chunk_ID ()) {
 			
 			case CHUNKID_RING_DEF:
-				if (definition_seen || cload.Cur_Chunk_Length() != sizeof(Definition)) {
-					loaded = false;
-				} else {
-					definition_seen = true;
-					loaded = cload.Read(&Definition, sizeof(Definition)) ==
-						sizeof(Definition) && loaded;
-				}
+				cload.Read (&Definition, sizeof (Definition));
 				break;
 
 			case CHUNKID_COLOR_CHANNEL:
-				if (color_seen) loaded = false;
-				else {
-					color_seen = true;
-					ColorChannel.Load(cload);
-					loaded = !cload.Has_Error() && loaded;
-				}
+				ColorChannel.Load (cload);
 				break;
 
 			case CHUNKID_ALPHA_CHANNEL:
-				if (alpha_seen) loaded = false;
-				else {
-					alpha_seen = true;
-					AlphaChannel.Load(cload);
-					loaded = !cload.Has_Error() && loaded;
-				}
+				AlphaChannel.Load (cload);
 				break;
 
 			case CHUNKID_INNER_SCALE_CHANNEL:
-				if (inner_scale_seen) loaded = false;
-				else {
-					inner_scale_seen = true;
-					InnerScaleChannel.Load(cload);
-					loaded = !cload.Has_Error() && loaded;
-				}
+				InnerScaleChannel.Load (cload);
 				break;
 
 			case CHUNKID_OUTER_SCALE_CHANNEL:
-				if (outer_scale_seen) loaded = false;
-				else {
-					outer_scale_seen = true;
-					OuterScaleChannel.Load(cload);
-					loaded = !cload.Has_Error() && loaded;
-				}
+				OuterScaleChannel.Load (cload);
 				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return loaded && !cload.Has_Error() && definition_seen &&
-		Definition.Name[0] != '\0' &&
-		::memchr(Definition.Name, '\0', sizeof(Definition.Name)) != NULL;
+	return true;
 }
 
 bool RingPrototypeClass::Save (ChunkSaveClass &csave)

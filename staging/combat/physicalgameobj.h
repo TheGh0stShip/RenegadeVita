@@ -84,11 +84,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual bool								Is_Valid_Config (StringClass &message);
 
-#if defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-	int Get_Killed_Explosion_ID(void) const { return KilledExplosion; }
-#endif
-
-
 	int		Get_Phys_Def_ID( void ) const	{ return PhysDefID; }
 	int		Get_Orator_Type( void ) const	{ return OratorType; }
 

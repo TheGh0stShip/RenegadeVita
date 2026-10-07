@@ -31,7 +31,7 @@
 #pragma warning ( pop )
 
 
-ThreadClass::ThreadClass(const char *thread_name, ExceptionHandlerType exception_handler) : handle(0), running(false), ThreadID(0), thread_priority(0)
+ThreadClass::ThreadClass(const char *thread_name, ExceptionHandlerType exception_handler) : handle(0), running(false), thread_priority(0)
 {
 	if (thread_name) {
 		assert(strlen(thread_name) < sizeof(ThreadName) - 1);
@@ -51,9 +51,7 @@ ThreadClass::~ThreadClass()
 void __cdecl ThreadClass::Internal_Thread_Function(void* params)
 {
 	ThreadClass* tc=reinterpret_cast<ThreadClass*>(params);
-#ifndef _UNIX
 	tc->running=true;
-#endif
 	tc->ThreadID = GetCurrentThreadId();
 
 #ifdef _WIN32
@@ -77,32 +75,27 @@ void __cdecl ThreadClass::Internal_Thread_Function(void* params)
 #ifdef _UNIX
 	/* Publish loader-thread writes before completion is observable.  Volatile
 	** alone is not synchronization on ARM or an optimizing host compiler. */
-	__atomic_store_n(&tc->running, false, __ATOMIC_RELEASE);
-	tc->ThreadID = 0;
-	/* Last access through tc: acquire completion permits owner teardown. */
 	__atomic_store_n(&tc->handle, 0UL, __ATOMIC_RELEASE);
+	__atomic_store_n(&tc->running, false, __ATOMIC_RELEASE);
 #else
 	tc->handle=0;
 	tc->running=false;
-	tc->ThreadID = 0;
 #endif
+	tc->ThreadID = 0;
 }
 
 void ThreadClass::Execute()
 {
-	WWASSERT(!Is_Running());	// Only one thread at a time!
+	WWASSERT(!handle);	// Only one thread at a time!
 	#ifdef _UNIX
 		pthread_t native_thread;
 		__atomic_store_n(&handle, 1UL, __ATOMIC_RELEASE);
-		/* Parent owns startup; a late worker must not undo Stop(). */
-		__atomic_store_n(&running, true, __ATOMIC_RELEASE);
 		if (pthread_create(&native_thread, NULL, [](void *params) -> void * {
 			ThreadClass::Internal_Thread_Function(params);
 			return NULL;
 		}, this) == 0) {
 			pthread_detach(native_thread);
 		} else {
-			__atomic_store_n(&running, false, __ATOMIC_RELEASE);
 			__atomic_store_n(&handle, 0UL, __ATOMIC_RELEASE);
 		}
 	#else
@@ -173,9 +166,5 @@ unsigned ThreadClass::_Get_Current_Thread_ID()
 
 bool ThreadClass::Is_Running()
 {
-#ifdef _UNIX
-	return __atomic_load_n(&handle, __ATOMIC_ACQUIRE) != 0UL;
-#else
 	return !!handle;
-#endif
 }

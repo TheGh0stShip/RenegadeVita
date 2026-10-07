@@ -164,7 +164,7 @@ AssetDependencyManager::Save_Dependencies (ChunkSaveClass &csave, ASSET_LIST &as
 //	Load_Level_Assets
 //
 ///////////////////////////////////////////////////////////////////////
-AssetDependencyManager::LoadResult
+void
 AssetDependencyManager::Load_Level_Assets (const char *level_name)
 {
 	//
@@ -180,7 +180,8 @@ AssetDependencyManager::Load_Level_Assets (const char *level_name)
 	//	Build a filename from the level name, and load the assets from it.
 	//
 	StringClass filename(base_name + StringClass (DEP_EXTENSION),true);
-	return Load_Assets (filename);
+	Load_Assets (filename);
+	return ;
 }
 
 
@@ -189,13 +190,14 @@ AssetDependencyManager::Load_Level_Assets (const char *level_name)
 //	Load_Always_Assets
 //
 ///////////////////////////////////////////////////////////////////////
-AssetDependencyManager::LoadResult
+void
 AssetDependencyManager::Load_Always_Assets (void)
 {
 	//
 	//	Load the assets from the always file
 	//
-	return Load_Assets (ALWAYS_FILENAME);
+	Load_Assets (ALWAYS_FILENAME);
+	return ;
 }
 
 
@@ -204,43 +206,39 @@ AssetDependencyManager::Load_Always_Assets (void)
 //	Load_Assets
 //
 ///////////////////////////////////////////////////////////////////////
-AssetDependencyManager::LoadResult
+void
 AssetDependencyManager::Load_Assets (const char *filename)
 {
 	//
 	//	Get a pointer to the file object
 	//
 	FileClass * file	= _TheFileFactory->Get_File (filename);
-	if (file == NULL) {
-		return LOAD_FAILED;
-	}
+	if (file != NULL) {
 
-	LoadResult result = LOAD_NOT_FOUND;
-	if ( file->Is_Available() ) {
+		if ( file->Is_Available() ) {
 			//
 			//	Open the file
 			//
-			if (!file->Open(FileClass::READ)) {
-				result = LOAD_FAILED;
-			} else {
+			file->Open (FileClass::READ);
 
 			//
 			//	Load the asset dependencies from the file
 			//
 			ChunkLoadClass cload (file);
-			result = Load_Assets(cload) ? LOAD_SUCCEEDED : LOAD_FAILED;
+			Load_Assets (cload);
 
 			//
 			//	Close the file
 			//
 			file->Close ();
-			}
-	} else {
-		WWDEBUG_SAY(( "Failed to find %s\n", filename ));
+		} else {
+			WWDEBUG_SAY(( "Failed to find %s\n", filename ));
+		}
+
+		_TheFileFactory->Return_File (file);
 	}
 
-	_TheFileFactory->Return_File (file);
-	return result;
+	return ;
 }
 
 
@@ -249,19 +247,13 @@ AssetDependencyManager::Load_Assets (const char *filename)
 //	Load_Assets
 //
 ///////////////////////////////////////////////////////////////////////
-bool
+void
 AssetDependencyManager::Load_Assets (ChunkLoadClass &cload)
 {
 	WWLOG_PREPARE_TIME_AND_MEMORY("AssetDependencyManager::Load_Assets (ChunkLoadClass &cload)");
-	bool loaded = true;
-	if (!cload.Open_Chunk()) {
-		return false;
-	}
-	if (cload.Cur_Chunk_ID() != CHUNKID_FILE_LIST) {
-		WWDEBUG_SAY(("Unexpected dependency root chunk %d.\n", cload.Cur_Chunk_ID()));
-		cload.Close_Chunk();
-		return false;
-	}
+	cload.Open_Chunk ();
+	WWASSERT (cload.Cur_Chunk_ID () == CHUNKID_FILE_LIST);
+	if (cload.Cur_Chunk_ID () == CHUNKID_FILE_LIST) {
 
 		//
 		//	Read the filename of each asset from the chunk and
@@ -277,12 +269,7 @@ AssetDependencyManager::Load_Assets (ChunkLoadClass &cload)
 					//
 					StringClass filename(0,true);
 					int size = cload.Cur_Micro_Chunk_Length ();
-					if (size <= 0 ||
-						cload.Read(filename.Get_Buffer(size), size) != size ||
-						filename.Is_Empty()) {
-						loaded = false;
-						break;
-					}
+					cload.Read (filename.Get_Buffer (size), size);
 
 					//
 					// Determine what the render object name should be from
@@ -296,8 +283,7 @@ AssetDependencyManager::Load_Assets (ChunkLoadClass &cload)
 					//	Load the assets from this file into the asset manager
 					//
 					if (WW3DAssetManager::Get_Instance ()->Render_Obj_Exists (render_obj_name) == false) {
-						loaded = WW3DAssetManager::Get_Instance ()->Load_3D_Assets (filename) &&
-							loaded;
+						WW3DAssetManager::Get_Instance ()->Load_3D_Assets (filename);
 					}
 //	WWLOG_INTERMEDIATE(filename);
 				}
@@ -308,14 +294,12 @@ AssetDependencyManager::Load_Assets (ChunkLoadClass &cload)
 					break;
 			}
 
-			loaded = cload.Close_Micro_Chunk() && loaded;
+			cload.Close_Micro_Chunk ();
 		}
-	loaded = cload.Close_Chunk() && loaded;
-	if (cload.Open_Chunk()) {
-		loaded = false;
-		loaded = cload.Close_Chunk() && loaded;
 	}
-	return loaded && !cload.Has_Error();
+
+	cload.Close_Chunk ();
+	return ;
 }
 
 

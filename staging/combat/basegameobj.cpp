@@ -81,21 +81,12 @@ NetworkGameObjectFactoryClass::Prep_Packet (NetworkObjectClass *object, cPacket 
 NetworkObjectClass *
 NetworkGameObjectFactoryClass::Create (cPacket &packet) const
 {
-	if (packet.Get_Bit_Read_Position() > packet.Get_Bit_Write_Position() ||
-		packet.Get_Bit_Write_Position() - packet.Get_Bit_Read_Position() < 32U) {
-		fprintf(stderr, "network-object: truncated preset identifier\n");
-		return NULL;
-	}
 	int definition_id = packet.Get (definition_id);
 
 	//
 	//	Lookup the definition for this object
 	//
 	DefinitionClass *definition = DefinitionMgrClass::Find_Definition (definition_id);
-	if (definition == NULL) {
-		fprintf(stderr, "network-object: unavailable preset id=%d\n", definition_id);
-		return NULL;
-	}
 	WWASSERT (definition != NULL);
 
 	//
@@ -128,17 +119,16 @@ bool	BaseGameObjDef::Save( ChunkSaveClass & csave )
 	csave.Begin_Chunk( CHUNKID_DEF_PARENT );
 		DefinitionClass::Save( csave );
 	csave.End_Chunk();
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	BaseGameObjDef::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	cload.Open_Chunk();
 	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_DEF_PARENT );
-	if (!DefinitionClass::Load( cload )) loaded = false;
+	DefinitionClass::Load( cload );
 	cload.Close_Chunk();
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 /*
@@ -204,7 +194,7 @@ bool	BaseGameObj::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_ENABLE_CINEMATIC_FREEZE, EnableCinematicFreeze );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	BaseGameObj::Load( ChunkLoadClass &cload )

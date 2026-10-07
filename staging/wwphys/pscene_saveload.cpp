@@ -357,38 +357,22 @@ void PhysicsSceneClass::Save_Level_Dynamic_Data(ChunkSaveClass & csave)
 #endif
 }
 
-bool PhysicsSceneClass::Load_Level_Dynamic_Data(ChunkLoadClass & cload)
+void PhysicsSceneClass::Load_Level_Dynamic_Data(ChunkLoadClass & cload)
 {
 	WWMEMLOG(MEM_PHYSICSDATA);
-	bool loaded_variables = false;
-	bool loaded_dynamic_objects = false;
-	bool loaded_static_states = false;
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case PSCENE_DD_CHUNK_VARIABLES:
-				if (loaded_variables) loaded = false;
-				else {
-					loaded_variables = true;
-					Load_LDD_Variables(cload);
-				}
+				Load_LDD_Variables(cload);
 				break;
 
 			case PSCENE_DD_CHUNK_DYNAMIC_OBJECTS:
-				if (loaded_dynamic_objects) loaded = false;
-				else {
-					loaded_dynamic_objects = true;
-					loaded = Load_Dynamic_Objects(cload) && loaded;
-				}
+				Load_Dynamic_Objects(cload);
 				break;
 
 			case PSCENE_DD_CHUNK_STATIC_OBJECT_STATES:
-				if (loaded_static_states) loaded = false;
-				else {
-					loaded_static_states = true;
-					loaded = Load_Static_Object_States(cload) && loaded;
-				}
+				Load_Static_Object_States(cload);
 				break;
 
 #if 0 // Do I need to do this?
@@ -403,7 +387,6 @@ bool PhysicsSceneClass::Load_Level_Dynamic_Data(ChunkLoadClass & cload)
 		}
 		cload.Close_Chunk();
 	}
-	return loaded && loaded_variables && !cload.Has_Error();
 }
 
 
@@ -662,39 +645,31 @@ void PhysicsSceneClass::Save_Dynamic_Objects(ChunkSaveClass & csave)
 }
 
 
-bool PhysicsSceneClass::Load_Dynamic_Objects(ChunkLoadClass & cload)
+void PhysicsSceneClass::Load_Dynamic_Objects(ChunkLoadClass & cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		if (cload.Cur_Chunk_ID() == PSCENE_DD_CHUNK_DYNAMIC_OBJECT) {
-			bool object_loaded = true;
 
 			/*
 			** Load the object
 			*/ 
-			const bool factory_chunk_open = cload.Open_Chunk();
+			cload.Open_Chunk();
 			PhysClass * obj = NULL;
-			if (factory_chunk_open) {
-				PersistFactoryClass * fact = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
-				if (fact != NULL) obj = (PhysClass *)fact->Load(cload);
-				else object_loaded = false;
-				cload.Close_Chunk();
-			} else {
-				object_loaded = false;
-			}
-			if (cload.Open_Chunk()) {
-				object_loaded = false;
-				cload.Close_Chunk();
+			PersistFactoryClass * fact = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
+			WWASSERT(fact != NULL);
+			if (fact) {
+				obj = (PhysClass *)fact->Load(cload);
 			}
 			cload.Close_Chunk();
-			object_loaded = obj != NULL && !cload.Has_Error() && object_loaded;
-			loaded = object_loaded && loaded;
+			cload.Close_Chunk();
+			
+			WWASSERT(obj);
 			
 			/* 
 			** Add the object to the dynamic culling system
 			*/
-			if (object_loaded) DynamicCullingSystem->Add_Object(obj);
+			DynamicCullingSystem->Add_Object(obj);
 
 			/*
 			** Finish installing the object into the physics scene
@@ -702,17 +677,14 @@ bool PhysicsSceneClass::Load_Dynamic_Objects(ChunkLoadClass & cload)
 			** - Add it to the appropriate list
 			** - Notify the render object that it was added to the scene
 			*/
-			if (obj != NULL) {
-				if (object_loaded) Internal_Add_Dynamic_Object(obj);
-				obj->Release_Ref();
-			}
+			Internal_Add_Dynamic_Object(obj);
+			obj->Release_Ref();
 
 		} else {
 			WWDEBUG_SAY(("Unhandled Chunk: 0x%x in file &s, line %d\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 			cload.Close_Chunk();
 		}
 	}
-	return loaded && !cload.Has_Error();
 }
 
 void PhysicsSceneClass::Save_Static_Object_States(ChunkSaveClass & csave)
@@ -741,51 +713,35 @@ void PhysicsSceneClass::Save_Static_Object_States(ChunkSaveClass & csave)
 	}
 }
 
-bool PhysicsSceneClass::Load_Static_Object_States(ChunkLoadClass & cload)
+void PhysicsSceneClass::Load_Static_Object_States(ChunkLoadClass & cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
-		uint32 id = 0;
-		if (cload.Cur_Chunk_ID() != PSCENE_DD_CHUNK_STATIC_OBJECT_ID ||
-			cload.Cur_Chunk_Length() != sizeof(id) ||
-			cload.Read(&id,sizeof(id)) != sizeof(id)) loaded = false;
+		WWASSERT(cload.Cur_Chunk_ID()==PSCENE_DD_CHUNK_STATIC_OBJECT_ID);
+		uint32 id;
+		cload.Read(&id,sizeof(uint32));
 		cload.Close_Chunk();
 
 		StaticPhysClass * sphys = Get_Static_Object_By_ID(id);
 
-		if (!cload.Open_Chunk()) {
-			if (sphys != NULL) sphys->Release_Ref();
-			return false;
-		}
+		cload.Open_Chunk();
+		WWASSERT(cload.Cur_Chunk_ID()==PSCENE_DD_CHUNK_STATIC_OLD_PTR);
 		uint32 old_ptr_token = 0;
-		if (cload.Cur_Chunk_ID() != PSCENE_DD_CHUNK_STATIC_OLD_PTR ||
-			cload.Cur_Chunk_Length() != sizeof(old_ptr_token) ||
-			cload.Read(&old_ptr_token,sizeof(old_ptr_token)) != sizeof(old_ptr_token)) loaded = false;
+		cload.Read(&old_ptr_token,sizeof(old_ptr_token));
 		SaveLoadSystemClass::Register_Pointer(
 			reinterpret_cast<void *>(static_cast<uintptr_t>(old_ptr_token)), sphys);
 		cload.Close_Chunk();
 
-		if (!cload.Open_Chunk()) {
-			if (sphys != NULL) sphys->Release_Ref();
-			return false;
-		}
-		const bool state_chunk_valid =
-			cload.Cur_Chunk_ID() == PSCENE_DD_CHUNK_STATIC_OBJECT_STATE;
-		if (!state_chunk_valid) loaded = false;
-		if (sphys != NULL && state_chunk_valid) {
+		cload.Open_Chunk();
+		WWASSERT(cload.Cur_Chunk_ID()==PSCENE_DD_CHUNK_STATIC_OBJECT_STATE);
+		if (sphys != NULL) {
 			sphys->Load_State(cload);
 			sphys->Release_Ref();
 		} else {
-			if (sphys != NULL) sphys->Release_Ref();
-			else {
-				loaded = false;
-				WWDEBUG_SAY(("Unable to find static object! id = %d\r\n",id));
-			}
+			WWDEBUG_SAY(("Unable to find static object! id = %d\r\n",id));
 		}
 		
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
 }
 
 void PhysicsSceneClass::Post_Load_Level_Dynamic_Data(void)

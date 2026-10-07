@@ -35,7 +35,6 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 #include "soldier.h"
-#include "renegade_client_effects.h"
 #include "debug.h"
 #include "pscene.h"
 #include "combat.h"
@@ -229,21 +228,18 @@ bool	SoldierGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	SoldierGameObjDef::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	int dialog_index = 0;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!SmartGameObjDef::Load( cload )) loaded = false;
+				SmartGameObjDef::Load( cload );
 				break;
 
 			case CHUNKID_DEF_DIALOG_ENTRY:
 				if (dialog_index < DIALOG_MAX) {
-					if (!DialogList[dialog_index++].Load(cload)) loaded = false;
-				} else {
-					loaded = false;
+					DialogList[dialog_index++].Load (cload);
 				}
 				break;
 								
@@ -282,7 +278,7 @@ bool	SoldierGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 const PersistFactoryClass & SoldierGameObjDef::Get_Factory (void) const 
@@ -630,7 +626,7 @@ enum	{
 bool	SoldierGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	if (!SmartGameObj::Save(csave)) csave.Report_Error();
+	SmartGameObj::Save( csave );
 	csave.End_Chunk();
 
 	//
@@ -675,17 +671,17 @@ bool	SoldierGameObj::Save( ChunkSaveClass & csave )
 
 	if ( WeaponAnimControl ) {
 		csave.Begin_Chunk( CHUNKID_WEAPON_ANIM );
-		if (!WeaponAnimControl->Save(csave)) csave.Report_Error();
+		WeaponAnimControl->Save( csave );
 		csave.End_Chunk();
 	}
 
 	csave.Begin_Chunk( CHUNKID_HUMAN_STATE );
-	if (!HumanState.Save(csave)) csave.Report_Error();
+	HumanState.Save( csave );
 	csave.End_Chunk();
 
 	if ( TransitionCompletionData ) {
 		csave.Begin_Chunk( CHUNKID_TRANSITION_COMPLETION_DATA );
-		if (!TransitionCompletionData->Save(csave)) csave.Report_Error();
+		TransitionCompletionData->Save( csave );
 		csave.End_Chunk();
 	}
 
@@ -699,11 +695,11 @@ bool	SoldierGameObj::Save( ChunkSaveClass & csave )
 
 	if ( SpecialDamageDamager.Get_Ptr() != NULL ) {
 		csave.Begin_Chunk( CHUNKID_SPECIAL_DAMAGE_DAMAGER );
-		if (!SpecialDamageDamager.Save(csave)) csave.Report_Error();
+		SpecialDamageDamager.Save( csave );
 		csave.End_Chunk();
 	}
 
-	return !csave.Has_Error();
+	return true;
 }
 
 //------------------------------------------------------------------------------------
@@ -711,7 +707,6 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 {
 	char anim_string[80];
 	int dialog_index = 0;
-	bool loaded = true;
 
 	WWASSERT( Vehicle == NULL );
 
@@ -719,14 +714,12 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				if (!SmartGameObj::Load(cload)) loaded = false;
+				SmartGameObj::Load( cload );
 				break;
 
 			case CHUNKID_DIALOG_ENTRY:
 				if (dialog_index < DIALOG_MAX) {
-					if (!DialogList[dialog_index++].Load(cload)) loaded = false;
-				} else {
-					loaded = false;
+					DialogList[dialog_index++].Load (cload);
 				}
 				break;
 								
@@ -780,31 +773,22 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 
 			case CHUNKID_WEAPON_ANIM:
 				Set_Weapon_Animation( NULL );	// Get the anim control built
-				if (WeaponAnimControl == NULL || !WeaponAnimControl->Load(cload)) loaded = false;
+				WeaponAnimControl->Load( cload );
 				break;
 
 			case CHUNKID_HUMAN_STATE:
-				if (!HumanState.Load(cload)) loaded = false;
+				HumanState.Load( cload );
 				break;
 
 			case CHUNKID_RENDER_OBJS:
-				if (!cload.Open_Chunk()) {
-					loaded = false;
-					break;
-				}
+				cload.Open_Chunk();
 				PersistFactoryClass * factory;
 				factory = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
 				WWASSERT(factory != NULL);
 				if (factory != NULL) {
 					RenderObjClass * robj = (RenderObjClass *)factory->Load(cload);
-					if (robj != NULL) {
-						Add_RenderObj(robj);
-						robj->Release_Ref();
-					} else {
-						loaded = false;
-					}
-				} else {
-					loaded = false;
+					Add_RenderObj( robj );
+					robj->Release_Ref();
 				}
 				cload.Close_Chunk();
 				break;
@@ -812,11 +796,11 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 			case CHUNKID_TRANSITION_COMPLETION_DATA:
 				WWASSERT( TransitionCompletionData == NULL );
 				TransitionCompletionData = new TransitionCompletionDataStruct();
-				if (!TransitionCompletionData->Load(cload)) loaded = false;
+				TransitionCompletionData->Load( cload );
 				break;
 
 			case CHUNKID_SPECIAL_DAMAGE_DAMAGER:
-				if (!SpecialDamageDamager.Load(cload)) loaded = false;
+				SpecialDamageDamager.Load( cload );
 				break;
 
 			default:
@@ -834,7 +818,7 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 //------------------------------------------------------------------------------------
@@ -974,30 +958,12 @@ void	SoldierGameObj::Import_Rare( BitStreamClass &packet )
  	Get_Weapon_Bag()->Force_Changed();
 
 	SmartGameObj::Import_Rare( packet );
-	if (packet.Has_Read_Error()) return;
 
 	//
 	//	Read the definition ID from the packet
 	//
 	uint32 definition_id	= 0;
 	packet.Get( definition_id );
-	if (packet.Has_Read_Error()) return;
-	bool modern = false;
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	modern = Renegade_Client_Uses_TT_Replication();
-#endif
-	RenegadeSoldierRareState incoming;
-	if (modern) {
-		if (!Renegade_Read_Soldier_Rare(packet, incoming)) return;
-		// Non-unit model scaling needs TT's renderer semantics, not a destructive
-		// call to the original shared hierarchy's relative Scale operation.
-		if (incoming.NetworkScale != 1.0f || incoming.WeaponHoldStyle < -1 ||
-			incoming.WeaponHoldStyle > 14) {
-			fprintf(stderr, "tt-soldier: unsupported model scale or hold style id=%u\n", definition_id);
-			packet.Mark_Read_Error();
-			return;
-		}
-	}
 
 	//
 	//	Did our definition change?
@@ -1015,19 +981,7 @@ void	SoldierGameObj::Import_Rare( BitStreamClass &packet )
 			//	Re-initialize ourselves
 			//
 			Re_Init (*soldier_def);
-		} else if (modern) {
-			packet.Mark_Read_Error();
-			return;
-		}
-	}
-	if (modern) {
-		TTState = incoming;
-		TTStateActive = true;
-		Set_Max_Speed(TTState.MaxSpeed);
-		HumanState.Set_Network_Animation_Options(TTState.WeaponHoldStyle,
-			TTState.HumanAnimOverride, TTState.MovementLoitersAllowed);
-		Adjust_Skeleton(TTState.SkeletonHeight, TTState.SkeletonWidth);
-		if (!HumanState.Is_Locked()) HumanState.Update_Animation();
+		}		
 	}
 
 	return ;
@@ -1068,14 +1022,12 @@ void	SoldierGameObj::Import_Occasional( BitStreamClass &packet )
    WWASSERT(CombatManager::I_Am_Only_Client());
 
 	SmartGameObj::Import_Occasional( packet );
-	if (packet.Has_Read_Error()) return;
 
 	//
 	// Held weapon
 	//
 #if 0 // (gth) moving back to "Frequent" to fix the game, re-optimize later?
 	bool has_weapon = packet.Get(has_weapon);
-   if (packet.Has_Read_Error()) return;
    if (has_weapon) {
       WWASSERT(!packet.Is_Flushed());
 	
@@ -1104,24 +1056,7 @@ void	SoldierGameObj::Import_Occasional( BitStreamClass &packet )
 	// Weapon list
 	//
 	WWASSERT(WeaponBag != NULL);
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	if (Renegade_Client_Uses_TT_Replication()) WeaponBag->Import_TT_Weapon_Selection(packet, false);
-	else
-#endif
-		WeaponBag->Import_Weapon_List(packet);
-	if (packet.Has_Read_Error()) return;
-
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	if (Renegade_Client_Uses_TT_Replication()) {
-		bool sniping = false, fly = false;
-		packet.Get(sniping);
-		packet.Get(fly);
-		if (packet.Has_Read_Error()) return;
-		if (!Is_Controlled_By_Me() && sniping != Is_Sniping())
-			HumanState.Toggle_State_Flag(HumanStateClass::SNIPING_FLAG);
-		if (fly != InFlyMode) Toggle_Fly_Mode();
-	}
-#endif
+	WeaponBag->Import_Weapon_List(packet);
 
 
 	/*
@@ -1221,28 +1156,14 @@ void SoldierGameObj::Export_Frequent(BitStreamClass & packet)
 void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 {
    WWASSERT(CombatManager::I_Am_Only_Client());
-	bool modern = false;
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	modern = Renegade_Client_Uses_TT_Replication();
-#endif
 
 	/**/
 	//TSS101601
 	bool in_vehicle = packet.Get(in_vehicle);
-	if (packet.Has_Read_Error()) return;
 	if (in_vehicle)
 	{
-		if (modern) Peek_Human_Phys()->Reset_Network_History();
 		// Just get control info
 		SmartGameObj::Import_Frequent(packet);
-		if (modern && !packet.Has_Read_Error() && !packet.Is_Flushed()) {
-			Vector3 position(0, 0, 0);
-			for (int axis = 0; axis < 3; ++axis) {
-				packet.Get(position[axis]);
-				if (!WWMath::Is_Valid_Float(position[axis])) position[axis] = 0;
-			}
-			if (!packet.Has_Read_Error()) Interpret_Sc_Position_Data(position);
-		}
 		return;
 	}
 	/**/
@@ -1256,14 +1177,12 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
       WWASSERT(!packet.Is_Flushed());
 	
 		int weapon_id = packet.Get(weapon_id);
-		int rounds = 0;
-		if (!modern) packet.Get(rounds);
-		if (packet.Has_Read_Error()) return;
+		int rounds = packet.Get(rounds);
 		if ((Get_Weapon() == NULL) || (weapon_id != Get_Weapon()->Get_ID())) {
 			WeaponBag->Select_Weapon_ID(weapon_id);
 		}
 
-		if (!modern && Get_Weapon() != NULL) {
+		if (Get_Weapon() != NULL) {
 			// If this weapon is currently being fired, ignore the server rounds count packet
 			// This should help the jittery rounds count
 			if ( !Get_Weapon()->Is_Triggered() ) {
@@ -1280,14 +1199,8 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	//
 	// Position
 	//
-	Vector3 sc_position(0, 0, 0);
+	Vector3 sc_position;
 
-	if (modern) {
-		for (int axis = 0; axis < 3; ++axis) {
-			packet.Get(sc_position[axis]);
-			if (!WWMath::Is_Valid_Float(sc_position[axis])) sc_position[axis] = 0;
-		}
-	} else {
 
 #ifdef MULTIPLAYERDEMO
 	//
@@ -1307,8 +1220,6 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	// we assume the max error is half of the resolution
 	float max_error = cEncoderList::Get_Encoder_Type_Entry( BITPACK_WORLD_POSITION_Z ).Get_Resolution() / 2.0f;
 	sc_position.Z += max_error;
-	}
-	if (packet.Has_Read_Error()) return;
 
 	Interpret_Sc_Position_Data(sc_position);
 
@@ -1319,33 +1230,15 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	HumanStateClass::HumanStateType state = 
 		(HumanStateClass::HumanStateType) h_state;
 	int sub_state = packet.Get(sub_state, BITPACK_HUMAN_SUB_STATE);
-	if (packet.Has_Read_Error()) return;
-	if (h_state < 0 || h_state > HumanStateClass::HIGHEST_HUMAN_STATE ||
-		sub_state < 0 || sub_state > HumanStateClass::HIGHEST_HUMAN_SUB_STATE) {
-		packet.Mark_Read_Error();
-		return;
-	}
-	if (modern && state == HumanStateClass::LADDER) {
-		float heading = 0;
-		packet.Get(heading);
-		if (packet.Has_Read_Error()) return;
-		if (!WWMath::Is_Valid_Float(heading)) heading = 0;
-		Peek_Human_Phys()->Set_Heading(heading);
-	}
 
 	//
 	// Velocity (if airborne)
 	//
-	Vector3 velocity(0, 0, 0);
+	Vector3 velocity;
 	if (state == HumanStateClass::AIRBORNE) {
 		packet.Get(velocity.X);
 		packet.Get(velocity.Y);
 		packet.Get(velocity.Z);
-		if (packet.Has_Read_Error()) return;
-		if (modern) {
-			for (int axis = 0; axis < 3; ++axis)
-				if (!WWMath::Is_Valid_Float(velocity[axis])) velocity[axis] = 0;
-		}
 	}
 
 	if (HumanState.Is_Locked()) {
@@ -1367,7 +1260,6 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 		  ( state == HumanStateClass::IN_VEHICLE ) ) {
       packet.Get_Terminated_String(trans_name, sizeof(trans_name));
 	}
-	if (packet.Has_Read_Error()) return;
 
 	Interpret_Sc_State_Data(state, sub_state, trans_name, velocity, sc_position);
 
@@ -1377,38 +1269,14 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	if ( is_special_damage ) {
 		packet.Get(mode);
 	}
-	if (packet.Has_Read_Error()) return;
-	if (mode < ArmorWarheadManager::SPECIAL_DAMAGE_TYPE_NONE ||
-		mode >= ArmorWarheadManager::NUM_SPECIAL_DAMAGE_TYPES) {
-		packet.Mark_Read_Error();
-		return;
-	}
-	// TT does not cancel an existing timed effect when the optional field is absent.
-	if ( (!modern || is_special_damage) && mode != SpecialDamageMode ) {
+	if ( mode != SpecialDamageMode ) {
 		Set_Special_Damage_Mode( (ArmorWarheadManager::SpecialDamageType)mode );
-	}
-	if (modern) {
-		bool do_tilt = true;
-		packet.Get(do_tilt);
-		if (packet.Has_Read_Error()) return;
-		NetworkDoTilt = do_tilt;
 	}
 
    if (Get_State() == HumanStateClass::DIVE)	{
-		if (modern) return;
       packet.Flush();
 	} else {
 		SmartGameObj::Import_Frequent(packet);
-	}
-	if (packet.Has_Read_Error()) return;
-	if (modern && !packet.Is_Flushed()) {
-		Vector3 old_position(0, 0, 0);
-		for (int axis = 0; axis < 3; ++axis) {
-			packet.Get(old_position[axis]);
-			if (!WWMath::Is_Valid_Float(old_position[axis])) old_position[axis] = 0;
-		}
-		if (packet.Has_Read_Error()) return;
-		Interpret_Sc_Position_Data(old_position);
 	}
 
    WWASSERT(packet.Is_Flushed());
@@ -1443,13 +1311,6 @@ void SoldierGameObj::Export_State_Cs(BitStreamClass & packet)
 {
 	bool	is_sniping = Is_Sniping();
 	packet.Add( is_sniping );
-
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	if (Renegade_Client_Uses_TT_Replication()) {
-		SmartGameObj::Export_State_Cs(packet);
-		return;
-	}
-#endif
 
 	bool checking = Control.Get_Boolean( ControlClass::BOOLEAN_ACTION );
 	packet.Add( checking );
@@ -1588,28 +1449,14 @@ bool	_UseLatencyInterpret = true;
 void SoldierGameObj::Interpret_Sc_Position_Data( const Vector3 & sc_position)
 {
 	Vector3 position = sc_position;
-	bool modern = false;
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	modern = Renegade_Client_Uses_TT_Replication();
-#endif
-	if (modern && Get_State() != HumanStateClass::TRANSITION && Is_In_Elevator()) {
-		Vector3 current;
-		Get_Position(&current);
-		position.Z = current.Z;
-	}
 
 	// Only use the latency code for the star
 	if ( _UseLatencyInterpret && (this == COMBAT_STAR) ) {
-		Peek_Human_Phys()->Network_Latency_State_Update(modern ? position : sc_position,Vector3(0,0,0));
+		Peek_Human_Phys()->Network_Latency_State_Update(sc_position,Vector3(0,0,0));
 		return;
 	}
 
    WWASSERT(CombatManager::I_Am_Only_Client());
-
-	if (modern) {
-		Peek_Human_Phys()->Network_Interpolated_State_Update(position, Get_State() == HumanStateClass::AIRBORNE);
-		return;
-	}
 
 	if (Get_State() == HumanStateClass::TRANSITION) {
 		//
@@ -1763,10 +1610,6 @@ void	SoldierGameObj::Generate_Control( void )
 //------------------------------------------------------------------------------------
 void SoldierGameObj::Apply_Control( void )
 {
-	if (TTStateActive) {
-		if (TTState.Freeze) Clear_Control();
-		if (TTState.BlockActionKey) Control.Set_Boolean(ControlClass::BOOLEAN_ACTION, false);
-	}
 	// if gameplay not permitted, skip
 	if ( !CombatManager::Is_Gameplay_Permitted() ) {
 		Clear_Control();
@@ -2396,7 +2239,7 @@ SyncLegs = true;
 	}
 
 	// Footsteps
-	if ((!TTStateActive || TTState.Footsteps) && !Is_Sniping() && !InFlyMode && CombatManager::Is_Gameplay_Permitted() && do_steps && Is_Control_Enabled() ) {
+	if (!Is_Sniping() && !InFlyMode && CombatManager::Is_Gameplay_Permitted() && do_steps && Is_Control_Enabled() ) {
 
 		bool leg_mode = HumanState.Get_Leg_Mode();
 
@@ -2443,7 +2286,6 @@ static char * _profile_name = "Soldier Think";
 //------------------------------------------------------------------------------------
 void	SoldierGameObj::Think( void )
 {
-	if (TTStateActive) Update_TT_Skeleton(TimeManager::Get_Frame_Seconds());
 	{	WWPROFILE( _profile_name );
 
 		if ( this == COMBAT_STAR ) {
@@ -2500,7 +2342,6 @@ void	SoldierGameObj::Think( void )
 		{
 			WWPROFILE("Update_Locked_Facing");
 			Update_Locked_Facing();
-			NetworkTargetUpdated = false;
 		}
 
 		/*
@@ -2849,7 +2690,7 @@ const Matrix3D & SoldierGameObj::Get_Muzzle( int index )
 		Vector3 muzzle_pos = true_muzzle.Get_Translation();
 		_muzzle.Obj_Look_At( muzzle_pos, Get_Targeting_Pos(), 0 );
 
-		if ( !Is_Human_Controlled() && (!TTStateActive || !TTState.OverrideMuzzleDirection) ) {
+		if ( !Is_Human_Controlled() ) {
 			// If the bullet is not close to going down the muzzle, force it to be
 			Vector3	to_target = _muzzle.Get_X_Vector();
 			Vector3	down_muzzle = true_muzzle.Get_X_Vector();
@@ -3309,7 +3150,6 @@ float		SoldierGameObj::Get_Weapon_Length( void )
 bool	SoldierGameObj::Internal_Set_Targeting( const Vector3 & target_pos, bool do_tilt )
 {
 	WWPROFILE( "Soldier Set Targeting" );
-	NetworkTargetUpdated = true;
 
 	if ( CombatManager::Is_Skeleton_Slider_Demo_Enabled() ) {
 		return false;
@@ -3421,9 +3261,6 @@ bool	SoldierGameObj::Internal_Set_Targeting( const Vector3 & target_pos, bool do
 bool	SoldierGameObj::Set_Targeting( const Vector3 & target_pos, bool do_tilt )
 {
 	bool retval = false;
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	if (Renegade_Client_Uses_TT_Replication()) do_tilt = NetworkDoTilt;
-#endif
 
 	//
 	//	Don't do the targetting if we are locked on an object
@@ -4139,8 +3976,7 @@ void	SoldierGameObj::Apply_Damage_Extended( const OffenseObjectClass & damager, 
 	} else {
 		// Play wound animation
 		// If state is interruptable.....
-		if ( Get_State() == HumanStateClass::UPRIGHT && anim_ok &&
-			(!TTStateActive || TTState.CanPlayDamageAnimations) ) {
+		if ( Get_State() == HumanStateClass::UPRIGHT && anim_ok ) {
 			HumanState.Set_State( HumanStateClass::WOUNDED, ouch_type );
 		}
 	}
@@ -4415,29 +4251,13 @@ bool SoldierGameObj::Can_See(SoldierGameObj * p_soldier)
 }
 
 //------------------------------------------------------------------------------------
-void SoldierGameObj::Update_TT_Skeleton(float seconds)
-{
-	const float old_height = TTState.SkeletonHeight, old_width = TTState.SkeletonWidth;
-	const auto advance = [seconds](float value, float target, float speed) {
-		const float step = WWMath::Max(0.0f, speed * seconds);
-		return value < target ? WWMath::Min(target, value + step) : WWMath::Max(target, value - step);
-	};
-	TTState.SkeletonHeight = advance(old_height, TTState.TargetHeight, TTState.HeightSpeed);
-	TTState.SkeletonWidth = advance(old_width, TTState.TargetWidth, TTState.WidthSpeed);
-	if (TTState.SkeletonHeight != old_height || TTState.SkeletonWidth != old_width)
-		Adjust_Skeleton(TTState.SkeletonHeight, TTState.SkeletonWidth);
-}
-
 void	SoldierGameObj::Adjust_Skeleton( float height, float width )
 {
 //	Debug_Say(( "Height %f, width %f\n", height, width ));
 
 	// Only adjust male skeletons
 	Animatable3DObjClass * robj = (Animatable3DObjClass *)Peek_Model();
-	if ( !robj || !robj->Get_HTree() ) return;
-	const char *skeleton = robj->Get_HTree()->Get_Name();
-	if (TTStateActive ? (strlen(skeleton) != 9 || skeleton[0] != 'S' || skeleton[1] != '_') :
-		skeleton[2] != 'A') {
+	if ( !robj || !robj->Get_HTree() || robj->Get_HTree()->Get_Name()[2] != 'A' ) {
 		return;
 	}
 
@@ -4446,11 +4266,9 @@ void	SoldierGameObj::Adjust_Skeleton( float height, float width )
 	HTreeClass	* tree_wide = NULL;
 
 	if ( tree_base == NULL ) {
-		char base[16] = "s_a_human", tall[16] = "s_a_tall", wide[16] = "s_a_wide";
-		if (TTStateActive) base[2] = tall[2] = wide[2] = skeleton[2];
-		tree_base = WW3DAssetManager::Get_Instance()->Get_HTree(base);
-		tree_tall = WW3DAssetManager::Get_Instance()->Get_HTree(tall);
-		tree_wide = WW3DAssetManager::Get_Instance()->Get_HTree(wide);
+		tree_base = WW3DAssetManager::Get_Instance()->Get_HTree( "s_a_human" );
+		tree_tall = WW3DAssetManager::Get_Instance()->Get_HTree( "s_a_tall" );
+		tree_wide = WW3DAssetManager::Get_Instance()->Get_HTree( "s_a_wide" );
 	}
 
 	if ( ( tree_base != NULL ) && ( tree_tall != NULL ) && ( tree_wide != NULL ) ) {
@@ -4466,7 +4284,7 @@ void	SoldierGameObj::Adjust_Skeleton( float height, float width )
 
 /*
 //------------------------------------------------------------------------------------
-void SoldierGameObj::Set_Ctf_Team_Flag(int team)
+void SoldierGameObj::Set_Ctf_Team_Flag(int team) 
 {
 	WWASSERT(
 		team == NO_FLAG			|| 
@@ -5425,12 +5243,6 @@ void	SoldierGameObj::Lock_Facing( PhysicalGameObj * game_obj, bool turn_body )
 
 void	SoldierGameObj::Update_Locked_Facing( void )
 {
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	if (Renegade_Client_Uses_TT_Replication() && FacingObject == NULL &&
-		!CombatManager::I_Am_Server() && Get_Control_Owner() < 0 && !NetworkTargetUpdated) {
-		Internal_Set_Targeting(Get_Targeting_Pos(), NetworkDoTilt);
-	}
-#endif
 	if ( FacingObject != NULL ) {
 
 		//
@@ -5497,3 +5309,4 @@ void	SoldierGameObj::Update_Locked_Facing( void )
 		CombatManager::Soldier_Dies(this);
 	}
 	*/
+

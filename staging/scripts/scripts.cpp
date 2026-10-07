@@ -502,7 +502,7 @@ float ScriptImpClass::Get_Float_Parameter(const char* parameterName)
 ******************************************************************************/
 Vector3 ScriptImpClass::Get_Vector3_Parameter( int index )
 {
-	float		x = 0.0f, y = 0.0f, z = 0.0f;
+	float		x,y,z;
 	::sscanf( Get_Parameter( index ), "%f %f %f", &x, &y, &z );
 	return Vector3( x,y,z );
 }

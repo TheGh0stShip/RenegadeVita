@@ -341,11 +341,11 @@ BlendableAnimChannelClass::BlendableAnimChannelClass( void ) :
 bool 	BlendableAnimChannelClass::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_NEW );
-	if (!NewChannel.Save(csave)) csave.Report_Error();
+	NewChannel.Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_OLD );
-	if (!OldChannel.Save(csave)) csave.Report_Error();
+	OldChannel.Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -353,7 +353,7 @@ bool 	BlendableAnimChannelClass::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_BLEND_TOTAL, BlendTotal );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	BlendableAnimChannelClass::Load( ChunkLoadClass &cload )
@@ -612,13 +612,13 @@ SimpleAnimControlClass::~SimpleAnimControlClass( void )
 bool 	SimpleAnimControlClass::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	if (!AnimControlClass::Save(csave)) csave.Report_Error();
+	AnimControlClass::Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_CHANNEL );
-	if (!Channel.Save(csave)) csave.Report_Error();
+	Channel.Save( csave );
 	csave.End_Chunk();
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	SimpleAnimControlClass::Load( ChunkLoadClass &cload )
@@ -683,7 +683,7 @@ HumanAnimControlClass::~HumanAnimControlClass( void )
 bool 	HumanAnimControlClass::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	if (!AnimControlClass::Save(csave)) csave.Report_Error();
+	AnimControlClass::Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -692,16 +692,16 @@ bool 	HumanAnimControlClass::Save( ChunkSaveClass & csave )
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_CHANNEL1 );
-	if (!Channel1.Save(csave)) csave.Report_Error();
+	Channel1.Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_CHANNEL2 );
-	if (!Channel2.Save(csave)) csave.Report_Error();
+	Channel2.Save( csave );
 	csave.End_Chunk();
 
 //	Don't need to save the animcombo
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	HumanAnimControlClass::Load( ChunkLoadClass &cload )

@@ -118,12 +118,11 @@ bool	ShakeableStaticPhysDefClass::Save(ChunkSaveClass & csave)
 
 bool	ShakeableStaticPhysDefClass::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case SHAKEABLESTATICPHYSDEF_CHUNK_STATICANIMPHYSDEF:
-				if (!StaticAnimPhysDefClass::Load( cload )) loaded = false;
+				StaticAnimPhysDefClass::Load( cload );
 				break;
   
 			default:
@@ -134,7 +133,7 @@ bool	ShakeableStaticPhysDefClass::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 const PersistFactoryClass & ShakeableStaticPhysDefClass::Get_Factory (void) const 
@@ -193,20 +192,19 @@ bool ShakeableStaticPhysClass::Save( ChunkSaveClass & csave )
 	** Save the parent class data
 	*/
 	csave.Begin_Chunk(SHAKEABLESTATICPHYS_CHUNK_STATICANIMPHYS);
-		if (!StaticAnimPhysClass::Save(csave)) csave.Report_Error();
+		StaticAnimPhysClass::Save( csave );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool ShakeableStaticPhysClass::Load(ChunkLoadClass & cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case SHAKEABLESTATICPHYS_CHUNK_STATICANIMPHYS:
-				if (!StaticAnimPhysClass::Load(cload)) loaded = false;
+				StaticAnimPhysClass::Load( cload );
 				break;
 		
 			default:
@@ -217,7 +215,7 @@ bool ShakeableStaticPhysClass::Load(ChunkLoadClass & cload)
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 

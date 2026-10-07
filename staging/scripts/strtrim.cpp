@@ -66,7 +66,7 @@ char* strtrim(char* buffer)
 			source++;
 
 		if (source != buffer)
-			memmove(buffer, source, strlen(source) + 1U);
+			strcpy(buffer, source);
 
 		// Clip trailing white space from the string.
 		for (int index = strlen(buffer) - 1; index >= 0; index--)

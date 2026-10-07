@@ -346,9 +346,6 @@ class OptionsMenuClass : public MenuDialogClass
 public:
 	OptionsMenuClass (void)	:
 		MenuDialogClass (IDD_MENU_OPTIONS)	{}
-
-	void	On_Init_Dialog (void);
-	void	On_Command (int ctrl_id, int message_id, DWORD param);
 };
 
 

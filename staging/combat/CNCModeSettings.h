@@ -55,7 +55,6 @@ class CNCModeSettingsDef :
 		
 		virtual bool Save(ChunkSaveClass& csave);
 		virtual bool Load(ChunkLoadClass& cload);
-		virtual void On_Load_Rejected(void);
 
 		virtual const PersistFactoryClass& Get_Factory(void) const;	
 
@@ -87,7 +86,6 @@ class CNCModeSettingsDef :
 
 	protected:
 		static CNCModeSettingsDef* _mInstance;
-		CNCModeSettingsDef* mPreviousInstance;
 
 		int AnnouncementInterval;
 

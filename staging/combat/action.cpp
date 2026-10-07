@@ -38,9 +38,6 @@
 #if defined(__vita__)
 #include "a30_vita_runtime.h"
 #endif
-#if defined(RENEGADE_VITA_PORT)
-#include "a35_campaign_flight_recorder.h"
-#endif
 #include "input.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
@@ -374,12 +371,6 @@ SimplePersistFactoryClass<PlayAnimationActionCodeClass, CHUNKID_ACTION_CODE_PLAY
 
 class	PlayAnimationActionCodeClass : public ActionCodeClass {
 public:
-	PlayAnimationActionCodeClass( void ) :
-		LastFrame( -1.0f ),
-		StalledSeconds( 0.0f )
-	{
-	}
-
 	virtual const PersistFactoryClass &	Get_Factory( void ) const	{ return _PlayAnimationActionCodeClassFactory; }
 
 	/*
@@ -425,8 +416,6 @@ public:
 
 		WWASSERT( obj->Get_Anim_Control() != NULL );
 		obj->Set_Animation( action->Get_Parameters().SafeAnimationName, action->Get_Parameters().AnimationLooping );
-		LastFrame = -1.0f;
-		StalledSeconds = 0.0f;
 	}
 
 	virtual	void	Shutdown( void )
@@ -456,43 +445,8 @@ public:
 			return ACTION_DONE;
 		}
 
-		if ( !Action->Get_Parameters().AnimationLooping ) {
-			const float frame = obj->Get_Anim_Control()->Get_Current_Frame();
-			const bool cinematic_frozen = GameObjManager::Is_Cinematic_Freeze_Active() &&
-				obj->Is_Cinematic_Freeze_Enabled();
-			if ( cinematic_frozen ) {
-				StalledSeconds = 0.0f;
-			} else if ( frame <= LastFrame + 0.001f ) {
-				const float frame_seconds = TimeManager::Get_Frame_Seconds();
-				if ( frame_seconds > 0.0f ) StalledSeconds += frame_seconds;
-			} else {
-				LastFrame = frame;
-				StalledSeconds = 0.0f;
-			}
-
-			if ( StalledSeconds >= 5.0f ) {
-#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-				static unsigned vita_reports = 0U;
-				if ( vita_reports++ < 32U ) {
-					A30_Vita_Log("A4 animation action forced complete: obj=%d def=%s anim=%s stalled_seconds=%.3f frame=%.3f\n",
-						obj->Get_ID(),
-						obj->Get_Definition().Get_Name(),
-						Action->Get_Parameters().SafeAnimationName.Peek_Buffer(),
-						StalledSeconds,
-						frame);
-				}
-#endif
-				Action->Done( ACTION_COMPLETE_NORMAL );
-				return ACTION_DONE;
-			}
-		}
-
 		return ACTION_IN_PROGRESS;
 	}
-
-private:
-	float LastFrame;
-	float StalledSeconds;
 };
 
 
@@ -3067,28 +3021,27 @@ bool	SafeActionParamsStruct::Save( ChunkSaveClass & csave )
 
 	if ( MoveObjectRef != NULL ) {
 		csave.Begin_Chunk( CHUNKID_MOVE_OBJECT );
-		if (!MoveObjectRef.Save(csave)) csave.Report_Error();
+		MoveObjectRef.Save( csave );
 		csave.End_Chunk();
 	}
 
 	if ( AttackObjectRef != NULL ) {
 		csave.Begin_Chunk( CHUNKID_ATTACK_OBJECT );
-		if (!AttackObjectRef.Save(csave)) csave.Report_Error();
+		AttackObjectRef.Save( csave );
 		csave.End_Chunk();
 	}
 
 	if ( LookObjectRef != NULL ) {
 		csave.Begin_Chunk( CHUNKID_LOOK_OBJECT );
-		if (!LookObjectRef.Save(csave)) csave.Report_Error();
+		LookObjectRef.Save( csave );
 		csave.End_Chunk();
 	}
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	SafeActionParamsStruct::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
@@ -3142,15 +3095,15 @@ bool	SafeActionParamsStruct::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_MOVE_OBJECT:
-				if (!MoveObjectRef.Load(cload)) loaded = false;
+				MoveObjectRef.Load( cload );
 				break;
 
 			case CHUNKID_ATTACK_OBJECT:
-				if (!AttackObjectRef.Load(cload)) loaded = false;
+				AttackObjectRef.Load( cload );
 				break;
 
 			case CHUNKID_LOOK_OBJECT:
-				if (!LookObjectRef.Load(cload)) loaded = false;
+				LookObjectRef.Load( cload );
 				break;
 
 			default:
@@ -3161,7 +3114,7 @@ bool	SafeActionParamsStruct::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 /*
@@ -3255,24 +3208,11 @@ void	ActionClass::Notify_Completed( int observer_id, int action_id, int reason )
 		// Find the observer and notify
 		SmartGameObj *	obj = Get_Action_Obj();
 		const GameObjObserverList & observer_list = obj->Get_Observers();
-#if defined(RENEGADE_VITA_PORT)
-		bool observer_found = false;
-#endif
 		for( int index = 0; index < observer_list.Count(); index++ ) {
 			if ( observer_list[ index ]->Get_ID() == observer_id ) {
-#if defined(RENEGADE_VITA_PORT)
-				observer_found = true;
-#endif
 				observer_list[ index ]->Action_Complete( obj, action_id, (ActionCompleteReason)reason );
 			}
 		}
-#if defined(RENEGADE_VITA_PORT)
-		if (!observer_found) {
-			// No callbacks ran on this path; do not inspect actors after delivery.
-			A35_Campaign_Flight_Action_Observer_Miss(static_cast<int32_t>(obj->Get_ID()),
-				static_cast<int32_t>(observer_id), static_cast<int32_t>(action_id), static_cast<int32_t>(reason));
-		}
-#endif
 	}
 }
 
@@ -3424,19 +3364,17 @@ bool	ActionClass::Save( ChunkSaveClass & csave )
 	}
 
 	csave.Begin_Chunk( CHUNKID_PARAMETERS );
-		if (!Parameters.Save(csave)) csave.Report_Error();
+		Parameters.Save( csave );
 	csave.End_Chunk();
 
 // Don't need to save ActionObj because it is set on ActionClass Constructor
 // Don't need to save ActCount because it is diagnostic
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	ActionClass::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
-	bool parameters_seen = false;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
@@ -3445,21 +3383,15 @@ bool	ActionClass::Load( ChunkLoadClass &cload )
 					PersistFactoryClass * factory = SaveLoadSystemClass::Find_Persist_Factory( cload.Cur_Chunk_ID() );
 					if ( factory ) {
 						ActionCode = (ActionCodeClass *)factory->Load( cload );
-						if (ActionCode != NULL) {
-							ActionCode->Set_Action(this);
-						} else {
-							loaded = false;
-						}
-					} else {
-						loaded = false;
+						WWASSERT( ActionCode != NULL );
+						ActionCode->Set_Action( this );
 					}
 					cload.Close_Chunk();
 				}
 				break;
 
 			case CHUNKID_PARAMETERS:
-				if (parameters_seen || !Parameters.Load(cload)) loaded = false;
-				parameters_seen = true;
+				Parameters.Load( cload );
 				break;
 
 			default:
@@ -3470,7 +3402,7 @@ bool	ActionClass::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && parameters_seen && !cload.Has_Error();
+	return true;
 }
 
 

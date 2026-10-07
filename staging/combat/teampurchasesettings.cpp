@@ -90,16 +90,11 @@ TeamPurchaseSettingsDefClass *		TeamPurchaseSettingsDefClass::DefinitionArray[TE
 //
 //////////////////////////////////////////////////////////////////////
 TeamPurchaseSettingsDefClass::TeamPurchaseSettingsDefClass (void)	:
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-    NetworkObjectClass(false),
-#endif
 	Team (TEAM_GDI),
 	BeaconNameID (0),
 	BeaconDefinitionID (0),
 	BeaconCost (0),
-	SupplyNameID (0),
-	PublishedTeam (-1),
-	PreviousDefinition (NULL)
+	SupplyNameID (0)
 {
 	//
 	//	Initialize the lists
@@ -179,20 +174,11 @@ TeamPurchaseSettingsDefClass::~TeamPurchaseSettingsDefClass (void)
 	//
 	//	Remove this entry from the static array
 	//
-	if (PublishedTeam >= 0 && PublishedTeam < TEAM_COUNT &&
-		DefinitionArray[PublishedTeam] == this) {
-		DefinitionArray[PublishedTeam] = PreviousDefinition;
+	if (Team < TEAM_COUNT) {
+		DefinitionArray[Team] = NULL;
 	}
 
 	return ;
-}
-
-void TeamPurchaseSettingsDefClass::On_Load_Rejected (void)
-{
-	if (PublishedTeam >= 0 && PublishedTeam < TEAM_COUNT &&
-		DefinitionArray[PublishedTeam] == this) {
-		DefinitionArray[PublishedTeam] = PreviousDefinition;
-	}
 }
 
 
@@ -270,7 +256,7 @@ TeamPurchaseSettingsDefClass::Save (ChunkSaveClass &csave)
 
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 
@@ -282,20 +268,15 @@ TeamPurchaseSettingsDefClass::Save (ChunkSaveClass &csave)
 bool
 TeamPurchaseSettingsDefClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
-	bool parent_seen = false;
-	bool variables_seen = false;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				if (parent_seen || !DefinitionClass::Load (cload)) loaded = false;
-				parent_seen = true;
+				DefinitionClass::Load (cload);
 				break;
 								
 			case CHUNKID_VARIABLES:
-				if (variables_seen || !Load_Variables (cload)) loaded = false;
-				variables_seen = true;
+				Load_Variables (cload);
 				break;
 
 			default:
@@ -307,14 +288,7 @@ TeamPurchaseSettingsDefClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	loaded = loaded && parent_seen && variables_seen && !cload.Has_Error() &&
-		Team >= 0 && Team < TEAM_COUNT;
-	if (loaded) {
-		PublishedTeam = Team;
-		PreviousDefinition = DefinitionArray[PublishedTeam];
-		DefinitionArray[PublishedTeam] = this;
-	}
-	return loaded;
+	return true;
 }
 
 
@@ -323,7 +297,7 @@ TeamPurchaseSettingsDefClass::Load (ChunkLoadClass &cload)
 //	Load_Variables
 //
 ///////////////////////////////////////////////////////////////////////////////////////////
-bool
+void
 TeamPurchaseSettingsDefClass::Load_Variables (ChunkLoadClass &cload)
 {
 	int entry_index = 0;
@@ -373,7 +347,13 @@ TeamPurchaseSettingsDefClass::Load_Variables (ChunkLoadClass &cload)
 		cload.Close_Micro_Chunk();
 	}
 
-	return !cload.Has_Error();
+	//
+	//	Add this definition to the static array
+	//
+	if (Team < TEAM_COUNT) {
+		DefinitionArray[Team] = this;
+	}
+	return ;
 }
 
 
@@ -406,6 +386,6 @@ TeamPurchaseSettingsDefClass::Get_Enlisted_Name (int index)
 TeamPurchaseSettingsDefClass *
 TeamPurchaseSettingsDefClass::Get_Definition (TEAM team)
 {
-	if (team < 0 || team >= TEAM_COUNT) return NULL;
 	return DefinitionArray[team];
 }
+

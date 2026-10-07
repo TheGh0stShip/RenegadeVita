@@ -39,9 +39,6 @@
 **	Includes
 */
 #include "armedgameobj.h"
-#include "vehicle.h"
-#include "combat.h"
-#include "renegade_client_effects.h"
 #include "debug.h"
 #include "weaponbag.h"
 #include "weapons.h"
@@ -121,12 +118,11 @@ bool	ArmedGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	ArmedGameObjDef::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!PhysicalGameObjDef::Load( cload )) loaded = false;
+				PhysicalGameObjDef::Load( cload );
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -160,7 +156,7 @@ bool	ArmedGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 /*
@@ -289,7 +285,7 @@ enum	{
 bool	ArmedGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	if (!PhysicalGameObj::Save(csave)) csave.Report_Error();
+	PhysicalGameObj::Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -297,20 +293,19 @@ bool	ArmedGameObj::Save( ChunkSaveClass & csave )
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_WEAPONBAG );
-	if (WeaponBag == NULL || !WeaponBag->Save(csave)) csave.Report_Error();
+	WeaponBag->Save( csave );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	ArmedGameObj::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				if (!PhysicalGameObj::Load(cload)) loaded = false;
+				PhysicalGameObj::Load( cload );
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -327,7 +322,7 @@ bool	ArmedGameObj::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_WEAPONBAG:
-				if (WeaponBag == NULL || !WeaponBag->Load(cload)) loaded = false;
+			 	WeaponBag->Load( cload );
 				break;
 
 			default:
@@ -340,7 +335,7 @@ bool	ArmedGameObj::Load( ChunkLoadClass &cload )
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void	ArmedGameObj::On_Post_Load( void )
@@ -354,35 +349,17 @@ void	ArmedGameObj::On_Post_Load( void )
 void ArmedGameObj::Import_Frequent(BitStreamClass & packet)
 {
 	PhysicalGameObj::Import_Frequent( packet );
-	if (packet.Has_Read_Error()) return;
 
 	Vector3 targeting_pos;
-	bool modern = false;
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	modern = Renegade_Client_Uses_TT_Replication();
-#endif
-	if (modern) {
-		for (int axis = 0; axis < 3; ++axis) {
-			packet.Get(targeting_pos[axis]);
-			if (!WWMath::Is_Valid_Float(targeting_pos[axis])) targeting_pos[axis] = 0;
-		}
-	} else {
-		packet.Get(targeting_pos.X, BITPACK_WORLD_POSITION_X);
-		packet.Get(targeting_pos.Y, BITPACK_WORLD_POSITION_Y);
-		packet.Get(targeting_pos.Z, BITPACK_WORLD_POSITION_Z);
-	}
-	if (packet.Has_Read_Error()) return;
+	packet.Get(targeting_pos.X, BITPACK_WORLD_POSITION_X);
+	packet.Get(targeting_pos.Y, BITPACK_WORLD_POSITION_Y);
+	packet.Get(targeting_pos.Z, BITPACK_WORLD_POSITION_Z);
 
 	//
 	//	Don't force the targetting if the object is controlled
 	// by this player
 	//
 	SmartGameObj *smart_game_obj = As_SmartGameObj ();
-	if (modern && smart_game_obj && smart_game_obj->As_VehicleGameObj()) {
-		VehicleGameObj *vehicle = smart_game_obj->As_VehicleGameObj();
-		if (vehicle->Get_Actual_Gunner() != COMBAT_STAR) Set_Targeting(targeting_pos);
-		return;
-	}
 	if (smart_game_obj == NULL || smart_game_obj->Is_Controlled_By_Me() == false) {
 		Set_Targeting(targeting_pos);
 	}
@@ -407,14 +384,6 @@ void ArmedGameObj::Export_State_Cs(BitStreamClass & packet)
 	Vector3	my_pos;
 	Get_Position( &my_pos );
 	Vector3 rel_target = TargetingPos - my_pos;
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	if (Renegade_Client_Uses_TT_Replication()) {
-		packet.Add(rel_target.X);
-		packet.Add(rel_target.Y);
-		packet.Add(rel_target.Z);
-		return;
-	}
-#endif
 	packet.Add(rel_target.X, BITPACK_WORLD_POSITION_X);
 	packet.Add(rel_target.Y, BITPACK_WORLD_POSITION_Y);
 	packet.Add(rel_target.Z, BITPACK_WORLD_POSITION_Z);

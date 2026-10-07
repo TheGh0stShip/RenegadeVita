@@ -2412,22 +2412,6 @@ void Phys3Class::Network_State_Update(const Vector3 & pos,const Vector3 & vel)
 }
 
 
-void Phys3Class::Reset_Network_History()
-{
-	if (History != NULL) History->Init(State.Position, State.Velocity);
-}
-
-void Phys3Class::Network_Interpolated_State_Update(const Vector3 & pos, bool airborne)
-{
-	// TT b9000 blends small ground corrections without changing velocity or
-	// snapping to terrain. Airborne and large corrections retain the full step.
-	Vector3 corrected = pos;
-	if (!airborne && (pos - State.Position).Length2() <= 2.0f)
-		corrected = State.Position + (pos - State.Position) * 0.5f;
-	Set_Position(corrected);
-	Update_Transform(true);
-}
-
 void Phys3Class::Network_Latency_State_Update(const Vector3 & net_pos,const Vector3 & net_vel)
 {
 	DEBUG_RENDER_AABOX(AABoxClass(CollisionBox.Center + net_pos,CollisionBox.Extent),Vector3(0,1,0),0.25f);
@@ -2481,7 +2465,7 @@ const PersistFactoryClass & Phys3Class::Get_Factory (void) const
 bool Phys3Class::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(PHYS3_CHUNK_MOVEABLEPHYS);
-	if (!MoveablePhysClass::Save(csave)) csave.Report_Error();
+	MoveablePhysClass::Save(csave);
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(PHYS3_CHUNK_VARIABLES);
@@ -2499,18 +2483,17 @@ bool Phys3Class::Save (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK(csave,PHYS3_VARIABLE_VELOCITY,State.Velocity);
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool Phys3Class::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case PHYS3_CHUNK_MOVEABLEPHYS:
-				if (!MoveablePhysClass::Load(cload)) loaded = false;
+				MoveablePhysClass::Load(cload);
 				break;
 
 			case PHYS3_CHUNK_VARIABLES:
@@ -2542,7 +2525,7 @@ bool Phys3Class::Load (ChunkLoadClass &cload)
 
 	Invalidate_Ground_State();
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void Phys3Class::On_Post_Load (void)
@@ -2710,13 +2693,12 @@ bool Phys3DefClass::Save(ChunkSaveClass &csave)
 
 bool Phys3DefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case PHYS3DEF_CHUNK_MOVEABLEPHYSDEF:
-				if (!MoveablePhysDefClass::Load(cload)) loaded = false;
+				MoveablePhysDefClass::Load(cload);
 				break;
 
 			case PHYS3DEF_CHUNK_VARIABLES:
@@ -2737,7 +2719,7 @@ bool Phys3DefClass::Load(ChunkLoadClass &cload)
 
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 bool Phys3DefClass::Is_Type(const char * type_name)

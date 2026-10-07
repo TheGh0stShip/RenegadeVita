@@ -61,11 +61,6 @@ class StringClass;
 class AssetDependencyManager
 {
 public:
-	enum LoadResult {
-		LOAD_NOT_FOUND,
-		LOAD_SUCCEEDED,
-		LOAD_FAILED
-	};
 	
 	////////////////////////////////////////////////////////////////////
 	//	Public data types
@@ -80,10 +75,10 @@ public:
 	static void				Save_Level_Dependencies (const char *full_path, ASSET_LIST &asset_list);
 	static void				Save_Dependencies (ChunkSaveClass &csave, ASSET_LIST &asset_list);
 
-	static LoadResult		Load_Level_Assets (const char *level_name);
-	static LoadResult		Load_Always_Assets (void);
-	static LoadResult		Load_Assets (const char *filename);
-	static bool				Load_Assets (ChunkLoadClass &cload);
+	static void				Load_Level_Assets (const char *level_name);
+	static void				Load_Always_Assets (void);
+	static void				Load_Assets (const char *filename);
+	static void				Load_Assets (ChunkLoadClass &cload);
 };
 
 

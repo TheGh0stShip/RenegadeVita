@@ -70,11 +70,7 @@ char BuildInfoClass::BuildDate   [64] = {"Insert1Build2Date3Here4     xxxx      
  *=============================================================================================*/
 unsigned long BuildInfoClass::Get_Build_Number(void)
 {
-	const unsigned char *bytes = reinterpret_cast<const unsigned char *>(&BuildNumber[28]);
-	return static_cast<unsigned long>(bytes[0]) |
-		(static_cast<unsigned long>(bytes[1]) << 8) |
-		(static_cast<unsigned long>(bytes[2]) << 16) |
-		(static_cast<unsigned long>(bytes[3]) << 24);
+	return (*(unsigned long*)(&BuildNumber[28]));
 }
 
 
@@ -97,7 +93,7 @@ unsigned long BuildInfoClass::Get_Build_Number(void)
 char *BuildInfoClass::Get_Build_Number_String(void)
 {
 	static char _buffer[16];
-	sprintf (_buffer, "%lu", Get_Build_Number());
+	sprintf (_buffer, "%d", *(unsigned long*)(&BuildNumber[28]));
 	return (_buffer);
 }
 
@@ -315,6 +311,7 @@ void BuildInfoClass::Log_Build_Info(void)
 	WWDEBUG_SAY((Composite_Build_Info()));
 	WWDEBUG_SAY(("\n"));
 }
+
 
 
 

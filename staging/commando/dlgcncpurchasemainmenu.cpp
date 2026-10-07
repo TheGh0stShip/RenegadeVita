@@ -251,8 +251,6 @@ CNCPurchaseMainMenuClass::Configure_Purchase_Controls (void)
 			ctrl->Set_Cost (0);
 			ctrl->Set_Texture (definition->Get_Enlisted_Texture (index));
 			ctrl->Set_User_Data (index);
-            ctrl->Show(!definition->Get_Hidden(index));
-            ctrl->Enable(definition->Is_Available(index));
 		}
 	}
 
@@ -661,19 +659,6 @@ CNCPurchaseMainMenuClass::On_Frame_Update (void)
 		RefreshTimer = 0.5F;
 		Refresh_Button_States ();
 		Refresh_Beacon_State ();
-        auto *catalog = TeamPurchaseSettingsDefClass::Get_Definition(
-            COMBAT_STAR->Get_Player_Type() == PLAYERTYPE_NOD ?
-                TeamPurchaseSettingsDefClass::TEAM_NOD : TeamPurchaseSettingsDefClass::TEAM_GDI);
-        if (catalog) {
-            const int enlisted_ids[] = {IDC_ENLISTED_PURCHASE_01, IDC_ENLISTED_PURCHASE_02,
-                IDC_ENLISTED_PURCHASE_03, IDC_ENLISTED_PURCHASE_04};
-            for (int index = 0; index < 4; ++index) {
-                if (auto *ctrl = Get_Dlg_Item(enlisted_ids[index])) {
-                    ctrl->Show(!catalog->Get_Hidden(index));
-                    ctrl->Enable(catalog->Is_Available(index));
-                }
-            }
-        }
 	}
 
 	//

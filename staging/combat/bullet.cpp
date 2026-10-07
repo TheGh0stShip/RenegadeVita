@@ -546,9 +546,7 @@ void BulletClass::Init( const BulletDataClass & data, float progress_time, const
 		// We don't need to do anything
 	} else {
 		RenderObjClass * model = NULL;
-		if ( model == NULL ) {
-			model = WW3DAssetManager::Get_Instance ()->Create_Render_Obj( BulletData.AmmoDefinition->ModelName );
-		}
+		model = WW3DAssetManager::Get_Instance ()->Create_Render_Obj( BulletData.AmmoDefinition->ModelName );
 
 		// If no name is given, lets create the NULL render obj
 		if ( model == NULL ) {
@@ -638,9 +636,7 @@ bool	BulletClass::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
 		WWASSERT( BulletData.AmmoDefinition != NULL );
-		int def_id = BulletData.AmmoDefinition != NULL ?
-			BulletData.AmmoDefinition->Get_ID() : 0;
-		if (BulletData.AmmoDefinition == NULL) csave.Report_Error();
+		int def_id = BulletData.AmmoDefinition->Get_ID();
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_AMMO_DEFINITION_ID, def_id );
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_PROJECTILE, Projectile );
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_SOFT_PIERCE_COUNT, BulletData.SoftPierceCount );
@@ -653,55 +649,37 @@ bool	BulletClass::Save( ChunkSaveClass & csave )
 
 	if ( BulletData.Get_Owner() != NULL ) {
 		csave.Begin_Chunk( CHUNKID_OWNER );
-		if (!BulletData.Owner.Save(csave)) csave.Report_Error();
+		BulletData.Owner.Save( csave );
 		csave.End_Chunk();
 	}
 
 	if ( TargetObject.Get_Ptr() != NULL ) {
 		csave.Begin_Chunk( CHUNKID_TARGET_OBJECT );
-		if (!TargetObject.Save(csave)) csave.Report_Error();
+		TargetObject.Save( csave );
 		csave.End_Chunk();
 	}
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	BulletClass::Load( ChunkLoadClass & cload )
 {
-	bool variables_seen = false;
-	bool owner_seen = false;
-	bool target_seen = false;
-	bool loaded = true;
-	uint32 loaded_values = 0U;
-	uint32 projectile_token = 0U;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
 			{
-				if (variables_seen) {
-					loaded = false;
-					break;
-				}
-				variables_seen = true;
 				int def_id = 0;
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
-#define READ_REQUIRED_BULLET_VALUE(id, value, bit) \
-						case (id): \
-							if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(value) || \
-								cload.Read(&(value), sizeof(value)) != sizeof(value)) loaded = false; \
-							else loaded_values |= (bit); \
-							break
-						READ_REQUIRED_BULLET_VALUE(MICROCHUNKID_AMMO_DEFINITION_ID, def_id, 1U);
-						READ_REQUIRED_BULLET_VALUE(MICROCHUNKID_PROJECTILE, projectile_token, 2U);
-						READ_REQUIRED_BULLET_VALUE(MICROCHUNKID_SOFT_PIERCE_COUNT, BulletData.SoftPierceCount, 4U);
-						READ_REQUIRED_BULLET_VALUE(MICROCHUNKID_DESTROY, BulletData.Destroy, 8U);
-						READ_REQUIRED_BULLET_VALUE(MICROCHUNKID_TARGET_VECTOR, TargetVector, 16U);
-						READ_REQUIRED_BULLET_VALUE(MICROCHUNKID_TRACKING_ERROR_TIMER, TrackingErrorTimer, 32U);
-						READ_REQUIRED_BULLET_VALUE(MICROCHUNKID_TRACKING_ERROR, TrackingError, 64U);
-						READ_REQUIRED_BULLET_VALUE(MICROCHUNKID_MODEL_NAME_CRC, ModelNameCRC, 128U);
-#undef READ_REQUIRED_BULLET_VALUE
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_AMMO_DEFINITION_ID, def_id );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_PROJECTILE, Projectile );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_SOFT_PIERCE_COUNT, BulletData.SoftPierceCount );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_DESTROY, BulletData.Destroy );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_TARGET_VECTOR, TargetVector );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_TRACKING_ERROR_TIMER, TrackingErrorTimer );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_TRACKING_ERROR, TrackingError );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_MODEL_NAME_CRC, ModelNameCRC );
 
 						default:
 							Debug_Say(("Unhandled Micro Chunk:%d File:%s Line:%d\r\n",cload.Cur_Micro_Chunk_ID(),__FILE__,__LINE__));
@@ -710,13 +688,12 @@ bool	BulletClass::Load( ChunkLoadClass & cload )
 					cload.Close_Micro_Chunk();
 				}
 
-				loaded = loaded && loaded_values == 0xFFU && projectile_token != 0U;
-				const AmmoDefinitionClass *ammo_definition = loaded ? WeaponManager::Find_Ammo_Definition(def_id) : NULL;
-				if (ammo_definition == NULL) loaded = false;
-				if (loaded) {
-					BulletData.AmmoDefinition = ammo_definition;
-					REF_PTR_RELEASE(Projectile);
-					Projectile = reinterpret_cast<ProjectileClass *>(static_cast<uintptr_t>(projectile_token));
+				WWASSERT( BulletData.AmmoDefinition == NULL );
+				BulletData.AmmoDefinition = WeaponManager::Find_Ammo_Definition( def_id );
+				WWASSERT( BulletData.AmmoDefinition != NULL );
+
+				WWASSERT( Projectile != NULL );
+				if ( Projectile != NULL ) {
 					REQUEST_REF_COUNTED_POINTER_REMAP( (RefCountClass **)&Projectile );
 				}
 
@@ -724,19 +701,11 @@ bool	BulletClass::Load( ChunkLoadClass & cload )
 			}
 
 			case CHUNKID_OWNER:
-				if (owner_seen) loaded = false;
-				else {
-					owner_seen = true;
-					loaded = BulletData.Owner.Load(cload) && loaded;
-				}
+				BulletData.Owner.Load( cload );
 				break;
 
 			case CHUNKID_TARGET_OBJECT:
-				if (target_seen) loaded = false;
-				else {
-					target_seen = true;
-					loaded = TargetObject.Load(cload) && loaded;
-				}
+				TargetObject.Load( cload );
 				break;
 
 			default:
@@ -747,9 +716,9 @@ bool	BulletClass::Load( ChunkLoadClass & cload )
 		cload.Close_Chunk();
 	}
 
-	loaded = loaded && variables_seen && !cload.Has_Error();
-	if (loaded) SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return loaded;
+	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+
+	return true;
 }
 
 void BulletClass::On_Post_Load (void)
@@ -1070,30 +1039,26 @@ bool	BulletManager::Save( ChunkSaveClass &csave )
 		BulletClass * bullet = it.Peek_Obj();
 
 		// Only save valid bullets
-		if (bullet == NULL) {
-			csave.Report_Error();
-		} else if ( bullet->Is_Valid() ) {
+		if ( bullet->Is_Valid() ) {
 			csave.Begin_Chunk( CHUNKID_BULLET );
-			if (!bullet->Save(csave)) csave.Report_Error();
+			bullet->Save( csave );
 			csave.End_Chunk();
 		}
 		it.Next();
 	}
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	BulletManager::Load( ChunkLoadClass &cload )
 {
-	WWASSERT(LiveBulletList.Is_Empty());
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_BULLET:
 			{
 				BulletClass * bullet = new BulletClass();
-				loaded = bullet->Load(cload) && loaded;
-				LiveBulletList.Add(bullet);
+				bullet->Load( cload );
+				LiveBulletList.Add( bullet );
 				break;
 			}
 
@@ -1103,6 +1068,6 @@ bool	BulletManager::Load( ChunkLoadClass &cload )
 		}
 		cload.Close_Chunk();
 	}
-	loaded = loaded && !cload.Has_Error();
-	return loaded;
+	return true;
 }
+

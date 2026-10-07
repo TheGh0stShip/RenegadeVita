@@ -182,12 +182,11 @@ bool	DamageableStaticPhysDefClass::Save(ChunkSaveClass & csave)
 
 bool	DamageableStaticPhysDefClass::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case DAMAGEABLESTATICPHYSDEF_CHUNK_STATICANIMPHYSDEF:
-				if (!StaticAnimPhysDefClass::Load( cload )) loaded = false;
+				StaticAnimPhysDefClass::Load( cload );
 				break;
   
 			case DAMAGEABLESTATICPHYSDEF_CHUNK_VARIABLES:
@@ -214,7 +213,7 @@ bool	DamageableStaticPhysDefClass::Load( ChunkLoadClass &cload )
 				break;
 
 			case DAMAGEABLESTATICPHYSDEF_CHUNK_DEFENSEOBJECTDEF:
-				if (!DefenseObjectDef.Load(cload)) loaded = false;
+				DefenseObjectDef.Load(cload);
 				break;
 
 			default:
@@ -225,7 +224,7 @@ bool	DamageableStaticPhysDefClass::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 const PersistFactoryClass & DamageableStaticPhysDefClass::Get_Factory (void) const 
@@ -433,14 +432,14 @@ bool DamageableStaticPhysClass::Save( ChunkSaveClass & csave )
 	** Save the parent class data
 	*/
 	csave.Begin_Chunk(DAMAGEABLESTATICPHYS_CHUNK_STATICANIMPHYS);
-		if (!StaticAnimPhysClass::Save(csave)) csave.Report_Error();
+		StaticAnimPhysClass::Save( csave );
 	csave.End_Chunk();
 
 	/*
 	** Save the contents of our damage object
 	*/
 	csave.Begin_Chunk(DAMAGEABLESTATICPHYS_CHUNK_DEFENSEOBJECT);
-		if (!DefenseObject.Save(csave)) csave.Report_Error();
+		DefenseObject.Save(csave);
 	csave.End_Chunk();
 	
 	/*
@@ -450,7 +449,7 @@ bool DamageableStaticPhysClass::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK(csave, DAMAGEABLESTATICPHYS_VARIABLE_CURSTATE, CurState);
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 

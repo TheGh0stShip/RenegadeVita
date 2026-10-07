@@ -228,7 +228,6 @@ protected:
 	void						Alloc_Stealth_Effect(void);
 
 	bool						StealthEnabled;		// stealth enabled by script or initialization code
-	bool NetworkStealthActive = true;
 	float						StealthPowerupTimer;	// stealth power is in effect
 	float						StealthFiringTimer;	// timer for de-cloaking during
 	StealthEffectClass *	StealthEffect;			// possible stealth effect

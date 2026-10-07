@@ -39,12 +39,8 @@
 #include "registry.h"
 #include "bittype.h"
 #include "_globals.h"
-#if !defined(RENEGADE_VITA_PORT)
 #include "wwonline\\wolsession.h"
 #include <WWOnline\WOLLangCodes.h>
-#else
-#include "wollangcodes.h"
-#endif
 #include "time.h"
 
 
@@ -374,7 +370,6 @@ MPSettingsMgrClass::Are_Alternate_Skins_Unlocked (void)
 		//
 		//	Do we have a valid WOL session to query?
 		//
-#if !defined(RENEGADE_VITA_PORT)
 		RefPtr<WWOnline::Session> wol_session = WWOnline::Session::GetInstance ();
 		if (wol_session.IsValid ()) {
 
@@ -415,9 +410,7 @@ MPSettingsMgrClass::Are_Alternate_Skins_Unlocked (void)
 				}
 			}
 
-		} else
-#endif
-		{
+		} else {
 
 			//
 			//	First, build a time structure representing when the skins are unlocked for everybody

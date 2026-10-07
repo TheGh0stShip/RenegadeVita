@@ -238,16 +238,15 @@ MendozaBossGameObjDefClass::Create (void) const
 bool
 MendozaBossGameObjDefClass::Save (ChunkSaveClass &csave)
 {
-	bool saved = true;
 	csave.Begin_Chunk (CHUNKID_DEF_PARENT);
-		saved = SoldierGameObjDef::Save(csave) && saved;
+		SoldierGameObjDef::Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_DEF_VARIABLES);
 		Save_Variables (csave);
 	csave.End_Chunk();
 
-	return saved && !csave.Has_Error();
+	return true;
 }
 
 
@@ -259,12 +258,11 @@ MendozaBossGameObjDefClass::Save (ChunkSaveClass &csave)
 bool
 MendozaBossGameObjDefClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!SoldierGameObjDef::Load (cload)) loaded = false;
+				SoldierGameObjDef::Load (cload);
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -279,7 +277,7 @@ MendozaBossGameObjDefClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -453,10 +451,10 @@ MendozaBossGameObjClass::MendozaBossGameObjClass (void)	:
 	//
 	//	Register the camera states with its state machine
 	//
-	CameraState.Add_State (NULL, NULL, &MendozaBossGameObjClass::On_CAMERA_STATE_NORMAL_Begin, NULL);
-	CameraState.Add_State (&MendozaBossGameObjClass::On_CAMERA_STATE_FACE_ZOOM_Think, NULL, &MendozaBossGameObjClass::On_CAMERA_STATE_FACE_ZOOM_Begin, NULL);
-	CameraState.Add_State (&MendozaBossGameObjClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Think, NULL, &MendozaBossGameObjClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Begin, NULL);
-	CameraState.Add_State (&MendozaBossGameObjClass::On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Think, NULL, &MendozaBossGameObjClass::On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Begin, NULL);
+	CameraState.Add_State (NULL,													NULL,		On_CAMERA_STATE_NORMAL_Begin,					NULL);
+	CameraState.Add_State (On_CAMERA_STATE_FACE_ZOOM_Think,				NULL,		On_CAMERA_STATE_FACE_ZOOM_Begin,				NULL);
+	CameraState.Add_State (On_CAMERA_STATE_WAYPATH_FOLLOW_Think,		NULL,		On_CAMERA_STATE_WAYPATH_FOLLOW_Begin,		NULL);
+	CameraState.Add_State (On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Think,	NULL,		On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Begin,	NULL);	
 	CameraState.Set_State (CAMERA_STATE_NORMAL);
 
 	//
@@ -536,9 +534,8 @@ MendozaBossGameObjClass::Get_Definition (void) const
 bool
 MendozaBossGameObjClass::Save (ChunkSaveClass & csave)
 {
-	bool saved = true;
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		saved = SoldierGameObj::Save(csave) && saved;
+		SoldierGameObj::Save (csave);
 	csave.End_Chunk ();
 
 	//
@@ -582,7 +579,7 @@ MendozaBossGameObjClass::Save (ChunkSaveClass & csave)
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
 		Save_Variables (csave);
 	csave.End_Chunk ();
-	return saved && !csave.Has_Error();
+	return true;
 }
 
 
@@ -594,60 +591,59 @@ MendozaBossGameObjClass::Save (ChunkSaveClass & csave)
 bool
 MendozaBossGameObjClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				if (!SoldierGameObj::Load(cload)) loaded = false;
+				SoldierGameObj::Load (cload);
 				break;
 
 			case CHUNKID_OVERALL_STATE_MACHINE:
-				if (!OverallState.Load(cload)) loaded = false;
+				OverallState.Load (cload);
 				break;
 
 			case CHUNKID_MENDOZA_STATE_MACHINE:
-				if (!MendozaState.Load(cload)) loaded = false;
+				MendozaState.Load (cload);
 				break;
 
 			case CHUNKID_SYDNEY_STATE_MACHINE:
-				if (!SydneyState.Load(cload)) loaded = false;
+				SydneyState.Load (cload);
 				break;
 
 			case CHUNKID_MOVE_STATE_MACHINE:
-				if (!MoveState.Load(cload)) loaded = false;
+				MoveState.Load (cload);
 				break;
 
 			case CHUNKID_HEAD_STATE_MACHINE:
-				if (!HeadState.Load(cload)) loaded = false;
+				HeadState.Load (cload);
 				break;
 
 			case CHUNKID_CAMERA_STATE_MACHINE:
-				if (!CameraState.Load(cload)) loaded = false;
+				CameraState.Load (cload);
 				break;
 
 			case CHUNKID_ATTACK_STATE_MACHINE:
-				if (!AttackState.Load(cload)) loaded = false;
+				AttackState.Load (cload);		
 				break;
 
 			//
 			//	Load the state machines from their chunk
 			//
 			case CHUNKID_STATE_MACHINES:
-				if (!OverallState.Load(cload)) loaded = false;
-				if (!MendozaState.Load(cload)) loaded = false;
-				if (!SydneyState.Load(cload)) loaded = false;
-				if (!MoveState.Load(cload)) loaded = false;
-				if (!HeadState.Load(cload)) loaded = false;
-				if (!CameraState.Load(cload)) loaded = false;
-				if (!AttackState.Load(cload)) loaded = false;
+				OverallState.Load (cload);
+				MendozaState.Load (cload);
+				SydneyState.Load (cload);
+				MoveState.Load (cload);
+				HeadState.Load (cload);
+				CameraState.Load (cload);
+				AttackState.Load (cload);		
 				break;
 
 			//
 			//	Load the camera spline
 			//
 			case CHUNKID_CAMERA_SPLINE:
-				if (!CameraSpline.Load(cload)) loaded = false;
+				CameraSpline.Load (cload);
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -664,7 +660,7 @@ MendozaBossGameObjClass::Load (ChunkLoadClass &cload)
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback (this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -3889,3 +3885,4 @@ MendozaBossGameObjClass::Spawn_Health_Powerups (void)
 
 	return ;
 }
+

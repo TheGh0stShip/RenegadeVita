@@ -90,12 +90,11 @@ bool	SAMSiteGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	SAMSiteGameObjDef::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!SmartGameObjDef::Load( cload )) loaded = false;
+				SmartGameObjDef::Load( cload );
 				break;
 	  
 			default:
@@ -106,7 +105,7 @@ bool	SAMSiteGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 const PersistFactoryClass & SAMSiteGameObjDef::Get_Factory (void) const 
@@ -198,7 +197,7 @@ enum	{
 bool	SAMSiteGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	if (!SmartGameObj::Save(csave)) csave.Report_Error();
+	SmartGameObj::Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -206,17 +205,16 @@ bool	SAMSiteGameObj::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_TIMER,	Timer );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	SAMSiteGameObj::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				if (!SmartGameObj::Load(cload)) loaded = false;
+				SmartGameObj::Load( cload );
 				break;
 								
 			case CHUNKID_VARIABLES:
@@ -243,7 +241,7 @@ bool	SAMSiteGameObj::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 /*

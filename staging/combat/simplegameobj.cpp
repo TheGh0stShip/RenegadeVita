@@ -120,12 +120,11 @@ bool	SimpleGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	SimpleGameObjDef::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!PhysicalGameObjDef::Load( cload )) loaded = false;
+				PhysicalGameObjDef::Load( cload );
 				break;
 	  
 			case CHUNKID_DEF_VARIABLES:
@@ -152,7 +151,7 @@ bool	SimpleGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 const PersistFactoryClass & SimpleGameObjDef::Get_Factory (void) const 
@@ -230,20 +229,19 @@ enum	{
 bool	SimpleGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-		if (!PhysicalGameObj::Save(csave)) csave.Report_Error();
+		PhysicalGameObj::Save( csave );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	SimpleGameObj::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_PARENT:
-				if (!PhysicalGameObj::Load(cload)) loaded = false;
+				PhysicalGameObj::Load( cload );
 				break;
 
 			default:
@@ -256,7 +254,7 @@ bool	SimpleGameObj::Load( ChunkLoadClass &cload )
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void	SimpleGameObj::On_Post_Load( void )

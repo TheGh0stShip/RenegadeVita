@@ -200,24 +200,23 @@ const PersistFactoryClass & WheeledVehicleClass::Get_Factory (void) const
 bool WheeledVehicleClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(WHEELEDVEHICLE_CHUNK_MOTORVEHICLE);
-	if (!MotorVehicleClass::Save(csave)) csave.Report_Error();
+	MotorVehicleClass::Save(csave);
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(WHEELEDVEHICLE_CHUNK_VARIABLES);
 	WRITE_MICRO_CHUNK(csave,WV_VARIABLE_STEERINGANGLE,SteeringAngle);
 	csave.End_Chunk();
-	return !csave.Has_Error();
+	return true;
 }
 
 bool WheeledVehicleClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case WHEELEDVEHICLE_CHUNK_MOTORVEHICLE:
-				if (!MotorVehicleClass::Load(cload)) loaded = false;
+				MotorVehicleClass::Load(cload);
 				break;
 
 			case WHEELEDVEHICLE_CHUNK_VARIABLES:
@@ -241,7 +240,7 @@ bool WheeledVehicleClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -314,13 +313,12 @@ bool WheeledVehicleDefClass::Save(ChunkSaveClass &csave)
 
 bool WheeledVehicleDefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case WHEELEDVEHICLEDEF_CHUNK_MOTORVEHICLEDEF:
-				if (!MotorVehicleDefClass::Load(cload)) loaded = false;
+				MotorVehicleDefClass::Load(cload);
 				break;
 
 			case WHEELEDVEHICLEDEF_CHUNK_VARIABLES:
@@ -352,7 +350,7 @@ bool WheeledVehicleDefClass::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 

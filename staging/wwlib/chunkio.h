@@ -153,8 +153,6 @@ public:
 	uint32				Write(const IOVector3Struct & v);
 	uint32				Write(const IOVector4Struct & v);
 	uint32				Write(const IOQuaternionStruct & q);
-	bool					Has_Error(void) const { return Error; }
-	void					Report_Error(void) { Error = true; }
 
 private:
 
@@ -171,7 +169,6 @@ private:
 	bool					InMicroChunk;
 	int					MicroChunkPosition;
 	MicroChunkHeader	MCHeader;
-	bool					Error;
 };
 
 
@@ -215,8 +212,6 @@ public:
 	// Sneak peek at the next chunk that will be opened.  Beware, if you need
 	// this, then you are probably hacking so be careful!
 	bool					Peek_Next_Chunk(uint32 * set_id,uint32 * set_size);
-	bool					Has_Error(void) const { return Error; }
-	void					Report_Error(void) { Error = true; }
 
 private:
 
@@ -233,7 +228,6 @@ private:
 	bool					InMicroChunk;
 	int					MicroChunkPosition;
 	MicroChunkHeader	MCHeader;
-	bool					Error;
 
 };
 
@@ -371,45 +365,6 @@ template<class T> inline void RV_Read_Micro_Chunk_Value(ChunkLoadClass &cload, T
 		break;                                                         \
 	}
 
-#if defined(RENEGADE_VITA_PORT)
-/*
-** Vita port: clamp untrusted micro-chunk string lengths to the destination,
-** always NUL-terminate, and skip any excess chunk bytes.
-*/
-#define READ_MICRO_CHUNK_STRING(cload,id,var,size)		\
-	case (id):	{																\
-		unsigned int rv_len_ = cload.Cur_Micro_Chunk_Length();		\
-		unsigned int rv_cap_ = ((size) > 0) ? (unsigned int)((size) - 1) : 0u;	\
-		unsigned int rv_copy_ = (rv_len_ < rv_cap_) ? rv_len_ : rv_cap_;	\
-		unsigned int rv_got_ = (rv_copy_ > 0) ? (unsigned int)cload.Read(var,rv_copy_) : 0u;	\
-		if (rv_got_ > rv_copy_) rv_got_ = rv_copy_;						\
-		if ((size) > 0) ((char *)(var))[rv_got_] = 0;					\
-		if (rv_len_ > rv_copy_) cload.Seek(rv_len_ - rv_copy_);		\
-		break;																	\
-	}
-
-#define READ_MICRO_CHUNK_WWSTRING(cload,id,var)		\
-	case (id):	{																\
-		unsigned int rv_len_ = cload.Cur_Micro_Chunk_Length();		\
-		char *rv_buf_ = (char *)var.Get_Buffer(rv_len_ + 1);			\
-		unsigned int rv_got_ = (unsigned int)cload.Read(rv_buf_,rv_len_);	\
-		if (rv_got_ > rv_len_) rv_got_ = rv_len_;						\
-		rv_buf_[rv_got_] = 0;													\
-		break;																	\
-	}
-
-#define READ_MICRO_CHUNK_WIDESTRING(cload,id,var)		\
-	case (id):	{																\
-		unsigned int rv_len_ = cload.Cur_Micro_Chunk_Length();		\
-		WCHAR *rv_buf_ = var.Get_Buffer(((rv_len_ + 1) / 2) + 1);	\
-		unsigned int rv_got_ = (unsigned int)cload.Read(rv_buf_,rv_len_);	\
-		if (rv_got_ > rv_len_) rv_got_ = rv_len_;						\
-		rv_buf_[(rv_got_ + 1) / 2] = 0;										\
-		break;																	\
-	}
-
-#else
-
 #define READ_MICRO_CHUNK_STRING(cload,id,var,size)		\
 	case (id):	WWASSERT(cload.Cur_Micro_Chunk_Length() <= size); cload.Read(var,cload.Cur_Micro_Chunk_Length()); break;	\
 
@@ -418,8 +373,6 @@ template<class T> inline void RV_Read_Micro_Chunk_Value(ChunkLoadClass &cload, T
 
 #define READ_MICRO_CHUNK_WIDESTRING(cload,id,var)		\
 	case (id):	cload.Read(var.Get_Buffer((cload.Cur_Micro_Chunk_Length()+1)/2),cload.Cur_Micro_Chunk_Length()); break;	\
-
-#endif
 
 /*
 ** These load macros make it easier to add extra code to a specifc case

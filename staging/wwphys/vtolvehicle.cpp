@@ -399,21 +399,20 @@ const PersistFactoryClass & VTOLVehicleClass::Get_Factory (void) const
 bool VTOLVehicleClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(VTOLVEHICLE_CHUNK_VEHICLEPHYS);
-	if (!VehiclePhysClass::Save(csave)) csave.Report_Error();
+	VehiclePhysClass::Save(csave);
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool VTOLVehicleClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case VTOLVEHICLE_CHUNK_VEHICLEPHYS:
-				if (!VehiclePhysClass::Load(cload)) loaded = false;
+				VehiclePhysClass::Load(cload);
 				break;
 
 			default:
@@ -424,7 +423,7 @@ bool VTOLVehicleClass::Load (ChunkLoadClass &cload)
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void VTOLVehicleClass::On_Post_Load (void)
@@ -546,13 +545,12 @@ bool VTOLVehicleDefClass::Save(ChunkSaveClass &csave)
 
 bool VTOLVehicleDefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case VTOLVEHICLEDEF_CHUNK_VEHICLEPHYSDEF:
-				if (!VehiclePhysDefClass::Load(cload)) loaded = false;
+				VehiclePhysDefClass::Load(cload);
 				break;
 
 			case VTOLVEHICLEDEF_CHUNK_VARIABLES:
@@ -585,7 +583,7 @@ bool VTOLVehicleDefClass::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 

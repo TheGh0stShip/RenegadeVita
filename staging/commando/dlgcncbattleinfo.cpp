@@ -52,6 +52,8 @@
 #include "damage.h"
 #include "vehicle.h"
 #include "resource.h"
+#include "WOLGMode.h"
+#include <WWOnline\WOLUser.h>
 #include "translatedb.h"
 #include "string_ids.h"
 #include "mousemgr.h"
@@ -69,8 +71,8 @@ enum
 	COL_SCORE
 };
 
-static const int BUILDING_COUNT		= 5;
-static const int BUILDING_SLOT_COUNT	= 6;
+static const BUILDING_COUNT		= 5;
+static const BUILDING_SLOT_COUNT	= 6;
 
 
 ////////////////////////////////////////////////////////////////

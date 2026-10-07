@@ -62,7 +62,6 @@ public:
 	virtual PersistClass *					Create( void ) const ;
 	virtual bool								Save( ChunkSaveClass &csave );
 	virtual bool								Load( ChunkLoadClass &cload );
-	virtual void								On_Load_Rejected (void);
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
 	DECLARE_EDITABLE( GlobalSettingsDef, DefinitionClass );
@@ -144,7 +143,6 @@ protected:
 	float									MPStealthDistanceVehicle;
 
 	static GlobalSettingsDef *		GlobalSettings;
-	GlobalSettingsDef *				PreviousGlobalSettings;
 };
 
 /*
@@ -194,7 +192,6 @@ public:
 	virtual PersistClass *					Create( void ) const ;
 	virtual bool								Save( ChunkSaveClass &csave );
 	virtual bool								Load( ChunkLoadClass &cload );
-	virtual void								On_Load_Rejected (void);
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
 	DECLARE_EDITABLE( HUDGlobalSettingsDef, DefinitionClass );
@@ -323,7 +320,6 @@ public:
 	RectClass	DamageDiagIndicatorUV;
 
 	static		HUDGlobalSettingsDef *	Instance;
-	HUDGlobalSettingsDef *				PreviousInstance;
 };
 
 /*

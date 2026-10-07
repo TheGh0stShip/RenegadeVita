@@ -143,16 +143,15 @@ bool	DoorPhysDefClass::Save( ChunkSaveClass & csave )
 
 bool	DoorPhysDefClass::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_OLD_PARENT:
-				if (!StaticAnimPhysDefClass::Load( cload )) loaded = false;
+				StaticAnimPhysDefClass::Load( cload );
 				break;
 
 			case CHUNKID_DEF_PARENT:
-				if (!AccessiblePhysDefClass::Load( cload )) loaded = false;
+				AccessiblePhysDefClass::Load( cload );
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -185,7 +184,7 @@ bool	DoorPhysDefClass::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 const PersistFactoryClass & DoorPhysDefClass::Get_Factory (void) const
@@ -245,7 +244,7 @@ enum	{
 bool	DoorPhysClass::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-		if (!AccessiblePhysClass::Save(csave)) csave.Report_Error();
+		AccessiblePhysClass::Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -255,7 +254,7 @@ bool	DoorPhysClass::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_OPEN_REQUEST_PENDING, OpenRequestPending );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	DoorPhysClass::Load( ChunkLoadClass &cload )

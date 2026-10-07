@@ -191,16 +191,15 @@ bool	ElevatorPhysDefClass::Save( ChunkSaveClass & csave )
 
 bool	ElevatorPhysDefClass::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_OLD_PARENT:
-				if (!StaticAnimPhysDefClass::Load( cload )) loaded = false;
+				StaticAnimPhysDefClass::Load( cload );
 				break;
 
 			case CHUNKID_DEF_PARENT:
-				if (!AccessiblePhysDefClass::Load( cload )) loaded = false;
+				AccessiblePhysDefClass::Load( cload );
 				break;
   
 			case CHUNKID_DEF_VARIABLES:
@@ -238,7 +237,7 @@ bool	ElevatorPhysDefClass::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 const PersistFactoryClass & ElevatorPhysDefClass::Get_Factory (void) const 
@@ -305,7 +304,7 @@ enum	{
 bool	ElevatorPhysClass::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-		if (!AccessiblePhysClass::Save(csave)) csave.Report_Error();
+		AccessiblePhysClass::Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -316,11 +315,11 @@ bool	ElevatorPhysClass::Save( ChunkSaveClass & csave )
 
 	if ( CurrentAIRider != NULL ) {
 		csave.Begin_Chunk( CHUNKID_RIDER_OBJECT );
-		if (!CurrentAIRider.Save(csave)) csave.Report_Error();
+		CurrentAIRider.Save( csave );
 		csave.End_Chunk();
 	}
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	ElevatorPhysClass::Load( ChunkLoadClass &cload )

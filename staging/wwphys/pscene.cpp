@@ -84,9 +84,6 @@
 
 
 #include "pscene.h"
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-#include "renegade_client_effects.h"
-#endif
 #include "rinfo.h"
 #include "light.h"
 #include "wwdebug.h"
@@ -2067,9 +2064,6 @@ void PhysicsSceneClass::Add_Camera_Shake
 	float power
 )
 {
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	if (Renegade_Client_Disables_Camera_Shake()) return;
-#endif
 	WWASSERT(CameraShakeSystem != NULL);
 	CameraShakeSystem->Add_Camera_Shake(position,radius,duration,power);
 }

@@ -42,9 +42,6 @@
 #define __ACTIVE_CONVERSATION_H
 
 #include "refcount.h"
-#if defined(RENEGADE_VITA_PORT)
-#include <stdint.h>
-#endif
 #include "conversation.h"
 #include "vector.h"
 #include "vector3.h"
@@ -206,10 +203,6 @@ protected:
 	int												Priority;
 	float												MaxDist;
 	bool												IsInterruptable;
-#if defined(RENEGADE_VITA_PORT)
-	// Diagnostic identity only; deliberately absent from save/load chunks.
-	uint64_t DiagnosticInstance;
-#endif
 };
 
 

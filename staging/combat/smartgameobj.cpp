@@ -39,10 +39,6 @@
 **	Includes
 */
 #include "smartgameobj.h"
-#if defined(RENEGADE_VITA_PORT)
-#include "a35_campaign_flight_recorder.h"
-#endif
-#include "renegade_client_effects.h"
 #include "gameobjmanager.h"
 #include "weapons.h"
 #include "bittype.h"
@@ -125,12 +121,11 @@ bool	SmartGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	SmartGameObjDef::Load( ChunkLoadClass &cload )
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_ARMEDGAMEOBJ_PARENT:
-				if (!ArmedGameObjDef::Load( cload )) loaded = false;
+				ArmedGameObjDef::Load( cload );
 				break;
 								
 			case CHUNKID_DEF_VARIABLES:
@@ -159,7 +154,7 @@ bool	SmartGameObjDef::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -231,7 +226,6 @@ void	SmartGameObj::Copy_Settings( const SmartGameObjDef & definition )
 void	SmartGameObj::Re_Init( const SmartGameObjDef & definition )
 {
 	ArmedGameObj::Re_Init( definition );
-	NetworkStealthActive = true;
 
 	//
 	//	Remove the listener from the scene
@@ -301,7 +295,7 @@ enum	{
 bool	SmartGameObj::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_ARMEDGAMEOBJ_PARENT );
-	if (!ArmedGameObj::Save(csave)) csave.Report_Error();
+	ArmedGameObj::Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -321,26 +315,26 @@ bool	SmartGameObj::Save( ChunkSaveClass & csave )
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_CONTROL );
-	if (!Control.Save(csave)) csave.Report_Error();
+	Control.Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_CONTROLLER );
-	if (!Controller.Save(csave)) csave.Report_Error();
+	Controller.Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_ACTION );
-	if (!Action.Save(csave)) csave.Report_Error();
+	Action.Save( csave );
 	csave.End_Chunk();
 
 	if (StealthEffect != NULL) {
 		csave.Begin_Chunk(CHUNKID_STEALTH_EFFECT);
-		if (!StealthEffect->Save(csave)) csave.Report_Error();
+		StealthEffect->Save(csave);
 		csave.End_Chunk();
 	}
 
 //	Don't need to save Listener
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	SmartGameObj::Load( ChunkLoadClass &cload )
@@ -348,18 +342,17 @@ bool	SmartGameObj::Load( ChunkLoadClass &cload )
 	WWASSERT( PlayerData == NULL );
 
 	int new_control_owner = 0;
-	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case OLD_CHUNKID_PHYSICALGAMEOBJ_PARENT:
 				Debug_Say(( "Loading old SmartGameObj format\n" ));
-				if (!PhysicalGameObj::Load(cload)) loaded = false;
+				PhysicalGameObj::Load( cload );
 				break;
 								
 			case CHUNKID_ARMEDGAMEOBJ_PARENT:
-				if (!ArmedGameObj::Load(cload)) loaded = false;
+				ArmedGameObj::Load( cload );
 				break;
 								
 			case CHUNKID_VARIABLES:
@@ -394,20 +387,20 @@ bool	SmartGameObj::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_CONTROL:
-				if (!Control.Load(cload)) loaded = false;
+				Control.Load( cload );
 				break;
 								
 			case CHUNKID_CONTROLLER:
-				if (!Controller.Load(cload)) loaded = false;
+				Controller.Load( cload );
 				break;
 								
 			case CHUNKID_ACTION:
-				if (!Action.Load(cload)) loaded = false;
+				Action.Load( cload );
 				break;
 								
 			case CHUNKID_STEALTH_EFFECT:
 				Alloc_Stealth_Effect();
-				if (StealthEffect == NULL || !StealthEffect->Load(cload)) loaded = false;
+				StealthEffect->Load(cload);
 				break;
 			
 			default:
@@ -425,7 +418,7 @@ bool	SmartGameObj::Load( ChunkLoadClass &cload )
 	Set_Control_Owner( new_control_owner );	// Be sure soldier virtual function calls
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -473,24 +466,6 @@ void SmartGameObj::Import_Frequent(BitStreamClass & packet)
 	//	Import all data from the base classes
 	//
 	ArmedGameObj::Import_Frequent(packet);
-	if (packet.Has_Read_Error()) return;
-
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	if (Renegade_Client_Uses_TT_Replication()) {
-		bool enabled = false, active = false;
-		packet.Get(enabled);
-		packet.Get(active);
-		ControlClass incoming;
-		incoming.Import_Sc(packet);
-		if (packet.Has_Read_Error()) return;
-		if (enabled != StealthEnabled) Enable_Stealth(enabled);
-		NetworkStealthActive = active;
-		// Consume local-player control too, but preserve local input and any
-		// following derived-class fields instead of flushing the whole packet.
-		if (!Is_Controlled_By_Me()) Control = incoming;
-		return;
-	}
-#endif
 
    //
 	//	Don't import the controller if the player is controlling
@@ -785,8 +760,7 @@ void SmartGameObj::Think()
 			StealthEffect->Set_Friendly( Is_Teammate( COMBAT_STAR ) );
 		}
 
-		if (((StealthPowerupTimer > 0.0f) || (StealthEnabled)) &&
-			(StealthFiringTimer <= 0.0f) && NetworkStealthActive) {
+		if (((StealthPowerupTimer > 0.0f) || (StealthEnabled)) && (StealthFiringTimer <= 0.0f)) {
 			WWPROFILE("Stealh");
 			
 			Alloc_Stealth_Effect();
@@ -903,12 +877,6 @@ void	SmartGameObj::On_Logical_Heard (LogicalListenerClass *listener, LogicalSoun
 		sound.Creator = NULL;
 	}
 
-#if defined(RENEGADE_VITA_PORT)
-	A35_Campaign_Flight_Logical_Stimulus(true, static_cast<int32_t>(sound_obj->Get_ID()),
-		static_cast<int32_t>(sound.Type), static_cast<int32_t>(Get_ID()),
-		sound.Creator ? static_cast<int32_t>(sound.Creator->Get_ID()) : 0,
-		CombatManager::Are_Observers_Active());
-#endif
 	// Notify observers
 	if (CombatManager::Are_Observers_Active()) {
 		const GameObjObserverList & observer_list = Get_Observers();
@@ -1016,7 +984,6 @@ void	SmartGameObj::Import_Creation( BitStreamClass &packet )
 	//
 	int control_owner = 0;
 	packet.Get( control_owner );
-	if (packet.Has_Read_Error()) return;
 	Set_Control_Owner( control_owner );
 
 	//
@@ -1027,11 +994,6 @@ void	SmartGameObj::Import_Creation( BitStreamClass &packet )
 		Get_Action()->Follow_Input( parameters );
 		CombatManager::Set_The_Star( As_SoldierGameObj() );
 	}
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	if (Renegade_Client_Uses_TT_Replication()) {
-		WeaponBag->Import_Weapon_List(packet);
-	}
-#endif
 
 	return ;
 }
@@ -1098,3 +1060,4 @@ void	SmartGameObj::Reset_Controller( void )
 		CombatManager::Send_Control_Packet(this);
 		CombatManager::Send_State_Packet(this);
 		*/
+

@@ -62,7 +62,7 @@ void CRCEngine::operator() (char datum)
 {
 	StagingBuffer.Buffer[Index++] = datum;
 
-	if (Index == sizeof(uint32_t))  {
+	if (Index == sizeof(long))  {
 		CRC = Value();
 		StagingBuffer.Composite = 0;
 		Index = 0;
@@ -110,22 +110,18 @@ long CRCEngine::operator() (void const * buffer, int length)
 		**	Perform the fast 'bulk' processing by reading long word sized
 		**	data blocks.
 		*/
-		// The original wire checksum uses little-endian 32-bit words, including
-		// unaligned input. Neither host long width nor ARM alignment may change it.
-		int longcount = bytes_left / sizeof(uint32_t);
+		long const * longptr = (long const *)dataptr;
+		int longcount = bytes_left / sizeof(long);		// Whole 'long' elements remaining.
 		while (longcount--) {
-			const unsigned char *bytes = reinterpret_cast<const unsigned char *>(dataptr);
-			const uint32_t word = uint32_t(bytes[0]) | (uint32_t(bytes[1]) << 8) |
-				(uint32_t(bytes[2]) << 16) | (uint32_t(bytes[3]) << 24);
-			CRC = _lrotl(CRC, 1) + word;
-			dataptr += sizeof(uint32_t);
-			bytes_left -= sizeof(uint32_t);
+			CRC = _lrotl(CRC, 1) + *longptr++;
+			bytes_left -= sizeof(long);
 		}
 
 		/*
 		**	If there are remainder bytes, then process these by adding them
 		**	to the staging buffer.
 		*/
+		dataptr = (char const *)longptr;
 		while (bytes_left) {
 			operator()(*dataptr);
 			dataptr++;

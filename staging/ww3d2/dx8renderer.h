@@ -356,10 +356,6 @@ public:
 	void						Set_Camera(CameraClass* cam) { camera=cam; }
 	CameraClass *			Peek_Camera(void)	{ return camera; }
 	void						Add_To_Render_List(DecalMeshClass * decalmesh);
-#if defined(RENEGADE_VITA_PORT)
-	bool						Queue_Material_Pass(MaterialPassClass *pass,
-		MeshClass *mesh, bool skin, bool delayed);
-#endif
 
 	// Enable or disable lighting on all objects inserted from now on. (Doesn't affect the objects that are already in the lists)
 	void						Enable_Lighting(bool enable) { enable_lighting=enable; }

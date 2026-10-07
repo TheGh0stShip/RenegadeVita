@@ -72,12 +72,9 @@ CreditsMenuClass::On_Init_Dialog (void)
 			//	Read the data from the file
 			//
 			int size = credits_txt_file->Size ();
-			if (size < 0) size = 0;
 			StringClass ascii_text;
-			int bytes_read = credits_txt_file->Read (ascii_text.Get_Buffer (size + 1), size);
-			if (bytes_read < 0 || bytes_read > size) bytes_read = 0;
-			ascii_text.Peek_Buffer ()[bytes_read] = 0;
-			credits_txt_file->Close ();
+			credits_txt_file->Read (ascii_text.Get_Buffer (size + 1), size);
+			ascii_text.Peek_Buffer ()[size] = 0;
 
 			//
 			//	Convert the text to wide character format and

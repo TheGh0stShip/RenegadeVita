@@ -330,21 +330,20 @@ const PersistFactoryClass & StaticAnimPhysClass::Get_Factory(void) const
 bool StaticAnimPhysClass::Save(ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(STATICANIMPHYS_CHUNK_STATICPHYS);
-	if (!StaticPhysClass::Save(csave)) csave.Report_Error();
+	StaticPhysClass::Save(csave);
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(STATICANIMPHYS_CHUNK_ANIMMANAGER);
-	if (!AnimManager.Save(csave)) csave.Report_Error();
+	AnimManager.Save(csave);
 	csave.End_Chunk();
 	
-	return !csave.Has_Error();
+	return true;
 }
 
 
 bool StaticAnimPhysClass::Load(ChunkLoadClass &cload)
 {
 	int legacy_collision_mode = -1;
-	bool loaded = true;
 #if defined(__vita__)
 	A35_Vita_Static_Load_Trace_Step("static-anim-entry", 0U);
 #endif
@@ -363,7 +362,7 @@ bool StaticAnimPhysClass::Load(ChunkLoadClass &cload)
 #if defined(__vita__)
 				A35_Vita_Static_Load_Trace_Step("static-phys-entry", cload.Cur_Chunk_ID());
 #endif
-				if (!StaticPhysClass::Load(cload)) loaded = false;
+				StaticPhysClass::Load(cload);
 #if defined(__vita__)
 				A35_Vita_Static_Load_Trace_Step("static-phys-return", cload.Cur_Chunk_ID());
 #endif
@@ -382,7 +381,7 @@ bool StaticAnimPhysClass::Load(ChunkLoadClass &cload)
 #if defined(__vita__)
 				A35_Vita_Static_Load_Trace_Step("anim-manager-entry", cload.Cur_Chunk_ID());
 #endif
-				if (!AnimManager.Load(cload)) loaded = false;
+				AnimManager.Load(cload);
 #if defined(__vita__)
 				A35_Vita_Static_Load_Trace_Step("anim-manager-return", cload.Cur_Chunk_ID());
 #endif
@@ -404,7 +403,7 @@ bool StaticAnimPhysClass::Load(ChunkLoadClass &cload)
 #if defined(__vita__)
 	A35_Vita_Static_Load_Trace_Step("static-anim-return", 0U);
 #endif
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void StaticAnimPhysClass::On_Post_Load(void)
@@ -558,21 +557,20 @@ bool StaticAnimPhysDefClass::Save(ChunkSaveClass &csave)
 
 bool StaticAnimPhysDefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case STATICANIMPHYSDEF_CHUNK_STATICPHYSDEF:
-				if (!StaticPhysDefClass::Load(cload)) loaded = false;
+				StaticPhysDefClass::Load(cload);
 				break;
 
 			case STATICANIMPHYSDEF_CHUNK_PROJECTORMANAGERDEF:
-				if (!ProjectorManagerDef.Load(cload)) loaded = false;
+				ProjectorManagerDef.Load(cload);
 				break;
 
 			case STATICANIMPHYSDEF_CHUNK_ANIMMANAGERDEF:
-				if (!AnimManagerDef.Load(cload)) loaded = false;
+				AnimManagerDef.Load(cload);
 				break;
 
 			case STATICANIMPHYSDEF_CHUNK_VARIABLES:
@@ -602,5 +600,6 @@ bool StaticAnimPhysDefClass::Load(ChunkLoadClass &cload)
 
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
+	return true;
 }
+

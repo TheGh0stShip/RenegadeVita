@@ -196,10 +196,7 @@ MapMgrClass::Save (ChunkSaveClass &csave)
 bool
 MapMgrClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded_variables = false;
-	bool loaded_shroud = false;
-	bool loaded = true;
-
+	
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 			
@@ -207,30 +204,18 @@ MapMgrClass::Load (ChunkLoadClass &cload)
 			//	Load all the variables from this chunk
 			//
 			case CHUNKID_VARIABLES:
-				if (loaded_variables) {
-					loaded = false;
-				} else {
-					loaded_variables = true;
-					loaded = Load_Variables (cload) && loaded;
-				}
+				Load_Variables (cload);
 				break;
 
 			case CHUNKID_SHROUD:
 			{
-				if (loaded_shroud) {
-					loaded = false;
-					break;
-				}
-				loaded_shroud = true;
 				//
 				//	Read the shroud vector from its chunk
 				//
 				int size = 0;
-				loaded = cload.Read (&size, sizeof (size)) == sizeof (size) && loaded;
+				cload.Read (&size, sizeof (size));
 				if (size == CLOUD_VECTOR_SIZE) {
-					loaded = cload.Read (CloudVector, sizeof (CloudVector)) == sizeof (CloudVector) && loaded;
-				} else {
-					loaded = false;
+					cload.Read (CloudVector, sizeof (CloudVector));
 				}
 				break;
 			}
@@ -239,7 +224,7 @@ MapMgrClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return loaded && loaded_variables && loaded_shroud;
+	return true;
 }
 
 
@@ -248,42 +233,18 @@ MapMgrClass::Load (ChunkLoadClass &cload)
 //	Load_Variables
 //
 ////////////////////////////////////////////////////////////////
-bool
+void
 MapMgrClass::Load_Variables (ChunkLoadClass &cload)
 {
-	uint32 loaded_values = 0U;
-	bool loaded = true;
-	#define LOAD_REQUIRED_MAP_VALUE(id, value, bit) \
-		case (id): { \
-			const uint32 value_bit = 1U << (bit); \
-			if ((loaded_values & value_bit) != 0U || \
-				cload.Cur_Micro_Chunk_Length() != sizeof(value)) { \
-				loaded = false; \
-			} else { \
-				loaded_values |= value_bit; \
-				loaded = cload.Read(&(value), sizeof(value)) == sizeof(value) && loaded; \
-			} \
-			break; \
-		}
 	while (cload.Open_Micro_Chunk ()) {
 		switch (cload.Cur_Micro_Chunk_ID ()) {
 
-			case VARID_TEXTURE_NAME:
-			{
-				if ((loaded_values & 1U) != 0U) {
-					loaded = false;
-				} else {
-					loaded_values |= 1U;
-					const uint32 length = cload.Cur_Micro_Chunk_Length();
-					loaded = cload.Read(MapTextureName.Get_Buffer(length), length) == length && loaded;
-				}
-			}
-			break;
-			LOAD_REQUIRED_MAP_VALUE (VARID_CENTER_POINT, MapCenterPoint, 1);
-			LOAD_REQUIRED_MAP_VALUE (VARID_SCALE, MapScale, 2);
-			LOAD_REQUIRED_MAP_VALUE (VARID_MAP_TITLE_ID, MapTitleID, 3);
-			LOAD_REQUIRED_MAP_VALUE (VARID_IS_PLAYER_MARKDER_VISIBLE, IsPlayerMarkerVisible, 4);
-			LOAD_REQUIRED_MAP_VALUE (VARID_ENABLE_VTOL, EnableVTOL, 5);
+			READ_MICRO_CHUNK_WWSTRING (cload, VARID_TEXTURE_NAME,	MapTextureName);
+			READ_MICRO_CHUNK (cload, VARID_CENTER_POINT,				MapCenterPoint);
+			READ_MICRO_CHUNK (cload, VARID_SCALE,						MapScale);
+			READ_MICRO_CHUNK (cload, VARID_MAP_TITLE_ID,				MapTitleID);
+			READ_MICRO_CHUNK (cload, VARID_IS_PLAYER_MARKDER_VISIBLE, IsPlayerMarkerVisible);		
+			READ_MICRO_CHUNK (cload, VARID_ENABLE_VTOL,				EnableVTOL);
 		}
 
 		cload.Close_Micro_Chunk ();
@@ -300,12 +261,8 @@ MapMgrClass::Load_Variables (ChunkLoadClass &cload)
 	EnableVTOL = false;
 #endif
 
-	#undef LOAD_REQUIRED_MAP_VALUE
-	const bool complete = loaded && loaded_values == ((1U << 6) - 1U);
-	if (complete) {
-		SaveLoadSystemClass::Register_Post_Load_Callback (this);
-	}
-	return complete;
+	SaveLoadSystemClass::Register_Post_Load_Callback (this);	
+	return ;
 }
 
 

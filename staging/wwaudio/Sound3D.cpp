@@ -698,7 +698,7 @@ bool
 Sound3DClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk (CHUNKID_BASE_CLASS);
-		if (!AudibleSoundClass::Save(csave)) csave.Report_Error();
+		AudibleSoundClass::Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
@@ -711,7 +711,7 @@ Sound3DClass::Save (ChunkSaveClass &csave)
 
 	csave.End_Chunk ();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 

@@ -198,7 +198,7 @@ enum	{
 bool	SoldierObserverClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-		if (!PersistentGameObjObserverClass::Save(csave)) csave.Report_Error();
+		PersistentGameObjObserverClass::Save( csave );
 	csave.End_Chunk();
 
 	if ( CombatManager::Are_Observers_Active() ) {
@@ -221,14 +221,14 @@ bool	SoldierObserverClass::Save (ChunkSaveClass &csave)
 
 		if ( EnemyObject != NULL ) {
 			csave.Begin_Chunk( CHUNKID_ENEMY_OBJ_REF );
-			if (!EnemyObject.Save(csave)) csave.Report_Error();
+			EnemyObject.Save( csave );
 			csave.End_Chunk();
 		}
 	}
 
 	// Don't need to save SubStateString, or LastEvent
 
-	return !csave.Has_Error();
+	return true;
 }
 
 

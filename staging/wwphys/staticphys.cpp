@@ -567,7 +567,7 @@ const PersistFactoryClass & StaticPhysClass::Get_Factory(void) const
 bool StaticPhysClass::Save(ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(STATICPHYS_CHUNK_PHYS);
-	if (!PhysClass::Save(csave)) csave.Report_Error();
+	PhysClass::Save(csave);
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(STATICPHYS_CHUNK_VARIABLES);
@@ -575,7 +575,7 @@ bool StaticPhysClass::Save(ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK(csave,STATICPHYS_VARIABLE_VISSECTORID,VisSectorID);
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 
@@ -593,7 +593,6 @@ bool StaticPhysClass::Save(ChunkSaveClass &csave)
  *=============================================================================================*/
 bool StaticPhysClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 #if defined(__vita__)
 	A35_Vita_Static_Load_Trace_Step("static-phys-load-entry", 0U);
 #endif
@@ -608,7 +607,7 @@ bool StaticPhysClass::Load(ChunkLoadClass &cload)
 #if defined(__vita__)
 				A35_Vita_Static_Load_Trace_Step("phys-entry", cload.Cur_Chunk_ID());
 #endif
-				if (!PhysClass::Load(cload)) loaded = false;
+				PhysClass::Load(cload);
 #if defined(__vita__)
 				A35_Vita_Static_Load_Trace_Step("phys-return", cload.Cur_Chunk_ID());
 #endif
@@ -636,7 +635,7 @@ bool StaticPhysClass::Load(ChunkLoadClass &cload)
 #if defined(__vita__)
 	A35_Vita_Static_Load_Trace_Step("static-phys-load-return", 0U);
 #endif
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -788,13 +787,12 @@ bool StaticPhysDefClass::Save(ChunkSaveClass &csave)
 
 bool StaticPhysDefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case STATICPHYSDEF_CHUNK_PHYSDEF:
-				if (!PhysDefClass::Load(cload)) loaded = false;
+				PhysDefClass::Load(cload);
 				break;
 
 			case STATICPHYSDEF_CHUNK_VARIABLES:				
@@ -813,5 +811,5 @@ bool StaticPhysDefClass::Load(ChunkLoadClass &cload)
 
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
+	return true;
 }

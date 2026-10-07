@@ -1876,32 +1876,22 @@ PathSolveClass::Save (ChunkSaveClass &csave)
 //	Load
 //
 ////////////////////////////////////////////////////////////////////////////////////////////
-bool
+void
 PathSolveClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded_variables = false;
-	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_VARIABLES:
-				if (loaded_variables) {
-					loaded = false;
-				} else {
-					loaded_variables = true;
-					loaded = Load_Variables (cload) && loaded;
-				}
+				Load_Variables (cload);
 				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	loaded = loaded && loaded_variables && !cload.Has_Error ();
-	if (loaded) {
-		SaveLoadSystemClass::Register_Post_Load_Callback (this);
-	}
-	return loaded;
+	SaveLoadSystemClass::Register_Post_Load_Callback (this);
+	return ;
 }
 
 
@@ -1926,18 +1916,12 @@ PathSolveClass::On_Post_Load (void)
 //	Load_Variables
 //
 ///////////////////////////////////////////////////////////////////////
-bool
+void
 PathSolveClass::Load_Variables (ChunkLoadClass &cload)
 {
 	uint32 old_ptr_token = 0;
-	uint32 start_sector_token = 0;
-	uint32 dest_sector_token = 0;
-	Vector3 start_pos;
-	Vector3 dest_pos;
-	PathObjectClass path_object;
-	float priority = 0.5F;
-	uint32 loaded_values = 0U;
-	bool loaded = true;
+	m_StartSector	= NULL;
+	m_DestSector	= NULL;
 
 	//
 	//	Loop through all the microchunks that define the variables
@@ -1945,43 +1929,24 @@ PathSolveClass::Load_Variables (ChunkLoadClass &cload)
 	while (cload.Open_Micro_Chunk ()) {
 		switch (cload.Cur_Micro_Chunk_ID ()) {
 
-#define READ_REQUIRED_PATH_VALUE(id, value, bit) \
-			case (id): \
-				if ((loaded_values & (bit)) != 0U || cload.Cur_Micro_Chunk_Length () != sizeof(value) || \
-					cload.Read (&(value), sizeof(value)) != sizeof(value)) loaded = false; \
-				else loaded_values |= (bit); \
-				break
-			READ_REQUIRED_PATH_VALUE (VARID_STARTPOS, start_pos, 1U);
-			READ_REQUIRED_PATH_VALUE (VARID_DESTPOS, dest_pos, 2U);
-			READ_REQUIRED_PATH_VALUE (VARID_START_SECTOR, start_sector_token, 4U);
-			READ_REQUIRED_PATH_VALUE (VARID_DEST_SECTOR, dest_sector_token, 8U);
-			READ_REQUIRED_PATH_VALUE (VARID_PATH_OBJECT, path_object, 16U);
-			READ_REQUIRED_PATH_VALUE (VARID_PRIORITY, priority, 32U);
-			READ_REQUIRED_PATH_VALUE (VARID_OLD_PTR, old_ptr_token, 64U);
-#undef READ_REQUIRED_PATH_VALUE
+			READ_MICRO_CHUNK (cload, VARID_STARTPOS,		m_StartPos);
+			READ_MICRO_CHUNK (cload, VARID_DESTPOS,		m_DestPos);
+			READ_MICRO_CHUNK (cload, VARID_PATH_OBJECT,	m_PathObject);
+			READ_MICRO_CHUNK (cload, VARID_OLD_PTR,		old_ptr_token);
+			READ_MICRO_CHUNK (cload, VARID_PRIORITY,		m_Priority);
 		}
 
 		cload.Close_Micro_Chunk ();
 	}
 
-	loaded = loaded && loaded_values == 0x7FU && !cload.Has_Error ();
-	(void)start_sector_token;
-	(void)dest_sector_token;
-	if (!loaded) {
-		return false;
-	}
-
-	m_StartPos = start_pos;
-	m_DestPos = dest_pos;
-	m_StartSector = NULL;
-	m_DestSector = NULL;
-	m_PathObject = path_object;
-	m_Priority = priority;
-	if (old_ptr_token != 0U) {
+	//
+	//	Register our old ptr so other objects can remap to us
+	//
+	if (old_ptr_token != 0) {
 		SaveLoadSystemClass::Register_Pointer (
 			reinterpret_cast<PathSolveClass *>(static_cast<uintptr_t>(old_ptr_token)),
 			this);
 	}
 
-	return true;
+	return ;
 }

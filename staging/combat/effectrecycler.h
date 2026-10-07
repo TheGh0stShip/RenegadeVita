@@ -72,8 +72,6 @@ public:
 	~EffectRecyclerClass(void);
 
 	void					Reset(void);
-	void					Preload_Effect(TimedDecorationPhysDefClass * definition,const Matrix3D & tm,int count = 1);
-	void					Preload_Effect(const char * render_obj_name,const Matrix3D & tm,int count = 1);
 	void					Spawn_Effect(TimedDecorationPhysDefClass * definition,const Matrix3D & tm);
 	void					Spawn_Effect(const char * render_obj_name,const Matrix3D & tm,float time = -1.0f);
 	
@@ -95,4 +93,5 @@ private:
 
 
 #endif //EFFECTRECYCLER_H
+
 

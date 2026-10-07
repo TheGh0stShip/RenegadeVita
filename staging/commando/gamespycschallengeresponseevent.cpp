@@ -41,12 +41,7 @@
 #include "apppackettypes.h"
 #include "networkobjectmgr.h"
 #include "playermanager.h"
-#if defined(RENEGADE_VITA_PORT)
-#include "renegade_client_identity.h"
-#include "a31_client_connect_boundary.h"
-#else
 #include "CDKeyAuth.h"
-#endif
 
 
 DECLARE_NETWORKOBJECT_FACTORY(cGameSpyCsChallengeResponseEvent, NETCLASSID_GAMESPYCSCHALLENGERESPONSEEVENT);
@@ -78,14 +73,7 @@ cGameSpyCsChallengeResponseEvent::Init
 
 	//TODO_AUTH - construct ChallengeResponseString here from challenge_string, 
 	// CD-KEY, random value.
-#if defined(RENEGADE_VITA_PORT)
-	if (!Renegade_Answer_Serial_Challenge(challenge_string.Peek_Buffer(), ChallengeResponseString)) {
-		Set_Delete_Pending();
-		return;
-	}
-#else
 	CCDKeyAuth::AuthSerial(challenge_string.Peek_Buffer(), ChallengeResponseString);
-#endif
 
 	// Get Serial Number
 
@@ -95,11 +83,6 @@ cGameSpyCsChallengeResponseEvent::Init
 		Act();
 	} else {
 		Set_Object_Dirty_Bit(0, BIT_CREATION, true);
-#if defined(RENEGADE_VITA_PORT)
-		// Admission runs before CombatGameMode's replication tick. Serialize
-		// through the original sender now; Service_Send owns transmission.
-		cNetwork::Send_Object_Update(this, 0);
-#endif
 	}
 }
 
@@ -114,10 +97,6 @@ cGameSpyCsChallengeResponseEvent::Act
 
    WWASSERT(cNetwork::I_Am_Server());
 
-#if defined(RENEGADE_VITA_PORT)
-	// The port is a TT client; it has no public serial-validation service.
-	A31ClientConnect::Identity_Failed();
-#else
 	cPlayer * p_player = cPlayerManager::Find_Player(ClientId);
 	if (p_player != NULL)
 	{
@@ -135,7 +114,6 @@ cGameSpyCsChallengeResponseEvent::Act
 		p_player->Set_GameSpy_Auth_State(GAMESPY_AUTH_STATE_VALIDATING);
 	}
 
-#endif
 	Set_Delete_Pending();
 }
 

@@ -357,10 +357,6 @@ bool ScriptManager::Save(ChunkSaveClass& csave)
 {
 	for (int index = 0; index < ActiveScriptList.Count(); index++) {
 		ScriptClass* script = ActiveScriptList[ index ];
-		if (script == NULL) {
-			csave.Report_Error();
-			continue;
-		}
 
 		csave.Begin_Chunk( CHUNKID_SCRIPT_ENTRY );
 		csave.Begin_Chunk( CHUNKID_SCRIPT_HEADER );
@@ -397,43 +393,28 @@ bool ScriptManager::Save(ChunkSaveClass& csave)
 
 		csave.End_Chunk();
 	}
-	return !csave.Has_Error();
+	return true;
 }
 
 
 bool	ScriptManager::Load( ChunkLoadClass & cload )
 {
 	WWASSERT( ActiveScriptList.Count() == 0 );
-	bool loaded = true;
 
 	while (cload.Open_Chunk()) {
 
-		uint32 game_obj_observer_token = 0U;
-		uint32 owner_token = 0U;
+		GameObjObserverClass * game_obj_observer_ptr = NULL;
+		PhysicalGameObj * owner_ptr = NULL;
 
 		WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_SCRIPT_ENTRY );
-		if (cload.Cur_Chunk_ID() != CHUNKID_SCRIPT_ENTRY) {
-			loaded = false;
-			cload.Close_Chunk();
-			continue;
-		}
 
 		ScriptClass *script = NULL;
 
 		// Load header
-		bool entry_loaded = cload.Open_Chunk();
-		WWASSERT( !entry_loaded || cload.Cur_Chunk_ID() == CHUNKID_SCRIPT_HEADER );
-		if (!entry_loaded || cload.Cur_Chunk_ID() != CHUNKID_SCRIPT_HEADER) {
-			if (entry_loaded) {
-				cload.Close_Chunk();
-			}
-			cload.Close_Chunk();
-			loaded = false;
-			continue;
-		}
+		cload.Open_Chunk();
+		WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_SCRIPT_HEADER );
 
 		int obs_id = -1;
-		uint32 header_values = 0U;
 
 //		int param_index = 0;
 		while (cload.Open_Micro_Chunk()) {
@@ -441,18 +422,8 @@ bool	ScriptManager::Load( ChunkLoadClass & cload )
 			switch( id ) {
 				case MICROCHUNKID_NAME:
 				{
-					const uint32 length = cload.Cur_Micro_Chunk_Length();
-					if ((header_values & 1U) != 0U || length == 0U || length > 512U) {
-						entry_loaded = false;
-						break;
-					}
 					StringClass	name;
 					LOAD_MICRO_CHUNK_WWSTRING( cload, name );
-					if (static_cast<uint32>(name.Get_Length() + 1) != length) {
-						entry_loaded = false;
-						break;
-					}
-					header_values |= 1U;
 					WWASSERT( script == NULL );
 					script = Create_Script( name );
 					if ( script == NULL ) {
@@ -466,45 +437,18 @@ bool	ScriptManager::Load( ChunkLoadClass & cload )
 
 				case MICROCHUNKID_PARAM:
 				{
-					const uint32 length = cload.Cur_Micro_Chunk_Length();
-					if ((header_values & 1U) == 0U || (header_values & 2U) != 0U || length == 0U || length > 256U) {
-						entry_loaded = false;
-						break;
-					}
-					header_values |= 2U;
 					if ( script != NULL ) {
 						StringClass	param;
 						LOAD_MICRO_CHUNK_WWSTRING( cload, param );
-						if (static_cast<uint32>(param.Get_Length() + 1) != length) {
-							entry_loaded = false;
-						} else {
-							script->Set_Parameters_String(param);
-						}
-					} else {
-						StringClass param;
-						LOAD_MICRO_CHUNK_WWSTRING(cload, param);
-						if (static_cast<uint32>(param.Get_Length() + 1) != length) {
-							entry_loaded = false;
-						}
+						script->Set_Parameters_String(param);
 					}
 					break;
 				}
 
-				case MICROCHUNKID_GAME_OBJ_OBSERVER_PTR:
-					if ((header_values & 4U) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(uint32)) entry_loaded = false;
-					else if (cload.Read(&game_obj_observer_token, sizeof(game_obj_observer_token)) != sizeof(game_obj_observer_token)) entry_loaded = false;
-					else header_values |= 4U;
-					break;
-				case MICROCHUNKID_OWNER_PTR:
-					if ((header_values & 8U) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(uint32)) entry_loaded = false;
-					else if (cload.Read(&owner_token, sizeof(owner_token)) != sizeof(owner_token)) entry_loaded = false;
-					else header_values |= 8U;
-					break;
-				case MICROCHUNKID_ID:
-					if ((header_values & 16U) != 0U || cload.Cur_Micro_Chunk_Length() != sizeof(obs_id)) entry_loaded = false;
-					else if (cload.Read(&obs_id, sizeof(obs_id)) != sizeof(obs_id)) entry_loaded = false;
-					else header_values |= 16U;
-					break;
+				READ_MICRO_CHUNK( cload, MICROCHUNKID_GAME_OBJ_OBSERVER_PTR, game_obj_observer_ptr );
+				READ_MICRO_CHUNK( cload, MICROCHUNKID_OWNER_PTR, owner_ptr );
+
+				READ_MICRO_CHUNK( cload, MICROCHUNKID_ID, obs_id );
 
 				default:
 					Debug_Say(( "Unrecognized ScriptCollection Header chunkID\n" ));
@@ -513,68 +457,39 @@ bool	ScriptManager::Load( ChunkLoadClass & cload )
 			cload.Close_Micro_Chunk();
 		}
 		cload.Close_Chunk();
-		entry_loaded = entry_loaded && header_values == 0x1FU &&
-			game_obj_observer_token != 0U && !cload.Has_Error();
-		if (!entry_loaded) {
-			if (script != NULL) {
-				ActiveScriptList.Delete(script);
-				WWASSERT(ScriptDestroyFunct != NULL);
-				if (ScriptDestroyFunct != NULL) ScriptDestroyFunct(script);
-			}
-			while (cload.Open_Chunk()) cload.Close_Chunk();
-			cload.Close_Chunk();
-			loaded = false;
-			continue;
-		}
 
 		if ( script != NULL ) {
+
 			if ( obs_id != -1 ) {
 				script->Set_ID( obs_id );
 //				Debug_Say(( "Loaded Script ID %d\n", obs_id ));
 			}
-		}
 
-		// If data is present, validate its position even when the current
-		// provider intentionally lacks the released script type.
-		if ( cload.Open_Chunk() ) {
-			WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_SCRIPT_DATA );
-			if (cload.Cur_Chunk_ID() == CHUNKID_SCRIPT_DATA) {
-				if (script != NULL) {
-					ScriptLoader loader( cload );
-					script->Load( loader );
-				}
-			} else {
-				entry_loaded = false;
-			}
-			cload.Close_Chunk();
-		}
-
-		if (cload.Open_Chunk()) {
-			entry_loaded = false;
-			do {
+			// If there is data, load
+			if ( cload.Open_Chunk() ) {
+				WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_SCRIPT_DATA );
+				ScriptLoader loader( cload );
+				script->Load( loader );
 				cload.Close_Chunk();
-			} while (cload.Open_Chunk());
-		}
-		entry_loaded = entry_loaded && !cload.Has_Error();
-		GameObjObserverClass *game_obj_observer_ptr = reinterpret_cast<GameObjObserverClass *>(
-			static_cast<uintptr_t>(game_obj_observer_token));
-		if (entry_loaded && script != NULL) {
-			SaveLoadSystemClass::Register_Pointer(game_obj_observer_ptr, (GameObjObserverClass *)script);
-			*(script->Get_Owner_Ptr()) = reinterpret_cast<ScriptableGameObj *>(static_cast<uintptr_t>(owner_token));
-			REQUEST_POINTER_REMAP( (void **)script->Get_Owner_Ptr() );
-		} else if (entry_loaded) {
-			SaveLoadSystemClass::Register_Pointer(game_obj_observer_ptr, (GameObjObserverClass *)NULL);
-		} else {
-			loaded = false;
-			if (script != NULL) {
-				ActiveScriptList.Delete(script);
-				WWASSERT(ScriptDestroyFunct != NULL);
-				if (ScriptDestroyFunct != NULL) ScriptDestroyFunct(script);
 			}
+
+			WWASSERT( game_obj_observer_ptr != NULL );
+			if ( game_obj_observer_ptr != NULL ) {
+				SaveLoadSystemClass::Register_Pointer(game_obj_observer_ptr, (GameObjObserverClass *)script);
+			}
+
+			// set the owner, and request remap
+			*(script->Get_Owner_Ptr()) = owner_ptr;
+			REQUEST_POINTER_REMAP( (void **)script->Get_Owner_Ptr() );
+		} else {
+			SaveLoadSystemClass::Register_Pointer(game_obj_observer_ptr, (GameObjObserverClass *)NULL);
 		}
 
 
 		cload.Close_Chunk();
 	}
-	return loaded && !cload.Has_Error();
+	return true;
 }
+
+
+

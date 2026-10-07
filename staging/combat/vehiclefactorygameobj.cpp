@@ -189,13 +189,12 @@ VehicleFactoryGameObjDef::Save (ChunkSaveClass &csave)
 bool
 VehicleFactoryGameObjDef::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk ())
 	{
 		switch (cload.Cur_Chunk_ID ())
 		{
 			case CHUNKID_DEF_PARENT:
-				if (!BuildingGameObjDef::Load (cload)) loaded = false;
+				BuildingGameObjDef::Load (cload);
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -210,7 +209,7 @@ VehicleFactoryGameObjDef::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -339,7 +338,7 @@ bool
 VehicleFactoryGameObj::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		if (!BuildingGameObj::Save(csave)) csave.Report_Error();
+		BuildingGameObj::Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
@@ -350,7 +349,7 @@ VehicleFactoryGameObj::Save (ChunkSaveClass &csave)
 		WRITE_MICRO_CHUNK (csave, MICROCHUNKID_GENERATING_VEHICLE_ID,	GeneratingVehicleID);
 
 	csave.End_Chunk ();
-	return !csave.Has_Error();
+	return true;
 }
 
 
@@ -362,12 +361,11 @@ VehicleFactoryGameObj::Save (ChunkSaveClass &csave)
 bool
 VehicleFactoryGameObj::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				if (!BuildingGameObj::Load(cload)) loaded = false;
+				BuildingGameObj::Load (cload);
 				break;
 								
 			case CHUNKID_VARIABLES:
@@ -382,7 +380,7 @@ VehicleFactoryGameObj::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 

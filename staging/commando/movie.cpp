@@ -71,7 +71,6 @@ void	MovieGameModeClass::Init()
 	BINKMovie::Init();
 	IsPending = false;
 	IsPlaying = false;
-	WasLeavePressed = Input::Get_State(INPUT_FUNCTION_MENU_TOGGLE);
 
 	RegistryClass registry( APPLICATION_SUB_KEY_NAME_OPTIONS );
 	if ( registry.Is_Valid() ) {
@@ -84,9 +83,9 @@ void	MovieGameModeClass::Init()
 
 void 	MovieGameModeClass::Shutdown()
 {
-	Stop_Current_Movie();
 	BINKMovie::Shutdown();
 	IsPending = false;
+	IsPlaying = false;
 }
 
 /*
@@ -109,11 +108,12 @@ void 	MovieGameModeClass::Think()
 		}
 
 		bool	leave = Input::Get_State(INPUT_FUNCTION_MENU_TOGGLE);
-		if ( leave && !WasLeavePressed ) {
-			WasLeavePressed = leave;		// Weird.  Double looping calls
+		static bool was_leave = true;
+		if ( leave && !was_leave ) {
+			was_leave = leave;		// Weird.  Double looping calls
 			Movie_Done();
 		}
-		WasLeavePressed = leave;
+		was_leave = leave;
 	}
 }
 
@@ -126,7 +126,9 @@ void 	MovieGameModeClass::Render()
 			if (BINKMovie::Is_Complete () == false) {
 				BINKMovie::Render ();
 			} else {
-				Stop_Current_Movie();
+				WWAudioClass::Get_Instance ()->Temp_Disable_Audio (false);
+				BINKMovie::Stop ();
+				IsPlaying = false;
 			}
 		}
 	}
@@ -135,9 +137,6 @@ void 	MovieGameModeClass::Render()
 void	MovieGameModeClass::Start_Movie( const char * filename )
 {
 	WWMEMLOG(MEM_BINK);
-	// A held control from the score/menu transition is baseline state for this
-	// movie. Require a release and a new edge before the outer movie owner skips.
-	WasLeavePressed = Input::Get_State(INPUT_FUNCTION_MENU_TOGGLE);
 	
 	//
 	//	Check to see if we should enforce the CD or not...
@@ -221,17 +220,6 @@ void	MovieGameModeClass::Play_Movie( const char * filename )
 	return ;
 }
 
-void MovieGameModeClass::Stop_Current_Movie( void )
-{
-	if (!IsPlaying) return;
-	// Balance the audio state exactly once on completion, skip, deactivation,
-	// frontend flush, or application teardown.
-	WWAudioClass *audio = WWAudioClass::Get_Instance ();
-	if (audio != NULL) audio->Temp_Disable_Audio (false);
-	BINKMovie::Stop ();
-	IsPlaying = false;
-}
-
 void	MovieGameModeClass::HandleNotification (CDVerifyEvent &event)
 {
 	if ( event.Event() == CDVerifyEvent::VERIFIED ) {
@@ -290,8 +278,18 @@ void	MovieGameModeClass::Movie_Done( void )
 		MovieStartupMode, IsPlaying ? 1 : 0, IsPending ? 1 : 0,
 		BINKMovie::Is_Complete() ? 1 : 0);
 
-	if (IsPlaying) A4_MOVIE_TRACE("A4 MovieGameMode: stopping current movie\n");
-	Stop_Current_Movie();
+	if (IsPlaying) {
+		WWAudioClass *audio = WWAudioClass::Get_Instance ();
+		A4_MOVIE_TRACE("A4 MovieGameMode: stopping current movie audio=%p\n", audio);
+		if (audio != NULL) {
+			audio->Temp_Disable_Audio (false);
+		} else {
+			A4_MOVIE_TRACE("A4 MovieGameMode: audio singleton unavailable during movie stop\n");
+		}
+		BINKMovie::Stop ();
+		A4_MOVIE_TRACE("A4 MovieGameMode: BINKMovie::Stop returned\n");
+		IsPlaying = false;
+	}
 
 	if ( MovieStartupMode == STARTUP_MOVIE_EA ) {
 		MovieStartupMode = STARTUP_MOVIE_INTRO;

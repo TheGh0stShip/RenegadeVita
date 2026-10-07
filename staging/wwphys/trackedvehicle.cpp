@@ -60,16 +60,6 @@
 
 DECLARE_FORCE_LINK(trackedvehicle);
 
-static bool _has_track_token(const char *name, const char *token)
-{
-	if (name == NULL || token == NULL || *token == '\0') return false;
-	const size_t token_length = strlen(token);
-	for (const char *cursor = name; *cursor != '\0'; ++cursor) {
-		if (strnicmp(cursor, token, token_length) == 0) return true;
-	}
-	return false;
-}
-
 
 
 static bool _is_left_track_name(const char * name) 
@@ -86,11 +76,6 @@ static bool _is_left_track_name(const char * name)
 	const char * sub_name = strchr(name,'.');
 	if (sub_name != NULL) {
 		sub_name++;
-	} else {
-		/* Some retail W3D hierarchies expose the track mesh name directly. */
-		sub_name = name;
-	}
-	if (sub_name != NULL) {
 		if (	(strnicmp(sub_name,LEFT_TRACK_NAME0,strlen(LEFT_TRACK_NAME0)) == 0) ||
 				(strnicmp(sub_name,LEFT_TRACK_NAME1,strlen(LEFT_TRACK_NAME1)) == 0) || 
 				(strnicmp(sub_name,LEFT_TRACK_NAME2,strlen(LEFT_TRACK_NAME2)) == 0) || 
@@ -99,12 +84,7 @@ static bool _is_left_track_name(const char * name)
 			return true;
 		}
 	}
-	return _has_track_token(name, "TRACK-L") ||
-		_has_track_token(name, "TREAD-L") ||
-		_has_track_token(name, "TRACK_L") ||
-		_has_track_token(name, "TREAD_L") ||
-		_has_track_token(name, "TRACKL") ||
-		_has_track_token(name, "TREADL");
+	return false;
 }
 
 static bool _is_right_track_name(const char * name)
@@ -121,11 +101,6 @@ static bool _is_right_track_name(const char * name)
 	const char * sub_name = strchr(name,'.');
 	if (sub_name != NULL) {
 		sub_name++;
-	} else {
-		/* Some retail W3D hierarchies expose the track mesh name directly. */
-		sub_name = name;
-	}
-	if (sub_name != NULL) {
 		if (	(strnicmp(sub_name,RIGHT_TRACK_NAME0,strlen(RIGHT_TRACK_NAME0)) == 0) ||
 				(strnicmp(sub_name,RIGHT_TRACK_NAME1,strlen(RIGHT_TRACK_NAME1)) == 0) || 
 				(strnicmp(sub_name,RIGHT_TRACK_NAME2,strlen(RIGHT_TRACK_NAME2)) == 0) || 
@@ -134,12 +109,7 @@ static bool _is_right_track_name(const char * name)
 			return true;
 		}
 	}
-	return _has_track_token(name, "TRACK-R") ||
-		_has_track_token(name, "TREAD-R") ||
-		_has_track_token(name, "TRACK_R") ||
-		_has_track_token(name, "TREAD_R") ||
-		_has_track_token(name, "TRACKR") ||
-		_has_track_token(name, "TREADR");
+	return false;
 }
 
 
@@ -172,9 +142,7 @@ TrackedVehicleClass::TrackedVehicleClass(void) :
 	LeftTrackMovement(0),
 	RightTrackMovement(0),
 	LeftTrackLastPosition(0,0,0),
-	RightTrackLastPosition(0,0,0),
-	LastTrackSyncTime(0),
-	TrackPositionsInitialized(false)
+	RightTrackLastPosition(0,0,0)
 {
 }
  
@@ -189,13 +157,6 @@ TrackedVehicleClass::~TrackedVehicleClass(void)
 
 void TrackedVehicleClass::Render(RenderInfoClass & rinfo)
 {
-	// Multiple submissions at one sync time must not erase the mapper rate
-	// before deferred meshes consume it. Accumulate motion on the next tick.
-	if (TrackPositionsInitialized && LastTrackSyncTime == WW3D::Get_Sync_Time()) {
-		VehiclePhysClass::Render(rinfo);
-		return;
-	}
-
 	/*
 	** Compute the track movement
 	*/
@@ -208,22 +169,14 @@ void TrackedVehicleClass::Render(RenderInfoClass & rinfo)
 	Vector3 forward;
 	tm.Get_X_Vector(&forward);
 
-	const unsigned int sync_time = WW3D::Get_Sync_Time();
-	const unsigned int elapsed_ms = sync_time - LastTrackSyncTime;
-	if (!TrackPositionsInitialized) {
-		LeftTrackMovement = 0.0f;
-		RightTrackMovement = 0.0f;
-		TrackPositionsInitialized = true;
-	} else {
-		Vector3 move;
-		Vector3::Subtract(left_track_position,LeftTrackLastPosition,&move);
-		LeftTrackMovement = Vector3::Dot_Product(move,forward);
-		Vector3::Subtract(right_track_position,RightTrackLastPosition,&move);
-		RightTrackMovement = Vector3::Dot_Product(move,forward);
-	}
+	Vector3 move;
+	Vector3::Subtract(left_track_position,LeftTrackLastPosition,&move);										
+	LeftTrackMovement = Vector3::Dot_Product(move,forward);
+
+	Vector3::Subtract(right_track_position,RightTrackLastPosition,&move);
+	RightTrackMovement = Vector3::Dot_Product(move,forward);
 	LeftTrackLastPosition = left_track_position;
 	RightTrackLastPosition = right_track_position;
-	LastTrackSyncTime = sync_time;
 	
 	/*
 	** Update the mappers
@@ -236,12 +189,9 @@ void TrackedVehicleClass::Render(RenderInfoClass & rinfo)
 		} else {
 			movement = RightTrackMovement;
 		}
-		const float movement_per_second = elapsed_ms > 0U ?
-			movement * 1000.0f / static_cast<float>(elapsed_ms) : 0.0f;
 
 		TrackMappers[i].Mapper->Set_UV_Offset_Delta(
-			Vector2(def->TrackUScaleFactor * movement_per_second,
-				def->TrackVScaleFactor * movement_per_second));
+			Vector2(def->TrackUScaleFactor * movement,def->TrackVScaleFactor * movement) );
 	}
 
 	/*
@@ -262,8 +212,6 @@ void TrackedVehicleClass::Update_Cached_Model_Parameters(void)
 	** Reset our array of mapper pointers
 	*/
 	TrackMappers.Delete_All(false);
-	TrackPositionsInitialized = false;
-	LastTrackSyncTime = WW3D::Get_Sync_Time();
 	
 	/*
 	** Make sure that this model has unique meshes for its tracks
@@ -429,21 +377,20 @@ const PersistFactoryClass & TrackedVehicleClass::Get_Factory (void) const
 bool TrackedVehicleClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(TRACKEDVEHICLE_CHUNK_VEHICLEPHYS);
-	if (!VehiclePhysClass::Save(csave)) csave.Report_Error();
+	VehiclePhysClass::Save(csave);
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool TrackedVehicleClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		
 		switch(cload.Cur_Chunk_ID()) 
 		{
 			case TRACKEDVEHICLE_CHUNK_VEHICLEPHYS:
-				if (!VehiclePhysClass::Load(cload)) loaded = false;
+				VehiclePhysClass::Load(cload);
 				break;
 
 			default:
@@ -454,7 +401,7 @@ bool TrackedVehicleClass::Load (ChunkLoadClass &cload)
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 void TrackedVehicleClass::On_Post_Load (void)
@@ -536,13 +483,12 @@ bool TrackedVehicleDefClass::Save(ChunkSaveClass &csave)
 
 bool TrackedVehicleDefClass::Load(ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 
 		switch(cload.Cur_Chunk_ID()) {
 
 			case TRACKEDVEHICLEDEF_CHUNK_VEHICLEPHYSDEF:
-				if (!VehiclePhysDefClass::Load(cload)) loaded = false;
+				VehiclePhysDefClass::Load(cload);
 				break;
 
 			case TRACKEDVEHICLEDEF_CHUNK_VARIABLES:
@@ -565,7 +511,7 @@ bool TrackedVehicleDefClass::Load(ChunkLoadClass &cload)
 		cload.Close_Chunk();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -577,3 +523,5 @@ bool TrackedVehicleDefClass::Is_Type(const char * type_name)
 		return VehiclePhysDefClass::Is_Type(type_name);
 	}
 }
+
+

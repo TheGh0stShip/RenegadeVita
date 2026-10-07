@@ -54,7 +54,7 @@ bool		NetworkObjectClass::IsServer		= false;
 //	NetworkObjectClass
 //
 ////////////////////////////////////////////////////////////////
-NetworkObjectClass::NetworkObjectClass (bool register_on_server)	:
+NetworkObjectClass::NetworkObjectClass (void)	:
 	ImportStateCount (0),
 	LastClientsideUpdateTime (0),
 	NetworkID (0),
@@ -73,7 +73,7 @@ NetworkObjectClass::NetworkObjectClass (bool register_on_server)	:
 	LastObjectIdIGotDamagedBy(-1)
 
 {
-	if (IsServer && register_on_server)
+	if (IsServer)
 	{
 		//
 		//	Assign the object a unique ID. This will happen on the client too during object

@@ -40,7 +40,7 @@
 #include "translatedb.h"
 #include "string_ids.h"
 #include "assets.h"
-#include "renegade_server_config.h"
+#include "multihud.h"
 #include "playerdata.h"
 #include "player.h"
 #include "playertype.h"
@@ -283,7 +283,7 @@ void cGameDataSkirmish::Load_From_Server_Config(void)
 {
 	cGameData::Load_From_Server_Config(Get_Ini_Filename());
 
-   INIClass * p_ini = Renegade_Load_Server_Config(Get_Ini_Filename());
+   INIClass * p_ini = Get_INI(Get_Ini_Filename());
    WWASSERT(p_ini != NULL);
 
    bool				b;
@@ -323,7 +323,7 @@ void cGameDataSkirmish::Save_To_Server_Config(void)
 {
 	cGameData::Save_To_Server_Config(Get_Ini_Filename());
 
-   INIClass * p_ini = Renegade_Load_Server_Config(Get_Ini_Filename());
+   INIClass * p_ini = Get_INI(Get_Ini_Filename());
    WWASSERT(p_ini != NULL);
 
 
@@ -336,7 +336,7 @@ void cGameDataSkirmish::Save_To_Server_Config(void)
 	p_ini->Put_Int(   INI_SECTION_NAME, "StartingCredits",			Get_Starting_Credits());
 
 
-	Renegade_Save_Server_Config(p_ini, Get_Ini_Filename());
+	Save_INI(p_ini, Get_Ini_Filename());
    Release_INI(p_ini);
 }
 

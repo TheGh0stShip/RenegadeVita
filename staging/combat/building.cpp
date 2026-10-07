@@ -229,14 +229,13 @@ BuildingGameObjDef::Save (ChunkSaveClass &csave)
 bool
 BuildingGameObjDef::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	int legacy_team = -1;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!DamageableGameObjDef::Load( cload )) loaded = false;
+				DamageableGameObjDef::Load( cload );
 				break;
 	  
 			case CHUNKID_DEF_VARIABLES:
@@ -275,7 +274,7 @@ BuildingGameObjDef::Load (ChunkLoadClass &cload)
 		}
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -440,7 +439,7 @@ bool
 BuildingGameObj::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		if (!DamageableGameObj::Save(csave)) csave.Report_Error();
+		DamageableGameObj::Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
@@ -449,7 +448,7 @@ BuildingGameObj::Save (ChunkSaveClass &csave)
 		WRITE_MICRO_CHUNK (csave, MICROCHUNKID_COLLECTION_SPHERE,	CollectionSphere);		
 	csave.End_Chunk ();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 
@@ -461,12 +460,11 @@ BuildingGameObj::Save (ChunkSaveClass &csave)
 bool
 BuildingGameObj::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				if (!DamageableGameObj::Load(cload)) loaded = false;
+				DamageableGameObj::Load (cload);
 				break;
 	  
 			case CHUNKID_VARIABLES:
@@ -505,7 +503,7 @@ BuildingGameObj::Load (ChunkLoadClass &cload)
 		CollectionSphere.Center = Position;
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 

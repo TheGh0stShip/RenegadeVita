@@ -111,43 +111,19 @@ SimplePersistFactoryClass<T,CHUNKID>::Load(ChunkLoadClass & cload) const
 {
 	T * new_obj = new T;
 	uint32 old_obj_token = 0;
-	bool pointer_seen = false;
-	bool data_seen = false;
-	bool loaded = true;
-	int phase = 0;
 
-	while (cload.Open_Chunk()) {
-		switch (cload.Cur_Chunk_ID()) {
-			case SIMPLEFACTORY_CHUNKID_OBJPOINTER:
-				if (phase != 0 || pointer_seen || cload.Cur_Chunk_Length() != sizeof(old_obj_token) ||
-					cload.Read(&old_obj_token, sizeof(old_obj_token)) != sizeof(old_obj_token)) {
-					loaded = false;
-				} else {
-					pointer_seen = true;
-					phase = 1;
-				}
-				break;
-
-			case SIMPLEFACTORY_CHUNKID_OBJDATA:
-				if (phase != 1 || data_seen) loaded = false;
-				else {
-					data_seen = true;
-					phase = 2;
-					loaded = new_obj->Load(cload) && loaded;
-				}
-				break;
-
-			default:
-				loaded = false;
-				break;
-		}
-		cload.Close_Chunk();
-	}
-	loaded = loaded && pointer_seen && data_seen && phase == 2 && old_obj_token != 0 && !cload.Has_Error();
-	if (!loaded) SaveLoadSystemClass::Report_Load_Failure();
-
+	cload.Open_Chunk();
+	WWASSERT(cload.Cur_Chunk_ID() == SIMPLEFACTORY_CHUNKID_OBJPOINTER);
+	cload.Read(&old_obj_token,sizeof(old_obj_token));
+	cload.Close_Chunk();
 	T * old_obj = reinterpret_cast<T *>(static_cast<uintptr_t>(old_obj_token));
-	if (old_obj != NULL) SaveLoadSystemClass::Register_Pointer(old_obj,new_obj);
+
+	cload.Open_Chunk();
+	WWASSERT(cload.Cur_Chunk_ID() == SIMPLEFACTORY_CHUNKID_OBJDATA);
+	new_obj->Load(cload);
+	cload.Close_Chunk();
+
+	SaveLoadSystemClass::Register_Pointer(old_obj,new_obj);
 	return new_obj;
 }
 
@@ -161,7 +137,7 @@ SimplePersistFactoryClass<T,CHUNKID>::Save(ChunkSaveClass & csave,PersistClass *
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(SIMPLEFACTORY_CHUNKID_OBJDATA);
-	if (obj == NULL || !obj->Save(csave)) csave.Report_Error();
+	obj->Save(csave);
 	csave.End_Chunk();
 }
 

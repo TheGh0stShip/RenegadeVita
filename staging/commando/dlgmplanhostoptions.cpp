@@ -50,33 +50,19 @@
 #include "nicenum.h"
 #include "useroptions.h"
 #include "gamemode.h"
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "wolgmode.h"
-#endif
 #include "campaign.h"
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "mpsettingsmgr.h"
-#endif
 #include "specialbuilds.h"
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "dlgmpslaveservers.h"
 #include "wolgmode.h"
 #include "wolloginprofile.h"
-#endif
 #include "dlgserversaveload.h"
 #include "modpackagemgr.h"
 #include "modpackage.h"
 
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "gamespyadmin.h"
-#endif
 #include "specialbuilds.h"
-
-static bool Is_Wol_Mode_Active(void)
-{
-	GameModeClass *mode = GameModeManager::Find("WOL");
-	return mode != NULL && mode->Is_Active();
-}
 
 ////////////////////////////////////////////////////////////////
 //
@@ -234,8 +220,8 @@ MPLanHostOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 								}
 							}
 
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 							SlaveMaster.Startup_Slaves();
+
 							GameModeClass* gameMode = GameModeManager::Find("WOL");
 
 							if (gameMode && gameMode->Is_Active()) {
@@ -246,9 +232,6 @@ MPLanHostOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 							} else {
 								Start_Game(The_Game());
 							}
-#else
-							Start_Game(The_Game());
-#endif
 						} else {
 							WideStringClass errorMsg(0, true);
 							errorMsg.Format(L"%s\n\n%s", TRANSLATE(IDS_MENU_TEXT330), (const WCHAR*)outMsg);
@@ -281,7 +264,6 @@ MPLanHostOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 
 
 
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 void MPLanHostOptionsMenuClass::ReceiveSignal(WolGameModeClass& gameMode)
 {
 	if (gameMode.Channel_Create_OK()) {
@@ -302,7 +284,6 @@ void MPLanHostOptionsMenuClass::ReceiveSignal(WolGameModeClass& gameMode)
 		}
 	}
 }
-#endif
 
 
 void MPLanHostOptionsMenuClass::Start_Game(cGameData* theGame)
@@ -354,11 +335,7 @@ MPLanHostBasicOptionsTabClass::~MPLanHostBasicOptionsTabClass (void)
 void
 MPLanHostBasicOptionsTabClass::On_Init_Dialog (void)
 {
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-	const bool wolGame = false;
-#else
-	const bool wolGame = Is_Wol_Mode_Active();
-#endif
+	bool wolGame = GameModeManager::Find("WOL")->Is_Active();
 
 	//
 	//	Fill in the game name
@@ -382,11 +359,7 @@ MPLanHostBasicOptionsTabClass::On_Init_Dialog (void)
 	//
 	//	Fill in the max-players control on the dialog
 	//
-	bool bandwidth_limited = wolGame;
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
-	bandwidth_limited = bandwidth_limited || cGameSpyAdmin::Is_Gamespy_Game();
-#endif
-	if (bandwidth_limited) {
+	if (wolGame || cGameSpyAdmin::Is_Gamespy_Game()) {
 		BandTestMaxPlayers = (cUserOptions::BandwidthBps.Get() / 250000) * 4;
 		if (BandTestMaxPlayers < 2) {
 			if (cUserOptions::BandwidthBps.Get() > 100000) {
@@ -412,11 +385,6 @@ MPLanHostBasicOptionsTabClass::On_Init_Dialog (void)
 		ULONG * nics = NULL;
 		int nic_count = 0;
 		ULONG preferred_nick;
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-		nics = cNicEnum::Get_Nics();
-		nic_count = cNicEnum::Get_Num_Nics();
-		preferred_nick = cUserOptions::PreferredLanNic.Get();
-#else
 		if (!cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
 			 nics = cNicEnum::Get_Nics();
 			 nic_count = cNicEnum::Get_Num_Nics();
@@ -426,7 +394,6 @@ MPLanHostBasicOptionsTabClass::On_Init_Dialog (void)
 			 nic_count = cNicEnum::Get_Num_GameSpy_Nics();
 			 preferred_nick = cUserOptions::PreferredGameSpyNic.Get();
 		}
-#endif
 		WWASSERT(nics != NULL);
 
 		int current_index = -1;
@@ -451,7 +418,6 @@ MPLanHostBasicOptionsTabClass::On_Init_Dialog (void)
 
 	int sidePref = cNetInterface::Get_Side_Preference();
 
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 	if (wolGame) {
 		RefPtr<WWOnline::Session> wolSession = WWOnline::Session::GetInstance(false);
 
@@ -467,7 +433,6 @@ MPLanHostBasicOptionsTabClass::On_Init_Dialog (void)
 			}
 		}
 	}
-#endif
 
 	InitSideChoiceCombo(sidePref);
 
@@ -555,11 +520,7 @@ MPLanHostBasicOptionsTabClass::On_Apply (void)
 	//
 	//	Read the IP NIC Enumeration combobox
 	//
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-	{
-#else
-	if (!Is_Wol_Mode_Active() && !cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
-#endif
+	if (!GameModeManager::Find("WOL")->Is_Active() && !cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
 		ComboBoxCtrlClass *nic_combobox = (ComboBoxCtrlClass *)Get_Dlg_Item (IDC_HOSTING_IP_COMBO);
 		if (nic_combobox != NULL) {
 			int curr_sel = nic_combobox->Get_Curr_Sel ();
@@ -571,8 +532,7 @@ MPLanHostBasicOptionsTabClass::On_Apply (void)
 				The_Game()->Set_Ip_Address(nics[curr_sel]);
 			}
 		}
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
-	} else if (!Is_Wol_Mode_Active() && cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
+	} else if (!GameModeManager::Find("WOL")->Is_Active() && cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
 		ComboBoxCtrlClass *nic_combobox = (ComboBoxCtrlClass *)Get_Dlg_Item (IDC_HOSTING_IP_COMBO);
 		if (nic_combobox != NULL) {
 			int curr_sel = nic_combobox->Get_Curr_Sel ();
@@ -584,7 +544,7 @@ MPLanHostBasicOptionsTabClass::On_Apply (void)
 				The_Game()->Set_Ip_Address(nics[curr_sel]);
 			}
 		}
-	} else if (!Is_Wol_Mode_Active() && cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
+	} else if (!GameModeManager::Find("WOL")->Is_Active() && cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
 		ComboBoxCtrlClass *nic_combobox = (ComboBoxCtrlClass *)Get_Dlg_Item (IDC_HOSTING_IP_COMBO);
 		if (nic_combobox != NULL) {
 			int curr_sel = nic_combobox->Get_Curr_Sel ();
@@ -597,7 +557,6 @@ MPLanHostBasicOptionsTabClass::On_Apply (void)
 			}
 		}
 	}
-#endif
 
 	ComboBoxCtrlClass* combo = (ComboBoxCtrlClass*)Get_Dlg_Item(IDC_CHOOSESIDE_COMBO);
 
@@ -641,14 +600,12 @@ MPLanHostBasicOptionsTabClass::On_EditCtrl_Change (EditCtrlClass *edit, int ctrl
 			player_count = max (player_count, 0);
 			Set_Dlg_Item_Int (IDC_NUM_PLAYERS_EDIT, player_count);
 		}
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
-		bool wol_game = Is_Wol_Mode_Active();
+		bool wol_game = GameModeManager::Find("WOL")->Is_Active();
 		if ((wol_game || cGameSpyAdmin::Is_Gamespy_Game()) && player_count > max_players) {
 			player_count = max_players;
 			Set_Dlg_Item_Int (IDC_NUM_PLAYERS_EDIT, player_count);
 			DlgMsgBox::DoDialog(IDS_MENU_TEXT329, IDS_MP_MAXPLAYER_WARNING, DlgMsgBox::Okay);
 		}
-#endif
 	}
 
 	return ;
@@ -681,16 +638,6 @@ MPLanHostAdvancedOptionsTabClass::On_Init_Dialog (void)
 		basicTab->SignalMe(*this);
 		basicTab->Release_Ref();
 	}
-
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-	The_Game()->IsDedicated.Set(false);
-	The_Game()->IsAutoRestart.Set(false);
-	Check_Dlg_Button(IDC_DEDICATED_SERVER_CHECK, false);
-	Enable_Dlg_Item(IDC_DEDICATED_SERVER_CHECK, false);
-	Check_Dlg_Button(IDC_SERVER_RESTART_CHECK, false);
-	Enable_Dlg_Item(IDC_SERVER_RESTART_CHECK, false);
-	Enable_Dlg_Item(IDC_MENU_MP_LAN_SLAVE_SERVER_BUTTON, false);
-#endif
 
 #ifdef FREEDEDICATEDSERVER
 	WWASSERT(PTheGameData != NULL);
@@ -726,11 +673,7 @@ MPLanHostAdvancedOptionsTabClass::On_Init_Dialog (void)
 #endif // MULTIPLAYERDEMO
 
 	// Configure WOL settings
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-	mIsWOLGame = false;
-#else
-	mIsWOLGame = Is_Wol_Mode_Active();
-#endif
+	mIsWOLGame = GameModeManager::Find("WOL")->Is_Active();
 	mPassword = The_Game()->IsPassworded.Get();
 	mLaddered = (mIsWOLGame && The_Game()->IsLaddered.Is_True());
 	mClanGame = (mIsWOLGame && IsHostAClanMember() && The_Game()->IsClanGame.Is_True());
@@ -742,7 +685,7 @@ MPLanHostAdvancedOptionsTabClass::On_Init_Dialog (void)
 		Enable_Dlg_Item(IDC_SERVER_RESTART_CHECK, false);
 	}
 
-	if (!Is_Wol_Mode_Active()) {
+	if (!GameModeManager::Find("WOL")->Is_Active()) {
 		Enable_Dlg_Item(IDC_MENU_MP_LAN_SLAVE_SERVER_BUTTON, false);
 	}
 
@@ -778,23 +721,12 @@ MPLanHostAdvancedOptionsTabClass::On_Apply (void)
 	//	Pass our settings onto the game
 	//
 	WWASSERT(PTheGameData != NULL);
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-	The_Game()->IsDedicated.Set(false);
-	The_Game()->IsAutoRestart.Set(false);
-#else
 	The_Game()->IsDedicated.Set (Is_Dlg_Button_Checked (IDC_DEDICATED_SERVER_CHECK));
 	The_Game()->IsAutoRestart.Set (Is_Dlg_Button_Checked (IDC_SERVER_RESTART_CHECK));
-#endif
 	The_Game()->IsTeamChangingAllowed.Set (Is_Dlg_Button_Checked (IDC_TEAM_CHANGE_CHECK));
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-	The_Game()->Set_QuickMatch_Server(false);
-	The_Game()->IsLaddered.Set(false);
-	The_Game()->IsClanGame.Set(false);
-#else
 	The_Game()->Set_QuickMatch_Server(Is_Dlg_Button_Checked(IDC_ALLOW_QUICKMATCH));
 	The_Game()->IsLaddered.Set (Is_Dlg_Button_Checked (IDC_LADDERED_CHECK));
 	The_Game()->IsClanGame.Set (Is_Dlg_Button_Checked (IDC_CLAN_GAME_CHECK));
-#endif
 	//The_Game()->IsClientTrusted.Set (Is_Dlg_Button_Checked (IDC_TRUST_CLIENTS_CHECK));
 	The_Game()->RemixTeams.Set (Is_Dlg_Button_Checked (IDC_REMIX_TEAMS_CHECK));
 
@@ -858,14 +790,12 @@ MPLanHostAdvancedOptionsTabClass::On_Command (int ctrl_id, int message_id, DWORD
 		break;
 
 		case IDC_SERVER_RESTART_CHECK: {
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 			if (Is_Dlg_Button_Checked(IDC_SERVER_RESTART_CHECK)) {
-				if (Is_Wol_Mode_Active() && strlen(MPSettingsMgrClass::Get_Auto_Login()) == 0) {
+				if (GameModeManager::Find("WOL")->Is_Active() && strlen(MPSettingsMgrClass::Get_Auto_Login()) == 0) {
 					DlgMsgBox::DoDialog (IDS_MENU_TEXT329, IDS_MENU_NEED_AUTO_LOGIN, DlgMsgBox::YesNo, this);
 					Check_Dlg_Button(IDC_SERVER_RESTART_CHECK, false);
 				}
 			}
-#endif
 		}
 		break;
 
@@ -873,13 +803,11 @@ MPLanHostAdvancedOptionsTabClass::On_Command (int ctrl_id, int message_id, DWORD
 		// Bring up the slave server config dialog.
 		//
 		case IDC_MENU_MP_LAN_SLAVE_SERVER_BUTTON:
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 			if (WW3D::Is_Windowed()) {
 				START_DIALOG(SlaveServerDialogClass);
 			} else {
 				DlgMsgBox::DoDialog(IDS_MENU_TEXT329, IDS_SLAVES_NEED_WINDOWED, DlgMsgBox::Okay);
 			}
-#endif
 			break;
 
 		case IDC_TEAM_CHANGE_CHECK:
@@ -946,7 +874,6 @@ MPLanHostAdvancedOptionsTabClass::On_Command (int ctrl_id, int message_id, DWORD
 
 void MPLanHostAdvancedOptionsTabClass::HandleNotification (DlgMsgBoxEvent &event)
 {
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 	//
 	// We only use a message box for the auto login confirm.
 	//
@@ -956,9 +883,6 @@ void MPLanHostAdvancedOptionsTabClass::HandleNotification (DlgMsgBoxEvent &event
 		const char* login = MPSettingsMgrClass::Get_Last_Login();
 		MPSettingsMgrClass::Set_Auto_Login(login);
 	}
-#else
-	(void)event;
-#endif
 }
 
 
@@ -1057,9 +981,6 @@ void MPLanHostAdvancedOptionsTabClass::ConfigureWOLControls(void)
 
 bool MPLanHostAdvancedOptionsTabClass::IsHostAClanMember(void) const
 {
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-	return false;
-#else
 	GameModeClass* gameMode = GameModeManager::Find("WOL");
 
 	if (gameMode && gameMode->Is_Active()) {
@@ -1074,7 +995,6 @@ bool MPLanHostAdvancedOptionsTabClass::IsHostAClanMember(void) const
 	}
 
 	return false;
-#endif
 }
 
 
@@ -1189,13 +1109,7 @@ MPLanHostMapCycleOptionsTabClass::On_Apply (void)
 			//
 			int curr_sel = combobox_ctrl->Get_Curr_Sel ();
 			if (curr_sel != -1) {
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-				const uint32 package_index = combobox_ctrl->Get_Item_Data(curr_sel);
-				const ModPackageClass *package = package_index == 0U ? NULL :
-					ModPackageMgrClass::Get_Package(static_cast<int>(package_index - 1U));
-#else
 				const ModPackageClass *package = (const ModPackageClass *)combobox_ctrl->Get_Item_Data (curr_sel);
-#endif
 				if (package != NULL) {
 					The_Game ()->Set_Mod_Name (package->Get_Package_Filename ());
 				} else {
@@ -1311,11 +1225,7 @@ MPLanHostMapCycleOptionsTabClass::Build_Mod_Package_List (void)
 
 			int item_index = combobx_ctrl->Add_String (curr_name);
 			if (item_index != -1) {
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-				combobx_ctrl->Set_Item_Data(item_index, static_cast<uint32>(index + 1));
-#else
 				combobx_ctrl->Set_Item_Data (item_index, (uint32)package);
-#endif
 
 				//
 				//	Is this the default entry?  If so select it...
@@ -1480,13 +1390,7 @@ MPLanHostMapCycleOptionsTabClass::Populate_Map_List_Ctrl (void)
 	//
 	int curr_sel = combobox_ctrl->Get_Curr_Sel ();
 	if (curr_sel != -1) {
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-		const uint32 package_index = combobox_ctrl->Get_Item_Data(curr_sel);
-		const ModPackageClass *package = package_index == 0U ? NULL :
-			ModPackageMgrClass::Get_Package(static_cast<int>(package_index - 1U));
-#else
 		const ModPackageClass *package = (const ModPackageClass *)combobox_ctrl->Get_Item_Data (curr_sel);
-#endif
 
 		//
 		//	Build a list of levels from the current mod package (or without a mod package)

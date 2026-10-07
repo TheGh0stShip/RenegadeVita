@@ -159,22 +159,21 @@ DialogueOptionClass::Save (ChunkSaveClass &csave)
 //	Load
 //
 ////////////////////////////////////////////////////////////////
-bool
+void
 DialogueOptionClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk ()) {		
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_OPTION_VARIABLES:
-				if (!Load_Variables(cload)) loaded = false;
+				Load_Variables (cload);
 				break;
 		}
 
 		cload.Close_Chunk ();
 	}
 
-	return loaded && !cload.Has_Error();
+	return ;
 }
 
 
@@ -183,7 +182,7 @@ DialogueOptionClass::Load (ChunkLoadClass &cload)
 //	Load_Variables
 //
 ///////////////////////////////////////////////////////////////////////
-bool
+void
 DialogueOptionClass::Load_Variables (ChunkLoadClass &cload)
 {
 	//
@@ -199,7 +198,7 @@ DialogueOptionClass::Load_Variables (ChunkLoadClass &cload)
 		cload.Close_Micro_Chunk ();
 	}
 
-	return !cload.Has_Error();
+	return ;
 }
 
 
@@ -299,17 +298,16 @@ DialogueClass::Save (ChunkSaveClass &csave)
 //	Load
 //
 ////////////////////////////////////////////////////////////////
-bool
+void
 DialogueClass::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	Free_Options ();
 
 	while (cload.Open_Chunk ()) {		
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_DIALOGUE_VARIABLES:
-				if (!Load_Variables(cload)) loaded = false;
+				Load_Variables (cload);
 				break;
 
 			case CHUNKID_DIALOGUE_OPTION:
@@ -318,12 +316,8 @@ DialogueClass::Load (ChunkLoadClass &cload)
 				//	Create a new option object and add it to the list
 				//
 				DialogueOptionClass *option = new DialogueOptionClass;
-				if (option->Load(cload)) {
-					OptionList.Add(option);
-				} else {
-					delete option;
-					loaded = false;
-				}
+				option->Load (cload);
+				OptionList.Add (option);
 			}
 			break;
 		}
@@ -331,7 +325,7 @@ DialogueClass::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return loaded && !cload.Has_Error();
+	return ;
 }
 
 
@@ -340,7 +334,7 @@ DialogueClass::Load (ChunkLoadClass &cload)
 //	Load_Variables
 //
 ///////////////////////////////////////////////////////////////////////
-bool
+void
 DialogueClass::Load_Variables (ChunkLoadClass &cload)
 {
 	//
@@ -355,7 +349,7 @@ DialogueClass::Load_Variables (ChunkLoadClass &cload)
 		cload.Close_Micro_Chunk ();
 	}
 
-	return !cload.Has_Error();
+	return ;
 }
 
 

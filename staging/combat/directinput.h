@@ -140,10 +140,6 @@ public:
 	//	Return the DIK ID of the last keyboard key pressed
 	//
 	static int		Get_Last_Key_Pressed (void)	{ return LastKeyPressed; }
-#if defined(RENEGADE_VITA_PORT)
-	// Native providers publish the original key ID represented by a device edge.
-	static void		Set_Last_Key_Pressed (int key) { LastKeyPressed = key; }
-#endif
 
 private:
 

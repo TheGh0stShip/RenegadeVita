@@ -929,7 +929,7 @@ public:
 	void							Post_Load_Level_Static_Objects(void);
 
 	void							Save_Level_Dynamic_Data(ChunkSaveClass & csave);
-	bool							Load_Level_Dynamic_Data(ChunkLoadClass & cload);
+	void							Load_Level_Dynamic_Data(ChunkLoadClass & cload);
 	void							Post_Load_Level_Dynamic_Data(void);
 
 
@@ -1051,9 +1051,9 @@ protected:
 
 	void							Load_LDD_Variables(ChunkLoadClass & cload);
 	void							Load_Static_Objects(ChunkLoadClass & cload);
-	bool							Load_Dynamic_Objects(ChunkLoadClass & cload);
+	void							Load_Dynamic_Objects(ChunkLoadClass & cload);
 	void							Load_Static_Lights(ChunkLoadClass & cload);
-	bool							Load_Static_Object_States(ChunkLoadClass & cload);
+	void							Load_Static_Object_States(ChunkLoadClass & cload);
 
 	/*
 	** Misc

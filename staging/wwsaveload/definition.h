@@ -89,7 +89,6 @@ public:
 
 	// Validation methods
 	virtual bool						Is_Valid_Config (StringClass &message);
-	virtual void						On_Load_Rejected (void) {}
 
 	// From PersistClass
 	virtual bool						Save (ChunkSaveClass &csave);

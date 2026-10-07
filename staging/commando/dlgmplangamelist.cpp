@@ -41,9 +41,7 @@
 #include "gamechannel.h"
 #include "gamechanlist.h"
 #include "gameinitmgr.h"
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 #include "wolgmode.h"
-#endif
 #include "dialogmgr.h"
 #include "cnetwork.h"
 #include "ww3d.h"
@@ -58,9 +56,6 @@
 #include "registry.h"
 #include "_globals.h"
 #include "dlgmplanhostoptions.h"
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-#include "renegade_ui_pointer_tokens.h"
-#endif
 
 bool MPLanGameListMenuClass::UpdateNickname = false;
 
@@ -278,15 +273,11 @@ MPLanGameListMenuClass::On_Frame_Update (void)
 		//
 		Update_Game_List ();
 
-#if !defined(RENEGADE_VITA_LAN_FRONTEND)
 		if (GameInitMgrClass::Is_WOL_Initialized ()) {
 			UpdateTimer = 20000;
 		} else {
 			UpdateTimer = 1000;
 		}
-#else
-		UpdateTimer = 1000;
-#endif
 	}
 
 	if (UpdateNickname) {
@@ -331,12 +322,7 @@ MPLanGameListMenuClass::Update_Game_List (void)
 	WideStringClass selected_owner_name;
 	int curr_sel = list_ctrl->Get_Curr_Sel ();
 	if (curr_sel != -1) {
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-		cGameChannel *channel = static_cast<cGameChannel *>(
-			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data(curr_sel, 0)));
-#else
 		cGameChannel *channel = (cGameChannel *)list_ctrl->Get_Entry_Data (curr_sel, 0);
-#endif
 		if (channel != NULL) {
 			selected_owner_name = channel->Get_Game_Data ()->Get_Owner ();
 		}
@@ -432,12 +418,7 @@ MPLanGameListMenuClass::Update_Game_List (void)
 			//
 			//	Associate the channel data inside with the entry
 			//
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-			list_ctrl->Set_Entry_Data(item_index, 0,
-				Renegade_Ui_Pointer_To_Token(channel));
-#else
 			list_ctrl->Set_Entry_Data (item_index, 0, (uint32)channel);
-#endif
 			channel->Add_Ref ();
 
 			//
@@ -510,12 +491,7 @@ MPLanGameListMenuClass::Join_Game (void)
 		//
 		//	Get the channel data from this entry
 		//
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-		cGameChannel *channel = static_cast<cGameChannel *>(
-			Renegade_Ui_Pointer_From_Token(list_ctrl->Get_Entry_Data(index, 0)));
-#else
 		cGameChannel *channel = (cGameChannel *)list_ctrl->Get_Entry_Data (index, 0);
-#endif
 		if (channel != NULL && list_ctrl->Get_Entry_Data (index, 1) == 0) {
 
 			//
@@ -602,12 +578,7 @@ MPLanGameListMenuClass::On_ListCtrl_Delete_Entry
 	//
 	//	Get the channel data from this entry
 	//
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-	cGameChannel *channel = static_cast<cGameChannel *>(
-		Renegade_Ui_Take_Pointer_Token(list_ctrl->Get_Entry_Data(item_index, 0)));
-#else
 	cGameChannel *channel = (cGameChannel *)list_ctrl->Get_Entry_Data (item_index, 0);
-#endif
 	list_ctrl->Set_Entry_Data (item_index, 0, NULL);
 	
 	if (channel != NULL) {

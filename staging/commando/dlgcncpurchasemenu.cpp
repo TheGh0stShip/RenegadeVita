@@ -175,10 +175,7 @@ CNCPurchaseMenuClass::On_Init_Dialog (void)
 				//
 				//	Disable any options that cost money if production is disabled
 				//
-                const bool visible = !Definition->Get_Page_Hidden() && !Definition->Get_Hidden(index);
-                ctrl->Show(visible);
-                if (auto *hotkey = Get_Dlg_Item(HOTKEY_CTRL_IDS[index])) hotkey->Show(visible);
-				if (!Definition->Is_Available(index) || (IsProductionDisabled && (cost > 0)) || (player_data->Get_Money () < cost)) {
+				if ((IsProductionDisabled && (cost > 0)) || (player_data->Get_Money () < cost)) {
 					ctrl->Enable (false);
 				}
 
@@ -321,7 +318,6 @@ CNCPurchaseMenuClass::Add_Item_To_Shopping_Cart (int ctrl_id)
 	}
 
 	int item_index = (int)ctrl->Get_User_Data ();
-    if (!Definition->Is_Available(item_index)) return;
 
 	//
 	//	Can the player afford this item?
@@ -847,10 +843,7 @@ CNCPurchaseMenuClass::Update_Enabled_Status (void)
 				//
 				//	Disable any options that cost money if production is disabled
 				//
-                const bool visible = !Definition->Get_Page_Hidden() && !Definition->Get_Hidden(index);
-                ctrl->Show(visible);
-                if (auto *hotkey = Get_Dlg_Item(HOTKEY_CTRL_IDS[index])) hotkey->Show(visible);
-				if (!Definition->Is_Available(index) || (IsProductionDisabled && (cost > 0)) || (player_data->Get_Money () < cost)) {
+				if ((IsProductionDisabled && (cost > 0)) || (player_data->Get_Money () < cost)) {
 					ctrl->Enable (false);
 				} else {
 					ctrl->Enable (true);

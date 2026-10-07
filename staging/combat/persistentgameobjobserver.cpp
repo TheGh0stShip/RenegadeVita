@@ -64,7 +64,7 @@ enum	{
 bool	PersistentGameObjObserverClass::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_PARENT );
-	if (!PersistClass::Save(csave)) csave.Report_Error();
+	PersistClass::Save( csave );
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -73,7 +73,7 @@ bool	PersistentGameObjObserverClass::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_OBSERVER_ID, ID );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	PersistentGameObjObserverClass::Load( ChunkLoadClass &cload )
@@ -147,16 +147,12 @@ bool	PersistentGameObjObserverManager::Save( ChunkSaveClass & csave )
 	csave.Begin_Chunk( CHUNKID_OBSERVERS );
 	// Allow each object in the master list to save
 	for ( int i = 0; i < ObserverList.Count(); i++ ) {
-		if (ObserverList[i] == NULL) {
-			csave.Report_Error();
-			continue;
-		}
 		csave.Begin_Chunk( ObserverList[i]->Get_Factory().Chunk_ID() );
 		ObserverList[i]->Get_Factory().Save( csave, ObserverList[i] );
 		csave.End_Chunk();
 	}
 	csave.End_Chunk();
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	PersistentGameObjObserverManager::Load( ChunkLoadClass & cload )
@@ -178,7 +174,6 @@ bool	PersistentGameObjObserverManager::Load( ChunkLoadClass & cload )
 	}
 
 	unsigned observer_child_count = 0U;
-	bool loaded = true;
 	while (cload.Open_Chunk()) {
 		const uint32 child_id = cload.Cur_Chunk_ID();
 		const uint32 child_len = cload.Cur_Chunk_Length();
@@ -189,11 +184,8 @@ bool	PersistentGameObjObserverManager::Load( ChunkLoadClass & cload )
 		if ( factory ) {
 			Debug_Say(( "PersistentGameObjObserverManager::Load child factory found id=%u\n",
 				child_id ));
-			if (factory->Load(cload) == NULL) {
-				loaded = false;
-			}
+			factory->Load( cload );
 		} else {
-			loaded = false;
 			Debug_Say(( "PersistentGameObjObserverManager::Load child factory unknown id=%u\n",
 				child_id ));
 		}
@@ -207,17 +199,10 @@ bool	PersistentGameObjObserverManager::Load( ChunkLoadClass & cload )
 		observer_child_count ));
 
 	cload.Close_Chunk();
-	if (cload.Open_Chunk()) {
-		loaded = false;
-		do {
-			cload.Close_Chunk();
-		} while (cload.Open_Chunk());
-	}
 	Debug_Say(( "PersistentGameObjObserverManager::Load final root close depth=%d\n",
 		cload.Cur_Chunk_Depth() ));
-	loaded = loaded && !cload.Has_Error();
-	Debug_Say(( "PersistentGameObjObserverManager::Load exit success=%d\n", loaded ? 1 : 0 ));
-	return loaded;
+	Debug_Say(( "PersistentGameObjObserverManager::Load exit success\n" ));
+	return true;
 }
 
 

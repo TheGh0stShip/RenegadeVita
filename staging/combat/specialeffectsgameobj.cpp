@@ -165,12 +165,11 @@ SpecialEffectsGameObjDef::Save (ChunkSaveClass &csave)
 bool
 SpecialEffectsGameObjDef::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!PhysicalGameObjDef::Load (cload)) loaded = false;
+				PhysicalGameObjDef::Load (cload);
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -186,7 +185,7 @@ SpecialEffectsGameObjDef::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -338,14 +337,14 @@ bool
 SpecialEffectsGameObj::Save (ChunkSaveClass & csave)
 {
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		if (!PhysicalGameObj::Save(csave)) csave.Report_Error();
+		PhysicalGameObj::Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
 		Save_Variables (csave);
 	csave.End_Chunk ();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 
@@ -357,12 +356,11 @@ SpecialEffectsGameObj::Save (ChunkSaveClass & csave)
 bool
 SpecialEffectsGameObj::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				if (!PhysicalGameObj::Load(cload)) loaded = false;
+				PhysicalGameObj::Load (cload);
 				break;
 
 			case CHUNKID_VARIABLES:
@@ -378,7 +376,7 @@ SpecialEffectsGameObj::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 

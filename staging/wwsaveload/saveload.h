@@ -147,13 +147,8 @@ public:
 	** To load a file just open it and pass it to the load method.
 	*/
 	static bool		Save (ChunkSaveClass &csave, SaveLoadSubSystemClass & subsystem);
-	static bool		Load (ChunkLoadClass &cload,bool auto_post_load = true,
-		bool require_player_save_subsystems = false);
+	static bool		Load (ChunkLoadClass &cload,bool auto_post_load = true);	
 	static bool		Post_Load_Processing (void(*network_callback)(void));
-	static void		Discard_Post_Load_Callbacks (void);
-	static void		Report_Load_Failure (void);
-	static bool		Has_Reported_Load_Failure (void);
-	static void		Retain_Rejected_Object_Until_Next_Load (PersistClass *object);
 	/*
 	** Look up the persist factory for a given chunk id
 	*/
@@ -202,8 +197,6 @@ protected:
 	static PersistFactoryClass *			FactoryListHead;
 	static PointerRemapClass				PointerRemapper;
 	static SList<PostLoadableClass>		PostLoadList;
-	static SList<PersistClass>			RejectedLoadList;
-	static bool							ReportedLoadFailure;
 
 	/*
 	** these are friends so that they can register themselves at construction time.
@@ -227,3 +220,4 @@ protected:
 
 
 #endif //SAVELOAD_H
+

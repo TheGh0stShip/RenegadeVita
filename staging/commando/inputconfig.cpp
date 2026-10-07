@@ -38,9 +38,6 @@
 #include "inputconfig.h"
 #include "chunkio.h"
 #include "debug.h"
-#if defined(RENEGADE_VITA_PORT)
-#include <string.h>
-#endif
 
 
 ////////////////////////////////////////////////////////////////
@@ -125,55 +122,14 @@ InputConfigClass::Load_Variables (ChunkLoadClass &cload)
 	while (cload.Open_Micro_Chunk ()) {
 		switch(cload.Cur_Micro_Chunk_ID ()) {			
 
-#if defined(RENEGADE_VITA_PORT)
-			// CONFIG.DAT is writable user state. The original string macros
-			// size each buffer to the stored byte count and copy no terminator,
-			// so a truncated or damaged record left the strings unterminated.
-			// Reserve and write the terminator after the bytes actually read.
-			case VARID_DISPLAY_NAME:
-			{
-				const int count = (int)(cload.Cur_Micro_Chunk_Length () / sizeof (WCHAR));
-				WCHAR *buffer = DisplayName.Get_Buffer (count + 1);
-				const int read = (int)(cload.Read (buffer, count * sizeof (WCHAR)) / sizeof (WCHAR));
-				buffer[read] = 0;
-				break;
-			}
-			case VARID_FILENAME:
-			{
-				const int count = (int)cload.Cur_Micro_Chunk_Length ();
-				char *buffer = Filename.Get_Buffer (count + 1);
-				const int read = (int)cload.Read (buffer, count);
-				buffer[read] = 0;
-				break;
-			}
-#else
 			READ_MICRO_CHUNK_WIDESTRING	(cload, VARID_DISPLAY_NAME,	DisplayName);
 			READ_MICRO_CHUNK_WWSTRING		(cload, VARID_FILENAME,			Filename);
-#endif
 			READ_MICRO_CHUNK					(cload, VARID_IS_DEFAULT,		IsDefault);
 			READ_MICRO_CHUNK					(cload, VARID_IS_CUSTOM,		IsCustom);
 		}
 
 		cload.Close_Micro_Chunk ();
 	}
-
-#if defined(RENEGADE_VITA_PORT)
-	//
-	//	Filename is joined onto user/config/ for load, save and delete. Keep
-	// only a bounded bare leaf name; Load_Config_List drops cleared records.
-	//
-	const char *name = Filename;
-	const size_t name_length = ::strlen (name);
-	bool name_valid = name_length > 0 && name_length < 64 &&
-		::strstr (name, "..") == NULL;
-	for (size_t index = 0; name_valid && index < name_length; index ++) {
-		const unsigned char ch = (unsigned char)name[index];
-		name_valid = ch >= 32 && ch != '/' && ch != '\\' && ch != ':';
-	}
-	if (!name_valid) {
-		Filename = "";
-	}
-#endif
 
 	return ;
 }

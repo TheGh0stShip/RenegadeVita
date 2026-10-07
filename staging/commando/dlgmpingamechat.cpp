@@ -47,9 +47,7 @@
 #include "player.h"
 #include "listctrl.h"
 #include "messagewindow.h"
-#if !defined(RENEGADE_VITA_PORT)
 #include "wolgmode.h"
-#endif
 #include "translatedb.h"
 #include "string_ids.h"
 
@@ -181,7 +179,6 @@ void MPChatChildDialogClass::Send_Message(WideStringClass& message, TextMessageE
 ////////////////////////////////////////////////////////////////
 bool MPChatChildDialogClass::Process_Commands(const WCHAR* message)
 {
-#if !defined(RENEGADE_VITA_PORT)
 	// Does this look like a command?
 	if (message && message[0] == L'/') {
 		// Separate the parameters into individual strings
@@ -317,8 +314,6 @@ bool MPChatChildDialogClass::Process_Commands(const WCHAR* message)
 		}
 	}
 
-	// These commands require the optional WOL provider, not the game server.
-#endif
 	return false;
 }
 
@@ -349,7 +344,7 @@ const WCHAR* Get_Parameter_From_String(const WCHAR* command, WideStringClass& pa
 
 	if (length > 0) {
 		WCHAR* buffer = param.Get_Buffer(length + 1);
-		rv_utf16_n_copy(buffer, command, length);
+		wcsncpy(buffer, command, length);
 		buffer[length - 1] = 0;
 	}
 
@@ -403,21 +398,21 @@ MPChatChildDialogClass::Auto_Complete_Name (void)
 				//	Make a copy of the first part of the message before the command
 				//
 				WideStringClass first_part (cmd_start_index + 1, true);
-				rv_utf16_n_copy(first_part.Peek_Buffer (), message, cmd_start_index);
+				::wcsncpy (first_part.Peek_Buffer (), message, cmd_start_index);
 				first_part.Peek_Buffer ()[cmd_start_index] = 0;
 
 				//
 				//	Make a copy of the remainder of the message after the command
 				//
 				WideStringClass last_part (message_len - cmd_end_index, true);
-				rv_utf16_copy(last_part.Peek_Buffer (), message.Peek_Buffer () + cmd_end_index);
+				::wcscpy (last_part.Peek_Buffer (), message.Peek_Buffer () + cmd_end_index);					
 				
 				//
 				//	Copy the typed characters into their own buffer
 				//
 				int typed_len = caret_pos - cmd_start_index;
 				WideStringClass typed_name (typed_len + 1, true);
-				rv_utf16_n_copy(typed_name.Peek_Buffer (), name_start, typed_len);
+				::wcsncpy (typed_name.Peek_Buffer (), name_start, typed_len);
 				typed_name.Peek_Buffer ()[typed_len] = 0;
 
 				//
@@ -470,7 +465,7 @@ MPChatChildDialogClass::Auto_Complete_Name (void)
 void	
 MPChatChildDialogClass::Complete_Player_Name (const WCHAR *typed_name, WideStringClass &completed_name)
 {
-	int typed_len = rv_utf16_length(typed_name);
+	int typed_len = ::wcslen (typed_name);
 	
 	//
 	//	Require more then one character for any name starting with "R'.  This is
@@ -499,7 +494,7 @@ MPChatChildDialogClass::Complete_Player_Name (const WCHAR *typed_name, WideStrin
 		//
 		//	Is this the best match so far?
 		//
-		if (::_wcsnicmp (player_name, typed_name, typed_len) == 0) {
+		if (::wcsnicmp (player_name, typed_name, typed_len) == 0) {
 			if (	completed_name.Get_Length () == 0 ||
 					::wcsicmp (player_name, completed_name) < 0)
 			{
@@ -604,7 +599,7 @@ MPChatChildDialogClass::Find_Current_Command(const WCHAR* message, int& start_in
 		//
 		//	Look to see if there is a command designator preceding the caret.
 		//
-		const WCHAR *command_start = rv_utf16_rchr(message, L'/');
+		const WCHAR *command_start = ::wcsrchr (message, L'/');
 		if (command_start != NULL) {
 			start_index = command_start - message;
 			command_start ++;
@@ -613,9 +608,9 @@ MPChatChildDialogClass::Find_Current_Command(const WCHAR* message, int& start_in
 			//	Check to ensure there isn't a space between the designator
 			// and the caret
 			//
-			const WCHAR *first_space = rv_utf16_chr(command_start, L' ');
+			const WCHAR *first_space = ::wcschr (command_start, L' ');
 			if (first_space == NULL) {
-				end_index = rv_utf16_length(message);
+				end_index = ::wcslen (message);
 				retval = true;
 			} else if (caret_pos <= (first_space - message)) {
 				end_index = (first_space - message);
@@ -796,15 +791,6 @@ MPIngameChatPopupClass::On_Init_Dialog (void)
 	//
 	Set_Background_Darkened (false);
 	PopupDialogClass::On_Init_Dialog ();
-#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && defined(__vita__)
-	// The original chat key leaves the caret in the edit field; Vita has no
-	// keyboard, so open the system IME there. Square still submits through
-	// the original Enter path; IME cancel leaves the text unchanged.
-	EditCtrlClass *edit_ctrl = (EditCtrlClass *)ChatModule->Get_Dlg_Item (IDC_MESSAGE_EDIT);
-	if (edit_ctrl != NULL) {
-		edit_ctrl->Begin_Native_Text_Entry ();
-	}
-#endif
 	return ;
 }
 

@@ -320,9 +320,8 @@ SakuraBossGameObjDef::Create (void) const
 bool
 SakuraBossGameObjDef::Save (ChunkSaveClass &csave)
 {
-	bool saved = true;
 	csave.Begin_Chunk (CHUNKID_DEF_PARENT);
-		saved = VehicleGameObjDef::Save(csave) && saved;
+		VehicleGameObjDef::Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_DEF_VARIABLES);
@@ -330,10 +329,10 @@ SakuraBossGameObjDef::Save (ChunkSaveClass &csave)
 	csave.End_Chunk();
 
 	csave.Begin_Chunk (CHUNKID_DEF_ROCKET_DEFENSEOBJ_DEF);
-		saved = RocketsDefense.Save(csave) && saved;
+		RocketsDefense.Save (csave);
 	csave.End_Chunk();
 
-	return saved && !csave.Has_Error();
+	return true;
 }
 
 
@@ -345,12 +344,11 @@ SakuraBossGameObjDef::Save (ChunkSaveClass &csave)
 bool
 SakuraBossGameObjDef::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_DEF_PARENT:
-				if (!VehicleGameObjDef::Load (cload)) loaded = false;
+				VehicleGameObjDef::Load (cload);
 				break;
 
 			case CHUNKID_DEF_VARIABLES:
@@ -358,7 +356,7 @@ SakuraBossGameObjDef::Load (ChunkLoadClass &cload)
 				break;
 
 			case CHUNKID_DEF_ROCKET_DEFENSEOBJ_DEF:
-				if (!RocketsDefense.Load (cload)) loaded = false;
+				RocketsDefense.Load (cload);
 				break;
 								
 			default:
@@ -369,7 +367,7 @@ SakuraBossGameObjDef::Load (ChunkLoadClass &cload)
 		cload.Close_Chunk ();
 	}
 
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -606,25 +604,24 @@ SakuraBossGameObj::Get_Definition (void) const
 bool
 SakuraBossGameObj::Save (ChunkSaveClass & csave)
 {
-	bool saved = true;
 	csave.Begin_Chunk (CHUNKID_PARENT);
-		saved = VehicleGameObj::Save(csave) && saved;
+		VehicleGameObj::Save (csave);
 	csave.End_Chunk ();	
 
 	csave.Begin_Chunk (CHUNKID_ROCKETL_DEFENSE_OBJ);
-		saved = LeftRocketDefenseObject.Save(csave) && saved;
+		LeftRocketDefenseObject.Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_ROCKETR_DEFENSE_OBJ);
-		saved = RightRocketDefenseObject.Save(csave) && saved;
+		RightRocketDefenseObject.Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_LAST_DAMAGER);
-		saved = LastDamager.Save(csave) && saved;
+		LastDamager.Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_CURR_TARGET);
-		saved = CurrentTarget.Save(csave) && saved;
+		CurrentTarget.Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_PILOT);
@@ -641,7 +638,7 @@ SakuraBossGameObj::Save (ChunkSaveClass & csave)
 		csave.End_Chunk();
 	}
 
-	return saved && !csave.Has_Error();
+	return true;
 }
 
 
@@ -653,39 +650,37 @@ SakuraBossGameObj::Save (ChunkSaveClass & csave)
 bool
 SakuraBossGameObj::Load (ChunkLoadClass &cload)
 {
-	bool loaded = true;
 	while (cload.Open_Chunk ()) {
 		switch(cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_PARENT:
-				if (!VehicleGameObj::Load(cload)) loaded = false;
+				VehicleGameObj::Load (cload);
 				break;
 
 			case CHUNKID_ROCKETL_DEFENSE_OBJ:
-				if (!LeftRocketDefenseObject.Load(cload)) loaded = false;
+				LeftRocketDefenseObject.Load (cload);
 				break;
 
 			case CHUNKID_ROCKETR_DEFENSE_OBJ:
-				if (!RightRocketDefenseObject.Load(cload)) loaded = false;
+				RightRocketDefenseObject.Load (cload);
 				break;
 
 			case CHUNKID_LAST_DAMAGER:
-				if (!LastDamager.Load(cload)) loaded = false;
+				LastDamager.Load (cload);
 				break;
 
 			case CHUNKID_CURR_TARGET:
-				if (!CurrentTarget.Load(cload)) loaded = false;
+				CurrentTarget.Load (cload);
 				break;
 
 			case CHUNKID_PILOT:
-				if (!Pilot.Load(cload)) loaded = false;
+				Pilot.Load (cload);
 				break;
 
 			case CHUNKID_PATH:
 			{
-				delete Path;
 				Path = new PathClass;
-				if (Path == NULL || !Path->Load(cload)) loaded = false;
+				Path->Load (cload);
 			}
 			break;
 
@@ -703,7 +698,7 @@ SakuraBossGameObj::Load (ChunkLoadClass &cload)
 	}
 
 	SaveLoadSystemClass::Register_Post_Load_Callback (this);
-	return loaded && !cload.Has_Error();
+	return true;
 }
 
 
@@ -2006,8 +2001,7 @@ SakuraBossGameObj::Set_Sakura_State (int new_state)
 				//	Find the first available taunt
 				//
 				int taunt_id = 0;
-				int index = 0;
-				for (; index < MAX_TAUNTS; index ++) {
+				for (int index = 0; index < MAX_TAUNTS; index ++) {
 					if (TauntList[index] != 0) {
 						taunt_id = TauntList[index] - 1;
 						TauntList[index] = 0;

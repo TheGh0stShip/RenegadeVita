@@ -83,7 +83,6 @@ public:
 	//
 	static bool		Get_Current_Configuration (InputConfigClass &config);
 	static int		Get_Current_Configuration_Index (void)							{ return CurrentConfigIndex; }
-	static bool		Current_Configuration_Is_Custom (void);
 	static void		Load_Current_Configuration (void);
 	static void		Load_Default_Configuration (void);
 	static void		Load_Configuration (const InputConfigClass &config);

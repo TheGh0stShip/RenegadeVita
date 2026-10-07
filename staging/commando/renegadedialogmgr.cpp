@@ -52,31 +52,15 @@
 #include "dlgpreviewoptions.h"
 #include "dlgcredits.h"
 #endif
-#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
-#include "dlgcredits.h"
-#endif
-#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
-#include "dlgmovieoptions.h"
-#endif
-#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
-#include "dlgcontrols.h"
-#endif
 #include "inputctrl.h"
 #include "translatedb.h"
 #include "string_ids.h"
-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || defined(RENEGADE_VITA_LAN_FRONTEND)
-#include "nicenum.h"
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-#include "cnetwork.h"
-#endif
-#include "dlgmessagebox.h"
-#include "dlgmplanhostoptions.h"
 #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
+#include "dlgmplanhostoptions.h"
 #include "dlginternetoptions.h"
 #endif
-#endif
 #include "gamemode.h"
-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || defined(RENEGADE_VITA_LAN_FRONTEND)
+#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 #include "dlgmplangamelist.h"
 #endif
 #include "directinput.h"
@@ -94,9 +78,6 @@
 #include "dlgmpwolmain.h"
 #include "dlgwolsettings.h"
 #include "dlghelpscreen.h"
-#include "dlgcncreference.h"
-#endif
-#if defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) && defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
 #include "dlgcncreference.h"
 #endif
 #include "wwmemlog.h"
@@ -140,14 +121,14 @@ DialogFactoryBaseClass *FactoryArray[FACTORY_COUNT] =
 	NULL,
 	NULL,
 	NULL,
-	new DialogFactoryClass<ControlsMenuClass>,
 	NULL,
 	NULL,
 	NULL,
 	NULL,
-	new DialogFactoryClass<MovieOptionsMenuClass>,
 	NULL,
-	new DialogFactoryClass<CreditsMenuClass>,
+	NULL,
+	NULL,
+	NULL,
 	new DialogFactoryClass<QuitVerificationDialogClass>,
 	NULL,
 	new DialogFactoryClass<MainMenuDialogClass>,
@@ -292,21 +273,10 @@ RenegadeDialogMgrClass::Initialize (void)
 		FactoryArray[IDC_MENU_START_CAMPAIGN_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<DifficultyMenuClass>;
 	if (FactoryArray[IDC_MENU_LOAD_SP_GAME_BUTTON - DIALOG_LINK_FIRST] == NULL)
 		FactoryArray[IDC_MENU_LOAD_SP_GAME_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<LoadSPGameMenuClass>;
-	if (FactoryArray[IDC_MENU_CONTROLS_BUTTON - DIALOG_LINK_FIRST] == NULL)
-		FactoryArray[IDC_MENU_CONTROLS_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<ControlsMenuClass>;
-	if (FactoryArray[IDC_MENU_MOVIES_BUTTON - DIALOG_LINK_FIRST] == NULL)
-		FactoryArray[IDC_MENU_MOVIES_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<MovieOptionsMenuClass>;
-	if (FactoryArray[IDC_MENU_CREDITS_BUTTON - DIALOG_LINK_FIRST] == NULL)
-		FactoryArray[IDC_MENU_CREDITS_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<CreditsMenuClass>;
 	if (FactoryArray[IDC_MENU_QUIT_BUTTON - DIALOG_LINK_FIRST] == NULL)
 		FactoryArray[IDC_MENU_QUIT_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<QuitVerificationDialogClass>;
 	if (FactoryArray[IDC_MENU_MAIN_MENU_BUTTON - DIALOG_LINK_FIRST] == NULL)
 		FactoryArray[IDC_MENU_MAIN_MENU_BUTTON - DIALOG_LINK_FIRST] = new DialogFactoryClass<MainMenuDialogClass>;
-#if defined(RENEGADE_VITA_LAN_FRONTEND)
-	if (FactoryArray[IDC_MENU_MP_LAN_GAME_BUTTON - DIALOG_LINK_FIRST] == NULL)
-		FactoryArray[IDC_MENU_MP_LAN_GAME_BUTTON - DIALOG_LINK_FIRST] =
-			new DialogFactoryClass<MPLanGameListMenuClass>;
-#endif
 #endif
 	const char *	STYLE_MGR_INI	= "stylemgr.ini";
 
@@ -378,12 +348,6 @@ RenegadeDialogMgrClass::Goto_Location (LOCATION location)
 			START_DIALOG (SplashOutroMenuDialogClass);
 			break;
 
-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || (defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO)
-		case LOC_LOAD_GAME:
-			LoadSPGameMenuClass::Display ();
-			break;
-#endif
-
 #if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER)
 		case LOC_INTERNET_MAIN:
 			MPWolMainMenuClass::Display ();
@@ -391,6 +355,10 @@ RenegadeDialogMgrClass::Goto_Location (LOCATION location)
 
 		case LOC_INTERNET_GAME_LIST:
 			MPWolGameListMenuClass::DoDialog ();
+			break;
+
+		case LOC_LAN_MAIN:
+			MPLanGameListMenuClass::Display ();
 			break;
 
 		case LOC_ENCYCLOPEDIA:
@@ -405,6 +373,14 @@ RenegadeDialogMgrClass::Goto_Location (LOCATION location)
 			EVAEncyclopediaMenuClass::Display (EVAEncyclopediaMenuClass::TAB_MAP);
 			break;
 
+		case LOC_CNC_REFERENCE:
+			CnCReferenceMenuClass::Display ();
+			break;
+
+		case LOC_LOAD_GAME:
+			LoadSPGameMenuClass::Display ();
+			break;
+
 		case LOC_IN_GAME_HELP:
 			HelpScreenDialogClass::Display ();
 			break;
@@ -414,19 +390,6 @@ RenegadeDialogMgrClass::Goto_Location (LOCATION location)
 			START_DIALOG (GameSpyMainDialogClass);
 			break;
 #endif
-
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-		case LOC_CNC_REFERENCE:
-			CnCReferenceMenuClass::Display ();
-			break;
-#endif
-
-#if !defined(RENEGADE_VITA_FRONTEND_SINGLEPLAYER) || defined(RENEGADE_VITA_LAN_FRONTEND)
-		case LOC_LAN_MAIN:
-			MPLanGameListMenuClass::Display ();
-			break;
-#endif
-
 	}
 
 	//

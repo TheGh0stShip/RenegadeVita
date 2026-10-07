@@ -298,7 +298,7 @@ ConversationClass::Save (ChunkSaveClass &csave)
 		//	Save this orator to its own chunk
 		//
 		csave.Begin_Chunk (CHUNKID_ORATOR);
-			if (!orator.Save(csave)) csave.Report_Error();
+			orator.Save (csave);
 		csave.End_Chunk ();		
 	}
 
@@ -312,11 +312,11 @@ ConversationClass::Save (ChunkSaveClass &csave)
 		//	Save this remark to its own chunk
 		//
 		csave.Begin_Chunk (CHUNKID_REMARK);
-			if (!remark.Save(csave)) csave.Report_Error();
+			remark.Save (csave);
 		csave.End_Chunk ();		
 	}
 
-	return !csave.Has_Error();
+	return true;
 }
 
 

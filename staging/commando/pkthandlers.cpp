@@ -43,9 +43,6 @@
 #include "playermanager.h"
 #include "apppacketstats.h"
 #include "specialbuilds.h"
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-#include "a31_client_connect_boundary.h"
-#endif
 
 
 extern char * Addr_As_String(sockaddr_in *addr);
@@ -61,14 +58,12 @@ Create_Network_Object (cPacket &packet, int class_id, int network_obj_id)
 	//	Lookup the factory for this type of network object
 	//
 	NetworkObjectFactoryClass *factory = NetworkObjectFactoryMgrClass::Find_Factory (class_id);
-	if (factory == NULL) return NULL;
 	WWASSERT (factory != NULL);
 
 	//
 	//	Create the new object
 	//
 	NetworkObjectClass *new_object = factory->Create (packet);
-	if (new_object == NULL) return NULL;
 	WWASSERT (new_object != NULL);
 
 	new_object->Set_Network_ID(network_obj_id);//TSS2001b
@@ -173,12 +168,6 @@ void cNetwork::Server_Packet_Handler(cPacket & packet, int rhost_id)
 		//	Create the network object
 		//
 		object = Create_Network_Object (packet, net_classid, network_obj_id);
-		if (object == NULL) {
-			fprintf(stderr, "network-object: rejected client creation class=%d object=%d\n",
-				net_classid, network_obj_id);
-			packet.Flush();
-			return;
-		}
 #ifdef WWDEBUG
 		object->Set_Created_By_Packet_ID(packet.Get_Id());
 #endif //WWDEBUG
@@ -266,22 +255,6 @@ void cNetwork::Server_Packet_Handler(cPacket & packet, int rhost_id)
 void cNetwork::Client_Packet_Handler(cPacket & packet)
 {
 #ifndef FREEDEDICATEDSERVER
-	auto decode_failed = [&](int id, const char *stage) {
-		if (!packet.Has_Read_Error()) return false;
-#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-		A31ClientConnect::Packet_Decode_Failed(id, stage);
-#else
-		Debug_Say(("Invalid replication object=%d stage=%s\n", id, stage));
-#endif
-		return true;
-	};
-	if (decode_failed(0, "entry")) return;
-	#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-	if (A31ClientConnect::Protocol_Failed()) {
-		packet.Flush();
-		return;
-	}
-	#endif
 
 	WWASSERT(I_Am_Client());
 	WWASSERT(Receiver != NULL);
@@ -304,7 +277,6 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 	int network_obj_id		= packet.Get (network_obj_id);
 	BYTE dirty_bits			= packet.Get (dirty_bits);
 	bool is_delete_pending	= packet.Get (is_delete_pending);
-	if (decode_failed(network_obj_id, "header")) return;
 	//BYTE app_packet_type		= packet.Get (app_packet_type);
 
 	//
@@ -329,28 +301,10 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 		//	Create the network object
 		//
 		int net_classid = packet.Get (net_classid);
-		if (decode_failed(network_obj_id, "class")) return;
-		#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-		if (object == NULL && NetworkObjectFactoryMgrClass::Find_Factory(net_classid) == NULL) {
-			// Leave teardown outside packet dispatch. Unknown required events
-			// are protocol failures, never fabricated objects or successful joins.
-			A31ClientConnect::Unsupported_Network_Class(net_classid);
-			packet.Flush();
-			return;
-		}
-		#endif
 		if (object == NULL) {
 			object = Create_Network_Object (packet, net_classid, network_obj_id);
 		}
-		if (object == NULL) {
-			#if defined(RENEGADE_A4_ORIGINAL_FRONTEND) && !RENEGADE_VITA_M00_DEMO
-			A31ClientConnect::Object_Creation_Failed(net_classid, network_obj_id);
-			#endif
-			packet.Flush();
-			return;
-		}
 		object->Import_Creation (packet);
-		if (decode_failed(network_obj_id, "creation")) return;
 
 		//
 		//	HACK - HACK
@@ -387,7 +341,6 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 		//
 		if ((dirty_bits & NetworkObjectClass::BIT_RARE) == NetworkObjectClass::BIT_RARE) {
 			object->Import_Rare (packet);
-			if (decode_failed(network_obj_id, "rare")) return;
 		}
 
 		//
@@ -395,7 +348,6 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 		//
 		if ((dirty_bits & NetworkObjectClass::BIT_OCCASIONAL) == NetworkObjectClass::BIT_OCCASIONAL) {
 			object->Import_Occasional (packet);
-			if (decode_failed(network_obj_id, "occasional")) return;
 		}
 
 		//
@@ -403,7 +355,6 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 		//
 		if ((dirty_bits & NetworkObjectClass::BIT_FREQUENT) == NetworkObjectClass::BIT_FREQUENT) {
 			object->Import_Frequent (packet);
-			if (decode_failed(network_obj_id, "frequent")) return;
 			//object->Increment_Import_State_Count ();
 		}
 

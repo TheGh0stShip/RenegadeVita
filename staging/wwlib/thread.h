@@ -88,16 +88,6 @@ protected:
 	virtual void Thread_Function() = 0;
 	volatile bool running;
 
-	// Cooperative cancellation; the POSIX worker reads the parent's release.
-	bool Should_Run() const
-	{
-#ifdef _UNIX
-		return __atomic_load_n(&running, __ATOMIC_ACQUIRE);
-#else
-		return running;
-#endif
-	}
-
 	// Name of thread.
 	char ThreadName[64];
 

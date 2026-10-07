@@ -134,7 +134,7 @@ bool TransitionDataClass::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK_WWSTRING( csave, MICROCHUNKID_ANIMATION_NAME, AnimationName );
 		
 	csave.End_Chunk();
-	return !csave.Has_Error();
+	return true;
 }
 
 /*
@@ -184,7 +184,7 @@ bool TransitionDataClass::Load( ChunkLoadClass & cload )
 			break;
 	}
 
-	return !cload.Has_Error();
+	return true;
 }
 
 /*
@@ -211,10 +211,10 @@ bool	TransitionCompletionDataStruct::Save( ChunkSaveClass & csave )
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_VEHICLE );
-		if (!Vehicle.Save(csave)) csave.Report_Error();
+		Vehicle.Save( csave );
 	csave.End_Chunk();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 bool	TransitionCompletionDataStruct::Load( ChunkLoadClass & cload )

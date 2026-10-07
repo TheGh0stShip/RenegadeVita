@@ -251,14 +251,14 @@ bool
 PathfindWaypathSectorClass::Save (ChunkSaveClass &csave)
 {	
 	csave.Begin_Chunk (CHUNKID_WP_PARENT);
-		if (!PathfindSectorClass::Save(csave)) csave.Report_Error();
+		PathfindSectorClass::Save (csave);
 	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_WP_VARIABLES);		
 		WRITE_MICRO_CHUNK (csave, VARID_WAYPATH_ID, WaypathID);
 	csave.End_Chunk ();
 
-	return !csave.Has_Error();
+	return true;
 }
 
 

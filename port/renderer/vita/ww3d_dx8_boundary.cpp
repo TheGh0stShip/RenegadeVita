@@ -21,6 +21,7 @@
 #include "sortingrenderer.h"
 #include "texture.h"
 #include "texture_upload_contract.h"
+#include "texture_upload_packing.h"
 #include "triangle_strip_indices.h"
 #include "targa.h"
 #include "vertmaterial.h"
@@ -35,6 +36,7 @@
 #if defined(__vita__)
 #include "vita_runtime_log.h"
 #include "renegade_vita_frame_profile.h"
+#include <psp2/kernel/processmgr.h>
 #include <vitaGL.h>
 // One-shot pool-gating probe (reports/VITAGL_POOL_GATING.md): logs vitaGL
 // pool free bytes around the first texture upload of the process.
@@ -1193,6 +1195,130 @@ bool Attach_Texture_Surface_Copy(IDirect3DTexture8 *texture, UINT level,
 	return true;
 }
 
+#if defined(__vita__)
+// RVTX1 switch, ux0:data/renegade/user/config/tutorial-texture-v1.flag,
+// containing exactly "RVTX1 <hex>\n" (texture_upload_packing.h). Read once on
+// the first archive TGA; absent or malformed means 0 = every path unchanged.
+unsigned Texture_Packing_Mode()
+{
+	static int mode = -1;
+	if (mode >= 0) return static_cast<unsigned>(mode);
+	unsigned parsed = 0U;
+	FILE *file = fopen("ux0:data/renegade/user/config/tutorial-texture-v1.flag", "rb");
+	if (file != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok) parsed = RenegadeVitaTexturePacking::Parse_Mode(value, size);
+	}
+	mode = static_cast<int>(parsed);
+	Vita_Append_A22_Runtime_Breadcrumb("tutorial-texture",
+		"version=1 mode=%X pack_a1r5g5b5=%u acceptance=unassessed", parsed,
+		(parsed & RenegadeVitaTexturePacking::MODE_PACK_A1R5G5B5) != 0U ? 1U : 0U);
+	return parsed;
+}
+
+// Archive TGA totals in both RVTX1 modes, logged for each of the first 16
+// loads (the static M00 closure has 14) and then at power-of-two counts, so
+// one runtime log compares decode, convert+upload time and GPU bytes.
+struct ArchiveTargaTotals {
+	unsigned loads;
+	unsigned packed16;
+	uint64_t texels;
+	uint64_t resident_bytes;
+	uint64_t decode_us;
+	uint64_t upload_us;
+};
+ArchiveTargaTotals g_archive_targa_totals = {};
+
+void Record_Archive_Targa_Load(const IDirect3DTexture8 *texture, uint64_t decode_us,
+	uint64_t upload_us)
+{
+	ArchiveTargaTotals &totals = g_archive_targa_totals;
+	++totals.loads;
+	totals.texels += static_cast<uint64_t>(texture->Width) * texture->Height;
+	totals.resident_bytes += texture->ResidentBytes;
+	totals.decode_us += decode_us;
+	totals.upload_us += upload_us;
+	if (totals.loads > 16U && (totals.loads & (totals.loads - 1U)) != 0U) return;
+	Vita_Append_A22_Runtime_Breadcrumb("tutorial-texture",
+		"archive-tga loads=%u packed16=%u texels=%llu resident_bytes=%llu decode_us=%llu convert_upload_us=%llu mode=%X",
+		totals.loads, totals.packed16,
+		static_cast<unsigned long long>(totals.texels),
+		static_cast<unsigned long long>(totals.resident_bytes),
+		static_cast<unsigned long long>(totals.decode_us),
+		static_cast<unsigned long long>(totals.upload_us), Texture_Packing_Mode());
+}
+
+// RVTX1 bit 0: an archive A1R5G5B5 TGA keeps 16-bit GPU texels. The original
+// PC loader also kept this Targa format 16-bit (Get_Valid_Texture_Format).
+// Fields are moved, never rounded; the GPU's 5-bit expansion may differ from
+// the RGBA8888 path's floor(v*255/31) by one 8-bit step, hence default off.
+// No mip chain is generated, exactly as on the RGBA8888 path. NULL (with no
+// GL object left behind) sends the caller down the unchanged RGBA8888 path.
+IDirect3DTexture8 *Create_Packed_A1R5G5B5_Texture(IDirect3DSurface8 *surface,
+	const D3DSURFACE_DESC &description, TextureClass::MipCountType mip_level_count)
+{
+	if (description.Format != D3DFMT_A1R5G5B5 ||
+		surface->Get_Pitch() < description.Width * 2U) {
+		return NULL;
+	}
+	std::vector<uint16_t> packed(static_cast<size_t>(description.Width) *
+		description.Height);
+	uint32_t checksum = 2166136261U;
+	for (unsigned y = 0U; y < description.Height; ++y) {
+		checksum = RenegadeVitaTexturePacking::Pack_A1R5G5B5_Row(
+			surface->Get_Data() + static_cast<size_t>(y) * surface->Get_Pitch(),
+			description.Width,
+			packed.data() + static_cast<size_t>(y) * description.Width, checksum);
+	}
+	IDirect3DTexture8 *texture = new (std::nothrow) IDirect3DTexture8;
+	if (texture == NULL) return NULL;
+	memset(texture, 0, sizeof(*texture));
+	texture->Width = description.Width;
+	texture->Height = description.Height;
+	texture->MipLevels = mip_level_count == TextureClass::MIP_LEVELS_ALL ? 1U :
+		static_cast<uint32_t>(mip_level_count);
+	if (texture->MipLevels == 0U) texture->MipLevels = 1U;
+	texture->SourceFormat = description.Format;
+	// Identity of the packed 5551 words (diagnostic; a different checksum
+	// domain from the RGBA8888 path, like the native DXT block checksum).
+	texture->PixelChecksum = checksum;
+	texture->ResidentBytes = packed.size() * sizeof(uint16_t);
+	texture->ReferenceCount = 1U;
+	texture->HasAlpha = true;
+	(void)glGetError();
+	GLuint native = 0U;
+	glGenTextures(1, &native);
+	if (native == 0U) {
+		delete texture;
+		return NULL;
+	}
+	glBindTexture(GL_TEXTURE_2D, native);
+	RenegadeVitaRenderer::Invalidate_Texture_State_Cache();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// GL_RGBA/GL_UNSIGNED_SHORT_5_5_5_1 with internal GL_RGBA is vitaGL's
+	// fast_store copy into SCE_GXM_TEXTURE_FORMAT_U5U5U5U1_RGBA.
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, description.Width, description.Height,
+		0, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, packed.data());
+	if (glGetError() != GL_NO_ERROR) {
+		RenegadeVitaRenderer::Release_Texture(native);
+		delete texture;
+		return NULL;
+	}
+	texture->NativeTexture = native;
+	texture->Uploaded = true;
+	RenegadeVitaRenderer::Record_Texture_Decode();
+	RenegadeVitaRenderer::Record_Texture_Upload(texture->ResidentBytes);
+	++g_archive_targa_totals.packed16;
+	return texture;
+}
+#endif
+
 // retain_surface_copy=false is only for sources that can be re-decoded on
 // demand (archive TGAs, see Load_Targa_Texture); every other caller passes a
 // surface it may not be able to reproduce, so its copy stays resident.
@@ -1209,6 +1335,15 @@ IDirect3DTexture8 *Create_Texture_From_Surface(IDirect3DSurface8 *surface,
 		RenegadeVitaRenderer::Record_Texture_Invalid_Data();
 		return Create_Checkerboard_Fallback();
 	}
+#if defined(__vita__)
+	// Archive TGAs only (they can be re-decoded, so no CPU copy is retained).
+	if (!retain_surface_copy && description.Format == D3DFMT_A1R5G5B5 &&
+		(Texture_Packing_Mode() & RenegadeVitaTexturePacking::MODE_PACK_A1R5G5B5) != 0U) {
+		IDirect3DTexture8 *packed = Create_Packed_A1R5G5B5_Texture(surface,
+			description, mip_level_count);
+		if (packed != NULL) return packed;
+	}
+#endif
 	const unsigned bytes_per_pixel = Surface_Bytes_Per_Pixel(description.Format);
 	std::vector<unsigned char> rgba(static_cast<size_t>(description.Width) *
 		description.Height * 4U);
@@ -1760,11 +1895,17 @@ IDirect3DTexture8 *Load_DDS_Texture(const char *filename,
 IDirect3DTexture8 *Load_Targa_Texture(const char *filename,
 	TextureClass::MipCountType mip_level_count)
 {
+#if defined(__vita__)
+	const uint64_t started_us = sceKernelGetProcessTimeWide();
+#endif
 	IDirect3DSurface8 *surface = DX8Wrapper::_Create_DX8_Surface(filename);
 	if (surface == NULL) {
 		Log_Texture_Fallback("tga-source-or-decode", filename);
 		return Create_Checkerboard_Fallback();
 	}
+#if defined(__vita__)
+	const uint64_t decoded_us = sceKernelGetProcessTimeWide();
+#endif
 	// The archive member can be decoded again, so the RGBA8888 GPU image is the
 	// only resident form; the source-format CPU surface is rebuilt on the first
 	// GetSurfaceLevel/LockRect (Materialize_Lazy_Targa_Surface_Levels). If the
@@ -1774,6 +1915,9 @@ IDirect3DTexture8 *Load_Targa_Texture(const char *filename,
 	IDirect3DTexture8 *texture = Create_Texture_From_Surface(surface,
 		mip_level_count, lazy_source == NULL);
 	surface->Release();
+#if defined(__vita__)
+	const uint64_t uploaded_us = sceKernelGetProcessTimeWide();
+#endif
 	if (texture != NULL && !texture->DiagnosticFallback) {
 		if (lazy_source != NULL) {
 			memcpy(lazy_source, filename, name_length + 1U);
@@ -1782,6 +1926,10 @@ IDirect3DTexture8 *Load_Targa_Texture(const char *filename,
 		}
 		RenegadeVitaRenderer::Record_Texture_Targa_Load();
 		Log_Texture_Load("tga", filename, texture);
+#if defined(__vita__)
+		Record_Archive_Targa_Load(texture, decoded_us - started_us,
+			uploaded_us - decoded_us);
+#endif
 	}
 	delete [] lazy_source;
 	return texture;

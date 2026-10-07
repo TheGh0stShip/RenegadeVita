@@ -2367,7 +2367,7 @@
     {
       "path": "port/patches/combat-a36-boss-load-status.patch",
       "stage_directory": "combat",
-      "sha256": "c69c59d86e887651aeb68c14d30e69672c57938d83098ef232f3733c42fa28af"
+      "sha256": "7ef70017f7b1f4ebe4d1e65dffb404637f802108f3e4ec2e9fc8c624e1360a06"
     },
     {
       "path": "port/patches/wwphys-a36-base-load-status.patch",
@@ -2540,5 +2540,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "3e26cc91ed64675e91bc6f2a2a892ba7b7b74a8f7a4ae71efecd9b9b8cff1e0f"
+  "registry_sha256": "4c067a9cca36f20143026a731a26eee47f274a724b2c47a7d403aaa867d5b2dd"
 }

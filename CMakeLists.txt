@@ -600,11 +600,28 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
   RENEGADE_A30_FULL_WWPHYS=1
   RENEGADE_VITA_A22_ORIGINAL_SOURCES=105
   RENEGADE_VITA_A22_PORT_SOURCES=9
-  RENEGADE_VITA_A31_ORIGINAL_SOURCES=${RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCE_COUNT}
-  RENEGADE_VITA_A30_PORT_SOURCES=${RENEGADE_A30_PORT_SOURCE_COUNT}
   RENEGADE_VITAGL_HAS_PHYCONT_MEM=${RENEGADE_VITAGL_HAS_PHYCONT_MEM}
   RENEGADE_VITAGL_PHYCONT_MEM=${RENEGADE_VITAGL_PHYCONT_MEM}
 	)
+# No translation unit reads these two counts, but they change whenever a
+# source is added, which rewrites all ~680 compile commands (ninja reruns every
+# edge; ccache direct mode misses each one). Opt-in RENEGADE_OMIT_SOURCE_COUNT_DEFINES=1
+# (environment or -D) drops them. Objects are unaffected: GCC does not record
+# -D options in DW_AT_producer and emits no macro info at -g. The default
+# keeps today's compile commands byte-for-byte (CMake sorts DEFINES).
+option(RENEGADE_OMIT_SOURCE_COUNT_DEFINES
+  "Drop the unused target-wide source-count definitions" OFF)
+set(rv_omit_source_count_defines "${RENEGADE_OMIT_SOURCE_COUNT_DEFINES}")
+if("$ENV{RENEGADE_OMIT_SOURCE_COUNT_DEFINES}" MATCHES "^(1|ON|on|TRUE|true|YES|yes)$")
+  set(rv_omit_source_count_defines ON)
+elseif("$ENV{RENEGADE_OMIT_SOURCE_COUNT_DEFINES}" MATCHES "^(0|OFF|off|FALSE|false|NO|no)$")
+  set(rv_omit_source_count_defines OFF)
+endif()
+if(NOT rv_omit_source_count_defines)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE
+    RENEGADE_VITA_A31_ORIGINAL_SOURCES=${RENEGADE_A31_INTERACTIVE_ORIGINAL_SOURCE_COUNT}
+    RENEGADE_VITA_A30_PORT_SOURCES=${RENEGADE_A30_PORT_SOURCE_COUNT})
+endif()
 # Each frame-profile scope costs two process-time syscalls. WWPhys wheel.cpp
 # opens up to five scopes per wheel per force evaluation (two per midpoint
 # integration step), far more calls than the work they bracket. The enclosing

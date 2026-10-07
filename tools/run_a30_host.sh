@@ -16,7 +16,9 @@ rv_renderer_lifecycle_build="$rv_root/build/host-a30-renderer-lifecycle"
 rv_runtime="$rv_root/build/host-a30-runtime"
 rv_timestamp=$(date +%Y%m%d-%H%M%S)
 rv_log="$rv_builder_root/logs/a30-$rv_timestamp-host-runtime.log"
-export CCACHE_DIR="$rv_root/build/ccache"
+# Opt-in shared compiler cache (cmake/RenegadeCcache.cmake); default per tree.
+rv_ccache_dir=${RENEGADE_CCACHE_DIR:-"$rv_root/build/ccache"}
+export CCACHE_DIR="$rv_ccache_dir"
 export CCACHE_BASEDIR="$rv_root"
 
 mkdir -p "$rv_build" "$rv_runtime/user" "$rv_runtime/cache" \
@@ -39,7 +41,7 @@ cmake -S "$rv_root/tools/host_a30_definitions" -B "$rv_build" -G Ninja \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DRENEGADE_HOST_ORIGINAL_AUDIO=ON \
 	-DRENEGADE_USE_CCACHE=ON
-grep -Fq "CCACHE_DIR=$rv_root/build/ccache" "$rv_build/build.ninja"
+grep -Fq "CCACHE_DIR=$rv_ccache_dir" "$rv_build/build.ninja"
 cmake --build "$rv_build" --target a30_wwphys_definition_runtime \
 	 a31_gameplay_seed_runtime a31_interactive_runtime a31_capture_telemetry_selftest \
 	 a31_vita_input_contract_selftest a35_vita_button_state_contract_selftest \

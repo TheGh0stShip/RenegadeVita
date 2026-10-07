@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "163d117fc4e5b87c44540ded5c41618d3bd0edd86acf85ba72c489eacd61e933",
-  "patch_count": 544,
+  "stage_script_sha256": "4faf09a7f7b148d8ba027ae66f32fe3512a432bb6c0534adf4377d41f65701cc",
+  "patch_count": 545,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1770,6 +1770,16 @@
       "sha256": "0f621e8d0da297ed6d79dfef7bdff55b4312a656009058767f9f394ee736f62b"
     },
     {
+      "path": "port/patches/scripts-a38-m07-hotwire-sam-conversation-fallback.patch",
+      "stage_directory": "scripts",
+      "sha256": "0c3754a87b4b22dfe29dbeda04d516eaa183dd139c51b897afbe706788598f83"
+    },
+    {
+      "path": "port/patches/scripts-a38-m07-hotwire-path-failure-fallback.patch",
+      "stage_directory": "scripts",
+      "sha256": "52ad8739d4d43d04d37087b30b3734d01fa9822427cd00a771e31543182d1122"
+    },
+    {
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
       "stage_directory": "combat",
       "sha256": "0698dde47d7dcf9d381f46134f90fdf878d997026d668ce3c574d32d613b1f2e"
@@ -2685,11 +2695,6 @@
       "sha256": "8696762046ee73979d8e8f279e5cef0b9071054cdbd288251690c96dc935d890"
     },
     {
-      "path": "port/patches/combat-a38-raveshaw-jump-grounded-landing.patch",
-      "stage_directory": "combat",
-      "sha256": "fe1e4eb02e059607f6df29c01c1fbb95aaf739cef53c0a929a7f60d6478def3d"
-    },
-    {
       "path": "port/patches/combat-a36-smart-control-disabled-weapon-guard.patch",
       "stage_directory": "combat",
       "sha256": "82e2110a38e9fdb81c97af66939a407ffe223a8fa3102fa5f38099afafe318d3"
@@ -2725,5 +2730,5 @@
       "sha256": "1fd9784eff93c659fa39a08322828cb55ab49dca36582e540f51be432e85a82a"
     }
   ],
-  "registry_sha256": "5d5bafb55b205e756d8468d2eb5230447495662be400ef07d5eca5cb8eb0e900"
+  "registry_sha256": "25ea4dc53388ee37480ba862c888e2f4bbc02ebf358d3277f8db6181e738e9aa"
 }

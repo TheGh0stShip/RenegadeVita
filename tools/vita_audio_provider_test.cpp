@@ -359,19 +359,19 @@ int main()
 		"provider 3D PCM load failed");
 	AIL_set_3D_sample_volume(sample3d, 127);
 	AIL_set_3D_sample_distances(sample3d, 10.0F, 2.0F);
-	AIL_set_3D_position(sample3d, 0.0F, 6.0F, 0.0F);
+	AIL_set_3D_position(sample3d, 0.0F, 4.0F, 0.0F);
 	AIL_start_3D_sample(sample3d);
 	int16_t spatial[2] = {};
 	passed &= Require(Renegade_Miles_Mix_For_Test(spatial, 1) &&
 		spatial[0] == 500 && spatial[1] == 500,
-		"3D provider distance interpolation differs");
+		"3D provider inverse-distance rolloff differs");
 	AIL_end_3D_sample(sample3d);
-	AIL_set_3D_position(sample3d, 0.0F, 10.0F, 0.0F);
+	AIL_set_3D_position(sample3d, 0.0F, 20.0F, 0.0F);
 	AIL_start_3D_sample(sample3d);
 	spatial[0] = spatial[1] = 1;
 	passed &= Require(Renegade_Miles_Mix_For_Test(spatial, 1) &&
-		spatial[0] == 0 && spatial[1] == 0,
-		"3D provider maximum-distance cutoff differs");
+		spatial[0] == 200 && spatial[1] == 200,
+		"3D provider beyond-maximum hold differs");
 	AIL_release_3D_sample_handle(sample3d);
 	g_stream_fixture = pcm_fact;
 	AIL_set_file_callbacks(Stream_Open, Stream_Close, Stream_Seek, Stream_Read);
@@ -511,7 +511,7 @@ int main()
 	passed &= Require(stats.sample_start_attempts == 7 &&
 		stats.sample_start_successes == 7 &&
 		stats.mixed_buffers == 9 &&
-		stats.mixed_nonzero_buffers == 7 &&
+		stats.mixed_nonzero_buffers == 8 &&
 		stats.mixed_peak_abs >= 1000 &&
 		stats.active_streams == 0 &&
 		stats.active_stream_position_ms == 0 &&

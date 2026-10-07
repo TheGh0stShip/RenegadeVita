@@ -714,6 +714,16 @@ void Mix_Mpeg_Voice(RenegadeMilesSample *sample, size_t source_frames,
 	sample->cursor = cursor;
 }
 
+// Miles/DS3D inverse-distance rolloff: unity inside minimum, held at the
+// maximum-distance gain beyond it (WWAudio already edge-fades and culls).
+inline float Inverse_Distance_Gain(float minimum_distance, float maximum_distance,
+	float distance)
+{
+	const float minimum = std::max(1.0e-3F, std::min(minimum_distance, maximum_distance));
+	const float maximum = std::max(minimum, maximum_distance);
+	return minimum / std::max(minimum, std::min(distance, maximum));
+}
+
 void Mix_Locked(int16_t *output, size_t frames,
 	RenegadeMilesMixSummary *summary = nullptr)
 {
@@ -749,13 +759,8 @@ void Mix_Locked(int16_t *output, size_t frames,
 				sample->position[0] * sample->position[0] +
 				sample->position[1] * sample->position[1] +
 				sample->position[2] * sample->position[2]);
-			const float minimum = std::max(0.0F, std::min(
-				sample->minimum_distance, sample->maximum_distance));
-			const float maximum = std::max(minimum, sample->maximum_distance);
-			if (distance >= maximum) distance_gain = 0.0F;
-			else if (distance > minimum && maximum > minimum) {
-				distance_gain = (maximum - distance) / (maximum - minimum);
-			}
+			distance_gain = Inverse_Distance_Gain(
+				sample->minimum_distance, sample->maximum_distance, distance);
 		}
 		const float gains[2] = {
 			volume * distance_gain * left_pan_gain,

@@ -28,6 +28,7 @@ class AudioMixerEquivalenceTests(unittest.TestCase):
                                   'UBSAN_OPTIONS': 'halt_on_error=1:print_stacktrace=1'})
             self.assertIn('audio mixer equivalence PASS scenarios=%d' % scenarios, completed.stdout)
             self.assertIn('audio pcm cache PASS', completed.stdout)
+            self.assertIn('audio inverse distance rolloff PASS', completed.stdout)
 
     def test_sanitized(self):
         self.build_and_run(['-O1', '-g', '-fsanitize=address,undefined',

@@ -61,13 +61,12 @@ void Reference_Mix_Locked(int16_t *output, size_t frames)
 				sample->position[0] * sample->position[0] +
 				sample->position[1] * sample->position[1] +
 				sample->position[2] * sample->position[2]);
-			const float minimum = std::max(0.0F, std::min(
+			const float minimum = std::max(1.0e-3F, std::min(
 				sample->minimum_distance, sample->maximum_distance));
 			const float maximum = std::max(minimum, sample->maximum_distance);
-			if (distance >= maximum) distance_gain = 0.0F;
-			else if (distance > minimum && maximum > minimum) {
-				distance_gain = (maximum - distance) / (maximum - minimum);
-			}
+			// Miles/DS3D inverse-distance rolloff: unity inside minimum, held at
+			// the maximum-distance gain beyond it (WWAudio fades and culls).
+			distance_gain = minimum / std::max(minimum, std::min(distance, maximum));
 		}
 		const float gains[2] = {
 			volume * distance_gain * left_pan_gain,
@@ -426,6 +425,16 @@ void Check_Pcm_Cache()
 	std::printf("audio pcm cache PASS\n");
 }
 
+void Check_Inverse_Distance_Rolloff()
+{
+	const float cases[][2] = {{0.5F, 1.0F}, {1.0F, 1.0F}, {10.0F, 0.1F},
+		{50.0F, 0.02F}, {100.0F, 0.01F}, {200.0F, 0.01F}};
+	for (const auto &c : cases) {
+		CHECK(std::fabs(Inverse_Distance_Gain(1.0F, 100.0F, c[0]) - c[1]) < 1.0e-6F);
+	}
+	std::printf("audio inverse distance rolloff PASS\n");
+}
+
 } // namespace
 
 int main(int argc, char **argv)
@@ -434,5 +443,6 @@ int main(int argc, char **argv)
 	const unsigned scenarios = argc > 1 ? static_cast<unsigned>(std::strtoul(argv[1], nullptr, 10)) : 3000U;
 	Check_Mixer_Equivalence(scenarios);
 	Check_Pcm_Cache();
+	Check_Inverse_Distance_Rolloff();
 	return 0;
 }

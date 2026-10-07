@@ -2950,6 +2950,14 @@ bool Run_Original_Gameplay_Pause_Menu(MenuGameModeClass2 &menu_mode,
 	// networking and the live match continue behind the C&C reference menu.
 	if (!death_dialog && !multiplayer_menu) combat_mode->Suspend();
 	pause_observed = true;
+#if !RENEGADE_VITA_M00_DEMO
+	// A dead or failed world is never resumed: the popup ends in restart, load or
+	// quit. The original Mendoza death sequence (mendozabossgameobj.cpp) slows
+	// TimeManager to 0.25/0.5, so a death or failure inside it must not leave the
+	// popup and the restarted world running in slow motion. The ordinary EVA pause
+	// keeps its scale because that world does resume.
+	if (death_dialog) TimeManager::Set_Time_Scale(1.0F);
+#endif
 	A4_Frontend_Begin_Pause_Loop();
 	Input::Menu_Enable(true);
 	Input::Update();
@@ -6044,6 +6052,9 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						// gameplay presentation after all loading draws return.
 						A31VitaScopedLoadingRenderResolution reload_loading_resolution;
 							if (campaign_restart) {
+								// TimeScale is not owned by Core_Shutdown/Load_Level. A restart
+								// begins a new generation at normal speed, like a new session.
+								TimeManager::Set_Time_Scale(1.0F);
 								cGod::Restart();
 							} else {
 								if (direct_client) g_b_core_restart = true;

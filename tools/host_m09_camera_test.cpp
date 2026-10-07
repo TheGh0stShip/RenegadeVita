@@ -13,6 +13,9 @@ static void SetCameraCommand(Slot &slot, Callback callback)
     slot = +callback;
 }
 
+// The staged M09 scripts log Vita lift/midtro recovery; discard on the host.
+int A30_Vita_Log(const char *, ...) { return 0; }
+
 static int CameraStorage;
 static GameObject *CameraObject = reinterpret_cast<GameObject *>(&CameraStorage);
 static std::vector<int> CameraQueries;

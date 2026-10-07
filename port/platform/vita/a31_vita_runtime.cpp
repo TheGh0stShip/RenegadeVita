@@ -173,6 +173,13 @@ extern GameObject *Find_Object(int obj_id);
 extern void Set_Position(GameObject *obj, const Vector3 &position);
 extern void Set_Facing(GameObject *obj, float degrees);
 extern void Select_Weapon(GameObject *obj, const char *weapon_name);
+// Original Combat/Commando globals. Declared here at file scope: a block-scope
+// extern inside the anonymous namespace below would name a nonexistent
+// internal-linkage symbol and fail to link.
+extern bool g_b_core_restart;
+extern bool g_client_quit;
+extern int _AwakeSoldiers;
+extern int _HibernatingSoldiers;
 extern void Send_Custom_Event(GameObject *from, GameObject *to, int type, int param, float delay);
 extern void Attach_Script(GameObject *object, const char *script_name, const char *script_params);
 extern GameObject *Create_Object(const char *type_name, const Vector3 &position);
@@ -2725,9 +2732,8 @@ void Log_Campaign_Simulation_Stages()
 		static_cast<unsigned long long>(drift_us / 1000U));
 	// Windowed (since the previous checkpoint) so an ambush is not diluted by
 	// the quiet frames before it: WWPhys scene casts issued by Combat.
-	// Original GameObjManager::Think soldier tallies (console-only on PC).
-	extern int _AwakeSoldiers;
-	extern int _HibernatingSoldiers;
+	// _AwakeSoldiers/_HibernatingSoldiers: original GameObjManager::Think
+	// soldier tallies (console-only on PC).
 	static A31SimulationStageTotals previous = {};
 	static int previous_awake = 0;
 	static int previous_hibernating = 0;
@@ -2974,8 +2980,6 @@ bool Run_Original_Gameplay_Pause_Menu(MenuGameModeClass2 &menu_mode,
 	WWAudioClass *audio, bool &pause_observed,
 	bool &resume_observed, bool death_dialog = false)
 {
-	extern bool g_b_core_restart;
-	extern bool g_client_quit;
 	GameModeClass *combat_mode = GameModeManager::Find("Combat");
 	if (combat_mode == NULL ||
 		(death_dialog ? !combat_mode->Is_Suspended() : !combat_mode->Is_Active())) return true;

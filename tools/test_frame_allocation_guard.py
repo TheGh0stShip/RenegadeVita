@@ -275,7 +275,7 @@ class FrameAllocationGuardTests(unittest.TestCase):
             self.assertFalse('config/frame-alloc-v1.flag"' in text, str(path))
         # The renderer primes the one-time read at initialization.
         init = read(RENDERER)
-        start = init.index("\tRead_Vertex_Array_Mode();\n#endif\n")
+        start = init.index("\tRead_Vertex_Array_Mode();\n")
         end = init.index('"vglInit entry"', start)
         self.assertIn("RenegadeVitaFrameAlloc::Mode()", init[start:end])
 

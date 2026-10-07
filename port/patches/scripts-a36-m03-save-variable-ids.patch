@@ -1,0 +1,12 @@
+diff --git a/Mission03.cpp b/Mission03.cpp
+--- a/Mission03.cpp
++++ b/Mission03.cpp
+@@ -3199,7 +3199,7 @@ DECLARE_SCRIPT(M03_Chinook_Drop_Soldiers_GDI, "Controller_ID:int")
+ 	{
+ 		SAVE_VARIABLE( con_id, 1 );
+ 		SAVE_VARIABLE( count, 2);
+-		SAVE_VARIABLE( count2, 2);
++		SAVE_VARIABLE( count2, 3);
+ 	}
+ 	
+ 	void Created(GameObject * obj)

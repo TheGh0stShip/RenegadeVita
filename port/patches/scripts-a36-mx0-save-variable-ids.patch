@@ -1,0 +1,12 @@
+diff --git a/MissionX0.cpp b/MissionX0.cpp
+--- a/MissionX0.cpp
++++ b/MissionX0.cpp
+@@ -2549,7 +2549,7 @@ DECLARE_SCRIPT( MX0_A03_FIRST_PLAYER_ZONE, "" )
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE(Trooper_One_Id, 1);
+-		SAVE_VARIABLE(first_time, 1);
++		SAVE_VARIABLE(first_time, 2);
+ 	}
+ 
+ 	void Created( GameObject *obj )

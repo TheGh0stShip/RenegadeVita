@@ -24,20 +24,24 @@ Tool: `python3 tools/audit_script_save_state_gaps.py [--json out.json] [--top N]
 
 ## Totals (tool output)
 
+Refreshed 2026-10-07 after the dupe-id patches: every dupe-id drop is now 0. The
+M01 dupe-id patch, the M05/M09/M10 patches and the dupe-id patches below also
+lowered the gap counts.
+
 | File | DECLARE_SCRIPT | with REGISTER | gap classes | gap vars | dupe-id drops |
 |---|---|---|---|---|---|
-| Mission01 | 289 | 112 | 5 | 5 | 2 |
+| Mission01 | 289 | 112 | 3 | 3 | 0 |
 | Mission02 | 26 | 10 | 3 | 3 | 0 |
-| Mission03 | 86 | 50 | 1 | 1 | 1 |
-| Mission04 | 138 | 56 | 2 | 3 | 1 |
-| Mission05 | 111 | 83 | 8 | 10 | 2 |
+| Mission03 | 86 | 50 | 0 | 0 | 0 |
+| Mission04 | 138 | 56 | 1 | 2 | 0 |
+| Mission05 | 111 | 83 | 6 | 8 | 0 |
 | Mission06 | 85 | 60 | 9 | 17 | 0 |
 | Mission07 | 122 | 67 | 10 | 10 | 0 |
 | mission08 | 114 | 69 | 9 | 15 | 0 |
 | Mission09 | 96 | 50 | 5 | 5 | 0 |
-| Mission10 | 79 | 36 | 6 | 8 | 0 |
-| Mission11 | 171 | 84 | 1 | 1 | 1 |
-| MissionX0 | 31 | 24 | 3 | 3 | 1 |
+| Mission10 | 79 | 36 | 5 | 6 | 0 |
+| Mission11 | 171 | 84 | 0 | 0 | 0 |
+| MissionX0 | 31 | 24 | 2 | 2 | 0 |
 | Test_DLS | 58 | 21 | 4 | 6 | 0 |
 
 Coverage is high overall. Mission11 and Mission03 register nearly all of their
@@ -82,10 +86,12 @@ skip, or a garbage value fed to the engine. **L** = cosmetic or AI only.
   (`:3202`, it collides with `count`), so it is never saved. After a load
   `sprintf("%d", count2)` at `:3240` passes a garbage `Number` to
   `M03_Beach_Soldier_GDI`. Check that consumer for unchecked indexing.
+  *Fixed: id 3 (`scripts-a36-m03-save-variable-ids.patch`).*
 
 ### M04
 - **L** `Mission04.cpp:8989` `M04_Firefight_Prisoner::warningPlayed`: **dupe id 3**
   (`:8996`). The warning line can repeat.
+  *Fixed: id 4 (`scripts-a36-m04-save-variable-ids.patch`).*
 - **L** `Mission04.cpp:10199-10200` `M04_BigSam_Script_JDG::civWarning`,
   `missileStuckSound`: no REGISTER block, so the sound and conversation can repeat.
 
@@ -96,12 +102,13 @@ skip, or a garbage value fed to the engine. **L** = cosmetic or AI only.
   A save between zone entry and conversation end leaves a garbage value, so the
   objective-fail HUD text and the `503` failure report can be dropped.
 - **M** `Mission05.cpp:5420` `M05_Inn_Tank::attacking`: **dupe id 2** (`:5429`)
-  causes AI state drift.
+  causes AI state drift. *Fixed: id 3 (`scripts-a36-m05-save-variable-ids.patch`).*
 - **L** `Mission05.cpp:2877-2879` `M05_Park_Controller::artillery_loc1..3`: explosion
   and sound positions are garbage until the next timer refresh at `:2993`.
 - **L** `Mission05.cpp:7390` `M05_Cathedral_Artillery`: `fire_loc[0]` and
   `fire_loc[1]` are both registered with id 1. The second registration is
   dropped (`:7393`) and only element 0 is saved.
+  *Fixed: `fire_loc[1]` is now id 2 (same M05 patch).*
 
 ### M06
 - **M** `Mission06.cpp:1501` `M06_Alarm_Behavior::alarm_switch_id` is set in
@@ -155,17 +162,20 @@ skip, or a garbage value fed to the engine. **L** = cosmetic or AI only.
 ### M11
 - **L** `Mission11.cpp:7529` `M11_Petrova_Taunt_Controller_JDG::last`: **dupe id 2**
   (`:7535`). The taunt rotation can repeat.
+  *Fixed: id 3 (`scripts-a36-m11-save-variable-ids.patch`).*
 
 ### M01
 - **L** `Mission01.cpp:19264` `M01_MediumTank_ReminderZone_JDG::reminderConv` is a
   conversation id that is lost on load.
 - **L** `:6985` `M01_TailgunRun_NOD_Commander_JDG::playerSeen` (**dupe id 2**, `:6991`)
   and `:12094` `M01_Church_Priest_JDG::prayerSound` (**dupe id 1**, `:12099`).
+  *Fixed: ids 3 and 2 (`scripts-a36-m01-save-variable-ids.patch`).*
 
 ### MX0 (tutorial)
 - **M** `MissionX0.cpp:2547` `MX0_A03_FIRST_PLAYER_ZONE::first_time`: **dupe id 1**
   (`:2552`, it collides with `Trooper_One_Id`). After a load the Nod ledge-drop
   cinematic (`:2578-2580`) can fire a second time or not at all.
+  *Fixed: id 2 (`scripts-a36-mx0-save-variable-ids.patch`).*
 - **L** `:1412` `MX0_GDI_ORCA::Trooper_One_Id` and `:2627`
   `MX0_A03_END_ZONE::Trooper_One_Id` are ids received over `Custom`, with no
   REGISTER block. `Find_Object` on a garbage id returns NULL.
@@ -194,7 +204,7 @@ skip, or a garbage value fed to the engine. **L** = cosmetic or AI only.
    `scripts-a36-m10-gate-check-save-flags.patch` (ids 2/3) and
    `scripts-a36-m05-dead6-help-failed-text-save.patch` (id 4, zeroed in
    `Created`). They are host syntax-checked only and have no save/load
-   repro or Vita evidence yet. The dupe-id fixes are not adopted.
+   repro or Vita evidence yet. The dupe-id fixes were adopted later (below).
 
    **Also adopted (2026-10-07):** `scripts-a36-m09-objective-controller-objective-save.patch`
    (`M09_Objective_Controller::objective[3]`, id 6) and
@@ -206,6 +216,17 @@ skip, or a garbage value fed to the engine. **L** = cosmetic or AI only.
    A full sweep of pointer members (`SCRIPT_POINTER_STATE.md`) confirms
    that the M09 `mobius` re-fetch was the only campaign-reachable stale
    pointer read in these files and in Toolkit*.cpp.
+
+   **Dupe ids adopted (2026-10-07):** all remaining duplicate ids now have
+   unique per-class values, one patch per mission file:
+   `scripts-a36-{mx0,m03,m04,m05,m11}-save-variable-ids.patch` (M01 was already
+   done). Changes are integer-literal edits to `SAVE_VARIABLE` arguments only.
+   The audit tool reports 0 dupe-id drops. Staging reproduces with
+   `bash tools/stage_sources.sh` (exit 0). Host/ARM builds, save/load
+   repro and Vita evidence are still pending. An old save made with the
+   duplicate id has no record for the new id and the retained id keeps its
+   old meaning, so old saves still load. The newly-unique variable simply
+   stays unsaved for that old save, as before.
 3. Heuristic limits: method-local shadowing (M08 `controller_id`) and
    objective links made through custom events are not fully resolved. Treat
    tool scores as triage only.

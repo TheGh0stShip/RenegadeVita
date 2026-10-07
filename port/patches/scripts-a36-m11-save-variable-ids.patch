@@ -1,0 +1,12 @@
+diff --git a/Mission11.cpp b/Mission11.cpp
+--- a/Mission11.cpp
++++ b/Mission11.cpp
+@@ -7532,7 +7532,7 @@ DECLARE_SCRIPT(M11_Petrova_Taunt_Controller_JDG, "")//103797
+ 	{
+ 		SAVE_VARIABLE(commandClearance, 1);
+ 		SAVE_VARIABLE(PetrovaDead, 2);
+-		SAVE_VARIABLE(last, 2);
++		SAVE_VARIABLE(last, 3);
+ 	}
+ 
+ 	void Created( GameObject * obj ) 

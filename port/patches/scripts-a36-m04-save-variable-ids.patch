@@ -1,0 +1,12 @@
+diff --git a/Mission04.cpp b/Mission04.cpp
+--- a/Mission04.cpp
++++ b/Mission04.cpp
+@@ -8993,7 +8993,7 @@ DECLARE_SCRIPT(M04_Firefight_Prisoner, "")
+ 		SAVE_VARIABLE(last_health, 1);
+ 		SAVE_VARIABLE(rallying, 2);
+ 		SAVE_VARIABLE(pokable, 3);
+-		SAVE_VARIABLE(warningPlayed, 3);
++		SAVE_VARIABLE(warningPlayed, 4);
+ 	}
+ 
+ 	void Created( GameObject * obj ) 

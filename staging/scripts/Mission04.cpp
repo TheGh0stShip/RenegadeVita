@@ -8993,7 +8993,7 @@ DECLARE_SCRIPT(M04_Firefight_Prisoner, "")
 		SAVE_VARIABLE(last_health, 1);
 		SAVE_VARIABLE(rallying, 2);
 		SAVE_VARIABLE(pokable, 3);
-		SAVE_VARIABLE(warningPlayed, 3);
+		SAVE_VARIABLE(warningPlayed, 4);
 	}
 
 	void Created( GameObject * obj ) 

@@ -5426,7 +5426,7 @@ DECLARE_SCRIPT(M05_Inn_Tank, "")
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( fire_loc, 2 );
-		SAVE_VARIABLE( attacking, 2 );
+		SAVE_VARIABLE( attacking, 3 );
 	}
 
 	void Created (GameObject * obj)
@@ -7393,7 +7393,7 @@ DECLARE_SCRIPT(M05_Cathedral_Artillery, "Fire_Loc1=0:int, Fire_Loc2=0:int")
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( fire_loc[0], 1 );
-		SAVE_VARIABLE( fire_loc[1], 1 );
+		SAVE_VARIABLE( fire_loc[1], 2 );
 //		SAVE_VARIABLE( already_entered, 1 );
 	}
 

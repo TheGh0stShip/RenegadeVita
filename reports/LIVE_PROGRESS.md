@@ -1,5 +1,40 @@
 # Live engineering progress
 
+# Source-only hardening since 2026-10-05 — 2026-10-06
+
+The 54 commits since 2026-10-05 change only source, host tests and reports.
+None of it is ARM-built, installed in Vita3K or verified on hardware.
+
+- Memory: release retained and unconsumed render objects at session teardown
+  and before campaign intermission; vitaGL free-memory floor on M00 texture
+  prewarm; reuse RGBA and strip-index scratch; cache missing font faces;
+  pool-gating analysis.
+- Saves: atomic replace through the Vita rename helper for options,
+  rank/movie unlock stores and TTFS manifest; restore a slot left aside by an
+  interrupted replace; stale `.pending` overwrite test; bounded CONFIG.DAT
+  input profiles.
+- Audio: spatial Miles samples ignore pan; non-fatal sample-registry
+  allocation failures; WAV stream memory reporting; Bink setup-stage labels
+  and power ticks; cinematic listener-vs-camera log.
+- Renderer: DX8 viewports mapped in render-target space; DDS/TGA truncation
+  bounds; depth-sort fallback arity fix; cinematic weapon warm-up; fog,
+  orientation and render-target analyses.
+- Input: carry sub-unit right-stick delta across frames; touch cursor follows
+  the originating finger; HUD readouts round like PC x87.
+- Suspend/lifecycle: system resume routed to the original EVA pause owner;
+  power ticks during loading and Bink; failed reloads use shared recovery;
+  unowned restart/quit requests dropped.
+- Networking: LanBeacon layout static_asserts; truncated beacon rejection;
+  Direct IP entry trimming; short-enum serialization audit.
+- Diagnostics: FPSCR startup log; captures capped at 64 per session; hook cost
+  and M13 Think audits; chunk string clamping and termination audit.
+- Tests: log contract, frame-profile stubs, demo menu return and mesh cache
+  updates; staging refreshed to 506 patches.
+
+Next evidence gates: ARM build; Vita3K install with verified SELF hash; M13
+physical run reading the A3.6 frame-profile lines; physical repeat quicksave.
+These stay open in `KNOWN_GAPS.md` until hardware evidence returns.
+
 # Save writer: atomic replace actually atomic, Vita rename — 2026-10-05
 
 Renegade Vita — v3.5 active

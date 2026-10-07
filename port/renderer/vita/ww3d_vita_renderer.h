@@ -236,6 +236,10 @@ bool Bind_Offscreen_Render_Target(uint32_t framebuffer, uint32_t width,
 	uint32_t height);
 bool Restore_Default_Render_Target();
 bool Get_Active_Render_Target_Size(uint32_t *width, uint32_t *height);
+// Physical display buffer (960x544 unless internal-resolution-v1.flag selects
+// a smaller hardware-scaled scan-out). Full-display glViewport calls outside
+// Apply_Viewport must use this, not the 960x544 logical display.
+void Get_Physical_Display_Size(uint32_t &width, uint32_t &height);
 bool Use_Direct_Text_Atlas_Upload();
 bool Use_Native_DDS_Upload();
 bool Bind_Texture(uint32_t native_texture, bool valid);

@@ -22,6 +22,7 @@
 #include "tri.h"
 #include "vertmaterial.h"
 #include "ww3d_vita_render_state_contract.h"
+#include "internal_resolution.h"
 
 // The per-index geometry checksum hashes every referenced vertex of every
 // indexed draw (HUD, text, particles, sorted geometry). It is a host/test
@@ -155,6 +156,11 @@ struct NativePresentationRect {
 NativePresentationRect g_native_presentation_rect = {
 	0U, 0U, DISPLAY_WIDTH, DISPLAY_HEIGHT
 };
+
+// Physical vitaGL display buffer. Smaller than the 960x544 logical display
+// only when internal-resolution-v1.flag selects hardware scan-out scaling.
+uint32_t g_physical_display_width = DISPLAY_WIDTH;
+uint32_t g_physical_display_height = DISPLAY_HEIGHT;
 
 #if defined(__vita__)
 bool g_logged_first_frame = false;
@@ -1871,8 +1877,8 @@ bool Reactivate_Native_Backend_State()
 		g_lifecycle.native_initialization_calls,
 		g_lifecycle.logical_sessions);
 	(void)glGetError();
-	glViewport(0, 0, static_cast<GLsizei>(DISPLAY_WIDTH),
-		static_cast<GLsizei>(DISPLAY_HEIGHT));
+	glViewport(0, 0, static_cast<GLsizei>(g_physical_display_width),
+		static_cast<GLsizei>(g_physical_display_height));
 	glDepthRangef(0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -2083,6 +2089,96 @@ void Apply_VitaGL_Sizing(const VitaGLSizing &sizing)
 	if (sizing.overridden & VitaGLSizing::FRAGMENT) vglSetFragmentBufferSize(sizing.fragment_ring_bytes);
 	if (sizing.overridden & VitaGLSizing::USSE) vglSetUSSEBufferSize(sizing.fragment_usse_ring_bytes);
 	if (sizing.overridden & VitaGLSizing::PARAMETER) vglSetParamBufferSize(sizing.parameter_buffer_bytes);
+}
+
+// Default 100% (native 960x544 scan-out, unchanged behaviour). A user config
+// file containing exactly "RVIR1 100\n", "RVIR1 75\n", "RVIR1 67\n",
+// "RVIR1 50\n" or "RVIR1 auto\n" selects hardware scan-out scaling.
+RenegadeVitaInternalResolution::Mode g_internal_resolution_mode = {false, 0U};
+bool g_internal_resolution_from_flag = false;
+RenegadeVitaInternalResolution::Controller g_internal_resolution_controller;
+uint32_t g_internal_resolution_pending_level = RenegadeVitaInternalResolution::LEVEL_COUNT;
+uint64_t g_internal_resolution_last_present_us = 0U;
+uint32_t g_internal_resolution_changes = 0U;
+
+void Read_Internal_Resolution_Mode()
+{
+	using namespace RenegadeVitaInternalResolution;
+	g_internal_resolution_mode.automatic = false;
+	g_internal_resolution_mode.level = LEVEL_100;
+	g_internal_resolution_from_flag = false;
+	FILE *file = fopen("ux0:data/renegade/user/config/internal-resolution-v1.flag", "rb");
+	if (file != NULL) {
+		char value[12] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		Mode parsed = g_internal_resolution_mode;
+		if (read_ok && size < sizeof(value) && Parse_Flag(value, size, parsed)) {
+			g_internal_resolution_mode = parsed;
+			g_internal_resolution_from_flag = true;
+		}
+	}
+	g_internal_resolution_controller.Reset(g_internal_resolution_mode.level, LEVEL_50);
+	g_internal_resolution_pending_level = LEVEL_COUNT;
+	g_internal_resolution_last_present_us = 0U;
+	g_internal_resolution_changes = 0U;
+}
+
+// vglSwapResolution only records the request; vitaGL reallocates the display
+// buffers at the end of the following vglSwapBuffers. Commit the matching
+// logical->physical mapping right after that swap so no frame mixes sizes.
+void Commit_Pending_Internal_Resolution()
+{
+	using namespace RenegadeVitaInternalResolution;
+	if (g_internal_resolution_pending_level >= LEVEL_COUNT) return;
+	const LevelSize &size = Level_Size(g_internal_resolution_pending_level);
+	g_internal_resolution_pending_level = LEVEL_COUNT;
+	g_physical_display_width = size.width;
+	g_physical_display_height = size.height;
+	glViewport(0, 0, static_cast<GLsizei>(size.width),
+		static_cast<GLsizei>(size.height));
+	g_current_native_viewport_known = false;
+	++g_internal_resolution_changes;
+}
+
+void Update_Internal_Resolution_After_Present()
+{
+	using namespace RenegadeVitaInternalResolution;
+	Commit_Pending_Internal_Resolution();
+	if (!g_internal_resolution_mode.automatic) return;
+	const uint64_t now_us = sceKernelGetProcessTimeWide();
+	const uint64_t previous_us = g_internal_resolution_last_present_us;
+	g_internal_resolution_last_present_us = now_us;
+	// The IME common dialog draws into the display buffer: never sample or
+	// resize under it.
+	if (RenegadeVitaTextEntry::Active()) return;
+	if (previous_us == 0U || now_us <= previous_us) return;
+	const uint64_t interval_us = now_us - previous_us;
+	(void)g_internal_resolution_controller.Record_Frame(
+		interval_us > 0xFFFFFFFFULL ? 0xFFFFFFFFU : static_cast<uint32_t>(interval_us));
+	// Evaluate on the shared 120-frame checkpoint so decisions line up with
+	// the frame-vblank/render-work-cache breadcrumbs. A window that missed
+	// presents (IME, non-presenting frames) is discarded, not judged.
+	if ((g_statistics.frames % Controller::WINDOW) != 0U) return;
+	const Decision decision = g_internal_resolution_controller.Evaluate();
+	if (decision.kind == DECISION_NONE) return;
+	const bool change = decision.level != decision.previous_level;
+	if (change) {
+		const LevelSize &size = Level_Size(decision.level);
+		(void)vglSwapResolution(static_cast<int>(size.width), static_cast<int>(size.height));
+		g_internal_resolution_pending_level = decision.level;
+	}
+	if (change || (g_statistics.frames % 1200U) == 0U) {
+		Vita_Append_A22_Runtime_Breadcrumb("internal-resolution",
+			"version=1 frame=%u decision=%s from=%u%% to=%u%% physical=%ux%u p50_us=%u p95_us=%u down_lock=%u up_lock=%u changes=%u",
+			g_statistics.frames, Decision_Name(decision.kind),
+			Level_Size(decision.previous_level).percent,
+			Level_Size(decision.level).percent,
+			g_physical_display_width, g_physical_display_height,
+			decision.p50_us, decision.p95_us, decision.down_lock,
+			decision.up_lock, g_internal_resolution_changes);
+	}
 }
 
 StaticMeshMaterialSnapshot Snapshot_Static_Mesh_Material(VertexMaterialClass *material)
@@ -2692,6 +2788,12 @@ bool Restore_Default_Render_Target()
 	return true;
 }
 
+void Get_Physical_Display_Size(uint32_t &width, uint32_t &height)
+{
+	width = g_physical_display_width;
+	height = g_physical_display_height;
+}
+
 bool Get_Active_Render_Target_Size(uint32_t *width, uint32_t *height)
 {
 	if (g_active_render_target_width == 0U || g_active_render_target_height == 0U)
@@ -2801,10 +2903,20 @@ bool Build_Native_Viewport(uint32_t d3d_x, uint32_t d3d_y,
 		return false;
 	}
 
-	viewport.x = static_cast<uint32_t>(left);
-	viewport.y = static_cast<uint32_t>(DISPLAY_HEIGHT - bottom);
-	viewport.width = static_cast<uint32_t>(right - left);
-	viewport.height = static_cast<uint32_t>(bottom - top);
+	// Logical 960x544 display -> physical display buffer (identity at 100%).
+	using RenegadeVitaInternalResolution::Scale_Edge;
+	const uint32_t physical_left =
+		Scale_Edge(left, DISPLAY_WIDTH, g_physical_display_width, false);
+	const uint32_t physical_right =
+		Scale_Edge(right, DISPLAY_WIDTH, g_physical_display_width, true);
+	const uint32_t physical_top =
+		Scale_Edge(top, DISPLAY_HEIGHT, g_physical_display_height, false);
+	const uint32_t physical_bottom =
+		Scale_Edge(bottom, DISPLAY_HEIGHT, g_physical_display_height, true);
+	viewport.x = physical_left;
+	viewport.y = g_physical_display_height - physical_bottom;
+	viewport.width = physical_right - physical_left;
+	viewport.height = physical_bottom - physical_top;
 	viewport.min_depth = min_depth;
 	viewport.max_depth = max_depth;
 	return true;
@@ -3032,8 +3144,27 @@ bool Initialize()
 		"display request: 960x544 buffers=3 color=SCE_GXM_COLOR_FORMAT_A8B8G8R8 depth=SCE_GXM_DEPTH_STENCIL_FORMAT_DF32M_S8 msaa=SCE_GXM_MULTISAMPLE_4X");
 #else
 	const unsigned campaign_msaa_samples = Read_Campaign_MSAA_Samples();
+	Read_Internal_Resolution_Mode();
+	{
+		// Auto starts at 960x544 so the depth/stencil surface vitaGL sizes at
+		// init covers every later (smaller) scan-out level.
+		const RenegadeVitaInternalResolution::LevelSize &initial_size =
+			RenegadeVitaInternalResolution::Level_Size(
+				g_internal_resolution_mode.automatic ?
+					RenegadeVitaInternalResolution::LEVEL_100 :
+					g_internal_resolution_mode.level);
+		g_physical_display_width = initial_size.width;
+		g_physical_display_height = initial_size.height;
+		Vita_Append_A22_Runtime_Breadcrumb("internal-resolution",
+			"version=1 mode=%s source=%s effective=%u%% physical=%ux%u logical=%ux%u scaling=display-scanout",
+			g_internal_resolution_mode.automatic ? "auto" : "fixed",
+			g_internal_resolution_from_flag ? "internal-resolution-v1.flag" : "default",
+			initial_size.percent, initial_size.width, initial_size.height,
+			static_cast<unsigned>(DISPLAY_WIDTH), static_cast<unsigned>(DISPLAY_HEIGHT));
+	}
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
-		"display request: 960x544 buffers=3 color=SCE_GXM_COLOR_FORMAT_A8B8G8R8 depth=SCE_GXM_DEPTH_STENCIL_FORMAT_DF32M_S8 msaa_samples=%u",
+		"display request: %ux%u buffers=3 color=SCE_GXM_COLOR_FORMAT_A8B8G8R8 depth=SCE_GXM_DEPTH_STENCIL_FORMAT_DF32M_S8 msaa_samples=%u",
+		g_physical_display_width, g_physical_display_height,
 		campaign_msaa_samples);
 #endif
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
@@ -3078,7 +3209,9 @@ bool Initialize()
 	const VitaGLSizing vitagl_sizing = Read_VitaGL_Sizing();
 	Apply_VitaGL_Sizing(vitagl_sizing);
 	const GLboolean resolution_fallback = vglInitExtended(
-		static_cast<int>(vitagl_sizing.immediate_pool_bytes), 960, 544,
+		static_cast<int>(vitagl_sizing.immediate_pool_bytes),
+		static_cast<int>(g_physical_display_width),
+		static_cast<int>(g_physical_display_height),
 		static_cast<int>(vitagl_sizing.ram_reserve_bytes), campaign_msaa);
 #endif
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
@@ -3109,17 +3242,19 @@ bool Initialize()
 	glGetIntegerv(GL_VIEWPORT, initial_viewport);
 	const GLenum query_error = Log_GL_Result("viewport query");
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
-		"framebuffer/display query: viewport=%d,%d %dx%d expected=960x544",
-		initial_viewport[0], initial_viewport[1], initial_viewport[2], initial_viewport[3]);
+		"framebuffer/display query: viewport=%d,%d %dx%d expected=%ux%u",
+		initial_viewport[0], initial_viewport[1], initial_viewport[2], initial_viewport[3],
+		g_physical_display_width, g_physical_display_height);
 
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init", "glViewport entry");
-	glViewport(0, 0, 960, 544);
+	glViewport(0, 0, static_cast<GLsizei>(g_physical_display_width),
+		static_cast<GLsizei>(g_physical_display_height));
 	const GLenum viewport_error = Log_GL_Result("glViewport");
 	if (viewport_error == GL_NO_ERROR) {
 		g_current_native_viewport.x = 0U;
 		g_current_native_viewport.y = 0U;
-		g_current_native_viewport.width = DISPLAY_WIDTH;
-		g_current_native_viewport.height = DISPLAY_HEIGHT;
+		g_current_native_viewport.width = g_physical_display_width;
+		g_current_native_viewport.height = g_physical_display_height;
 		g_current_native_viewport.min_depth = 0.0f;
 		g_current_native_viewport.max_depth = 1.0f;
 		g_current_native_viewport_known = true;
@@ -3286,6 +3421,9 @@ void End_Frame(bool present)
 		if (present_error != GL_NO_ERROR) {
 			++g_statistics.backend_errors;
 		}
+#if !RENEGADE_VITA_M00_DEMO
+		Update_Internal_Resolution_After_Present();
+#endif
 		if (!g_logged_first_present) {
 			Vita_Append_A22_Runtime_Breadcrumb("render-frame",
 				"WW3D first End_Frame present return: frame_after=%u glGetError=%08X",
@@ -4787,14 +4925,19 @@ bool Capture_Resolved_Frame_RGBA(uint8_t *output, size_t output_bytes,
 	// uses a negative display stride and Dev122 fails inside Vita3K during
 	// this loading capture. Emulator framebuffer screenshots remain separate
 	// evidence until native readback synchronization is validated.
-	glReadPixels(0, 0, static_cast<GLsizei>(DISPLAY_WIDTH),
-		static_cast<GLsizei>(DISPLAY_HEIGHT), GL_RGBA, GL_UNSIGNED_BYTE, output);
+	// A reduced internal resolution reads the smaller physical buffer and
+	// expands it in place so consumers keep the 960x544 logical layout.
+	glReadPixels(0, 0, static_cast<GLsizei>(g_physical_display_width),
+		static_cast<GLsizei>(g_physical_display_height), GL_RGBA, GL_UNSIGNED_BYTE, output);
 	const GLenum error = glGetError();
 	glReadBuffer(GL_BACK);
 	if (error != GL_NO_ERROR) {
 		++g_statistics.backend_errors;
 		return false;
 	}
+	RenegadeVitaInternalResolution::Expand_Capture_In_Place(output,
+		g_physical_display_width, g_physical_display_height,
+		DISPLAY_WIDTH, DISPLAY_HEIGHT);
 #else
 	(void)presented_frame;
 	memset(output, 0, required);

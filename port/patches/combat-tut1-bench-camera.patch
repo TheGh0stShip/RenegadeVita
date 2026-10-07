@@ -1,0 +1,21 @@
+--- a/combat.cpp
++++ b/combat.cpp
+@@ -111,6 +111,7 @@
+ #include "string_ids.h"
+ #if defined(RENEGADE_VITA_PORT)
+ #include "a31_vita_hud_presentation.h"
++#include "renegade_vita_bench_camera.h"
+ #endif
+ #if defined(RENEGADE_VITA_PORT) && defined(RENEGADE_VITA_FRAME_PROFILE)
+ // RVSC1: profile scopes for the script-driven once-per-frame calls below,
+@@ -785,6 +786,10 @@
+ }{	WWPROFILE( "Camera 1" );
+ 	if ( !MainCamera->Is_Using_Host_Model() ) {
+ 		MainCamera->Update();
++#if defined(RENEGADE_VITA_PORT)
++		// Dev-only tutorial benchmark viewpoint (RVTB1); inert unless armed.
++		Renegade_Vita_Bench_Apply_Camera( *MainCamera );
++#endif
+ 	}
+ 
+ 	// Now, Post Process all objects logically

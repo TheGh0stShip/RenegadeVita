@@ -39,6 +39,9 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <malloc.h>
+
+extern "C" unsigned int _newlib_heap_size_user;
 
 #if defined(RENEGADE_HOST_RENDERER_LIFECYCLE_SELFTEST) && defined(__GNUC__)
 void RenegadeVita_Release_DX8_Bound_Textures() __attribute__((weak));
@@ -1739,6 +1742,11 @@ void Log_VitaGL_Memory()
 		static_cast<unsigned long long>(vglMemFree(VGL_MEM_BUDGET)),
 		static_cast<unsigned long long>(vglMemTotal(VGL_MEM_ALL)),
 		static_cast<unsigned long long>(vglMemFree(VGL_MEM_ALL)));
+	const struct mallinfo heap = mallinfo();
+	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
+		"newlib heap after vglInit: configured=%u arena=%u in_use=%u free=%u",
+		_newlib_heap_size_user, static_cast<unsigned>(heap.arena),
+		static_cast<unsigned>(heap.uordblks), static_cast<unsigned>(heap.fordblks));
 }
 #endif
 

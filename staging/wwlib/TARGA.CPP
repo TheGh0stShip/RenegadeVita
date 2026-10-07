@@ -1036,6 +1036,9 @@ long Targa::DecodeImage()
 				{
 				count &= 0x7F;
 				count++;
+#if defined(RENEGADE_VITA_PORT)
+				if (count > pixel_count) { error = TGAERR_READ; break; }
+#endif
 
 				/* Read in run pixel. */
 				if (File_Read(image, depth) == depth)
@@ -1054,6 +1057,9 @@ long Targa::DecodeImage()
 			else
 				{
 				count++;
+#if defined(RENEGADE_VITA_PORT)
+				if (count > pixel_count) { error = TGAERR_READ; break; }
+#endif
 				size = (count * depth);
 
 				/* Read in raw pixels. */

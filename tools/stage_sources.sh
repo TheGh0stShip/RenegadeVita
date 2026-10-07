@@ -671,6 +671,7 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-texture-wrapper-surface-release.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-mix-failure-file-release.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a35-targa-fixed-width.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/wwlib" -p1 < "$rv_root/port/patches/wwlib-a36-targa-rle-bound.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a35-format-table-init.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage" -p1 < "$rv_root/port/patches/commando-a35-loading-animation-varargs.patch"
 echo "Applied: port/patches/commando-a35-loading-animation-varargs.patch"

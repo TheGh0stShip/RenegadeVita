@@ -5848,8 +5848,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				selected_archive);
 			const AssetDependencyManager::LoadResult dependency_result =
 				AssetDependencyManager::Load_Level_Assets(selected_archive);
+			// The original preload is best effort (void): retail dependency
+			// lists name assets that do not exist. A miss is logged, never fatal.
 			if (dependency_result == AssetDependencyManager::LOAD_FAILED) {
-				A35_Level_Load_Record_Failure(A35_LOAD_DEPENDENCY_PRELOAD_FAILED);
+				A30_Vita_Log("A4 campaign preload: dependency list had misses archive=%s (non-fatal, original best-effort preload)\n",
+					selected_archive);
 			}
 			A30_Vita_Log("A4 campaign preload: original mission dependency list return archive=%s elapsed_ms=%llu\n",
 				selected_archive,

@@ -35,7 +35,9 @@ class CampaignDiscoveryHandoffTests(unittest.TestCase):
         restore = source.index("EncyclopediaMgrClass::Restore_Data();", load)
         initialize = source.index("EncyclopediaMgrClass::Initialize();", restore)
         region = source[load:initialize]
-        self.assertIn("if (!loaded) break;", region)
+        self.assertIn("if (!loaded) {", region)
+        self.assertIn("A31_CAMPAIGN_HANDOFF_STATE_LOAD_FAILED", region)
+        self.assertLess(region.index("if (!loaded) {"), region.index("Restore_Data"))
         self.assertIn("#if !RENEGADE_VITA_M00_DEMO", region)
         self.assertIn("if (campaign_source != NULL)", region)
         self.assertIn("} else", region)

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "2e5877f4186918baedc7aa17be22f5c1528c9a85f48282cb13cdbc199a3746e0",
-  "patch_count": 577,
+  "stage_script_sha256": "0008711a0c81049e949552b452338798e23d71d9d70ecd5b3836182faaf453f5",
+  "patch_count": 585,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -2700,6 +2700,11 @@
       "sha256": "77ae05f8c9773d157bbdcf6718e28efd063623bdfa433bfb2c2cdaa3a2787340"
     },
     {
+      "path": "port/patches/ww3d2-tut1-particle-cost.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "5f4bdd73cdc20ba9b7d18ba622dd681bb7e24fb1f6299535e16048006c4504cd"
+    },
+    {
       "path": "port/patches/commando-a36-lan-browser-factory.patch",
       "stage_directory": "commando",
       "sha256": "409f464f9e922206ae78d9f46116e6bd4e92ea2a8ef1a95452d3f146d251f222"
@@ -2885,10 +2890,45 @@
       "sha256": "a0161663d956b8e98e985a1fb002021d201c92fea1fdd760984376592bba6563"
     },
     {
+      "path": "port/patches/commando-tut1-gamedata-include-spelling.patch",
+      "stage_directory": "commando",
+      "sha256": "b973c138897d94a9d4e9a4452ec947f31f2f29e86b83669866e86dea72ccfd50"
+    },
+    {
       "path": "port/patches/combat-a37-face-action-stale-end-time-clamp.patch",
       "stage_directory": "combat",
       "sha256": "fc6b37a6f0f9ef5136fbe67e950835ee8b2084fb57f42d6611599f96636e3a56"
+    },
+    {
+      "path": "port/patches/combat-tut1-pathfind-cost.patch",
+      "stage_directory": "combat",
+      "sha256": "05d9ee462c5944a8c147ad4b45188bceb46dc78cffa4b652f6eabab7c916f266"
+    },
+    {
+      "path": "port/patches/combat-tut1-script-cost-scopes.patch",
+      "stage_directory": "combat",
+      "sha256": "6513c7c5546b980f55f294ea82d9f615214c214fbb8675655d5e74e9cb699195"
+    },
+    {
+      "path": "port/patches/combat-tut1-textwindow-measured-build.patch",
+      "stage_directory": "combat",
+      "sha256": "ec797df7b446a1114b5e92f7a4f1f3b5ad4595fbe92f7d533c8dc5ae0064290d"
+    },
+    {
+      "path": "port/patches/combat-tut1-hud-target-name-temp.patch",
+      "stage_directory": "combat",
+      "sha256": "58a420baee7123ddfb65001a459594ee77028bf24ee99b109daf68344c523ab7"
+    },
+    {
+      "path": "port/patches/combat-tut1-bench-camera.patch",
+      "stage_directory": "combat",
+      "sha256": "25af9a0af54270080438b96fd643899925d45295a408cca6df3694c572ab6a5e"
+    },
+    {
+      "path": "port/patches/wwphys-tut1-render-sort.patch",
+      "stage_directory": "wwphys",
+      "sha256": "27f05e1a2c8f8779dcf94b140e9d91bcaff4da6a53d3a07e416fa3978fb99291"
     }
   ],
-  "registry_sha256": "68dde3299ff55134a9144915d1d02b799fce19d2c48b767dce76a323798223bc"
+  "registry_sha256": "f6db6d53b811ce1c22da2996e66009d08f1998d12d2113f9df0bdecfe1969410"
 }

@@ -1749,6 +1749,20 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a38-modelless-animation-guard.patch"
 test "$(sha256sum "$rv_stage/combat/physicalgameobj.cpp" | cut -d' ' -f1)" = \
 	"ef50f3295e1fb74fe71f9a46f3502cfcdab4d611813314cfd40ad366d43fc5ad"
+# Vita suspend/resume: cap the first real frame step after an observed power
+# resume at the original 200 ms simulated limit (port hook in
+# a31_vita_runtime.cpp).  No earlier patch touches timemgr.cpp.
+test "$(sha256sum "$rv_stage/combat/timemgr.cpp" | cut -d' ' -f1)" = \
+	"16db8b1e46f04ad76863e8a14bd0d3fde31046e7d90e0c87ddaa7db787cdfbc8"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a38-timemgr-resume-real-step-cap.patch"
+# The slow cinematic command record read the control-line text after
+# dispatch; a re-entrant primary kill frees that line first.  Copy it before
+# dispatch.  Anchored to the final Test_Cinematic.cpp so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)" = \
+	"b7a05ce28d3b0e812b593075ef079f3c3c220e6d4b853e2f7c5516d0ddf39214"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-cinematic-slow-command-text-copy.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

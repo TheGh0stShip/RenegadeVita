@@ -286,6 +286,7 @@ python3 -m unittest tools.test_runtime_log_contract tools.test_verify_candidate_
 	tools.test_vitagl_compact_vertices \
 	tools.test_vita_projective_coordinates \
 	tools.test_vita_animation_clock \
+	tools.test_suspend_resume_frame_clock \
 	tools.test_original_dazzle_lifecycle \
 	tools.test_vita_mesh_batch \
 	tools.test_vitagl_full_upload \

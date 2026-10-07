@@ -987,7 +987,12 @@ public:
 	void	Parse_Command( char *command ) 
 	{
 #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
-		const char *vita_original_command = command;
+		/* Copy the text before dispatch. A command whose callee kills the
+		** primary re-enters Parse_Commands through Custom, and that inner call
+		** frees this control line before the slow-command record below. */
+		char vita_original_command[161];
+		strncpy(vita_original_command, command, sizeof(vita_original_command) - 1U);
+		vita_original_command[sizeof(vita_original_command) - 1U] = '\0';
 		const uint64_t vita_command_start_us = sceKernelGetProcessTimeWide();
 		/* M01 intro hang locator. The Dev197 PSTV and Vita3K logs both stop
 		** after X1C_Intro.txt starts its frame-32 missile commands. The existing

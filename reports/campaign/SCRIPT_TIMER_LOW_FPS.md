@@ -148,10 +148,12 @@ handler.
      first frame after resume carries the whole suspend duration. In the
      pack-exploding or death-camera states that frame expires the state timers
      at once and skips `CAMERA_STATE_WAYPATH_FOLLOW`. The window is about 10
-     seconds of one boss fight. This is not patched: whether process time
-     advances across suspend needs a hardware log first. The candidate fix is
-     a per-frame clamp to `1/SLOWEST_FPS` inside `mendozabossgameobj.cpp`
-     only.
+     seconds of one boss fight. **Mitigated in port code**: the first
+     `TimeManager` update after an observed power or application resume
+     now caps the real step at 200 ms
+     (`combat-a38-timemgr-resume-real-step-cap.patch`; see
+     `reports/SUSPEND_RESUME_TIMING.md`). Real hitches over 200 ms that are
+     not suspends still pass through, as in the original.
   3. HUD blink (`hud.cpp:3374`), console, scoreboard and
      `weaponview.cpp:634` recoil are cosmetic.
 - Diagnostic only: `Toolkit.cpp:96-135` uses `time(NULL)` for a debug log.
@@ -232,7 +234,9 @@ These are informational. None requires a change for 15–30 fps.
 - Cross-object ordering between two timers or delayed customs with distinct
   but close delays is not exhaustively scanned. At 15 fps, events less than
   67 ms apart can share a frame and then follow `GameObjList` order.
-- On hardware, record whether `sceKernelGetProcessTimeWide` advances across a
-  system suspend. Do this before deciding on the Mendoza clamp.
+- On hardware, read the `A3.6 power: resume frame clock` record to learn
+  whether `sceKernelGetProcessTimeWide` advances across a suspend, and
+  whether the resume notification can arrive late
+  (`reports/SUSPEND_RESUME_TIMING.md`).
 - Record `clock_real/sim/drift_ms` per cinematic on hardware to size the
   audio drift that hitches cause.

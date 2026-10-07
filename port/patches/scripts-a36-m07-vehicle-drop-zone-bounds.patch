@@ -1,0 +1,20 @@
+M07_Vehicle_Drop_Controller stored every M07_VEHICLE_DROP_ZONE param as
+drop_zone and later read vehicle_drop[drop_zone] (eight entries). The park
+zone sends 10; after seven player-vehicle losses that value was stored and the
+next replacement drop read past the table. Keep the previous slot unless the
+param is 0-7. Zones 1-7 and the park conversation are unchanged.
+
+--- a/Mission07.cpp
++++ b/Mission07.cpp
+@@ -3051,8 +3051,10 @@
+ 				Commands->Join_Conversation(STAR, conv_id, false, true);
+ 				Commands->Start_Conversation (conv_id, 300700);
+ 			}
+-			else
++			else if (param >= 0 && param < 8)
+ 			{
++				// vehicle_drop has eight entries. The park zone (10) arriving
++				// after seven vehicle losses must not select a slot past them.
+ 				drop_zone = param;
+ 			}
+ 

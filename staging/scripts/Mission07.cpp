@@ -3051,8 +3051,10 @@ DECLARE_SCRIPT(M07_Vehicle_Drop_Controller, "")
 				Commands->Join_Conversation(STAR, conv_id, false, true);
 				Commands->Start_Conversation (conv_id, 300700);
 			}
-			else
+			else if (param >= 0 && param < 8)
 			{
+				// vehicle_drop has eight entries. The park zone (10) arriving
+				// after seven vehicle losses must not select a slot past them.
 				drop_zone = param;
 			}
 
@@ -4132,8 +4134,8 @@ DECLARE_SCRIPT(M07_Inn_APC, "")
 			reinforce++;
 			if(reinforce < 7)
 			{
-				char param1[10];
-				sprintf(param1, "%d", Commands->Get_ID(obj));
+				char param1[16];
+				snprintf(param1, sizeof(param1), "%d", Commands->Get_ID(obj));
 
 				Vector3 pos = Commands->Get_Position(obj);
 				float facing = Commands->Get_Facing(obj);
@@ -5135,8 +5137,8 @@ DECLARE_SCRIPT(M07_APC_Dec, "")
 			reinforce++;
 			if(reinforce < 7)
 			{
-				char param1[10];
-				sprintf(param1, "%d", Commands->Get_ID(obj));
+				char param1[16];
+				snprintf(param1, sizeof(param1), "%d", Commands->Get_ID(obj));
 
 				Vector3 pos = Commands->Get_Position(obj);
 				float facing = Commands->Get_Facing(obj);
@@ -5928,8 +5930,8 @@ DECLARE_SCRIPT(M07_Inn_Evac, "")//104496
 		if (type == M07_DEAD6_EVAC) //SAM sites captured, evac DEAD6 and Sydney
 		{
 
-			char param1[10];
-			sprintf(param1, "%d", param);
+			char param1[16];
+			snprintf(param1, sizeof(param1), "%d", param);
 
 			Vector3 evacPosition = Commands->Get_Position ( obj );
 			float evacFacing = Commands->Get_Facing ( obj );

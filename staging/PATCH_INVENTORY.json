@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "3c217cecfb92eba4f06b3866d168894884bb892134f551375d1df9bf785fcd83",
-  "patch_count": 539,
+  "stage_script_sha256": "1c0e96ab8666899a109aaeb6eff5b2d2839f0247b7e5ea4d0b721af11d01df62",
+  "patch_count": 541,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1755,6 +1755,16 @@
       "sha256": "9579e0bd770447ae71d7bccd0247b6147d87191721cc84ec96caa5677b0001ad"
     },
     {
+      "path": "port/patches/scripts-a36-m07-evac-param-id-buffer.patch",
+      "stage_directory": "scripts",
+      "sha256": "2862802fdcc436951fb6b0fb48d6c2a04f048a0ae67722583d8a0d69aadfff12"
+    },
+    {
+      "path": "port/patches/scripts-a36-m07-vehicle-drop-zone-bounds.patch",
+      "stage_directory": "scripts",
+      "sha256": "0f621e8d0da297ed6d79dfef7bdff55b4312a656009058767f9f394ee736f62b"
+    },
+    {
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
       "stage_directory": "combat",
       "sha256": "0698dde47d7dcf9d381f46134f90fdf878d997026d668ce3c574d32d613b1f2e"
@@ -2700,5 +2710,5 @@
       "sha256": "8344203252d190bbfabc8d76ae51164cabec4a81d780578383284115c478cf5d"
     }
   ],
-  "registry_sha256": "166e6f351a57713143a9a973c06987276d540de69d73f15a91d0c6e0983d72a4"
+  "registry_sha256": "ebeb0f9ce4f709d1b1d8aab7837d125119bf4cc19dea838e5ce341f838016886"
 }

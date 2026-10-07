@@ -3,10 +3,12 @@
 #include "renegade_vita_frame_profile.h"
 #include "category_fvf_layout.h"
 #include "normal_transform.h"
+#include "ww3d_vita_skin_deform_cache.h"
 
 #include "camera.h"
 #include "d3d8.h"
 #include "dx8wrapper.h"
+#include "htree.h"
 #include "lightenvironment.h"
 #include "matpass.h"
 #include "mesh.h"
@@ -107,6 +109,13 @@ bool g_logged_first_invalid_procedural_apt = false;
 Vector3 *g_deformed_skin_vertices = NULL;
 Vector3 *g_deformed_skin_normals = NULL;
 int g_deformed_skin_capacity = 0;
+// Skin submissions that are followed by another submission of the same mesh
+// in the frame deform into this per-frame cache so the later submission can
+// reuse the identical output (see ww3d_vita_skin_deform_cache.h for the
+// invalidation argument). Off until Read_Skin_Deform_Cache_Mode() enables it,
+// so the M00 demo and any non-campaign build keep the original scratch path.
+SkinDeformCache<Vector3> g_skin_deform_cache;
+bool g_skin_deform_cache_enabled = false;
 // Original MeshClass uses a retained scratch APT rather than allocating one
 // for every projected mesh. Rendering is single-threaded at this boundary.
 SimpleDynVecClass<uint32> g_procedural_material_apt;
@@ -144,6 +153,65 @@ void Release_Deformed_Skin_Scratch()
 	g_deformed_skin_vertices = NULL;
 	g_deformed_skin_normals = NULL;
 	g_deformed_skin_capacity = 0;
+	g_skin_deform_cache.Release();
+}
+
+// Same predicate MeshClass::Render uses to queue a material pass after the
+// base submission. Skins without one keep the original scratch path and pay
+// no snapshot cost.
+bool Skin_Material_Pass_Follows(MeshClass &mesh, RenderInfoClass &render_info)
+{
+	for (int index = 0; index < render_info.Additional_Pass_Count(); ++index) {
+		MaterialPassClass *pass = render_info.Peek_Additional_Pass(index);
+		if (pass != NULL &&
+			(!mesh.Is_Translucent() || pass->Is_Enabled_On_Translucent_Meshes())) {
+			return true;
+		}
+	}
+	return false;
+}
+
+// True when vertices/normals now hold MeshClass::Get_Deformed_Vertices output
+// for this submission. Any submission first reuses a deformation stored
+// earlier in this frame whose model and every referenced pivot transform are
+// verified bitwise unchanged (a queued material pass after its base pass, a
+// base pass after a material-pass-only render such as a shadow, projector or
+// stealth pass, or the same skin seen by another camera). On a miss, only
+// submissions that are expected to be followed by another one of the same
+// mesh store their deformation: a base pass that MeshClass::Render follows
+// with queued material passes, and any material pass. False keeps the
+// original uncached scratch path.
+bool Fetch_Cached_Deformed_Skin(MeshClass &mesh, MeshModelClass *model,
+	RenderInfoClass &render_info, bool material_pass, int vertex_count,
+	const Vector3 *&vertices, const Vector3 *&normals)
+{
+	if (!g_skin_deform_cache_enabled) return false;
+	const RenderObjClass *container = mesh.Get_Container();
+	const HTreeClass *htree = container != NULL ? container->Get_HTree() : NULL;
+	if (htree == NULL) return false;
+	static_assert(sizeof(Matrix3D) == SkinDeformCache<Vector3>::MATRIX_BYTES,
+		"pivot snapshots hold one Matrix3D");
+	const auto transform_at = [htree](int pivot) -> const void * {
+		return &htree->Get_Transform(pivot);
+	};
+	g_skin_deform_cache.Begin_Frame(g_statistics.frames);
+	if (g_skin_deform_cache.Find(&mesh, model, vertex_count,
+		htree->Num_Pivots(), transform_at, &vertices, &normals)) {
+		return true;
+	}
+	if (!material_pass && !Skin_Material_Pass_Follows(mesh, render_info)) return false;
+	Vector3 *deformed_vertices = NULL;
+	Vector3 *deformed_normals = NULL;
+	if (!g_skin_deform_cache.Reserve(&mesh, model, vertex_count,
+		&deformed_vertices, &deformed_normals)) {
+		return false;
+	}
+	mesh.Get_Deformed_Vertices(deformed_vertices, deformed_normals);
+	g_skin_deform_cache.Commit(model->Get_Vertex_Bone_Links(), vertex_count,
+		htree->Num_Pivots(), transform_at);
+	vertices = deformed_vertices;
+	normals = deformed_normals;
+	return true;
 }
 
 struct NativePresentationRect {
@@ -2019,6 +2087,45 @@ void Log_Static_Mesh_Cache_Statistics()
 		static_cast<unsigned long long>(g_static_mesh_statistics.cached_triangles));
 }
 
+void Read_Skin_Deform_Cache_Mode()
+{
+	// "RVSD1 0\n" restores per-submission skin deformation for A/B comparison.
+	g_skin_deform_cache_enabled = true;
+	FILE *file = fopen("ux0:data/renegade/user/config/skin-deform-cache-v1.flag", "rb");
+	if (file != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok && size == 8U && memcmp(value, "RVSD1 ", 6U) == 0 &&
+			value[7] == '\n' && value[6] == '0') {
+			g_skin_deform_cache_enabled = false;
+		}
+	}
+	Vita_Append_A22_Runtime_Breadcrumb("skin-deform-cache",
+		"version=1 enabled=%d entries=%d vertices=%d bones=%d acceptance=unassessed",
+		g_skin_deform_cache_enabled ? 1 : 0,
+		static_cast<int>(SkinDeformCache<Vector3>::MAX_ENTRIES),
+		static_cast<int>(SkinDeformCache<Vector3>::MAX_VERTICES),
+		static_cast<int>(SkinDeformCache<Vector3>::MAX_BONES));
+}
+
+void Log_Skin_Deform_Cache_Statistics()
+{
+	const SkinDeformCacheStatistics &counters = g_skin_deform_cache.Counters();
+	Vita_Append_A22_Runtime_Breadcrumb("skin-deform-cache",
+		"frame=%u enabled=%d bytes=%u stores=%llu hits=%llu misses=%llu stale=%llu overflows=%llu forgets=%llu allocation_failures=%llu",
+		g_statistics.frames, g_skin_deform_cache_enabled ? 1 : 0,
+		g_skin_deform_cache.Bytes(),
+		static_cast<unsigned long long>(counters.stores),
+		static_cast<unsigned long long>(counters.hits),
+		static_cast<unsigned long long>(counters.misses),
+		static_cast<unsigned long long>(counters.stale),
+		static_cast<unsigned long long>(counters.overflows),
+		static_cast<unsigned long long>(counters.forgets),
+		static_cast<unsigned long long>(counters.allocation_failures));
+}
+
 // Build default from CMake; a user config file containing exactly
 // "RVMSAA1 0\n", "RVMSAA1 2\n" or "RVMSAA1 4\n" selects another framebuffer
 // sample count at launch.
@@ -3191,6 +3298,7 @@ bool Initialize()
 	Read_Render_Work_Cache_Mode();
 #if !RENEGADE_VITA_M00_DEMO
 	Read_Static_Mesh_Cache_Mode();
+	Read_Skin_Deform_Cache_Mode();
 #endif
 	Invalidate_Native_State_Cache();
 
@@ -3475,6 +3583,7 @@ void End_Frame(bool present)
 				static_cast<unsigned long long>(g_material_skin_rgb_skips));
 #if !RENEGADE_VITA_M00_DEMO
 			Log_Static_Mesh_Cache_Statistics();
+			Log_Skin_Deform_Cache_Statistics();
 #if defined(RENEGADE_VITA_DETAILED_TIMING)
 			Vita_Append_A22_Runtime_Breadcrumb("mesh-boundary-time",
 				"frame=%u meshes=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu max_name=%s draw_ends=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu",
@@ -4004,7 +4113,11 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 	const uint64_t mesh_boundary_start_us = sample_mesh_boundary ?
 		sceKernelGetProcessTimeWide() : 0U;
 #endif
-	if (is_skin) {
+	if (is_skin && Fetch_Cached_Deformed_Skin(mesh, model, render_info,
+		material_pass != NULL, vertex_count, vertices, normals)) {
+		++g_statistics.skinned_mesh_submissions;
+		g_statistics.deformed_skin_vertices += static_cast<uint32_t>(vertex_count);
+	} else if (is_skin) {
 		if (!Ensure_Deformed_Skin_Scratch(vertex_count)) {
 			++g_statistics.skin_deformation_failures;
 			++g_statistics.backend_errors;
@@ -5006,6 +5119,9 @@ void Invalidate_Static_Mesh_Cache()
 
 void Forget_Static_Mesh_Model(const void *model)
 {
+	// The same original model reset/destruction/geometry-unique hooks retire
+	// deformed-skin entries before that model's arrays change or are reused.
+	g_skin_deform_cache.Forget_Model(model);
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	g_static_mesh_cache.Forget_Model(model);
 #else

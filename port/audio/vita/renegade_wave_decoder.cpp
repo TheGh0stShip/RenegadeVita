@@ -133,6 +133,23 @@ struct ImaTransitions {
 // asset-specific state. Reused by every mono/stereo IMA block thereafter.
 const ImaTransitions kImaTransitions;
 
+struct BlockSink {
+	int16_t *output;
+	size_t capacity_frames;
+	uint16_t channels;
+	size_t count;
+
+	bool Put(const int16_t *frame)
+	{
+		if (count >= capacity_frames) return false;
+		for (uint16_t channel = 0; channel < channels; ++channel) {
+			output[count * channels + channel] = frame[channel];
+		}
+		++count;
+		return true;
+	}
+};
+
 int16_t Decode_Ima_Nibble(uint8_t nibble, int *predictor, int *step_index)
 {
 	const unsigned code = nibble & 0x0fU;
@@ -143,9 +160,27 @@ int16_t Decode_Ima_Nibble(uint8_t nibble, int *predictor, int *step_index)
 	return static_cast<int16_t>(*predictor);
 }
 
-bool Decode_Ima_Block(const uint8_t *block, size_t bytes,
-	const WaveInfo &info, DecodedWave *decoded, const char **error)
+} // namespace
+
+size_t Adpcm_Block_Max_Frames(const WaveInfo &info, size_t bytes)
 {
+	// Every payload byte yields at most two frames, plus header frames.
+	const size_t header_frames =
+		info.encoding == WaveEncoding::MicrosoftAdpcm ? 2U : 1U;
+	size_t frames = header_frames + bytes * 2U;
+	if (info.samples_per_block != 0) {
+		frames = std::min<size_t>(frames, info.samples_per_block);
+		frames = std::max(frames, header_frames);
+	}
+	return frames;
+}
+
+bool Decode_Ima_Block(const uint8_t *block, size_t bytes,
+	const WaveInfo &info, int16_t *output, size_t output_frames,
+	size_t *frames_written, const char **error)
+{
+	BlockSink sink{output, output_frames, info.channels, 0};
+	if (frames_written != nullptr) *frames_written = 0;
 	const size_t header_bytes = static_cast<size_t>(info.channels) * 4U;
 	if (bytes < header_bytes) return Fail("truncated IMA ADPCM block", error);
 	int predictor[2] = {};
@@ -160,7 +195,7 @@ bool Decode_Ima_Block(const uint8_t *block, size_t bytes,
 		}
 		frame[channel] = static_cast<int16_t>(predictor[channel]);
 	}
-	if (!Append_Frame(decoded, frame)) return Fail("decoded sample ceiling exceeded", error);
+	if (!sink.Put(frame)) return Fail("block output buffer too small", error);
 	const size_t frame_limit = info.samples_per_block != 0
 		? info.samples_per_block : std::numeric_limits<size_t>::max();
 	size_t frames = 1;
@@ -170,13 +205,14 @@ bool Decode_Ima_Block(const uint8_t *block, size_t bytes,
 		for (size_t index = 0; index < payload_bytes && frames < frame_limit; ++index) {
 			const uint8_t packed = payload[index];
 			frame[0] = Decode_Ima_Nibble(packed & 0x0fU, predictor, step_index);
-			if (!Append_Frame(decoded, frame)) return Fail("decoded sample ceiling exceeded", error);
+			if (!sink.Put(frame)) return Fail("block output buffer too small", error);
 			++frames;
 			if (frames >= frame_limit) break;
 			frame[0] = Decode_Ima_Nibble(packed >> 4U, predictor, step_index);
-			if (!Append_Frame(decoded, frame)) return Fail("decoded sample ceiling exceeded", error);
+			if (!sink.Put(frame)) return Fail("block output buffer too small", error);
 			++frames;
 		}
+		if (frames_written != nullptr) *frames_written = sink.count;
 		return true;
 	}
 	for (size_t group = 0; group < payload_bytes && frames < frame_limit;) {
@@ -198,10 +234,40 @@ bool Decode_Ima_Block(const uint8_t *block, size_t bytes,
 		for (size_t sample = 0; sample < group_frames && frames < frame_limit; ++sample) {
 			frame[0] = channel_samples[0][sample];
 			frame[1] = channel_samples[1][sample];
-			if (!Append_Frame(decoded, frame)) return Fail("decoded sample ceiling exceeded", error);
+			if (!sink.Put(frame)) return Fail("block output buffer too small", error);
 			++frames;
 		}
 	}
+	if (frames_written != nullptr) *frames_written = sink.count;
+	return true;
+}
+
+namespace {
+
+typedef bool (*BlockDecoder)(const uint8_t *, size_t, const WaveInfo &,
+	int16_t *, size_t, size_t *, const char **);
+
+// Decode one block via the pure per-block decoder, then append it under the
+// same decoded-sample ceiling the incremental path enforced.
+bool Append_Block(BlockDecoder decoder, const uint8_t *block, size_t bytes,
+	const WaveInfo &info, DecodedWave *decoded, std::vector<int16_t> *scratch,
+	const char **error)
+{
+	const size_t capacity = Adpcm_Block_Max_Frames(info, bytes);
+	if (scratch->size() < capacity * info.channels) {
+		scratch->resize(capacity * info.channels);
+	}
+	size_t frames = 0;
+	if (!decoder(block, bytes, info, scratch->data(), capacity, &frames, error)) {
+		return false;
+	}
+	const size_t samples = frames * info.channels;
+	if (decoded->samples.size() > kMaximumDecodedSamples ||
+		samples > kMaximumDecodedSamples - decoded->samples.size()) {
+		return Fail("decoded sample ceiling exceeded", error);
+	}
+	decoded->samples.insert(decoded->samples.end(), scratch->begin(),
+		scratch->begin() + static_cast<std::ptrdiff_t>(samples));
 	return true;
 }
 
@@ -209,6 +275,7 @@ bool Decode_Ima(const uint8_t *data, size_t source_bytes, const WaveInfo &info,
 	DecodedWave *decoded, const char **error)
 {
 	const uint8_t *source = data + info.data_offset;
+	std::vector<int16_t> scratch;
 	for (size_t offset = 0; offset < info.data_bytes;) {
 		const size_t block_bytes = std::min<size_t>(
 			info.block_align, info.data_bytes - offset);
@@ -228,7 +295,8 @@ bool Decode_Ima(const uint8_t *data, size_t source_bytes, const WaveInfo &info,
 			offset += block_bytes;
 			continue;
 		}
-		if (!Decode_Ima_Block(source + offset, block_bytes, info, decoded, error)) {
+		if (!Append_Block(Decode_Ima_Block, source + offset, block_bytes, info,
+			decoded, &scratch, error)) {
 			return false;
 		}
 		offset += block_bytes;
@@ -256,9 +324,14 @@ int16_t Decode_Ms_Nibble(uint8_t nibble, int coefficient1, int coefficient2,
 	return decoded;
 }
 
+} // namespace
+
 bool Decode_Ms_Block(const uint8_t *block, size_t bytes,
-	const WaveInfo &info, DecodedWave *decoded, const char **error)
+	const WaveInfo &info, int16_t *output, size_t output_frames,
+	size_t *frames_written, const char **error)
 {
+	BlockSink sink{output, output_frames, info.channels, 0};
+	if (frames_written != nullptr) *frames_written = 0;
 	const size_t header_bytes = static_cast<size_t>(info.channels) * 7U;
 	if (bytes < header_bytes) return Fail("truncated Microsoft ADPCM block", error);
 	int coefficient1[2] = {};
@@ -281,11 +354,11 @@ bool Decode_Ms_Block(const uint8_t *block, size_t bytes,
 		sample2[channel] = Read_S16(block + info.channels * 5U + channel * 2U);
 		frame[channel] = static_cast<int16_t>(sample2[channel]);
 	}
-	if (!Append_Frame(decoded, frame)) return Fail("decoded sample ceiling exceeded", error);
+	if (!sink.Put(frame)) return Fail("block output buffer too small", error);
 	for (uint16_t channel = 0; channel < info.channels; ++channel) {
 		frame[channel] = static_cast<int16_t>(sample1[channel]);
 	}
-	if (!Append_Frame(decoded, frame)) return Fail("decoded sample ceiling exceeded", error);
+	if (!sink.Put(frame)) return Fail("block output buffer too small", error);
 	const size_t frame_limit = info.samples_per_block != 0
 		? info.samples_per_block : std::numeric_limits<size_t>::max();
 	size_t frames = 2;
@@ -296,7 +369,7 @@ bool Decode_Ms_Block(const uint8_t *block, size_t bytes,
 		if (info.channels == 1) {
 			frame[0] = Decode_Ms_Nibble(packed >> 4U, coefficient1[0],
 				coefficient2[0], &delta[0], &sample1[0], &sample2[0]);
-			if (!Append_Frame(decoded, frame)) return Fail("decoded sample ceiling exceeded", error);
+			if (!sink.Put(frame)) return Fail("block output buffer too small", error);
 			++frames;
 			if (frames >= frame_limit) break;
 			frame[0] = Decode_Ms_Nibble(packed & 0x0fU, coefficient1[0],
@@ -307,20 +380,25 @@ bool Decode_Ms_Block(const uint8_t *block, size_t bytes,
 			frame[1] = Decode_Ms_Nibble(packed & 0x0fU, coefficient1[1],
 				coefficient2[1], &delta[1], &sample1[1], &sample2[1]);
 		}
-		if (!Append_Frame(decoded, frame)) return Fail("decoded sample ceiling exceeded", error);
+		if (!sink.Put(frame)) return Fail("block output buffer too small", error);
 		++frames;
 	}
+	if (frames_written != nullptr) *frames_written = sink.count;
 	return true;
 }
+
+namespace {
 
 bool Decode_Microsoft_Adpcm(const uint8_t *data, const WaveInfo &info,
 	DecodedWave *decoded, const char **error)
 {
 	const uint8_t *source = data + info.data_offset;
+	std::vector<int16_t> scratch;
 	for (size_t offset = 0; offset < info.data_bytes;) {
 		const size_t block_bytes = std::min<size_t>(
 			info.block_align, info.data_bytes - offset);
-		if (!Decode_Ms_Block(source + offset, block_bytes, info, decoded, error)) {
+		if (!Append_Block(Decode_Ms_Block, source + offset, block_bytes, info,
+			decoded, &scratch, error)) {
 			return false;
 		}
 		offset += block_bytes;

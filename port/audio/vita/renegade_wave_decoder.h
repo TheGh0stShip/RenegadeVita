@@ -72,4 +72,15 @@ bool Decode_Wave(const uint8_t *data, size_t bytes, DecodedWave *decoded,
 bool Decode_Wave_With_Info(const uint8_t *data, size_t bytes,
 	DecodedWave *decoded, WaveInfo *info, const char **error = nullptr);
 
+// Pure per-block ADPCM decoders: output depends only on block bytes and the
+// validated format. Writes interleaved frames into a caller-provided buffer of
+// output_frames capacity; fails without partial-success if it is too small.
+size_t Adpcm_Block_Max_Frames(const WaveInfo &info, size_t block_bytes);
+bool Decode_Ima_Block(const uint8_t *block, size_t bytes, const WaveInfo &info,
+	int16_t *output, size_t output_frames, size_t *frames_written,
+	const char **error = nullptr);
+bool Decode_Ms_Block(const uint8_t *block, size_t bytes, const WaveInfo &info,
+	int16_t *output, size_t output_frames, size_t *frames_written,
+	const char **error = nullptr);
+
 } // namespace RenegadeVitaAudio

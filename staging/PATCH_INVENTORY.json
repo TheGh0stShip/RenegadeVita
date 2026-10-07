@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "eb89e64a8c31e2df6b860932900d88bd6caf520064441fe7036f34dd505b8517",
-  "patch_count": 499,
+  "stage_script_sha256": "a490bda54360300c473399978318e5704acdccaaa8f20691d64170145cfea36a",
+  "patch_count": 502,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1825,6 +1825,11 @@
       "sha256": "3d233b01fa6d2764bcc9ad4157c26a9374b8bcf1609b19ecd3166eb7b8463362"
     },
     {
+      "path": "port/patches/commando-a36-input-config-record-bounds.patch",
+      "stage_directory": "commando",
+      "sha256": "4709dcb9da76ddc12c7590315dea71a2f88cf80725cf18eb923e13ac3f3fd6f7"
+    },
+    {
       "path": "port/patches/commando-a36-original-controls-route.patch",
       "stage_directory": "commando",
       "sha256": "9e0155fe7117b9abbf671bf578b6eac649757f5eed829bb1777a72861edd1251"
@@ -2365,6 +2370,11 @@
       "sha256": "9a52a9fa01801f7647044401b6a1c12b6a95fa6179a5e8fcd197ab929832884f"
     },
     {
+      "path": "port/patches/combat-a36-corrupt-ddb-rejects-level-data.patch",
+      "stage_directory": "combat",
+      "sha256": "74f7b2cdd11b538f1c9668d91bc8add0e500e7d02d65bd871d8f283ed1564762"
+    },
+    {
       "path": "port/patches/wwsaveload-a36-definition-admission.patch",
       "stage_directory": "wwsaveload",
       "sha256": "7eff57729c5200a091649928739b855a9557e0afcc8d43f546e33904b1c16c23"
@@ -2498,7 +2508,12 @@
       "path": "port/patches/commando-a36-lan-connect-refusal.patch",
       "stage_directory": "commando",
       "sha256": "b0e9c5c72a9f9620a0980b8ffc9503b4fc21d7c5bb8a26705b9a6e751d4c113f"
+    },
+    {
+      "path": "port/patches/commando-credits-short-read.patch",
+      "stage_directory": "commando",
+      "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "6c702b703d7321cc696f172fae001376eec88a0f26abf55612eb955b268a61fb"
+  "registry_sha256": "3bb126caabe7f5e3f2c1702e75e44465ac783c2159c242e1f319f254d72561fd"
 }

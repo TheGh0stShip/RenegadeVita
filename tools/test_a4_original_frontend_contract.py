@@ -38,7 +38,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
 
     def test_remote_player_wait_uses_original_loading_timeout_window(self):
         runtime = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
-        block = runtime[runtime.index("if (remote_client) {\n\t\t\t\tif (!remote_join.Complete_World_Load"):
+        block = runtime[runtime.index("if (direct_client) {\n\t\t\t\tif (!remote_join.Complete_World_Load"):
                         runtime.index("local_player = cNetwork::Get_My_Player_Object();")]
         self.assertIn("cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT", block)
         self.assertIn("cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT_LOADING_ALLOWANCE", block)
@@ -53,7 +53,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         frame_loop = runtime.index("while (true) {", diagnostic)
         block = runtime[ready:frame_loop]
         self.assertLess(ready, diagnostic)
-        self.assertIn("if (remote_client) {", block)
+        self.assertIn("if (direct_client) {", block)
         self.assertIn("star->Get_Player_Data() != local_player", block)
         self.assertIn("terminal == NULL || remove(terminal_request) != 0", block)
         self.assertIn("terminal->Display_Default_Terminal_For_Player(star);", block)
@@ -70,7 +70,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
                          gameplay.index("A31_Interactive_Apply_Render_Capabilities();")]
         render = gameplay[gameplay.index("A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame"):
                           gameplay.index("trace.text_display_available =")]
-        self.assertIn(guard + "\n\tA4_Frontend_Pump_WWUI_Key_Transitions();", think)
+        self.assertIn("Input::Update();\n" + guard + "\n\t\tA4_Frontend_Pump_WWUI_Key_Transitions();", think)
         self.assertIn(guard + "\n\tDialogMgrClass::On_Frame_Update();", think)
         self.assertIn(guard + "\n\t\tDialogMgrClass::Render();", render)
         self.assertLess(think.index("Input::Update();"),
@@ -98,7 +98,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("#if RENEGADE_VITA_M00_DEMO", handoff)
         self.assertIn("reload_valid = A4_Frontend_Is_Tutorial_Source(reload_source);", handoff)
         self.assertIn("A4_Frontend_Resolve_Single_Player_Archive(reload_source,", handoff)
-        self.assertIn("&& reload_is_save;", handoff)
+        self.assertIn("? !reload_is_save && reload_replay_difficulty <= 3 : reload_is_save);", handoff)
         self.assertIn("if (reload_valid) {", handoff)
 
     def test_cmake_selects_original_frontend_and_boundary_sources(self):
@@ -290,19 +290,19 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "CursorPos.Y = front_touch.y;",
             "Set_Button(DIMouseButtons, DirectInput::BUTTON_MOUSE_LEFT & 0xFF",
             "front touch feeds original mouse cursor and left click",
-            "gameplay_input_active && back_touch.down",
-            "gameplay_input_active && (buttons & SCE_CTRL_UP) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_DOWN) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_LEFT) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_RIGHT) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_CROSS) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_CIRCLE) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_TRIANGLE) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_SQUARE) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_LTRIGGER) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_RTRIGGER) != 0",
-            "gameplay_input_active ? left.x.logical : 0",
-            "gameplay_input_active ? left.y.logical : 0",
+            "ordinary_gameplay_input && (back_touch.down || camera_toggle_chord)",
+            "(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_UP) != 0",
+            "(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_DOWN) != 0",
+            "(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_LEFT) != 0",
+            "(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_RIGHT) != 0",
+            "(ordinary_gameplay_input || dialog_navigation) && (buttons & SCE_CTRL_CROSS) != 0",
+            "(ordinary_gameplay_input || dialog_navigation) &&\n\t\t(buttons & SCE_CTRL_CIRCLE) != 0",
+            "(ordinary_gameplay_input || dialog_navigation) &&\n\t\t(buttons & SCE_CTRL_TRIANGLE) != 0",
+            "(ordinary_gameplay_input || dialog_navigation) &&\n\t\t(buttons & SCE_CTRL_SQUARE) != 0",
+            "(ordinary_gameplay_input || dialog_navigation) &&\n\t\t(buttons & SCE_CTRL_LTRIGGER) != 0",
+            "(ordinary_gameplay_input || dialog_navigation) &&\n\t\t(buttons & SCE_CTRL_RTRIGGER) != 0",
+            "ordinary_gameplay_input ? left.x.logical : 0",
+            "ordinary_gameplay_input ? left.y.logical : 0",
             "DirectInput::Read first entry captured=%d",
             "DirectInput::Read first controller buttons=%08X",
             "DirectInput::Read first touch front/back=%d/%d",
@@ -429,7 +429,7 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
         self.assertIn("menu_loop_active = true", pause_latch)
         self.assertNotIn("tutorial_start_latched = false", pause_latch)
         self.assertNotIn("exit_requested = false", pause_latch)
-        self.assertLess(runtime.index("if (frontend_dialog_manager_retained) DialogMgrClass::Flush_Dialogs();"),
+        self.assertLess(runtime.index("if (frontend_dialog_manager_retained) {", runtime.index("EVA tabs can retain live world/model pointers")),
                         runtime.index("frontend_combat_mode.Deactivate();"))
         self.assertLess(runtime.index("TextDisplayGameModeClass::Get_Instance()->Shutdown();"),
                         runtime.rindex("RenegadeDialogMgrClass::Shutdown();"))
@@ -751,8 +751,11 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
 
         for source in (movie, patch):
             self.assertIn("A4 MovieGameMode: Movie_Done entry", source)
-            self.assertIn("A4 MovieGameMode: stopping current movie audio=%p", source)
-            self.assertIn("audio singleton unavailable during movie stop", source)
+            self.assertIn("A4 MovieGameMode: stopping current movie", source)
+        self.assertIn("audio singleton unavailable during movie stop", patch)
+        stop = movie[movie.index("void MovieGameModeClass::Stop_Current_Movie( void )"):]
+        self.assertIn("if (audio != NULL) audio->Temp_Disable_Audio (false);", stop[:600])
+        for source in (movie, patch):
             self.assertIn("A4 MovieGameMode: routing to main menu location", source)
             self.assertIn("A4 MovieGameMode: dialog route returned", source)
             self.assertLess(

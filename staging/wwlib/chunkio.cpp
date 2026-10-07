@@ -451,6 +451,9 @@ bool ChunkLoadClass::Open_Chunk()
 			return false;
 		}
 	} else {
+		// Original semantics: an unopened file simply has no chunks (its Read
+		// returned 0). Tell/Size would seek a closed handle.
+		if (!File->Is_Open()) return false;
 		const int file_position = File->Tell();
 		const int file_size = File->Size();
 		if (file_position < 0 || file_size < file_position) {
@@ -517,6 +520,7 @@ bool ChunkLoadClass::Peek_Next_Chunk(uint32 * set_id,uint32 * set_size)
 		if (parent_position > parent_size) { Error = true; return false; }
 		available = parent_size - parent_position;
 	} else {
+		if (!File->Is_Open()) return false;
 		const int file_position = File->Tell();
 		const int file_size = File->Size();
 		if (file_position < 0 || file_size < file_position) { Error = true; return false; }

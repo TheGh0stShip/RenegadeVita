@@ -6285,6 +6285,23 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				if (result.frames == 0U) {
 					A30_Vita_Log("A3.1 breadcrumb: first original input frame\n");
 				}
+				/* M01 intro hang locator. The Dev197 PSTV and Vita3K logs stop
+				** inside the X1C_Intro aircraft sequence with no slow-frame record
+				** for the stalled frame. Mark each phase of the first M01 frames
+				** and sync once per frame, so the last line names the phase that
+				** did not return. */
+#if !RENEGADE_VITA_M00_DEMO
+				static const char *const kM01IntroPhaseArchive = "M01.mix";
+				const bool m01_intro_phase_trace = result.frames < 120U &&
+					stricmp(selected_archive, kM01IntroPhaseArchive) == 0;
+#else
+				const bool m01_intro_phase_trace = false;
+#endif
+				if (m01_intro_phase_trace) {
+					A30_Vita_Log("A4 M01 intro phase: frame=%u phase=simulation-begin t_us=%llu\n",
+						result.frames, static_cast<unsigned long long>(simulation_begin));
+					A30_Vita_Log_Flush();
+				}
 				const bool was_suspended = combat_mode->Is_Suspended();
 				A35_Script_Lookup_Set_Context(A35_LOOKUP_GAMEPLAY, result.frames + 1U);
 				A31_Interactive_Run_Simulation_Frame();
@@ -6510,9 +6527,20 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				if (result.frames == 0U) {
 					A30_Vita_Log("A3.1 breadcrumb: first original Combat update\n");
 				}
+				if (m01_intro_phase_trace) {
+					A30_Vita_Log("A4 M01 intro phase: frame=%u phase=render-begin simulation_us=%llu\n",
+						result.frames,
+						static_cast<unsigned long long>(render_begin - simulation_begin));
+				}
 
 				const A31InteractiveRenderTrace render_trace =
 					A31_Interactive_Run_Render_Frame();
+				if (m01_intro_phase_trace) {
+					A30_Vita_Log("A4 M01 intro phase: frame=%u phase=audio-begin render_us=%llu\n",
+						result.frames,
+						static_cast<unsigned long long>(
+							sceKernelGetProcessTimeWide() - render_begin));
+				}
 				/* Preserve original mainloop ownership and ordering: WWAudio advances
 				** once after the game render. This services playback completion,
 				** looping, and original sound-ended events; conversation remark timing
@@ -6520,6 +6548,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				{
 					RENEGADE_FRAME_PROFILE("Vita WWAudio Frame Update");
 					audio->On_Frame_Update(0);
+				}
+				if (m01_intro_phase_trace) {
+					A30_Vita_Log("A4 M01 intro phase: frame=%u phase=audio-end\n",
+						result.frames);
 				}
 				/* M13 diagnostic: during cinematic freeze, log the WWAudio listener
 				** against the CombatManager camera at most once per second. */

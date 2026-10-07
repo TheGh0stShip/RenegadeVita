@@ -1,0 +1,37 @@
+--- a/Test_Cinematic.cpp
++++ b/Test_Cinematic.cpp
+@@ -989,6 +989,22 @@
+ #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+ 		const char *vita_original_command = command;
+ 		const uint64_t vita_command_start_us = sceKernelGetProcessTimeWide();
++		/* M01 intro hang locator. The Dev197 PSTV and Vita3K logs both stop
++		** after X1C_Intro.txt starts its frame-32 missile commands. The existing
++		** slow-command record prints only after a command returns, so it cannot
++		** show a command that never returns. Log a bounded begin/end pair for
++		** M01 X1* cinematic commands. */
++		static unsigned vita_m01_intro_command_reports = 0U;
++		const char *vita_m01_intro_file = Get_Parameter("ControlFilename");
++		const bool vita_m01_intro_trace = vita_m01_intro_file != NULL &&
++			strnicmp(vita_m01_intro_file, "X1", 2) == 0 &&
++			vita_m01_intro_command_reports < 160U;
++		const unsigned vita_m01_intro_n =
++			vita_m01_intro_trace ? ++vita_m01_intro_command_reports : 0U;
++		if (vita_m01_intro_trace) {
++			A30_Vita_Log("A4 M01 cinematic command begin: n=%u file=%s owner_id=%d time=%.3f command=%.120s\n",
++				vita_m01_intro_n, vita_m01_intro_file, MyID, Time, command);
++		}
+ #endif
+ //		Commands->Debug_Message( "Parse %s\n", (int)command );
+ 
+@@ -1015,6 +1031,11 @@
+ 		}
+ #if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+ 		const uint64_t vita_command_us = sceKernelGetProcessTimeWide() - vita_command_start_us;
++		if (vita_m01_intro_trace) {
++			A30_Vita_Log("A4 M01 cinematic command end: n=%u file=%s us=%llu\n",
++				vita_m01_intro_n, vita_m01_intro_file,
++				static_cast<unsigned long long>(vita_command_us));
++		}
+ 		static unsigned vita_slow_command_reports = 0U;
+ 		const char *vita_control_filename = Get_Parameter("ControlFilename");
+ 		const bool vita_trace_campaign_cinematic =

@@ -125,6 +125,33 @@ on the primary path.
    `01_A`). Preparation stops at the 24 MB vitaGL free-memory floor, which skips
    the animation pass; check `A4 cinematic animation preparation: archive=M01.mix`
    for `memory_floor=0` and `loaded=` equal to `named=` on hardware.
+
+   Retained-log boundary (read-only, 2026-10-07): the Dev197 PSTV log
+   (`build/device-evidence/a35-dev197-pstv-20260927/a35-dev197-m01-freeze-runtime.log`)
+   and the Dev197 Vita3K log
+   (`local-builder/logs/dev197-m01-guest-debug-20260926/runtime-before.log`)
+   both end on an `X1C_Intro.txt` yield with `pending_time=1.067` (current
+   1.194 and 1.167). Dev192 also ended after the `X1C_AG_Missile` instance was
+   consumed. Frame 32 (1.067 s) of retail `X1C_Intro.txt` creates slot 5
+   `X1C_AG_Missile`, plays `X1C_missile.X1C_missile`, then runs
+   `Play_Audio "SFX.Missile_Launch_2second",5,"XO_missile11"`. That reaches
+   `Command_Play_Audio` -> `Create_3D_Sound_At_Bone`
+   (`staging/combat/scriptcommands.cpp:980`), and the preset resolves to
+   `missile_launch_2s1.wav` (8-bit PCM, valid header). The next authored X1C
+   records are at 2.667 s, and a slow-frame record is written only after a
+   frame returns. The logs therefore cannot say whether the stall is in that
+   command, in the missile's animation or render, or elsewhere in the frames
+   that follow. No fix is claimed.
+   Next-run breadcrumbs: `A4 M01 cinematic command begin/end` (first 160 `X1*`
+   commands, `port/patches/scripts-a36-m01-intro-command-breadcrumbs.patch`)
+   and `A4 M01 intro phase: frame=N phase=simulation-begin|render-begin|audio-begin|audio-end`
+   (first 120 M01 frames, with one log sync per frame). A trailing `begin`
+   with no `end` names the command. Otherwise the last phase line names the
+   stalled frame stage.
+2. Finale assets are not prepared: `X1Z_CAMERA`, `X1Z_Traject_01..04`,
+   `x1z_trnspt` and the X1Z human animations load on demand during the
+   finale. That costs a possible hitch, but timer-driven success does not
+   depend on it. Add them to preparation only with a measured cost.
 3. Two finale `Play_audio` presets (`M00NSMG_KILL0053I1GBMG_SND`,
    `M03DSGN_DSGN0039RIGBMG_SND`) are unlocated (cosmetic). Eleven oversized
    M01 WAV RIFF headers also still need decoder validation.

@@ -9,6 +9,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def remove_command_bounds_patch(path, args):
     # Reconstruct the historical anchor before testing these earlier patches.
+    if 'A4 M01 cinematic command begin' in path.read_text():
+        breadcrumbs = (ROOT / 'port/patches/scripts-a36-m01-intro-command-breadcrumbs.patch').read_bytes()
+        subprocess.run(args + ['--reverse'], input=breadcrumbs, capture_output=True, check=True)
     if 'Vita_Is_Budgeted_Campaign_Cinematic' not in path.read_text():
         dispatch = (ROOT / 'port/patches/scripts-a35-cinematic-original-dispatch.patch').read_bytes()
         subprocess.run(args + ['--reverse'], input=dispatch, capture_output=True, check=True)

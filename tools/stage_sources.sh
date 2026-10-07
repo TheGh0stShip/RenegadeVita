@@ -1528,6 +1528,12 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 # waypath. Apply after the boss Save/Load status patches that share these files.
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-boss-waypath-release-guard.patch"
+# M01 intro hang locator: bounded begin/end records for X1* cinematic
+# commands. Anchored to the final Test_Cinematic.cpp so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)" = \
+	"196adffdf51980d92b3029d5ecd8f3d1a68f45214af3dd42df9ad72aaa96dfc8"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m01-intro-command-breadcrumbs.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

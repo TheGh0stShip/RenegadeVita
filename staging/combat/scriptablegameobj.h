@@ -122,6 +122,7 @@ public:
 	virtual	bool	Save( ChunkSaveClass & csave );
 	virtual	bool	Load( ChunkLoadClass & cload );
 	virtual	void	On_Post_Load( void );
+	virtual	void	On_Post_Load_Discarded( void );
 
 	//	Thinking
 	virtual	void	Think();

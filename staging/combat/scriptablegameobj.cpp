@@ -638,6 +638,22 @@ void ScriptableGameObj::On_Post_Load( void )
 	}
 }
 
+// Vita port: a rejected load still holds NULL observers (unrecreatable scripts
+// or unresolved remaps). Purge them as On_Post_Load does, without running any
+// post-load behavior, so Remove_All_Observers never calls NULL->Detach.
+void ScriptableGameObj::On_Post_Load_Discarded( void )
+{
+	BaseGameObj::On_Post_Load_Discarded();
+
+	GameObjObserverList & observer_list = (GameObjObserverList &)Get_Observers();
+	for( int index = 0; index < observer_list.Count(); index++ ) {
+		if ( observer_list[ index ] == NULL ) {
+			observer_list.Delete( index );
+			index--;
+		}
+	}
+}
+
 /*
 **
 */

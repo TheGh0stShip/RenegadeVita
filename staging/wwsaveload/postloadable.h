@@ -57,6 +57,11 @@ public:
 
 	virtual void						On_Post_Load (void)							{ }
 
+	// Vita port: called instead of On_Post_Load when a rejected load discards
+	// the post-load list. Pointers are already remapped but post-load linking
+	// never ran; override to drop links that only On_Post_Load would make.
+	virtual void						On_Post_Load_Discarded (void)				{ }
+
 	bool									Is_Post_Load_Registered(void)				{ return IsPostLoadRegistered; }
 	void									Set_Post_Load_Registered(bool onoff)	{ IsPostLoadRegistered = onoff; }
 

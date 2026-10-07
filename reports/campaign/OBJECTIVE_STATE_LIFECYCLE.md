@@ -112,7 +112,7 @@ Not changed because the correct target state is a design choice (match a fresh P
 the loaded discoveries as the level-start copy). A snapshot would be a one-line `Store_Data` after a
 successful non-handoff save load. Flagged for a decision.
 
-### F4. Unwinding a rejected load may crash on unlinked `GameObjReference` members (open, high priority)
+### F4. Unwinding a rejected load may crash on unlinked `GameObjReference` members (fixed in staging, see `reports/REJECTED_LOAD_DISCARD.md`)
 
 The a36 rejected-load patches remap pointer tokens but then `Discard_Post_Load_Callbacks()`
 (saveload.cpp:140) so `ReferencerClass::On_Post_Load` never relinks. Each non-null

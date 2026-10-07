@@ -1775,6 +1775,17 @@ test "$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)" = \
 	"b7a05ce28d3b0e812b593075ef079f3c3c220e6d4b853e2f7c5516d0ddf39214"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-cinematic-slow-command-text-copy.patch"
+# A rejected load remaps pointers but discards post-load linking. Give each
+# registered object an On_Post_Load_Discarded hook so referencers, NULL script
+# observers and rider->carrier links that only On_Post_Load would link are
+# dropped before the partial state is destroyed (OBJECTIVE_STATE_LIFECYCLE F4).
+# Applied after every scriptablegameobj.cpp anchor so no anchor moves.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwsaveload" -p1 < "$rv_root/port/patches/wwsaveload-a37-rejected-load-discard-hook.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-rejected-load-discard-unlink.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-a37-rejected-load-carrier-discard.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

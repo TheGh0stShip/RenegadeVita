@@ -108,6 +108,16 @@ void	ReferencerClass::On_Post_Load(void)
 }
 
 
+// Vita port: a registered referencer was never linked into its remapped
+// target's list (Load leaves the link NULL), so drop the target instead of
+// letting the destructor search a list that does not contain it.
+void	ReferencerClass::On_Post_Load_Discarded(void)
+{
+	ReferenceTarget = NULL;
+	TargetReferencerListNext = NULL;
+}
+
+
 const ReferencerClass & ReferencerClass::operator = ( const ScriptableGameObj * reference_target )
 {
 	if ( ReferenceTarget != NULL ) {		// if I currently have a target

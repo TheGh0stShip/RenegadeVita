@@ -104,6 +104,7 @@ class ReferencerClass : public PostLoadableClass {
 		virtual ~ReferencerClass( void ) { operator = ((const ScriptableGameObj*)NULL); }
 
 		virtual void	On_Post_Load(void);
+		virtual void	On_Post_Load_Discarded(void);
 
 		bool	Save( ChunkSaveClass & csave );
 		bool	Load( ChunkLoadClass & cload );

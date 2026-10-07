@@ -118,7 +118,9 @@ class M10ObjectiveConversationTests(unittest.TestCase):
         pattern = re.compile(r'Start_Conversation\((\w+), \d+\);\s*\n\s*Commands->Monitor_Conversation\(obj, \1\);')
         upstream = len(pattern.findall(UPSTREAM_MISSION10.read_text(errors='replace')))
         staged = len(pattern.findall(self.source))
-        self.assertEqual(upstream - staged, len(SITES))
+        # + M10CON018 (zone 18), scripts-a38-m10-ne-gate-briefing-monitor-first.patch;
+        # its contract is in test_m10_follow_up_fixes.py.
+        self.assertEqual(upstream - staged, len(SITES) + 1)
 
     def test_patch_registered_once_after_existing_m10_patches(self):
         stage = STAGE.read_text()

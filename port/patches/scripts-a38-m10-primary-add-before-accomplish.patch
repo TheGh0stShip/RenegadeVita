@@ -1,0 +1,33 @@
+M10 objective controller: add a primary objective before completing it.
+
+Only the Power Plant (1001) and Comm Center (1004) senders add their objective
+before completing it. Con Yard 1002, gates 1005/1006/1007 and the Level-1 key
+1012 are added only by their briefing (zones 4/1/18/7 and the KEY_OBJ timer).
+When the player completes one of them first, Set_Objective_Status finds no
+objective and does nothing, primary_count still counts it, and the late
+briefing then adds the objective as pending. It can never complete again, and
+its HUD priority (74-80) sorts its pog ahead of the beacon objective 1003 (73),
+so the HUD points at an open gate or a destroyed Con Yard. The controller now
+calls Add_An_Objective for a primary before marking it accomplished. When the
+objective already exists, ObjectiveManager::Add_Objective returns at once and
+only the HUD position and blip are set again before the status change. The
+late briefing's add is then a duplicate and is ignored. Counting and
+completion are unchanged.
+
+--- a/Mission10.cpp
++++ b/Mission10.cpp
+@@ -526,6 +526,14 @@
+ 					}
+ 					else
+ 					{
++						// Vita: add a primary before completing it. A gate poked, the Con Yard
++						// destroyed or the key picked up before its briefing completed nothing,
++						// and the late briefing then added a stale pending primary whose HUD pog
++						// outranks the beacon objective 1003. Add_Objective ignores duplicates.
++						if (type < 1008 || type == 1012)
++						{
++							Add_An_Objective(type);
++						}
+ 						Commands->Set_Objective_Status(type, OBJECTIVE_STATUS_ACCOMPLISHED);
+ 						if (type < 1008 || type == 1012)
+ 						{

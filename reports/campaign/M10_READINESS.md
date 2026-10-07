@@ -336,3 +336,139 @@ Residual risks:
   start from inside that callback. The Killed/Poked code that runs after it only
   sends events and sets power and fences, so the order is harmless by source.
 - The physical behaviour is unproven. The route step 3 variant above exercises it.
+
+## Follow-up fixes (2026-10-07)
+
+Evidence class: staged source, read-only host parsing of the Vita3K retail copy
+(`always.dat` cinematic texts, the `m10.ldd` binding receipt), host Python source
+contracts and one `arm-vita-eabi-g++ -fsyntax-only` of the patched file. No build,
+link, VPK, emulator or device. Line numbers are the staged `Mission10.cpp` after
+these patches. Compared with the key-conversation fix section, lines up to :528 are
+unchanged and later lines move by +8 to +22.
+
+Four patches, registered in `tools/stage_sources.sh` in this order right after
+`scripts-a38-m10-objective-conversation-resend`. Staging re-run: 574 ordered
+patches, PASS, zero fuzz, and only `staging/scripts/Mission10.cpp` changes (plus
+`PATCH_INVENTORY.json`).
+
+### Primary guidance
+
+- **NE gate briefing** (`scripts-a38-m10-ne-gate-briefing-monitor-first.patch`).
+  Primary 1006 is added only by `M10_Conversation_Zone` zone 18, from
+  `Action_Complete(100018)` when M10CON018 ends (`1006, 3` has one sender, :3628).
+  M10CON018 is **not key**. If any key conversation was playing on entry (intro
+  M10CON064, briefings M10CON001/004/007/010/015, M10CON019), Start stopped it
+  before the monitor registered. Then 1006 never appeared: no objective entry, blip
+  or pog for the NE gate. The poke still counted the primary, so completion was not
+  blocked. The conversation-gated report lists this gate as SAFE (alt path), but the
+  "alternatives" it counts were the helper itself and the gate's completion sends,
+  which never added the objective. The fix uses the M10 pattern: monitor at :3796
+  before Start at :3797, and an `id < 0` fallback at :3798. `already_entered` is
+  still set before the conversation. A re-run of the audit tool on the patched tree
+  reports `monitor_before_start: true` for this gate. The M10 summary counts do not
+  change.
+- **Stale primaries** (`scripts-a38-m10-primary-add-before-accomplish.patch`).
+  1002, 1005, 1006, 1007 and 1012 are added only by their briefing (zones 4, 1, 18
+  and 7, and the KEY_OBJ timer at :3603). Completing one first (Con Yard destroyed,
+  gate poked, key picked up) made `Set_Objective_Status` a no-op. `primary_count`
+  still counted it, and the late briefing then added a **pending** primary that can
+  never complete. Its HUD priority (74-80, :218-:333) sorts ahead of beacon
+  objective 1003 (73, :229) in `ObjectiveSortCallback` (objectives.cpp:655-677).
+  The HUD shows index 0 first (hud.cpp:2054-2088), so after the beacon drop the
+  pog could point at an open gate or a dead Con Yard. The controller now calls
+  `Add_An_Objective(type)` for a primary before accomplishing it (:529-:536). This
+  is the same add-then-complete order that the Power Plant and Comm Center senders
+  already use. `ObjectiveManager::Add_Objective` returns early on a duplicate
+  (objectives.cpp:491-494), so the normal path only sets the HUD position and blip
+  again before the status change. `Update_Object_Blip` clears the blip for a
+  non-pending objective. Counting, the seventh-primary cinematic and the 1003
+  completion timer are unchanged.
+- **7 LOW gates** (M10CON052, 045, 021, 031, 037, 043, 040 for secondaries 1019,
+  1017, 1008, 1009, 1010, 1011, 1014). Not changed. A preempted conversation leaves
+  only a secondary pending. Secondary HUD priorities are 50-59, always below every
+  primary (73-80), so none of them hides primary guidance. M10CON052 is also
+  redundant: the controller already adds and accomplishes 1019 before starting it
+  (:463-:464). There are no M10 REVIEW gates.
+
+### Save/load
+
+- **Attack tables** (`scripts-a38-m10-attack-target-save-ids.patch`).
+  `M10_Stealth_Attack_01::attack_loc` id 9 (:3088), `_02::attack_loc` id 8 and
+  `same` id 9 (:3222-:3223), `M10_Mammoth_Attack::target` id 4 (:2426). `Created()`
+  is skipped on load. With the a37 value-initialising factory, the unsaved tables
+  loaded as zeros, so `Find_Object(0)` returned NULL and the tanks pathed toward
+  the origin. `_01` is reachable: `M10_XG_VehicleDrop2.txt` attaches it at frame
+  438. `_02` is attached by `M10_Cargo_Plane_Dropoff`. `_02::same` is never set
+  true, so registering it only documents state. `M10_Mammoth_Attack` is unbound
+  in retail data. The arrays are 52/16 bytes, under the 250-byte
+  `Auto_Save_Variable` limit, and the ids are unique per script. Old saves load the
+  tables as zero, as before.
+- **Apache `apache_id[0]`**: verified. `scripts-a37-script-factory-value-init`
+  zero-fills it (`new T()`; DECLARE_SCRIPT classes have no user-provided
+  constructor). `SAVE_VARIABLE(apache_id, 4)` (:1254) saves and restores 0.
+  Single-player objects get non-zero network ids (basegameobj.cpp:265-271,
+  networkobject.cpp:82), so `Find_Object(0)` is NULL, and area 0
+  `Attack_Player`/`Return_To_Helipad`/`Reload_At_Helipad` are no-ops. No patch.
+- `M10_Mrls_Grant::Created` sets `occupied1` twice (:4184-:4185, retail typo) and
+  never sets `occupied2`. The factory zero-fills it and it is saved (id 5). No patch.
+
+### Crash hygiene
+
+- `scripts-a38-m10-paradrop-param-buffer.patch`: `M10_Chinook_ParaDrop` `char
+  params[16]` + `snprintf` (:1779-:1780), as in the M03 paradrop fix. The script is
+  unbound in retail M10, and the formatted text is unchanged.
+
+### Soft-lock hunt (no new blocker found)
+
+- **SE gate keycard**: one carrier (2000890, `M10_Refinery_Key_Grant`). Its `Killed`
+  creates `Level_01_Keycard` (:2699), which has `AlwaysAllowGrant=1` and `GrantKey=1`.
+  Powerups never expire on their own: `PowerUpGameObj::Expire` is reachable only
+  from the script command (scriptcommands.cpp:3343), and M10 never calls it.
+  `M10_Gate_Check` sets `already_poked` only while the player holds key 1 (:2762),
+  so a poke without the key does not lose the gate. `M10_Pokeable_Item_OnePoke`
+  on the same consoles hides the HUD poke indicator after the first poke, even one
+  made without the key (:4430). That affects guidance only and is retail behaviour.
+  `Key_Grant` sets the blip on 1012 before 1012 exists if the carrier dies early
+  (:2702 no-op), which is also retail behaviour.
+- **Beacon 1003/1012**: 1003 is added at 0.5 s. Completion requires the beacon
+  grant after count 7, so 1003 cannot arrive early. `X10I_GDI_Drop_PowerUp.txt`
+  creates slot 9 at frame 145, attaches `M10_Ion_Cannon` at 146, detaches it from
+  `Box01` at 255 and destroys only slots 1, 2, 3 and 6, so the beacon stays. The
+  cinematic disables hibernation on its controller (Test_Cinematic.cpp:506) and
+  saves time, slots and control lines (:321-:357). No M10 cinematic text uses
+  control, camera, letterbox or HUD commands.
+- **Laser fence/power**: fence 1285077 drops only when the Power Plant dies (a
+  counted primary). Without duplicate sends, the beacon cannot drop while the fence
+  is up. `StaticAnimPhysClass::Save_State` keeps the fence and gate frames across a
+  load, and `Created` (frame 0) does not re-run on load.
+- **Apache controller (type 5000)**: `M10_Apache` sends 5000 with its own `Area`
+  parameter. `Reload_At_Helipad(param)` and timer `10+param` (0..2 after the guard)
+  refer to that requesting Apache. No objective depends on the Apaches or their
+  timers.
+- **Seventh-primary drop**: unchanged from the earlier sections. With the stale
+  primary fix, the HUD pog at that point is 1003.
+
+### Deferred
+
+- **Performance/memory, retail-identical, needs physical measurement**:
+  `M10_Con_Yard_Repair::Damaged` (:4355) starts one timer per missing health point on
+  every hit, until the Con Yard dies. It is bound to 22 objects (Power Plant and Comm
+  Center at RepairSpeed 10, plus SAMs, turrets, silos, helipads, HoN, Obelisk,
+  Refinery and Airstrip). The `ObserverTimerList` scan and `Delete` are O(n) per
+  frame (scriptablegameobj.cpp:724-768), and every timer is saved. Sustained fire on
+  a damaged building could build up thousands of timers. Measure the timer count
+  and frame time on hardware before changing it.
+- Briefing conversations still play after their objective is complete (retail).
+- `CONVERSATION_GATED_OBJECTIVES.md` was not regenerated. Its M10 line numbers come
+  from before these patches. The M10 class counts are unchanged.
+
+Evidence: `tools/test_m10_follow_up_fixes.py` (5 tests) and
+`tools/test_m10_objective_conversation_resend.py` (5 tests; its Start→Monitor
+count now also expects the zone-18 site) pass with upstream linked. The gated
+audit, objective lifecycle, script warning/event route, cinematic save, autosave,
+mission completion/conversation, script portability, call-default, compiler
+diagnostic, incremental-staging and load-capacity tests also pass. The one error,
+in `test_script_lookup_telemetry`, comes from the missing worktree `build/`
+directory. `arm-vita-eabi-g++ -fsyntax-only` (compdb flags plus the frame-profile,
+LAN and MSAA defines): exit 0, with the same 18 `-Wwrite-strings` and 7
+`-Wattributes` warnings as before. Physical acceptance is still open.

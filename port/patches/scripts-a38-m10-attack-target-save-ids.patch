@@ -1,0 +1,44 @@
+M10 attack scripts: save the node/target id tables set in Created().
+
+M10_Stealth_Attack_01/02 fill attack_loc[13] and M10_Mammoth_Attack fills
+target[4] with level object ids in Created(), and _02 clears same there.
+Created() does not run when a save is loaded, and these members were not
+registered, so after a load the tables hold zeros (script factory
+value-initialisation): every Find_Object returns NULL and the stealth tanks
+path toward the world origin instead of the attack nodes. Register them under
+unused SAVE_VARIABLE ids (_01 attack_loc 9; _02 attack_loc 8, same 9;
+Mammoth target 4). Saves made before this patch load the tables as zero, as
+before. M10_Mammoth_Attack is not bound in retail M10 data; it is registered
+for consistency.
+
+--- a/Mission10.cpp
++++ b/Mission10.cpp
+@@ -2414,6 +2414,8 @@
+ 		SAVE_VARIABLE( attacking, 1 );
+ 		SAVE_VARIABLE( valid, 2 );
+ 		SAVE_VARIABLE( choice, 3 );
++		// Vita save/load: the target ids are set only in Created(), which a load skips.
++		SAVE_VARIABLE( target, 4 );
+ 	}
+ 
+ 	void Created(GameObject * obj)
+@@ -3074,6 +3076,8 @@
+ 		SAVE_VARIABLE( loc_dist, 6 );
+ 		SAVE_VARIABLE( loc, 7 );
+ 		SAVE_VARIABLE( same, 8 );
++		// Vita save/load: the node ids are set only in Created(), which a load skips.
++		SAVE_VARIABLE( attack_loc, 9 );
+ 	}
+ 
+ 	void Created(GameObject * obj)
+@@ -3205,6 +3209,10 @@
+ 		SAVE_VARIABLE( enemy_loc, 5 );
+ 		SAVE_VARIABLE( loc_dist, 6 );
+ 		SAVE_VARIABLE( loc, 7 );
++		// Vita save/load: the node ids and same are set only in Created(), which a
++		// load skips.
++		SAVE_VARIABLE( attack_loc, 8 );
++		SAVE_VARIABLE( same, 9 );
+ 	}
+ 
+ 	void Created(GameObject * obj)

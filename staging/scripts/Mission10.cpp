@@ -526,6 +526,14 @@ DECLARE_SCRIPT(M10_Objective_Controller, "")
 					}
 					else
 					{
+						// Vita: add a primary before completing it. A gate poked, the Con Yard
+						// destroyed or the key picked up before its briefing completed nothing,
+						// and the late briefing then added a stale pending primary whose HUD pog
+						// outranks the beacon objective 1003. Add_Objective ignores duplicates.
+						if (type < 1008 || type == 1012)
+						{
+							Add_An_Objective(type);
+						}
 						Commands->Set_Objective_Status(type, OBJECTIVE_STATUS_ACCOMPLISHED);
 						if (type < 1008 || type == 1012)
 						{
@@ -1768,8 +1776,8 @@ DECLARE_SCRIPT(M10_Chinook_ParaDrop, "Preset:string")
 
 		dead = false;
 		out = 0;
-		char params[10];
-		sprintf(params, "%d", Commands->Get_ID(obj));
+		char params[16];
+		snprintf(params, sizeof(params), "%d", Commands->Get_ID(obj));
 		Commands->Attach_Script(chinook, "M10_Reinforcement_Chinook", params);
 
 		chinook_id = Commands->Get_ID(chinook);
@@ -2414,6 +2422,8 @@ DECLARE_SCRIPT (M10_Mammoth_Attack, "")
 		SAVE_VARIABLE( attacking, 1 );
 		SAVE_VARIABLE( valid, 2 );
 		SAVE_VARIABLE( choice, 3 );
+		// Vita save/load: the target ids are set only in Created(), which a load skips.
+		SAVE_VARIABLE( target, 4 );
 	}
 
 	void Created(GameObject * obj)
@@ -3074,6 +3084,8 @@ DECLARE_SCRIPT (M10_Stealth_Attack_01, "")
 		SAVE_VARIABLE( loc_dist, 6 );
 		SAVE_VARIABLE( loc, 7 );
 		SAVE_VARIABLE( same, 8 );
+		// Vita save/load: the node ids are set only in Created(), which a load skips.
+		SAVE_VARIABLE( attack_loc, 9 );
 	}
 
 	void Created(GameObject * obj)
@@ -3205,6 +3217,10 @@ DECLARE_SCRIPT (M10_Stealth_Attack_02, "")
 		SAVE_VARIABLE( enemy_loc, 5 );
 		SAVE_VARIABLE( loc_dist, 6 );
 		SAVE_VARIABLE( loc, 7 );
+		// Vita save/load: the node ids and same are set only in Created(), which a
+		// load skips.
+		SAVE_VARIABLE( attack_loc, 8 );
+		SAVE_VARIABLE( same, 9 );
 	}
 
 	void Created(GameObject * obj)
@@ -3775,8 +3791,14 @@ DECLARE_SCRIPT (M10_Conversation_Zone, "Conv_Num:int")
 					int id = Commands->Create_Conversation("M10CON018", 99, 2000, false);
 					Commands->Join_Conversation(NULL, id);
 					Commands->Join_Conversation(STAR, id);					
-					Commands->Start_Conversation(id, 100018);
+					// Vita: monitor before Start so a key-conversation preemption inside Start
+					// still reaches Action_Complete (and adds primary objective 1006).
 					Commands->Monitor_Conversation(obj, id);
+					Commands->Start_Conversation(id, 100018);
+					if (id < 0)
+					{
+						Action_Complete(obj, 100018, ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT);
+					}
 				}
 				break;
 			case 20: 

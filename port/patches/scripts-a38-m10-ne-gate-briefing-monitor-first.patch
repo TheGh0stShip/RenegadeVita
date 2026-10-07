@@ -1,0 +1,35 @@
+M10 NE gate briefing: register the M10CON018 monitor before Start.
+
+Primary objective 1006 (lower the Northeastern base gate) is added only from
+M10_Conversation_Zone::Action_Complete(100018), when the zone-18 briefing
+M10CON018 ends. M10CON018 is not a key conversation, so
+ActiveConversationClass::Start_Conversation stops it with INTERRUPTED at once
+when any key conversation is playing (the intro M10CON064, a zone briefing
+such as M10CON007, or M10CON019). Retail registered the monitor after Start,
+so that stop had no observer and 1006 was never added: no objective entry,
+radar blip or HUD pog for the NE gate, while the gate poke still counted the
+primary. Same pattern as scripts-a38-m10-objective-conversation-resend:
+Monitor_Conversation now precedes Start_Conversation, so the preemption calls
+Action_Complete synchronously inside Entered and the objective is added. The
+normal path (no key conversation) is unchanged. already_entered is set before
+the conversation, so the zone briefs once; a missing conversation (id < 0,
+not reachable with retail m10.ldd) adds the objective directly.
+
+--- a/Mission10.cpp
++++ b/Mission10.cpp
+@@ -3775,8 +3775,14 @@
+ 					int id = Commands->Create_Conversation("M10CON018", 99, 2000, false);
+ 					Commands->Join_Conversation(NULL, id);
+ 					Commands->Join_Conversation(STAR, id);					
+-					Commands->Start_Conversation(id, 100018);
++					// Vita: monitor before Start so a key-conversation preemption inside Start
++					// still reaches Action_Complete (and adds primary objective 1006).
+ 					Commands->Monitor_Conversation(obj, id);
++					Commands->Start_Conversation(id, 100018);
++					if (id < 0)
++					{
++						Action_Complete(obj, 100018, ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT);
++					}
+ 				}
+ 				break;
+ 			case 20: 

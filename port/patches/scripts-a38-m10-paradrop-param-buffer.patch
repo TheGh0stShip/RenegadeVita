@@ -1,0 +1,22 @@
+M10_Chinook_ParaDrop: bound the owner-id parameter buffer.
+
+M10_Chinook_ParaDrop::Created formatted its owner's object id into
+char params[10] with sprintf. A dynamic id (>= 1500000000) has ten digits and
+needs 11 bytes, so the write overflowed by one byte. The script is not bound
+or attached in retail M10 data; the buffer is enlarged to 16 bytes and the
+write bounded with snprintf for consistency with the M03 paradrop fix. The
+formatted text is unchanged for every id.
+
+--- a/Mission10.cpp
++++ b/Mission10.cpp
+@@ -1768,8 +1768,8 @@
+ 
+ 		dead = false;
+ 		out = 0;
+-		char params[10];
+-		sprintf(params, "%d", Commands->Get_ID(obj));
++		char params[16];
++		snprintf(params, sizeof(params), "%d", Commands->Get_ID(obj));
+ 		Commands->Attach_Script(chinook, "M10_Reinforcement_Chinook", params);
+ 
+ 		chinook_id = Commands->Get_ID(chinook);

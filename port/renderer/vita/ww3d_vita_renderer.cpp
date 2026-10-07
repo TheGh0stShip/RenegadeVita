@@ -3961,13 +3961,18 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 		}
 		const bool indexed_batch = (g_render_work_cache_mode & 8U) != 0U;
 		bool current_texturing = false;
+		// Per-batch hoists (SKIN_PATH_COST item 6): texture names, the skin
+		// pass-through predicate and the diagnostic-name predicates are constant
+		// while a batch's bound textures/shader are unchanged.
+		const char *bound_texture_names[2] = { "none", "none" };
+		bool batch_skin_color_passthrough = false;
+		bool batch_skin_names_recordable = false;
 		auto emit_vertex = [&](unsigned vertex_index, bool emit_position) {
 				if (bound_textures[0] != NULL) {
 					Emit_Original_Texture_Coordinate(0U, GL_TEXTURE0,
 						current_texture_coordinates[0], current_uvs[0], vertices,
 						normals, vertex_index, original_world_transform,
-						original_view_transform,
-						bound_textures[0]->Get_Texture_Name().Peek_Buffer());
+						original_view_transform, bound_texture_names[0]);
 				}
 				if (current_detail_stage) {
 					const Vector2 *detail_uvs =
@@ -3975,8 +3980,7 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 					Emit_Original_Texture_Coordinate(1U, GL_TEXTURE1,
 						current_texture_coordinates[1], detail_uvs, vertices,
 						normals, vertex_index, original_world_transform,
-						original_view_transform,
-						bound_textures[1]->Get_Texture_Name().Peek_Buffer());
+						original_view_transform, bound_texture_names[1]);
 				}
 			/* Preserve the original mesh material color owner.  The former Vita
 			** bridge invented RGB from each normal, visibly recoloring otherwise
@@ -3985,14 +3989,9 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 			** boundary before handing the result to vitaGL for texture modulation. */
 			VertexMaterialClass *material =
 				material_for(static_cast<int>(vertex_index), pass);
-			const bool skin_color_passthrough = !procedural_pass && is_skin &&
-				bound_textures[0] != NULL &&
-				current_texturing;
+			const bool skin_color_passthrough = batch_skin_color_passthrough;
 			const bool record_original_skin_color = skin_color_passthrough &&
-				!g_logged_first_skin_texture_color &&
-				!Is_Loading_Screen_Diagnostic_Name(mesh.Get_Name()) &&
-				!Is_Loading_Screen_Diagnostic_Name(
-					bound_textures[0]->Get_Texture_Name().Peek_Buffer());
+				!g_logged_first_skin_texture_color && batch_skin_names_recordable;
 			const MaterialVertexColor vertex_color = Evaluate_Material_Vertex_Color(
 				cache_material_colors, material, color1, color2, vertex_index,
 				normals, original_world_transform, render_info, light_directions,
@@ -4003,8 +4002,7 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 				if (record_original_skin_color) {
 					Vita_Append_A22_Runtime_Breadcrumb("skin-submit",
 						"first textured skin color pass-through: mesh=%s pass=%d texture=%s material_lighting=%d original_rgb=(%.3f,%.3f,%.3f) alpha=%.3f",
-						mesh.Get_Name(), pass,
-						bound_textures[0]->Get_Texture_Name().Peek_Buffer(),
+						mesh.Get_Name(), pass, bound_texture_names[0],
 						vertex_color.lighting ? 1 : 0, final_color.X,
 						final_color.Y, final_color.Z, vertex_color.alpha);
 					g_logged_first_skin_texture_color = true;
@@ -4082,6 +4080,18 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 				current_detail_stage = detail_stage;
 				current_shader_bits = triangle_shader_bits;
 				current_texturing = triangle_shader.Get_Texturing() == ShaderClass::TEXTURING_ENABLE;
+				bound_texture_names[0] = bound_textures[0] != NULL ?
+					bound_textures[0]->Get_Texture_Name().Peek_Buffer() : "none";
+				bound_texture_names[1] = bound_textures[1] != NULL ?
+					bound_textures[1]->Get_Texture_Name().Peek_Buffer() : "none";
+				batch_skin_color_passthrough = !procedural_pass && is_skin &&
+					bound_textures[0] != NULL && current_texturing;
+				// The record flag only transitions false->true, so when it is
+				// already set the name predicates are never consulted (as before).
+				batch_skin_names_recordable = batch_skin_color_passthrough &&
+					!g_logged_first_skin_texture_color &&
+					!Is_Loading_Screen_Diagnostic_Name(mesh.Get_Name()) &&
+					!Is_Loading_Screen_Diagnostic_Name(bound_texture_names[0]);
 				// ShaderClass remains the authoritative original material policy.
 				// Translate only the fixed-function state VitaGL exposes here; this
 				// preserves alpha-cutout, conventional transparency and additive fire.

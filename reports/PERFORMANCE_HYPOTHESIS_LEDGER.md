@@ -1412,3 +1412,15 @@ bound its own overhead).
   Invalidate_Native_State_Cache on init/reactivation and on GL error). Risk:
   behaviour-preserving only. Before/after: unmeasured. Decision: adopted as
   hygiene pending fixed-benchmark measurement.
+- Skin submit per-batch hoist (SKIN_PATH_COST item 6): texture-name lookups,
+  skin pass-through predicate and loading-screen diagnostic-name predicates
+  moved from emit_vertex (per corner) to batch state change in
+  Submit_Mesh_Internal. Hypothesis: <2% of skin submit. Risk: none; emitted
+  values and first-occurrence breadcrumbs unchanged. Before/after: unmeasured.
+  Decision: adopted as hygiene pending fixed-benchmark measurement.
+- Identity normal-transform fast path (SKIN_PATH_COST item 5):
+  PreparedNormalTransform flags bitwise-identity input and Apply skips the
+  cofactor products and divide while keeping the same addition order, so
+  results (incl. signed zero/NaN) are bit-identical. Hypothesis: <5% of lit
+  skin colour evaluation. Risk: none by construction. Before/after:
+  unmeasured. Decision: adopted as hygiene pending fixed-benchmark measurement.

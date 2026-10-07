@@ -1,0 +1,17 @@
+M10_Gate_Check save/load robustness. first/second are set in Action_Complete()
+and route objective events 1005/1006/1007 to controller 1100154 in Poked(), but
+were not saved. Register them with the unused ids 2 and 3. Saves without these
+ids still load (unknown/missing ids are ignored by the original loader).
+
+--- a/Mission10.cpp
++++ b/Mission10.cpp
+@@ -2649,6 +2649,9 @@
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE( already_poked, 1 );
++		// Vita save/load: first/second route objectives 1005/1006/1007 in Poked().
++		SAVE_VARIABLE( first, 2 );
++		SAVE_VARIABLE( second, 3 );
+ 	}
+ 
+ 	void Created (GameObject *obj)

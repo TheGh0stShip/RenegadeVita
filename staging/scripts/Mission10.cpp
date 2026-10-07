@@ -2649,6 +2649,9 @@ DECLARE_SCRIPT (M10_Gate_Check, "Objective:int, Gate1:int, Gate2:int")
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( already_poked, 1 );
+		// Vita save/load: first/second route objectives 1005/1006/1007 in Poked().
+		SAVE_VARIABLE( first, 2 );
+		SAVE_VARIABLE( second, 3 );
 	}
 
 	void Created (GameObject *obj)

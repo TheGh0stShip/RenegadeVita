@@ -6756,6 +6756,8 @@ DECLARE_SCRIPT(M05_Dead6_Help, "Message_ID=0:int")
 		SAVE_VARIABLE( already_entered, 1 );
 		SAVE_VARIABLE( deadeye_freed, 2 );
 		SAVE_VARIABLE( message_id, 3 );
+		// Vita save/load: set in Entered(), consumed in Action_Complete().
+		SAVE_VARIABLE( mission_failed_text, 4 );
 	}
 
 	void Created (GameObject * obj)
@@ -6763,6 +6765,7 @@ DECLARE_SCRIPT(M05_Dead6_Help, "Message_ID=0:int")
 		already_entered = false;
 		message_id = Get_Int_Parameter("Message_ID");
 		deadeye_freed = false;
+		mission_failed_text = 0;
 		
 	}
 

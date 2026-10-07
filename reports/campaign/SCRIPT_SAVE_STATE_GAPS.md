@@ -188,6 +188,13 @@ skip, or a garbage value fed to the engine. **L** = cosmetic or AI only.
      loaders ignore unknown ids.
 
    Ship each as a separate `port/patches/scripts-*` patch.
+
+   **Adopted (2026-10-07):** the first two candidates are now staged as
+   `scripts-a36-m09-keycard-mobius-refetch.patch`,
+   `scripts-a36-m10-gate-check-save-flags.patch` (ids 2/3) and
+   `scripts-a36-m05-dead6-help-failed-text-save.patch` (id 4, zeroed in
+   `Created`). They are host syntax-checked only and have no save/load
+   repro or Vita evidence yet. The dupe-id fixes are not adopted.
 3. Heuristic limits: method-local shadowing (M08 `controller_id`) and
    objective links made through custom events are not fully resolved. Treat
    tool scores as triage only.

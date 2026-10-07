@@ -4414,6 +4414,10 @@ DECLARE_SCRIPT (M09_KeyCard_Zone, "")
 						
 		if ( type == COUNT ) 
 		{
+			// Vita save/load: mobius is not saved and Created() does not re-run
+			// on load, so refresh it from its fixed id before use.
+			mobius = Commands->Find_Object (2000010);
+
 			if (param == 0)
 			{
 				//initiation = true;

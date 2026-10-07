@@ -1,0 +1,19 @@
+M09_KeyCard_Zone save/load robustness. The GameObject *mobius member is not
+saved and Created() is not re-run on a savegame load, so Custom(COUNT) could
+pass an indeterminate pointer to Join_Conversation after a mid-mission load.
+Re-fetch it from Find_Object(2000010), the id it is always assigned from;
+behaviour is identical while the stored pointer is valid.
+
+--- a/Mission09.cpp
++++ b/Mission09.cpp
+@@ -4414,6 +4414,10 @@
+ 						
+ 		if ( type == COUNT ) 
+ 		{
++			// Vita save/load: mobius is not saved and Created() does not re-run
++			// on load, so refresh it from its fixed id before use.
++			mobius = Commands->Find_Object (2000010);
++
+ 			if (param == 0)
+ 			{
+ 				//initiation = true;

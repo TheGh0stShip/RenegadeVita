@@ -1903,6 +1903,9 @@ void Apply_Original_Texture_Coordinate_State(VertexMaterialClass *material)
 	}
 }
 
+#else
+// Host probes have no native GL state; render-target switches still call this.
+void Invalidate_Native_State_Cache() {}
 #endif // __vita__: color evaluation below is shared with the host probe.
 
 float Clamp01(float value)

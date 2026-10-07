@@ -1,6 +1,8 @@
 #include "renegade_wave_decoder.h"
+#include "renegade_audio_cost.h"
 
 #include <algorithm>
+#include <atomic>
 #include <limits>
 #include <utility>
 #include <cstring>
@@ -15,6 +17,10 @@ namespace RenegadeVitaAudio {
 namespace {
 
 constexpr size_t kMaximumDecodedSamples = 16U * 1024U * 1024U;
+
+std::atomic<bool> g_exact_decode_reserve{
+	(RENEGADE_VITA_AUDIO_COST_DEFAULT & RENEGADE_AUDIO_COST_EXACT_DECODE_RESERVE) != 0U};
+std::atomic<uint32_t> g_exact_decode_reserve_raises{0U};
 
 uint16_t Read_U16(const uint8_t *data)
 {
@@ -443,6 +449,30 @@ uint32_t Estimate_Frame_Count(const WaveInfo &info)
 	return Saturating_U64_To_U32(frames);
 }
 
+// RVAU1 bit 0. Estimate_Frame_Count counts a final partial block no larger
+// than its header as zero frames, but decoding still emits its header frames
+// (one IMA, two Microsoft; the mono IMA predictor tail emits one). Mono IMA
+// output is then padded to the fact count. Either overflow made std::vector
+// grow to about twice its size and keep that capacity. This returns a reserve
+// holding the final output without regrowth; the samples written are the same.
+// Fact sizes the reserve only where the output is padded to it anyway, after
+// the IMA fact ceiling check.
+size_t Exact_Adpcm_Reserve(const WaveInfo &info, size_t estimate_reserve)
+{
+	const bool microsoft = info.encoding == WaveEncoding::MicrosoftAdpcm;
+	const uint32_t header = (microsoft ? 7U : 4U) * static_cast<uint32_t>(info.channels);
+	const uint32_t remainder = info.block_align != 0U
+		? info.data_bytes % info.block_align : 0U;
+	uint64_t samples = estimate_reserve;
+	if (remainder != 0U && remainder <= header) {
+		samples += static_cast<uint64_t>(microsoft ? 2U : 1U) * info.channels;
+	}
+	if (info.encoding == WaveEncoding::ImaAdpcm && info.channels == 1U) {
+		samples = std::max<uint64_t>(samples, info.fact_sample_frames);
+	}
+	return static_cast<size_t>(std::min<uint64_t>(kMaximumDecodedSamples, samples));
+}
+
 #if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)
 bool Is_Mpeg_Image(const uint8_t *data, size_t bytes)
 {
@@ -684,8 +714,15 @@ try {
 			static_cast<uint64_t>(info.estimated_sample_frames) * info.channels;
 		const uint64_t physical_sample_bound =
 			static_cast<uint64_t>(info.data_bytes) * 2U;
-		const size_t reserve_samples = static_cast<size_t>(std::min<uint64_t>(
+		size_t reserve_samples = static_cast<size_t>(std::min<uint64_t>(
 			kMaximumDecodedSamples, std::min(estimated_samples, physical_sample_bound)));
+		if (g_exact_decode_reserve.load(std::memory_order_relaxed)) {
+			const size_t exact_samples = Exact_Adpcm_Reserve(info, reserve_samples);
+			if (exact_samples > reserve_samples) {
+				g_exact_decode_reserve_raises.fetch_add(1U, std::memory_order_relaxed);
+				reserve_samples = exact_samples;
+			}
+		}
 		output.samples.reserve(reserve_samples);
 	}
 	bool success = false;
@@ -728,6 +765,16 @@ try {
 	// Keep the caller's prior decoded image intact and use the provider's
 	// existing load-failure path instead of terminating the game on low RAM.
 	return Fail("WAVE decode allocation failed", error);
+}
+
+void Set_Exact_Decode_Reserve(bool enabled)
+{
+	g_exact_decode_reserve.store(enabled, std::memory_order_relaxed);
+}
+
+uint32_t Exact_Decode_Reserve_Raises()
+{
+	return g_exact_decode_reserve_raises.load(std::memory_order_relaxed);
 }
 
 bool Is_Mpeg_Media(const uint8_t *data, size_t bytes)

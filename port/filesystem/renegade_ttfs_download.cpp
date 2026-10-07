@@ -1,4 +1,6 @@
 #include "renegade_ttfs.h"
+// Defined in renegade_file_factory.cpp; Vita sceIoRename refuses an existing destination.
+bool Renegade_Replace_File(const char *source, const char *destination);
 
 #include <curl/curl.h>
 #include <zlib.h>
@@ -162,7 +164,7 @@ bool Download(const std::string &repository, uint32_t id,
     if (!output) { error = "manifest cache creation failed"; return finish(false); }
     bool ok = fwrite(bytes.data(), 1, bytes.size(), output) == bytes.size();
     if (fclose(output) != 0) ok = false;
-    if (!ok || rename(pending.c_str(), (destination + "/manifest.tpi").c_str()) != 0) {
+    if (!ok || !Renegade_Replace_File(pending.c_str(), (destination + "/manifest.tpi").c_str())) {
         error = "manifest cache commit failed"; return finish(false);
     }
     return finish(true);

@@ -1704,6 +1704,8 @@ DECLARE_SCRIPT(M05_Triangle_Tank, "")
 	{
 		
 		SAVE_VARIABLE( attacking, 1 );
+		// Vita save/load: fire_loc is only filled in Created().
+		SAVE_VARIABLE( fire_loc, 2 );
 	}
 
 	void Created (GameObject * obj)
@@ -6129,7 +6131,8 @@ DECLARE_SCRIPT(M05_Cathedral_Apache, "Apache_ID=0:int")  // 100287
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( apache_id, 1 );
-//		SAVE_VARIABLE( fire_loc, 2 );
+		// Vita save/load: fire_loc is only filled in Created().
+		SAVE_VARIABLE( fire_loc, 2 );
 		SAVE_VARIABLE( attacking, 3 );
 	}
 
@@ -7766,6 +7769,8 @@ DECLARE_SCRIPT(M05_Resistance_Poke_Conversation, "")
 	void Created (GameObject * obj)
 	{
 		random = Commands->Get_Random_Int(0, RESISTANCE_CONV_TABLE_SIZE);
+		// Vita: last was never initialized; -1 matches no table index.
+		last = -1;
 		conversation = false;
 	}
 
@@ -7819,6 +7824,14 @@ DECLARE_SCRIPT(M05_Resistance_Poke_Conversation, "")
 	
 	int Index(int Min, int Max)
 	{
+		// Vita: an unmatched preset (Civ_Resist_Male_v2b/v2c) gives Min == Max
+		// == 0. The loop below can never exit once last == 0, which hangs the
+		// game thread. A one-entry range has only one possible answer.
+		if(Min >= Max)
+		{
+			last = Min;
+			return last;
+		}
 		while(random == last || random < Min || random > Max)
 		{
 			random = Commands->Get_Random_Int(0, RESISTANCE_CONV_TABLE_SIZE);

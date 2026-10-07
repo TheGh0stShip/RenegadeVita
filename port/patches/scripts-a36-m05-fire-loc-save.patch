@@ -1,0 +1,29 @@
+M05_Triangle_Tank and M05_Cathedral_Apache fill their fire_loc target-id
+tables only in Created(). Neither table was registered for auto-save (the
+Apache line was commented out), so after a load the timers pick a target id
+from uninitialized memory and Find_Object() returns NULL or an unrelated
+object. Register both tables with unused id 2 (12 and 40 bytes, under the
+250-byte limit). New games are unchanged; a load restores the authored ids.
+Saves made before this patch carry no id 2 and behave as before.
+
+--- a/Mission05.cpp
++++ b/Mission05.cpp
+@@ -1704,6 +1704,8 @@
+ 	{
+ 		
+ 		SAVE_VARIABLE( attacking, 1 );
++		// Vita save/load: fire_loc is only filled in Created().
++		SAVE_VARIABLE( fire_loc, 2 );
+ 	}
+ 
+ 	void Created (GameObject * obj)
+@@ -6129,7 +6131,8 @@
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE( apache_id, 1 );
+-//		SAVE_VARIABLE( fire_loc, 2 );
++		// Vita save/load: fire_loc is only filled in Created().
++		SAVE_VARIABLE( fire_loc, 2 );
+ 		SAVE_VARIABLE( attacking, 3 );
+ 	}
+ 

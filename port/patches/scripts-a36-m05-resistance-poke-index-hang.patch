@@ -1,0 +1,37 @@
+M05_Resistance_Poke_Conversation::Index() picks a random conversation from
+[Min, Max] that differs from the last one. Poked() only sets a range for the
+Civ_Resist_Female_v0*, Male_v0* and Male_v1* presets. The M05_Civ_Resist
+spawners in M05.mix can also spawn Civ_Resist_Male_v2b and Civ_Resist_Male_v2c,
+so those civilians call Index(0, 0). The loop then exits only when
+random == 0 and last != 0. `last` was never initialized (script objects are
+created with `new T`), so on zero-filled heap memory the first poke spins
+forever on the game thread. Initialize last to -1 and return Min directly for a
+one-entry range. Every range that terminated before still returns the same
+index; the only change is that the hang becomes a single conversation.
+
+--- a/Mission05.cpp
++++ b/Mission05.cpp
+@@ -7766,6 +7766,8 @@
+ 	void Created (GameObject * obj)
+ 	{
+ 		random = Commands->Get_Random_Int(0, RESISTANCE_CONV_TABLE_SIZE);
++		// Vita: last was never initialized; -1 matches no table index.
++		last = -1;
+ 		conversation = false;
+ 	}
+ 
+@@ -7819,6 +7821,14 @@
+ 	
+ 	int Index(int Min, int Max)
+ 	{
++		// Vita: an unmatched preset (Civ_Resist_Male_v2b/v2c) gives Min == Max
++		// == 0. The loop below can never exit once last == 0, which hangs the
++		// game thread. A one-entry range has only one possible answer.
++		if(Min >= Max)
++		{
++			last = Min;
++			return last;
++		}
+ 		while(random == last || random < Min || random > Max)
+ 		{
+ 			random = Commands->Get_Random_Int(0, RESISTANCE_CONV_TABLE_SIZE);

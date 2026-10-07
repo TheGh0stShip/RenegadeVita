@@ -688,6 +688,8 @@ if [[ "$rv_hud_target_sha" != "01cfa037602fc74edb7812af8fa1776ba567fbc17dee1d496
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-hud-target-box-nan-guard.patch"
 echo "Applied: port/patches/combat-a35-hud-target-box-nan-guard.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a35-hud-readout-x87-rounding.patch"
+echo "Applied: port/patches/combat-a35-hud-readout-x87-rounding.patch"
 rv_scriptable_post_sha=$(sha256sum "$rv_stage/combat/scriptablegameobj.cpp" | cut -d' ' -f1)
 if [[ "$rv_scriptable_post_sha" != "995ab56c511d88b940ff8f55630f8b7bc02ee393b3e9ee75f9de33460635016d" ]]; then
 	echo "Refusing unanchored script timer timing patch: scriptablegameobj.cpp changed ($rv_scriptable_post_sha)" >&2

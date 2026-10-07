@@ -46,6 +46,7 @@ extern "C" unsigned int _newlib_heap_size_user __attribute__((weak)); // defined
 #if defined(RENEGADE_HOST_RENDERER_LIFECYCLE_SELFTEST) && defined(__GNUC__)
 void RenegadeVita_Release_DX8_Bound_Textures() __attribute__((weak));
 void RenegadeVita_Release_DX8_Render_Target() __attribute__((weak));
+void RenegadeVita_Release_DX8_Scratch() __attribute__((weak));
 #else
 void RenegadeVita_Release_DX8_Render_Target();
 #endif
@@ -3082,9 +3083,13 @@ void Shutdown()
 	if (RenegadeVita_Release_DX8_Bound_Textures != NULL) {
 		RenegadeVita_Release_DX8_Bound_Textures();
 	}
+	if (RenegadeVita_Release_DX8_Scratch != NULL) {
+		RenegadeVita_Release_DX8_Scratch();
+	}
 #else
 	RenegadeVita_Release_DX8_Render_Target();
 	RenegadeVita_Release_DX8_Bound_Textures();
+	RenegadeVita_Release_DX8_Scratch();
 #endif
 	g_statistics.initialized = false;
 	g_lifecycle.logical_session_active = false;

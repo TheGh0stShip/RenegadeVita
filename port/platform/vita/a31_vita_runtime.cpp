@@ -7083,6 +7083,26 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	}
 	if (wwphys_initialized) WWPhys::Shutdown();
 	Log_File_Factory_Statistics();
+	{
+		// Session-boundary residual: every session owner above has been torn
+		// down, so heap in_use and vitaGL free memory here should be flat
+		// across campaign handoffs (M13 -> M01 ... M11). Growth between
+		// consecutive lines is retained state. [LIFECYCLE] survives the log cap.
+		static unsigned session_index = 0U;
+		++session_index;
+		const struct mallinfo heap = mallinfo();
+		RenegadeVitaRenderer::BackendMemoryStatistics backend = {};
+		const bool backend_ok = RenegadeVitaRenderer::Query_Backend_Memory(backend);
+		A30_Vita_Log("[LIFECYCLE] SESSION residual index=%u frames=%u heap arena/in_use/free/free_chunks=%u/%u/%u/%u vitagl=%d ram/vram/all_free=%llu/%llu/%llu user_free=%lld\n",
+			session_index, result.frames,
+			static_cast<unsigned>(heap.arena), static_cast<unsigned>(heap.uordblks),
+			static_cast<unsigned>(heap.fordblks), static_cast<unsigned>(heap.ordblks),
+			backend_ok ? 1 : 0,
+			static_cast<unsigned long long>(backend.ram_free),
+			static_cast<unsigned long long>(backend.vram_free),
+			static_cast<unsigned long long>(backend.all_free),
+			static_cast<long long>(backend.system_user_free));
+	}
 	_TheFileFactory = previous_read_factory;
 	_TheWritingFileFactory = previous_write_factory;
 	result.teardown_completed = !result.render_error && audio_teardown_completed &&

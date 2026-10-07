@@ -1715,6 +1715,12 @@ test "$(sha256sum "$rv_stage/combat/action.cpp" | cut -d' ' -f1)" = \
 	"f90761922d80e0795ed3d99f9ce7545561f144d3dbfc52c735c1d1eb4f46edbb"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-face-action-stale-end-time-clamp.patch"
+# TUT-R1-03 script-cost attribution: RVSC1-gated profile scopes around the
+# script-driven once-per-frame calls in CombatManager::Think that had none
+# (ObjectiveManager::Update, ConversationMgrClass::Think, SpawnManager::Update).
+# Diagnostics only; off unless script-cost-v1.flag = "RVSC1 1".
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-tut1-script-cost-scopes.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

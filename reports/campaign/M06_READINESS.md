@@ -85,7 +85,8 @@ object 100018 together with `M06_Destruction_Stub` and
 ## Blockers
 
 - Found: none blocking in source or data.
-- Fixed: none.
+- Fixed (2026-10-07): `combat-a36-boss-waypath-release-guard.patch` guards the
+  waypath 3000100 lookup (risk 2). Host ARM syntax-check only.
 
 ## Risks (non-blocking, unverified)
 
@@ -94,11 +95,15 @@ object 100018 together with `M06_Destruction_Stub` and
    end of the sequence. `TimeManager::Reset` is called only from the network
    timer path (`combatgmode.cpp:1427`). Quitting or loading during the roughly
    15-second death sequence could leave the next level in slow motion.
-   Candidate fix, not applied: restore the scale when the boss is destroyed or
-   when a level loads.
-2. **Waypath dereference.** `Find_Waypath(3000100)` is guarded only by
-   `WWASSERT`. If the waypath is missing at runtime, it crashes with a null
-   dereference in release builds. The data is present, so this is low risk.
+   Mitigated on Vita: `A31_Vita_Run_Interactive_Runtime` sets the time scale to
+   1.0 at every session start, so the next level cannot inherit slow motion.
+   Within the same session the original behaviour is unchanged.
+2. **Waypath dereference (fixed).** `Find_Waypath(3000100)` was guarded only by
+   `WWASSERT`. `combat-a36-boss-waypath-release-guard.patch` now skips the
+   camera path when the waypath is missing or has fewer than two keys, goes
+   straight to LOOK_AT_DEAD_BOSS (which still calls `Mission_Complete(true)`),
+   and logs `A3.5 Mendoza death camera: waypath 3000100 unusable`. The data is
+   present, so the fallback should never fire.
 3. **Missing flyover texts.** Retail lacks `M06_XG_VehicleDrop0/1/2.txt`. When
    the flyover controller picks one of them (`:4941-4980`), Test_Cinematic
    destroys its empty controller and the ambient flyover chain stops. Retail PC

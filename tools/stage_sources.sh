@@ -1534,6 +1534,16 @@ test "$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)" = \
 	"196adffdf51980d92b3029d5ecd8f3d1a68f45214af3dd42df9ad72aaa96dfc8"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m01-intro-command-breadcrumbs.patch"
+# ScriptCommands NULL/model/animation guards: mission scripts pass unchecked
+# Find_Object / Get_A_Star / Create_Object results into commands that would
+# data-abort on ARM.  Anchored to the final scriptcommands.cpp produced by all
+# earlier patches so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/combat/scriptcommands.cpp" | cut -d' ' -f1)" = \
+	"1466877658628e8020c65c4bb222fee7d399c68c57ec82f40fccedb3a7e8a69f"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-scriptcommands-null-guards.patch"
+test "$(sha256sum "$rv_stage/combat/scriptcommands.cpp" | cut -d' ' -f1)" = \
+	"c6c127c54ac6689703f62612206935da98bd870866148587e2e818a032f61985"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

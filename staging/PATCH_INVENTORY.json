@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "05e7b973317a60f0a044fb69421422453e74afba416708119ef680923d51cbb2",
-  "patch_count": 525,
+  "stage_script_sha256": "fbc6b2e6e0e8a7924bb4489acb9836370e563f4f4a859474135793136725084c",
+  "patch_count": 526,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -2628,7 +2628,12 @@
       "path": "port/patches/scripts-a36-m01-intro-command-breadcrumbs.patch",
       "stage_directory": "scripts",
       "sha256": "30f0ad3ed7b87ca32095d32d6f800ae73043544a75cd96a5d2d0272cba7c3f73"
+    },
+    {
+      "path": "port/patches/combat-a36-scriptcommands-null-guards.patch",
+      "stage_directory": "combat",
+      "sha256": "d41a91caa9052ce951998d269fbc92bbfe1b0b3ac9e9a7ce449bed502118cef5"
     }
   ],
-  "registry_sha256": "91c1f08d66dd3d5bfa8e9ab32f85e83c7403cb68f34d71a56bb966619e76ec60"
+  "registry_sha256": "bda5c16200beddda006c546cc9f03e2179a97b95d20feec9dc09ed405e9ccbec"
 }

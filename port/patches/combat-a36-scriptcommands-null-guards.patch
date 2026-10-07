@@ -1,0 +1,215 @@
+--- a/scriptcommands.cpp
++++ b/scriptcommands.cpp
+@@ -103,6 +103,16 @@
+ #define	SCRIPT_PTR_CHECK( x )				if ( x == NULL ) { Debug_Say(( "NULL Script Ptr at %s line %d\n", __FILE__, __LINE__ )); return;	}
+ #define	SCRIPT_PTR_CHECK_RET( x, ret )	if ( x == NULL ) { Debug_Say(( "NULL Script Ptr at %s line %d\n", __FILE__, __LINE__ )); return ret;	}
+ 
++//
++//	Vita guard policy: mission scripts pass Find_Object / Get_A_Star /
++// Create_Object results (and model, bone and animation lookups that can
++// legitimately miss) straight into these commands.  On ARM a NULL deref is
++// a data abort, so every command below that dereferences such a pointer uses
++// the file's own SCRIPT_PTR_CHECK convention: the command becomes a no-op
++// returning its existing failure value (WWDEBUG-only Debug_Say, no release
++// logging).  Valid-pointer behaviour is unchanged.
++//
++
+ char	DamageModelName[ 30 ];	// HACK
+ bool	DamageModelDirection;		// HACK
+ 
+@@ -322,6 +332,7 @@
+ Vector3 Get_Bone_Position( GameObject * obj, const char * bone_name )
+ {
+ 	SCRIPT_PTR_CHECK_RET( obj, Vector3(0,0,0) );
++	SCRIPT_PTR_CHECK_RET( bone_name, Vector3(0,0,0) );
+ 
+ 	PhysicalGameObj * pgobj = obj->As_PhysicalGameObj();
+ 	if ( pgobj == NULL ) {
+@@ -485,7 +496,9 @@
+ 
+ 	if (object != NULL) {
+ 		WWASSERT( object->As_PhysicalGameObj() );
+-		object->As_PhysicalGameObj()->Set_Transform(tm);
++		if ( object->As_PhysicalGameObj() != NULL ) {
++			object->As_PhysicalGameObj()->Set_Transform(tm);
++		}
+ 		object->Start_Observers();
+ 	}
+ 
+@@ -541,6 +554,7 @@
+ 	return obj;
+ #else
+ 
++	SCRIPT_PTR_CHECK_RET( pgobj->Peek_Model(), NULL );
+ 	Matrix3D tm = pgobj->Peek_Model()->Get_Bone_Transform(bone_name);
+ 	return Create_Object(new_obj_type_name, tm);
+ #endif
+@@ -708,6 +722,7 @@
+ */
+ GameObject *Find_Random_Simple_Object ( const char *preset_name )
+ {
++	SCRIPT_PTR_CHECK_RET( preset_name, NULL );
+ 	SCRIPT_TRACE((	"ST>Find_Random_Simple_Object( %s )\n", preset_name ));
+ 
+ 	GameObject *retval = NULL;
+@@ -811,6 +826,7 @@
+ 	if ( ( sub_obj_name != NULL ) && ( *sub_obj_name != 0 ) ) {
+ 
+ 		RenderObjClass * model = pgobj->Peek_Model();
++		SCRIPT_PTR_CHECK( model );
+ 		RenderObjClass * sub = model->Get_Sub_Object_By_Name( sub_obj_name );
+ 
+ 		if ( sub != NULL ) {
+@@ -922,6 +938,7 @@
+ */
+ int Create_Sound(const char* sound_name, const Vector3& position, GameObject* creator)
+ {
++	SCRIPT_PTR_CHECK_RET( sound_name, 0 );
+ 	SCRIPT_TRACE(("ST>Create_Sound( %s, (%f,%f,%f) )\n", sound_name, position[0], position[1], position[2]));
+ 
+ 	Matrix3D matrix(true);
+@@ -940,6 +957,7 @@
+ 
+ int Create_2D_Sound( const char * sound_preset_name )
+ {
++	SCRIPT_PTR_CHECK_RET( sound_preset_name, 0 );
+ 	WWAudioClass* audio = WWAudioClass::Get_Instance();
+ 	assert(audio != NULL);
+ 
+@@ -979,6 +997,9 @@
+ 
+ int Create_3D_Sound_At_Bone( const char * sound_preset_name, GameObject * obj, const char * bone_name )
+ {
++	SCRIPT_PTR_CHECK_RET( sound_preset_name, 0 );
++	SCRIPT_PTR_CHECK_RET( obj, 0 );
++	SCRIPT_PTR_CHECK_RET( bone_name, 0 );
+ 	WWAudioClass* audio = WWAudioClass::Get_Instance();
+ 	assert(audio != NULL);
+ 
+@@ -987,6 +1008,7 @@
+ 		Debug_Say(( "Not a PhysicalGameObj at %s %d\n", __FILE__, __LINE__ ));
+ 		return 0;
+ 	}
++	SCRIPT_PTR_CHECK_RET( pgobj->Peek_Model(), 0 );
+ 
+ 	//
+ 	//	Create the sound object from its preset
+@@ -1016,6 +1038,9 @@
+ 
+ int Create_3D_WAV_Sound_At_Bone( const char * wav_filename, GameObject * obj, const char * bone_name )
+ {
++	SCRIPT_PTR_CHECK_RET( wav_filename, 0 );
++	SCRIPT_PTR_CHECK_RET( obj, 0 );
++	SCRIPT_PTR_CHECK_RET( bone_name, 0 );
+ 	WWAudioClass* audio = WWAudioClass::Get_Instance();
+ 	assert(audio != NULL);
+ 
+@@ -1024,6 +1049,7 @@
+ 		Debug_Say(( "Not a PhysicalGameObj at %s %d\n", __FILE__, __LINE__ ));
+ 		return 0;
+ 	}
++	SCRIPT_PTR_CHECK_RET( pgobj->Peek_Model(), 0 );
+ 
+ 	int sound_id = 0;
+ 	Sound3DClass *	sound = audio->Create_3D_Sound( wav_filename );
+@@ -1316,6 +1342,7 @@
+ 		return;
+ 	}
+ 
++	SCRIPT_PTR_CHECK( name );
+ 	dgobj->Get_Defense_Object()->Set_Shield_Type( ArmorWarheadManager::Get_Armor_Type( name ) );
+ }
+ 
+@@ -1947,6 +1974,7 @@
+ 			Debug_Say(( "Not a PhysicalGameObj at %s %d\n", __FILE__, __LINE__ ));
+ 			return;
+ 		}
++		SCRIPT_PTR_CHECK( pgobj->Peek_Model() );
+ 
+ 		Matrix3D tm = pgobj->Peek_Model()->Get_Bone_Transform( bone_name );
+ 
+@@ -2276,7 +2304,11 @@
+ 				sapc->Get_Animation_Manager().Set_Animation( anim_name );
+ 			}
+ 			sapc->Get_Animation_Manager().Set_Animation_Mode( AnimCollisionManagerClass::ANIMATE_TARGET );
+-			sapc->Get_Animation_Manager().Set_Target_Frame( sapc->Get_Animation_Manager().Peek_Animation()->Get_Num_Frames() - 1 );
++			// A missing animation leaves Peek_Animation() NULL; keep the
++			// engine's own Set_Target_Frame_End() semantics (no target change).
++			if ( sapc->Get_Animation_Manager().Peek_Animation() != NULL ) {
++				sapc->Get_Animation_Manager().Set_Target_Frame( sapc->Get_Animation_Manager().Peek_Animation()->Get_Num_Frames() - 1 );
++			}
+ 		}
+ 	}
+ }
+@@ -2414,6 +2446,7 @@
+ 
+ bool	Has_Key( GameObject* object, int key )
+ {
++	SCRIPT_PTR_CHECK_RET( object, false );
+ 	SoldierGameObj * soldier = NULL;
+ 	if ( object->As_SmartGameObj() != NULL ) {
+ 		soldier = object->As_SmartGameObj()->As_SoldierGameObj();
+@@ -2446,6 +2479,12 @@
+ 			object->As_PhysicalGameObj()->Attach_To_Object_Bone( NULL, NULL );
+ 		} else {
+ 			WWASSERT( host_object->As_PhysicalGameObj() ) ;
++			// A non-physical host still detaches (NULL host), as in release
++			// builds; a physical host needs a model and a bone name to resolve.
++			if ( host_object->As_PhysicalGameObj() != NULL ) {
++				SCRIPT_PTR_CHECK( host_object->As_PhysicalGameObj()->Peek_Model() );
++				SCRIPT_PTR_CHECK( bone_name );
++			}
+ 			object->As_PhysicalGameObj()->Attach_To_Object_Bone( host_object->As_PhysicalGameObj(), bone_name );
+ 		}
+ 	} else {
+@@ -2461,7 +2500,8 @@
+ 	//
+ 	//	Try to find the requested conversation
+ 	//
+-	ConversationClass *conversation = ConversationMgrClass::Find_Conversation( conversation_name );
++	ConversationClass *conversation = ( conversation_name != NULL ) ?
++		ConversationMgrClass::Find_Conversation( conversation_name ) : NULL;
+ #if defined(RENEGADE_VITA_PORT) || defined(RENEGADE_HOST_ABI_TEST)
+ 	A35_Script_Lookup_Record(A35_LOOKUP_CONVERSATION, conversation_name,
+ 		0, conversation != NULL);
+@@ -2748,6 +2788,8 @@
+ 	SCRIPT_PTR_CHECK( object );
+ 	SCRIPT_TRACE((	"ST>Apply_Damage( %d, %f, %s )\n", object->Get_ID(), amount, warhead_name ));
+ 
++	SCRIPT_PTR_CHECK( warhead_name );
++
+ 	DamageableGameObj * damgo = object->As_DamageableGameObj();
+ 	if ( damgo ) {
+ 		int warhead = ArmorWarheadManager::Get_Warhead_Type( warhead_name );
+@@ -2809,6 +2851,7 @@
+ 
+ 	PhysicalGameObj * physgo = object->As_PhysicalGameObj();
+ 	if ( physgo ) {
++		SCRIPT_PTR_CHECK( physgo->Peek_Model() );
+ 		physgo->Peek_Model()->Set_Hidden( !rendered );
+ 		physgo->Set_Object_Dirty_Bit (NetworkObjectClass::BIT_RARE, true);
+ 	} else {
+@@ -3096,7 +3139,7 @@
+ 
+ int	Text_File_Open( const char * filename )
+ {
+-	FileClass * file = _TheFileFactory->Get_File( filename );
++	FileClass * file = ( filename != NULL ) ? _TheFileFactory->Get_File( filename ) : NULL;
+ 	if ( file ) {
+ 		file->Open();
+ 		if ( !file->Is_Available() ) {
+@@ -3117,11 +3160,14 @@
+ 
+ bool	Text_File_Get_String( int handle, char * buffer, int size )
+ {
++	if (buffer == NULL) return false;
+ #if defined(RENEGADE_HOST_ABI_TEST)
+ 	FileClass * file = static_cast<FileClass *>(Renegade_Ui_Pointer_From_Token(handle));
+ 	if (file == NULL) return false;
+ #else
+ 	FileClass * file = (FileClass *)handle;
++	// A failed Text_File_Open returns 0; reading it would deref NULL.
++	if (file == NULL) return false;
+ #endif
+ 	char ch[4];
+ 	char *b = buffer;

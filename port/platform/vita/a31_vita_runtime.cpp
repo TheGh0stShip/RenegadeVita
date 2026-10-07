@@ -3958,6 +3958,14 @@ void A31_Vita_Render_Original_Loading_Callback(const char *phase,
 	rendering = false;
 }
 
+// One line per atomic write-only session (quicksave/manual/autosave/config).
+static void Report_Atomic_Write(const char *target_path, int bytes,
+	unsigned long long elapsed_us, bool success)
+{
+	A30_Vita_Log("A3.5 save write: path=%s bytes=%d elapsed_us=%llu success=%d\n",
+		target_path != NULL ? target_path : "(null)", bytes, elapsed_us, success ? 1 : 0);
+}
+
 A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 	int startup_screen_result, bool start_at_main_menu, bool start_at_lan_menu,
 	const char *reload_source,

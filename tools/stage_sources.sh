@@ -1097,6 +1097,10 @@ test "$(sha256sum "$rv_stage/scripts/Test_DLS.cpp" | cut -d' ' -f1)" = \
 	"357ac12b67ff3060f20cd0854e2fb60e9926e9fcf86b5f07530d68978263caab"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a37-mx0-area4-controller-id-init.patch"
+test "$(sha256sum "$rv_stage/scripts/Test_RAD.cpp" | cut -d' ' -f1)" = \
+	"5699f1fc5df5441cc33b9ccc50b09d9017068bff776b2a99e98912bf4c87753a"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m13-firehole-engineer-register.patch"
 test "$(sha256sum "$rv_stage/ww3d2/dazzle.cpp" | cut -d' ' -f1)" = \
 	"2bbcba91d75327b7fa35b4c1f50718ab05d3b252a687a78d0b3c62a90dfefd58"
 test "$(sha256sum "$rv_stage/ww3d2/ww3d.cpp" | cut -d' ' -f1)" = \

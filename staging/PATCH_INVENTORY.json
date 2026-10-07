@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "23930b2db14ae031b16191b55d5af35617d4ea4a58589aa67762bc12bbcd6ff3",
-  "patch_count": 545,
+  "stage_script_sha256": "b2a9be0af74fe890092ae48e88ada221a4426b88b4349d84f3c0cf93dade3f3f",
+  "patch_count": 544,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1620,6 +1620,11 @@
       "sha256": "a89fcda5e3204e49d1d91bd3a2452b226f2292096924460e36a611146c589b72"
     },
     {
+      "path": "port/patches/scripts-a38-m13-firehole-engineer-register.patch",
+      "stage_directory": "scripts",
+      "sha256": "6ad22e6af28c87772b69f4e6029be116cc9406f6a18fbf3c4ea4987e23d4e192"
+    },
+    {
       "path": "port/patches/ww3d-a35-original-dazzle-lifecycle.patch",
       "stage_directory": "ww3d2",
       "sha256": "d3732d603f9118a9e0994b8d295b20baa628ba7fd502b728306bd0256e8826f1"
@@ -2718,17 +2723,7 @@
       "path": "port/patches/combat-a37-screen-overlay-opacity-clamp.patch",
       "stage_directory": "combat",
       "sha256": "1fd9784eff93c659fa39a08322828cb55ab49dca36582e540f51be432e85a82a"
-    },
-    {
-      "path": "port/patches/combat-a37-hud-objective-index-bounds.patch",
-      "stage_directory": "combat",
-      "sha256": "ae406f0dd7173d744a1d84105b2b6518b88c1446a0ebf9260b23ecaf8363805f"
-    },
-    {
-      "path": "port/patches/combat-a37-encyclopedia-save-bit-cache-flush.patch",
-      "stage_directory": "combat",
-      "sha256": "5a443ebf6a3eb814d1e19af9afe44985ea9958b82bf3e026425cb86ce04a9d2f"
     }
   ],
-  "registry_sha256": "25e690af7e52c97679aa512223e07301b525ca21483b881c38e5773f47dfd595"
+  "registry_sha256": "b351588e9abdd92b0e63e23e21227839822859fd5343ad900a5da8547e4837c8"
 }

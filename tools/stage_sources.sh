@@ -1552,6 +1552,11 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a36-primitive-animation-admission.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-a36-dds-short-file.patch"
+# particle-cost-v1 (RVPE1): exact decimation-aware particle visual state, the
+# clone lowest-LOD visual-state switch and bounded telemetry. Applies to the
+# final part_buf.cpp (after ww3d2-a35-particle-size-keyframe-guard).
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/ww3d2" -p1 < "$rv_root/port/patches/ww3d2-tut1-particle-cost.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a36-lan-browser-factory.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \

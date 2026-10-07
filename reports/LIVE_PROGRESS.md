@@ -1,5 +1,32 @@
 # Live engineering progress
 
+# Campaign development push 3 (full mission audits) — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Completed (static source/retail-data evidence, ARM -fsyntax-only and host tests only; nothing linked,
+emulated or run on hardware). Full audits of M13 and M01–M11 (bindings, events, ids, assets, crash code,
+objective chain, port patches) are in each reports/campaign/Mxx_READINESS.md "Full audit" section.
+- Link: LAN team-select helpers were compiled out but still referenced (would fail the next ARM link); fixed.
+  vitaGL must be rebuilt for vglRenegadeInvalidateVertexAttributes (normal build.sh does this).
+- Crash/hang fixes: ScriptCommands NULL guards (Has_Key, 3D sound at bone, missing models/anims, text files);
+  10-digit dynamic-id buffer overflows in M03 paradrop, M07 inn evac, M09 evac gunner; M05/M07 resistance
+  poke infinite loop; M10 stealth attack loc=100 read; M07 vehicle drop index; M02 respawn area 99 write;
+  Raveshaw strike modulo-by-zero and fodder create; weaponless vehicle with control disabled.
+- State: script factory value-initialises every DECLARE_SCRIPT (new T()), plus explicit id init in M01
+  controller, M11 Sydney/controller, M13 area-4 controller; M01 position tables rebuilt after load; M05
+  fire_loc saved.
+- Session chain: movie and DX8 scratch buffers released between missions; per-session [LIFECYCLE]
+  SESSION residual memory line.
+- Assets: M08.mix fallback for lv8_hbag.tga in M01/M04. Tools: campaign asset closure, script binding
+  closure, text/conversation closure. Fix-ledger: registry clean; dialog template style flags fixed
+  (seven MP/credits dialogs change — needs a Vita3K look); 15 stale host test files repaired.
+- Open decisions: M10 objective conversations can be dropped if a key conversation is playing
+  (retail behaviour; fix needs an owner choice). Elevator entry timeout deferred.
+Staging: 543 patches, inventory PASS.
+
+Next: full ARM build (vitaGL rebuild), Vita3K install, M01 intro breadcrumbs and campaign routes.
+
 # Campaign asset closure audit — 2026-10-07
 
 Renegade Vita — v3.5 active
@@ -17,8 +44,8 @@ Completed (host Python over the unchanged retail archives; nothing built, linked
   degrades without a crash on the Vita code path. Static sounds, music, conversation text/voice, always.dep
   records, mission members, hierarchy names and all 12 movies resolve; no unresolved name has a case or
   mangling look-alike. The preload is not needed for resolution (0 preload-dependent prototypes).
-- Not applied: a lowest-priority M08.mix supplement for M01/M04 (needs the factory-swap change in
-  a31_vita_runtime.cpp and a compile); recorded in KNOWN_GAPS.md.
+- Follow-up applied: a31_vita_runtime.cpp mounts M08.mix as the lowest-priority fallback for M01/M04
+  (ARM syntax-checked only).
 
 # Campaign script binding closure — 2026-10-07
 

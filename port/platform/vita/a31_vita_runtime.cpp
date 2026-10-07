@@ -7074,6 +7074,18 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 			result.campaign_handoff_failure,
 			result.campaign_handoff_cleanup_completed ? 1 : 0);
 	}
+#if !RENEGADE_VITA_M00_DEMO
+	// A campaign Level directive's autosave request belongs to the session
+	// that loads that level. It may cross only the intermission-to-level
+	// handoff. A session that ends any other way without consuming it (pause
+	// or power-resume menu opened before the first simulation Think, then
+	// Load or Quit) must not write autosave.sav from a later, unrelated world.
+	if (CombatManager::Is_Autosave_Requested() && !result.campaign_handoff_completed) {
+		CombatManager::Request_Autosave(false);
+		A30_Vita_Log("A4 campaign: cleared unconsumed autosave request at session end frames=%u\n",
+			result.frames);
+	}
+#endif
 	A30_Vita_Log("A3.1 interactive: complete ready=%d transport=%d level=%d player=%d commando=%d frames=%u exit=%d render_error=%d teardown=%d pause/resume=%d/%d paused_input_frames=%u start_exit=%d mission_complete/success/star=%d/%d/%d perf_fps=%.3f p50/p95/worst_us=%u/%u/%u\n",
 		result.initialized ? 1 : 0, result.transport_established ? 1 : 0,
 		result.level_loaded ? 1 : 0, result.player_created ? 1 : 0,

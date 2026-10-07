@@ -41,7 +41,7 @@ case-insensitively, for example `Data\Movies\R_L01.bik` resolves to
 | Restored session: Init, catalog check, Load, `Current_Level_Matches_Archive` | a31_vita_runtime.cpp:4573-4627 | OK (source). Generic `Mxx.mix` resolver (a4_frontend_lifecycle_boundary.cpp:306) |
 | Restored session latches the next source without startup movies | a31_vita_runtime.cpp:3837-3839 | OK (source) |
 | Encyclopedia discoveries carried across sessions | a31_vita_runtime.cpp:4630-4636 | OK (source) |
-| Autosave request survives teardown and runs in the next Combat think | combatgmode.cpp:1659; only cleared on failure (a31_vita_runtime.cpp:2880, 4016) | OK (source). Not runtime-verified for M01-M11 |
+| Autosave request survives only the campaign handoff and runs at the first Combat think | combatgmode.cpp:1659; cleared on failure and at any non-handoff session end (a31_vita_runtime.cpp:2892, 4362, 7041) | OK (source). See AUTOSAVE_CHAIN.md. Not runtime-verified for M01-M11 |
 | Per-map script spawn presets exist for M13 and M01-M11 | a31_vita_runtime.cpp:3510-3534 | OK |
 | After M11: Score → `Movie R_Finale` → Movie_Done → Continue | campaign.cpp:358 (State 35 >= Count-1) | OK (source) |
 | End of campaign: State reset, End_Game (no-op), `Display_End_Game_Menu` → LOC_MAIN_MENU | campaign.cpp:358-365; gameinitmgr.cpp:499-509 | OK (source). The main menu is pumped by the intermission loop (owner count > 0) |

@@ -1,53 +1,64 @@
 # Known gaps
 
-- Staging-patch guard policy is undocumented: of 231 patches touched in the
-  last 30 commits, 164 change original load/save/lifecycle behaviour without a
-  `RENEGADE_VITA_PORT`/`__vita__` guard (mostly a36 load admission and save
-  status propagation, shared with host tests). Review first: commando-a4 WOL /
-  online boundary patches, campaign source-binding/backdrop patches,
-  scripts-a35-host-m03-pointer-exchange, ww3d2-a315-dds-vita and
-  commando-a35-suspend-viewer-lifecycle. Decide and record a policy.
+## 2026-10-05/06 consolidated (all source-only unless stated)
 
-- Retail M11 spawners 100581, 100582 and 100586 name scripts
+Evidence class: nothing below has a physical Vita result yet. Host tests and
+reviews are noted where they exist.
+
+- **Application memory budget (open).** newlib heap raised from the 128 MiB
+  default to 192 MiB with `ATTRIBUTE2=12` (extended user memory). Follow-ups
+  add a weak heap-size reference, newlib mallinfo logging after
+  `vglInitExtended` (8f5d092, e83fe91), one-shot vitaGL pool free-byte logs
+  (01f5ac7), a 24 MiB vitaGL floor for cinematic preset warming (96dffb1) and
+  M00 texture prewarm (f35bcdf); see the vitaGL pool gating analysis
+  (e6217f1). Whether Vita and PSTV grant the extended budget, the resulting
+  pool size and M13 heap high-water remain unverified until a candidate runs.
+- **Atomic save writer (open, physical).** Saves are staged to
+  `<slot>.pending` and moved over the slot with a `.previous` fallback
+  (Vita `sceIoRename` cannot replace); a crash between renames leaves
+  `<slot>.previous`, restored on next slot access. A host test covers a stale
+  `.pending` left by a crash (0214d5d); each write now logs
+  duration/size/result/path (65da314, 652a872); rank, movie-unlock and TTFS
+  manifest stores use the same replace helper (ca83444, 48a2a7f). Physical
+  repeat quicksave/reload remains unverified.
+- **Staging-patch guard policy (mostly resolved by review).** 164 of 231
+  recently touched patches change load/save/lifecycle behavior without a
+  `RENEGADE_VITA_PORT`/`__vita__` guard. `UNGUARDED_PATCH_REVIEW.md`
+  (92be9b9), `WOL_BOUNDARY_PATCH_REVIEW.md` (ae1347f) and
+  `PORT_GUARD_SWEEP.md` reviewed every originally named patch: none needs a
+  guard. `RENEGADE_VITA_PORT` is also set by host test trees, so it means
+  "port build", not "Vita only"; use `RENEGADE_HOST_ABI_TEST` or a new define
+  to tell them apart. Still open: a written policy statement, and checking
+  retail `campaign.ini` for duplicate backdrop entries, because
+  `commando-a36-campaign-backdrop-selection` changes last-match to
+  first-match.
+- **Retail M11 fodder-guy scripts absent (known, graceful; recorded cf7904c).**
+  Spawners 100581, 100582 and 100586 name
   `M11_ObeliskWall_FodderGuy01_JDG`, `M11_ObeliskWall_FodderGuy02_JDG` and
-  `M11_TempleRoof_FodderGuy02_JDG`, which are absent from the released Scripts
-  source (`reports/generated/sweeps/live_script_bindings.json`). The miss is
-  graceful: `ScriptRegistrar::CreateScript` returns NULL, the static provider
-  records a lookup-telemetry miss, `ScriptManager::Create_Script`
-  (`staging/combat/scripts.cpp`) logs "native provider missing script" and
-  returns NULL, and `SpawnerClass` (`staging/combat/spawn.cpp`) only attaches
-  non-NULL scripts. Save/load also skips unknown names. The spawned soldiers
-  exist without that per-unit script behavior (likely scripted movement/death
-  hooks), which the retail PC build would also lack unless its Scripts.dll had
-  them. Not physically checked in M11.
+  `M11_TempleRoof_FodderGuy02_JDG`, which are not in the released Scripts
+  source (`reports/generated/sweeps/live_script_bindings.json`).
+  `ScriptRegistrar::CreateScript` returns NULL, the provider records a lookup
+  miss, `ScriptManager::Create_Script` (`staging/combat/scripts.cpp`) logs
+  "native provider missing script", `SpawnerClass`
+  (`staging/combat/spawn.cpp`) attaches only non-NULL scripts, and save/load
+  skips unknown names. The soldiers spawn without per-unit scripted behavior;
+  retail PC would also lack it unless its Scripts.dll had them. Not physically
+  checked in M11.
+- **Original Technical Options (open).** Reachable through
+  `OptionsMenuClass::On_Command`, independent of its null dialog-factory slot
+  (do not populate that slot unless the direct owner is removed). Technical
+  options and the Audio, Video and Performance tabs are linked and require
+  their complete directly addressed control sets at resource generation.
+  Opening, applying, audio/performance persistence, fixed Vita video
+  presentation, layout and repeated entry remain executable and physical
+  gates.
 
-- Save writes are now staged, written to `<slot>.pending` and moved over the
-  slot (with a `.previous` fallback because Vita `sceIoRename` cannot
-  replace). A crash between the two renames leaves only `<slot>.previous`;
-  the next access to that slot moves it back. Physical repeat-quicksave and
-  reload remain unverified.
-
-- Application memory budget: the newlib heap was newlib's fixed 128 MiB
-  default and extended user memory was never requested. Source now sets a
-  192 MiB heap and `ATTRIBUTE2=12`. Whether the Vita and PSTV grant the
-  extended budget, the resulting vitaGL pool size and M13 heap high-water are
-  unverified until a candidate runs.
-
-- The original Technical Options button is source-reachable through
-  `OptionsMenuClass::On_Command`; it does not depend on its null dialog-factory
-  slot. Audio, Video and Performance tabs are linked and resource-checked.
-  Opening, applying, persisting and repeatedly leaving the tabs remain
-  executable and physical evidence gates. Do not populate the null factory
-  slot unless the original direct owner is removed.
+## Earlier open gaps (pre-2026-10-05)
 
 - Every child tab selected by the original Controls menu now has a strict
   canonical-resource contract. Physical rebinding, saved-profile restoration,
   sniper scope/zoom input and repeated dialog lifetime remain unverified.
 
-- Technical options and all three child tabs now require their complete
-  directly addressed control sets during resource generation. Audio and
-  performance persistence, fixed Vita video presentation, repeated entry and
-  layout remain executable and physical evidence gates.
 
 - The multiplayer Help template now requires every original key-label control.
   Vita label text, navigation, repeated entry and rendered layout remain

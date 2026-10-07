@@ -118,7 +118,7 @@ class TexturePackingBoundaryContract(unittest.TestCase):
                       create)
         self.assertIn('if (packed != NULL) return packed;', create)
         # The RGBA8888 expansion is skipped only when the packed upload succeeded.
-        self.assertLess(gate, create.index('std::vector<unsigned char> rgba('))
+        self.assertLess(gate, create.index('const size_t rgba_bytes = '))
         self.assertEqual(self.boundary.count('Create_Packed_A1R5G5B5_Texture('), 2)
 
     def test_packed_upload_is_16_bit_level_zero_and_transactional(self):

@@ -866,6 +866,81 @@ uint32_t Count_Physics_Objects(RefPhysListIterator iterator)
 	return count;
 }
 
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include "a30_vita_runtime.h"
+#include "camera.h"
+#include "colmath.h"
+#include "phys.h"
+#include "vistable.h"
+
+/* Sampled read-only census of the original precomputed visibility (PVS) and
+** frustum culling, taken once per 120 render frames directly after
+** PhysicsSceneClass::Pre_Render_Processing.  The PVS comes from
+** Get_Vis_Table_For_Rendering with the same camera, which is idempotent: the
+** same sample point yields the same sector id, LastValidVisId and
+** VisSectorMissing values that the render pass just stored.  Counts mirror
+** the original per-object tests (PVS bit of Get_Vis_Object_ID plus
+** Overlap_Test of Get_Cull_Box); hierarchical node rejection and the dynamic
+** grid's no-grid list are not replicated, so the collected figures are upper
+** bounds of what Collect_Visible_Objects returned. */
+static void Sample_Original_Visibility_Census(PhysicsSceneClass &scene,
+	CameraClass &camera)
+{
+	static uint32_t sample_frame = 0U;
+	static uint32_t census_logs = 0U;
+	if (++sample_frame % 120U != 0U || census_logs >= 1024U) return;
+	++census_logs;
+	const uint64_t census_start_us = sceKernelGetProcessTimeWide();
+
+	VisTableClass *pvs = scene.Get_Vis_Table_For_Rendering(camera);
+	const int pvs_bits = pvs != NULL ? pvs->Get_Bit_Count() : 0;
+	const FrustumClass &frustum = camera.Get_Frustum();
+	struct Counts { uint32_t total, ws_mesh, in_frustum, pvs_hidden, vis_saved; };
+	Counts counts[2] = {};
+	RefPhysListIterator iterators[2] = {
+		scene.Get_Static_Object_Iterator(), scene.Get_Dynamic_Object_Iterator()};
+	for (int list = 0; list < 2; ++list) {
+		Counts &c = counts[list];
+		RefPhysListIterator &it = iterators[list];
+		for (it.First(); !it.Is_Done(); it.Next()) {
+			PhysClass *obj = it.Peek_Obj();
+			++c.total;
+			if (obj->Is_World_Space_Mesh()) ++c.ws_mesh;
+			const bool in_frustum = CollisionMath::Overlap_Test(frustum,
+				obj->Get_Cull_Box()) != CollisionMath::OUTSIDE;
+			const int vis_id = obj->Get_Vis_Object_ID();
+			const bool pvs_visible = pvs == NULL ||
+				(vis_id >= 0 && vis_id < pvs_bits && pvs->Get_Bit(vis_id) != 0);
+			if (in_frustum) ++c.in_frustum;
+			if (!pvs_visible) {
+				++c.pvs_hidden;
+				if (in_frustum) ++c.vis_saved;
+			}
+		}
+	}
+	const int pvs_true = pvs != NULL ? pvs->Count_True_Bits() : 0;
+	const int sector = pvs != NULL ? pvs->Get_Vis_Sector_ID() : -1;
+	REF_PTR_RELEASE(pvs);
+	const Counts &s = counts[0];
+	const Counts &d = counts[1];
+	A30_Vita_Log("A3.6 vis-census: frame=%u vis_enabled=%d inverted=%d "
+		"sector=%d missing=%d fallback=%d pvs_true=%d/%d "
+		"static total/ws/in_frustum/pvs_hidden/vis_saved/collected=%u/%u/%u/%u/%u/%u "
+		"dynamic total/in_frustum/pvs_hidden/vis_saved/collected=%u/%u/%u/%u/%u "
+		"census_us=%llu\n",
+		sample_frame, scene.Is_Vis_Enabled() ? 1 : 0,
+		scene.Is_Vis_Inverted() ? 1 : 0, sector,
+		scene.Is_Vis_Sector_Missing() ? 1 : 0,
+		scene.Is_Vis_Sector_Fallback_Enabled() ? 1 : 0, pvs_true, pvs_bits,
+		s.total, s.ws_mesh, s.in_frustum, s.pvs_hidden, s.vis_saved,
+		s.in_frustum - s.vis_saved,
+		d.total, d.in_frustum, d.pvs_hidden, d.vis_saved,
+		d.in_frustum - d.vis_saved,
+		static_cast<unsigned long long>(
+			sceKernelGetProcessTimeWide() - census_start_us));
+}
+#endif
+
 A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present)
 {
 	A31InteractiveRenderTrace trace = {};
@@ -1007,6 +1082,9 @@ A31InteractiveRenderTrace A31_Interactive_Run_Render_Frame(bool present)
 		RENEGADE_FRAME_PROFILE("Vita Render Pre_Render_Processing");
 		scene->Pre_Render_Processing(*camera);
 	}
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	Sample_Original_Visibility_Census(*scene, *camera);
+#endif
 	trace.pre_render_completed = true;
 	{
 		RENEGADE_FRAME_PROFILE("Vita Render Begin_Render");

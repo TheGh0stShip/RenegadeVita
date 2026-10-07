@@ -60,6 +60,9 @@ struct RenegadeMilesRuntimeStats {
 	uint32_t pcm_cache_evictions;
 	uint32_t pcm_cache_entries;
 	uint32_t pcm_cache_bytes;
+	uint32_t pcm_live_bytes;
+	uint32_t pcm_live_high_water_bytes;
+	uint32_t pcm_largest_image_bytes;
 	uint32_t allocated_samples;
 	uint32_t active_samples;
 	uint32_t active_streams;

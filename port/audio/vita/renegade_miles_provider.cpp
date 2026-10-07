@@ -153,6 +153,10 @@ AIL_FILE_READ_CALLBACK g_file_read = nullptr;
 RenegadeMilesPcm *g_pcm_cache[kPcmCacheSlots] = {};
 size_t g_pcm_cache_bytes = 0U;
 uint64_t g_pcm_cache_clock = 0U;
+// Decoded PCM held by live images (cached and uncached). Guarded by g_mutex.
+size_t g_pcm_live_bytes = 0U;
+size_t g_pcm_live_high_water_bytes = 0U;
+size_t g_pcm_largest_image_bytes = 0U;
 
 void Initialize_Mutex()
 {
@@ -223,7 +227,21 @@ size_t Pcm_Bytes(const RenegadeMilesPcm *pcm)
 
 void Release_Pcm(RenegadeMilesPcm *pcm)
 {
-	if (pcm != nullptr && --pcm->references == 0U) delete pcm;
+	if (pcm != nullptr && --pcm->references == 0U) {
+		g_pcm_live_bytes -= Pcm_Bytes(pcm);
+		delete pcm;
+	}
+}
+
+// Called once per new image after its PCM is moved in; capacity is fixed
+// thereafter so Release_Pcm subtracts the same amount.
+void Track_New_Pcm(const RenegadeMilesPcm *pcm)
+{
+	const size_t bytes = Pcm_Bytes(pcm);
+	g_pcm_live_bytes += bytes;
+	if (g_pcm_live_bytes > g_pcm_live_high_water_bytes)
+		g_pcm_live_high_water_bytes = g_pcm_live_bytes;
+	if (bytes > g_pcm_largest_image_bytes) g_pcm_largest_image_bytes = bytes;
 }
 
 void Set_Sample_Pcm(RenegadeMilesSample *sample, RenegadeMilesPcm *pcm)
@@ -357,6 +375,7 @@ bool Decode_Into_Sample(RenegadeMilesSample *sample, const void *data,
 		pcm->encoded_data_bytes = info.data_bytes;
 		pcm->source_hash = hash;
 		pcm->source_bytes = bytes;
+		Track_New_Pcm(pcm);
 		++g_stats.pcm_decodes;
 		if (cacheable) Cache_Pcm(pcm);
 	}
@@ -428,6 +447,7 @@ bool Publish_Stream_Source_Locked(RenegadeMilesSample *sample,
 			pcm->encoded_data_bytes = prepared->info.data_bytes;
 			pcm->source_hash = prepared->source_hash;
 			pcm->source_bytes = prepared->source_bytes;
+			Track_New_Pcm(pcm);
 			if (prepared->cacheable) Cache_Pcm(pcm);
 		}
 		pcm->last_use = ++g_pcm_cache_clock;
@@ -1547,6 +1567,7 @@ void Renegade_Miles_Reset_Runtime_Stats()
 {
 	AIL_lock();
 	g_stats = {};
+	g_pcm_live_high_water_bytes = g_pcm_live_bytes;
 	g_output_lock_starvation_buffers.store(0U, std::memory_order_relaxed);
 	std::snprintf(g_stats.last_error, sizeof(g_stats.last_error), "%s",
 		g_last_error);
@@ -1566,6 +1587,11 @@ void Renegade_Miles_Get_Runtime_Stats(RenegadeMilesRuntimeStats *stats)
 		if (pcm != nullptr) ++stats->pcm_cache_entries;
 	}
 	stats->pcm_cache_bytes = Saturate_Size_To_U32(g_pcm_cache_bytes);
+	stats->pcm_live_bytes = Saturate_Size_To_U32(g_pcm_live_bytes);
+	stats->pcm_live_high_water_bytes =
+		Saturate_Size_To_U32(g_pcm_live_high_water_bytes);
+	stats->pcm_largest_image_bytes =
+		Saturate_Size_To_U32(g_pcm_largest_image_bytes);
 	stats->active_samples = 0U;
 	stats->active_streams = 0U;
 	stats->active_stream_position_ms = 0U;

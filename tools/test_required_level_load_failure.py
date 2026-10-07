@@ -1,6 +1,7 @@
 """Source contracts only: no C++ compilation or runtime failure injection."""
 from pathlib import Path
 import hashlib
+import re
 import subprocess
 import tempfile
 import unittest
@@ -14,15 +15,23 @@ class RequiredLevelLoadTests(unittest.TestCase):
             for name in ('savegame.cpp', 'savegame.h'):
                 (Path(directory) / name).write_bytes((ROOT / 'staging/combat' / name).read_bytes())
             # Restore the historical anchor before replaying the earlier
-            # required-load patch. Current save diagnostics add source lines
-            # but must not weaken the immutable source hashes or offset gate.
-            if 'RV_SAVE_PHASE' in (Path(directory) / 'savegame.cpp').read_text():
-                diagnostics = (ROOT / 'port/patches/combat-a35-save-phase-diagnostics.patch').read_bytes()
-                save_only = diagnostics.split(b'--- a/conversationmgr.cpp', 1)[0]
-                undo = subprocess.run(['patch', '--batch', '--reverse', '--fuzz=0',
-                                       '--no-backup-if-mismatch', '-p1', '-d', directory],
-                                      input=save_only, capture_output=True, check=True)
-                self.assertNotIn(b'offset', undo.stdout)
+            # required-load patch. Later staged patches (save diagnostics and
+            # A3.6 save admission) also edit savegame.*; reverse their
+            # savegame hunks in reverse staging order first.
+            order = []
+            for name in re.findall(r'combat-a3[56][-a-z0-9]*\.patch',
+                                   (ROOT / 'tools/stage_sources.sh').read_text()):
+                if name not in order:
+                    order.append(name)
+            later = order[order.index('combat-a35-required-level-load-failure.patch') + 1:]
+            for name in reversed(later):
+                parts = re.split(rb'(?m)^(?=--- a/)', (ROOT / 'port/patches' / name).read_bytes())
+                body = b''.join(part for part in parts
+                                if re.match(rb'--- a/savegame\.(cpp|h)\s', part))
+                if body:
+                    subprocess.run(['patch', '--batch', '--reverse', '--fuzz=0',
+                                    '--no-backup-if-mismatch', '-p1', '-d', directory],
+                                   input=body, capture_output=True, check=True)
             patch = (ROOT / 'port/patches/combat-a35-required-level-load-failure.patch').read_bytes()
             # Future build entrypoints run after staging. Reverse only this
             # patch in the private copy before replaying the anchored contract.
@@ -63,12 +72,15 @@ class RequiredLevelLoadTests(unittest.TestCase):
         runtime = (ROOT / 'port/platform/vita/a31_vita_runtime.cpp').read_text()
         reset = runtime.index('A35_Level_Load_Reset_Failure();')
         load = runtime.index('CombatManager::Load_Level_Threaded(load_source, false);', reset)
-        post = runtime.index('SaveLoadSystemClass::Post_Load_Processing(NULL);', load)
-        guard = runtime.index('if (load_failure != A35_LOAD_NO_FAILURE)', post)
-        finalize = runtime.index('CombatManager::Post_Load_Level();', guard)
+        # The failure guard now runs before post-load processing so pending
+        # post-load callbacks are discarded instead of executed.
+        guard = runtime.index('if (load_failure != A35_LOAD_NO_FAILURE)', load)
+        post = runtime.index('SaveLoadSystemClass::Post_Load_Processing(NULL);', guard)
+        finalize = runtime.index('CombatManager::Post_Load_Level();', post)
         self.assertLess(reset, load)
-        self.assertLess(post, guard)
-        failure = runtime[guard:finalize]
+        self.assertLess(guard, post)
+        failure = runtime[guard:post]
+        self.assertIn('SaveLoadSystemClass::Discard_Post_Load_Callbacks();', failure)
         self.assertIn('NetworkObjectMgrClass::Set_Is_Level_Loading(false);', failure)
         self.assertIn('result.render_error = true;', failure)
         self.assertIn('break;', failure)

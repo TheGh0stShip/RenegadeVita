@@ -661,6 +661,13 @@ InputConfigMgrClass::Load_Config_List (ChunkLoadClass &cload)
 				//
 				//	Add the object to our list
 				//
+#if defined(RENEGADE_VITA_PORT)
+				// Load_Variables clears a damaged or non-leaf filename; such a
+				// record has no file to load, save or delete under user/config.
+				if (config.Get_Filename ()[0] == 0) {
+					break;
+				}
+#endif
 				ConfigList.Add (config);
 				break;
 			}

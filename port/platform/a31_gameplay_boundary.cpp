@@ -74,6 +74,8 @@
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 #include <psp2/kernel/processmgr.h>
 static A31SimulationStageTotals g_campaign_simulation_stages = {};
+// Defined by the staged WWPhys pscene_collision.cpp (diagnostic counters).
+extern unsigned int g_renegade_phys_cast_counts[6];
 #endif
 
 #if defined(__vita__) && RENEGADE_VITA_M00_DEMO
@@ -794,6 +796,10 @@ void A31_Interactive_Run_Simulation_Frame()
 	}
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	const uint64_t network_end_us = sceKernelGetProcessTimeWide();
+	unsigned int casts_before[6];
+	for (unsigned kind = 0U; kind < 6U; ++kind) {
+		casts_before[kind] = g_renegade_phys_cast_counts[kind];
+	}
 #endif
 	{
 		RENEGADE_FRAME_PROFILE("Vita Sim CombatManager Think");
@@ -827,6 +833,10 @@ void A31_Interactive_Run_Simulation_Frame()
 #endif
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	const uint64_t combat_end_us = sceKernelGetProcessTimeWide();
+	for (unsigned kind = 0U; kind < 6U; ++kind) {
+		g_campaign_simulation_stages.combat_casts[kind] +=
+			g_renegade_phys_cast_counts[kind] - casts_before[kind];
+	}
 #endif
 	A31_Interactive_Apply_Render_Capabilities();
 #if !defined(RENEGADE_HOST_ABI_TEST)

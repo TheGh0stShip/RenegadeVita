@@ -2723,6 +2723,34 @@ void Log_Campaign_Simulation_Stages()
 		static_cast<unsigned long long>(stages.real_us / 1000U),
 		static_cast<unsigned long long>(stages.simulated_us / 1000U),
 		static_cast<unsigned long long>(drift_us / 1000U));
+	// Windowed (since the previous checkpoint) so an ambush is not diluted by
+	// the quiet frames before it: WWPhys scene casts issued by Combat.
+	// Original GameObjManager::Think soldier tallies (console-only on PC).
+	extern int _AwakeSoldiers;
+	extern int _HibernatingSoldiers;
+	static A31SimulationStageTotals previous = {};
+	static int previous_awake = 0;
+	static int previous_hibernating = 0;
+	if (stages.frames < previous.frames) previous = A31SimulationStageTotals();
+	if (_AwakeSoldiers < previous_awake) previous_awake = 0;
+	if (_HibernatingSoldiers < previous_hibernating) previous_hibernating = 0;
+	const uint32_t window_frames = stages.frames - previous.frames;
+	if (window_frames != 0U) {
+		double per_frame[6];
+		for (unsigned kind = 0U; kind < 6U; ++kind) {
+			per_frame[kind] = static_cast<double>(
+				stages.combat_casts[kind] - previous.combat_casts[kind]) / window_frames;
+		}
+		A30_Vita_Log("A4 combat casts: frames=%u window=%u combat_avg_us=%llu soldiers_awake/hibernating_per_frame=%.1f/%.1f per_frame ray_cull/ray_region/aabox_cull/aabox_region/obbox_cull/obbox_region=%.1f/%.1f/%.1f/%.1f/%.1f/%.1f\n",
+			stages.frames, window_frames,
+			static_cast<unsigned long long>((stages.combat_us - previous.combat_us) / window_frames),
+			static_cast<double>(_AwakeSoldiers - previous_awake) / window_frames,
+			static_cast<double>(_HibernatingSoldiers - previous_hibernating) / window_frames,
+			per_frame[0], per_frame[1], per_frame[2], per_frame[3], per_frame[4], per_frame[5]);
+	}
+	previous = stages;
+	previous_awake = _AwakeSoldiers;
+	previous_hibernating = _HibernatingSoldiers;
 #endif
 }
 

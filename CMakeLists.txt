@@ -555,6 +555,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${RENEGADE_STAGE}/wwtranslatedb
   ${RENEGADE_STAGE}/ww3d2
   ${RENEGADE_STAGE}/wwphys
+  # Staged wwprofile.h routes WWPROFILE to the Vita frame profiler; without
+  # this entry every engine TU resolved the pristine header (empty macro).
+  ${RENEGADE_STAGE}/wwdebug
   ${RENEGADE_UPSTREAM}/Code/wwdebug
   ${RENEGADE_UPSTREAM}/Code/wwlib
   ${RENEGADE_UPSTREAM}/Code/wwutil
@@ -602,6 +605,12 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
   RENEGADE_VITAGL_HAS_PHYCONT_MEM=${RENEGADE_VITAGL_HAS_PHYCONT_MEM}
   RENEGADE_VITAGL_PHYCONT_MEM=${RENEGADE_VITAGL_PHYCONT_MEM}
 	)
+# Each frame-profile scope costs two process-time syscalls. WWPhys wheel.cpp
+# opens up to five scopes per wheel per force evaluation (two per midpoint
+# integration step), far more calls than the work they bracket. The enclosing
+# VehiclePhysClass::Compute_Force_And_Torque scope still times the wheel loop.
+set_property(SOURCE ${RENEGADE_STAGE}/wwphys/wheel.cpp APPEND PROPERTY
+  COMPILE_DEFINITIONS RENEGADE_VITA_FRAME_PROFILE_SKIP_TU=1)
 if(RENEGADE_A4_ORIGINAL_FRONTEND)
   target_compile_definitions(${PROJECT_NAME} PRIVATE
     RENEGADE_A4_ORIGINAL_FRONTEND=1

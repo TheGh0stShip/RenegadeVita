@@ -430,3 +430,124 @@ and only `Mission05.cpp` changed.
   502. Repeat for Gunner during `M05_CON006`.
 - In the cathedral battle, record `blackhand_cnt` progress. Telemetry should
   show a REINFORCE for every para death before completion.
+
+## Follow-up fixes (2026-10-07)
+
+Evidence class: staged-source inspection, host Python reads of the read-only
+Vita3K retail copy (`m05.ldd` spawner and script records, `objects.ddb` in
+`always.dbs`, cinematic texts in `always.dat`), one `arm-vita-eabi-g++
+-fsyntax-only` of the patched `Mission05.cpp` (exit 0, only the existing
+`-Wwrite-strings` warnings, `-Wimplicit-fallthrough` clean), and a re-run of
+`tools.audit_conversation_gated_objectives` into a scratch file. No build,
+emulator or device run. Line numbers are the staged file after these
+patches.
+
+Three patches are registered after `scripts-a38-m05-gunner-poke-rearm.patch`.
+Staging: 573 ordered patches, PASS, zero fuzz, and only `Mission05.cpp`
+changed. Each new flag is a `SAVE_VARIABLE` on an unused ID. Scripts are
+value-initialised (`ScriptRegistrant::Create`), so saves from before the
+patches load with the flags false. No sha256 anchor changed.
+
+### Retail data decoded
+
+- **Town Square supply.** The `M05_TownSquare_Unit` bindings are placed
+  100108/100111 (ID 1), 100109/100110 (ID 2) and 100117/100118 (ID 0).
+  Spawner 100115 also spawns ID 0 units. `X5D_CHTroopdrop1/2` each drop two
+  ID 1 or ID 2 soldiers. `M05_TownSquare_Tank` is placed 100023 (ID 3).
+  ID 0 is no `switch` case, so it is never counted.
+- **Flame tank.** Spawner 100618 has definition 82050342 with SpawnMax 1,
+  StartsDisabled 1 and KillHibernatingSpawn 0. It carries
+  `M05_TownSquare_FlameTank "4"` and `M08_Mobile_Vehicle`, which never
+  destroys the tank. `SpawnCount` is saved and never reset, so exactly one
+  flame tank exists. A second flame tank is not possible.
+- **Removal without `Killed`.** All damage, including ally fire and
+  visceroid conversion, reaches `DamageableGameObj::Apply_Damage`, which
+  sends `Killed` first. A flipped vehicle also sends `Killed`. One path
+  calls only `Destroyed`: `PhysicalGameObj` deletes an object that falls
+  more than 20 m below the level extents. No M05 script `Destroy_Object`s
+  these units.
+
+### Fixes
+
+1. **Town Square 507 and Gunner's 501 path.** Before this fix, one lost
+   counted unit stalled the drop schedule or left a counter below its target.
+   That blocked 507 and the 500/500 leave order for the rest of the mission.
+   *Fix:* `scripts-a38-m05-townsquare-count-robust.patch`.
+   - The check uses `>=` (`:4460`). Retail supplies exactly 6/6/1/1, so the
+     normal path fires on the same kill.
+   - `M05_TownSquare_Unit` (`:4531`), `M05_TownSquare_FlameTank` (`:4562`)
+     and `M05_TownSquare_Tank` (`:1864`) report a `Destroyed` without
+     `Killed` once as the same REINFORCE. This keeps the drop schedule
+     moving.
+2. **Black Hand count (`> 7`, `:6195`).** An ID 8 or 10 soldier removed
+   without `Killed` ended its re-drop chain. *Fix:*
+   `scripts-a38-m05-blackhand-redrop-on-loss.patch`.
+   - `M05_Cathedral_Para_Unit::Destroyed` (`:6475`) reports such a soldier
+     once as `M05_CATHEDRAL_REINFORCE` with its ID, so the chain continues.
+   - `Killed` also sets the flag, and there is no report after
+     `M05_CATHEDRAL_FREE`.
+   - ID "" units are not reported. These are the drop-7 minigunner and the
+     transports, which the text removes at frame 280.
+
+   The count therefore cannot cap below 8. The `< 9` re-drop bound and the
+   vehicle counter are unchanged.
+3. **`M05_Escapee_Brother` (509) and `M05_Babushka` (510): was REVIEW, now
+   a real lock.**
+   - **Receivers.** Objective controller 100001 handles 509/1, 509/2, 510/1
+     and 510/2 (`param` 1 accomplishes, 2 fails). 5001 is
+     `M05_CUSTOM_ACTIVATE` to 100037, the escapee visceroid. Neither
+     objective gates `Mission_Complete`.
+   - **What was lost.** The Brother's ENDED path also drops the Personal Ion
+     Cannon powerup and starts the invaders.
+   - **How it locked.** Both started a non-key conversation before
+     `Monitor_Conversation`. Their own radio briefings, `M05_CON038` and
+     `M05_CON008`, are key, so poking during the briefing refused the start
+     with no monitor. A walk-away INTERRUPTED was ignored. Either way the
+     character could never be poked again.
+
+   *Fix:* `scripts-a38-m05-escapee-babushka-poke-rearm.patch` (M10 pattern).
+   - The poke state and monitor are set before `Start_Conversation`
+     (`:2414`, `:2754`).
+   - INTERRUPTED or UNABLE_TO_INIT of 300509 re-arms the poke (`:2433`,
+     `:2783`).
+   - Babushka re-arms to a new `case 3` (`:2743`), which replays only the
+     thanks conversation. Her first-poke animation, `Action_Reset` and team
+     change run once.
+   - The ENDED handlers are guarded by the existing saved `complete` and
+     `saved` flags, so 509/1 and 510/1 are sent exactly once.
+
+   In the scratch audit re-run, the M05 row changed from 1 FIXED and 2
+   REVIEW to 3 FIXED and 0 REVIEW.
+
+### Lost-unit report mechanics
+
+Each report is a `Send_Custom_Event` with a 1 s delay. It is held as a
+custom timer on the receiving controller (`Start_Custom_Timer`), which only
+`Think` runs. Level exit and reload use `GameObjManager::Destroy_All`, which
+calls `Destroyed` on every object and runs no `Think`. A teardown therefore
+discards the report and cannot change objectives.
+
+### Not changed
+
+- **Cathedral 506 chain.** No hole was found. The vehicle counter and the
+  REINFORCE kill path are untouched.
+- **Stuck units.** A live but unreachable Town Square or Black Hand unit
+  still has to be killed (retail design). Town Square units walk to 100112.
+  Para units chase the star.
+- **Flame tank not spawned.** If the player never enters the roadblock zone
+  100623, the flame tank never spawns and 507 stays pending. This is retail
+  design.
+
+### Deferred
+
+- Regenerate `CONVERSATION_GATED_OBJECTIVES.md` from the integrated tree.
+  This round only re-ran the audit into a scratch file.
+
+### Physical test additions
+
+- Poke the Escapee's brother while `M05_CON038` plays, and Babushka while
+  `M05_CON008` plays. Each must stay pokable, and a later poke must play the
+  conversation and complete the objective once. Check that only one Ion
+  Cannon powerup appears.
+- Complete Town Square normally. 507 and Gunner's departure must happen on
+  the last kill, as before.

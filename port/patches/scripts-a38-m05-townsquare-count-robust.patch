@@ -1,0 +1,159 @@
+M05_TownSquare_Controller (100112) accomplishes secondary 507 and sends
+Gunner (100003) his 500/500 leave order only when its kill counters are
+exactly unit_id1 == 6, unit_id2 == 6, unit_id3 == 1 and unit_id4 == 1.
+Retail supplies exactly that many: placed 100108/100111 (1) and
+100109/100110 (2), two X5D_CHTroopdrop1/2 drops of two each, the placed
+M05_TownSquare_Tank 100023 (3), and one flame tank from spawner 100618
+(4; SpawnMax 1, StartsDisabled, KillHibernatingSpawn 0 in objects.ddb).
+Killed is not filtered by killer, so ally kills count. A counted unit
+removed without Killed (an object below the level extents is deleted with
+Destroyed only) never reported, so the drop schedule stalled and 507 and
+Gunner's 501 path were lost for the rest of the mission.
+
+Compare with >= so any extra report cannot skip the exact value, and
+report a counted unit or tank that is destroyed without Killed once from
+Destroyed, using a SAVE_VARIABLE flag on an unused id. That report is a
+1 s delayed custom, which waits on the controller and is discarded when
+the level is torn down (Destroy_All stops Think before the timer runs).
+Unit_ID 0 units (100117, 100118, spawner 100115) are not counted, as
+before. The normal kill path and its counts are unchanged.
+
+--- a/Mission05.cpp
++++ b/Mission05.cpp
+@@ -1795,6 +1795,7 @@
+ {
+ 
+ 	int fire_loc[3];
++	bool loss_reported;
+ 
+ 	enum {TANK_TIMER, WAYPATH};
+ 
+@@ -1803,12 +1804,14 @@
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE( fire_loc, 1 );
++		SAVE_VARIABLE( loss_reported, 2 );
+ 	}
+ 
+ 	void Created (GameObject * obj)
+ 	{
+ 		ActionParamsStruct params;
+ 
++		loss_reported = false;
+ 		fire_loc[0] = 100024;
+ 		fire_loc[1] = 100025;
+ 		fire_loc[2] = 100026;
+@@ -1851,9 +1854,22 @@
+ 
+ 	void Killed (GameObject * obj, GameObject * killer)
+ 	{
++		loss_reported = true;
+ 		Commands->Send_Custom_Event(obj, Commands->Find_Object(100112), M05_TOWNSQUARE_REINFORCE, 3, 0.0f);
+ 	}
+ 
++	// Vita: a tank removed without Killed (it left the level extents) is
++	// still counted once. The delayed custom waits on the controller, so a
++	// level teardown discards it.
++	void Destroyed (GameObject * obj)
++	{
++		if(!loss_reported)
++		{
++			loss_reported = true;
++			Commands->Send_Custom_Event(obj, Commands->Find_Object(100112), M05_TOWNSQUARE_REINFORCE, 3, 1.0f);
++		}
++	}
++
+ };
+ 
+ DECLARE_SCRIPT(M05_Bridge_Tank, "")
+@@ -4413,7 +4429,10 @@
+ 			
+ 			}
+ 			// Check that all Nod soldiers, tank, cannon emplacement killed
+-			if((unit_id1 == 6) && (unit_id2 == 6) && (unit_id3 == 1) && (unit_id4 == 1) && (!townsquare_retaken))
++			// Vita: at least the authored 6/6/1/1. Retail supplies exactly
++			// that many, so the normal path is unchanged; an extra report
++			// no longer skips the exact value and locks 507 and Gunner.
++			if((unit_id1 >= 6) && (unit_id2 >= 6) && (unit_id3 >= 1) && (unit_id4 >= 1) && (!townsquare_retaken))
+ 			{
+ 				Commands->Debug_Message("Resistance have taken town square, Gunner will now leave");
+ 				// Resistance have taken town square
+@@ -4429,17 +4448,21 @@
+ 
+ DECLARE_SCRIPT(M05_TownSquare_Unit, "Unit_ID=0:int")
+ {
++	bool loss_reported;
++
+ 	enum{GO_TOWNSQUARE};
+-	
++
+ 	// Register variables to be Auto-Saved
+ 	// All variables must have a unique ID, less than 256, that never changes
+ 	REGISTER_VARIABLES()
+ 	{
+ //		SAVE_VARIABLE( unit_id, 1 );
++		SAVE_VARIABLE( loss_reported, 2 );
+ 	}
+ 
+ 	void Created (GameObject * obj)
+ 	{
++		loss_reported = false;
+ 		Commands->Start_Timer (obj, this, 3.0f, GO_TOWNSQUARE);
+ 	}
+ 
+@@ -4471,18 +4494,55 @@
+ 
+ 	void Killed (GameObject * obj, GameObject * killer)
+ 	{
++		loss_reported = true;
+ 		int unit_id = Get_Int_Parameter("Unit_ID");
+ 		Commands->Send_Custom_Event(obj, Commands->Find_Object(100112), M05_TOWNSQUARE_REINFORCE, unit_id, 0.0f);
+ 	}
++
++	// Vita: a counted unit removed without Killed (it fell below the level
++	// extents) is still reported once, so the drop schedule and the 6/6
++	// count continue. The delayed custom waits on the controller, so a
++	// level teardown discards it. Unit_ID 0 units are not counted.
++	void Destroyed (GameObject * obj)
++	{
++		int unit_id = Get_Int_Parameter("Unit_ID");
++		if(!loss_reported && unit_id != 0)
++		{
++			loss_reported = true;
++			Commands->Send_Custom_Event(obj, Commands->Find_Object(100112), M05_TOWNSQUARE_REINFORCE, unit_id, 1.0f);
++		}
++	}
+ };
+ 
+ DECLARE_SCRIPT(M05_TownSquare_FlameTank, "Unit_ID=0:int")
+ {
++	bool loss_reported;
++
++	// Register variables to be Auto-Saved
++	// All variables must have a unique ID, less than 256, that never changes
++	REGISTER_VARIABLES()
++	{
++		SAVE_VARIABLE( loss_reported, 1 );
++	}
++
+ 	void Killed (GameObject * obj, GameObject * killer)
+ 	{
++		loss_reported = true;
+ 		int unit_id = Get_Int_Parameter("Unit_ID");
+ 		Commands->Send_Custom_Event(obj, Commands->Find_Object(100112), M05_TOWNSQUARE_REINFORCE, unit_id, 0.0f);
+ 	}
++
++	// Vita: spawner 100618 (SpawnMax 1) never replaces a lost tank, so a
++	// tank removed without Killed is reported once (see M05_TownSquare_Unit).
++	void Destroyed (GameObject * obj)
++	{
++		int unit_id = Get_Int_Parameter("Unit_ID");
++		if(!loss_reported && unit_id != 0)
++		{
++			loss_reported = true;
++			Commands->Send_Custom_Event(obj, Commands->Find_Object(100112), M05_TOWNSQUARE_REINFORCE, unit_id, 1.0f);
++		}
++	}
+ };
+ 
+ DECLARE_SCRIPT(M05_Nod_Gun_Emplacement, "")

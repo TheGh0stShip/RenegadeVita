@@ -1795,6 +1795,7 @@ DECLARE_SCRIPT(M05_TownSquare_Tank, "")
 {
 
 	int fire_loc[3];
+	bool loss_reported;
 
 	enum {TANK_TIMER, WAYPATH};
 
@@ -1803,12 +1804,14 @@ DECLARE_SCRIPT(M05_TownSquare_Tank, "")
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( fire_loc, 1 );
+		SAVE_VARIABLE( loss_reported, 2 );
 	}
 
 	void Created (GameObject * obj)
 	{
 		ActionParamsStruct params;
 
+		loss_reported = false;
 		fire_loc[0] = 100024;
 		fire_loc[1] = 100025;
 		fire_loc[2] = 100026;
@@ -1851,7 +1854,20 @@ DECLARE_SCRIPT(M05_TownSquare_Tank, "")
 
 	void Killed (GameObject * obj, GameObject * killer)
 	{
+		loss_reported = true;
 		Commands->Send_Custom_Event(obj, Commands->Find_Object(100112), M05_TOWNSQUARE_REINFORCE, 3, 0.0f);
+	}
+
+	// Vita: a tank removed without Killed (it left the level extents) is
+	// still counted once. The delayed custom waits on the controller, so a
+	// level teardown discards it.
+	void Destroyed (GameObject * obj)
+	{
+		if(!loss_reported)
+		{
+			loss_reported = true;
+			Commands->Send_Custom_Event(obj, Commands->Find_Object(100112), M05_TOWNSQUARE_REINFORCE, 3, 1.0f);
+		}
 	}
 
 };
@@ -2391,11 +2407,12 @@ DECLARE_SCRIPT(M05_Escapee_Brother, "")
 					int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
 					Commands->Join_Conversation(STAR, conv_id, false, true);
 					Commands->Join_Conversation(obj, conv_id, false, true);
-					Commands->Start_Conversation (conv_id, 300509);
-					Commands->Monitor_Conversation (obj, conv_id);
-
+					// Vita: poke state and monitor before starting, so a start
+					// refused by a playing key conversation reaches Action_Complete.
 					poke_id = 2;
 					Commands->Enable_HUD_Pokable_Indicator( obj, false );
+					Commands->Monitor_Conversation (obj, conv_id);
+					Commands->Start_Conversation (conv_id, 300509);
 				}
 				break;
 			}
@@ -2411,7 +2428,16 @@ DECLARE_SCRIPT(M05_Escapee_Brother, "")
 			conversation = false;
 		}
 
-		if(action_id == 300509 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
+		// Vita: an interrupted or refused talk re-arms the poke instead of
+		// leaving 509 and the reward pending forever.
+		if(action_id == 300509 && (reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED || reason == ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT) && poke_id == 2 && !complete)
+		{
+			conversation = false;
+			poke_id = 1;
+			Commands->Enable_HUD_Pokable_Indicator( obj, true );
+		}
+
+		if(action_id == 300509 && reason == ACTION_COMPLETE_CONVERSATION_ENDED && !complete)
 		{
 			
 			Commands->Select_Weapon(obj, "Weapon_Shotgun_Ai" );
@@ -2711,16 +2737,22 @@ DECLARE_SCRIPT(M05_Babushka, "")
 			//		Commands->Give_PowerUp(obj, "POW_Chaingun_AI");
 					Commands->Start_Timer (obj, this, 1.0f, ARM_SHOTGUN);
 					Commands->Set_Player_Type(obj, SCRIPT_PLAYERTYPE_GDI );
+				}
+				// Vita: case 3 replays only the thanks talk below.
+				// fall through
+			case 3:
+				{
 					// You have my thanks, brave warrior. Our village is in debt to you.\n
 					const char *conv_name = ("M05_CON023");
 					int conv_id = Commands->Create_Conversation (conv_name, INNATE_PRIORITY_ENEMY_SEEN - 5, 200.0f, false);
 					Commands->Join_Conversation(obj, conv_id, false, true);
 					Commands->Join_Conversation(STAR, conv_id, false, true);
-					Commands->Start_Conversation (conv_id, 300509);
-					Commands->Monitor_Conversation (obj, conv_id);
-
+					// Vita: poke state and monitor before starting, so a start
+					// refused by a playing key conversation reaches Action_Complete.
 					poke_id = 2;
 					Commands->Enable_HUD_Pokable_Indicator( obj, false );
+					Commands->Monitor_Conversation (obj, conv_id);
+					Commands->Start_Conversation (conv_id, 300509);
 				}
 				break;
 			}
@@ -2746,7 +2778,16 @@ DECLARE_SCRIPT(M05_Babushka, "")
 			conversation = false;
 		}
 
-		if(action_id == 300509 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
+		// Vita: an interrupted or refused talk re-arms the poke (thanks talk
+		// only) instead of leaving 510 pending forever.
+		if(action_id == 300509 && (reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED || reason == ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT) && poke_id == 2 && !saved)
+		{
+			conversation = false;
+			poke_id = 3;
+			Commands->Enable_HUD_Pokable_Indicator( obj, true );
+		}
+
+		if(action_id == 300509 && reason == ACTION_COMPLETE_CONVERSATION_ENDED && !saved)
 		{
 			saved = true;
 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100001), 510, 1, 0.0f);
@@ -4413,7 +4454,10 @@ DECLARE_SCRIPT(M05_TownSquare_Controller, "")  // 100112
 			
 			}
 			// Check that all Nod soldiers, tank, cannon emplacement killed
-			if((unit_id1 == 6) && (unit_id2 == 6) && (unit_id3 == 1) && (unit_id4 == 1) && (!townsquare_retaken))
+			// Vita: at least the authored 6/6/1/1. Retail supplies exactly
+			// that many, so the normal path is unchanged; an extra report
+			// no longer skips the exact value and locks 507 and Gunner.
+			if((unit_id1 >= 6) && (unit_id2 >= 6) && (unit_id3 >= 1) && (unit_id4 >= 1) && (!townsquare_retaken))
 			{
 				Commands->Debug_Message("Resistance have taken town square, Gunner will now leave");
 				// Resistance have taken town square
@@ -4429,17 +4473,21 @@ DECLARE_SCRIPT(M05_TownSquare_Controller, "")  // 100112
 
 DECLARE_SCRIPT(M05_TownSquare_Unit, "Unit_ID=0:int")
 {
+	bool loss_reported;
+
 	enum{GO_TOWNSQUARE};
-	
+
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
 	REGISTER_VARIABLES()
 	{
 //		SAVE_VARIABLE( unit_id, 1 );
+		SAVE_VARIABLE( loss_reported, 2 );
 	}
 
 	void Created (GameObject * obj)
 	{
+		loss_reported = false;
 		Commands->Start_Timer (obj, this, 3.0f, GO_TOWNSQUARE);
 	}
 
@@ -4471,17 +4519,54 @@ DECLARE_SCRIPT(M05_TownSquare_Unit, "Unit_ID=0:int")
 
 	void Killed (GameObject * obj, GameObject * killer)
 	{
+		loss_reported = true;
 		int unit_id = Get_Int_Parameter("Unit_ID");
 		Commands->Send_Custom_Event(obj, Commands->Find_Object(100112), M05_TOWNSQUARE_REINFORCE, unit_id, 0.0f);
+	}
+
+	// Vita: a counted unit removed without Killed (it fell below the level
+	// extents) is still reported once, so the drop schedule and the 6/6
+	// count continue. The delayed custom waits on the controller, so a
+	// level teardown discards it. Unit_ID 0 units are not counted.
+	void Destroyed (GameObject * obj)
+	{
+		int unit_id = Get_Int_Parameter("Unit_ID");
+		if(!loss_reported && unit_id != 0)
+		{
+			loss_reported = true;
+			Commands->Send_Custom_Event(obj, Commands->Find_Object(100112), M05_TOWNSQUARE_REINFORCE, unit_id, 1.0f);
+		}
 	}
 };
 
 DECLARE_SCRIPT(M05_TownSquare_FlameTank, "Unit_ID=0:int")
 {
+	bool loss_reported;
+
+	// Register variables to be Auto-Saved
+	// All variables must have a unique ID, less than 256, that never changes
+	REGISTER_VARIABLES()
+	{
+		SAVE_VARIABLE( loss_reported, 1 );
+	}
+
 	void Killed (GameObject * obj, GameObject * killer)
 	{
+		loss_reported = true;
 		int unit_id = Get_Int_Parameter("Unit_ID");
 		Commands->Send_Custom_Event(obj, Commands->Find_Object(100112), M05_TOWNSQUARE_REINFORCE, unit_id, 0.0f);
+	}
+
+	// Vita: spawner 100618 (SpawnMax 1) never replaces a lost tank, so a
+	// tank removed without Killed is reported once (see M05_TownSquare_Unit).
+	void Destroyed (GameObject * obj)
+	{
+		int unit_id = Get_Int_Parameter("Unit_ID");
+		if(!loss_reported && unit_id != 0)
+		{
+			loss_reported = true;
+			Commands->Send_Custom_Event(obj, Commands->Find_Object(100112), M05_TOWNSQUARE_REINFORCE, unit_id, 1.0f);
+		}
 	}
 };
 
@@ -6305,6 +6390,7 @@ DECLARE_SCRIPT(M05_Cathedral_Apache, "Apache_ID=0:int")  // 100287
 DECLARE_SCRIPT(M05_Cathedral_Para_Unit, "Soldier_ID=0:int")
 {
 	bool cathedral_free;
+	bool loss_reported;
 
 	enum{GO_STAR, ATTACK_STAR};
 
@@ -6313,11 +6399,13 @@ DECLARE_SCRIPT(M05_Cathedral_Para_Unit, "Soldier_ID=0:int")
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( cathedral_free, 1 );
+		SAVE_VARIABLE( loss_reported, 2 );
 	}
 
 	void Created (GameObject * obj)
 	{
 		cathedral_free = false;
+		loss_reported = false;
 
 		ActionParamsStruct params;
 
@@ -6370,10 +6458,27 @@ DECLARE_SCRIPT(M05_Cathedral_Para_Unit, "Soldier_ID=0:int")
 
 	void Killed (GameObject * obj, GameObject * killer)
 	{
+		loss_reported = true;
 		if(!cathedral_free)
 		{
 			int soldier_id = Get_Int_Parameter("Soldier_ID");
 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100287), M05_CATHEDRAL_REINFORCE, soldier_id, 0.0f);
+		}
+	}
+
+	// Vita: Soldier_ID 8 and 10 carry the only re-drop chains. One removed
+	// without Killed (it fell below the level extents) ended its chain and
+	// could cap blackhand_cnt below 8. Report it once like a kill so the
+	// chain continues. The transports (Soldier_ID "") are removed by their
+	// text after every drop and are not reported. The delayed custom waits
+	// on the controller, so a level teardown discards it.
+	void Destroyed (GameObject * obj)
+	{
+		int soldier_id = Get_Int_Parameter("Soldier_ID");
+		if(!loss_reported && !cathedral_free && (soldier_id == 8 || soldier_id == 10))
+		{
+			loss_reported = true;
+			Commands->Send_Custom_Event(obj, Commands->Find_Object(100287), M05_CATHEDRAL_REINFORCE, soldier_id, 1.0f);
 		}
 	}
 

@@ -1,0 +1,72 @@
+M05_Cathedral_Controller (100287) needs blackhand_cnt > 7 for 506 and
+Mission_Complete(true). Only M05_Cathedral_Para_Unit soldiers with
+Soldier_ID 8 and 10 re-drop their squad (X5D_CHTroopdrop8/10) on Killed;
+the drop-7 minigunner and the transports ("") do not. A Soldier_ID 8 or
+10 soldier removed without Killed (an object below the level extents is
+deleted with Destroyed only) ended its chain. Losing both chains capped
+the count at the kills so far plus any transports shot down, and the
+mission could not complete.
+
+Report such a soldier once from Destroyed as a M05_CATHEDRAL_REINFORCE
+with its Soldier_ID, guarded by a SAVE_VARIABLE flag on an unused id that
+Killed also sets, and not after M05_CATHEDRAL_FREE. The report is a 1 s
+delayed custom, which waits on the controller and is discarded when the
+level is torn down. The transports' scripted Destroy_Object at frame 280
+is not reported. The kill path, the blackhand_cnt < 9 re-drop bound and
+the vehicle counter are unchanged.
+
+--- a/Mission05.cpp
++++ b/Mission05.cpp
+@@ -6365,6 +6365,7 @@
+ DECLARE_SCRIPT(M05_Cathedral_Para_Unit, "Soldier_ID=0:int")
+ {
+ 	bool cathedral_free;
++	bool loss_reported;
+ 
+ 	enum{GO_STAR, ATTACK_STAR};
+ 
+@@ -6373,11 +6374,13 @@
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE( cathedral_free, 1 );
++		SAVE_VARIABLE( loss_reported, 2 );
+ 	}
+ 
+ 	void Created (GameObject * obj)
+ 	{
+ 		cathedral_free = false;
++		loss_reported = false;
+ 
+ 		ActionParamsStruct params;
+ 
+@@ -6430,6 +6433,7 @@
+ 
+ 	void Killed (GameObject * obj, GameObject * killer)
+ 	{
++		loss_reported = true;
+ 		if(!cathedral_free)
+ 		{
+ 			int soldier_id = Get_Int_Parameter("Soldier_ID");
+@@ -6437,6 +6441,22 @@
+ 		}
+ 	}
+ 
++	// Vita: Soldier_ID 8 and 10 carry the only re-drop chains. One removed
++	// without Killed (it fell below the level extents) ended its chain and
++	// could cap blackhand_cnt below 8. Report it once like a kill so the
++	// chain continues. The transports (Soldier_ID "") are removed by their
++	// text after every drop and are not reported. The delayed custom waits
++	// on the controller, so a level teardown discards it.
++	void Destroyed (GameObject * obj)
++	{
++		int soldier_id = Get_Int_Parameter("Soldier_ID");
++		if(!loss_reported && !cathedral_free && (soldier_id == 8 || soldier_id == 10))
++		{
++			loss_reported = true;
++			Commands->Send_Custom_Event(obj, Commands->Find_Object(100287), M05_CATHEDRAL_REINFORCE, soldier_id, 1.0f);
++		}
++	}
++
+ };
+ 
+ DECLARE_SCRIPT(M05_Cache_Surprise, "")

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "331d87641feeac8fe3811a17d6079c347e1b27c5309b61f84b29eee1c07dcbf0",
-  "patch_count": 574,
+  "stage_script_sha256": "3784587c54749e2cb305ec924bddad225b3821aec378db10f380a43b2da9e7d6",
+  "patch_count": 573,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1700,26 +1700,6 @@
       "sha256": "67b439e68bf42f766741f8983ea2a895390509f0710785bab8f376642dee67f3"
     },
     {
-      "path": "port/patches/scripts-a38-m10-ne-gate-briefing-monitor-first.patch",
-      "stage_directory": "scripts",
-      "sha256": "b00765c21bffbc679013953d8dee51f2311ae94b4c89554d768e878053e2a9de"
-    },
-    {
-      "path": "port/patches/scripts-a38-m10-attack-target-save-ids.patch",
-      "stage_directory": "scripts",
-      "sha256": "2ed1d5d23e6a8d9cd304c720529f32cdd5221d6a7345bbeae1e5f7f85dc3f330"
-    },
-    {
-      "path": "port/patches/scripts-a38-m10-paradrop-param-buffer.patch",
-      "stage_directory": "scripts",
-      "sha256": "02d7c36f0c5dbf30fc6eada2c082d5353550e87bfc0e37659163ecdc5c6a8bd9"
-    },
-    {
-      "path": "port/patches/scripts-a38-m10-primary-add-before-accomplish.patch",
-      "stage_directory": "scripts",
-      "sha256": "deb1514073f44b091964c927b361c4692ea1958471f30b84caa583e4ef8f19b5"
-    },
-    {
       "path": "port/patches/scripts-a36-m05-dead6-help-failed-text-save.patch",
       "stage_directory": "scripts",
       "sha256": "e5c6f8fde4b5325ebf559015fb593cc1feec2fdd4605c417dae835e817b6cf8a"
@@ -1823,6 +1803,21 @@
       "path": "port/patches/scripts-a38-m05-gunner-poke-rearm.patch",
       "stage_directory": "scripts",
       "sha256": "b2161f242e2f76695d1d2a0be0c4a842a520672ab273be05343f999c567adbc1"
+    },
+    {
+      "path": "port/patches/scripts-a38-m05-townsquare-count-robust.patch",
+      "stage_directory": "scripts",
+      "sha256": "9821324976a87055aa482a32fc2925f7a94d2a50b336c9181bca903e1ca81584"
+    },
+    {
+      "path": "port/patches/scripts-a38-m05-blackhand-redrop-on-loss.patch",
+      "stage_directory": "scripts",
+      "sha256": "e5566aee5677d4084e608b17a502c8e78ccae1afd240ef20601277b55e48ef03"
+    },
+    {
+      "path": "port/patches/scripts-a38-m05-escapee-babushka-poke-rearm.patch",
+      "stage_directory": "scripts",
+      "sha256": "a6780abeb2eb437cfcfbf4724d4e8dc2b52f0e292db30317e39c3d83d396ce48"
     },
     {
       "path": "port/patches/scripts-a36-m11-save-variable-ids.patch",
@@ -2875,5 +2870,5 @@
       "sha256": "fc6b37a6f0f9ef5136fbe67e950835ee8b2084fb57f42d6611599f96636e3a56"
     }
   ],
-  "registry_sha256": "b34d88b1d91b1e6139c141ef6afa953506328b33f6498ddd769ac45d04a365eb"
+  "registry_sha256": "d70359c39cd8e0d1c04854a038e7e629e4d349b09fdcc6b8af7bb49e7de439a1"
 }

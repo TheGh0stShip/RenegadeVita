@@ -1918,7 +1918,7 @@ void Submit_Bound_Triangles(const RenderStateStruct &state,
 	const bool stage1_texture = indexed_texturing && state.Textures[1] != NULL;
 	for (unsigned stage = 0; stage < MAX_TEXTURE_STAGES; ++stage) {
 		if (indexed_texturing && state.Textures[stage] != NULL) {
-			state.Textures[stage]->Apply_For_Platform_Boundary(stage);
+			RenegadeVitaRenderer::Apply_Platform_Texture_Stage(*state.Textures[stage], stage);
 		} else if (stage == 0U) {
 			RenegadeVitaRenderer::Bind_Texture(0U, false);
 		} else {

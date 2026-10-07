@@ -328,6 +328,15 @@ struct NativeTextureStageCache {
 	uint32_t alpha_op;
 	uint32_t alpha_arg1;
 	uint32_t alpha_arg2;
+	// Last GL_TEXTURE_ENV values sent to this unit (RVRC1 bit 0). Texture
+	// environment state belongs to the unit, not to the bound object, and each
+	// glTexEnvi is idempotent per (unit, name), so an equal resend is a no-op.
+	// Apply_Original_Shader_State rewrites only GL_TEXTURE_ENV_MODE and clears
+	// combiner_known; the combine operands recorded here survive it.
+	enum { ENV_SHADOW_SLOTS = 15 };
+	uint32_t env_known;
+	GLint env_values[ENV_SHADOW_SLOTS];
+	bool env_color_white;
 };
 
 struct NativeRenderStateCache {
@@ -375,6 +384,30 @@ struct NativeTextureObjectSampler {
 enum { TEXTURE_OBJECT_SAMPLER_SLOTS = 1024 };
 NativeTextureObjectSampler g_texture_object_samplers[TEXTURE_OBJECT_SAMPLER_SLOTS] = {};
 uint32_t g_texture_object_sampler_generation = 1U;
+// One original TextureClass::Apply binds with the stage's previous sampler
+// request, then sets each changed filter and address state separately; every
+// step used to reach the bound GL object. Inside a sampler batch only each
+// stage's final request is kept and applied when the batch closes (see
+// Configure_Texture_Sampler_Stage). No draw can occur inside a batch.
+struct PendingTextureSampler {
+	bool pending;
+	uint32_t texture;
+	uint32_t address_u;
+	uint32_t address_v;
+	uint32_t min_filter;
+	uint32_t mag_filter;
+	uint32_t mip_filter;
+};
+PendingTextureSampler g_pending_texture_samplers[MeshMatDescClass::MAX_TEX_STAGES] = {};
+unsigned g_texture_sampler_batch_depth = 0U;
+uint64_t g_texture_sampler_deferrals = 0U;
+uint64_t g_texture_env_writes = 0U;
+uint64_t g_texture_env_skips = 0U;
+
+uint32_t Texture_Object_Sampler_Slot(uint32_t texture)
+{
+	return (texture * 2654435761U) & (TEXTURE_OBJECT_SAMPLER_SLOTS - 1U);
+}
 
 void Invalidate_Texture_Object_Samplers()
 {
@@ -384,6 +417,24 @@ void Invalidate_Texture_Object_Samplers()
 	if (g_texture_object_sampler_generation == 0U) {
 		memset(g_texture_object_samplers, 0, sizeof(g_texture_object_samplers));
 		g_texture_object_sampler_generation = 1U;
+	}
+}
+
+// glDeleteTextures frees one object's parameters and unbinds its name from
+// every unit. Unit enables, texture environments and all other objects keep
+// their state. glGenTextures may recycle the name with default parameters, so
+// every memo of this name, and any deferred request for it, is dropped.
+void Invalidate_Texture_Object_State(uint32_t texture)
+{
+	NativeTextureObjectSampler &object =
+		g_texture_object_samplers[Texture_Object_Sampler_Slot(texture)];
+	if (object.texture == texture) object.generation = 0U;
+	for (uint32_t stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+		NativeTextureStageCache &cache = g_texture_stage_cache[stage];
+		if (cache.texture == texture) cache.texture_known = false;
+		if (cache.sampler_texture == texture) cache.sampler_known = false;
+		PendingTextureSampler &pending = g_pending_texture_samplers[stage];
+		if (pending.texture == texture) pending.pending = false;
 	}
 }
 
@@ -1392,6 +1443,8 @@ bool Emit_Indexed_Texture_Coordinate(unsigned stage, GLenum texture_unit,
 	return true;
 }
 
+void Set_Texture_Env(uint32_t stage, GLenum name, GLint value);
+
 void Apply_Original_Shader_State(const ShaderClass &shader)
 {
 	Apply_Original_Fog_State(shader);
@@ -1420,19 +1473,19 @@ void Apply_Original_Shader_State(const ShaderClass &shader)
 			** default is modulation; leaving that default multiplies valid
 			** M00 textures by black DCG/material colours and produces the
 			** physical all-black-surface regression seen in dev16. */
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			Set_Texture_Env(0U, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 			break;
 		case ShaderClass::GRADIENT_ADD:
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
+			Set_Texture_Env(0U, GL_TEXTURE_ENV_MODE, GL_ADD);
 			break;
 		default:
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			Set_Texture_Env(0U, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 			break;
 		}
 	} else {
 		glActiveTexture(GL_TEXTURE0);
 		glDisable(GL_TEXTURE_2D);
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		Set_Texture_Env(0U, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	}
 	// Raster calls go through the exact GL-state shadow: only values vitaGL does
 	// not already hold are issued, in the original order.
@@ -1487,141 +1540,191 @@ GLenum To_GL_Texture_Argument(uint32_t argument)
 	}
 }
 
-void Set_Texture_Env_White_Constant()
+int Texture_Env_Shadow_Slot(GLenum name)
 {
-	GLfloat white[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, white);
+	switch (name) {
+	case GL_TEXTURE_ENV_MODE: return 0;
+	case GL_COMBINE_RGB: return 1;
+	case GL_SRC0_RGB: return 2;
+	case GL_SRC1_RGB: return 3;
+	case GL_SRC2_RGB: return 4;
+	case GL_OPERAND0_RGB: return 5;
+	case GL_OPERAND1_RGB: return 6;
+	case GL_OPERAND2_RGB: return 7;
+	case GL_COMBINE_ALPHA: return 8;
+	case GL_SRC0_ALPHA: return 9;
+	case GL_SRC1_ALPHA: return 10;
+	case GL_SRC2_ALPHA: return 11;
+	case GL_OPERAND0_ALPHA: return 12;
+	case GL_OPERAND1_ALPHA: return 13;
+	case GL_OPERAND2_ALPHA: return 14;
+	default: return -1;
+	}
 }
 
-void Apply_GL_RGB_Texture_Op(uint32_t operation, uint32_t argument0,
+// The caller has made `stage` the active unit. vitaGL marks the fragment
+// program dirty on every glTexEnvi, even an equal one; skipping an equal
+// resend leaves the unit's environment, and so the selected program, unchanged.
+void Set_Texture_Env(uint32_t stage, GLenum name, GLint value)
+{
+	NativeTextureStageCache &cache = g_texture_stage_cache[stage];
+	const int slot = Texture_Env_Shadow_Slot(name);
+	const uint32_t bit = slot >= 0 ? 1U << static_cast<unsigned>(slot) : 0U;
+	if ((g_render_work_cache_mode & 1U) != 0U && bit != 0U &&
+		(cache.env_known & bit) != 0U && cache.env_values[slot] == value) {
+		++g_texture_env_skips;
+		return;
+	}
+	glTexEnvi(GL_TEXTURE_ENV, name, value);
+	if (bit != 0U) {
+		cache.env_known |= bit;
+		cache.env_values[slot] = value;
+	}
+	++g_texture_env_writes;
+}
+
+void Set_Texture_Env_White_Constant(uint32_t stage)
+{
+	NativeTextureStageCache &cache = g_texture_stage_cache[stage];
+	if ((g_render_work_cache_mode & 1U) != 0U && cache.env_color_white) {
+		++g_texture_env_skips;
+		return;
+	}
+	GLfloat white[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, white);
+	cache.env_color_white = true;
+	++g_texture_env_writes;
+}
+
+void Apply_GL_RGB_Texture_Op(uint32_t stage, uint32_t operation, uint32_t argument0,
 	uint32_t argument1)
 {
 	switch (operation) {
 	case D3DTOP_SELECTARG1:
 	case D3DTOP_SELECTARG2:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_REPLACE);
+		Set_Texture_Env(stage, GL_SRC0_RGB,
 			To_GL_Texture_Argument(operation == D3DTOP_SELECTARG1 ?
 				argument0 : argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
 		break;
 	case D3DTOP_MODULATE:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_MODULATE);
+		Set_Texture_Env(stage, GL_SRC0_RGB,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+		Set_Texture_Env(stage, GL_SRC1_RGB,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND1_RGB, GL_SRC_COLOR);
 		break;
 	case D3DTOP_ADD:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_ADD);
+		Set_Texture_Env(stage, GL_SRC0_RGB,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+		Set_Texture_Env(stage, GL_SRC1_RGB,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND1_RGB, GL_SRC_COLOR);
 		break;
 	case D3DTOP_ADDSMOOTH:
-		Set_Texture_Env_White_Constant();
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_CONSTANT);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+		Set_Texture_Env_White_Constant(stage);
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_INTERPOLATE);
+		Set_Texture_Env(stage, GL_SRC0_RGB, GL_CONSTANT);
+		Set_Texture_Env(stage, GL_SRC1_RGB,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB,
+		Set_Texture_Env(stage, GL_SRC2_RGB,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND2_RGB, GL_SRC_COLOR);
 		break;
 	case D3DTOP_SUBTRACT:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_SUBTRACT);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_SUBTRACT);
+		Set_Texture_Env(stage, GL_SRC0_RGB,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+		Set_Texture_Env(stage, GL_SRC1_RGB,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND1_RGB, GL_SRC_COLOR);
 		break;
 	case D3DTOP_BLENDTEXTUREALPHA:
 	case D3DTOP_BLENDCURRENTALPHA:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_INTERPOLATE);
+		Set_Texture_Env(stage, GL_SRC0_RGB,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,
+		Set_Texture_Env(stage, GL_SRC1_RGB,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB,
+		Set_Texture_Env(stage, GL_SRC2_RGB,
 			operation == D3DTOP_BLENDTEXTUREALPHA ? GL_TEXTURE : GL_PREVIOUS);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND1_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_OPERAND2_RGB, GL_SRC_ALPHA);
 		break;
 	case D3DTOP_DISABLE:
 	default:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+		Set_Texture_Env(stage, GL_COMBINE_RGB, GL_REPLACE);
+		Set_Texture_Env(stage, GL_SRC0_RGB, GL_PREVIOUS);
+		Set_Texture_Env(stage, GL_OPERAND0_RGB, GL_SRC_COLOR);
 		break;
 	}
 }
 
-void Apply_GL_Alpha_Texture_Op(uint32_t operation, uint32_t argument0,
+void Apply_GL_Alpha_Texture_Op(uint32_t stage, uint32_t operation, uint32_t argument0,
 	uint32_t argument1)
 {
 	switch (operation) {
 	case D3DTOP_SELECTARG1:
 	case D3DTOP_SELECTARG2:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,
+		Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_REPLACE);
+		Set_Texture_Env(stage, GL_SRC0_ALPHA,
 			To_GL_Texture_Argument(operation == D3DTOP_SELECTARG1 ?
 				argument0 : argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
 		break;
 	case D3DTOP_MODULATE:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,
+		Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_MODULATE);
+		Set_Texture_Env(stage, GL_SRC0_ALPHA,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,
+		Set_Texture_Env(stage, GL_SRC1_ALPHA,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
 		break;
 	case D3DTOP_ADD:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_ADD);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,
+		Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_ADD);
+		Set_Texture_Env(stage, GL_SRC0_ALPHA,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,
+		Set_Texture_Env(stage, GL_SRC1_ALPHA,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
 		break;
 	case D3DTOP_ADDSMOOTH:
-		Set_Texture_Env_White_Constant();
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_INTERPOLATE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_CONSTANT);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,
+		Set_Texture_Env_White_Constant(stage);
+		Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_INTERPOLATE);
+		Set_Texture_Env(stage, GL_SRC0_ALPHA, GL_CONSTANT);
+		Set_Texture_Env(stage, GL_SRC1_ALPHA,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_ALPHA,
+		Set_Texture_Env(stage, GL_SRC2_ALPHA,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND2_ALPHA, GL_SRC_ALPHA);
 		break;
 	case D3DTOP_SUBTRACT:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_SUBTRACT);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,
+		Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_SUBTRACT);
+		Set_Texture_Env(stage, GL_SRC0_ALPHA,
 			To_GL_Texture_Argument(argument0));
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA,
+		Set_Texture_Env(stage, GL_SRC1_ALPHA,
 			To_GL_Texture_Argument(argument1));
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
 		break;
 	case D3DTOP_DISABLE:
 	default:
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PREVIOUS);
-		glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+		Set_Texture_Env(stage, GL_COMBINE_ALPHA, GL_REPLACE);
+		Set_Texture_Env(stage, GL_SRC0_ALPHA, GL_PREVIOUS);
+		Set_Texture_Env(stage, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
 		break;
 	}
 }
@@ -3011,9 +3114,9 @@ void Replay_Static_Mesh_Entry(const StaticMeshEntry &entry)
 		if (!same_state) {
 			const ShaderClass shader(batch.shader_bits);
 			Apply_Original_Shader_State(shader);
-			if (texture0 != NULL) texture0->Apply_For_Platform_Boundary(0U);
+			if (texture0 != NULL) Apply_Platform_Texture_Stage(*texture0, 0U);
 			else Bind_Texture(0U, false);
-			if (batch.detail_stage) texture1->Apply_For_Platform_Boundary(1U);
+			if (batch.detail_stage) Apply_Platform_Texture_Stage(*texture1, 1U);
 			else Disable_Texture_Stage(1U);
 			Apply_Original_Texture_Coordinate_State(
 				static_cast<VertexMaterialClass *>(batch.material));
@@ -3937,6 +4040,16 @@ void End_Frame(bool present)
 				static_cast<unsigned>(sizeof(g_indexed_mesh_batch)),
 				static_cast<unsigned long long>(g_material_skin_rgb_skips));
 			Log_GL_State_Shadow_Window(g_statistics.frames);
+			Vita_Append_A22_Runtime_Breadcrumb("texture-state",
+				"version=1 frame=%u sampler_updates=%llu sampler_skips=%llu sampler_deferrals=%llu texenv_writes=%llu texenv_skips=%llu binds=%llu bind_skips=%llu",
+				g_statistics.frames,
+				static_cast<unsigned long long>(g_statistics.texture_sampler_updates),
+				static_cast<unsigned long long>(g_statistics.texture_sampler_skips),
+				static_cast<unsigned long long>(g_texture_sampler_deferrals),
+				static_cast<unsigned long long>(g_texture_env_writes),
+				static_cast<unsigned long long>(g_texture_env_skips),
+				static_cast<unsigned long long>(g_statistics.texture_binds),
+				static_cast<unsigned long long>(g_statistics.texture_bind_skips));
 #if !RENEGADE_VITA_M00_DEMO
 			Log_Static_Mesh_Cache_Statistics();
 			Log_Skin_Deform_Cache_Statistics();
@@ -4055,6 +4168,10 @@ bool Bind_Texture(uint32_t native_texture, bool valid)
 	return Bind_Texture_Stage(0U, native_texture, valid);
 }
 
+#if defined(__vita__)
+static bool Flush_Pending_Texture_Sampler(uint32_t stage);
+#endif
+
 bool Bind_Texture_Stage(uint32_t stage, uint32_t native_texture, bool valid)
 {
 	if (stage >= MeshMatDescClass::MAX_TEX_STAGES) {
@@ -4076,6 +4193,12 @@ bool Bind_Texture_Stage(uint32_t stage, uint32_t native_texture, bool valid)
 	if (cache.texture_known && cache.texture == native_texture) {
 		++g_statistics.texture_bind_skips;
 		return true;
+	}
+	// A deferred request still targets the object bound now; finish it before
+	// the stage moves on, exactly where the immediate path wrote it.
+	if (g_pending_texture_samplers[stage].pending &&
+		g_pending_texture_samplers[stage].texture != native_texture) {
+		(void)Flush_Pending_Texture_Sampler(stage);
 	}
 	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
 	glBindTexture(GL_TEXTURE_2D, native_texture);
@@ -4104,21 +4227,12 @@ bool Configure_Texture_Sampler(uint32_t native_texture, bool valid,
 		address_u, address_v, min_filter, mag_filter, mip_filter);
 }
 
-bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
-	bool valid, uint32_t address_u, uint32_t address_v, uint32_t min_filter,
+#if defined(__vita__)
+// Applies one validated sampler request to `native_texture` on `stage` now.
+static bool Apply_Texture_Sampler_Now(uint32_t stage, uint32_t native_texture,
+	uint32_t address_u, uint32_t address_v, uint32_t min_filter,
 	uint32_t mag_filter, uint32_t mip_filter)
 {
-	if (stage >= MeshMatDescClass::MAX_TEX_STAGES) {
-		Record_Texture_Unsupported_Stage(stage);
-		return false;
-	}
-	if (!valid || native_texture == 0U) {
-		if (valid && native_texture == 0U) {
-			++g_statistics.texture_invalid_binds;
-		}
-		return false;
-	}
-#if defined(__vita__)
 	// D3D8's TextureClass owns the state choices.  This narrow translation only
 	// maps its established address/filter contract to VitaGL; it does not add a
 	// Vita sensitivity, cache, or material policy of its own.
@@ -4142,8 +4256,8 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 		native_min = point_min ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR;
 	}
 	const GLenum native_mag = mag_filter == 1U ? GL_NEAREST : GL_LINEAR;
-	NativeTextureObjectSampler &object_sampler = g_texture_object_samplers[
-		(native_texture * 2654435761U) & (TEXTURE_OBJECT_SAMPLER_SLOTS - 1U)];
+	NativeTextureObjectSampler &object_sampler =
+		g_texture_object_samplers[Texture_Object_Sampler_Slot(native_texture)];
 	const bool object_known = (g_render_work_cache_mode & 1U) != 0U &&
 		object_sampler.generation == g_texture_object_sampler_generation &&
 		object_sampler.texture == native_texture;
@@ -4204,6 +4318,84 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 	object_sampler.min_filter = native_min;
 	object_sampler.mag_filter = native_mag;
 	object_sampler.generation = g_texture_object_sampler_generation;
+	return true;
+}
+
+static bool Flush_Pending_Texture_Sampler(uint32_t stage)
+{
+	PendingTextureSampler &pending = g_pending_texture_samplers[stage];
+	if (!pending.pending) return true;
+	pending.pending = false;
+	return Apply_Texture_Sampler_Now(stage, pending.texture, pending.address_u,
+		pending.address_v, pending.min_filter, pending.mag_filter, pending.mip_filter);
+}
+#endif
+
+// Sampler batches bracket one original TextureClass::Apply. Its requests have
+// no draw between them, so only each object's final request is observable.
+void Begin_Texture_Sampler_Batch()
+{
+#if defined(__vita__)
+	++g_texture_sampler_batch_depth;
+#endif
+}
+
+void End_Texture_Sampler_Batch()
+{
+#if defined(__vita__)
+	if (g_texture_sampler_batch_depth == 0U || --g_texture_sampler_batch_depth != 0U) return;
+	for (uint32_t stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+		(void)Flush_Pending_Texture_Sampler(stage);
+	}
+#endif
+}
+
+bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
+	bool valid, uint32_t address_u, uint32_t address_v, uint32_t min_filter,
+	uint32_t mag_filter, uint32_t mip_filter)
+{
+	if (stage >= MeshMatDescClass::MAX_TEX_STAGES) {
+		Record_Texture_Unsupported_Stage(stage);
+		return false;
+	}
+	if (!valid || native_texture == 0U) {
+		if (valid && native_texture == 0U) {
+			++g_statistics.texture_invalid_binds;
+		}
+		return false;
+	}
+#if defined(__vita__)
+	// Defer only inside a batch and only for the object this stage already
+	// binds (TextureClass::Apply binds first), so deferral never changes a
+	// binding; the stage keeps just its final request. Any older request that
+	// this one supersedes, for another object on this stage or for this object
+	// on another stage, is applied first, so each object still ends with its
+	// last request in call order.
+	const NativeTextureStageCache &bound = g_texture_stage_cache[stage];
+	const bool defer = g_texture_sampler_batch_depth != 0U &&
+		(g_render_work_cache_mode & 1U) != 0U &&
+		bound.texture_known && bound.texture == native_texture;
+	for (uint32_t other = 0U; other < MeshMatDescClass::MAX_TEX_STAGES; ++other) {
+		const PendingTextureSampler &queued = g_pending_texture_samplers[other];
+		if (queued.pending && (other == stage ?
+			!defer || queued.texture != native_texture : queued.texture == native_texture)) {
+			(void)Flush_Pending_Texture_Sampler(other);
+		}
+	}
+	if (defer) {
+		PendingTextureSampler &pending = g_pending_texture_samplers[stage];
+		pending.pending = true;
+		pending.texture = native_texture;
+		pending.address_u = address_u;
+		pending.address_v = address_v;
+		pending.min_filter = min_filter;
+		pending.mag_filter = mag_filter;
+		pending.mip_filter = mip_filter;
+		++g_texture_sampler_deferrals;
+		return true;
+	}
+	return Apply_Texture_Sampler_Now(stage, native_texture, address_u, address_v,
+		min_filter, mag_filter, mip_filter);
 #else
 	(void)address_u;
 	(void)address_v;
@@ -4211,8 +4403,8 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 	(void)mag_filter;
 	(void)mip_filter;
 	++g_statistics.texture_sampler_updates;
-#endif
 	return true;
+#endif
 }
 
 bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
@@ -4254,9 +4446,9 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 		return true;
 	}
 	glActiveTexture(GL_TEXTURE0 + static_cast<GLenum>(stage));
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-	Apply_GL_RGB_Texture_Op(color_op, color_arg1, color_arg2);
-	Apply_GL_Alpha_Texture_Op(alpha_op, alpha_arg1, alpha_arg2);
+	Set_Texture_Env(stage, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+	Apply_GL_RGB_Texture_Op(stage, color_op, color_arg1, color_arg2);
+	Apply_GL_Alpha_Texture_Op(stage, alpha_op, alpha_arg1, alpha_arg2);
 	glActiveTexture(GL_TEXTURE0);
 	cache.combiner_known = true;
 	cache.combiner_texture_enabled = true;
@@ -4268,6 +4460,10 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 	cache.alpha_arg2 = alpha_arg2;
 	++g_statistics.state_changes;
 	if (glGetError() != GL_NO_ERROR) {
+		// Do not let a rejected environment value become a later skip.
+		cache.combiner_known = false;
+		cache.env_known = 0U;
+		cache.env_color_white = false;
 		++g_statistics.backend_errors;
 		return false;
 	}
@@ -4282,6 +4478,13 @@ bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 	(void)texture_enabled;
 #endif
 	return true;
+}
+
+void Apply_Platform_Texture_Stage(TextureClass &texture, unsigned stage)
+{
+	Begin_Texture_Sampler_Batch();
+	texture.Apply_For_Platform_Boundary(stage);
+	End_Texture_Sampler_Batch();
 }
 
 bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
@@ -4436,7 +4639,7 @@ void Release_Texture(uint32_t native_texture)
 #if defined(__vita__)
 	if (native_texture != 0U) {
 		glDeleteTextures(1, &native_texture);
-		Invalidate_Texture_State_Cache();
+		Invalidate_Texture_Object_State(native_texture);
 	}
 #else
 	(void)native_texture;
@@ -4586,7 +4789,7 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 				if (texture != bound_textures[stage]) {
 					bound_textures[stage] = texture;
 					if (bound_textures[stage] != NULL) {
-						bound_textures[stage]->Apply_For_Platform_Boundary(
+						Apply_Platform_Texture_Stage(*bound_textures[stage],
 							static_cast<unsigned int>(stage));
 					} else if (stage == 0) {
 						Bind_Texture(0U, false);
@@ -4837,12 +5040,12 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 					// Retain TextureClass as the resource/lifetime owner and invoke its
 					// original filter, mip, wrap, and bind sequence through the narrow
 					// platform bridge.
-					bound_textures[0]->Apply_For_Platform_Boundary(0U);
+					Apply_Platform_Texture_Stage(*bound_textures[0], 0U);
 				} else {
 					Bind_Texture(0U, false);
 				}
 				if (current_detail_stage) {
-					bound_textures[1]->Apply_For_Platform_Boundary(1U);
+					Apply_Platform_Texture_Stage(*bound_textures[1], 1U);
 				} else {
 					Disable_Texture_Stage(1U);
 				}

@@ -257,6 +257,12 @@ bool Configure_Texture_Sampler_Stage(uint32_t stage, uint32_t native_texture,
 bool Apply_DX8_Texture_Stage_State(uint32_t stage, uint32_t color_op,
 	uint32_t color_arg1, uint32_t color_arg2, uint32_t alpha_op,
 	uint32_t alpha_arg1, uint32_t alpha_arg2, bool texture_enabled);
+// Runs one original TextureClass::Apply inside a sampler batch: its bind and
+// combiner calls stay immediate, but only each stage's final address/filter
+// request reaches the GL texture object (RVRC1 bit 0; immediate when clear).
+void Begin_Texture_Sampler_Batch();
+void End_Texture_Sampler_Batch();
+void Apply_Platform_Texture_Stage(TextureClass &texture, unsigned stage);
 bool Apply_DX8_Render_State(uint32_t state, uint32_t value);
 void Record_Texture_Unsupported_Stage(uint32_t stage);
 void Release_Texture(uint32_t native_texture);

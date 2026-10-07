@@ -1,0 +1,348 @@
+--- a/source/ffp.c
++++ b/source/ffp.c
+@@ -267,8 +267,10 @@
+ } cached_vertex_shader;
+ cached_fragment_shader frag_shader_cache[SHADER_CACHE_SIZE];
+ cached_vertex_shader vert_shader_cache[SHADER_CACHE_SIZE];
+-uint8_t frag_shader_cache_size = 0;
+-uint8_t vert_shader_cache_size = 0;
++// Renegade: uint16_t so the 256-entry ring can report "full" and evict; a
++// uint8_t count wrapped to 0 on the 256th insert and leaked the cache.
++uint16_t frag_shader_cache_size = 0;
++uint16_t vert_shader_cache_size = 0;
+ int frag_shader_cache_idx = -1;
+ int vert_shader_cache_idx = -1;
+ uint8_t ffp_vertex_num_params = 1;
+@@ -444,6 +446,94 @@
+ }
+ #endif
+ 
++// Renegade platform extension: application-owned FFP GXP cache directory,
++// first-use telemetry and loading-time pre-warm. vglInit points the cache at
++// <vglSetShaderCachePath root>/ffp-<tag>; the default stays upstream's.
++#if defined(HAVE_HIGH_FFP_TEXUNITS) || defined(DISABLE_TEXTURE_COMBINER)
++#error Renegade FFP program cache requires the pinned two-stage combiner configuration
++#endif
++#ifndef RENEGADE_VGL_FFP_CACHE_DIGEST
++#define RENEGADE_VGL_FFP_CACHE_DIGEST "unversioned"
++#endif
++#define RENEGADE_FFP_STR_(x) #x
++#define RENEGADE_FFP_STR(x) RENEGADE_FFP_STR_(x)
++#define RENEGADE_FFP_MAX_GXP_BYTES (256 * 1024)
++enum {
++	RENEGADE_FFP_STAT_VERSION,
++	RENEGADE_FFP_STAT_VERT_COMPILES,
++	RENEGADE_FFP_STAT_FRAG_COMPILES,
++	RENEGADE_FFP_STAT_VERT_DISK_LOADS,
++	RENEGADE_FFP_STAT_FRAG_DISK_LOADS,
++	RENEGADE_FFP_STAT_DISK_REJECTS,
++	RENEGADE_FFP_STAT_COMPILE_US,
++	RENEGADE_FFP_STAT_DISK_US,
++	RENEGADE_FFP_STAT_MASK_CHANGES,
++	RENEGADE_FFP_STAT_VERT_REPATCHES,
++	RENEGADE_FFP_STAT_FRAG_REPATCHES,
++	RENEGADE_FFP_STAT_PREWARM_VERT,
++	RENEGADE_FFP_STAT_PREWARM_FRAG,
++	RENEGADE_FFP_STAT_VERT_CACHE_SIZE,
++	RENEGADE_FFP_STAT_FRAG_CACHE_SIZE,
++	RENEGADE_FFP_STAT_COMPILE_MAX_US,
++	RENEGADE_FFP_STAT_PREWARM_BYTES,
++	RENEGADE_FFP_STAT_COUNT
++};
++char vgl_renegade_ffp_cache_path[256] = "ux0:data/shader_cache/v" RENEGADE_FFP_STR(FFP_SHADER_CACHE_MAGIC);
++static uint32_t renegade_ffp_stats[RENEGADE_FFP_STAT_COUNT] = {1};
++
++const char *vglRenegadeGetFfpCacheTag(void) {
++	return VGL_GIT_HASH "-m" RENEGADE_FFP_STR(FFP_SHADER_CACHE_MAGIC) "-w" RENEGADE_FFP_STR(WVP_ON_GPU) "-p" RENEGADE_VGL_FFP_CACHE_DIGEST;
++}
++
++const char *vglRenegadeGetFfpCachePath(void) {
++	return vgl_renegade_ffp_cache_path;
++}
++
++uint32_t vglRenegadeGetFfpStats(uint32_t *out, uint32_t max_count) {
++	renegade_ffp_stats[RENEGADE_FFP_STAT_VERT_CACHE_SIZE] = vert_shader_cache_size;
++	renegade_ffp_stats[RENEGADE_FFP_STAT_FRAG_CACHE_SIZE] = frag_shader_cache_size;
++	uint32_t count = max_count < RENEGADE_FFP_STAT_COUNT ? max_count : RENEGADE_FFP_STAT_COUNT;
++	for (uint32_t i = 0; i < count; i++)
++		out[i] = renegade_ffp_stats[i];
++	return count;
++}
++
++static void renegade_ffp_count_build(int stat, uint32_t start_us) {
++	uint32_t elapsed = sceKernelGetProcessTimeLow() - start_us;
++	renegade_ffp_stats[stat]++;
++	if (stat == RENEGADE_FFP_STAT_VERT_COMPILES || stat == RENEGADE_FFP_STAT_FRAG_COMPILES) {
++		renegade_ffp_stats[RENEGADE_FFP_STAT_COMPILE_US] += elapsed;
++		if (elapsed > renegade_ffp_stats[RENEGADE_FFP_STAT_COMPILE_MAX_US])
++			renegade_ffp_stats[RENEGADE_FFP_STAT_COMPILE_MAX_US] = elapsed;
++	} else {
++		renegade_ffp_stats[RENEGADE_FFP_STAT_DISK_US] += elapsed;
++	}
++}
++
++// Reads one cached GXP. A missing, empty, oversized, short-read or
++// structurally invalid file returns NULL so the caller recompiles and
++// rewrites it, instead of registering a truncated program.
++static SceGxmProgram *renegade_load_cached_ffp_program(const char *fname) {
++	SceUID f = sceIoOpen(fname, SCE_O_RDONLY, 0777);
++	if (f < 0)
++		return NULL;
++	SceOff end = sceIoLseek(f, 0, SCE_SEEK_END);
++	sceIoLseek(f, 0, SCE_SEEK_SET);
++	SceGxmProgram *prog = NULL;
++	if (end > 0 && end <= RENEGADE_FFP_MAX_GXP_BYTES) {
++		uint32_t size = (uint32_t)end;
++		prog = (SceGxmProgram *)vglMalloc(size);
++		if (prog && (sceIoRead(f, prog, size) != (int)size || sceGxmProgramCheck(prog) != 0 || sceGxmProgramGetSize(prog) > size)) {
++			vgl_free(prog);
++			prog = NULL;
++		}
++	}
++	sceIoClose(f);
++	if (!prog)
++		renegade_ffp_stats[RENEGADE_FFP_STAT_DISK_REJECTS]++;
++	return prog;
++}
++
+ uint8_t reload_ffp_shaders(SceGxmVertexAttribute *attrs, SceGxmVertexStream *streams, SceGxmIndexSource index_type) {
+ #ifdef HAVE_PROFILING
+ 	uint32_t reload_ffp_shaders_start = sceKernelGetProcessTimeLow();
+@@ -609,6 +699,7 @@
+ 		ffp_dirty_vert = GL_FALSE;
+ 		ffp_dirty_frag = GL_FALSE;
+ 	} else {
++		renegade_ffp_stats[RENEGADE_FFP_STAT_MASK_CHANGES]++;
+ 		ffp_dirty_frag_blend = GL_TRUE; // We need to relink fragment with vertex shader if mask changed
+ 
+ 		if ((ffp_mask.raw & VERTEX_SHADER_MASK) == vert_shader_mask) {
+@@ -663,16 +754,14 @@
+ #ifdef HAVE_HIGH_FFP_TEXUNITS
+ 		sprintf(fname, "ux0:data/shader_cache/v%d/v/%016llX-%d.gxp", FFP_SHADER_CACHE_MAGIC, vert_shader_mask, WVP_ON_GPU);
+ #else
+-		sprintf(fname, "ux0:data/shader_cache/v%d/v/%08X-%d.gxp", FFP_SHADER_CACHE_MAGIC, vert_shader_mask, WVP_ON_GPU);
++		snprintf(fname, sizeof(fname), "%s/v/%08X-%d.gxp", vgl_renegade_ffp_cache_path, vert_shader_mask, WVP_ON_GPU);
+ #endif
+-		SceUID f = sceIoOpen(fname, SCE_O_RDONLY, 0777);
+-		if (f >= 0) {
++		SceUID f;
++		uint32_t renegade_build_start = sceKernelGetProcessTimeLow();
++		ffp_vertex_program = renegade_load_cached_ffp_program(fname);
++		if (ffp_vertex_program) {
+ 			// Gathering the precompiled shader from cache
+-			uint32_t size = sceIoLseek(f, 0, SCE_SEEK_END);
+-			sceIoLseek(f, 0, SCE_SEEK_SET);
+-			ffp_vertex_program = (SceGxmProgram *)vglMalloc(size);
+-			sceIoRead(f, ffp_vertex_program, size);
+-			sceIoClose(f);
++			renegade_ffp_count_build(RENEGADE_FFP_STAT_VERT_DISK_LOADS, renegade_build_start);
+ 		} else {
+ 			// Restarting vitaShaRK if we released it before
+ 			if (!is_shark_online)
+@@ -691,6 +780,7 @@
+ 			f = sceIoOpen(fname, SCE_O_WRONLY | SCE_O_TRUNC | SCE_O_CREAT, 0777);
+ 			sceIoWrite(f, ffp_vertex_program, size);
+ 			sceIoClose(f);
++			renegade_ffp_count_build(RENEGADE_FFP_STAT_VERT_COMPILES, renegade_build_start);
+ 		}
+ 		sceGxmShaderPatcherRegisterProgram(gxm_shader_patcher, ffp_vertex_program, &ffp_vertex_program_id);
+ 		ffp_vertex_unif_buf_size = sceGxmProgramGetDefaultUniformBufferSize(ffp_vertex_program);
+@@ -860,6 +950,7 @@
+ 		ffp_dirty_vert_attr = 0;
+ 		
+ 		// Creating patched vertex shader
++		renegade_ffp_stats[RENEGADE_FFP_STAT_VERT_REPATCHES]++;
+ 		patch_vertex_program(gxm_shader_patcher, ffp_vertex_program_id, attrs, ffp_vertex_num_params, streams, ffp_vertex_num_params, &ffp_vertex_program_patched);
+ 		
+ #ifndef INDICES_SPEEDHACK
+@@ -876,7 +967,7 @@
+ #ifdef HAVE_HIGH_FFP_TEXUNITS
+ 		sprintf(fname, "ux0:data/shader_cache/v%d/f/%016llX-%016llX-%08X.gxp", FFP_SHADER_CACHE_MAGIC, frag_shader_mask, cmb_mask.raw_high, cmb_mask.raw_low);
+ #else
+-		sprintf(fname, "ux0:data/shader_cache/v%d/f/%08X-%016llX.gxp", FFP_SHADER_CACHE_MAGIC, frag_shader_mask, cmb_mask.raw);
++		snprintf(fname, sizeof(fname), "%s/f/%08X-%016llX.gxp", vgl_renegade_ffp_cache_path, frag_shader_mask, cmb_mask.raw);
+ #endif
+ #else
+ #ifdef HAVE_HIGH_FFP_TEXUNITS
+@@ -885,14 +976,12 @@
+ 		sprintf(fname, "ux0:data/shader_cache/v%d/f/%08X-0000000000000000.gxp", FFP_SHADER_CACHE_MAGIC, frag_shader_mask);
+ #endif
+ #endif
+-		SceUID f = sceIoOpen(fname, SCE_O_RDONLY, 0777);
+-		if (f >= 0) {
++		SceUID f;
++		uint32_t renegade_build_start = sceKernelGetProcessTimeLow();
++		ffp_fragment_program = renegade_load_cached_ffp_program(fname);
++		if (ffp_fragment_program) {
+ 			// Gathering the precompiled shader from cache
+-			uint32_t size = sceIoLseek(f, 0, SCE_SEEK_END);
+-			sceIoLseek(f, 0, SCE_SEEK_SET);
+-			ffp_fragment_program = (SceGxmProgram *)vglMalloc(size);
+-			sceIoRead(f, ffp_fragment_program, size);
+-			sceIoClose(f);
++			renegade_ffp_count_build(RENEGADE_FFP_STAT_FRAG_DISK_LOADS, renegade_build_start);
+ 		} else {
+ 			// Restarting vitaShaRK if we released it before
+ 			if (!is_shark_online)
+@@ -971,6 +1060,7 @@
+ 			f = sceIoOpen(fname, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0777);
+ 			sceIoWrite(f, ffp_fragment_program, size);
+ 			sceIoClose(f);
++			renegade_ffp_count_build(RENEGADE_FFP_STAT_FRAG_COMPILES, renegade_build_start);
+ 		}
+ 		sceGxmShaderPatcherRegisterProgram(gxm_shader_patcher, ffp_fragment_program, &ffp_fragment_program_id);
+ 		ffp_fragment_unif_buf_size = sceGxmProgramGetDefaultUniformBufferSize(ffp_fragment_program);
+@@ -1014,6 +1104,7 @@
+ 
+ 	// Checking if fragment shader requires a blend settings change
+ 	if (ffp_dirty_frag_blend) {
++		renegade_ffp_stats[RENEGADE_FFP_STAT_FRAG_REPATCHES]++;
+ 		rebuild_frag_shader(ffp_fragment_program_id, &ffp_fragment_program_patched, ffp_vertex_program, SCE_GXM_OUTPUT_REGISTER_FORMAT_UCHAR4);
+ 
+ 		// Updating current fixed function pipeline blend config
+@@ -3953,3 +4044,105 @@
+ void vglRenegadeInvalidateVertexAttributes(void) {
+ 	ffp_dirty_vert_attr = 0xFFFF;
+ }
++
++// Renegade platform extension: export the FFP program keys resident in the
++// RAM cache (insertion order). Fragment keys are {mask, combiner low, high}.
++void vglRenegadeGetFfpKeys(uint32_t *vert, int max_vert, int *n_vert, uint32_t *frag, int max_frag, int *n_frag) {
++	int nv = 0, nf = 0;
++	for (int i = 0; i < vert_shader_cache_size && nv < max_vert; i++)
++		vert[nv++] = vert_shader_cache[i].mask.raw;
++	for (int i = 0; i < frag_shader_cache_size && nf < max_frag; i++) {
++		frag[nf * 3 + 0] = frag_shader_cache[i].mask.raw;
++		frag[nf * 3 + 1] = (uint32_t)frag_shader_cache[i].cmb_mask.raw;
++		frag[nf * 3 + 2] = (uint32_t)(frag_shader_cache[i].cmb_mask.raw >> 32);
++		nf++;
++	}
++	*n_vert = nv;
++	*n_frag = nf;
++}
++
++// Renegade platform extension: loading-time pre-warm. Each key that is not
++// yet resident and whose GXP is already in the persistent cache is loaded,
++// registered and inserted exactly as reload_ffp_shaders would on first use.
++// Keys without a cached GXP are skipped (first use compiles them as before),
++// the RAM cache never wraps here, and the active program state is restored.
++void vglRenegadePrewarmFfpPrograms(const uint32_t *vert, int n_vert, const uint32_t *frag, int n_frag, int *vert_loaded, int *frag_loaded) {
++	SceGxmProgram *saved_vertex_program = ffp_vertex_program;
++	int *saved_vertex_params = ffp_vertex_params;
++	int *saved_vertex_attribs = ffp_vertex_attribs;
++	SceGxmProgram *saved_fragment_program = ffp_fragment_program;
++	int *saved_fragment_params = ffp_fragment_params;
++	char fname[256];
++	int nv = 0, nf = 0;
++	for (int k = 0; k < n_vert && vert_shader_cache_size < SHADER_CACHE_SIZE; k++) {
++		uint32_t key = vert[k];
++		int resident = (key & VERTEX_SHADER_MASK) != key;
++		for (int i = 0; i < vert_shader_cache_size && !resident; i++)
++			resident = vert_shader_cache[i].mask.raw == key;
++		if (resident)
++			continue;
++		snprintf(fname, sizeof(fname), "%s/v/%08X-%d.gxp", vgl_renegade_ffp_cache_path, key, WVP_ON_GPU);
++		uint32_t start = sceKernelGetProcessTimeLow();
++		SceGxmProgram *prog = renegade_load_cached_ffp_program(fname);
++		SceGxmShaderPatcherId id;
++		if (!prog)
++			continue;
++		if (sceGxmShaderPatcherRegisterProgram(gxm_shader_patcher, prog, &id) < 0) {
++			vgl_free(prog);
++			continue;
++		}
++		renegade_ffp_count_build(RENEGADE_FFP_STAT_PREWARM_VERT, start);
++		vert_shader_cache_idx = (vert_shader_cache_idx + 1) % SHADER_CACHE_SIZE;
++		vert_shader_cache_size++;
++		cached_vertex_shader *entry = &vert_shader_cache[vert_shader_cache_idx];
++		entry->mask.raw = key;
++		entry->prog = prog;
++		entry->id = id;
++		entry->unif_buf_size = sceGxmProgramGetDefaultUniformBufferSize(prog);
++		entry->unif_buf = vglMalloc(entry->unif_buf_size);
++		renegade_ffp_stats[RENEGADE_FFP_STAT_PREWARM_BYTES] += sceGxmProgramGetSize(prog) + entry->unif_buf_size;
++		ffp_vertex_program = prog;
++		reload_vertex_uniforms_and_attributes(entry->vert_unifs, entry->attributes);
++		nv++;
++	}
++	for (int k = 0; k < n_frag && frag_shader_cache_size < SHADER_CACHE_SIZE; k++) {
++		uint32_t key = frag[k * 3 + 0];
++		uint64_t cmb = (uint64_t)frag[k * 3 + 1] | ((uint64_t)frag[k * 3 + 2] << 32);
++		int resident = (key & FRAGMENT_SHADER_MASK) != key;
++		for (int i = 0; i < frag_shader_cache_size && !resident; i++)
++			resident = frag_shader_cache[i].mask.raw == key && frag_shader_cache[i].cmb_mask.raw == cmb;
++		if (resident)
++			continue;
++		snprintf(fname, sizeof(fname), "%s/f/%08X-%016llX.gxp", vgl_renegade_ffp_cache_path, key, cmb);
++		uint32_t start = sceKernelGetProcessTimeLow();
++		SceGxmProgram *prog = renegade_load_cached_ffp_program(fname);
++		SceGxmShaderPatcherId id;
++		if (!prog)
++			continue;
++		if (sceGxmShaderPatcherRegisterProgram(gxm_shader_patcher, prog, &id) < 0) {
++			vgl_free(prog);
++			continue;
++		}
++		renegade_ffp_count_build(RENEGADE_FFP_STAT_PREWARM_FRAG, start);
++		frag_shader_cache_idx = (frag_shader_cache_idx + 1) % SHADER_CACHE_SIZE;
++		frag_shader_cache_size++;
++		cached_fragment_shader *entry = &frag_shader_cache[frag_shader_cache_idx];
++		entry->mask.raw = key;
++		entry->cmb_mask.raw = cmb;
++		entry->prog = prog;
++		entry->id = id;
++		entry->unif_buf_size = sceGxmProgramGetDefaultUniformBufferSize(prog);
++		entry->unif_buf = entry->unif_buf_size ? vglMalloc(entry->unif_buf_size) : NULL;
++		renegade_ffp_stats[RENEGADE_FFP_STAT_PREWARM_BYTES] += sceGxmProgramGetSize(prog) + entry->unif_buf_size;
++		ffp_fragment_program = prog;
++		reload_fragment_uniforms(entry->frag_unifs);
++		nf++;
++	}
++	ffp_vertex_program = saved_vertex_program;
++	ffp_vertex_params = saved_vertex_params;
++	ffp_vertex_attribs = saved_vertex_attribs;
++	ffp_fragment_program = saved_fragment_program;
++	ffp_fragment_params = saved_fragment_params;
++	*vert_loaded = nv;
++	*frag_loaded = nf;
++}
+--- a/source/vgl.c
++++ b/source/vgl.c
+@@ -29,6 +29,8 @@
+ #ifdef HAVE_SHADER_CACHE
+ static char shader_cache_root[128] = {};
+ #endif
++extern char vgl_renegade_ffp_cache_path[256];
++const char *vglRenegadeGetFfpCacheTag(void);
+ 
+ #ifdef HAVE_SOFTFP_ABI
+ __attribute__((naked)) void sceGxmSetViewport_sfp(SceGxmContext *context, float xOffset, float xScale, float yOffset, float yScale, float zOffset, float zScale) {
+@@ -176,13 +178,23 @@
+ 	sprintf(vgl_file_cache_path, "ux0:data/vgl_cache/%s", titleid);
+ 	sceIoMkdir(vgl_file_cache_path, 0777);
+ #endif
+-	sceIoMkdir("ux0:data/shader_cache", 0777);
+ 	char fname[256];
+-	sprintf(fname, "ux0:data/shader_cache/v%d", FFP_SHADER_CACHE_MAGIC);
+-	sceIoMkdir(fname, 0777);
+-	sprintf(fname, "ux0:data/shader_cache/v%d/v", FFP_SHADER_CACHE_MAGIC);
++#ifdef HAVE_SHADER_CACHE
++	if (shader_cache_root[0]) {
++		// Renegade: an application-owned root also owns the FFP GXP cache,
++		// versioned by vitaGL revision, FFP magic, WVP mode and patch digest.
++		sceIoMkdir(shader_cache_root, 0777);
++		snprintf(vgl_renegade_ffp_cache_path, sizeof(vgl_renegade_ffp_cache_path), "%s/ffp-%s", shader_cache_root, vglRenegadeGetFfpCacheTag());
++	} else
++#endif
++	{
++		sceIoMkdir("ux0:data/shader_cache", 0777);
++		sprintf(vgl_renegade_ffp_cache_path, "ux0:data/shader_cache/v%d", FFP_SHADER_CACHE_MAGIC);
++	}
++	sceIoMkdir(vgl_renegade_ffp_cache_path, 0777);
++	snprintf(fname, sizeof(fname), "%s/v", vgl_renegade_ffp_cache_path);
+ 	sceIoMkdir(fname, 0777);
+-	sprintf(fname, "ux0:data/shader_cache/v%d/f", FFP_SHADER_CACHE_MAGIC);
++	snprintf(fname, sizeof(fname), "%s/f", vgl_renegade_ffp_cache_path);
+ 	sceIoMkdir(fname, 0777);
+ #ifdef HAVE_SHADER_CACHE
+ 	if (!shader_cache_root[0])

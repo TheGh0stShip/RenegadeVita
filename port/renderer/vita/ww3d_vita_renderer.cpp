@@ -66,6 +66,7 @@ void RenegadeVita_Release_DX8_Render_Target();
 #include "ww3d_vita_indexed_mesh_batch.h"
 #include "ww3d_vita_indexed_vertex_records.h"
 #include "ww3d_vita_static_mesh_cache.h"
+#include "ww3d_vita_ffp_program_warm.h"
 extern "C" void vglRenegadeEndIndexed(GLsizei count, const GLushort *indices);
 extern "C" GLboolean vglRenegadeImmediateVertices(const GLfloat *records, GLsizei count);
 extern "C" void vglRenegadeBeginProjective(GLenum mode);
@@ -3835,6 +3836,8 @@ bool Initialize()
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-init",
 		"internal stages reached before vglInit return: GXM/context/framebuffer/depth/shader-patcher/clear-program/index-buffer/texture0 attempted; installed NO_DEBUG archive does not expose their individual return codes");
 	Log_System_Memory("after vglInit");
+	// Boot loading time: load previously seen FFP GXPs before any gameplay draw.
+	RenegadeVitaFfpProgramWarm::Prewarm_From_Record("renderer-init");
 	Log_VitaGL_Memory();
 	{
 		const bool vsync_enabled = Read_Vsync_Enabled();
@@ -3970,6 +3973,7 @@ void Shutdown()
 	Release_Static_Mesh_Builder();
 #endif
 	Invalidate_Native_State_Cache();
+	RenegadeVitaFfpProgramWarm::Record_Resident_Keys("renderer-shutdown");
 	Vita_Append_A22_Runtime_Breadcrumb("renderer-lifecycle",
 		"logical shutdown: shutdowns=%u sessions=%u native_calls=%u native_ready=%d",
 		g_lifecycle.logical_shutdowns, g_lifecycle.logical_sessions,
@@ -4069,6 +4073,7 @@ void End_Frame(bool present)
 			}
 		}
 		if (g_statistics.frames % 120U == 0U) {
+			RenegadeVitaFfpProgramWarm::Sample_Window(g_statistics.frames);
 			Vita_Append_A22_Runtime_Breadcrumb("render-work-cache",
 				"version=1 mode=%u frame=%u sampler_writes=%llu material_evaluations=%llu material_hits=%llu fallback_passes=%llu scratch_bytes=%llu object_table_bytes=%u direct_atlas_requests=%llu light_normalizations=%llu mesh_corners=%llu mesh_unique=%llu mesh_batches=%llu mesh_scratch=%u skin_rgb_skips=%llu",
 				g_render_work_cache_mode, g_statistics.frames,

@@ -29,6 +29,7 @@
 #include "renegade_build_identity.h"
 #include "renegade_vita_frame_profile.h"
 #include "ww3d_vita_renderer.h"
+#include "ww3d_vita_ffp_program_warm.h"
 
 #include "assetmgr.h"
 #include "_globals.h"
@@ -3949,6 +3950,8 @@ void Prepare_Original_Level_Loading_Resources(A31VitaLoadingPresenter &presenter
 	const char *label = m13 ? "M13" : (m01 ? "M01" : archive);
 	A30_Vita_Log("A4 level preparation: begin owner=%s archive=%s campaign=%d\n",
 		owner != NULL ? owner : "(none)", archive, campaign ? 1 : 0);
+	// Persist FFP program keys first used since the last loading screen.
+	RenegadeVitaFfpProgramWarm::Record_Resident_Keys("level-prepare");
 	Warm_Level_Cinematic_Preset_Models(presenter, archive, root_factory);
 	// Dev155-157 measured retained aggregate/HLOD templates and the M13 intro
 	// set remain hand-selected: generic per-instance retention is unmeasured.

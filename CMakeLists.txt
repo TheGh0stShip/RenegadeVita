@@ -476,6 +476,7 @@ set(RENEGADE_A30_PORT_SOURCES
   ${RENEGADE_ROOT}/port/platform/renegade_optional_services.cpp
   ${RENEGADE_ROOT}/port/platform/renegade_network_provider.cpp
 	${RENEGADE_ROOT}/port/renderer/vita/ww3d_vita_renderer.cpp
+	${RENEGADE_ROOT}/port/renderer/vita/ww3d_vita_ffp_program_warm.cpp
 	${RENEGADE_ROOT}/port/renderer/vita/ww3d_dx8_boundary.cpp
 	${RENEGADE_ROOT}/port/renderer/vita/surface_boundary.cpp
 	${RENEGADE_ROOT}/port/renderer/vita/renegade_freetype_font_provider.cpp

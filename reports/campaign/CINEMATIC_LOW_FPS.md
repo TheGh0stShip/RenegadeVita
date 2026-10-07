@@ -125,7 +125,7 @@ Lateness is always at most one clamped frame of 200 ms, and `FrameSync` absorbs 
    - Effect: `Parse_Commands` re-enters from `Custom`. The inner call frees the executing head, runs only the >999000 tail, then destroys. The outer loop then sees an empty list.
    - Host test: no line runs twice, and `Destroy_Object` is called twice, which is harmless `Set_Delete_Pending`.
    - Port note: the Vita-only slow-command log in `Parse_Command` prints `vita_original_command` after the command returns. In this nested case, and only when that command took at least 100 ms, it reads freed text.
-   - Reachability from retail data is unproven and the read is diagnostic-only, so it is not patched. If it is ever seen, copy the command into a bounded buffer before dispatch.
+   - Reachability from retail data is unproven. **Fixed anyway**: `scripts-a38-cinematic-slow-command-text-copy.patch` copies the command into a 161-byte buffer before dispatch (`reports/SUSPEND_RESUME_TIMING.md`).
 4. **Animation wrap and overshoot** (wwphys/combat, original).
    - `ANIMATE_TARGET` with `FrameSync` beyond the end frame snaps back to the end within a frame.
    - `ANIMATE_LOOP` and `ANIM_MODE_LOOP` subtract the loop length once per step. A loop shorter than one frame step (at most 6 frames at the clamp) can leave the frame past the loop end.

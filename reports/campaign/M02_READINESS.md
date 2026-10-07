@@ -419,3 +419,90 @@ secondaries, and even a pending primary 203, cannot stop the mission ending.
   navigation, and only a physical route can show it.
 - **Physical gates.** All physical gates in the test route above are still
   open.
+
+## Follow-up fixes (2026-10-07)
+
+Evidence class: static source review, retail metadata (Vita3K retail copy,
+read-only: `m02.ldd` conversation records), deterministic staging
+(`bash tools/stage_sources.sh` rc 0, zero fuzz, 572 ordered patches, inventory
+`bb6441b9…21d5`), `tools/audit_script_save_state_gaps.py` and
+`arm-vita-eabi-g++ -fsyntax-only` of the patched `Mission02.cpp` (rc 0, no
+Mission02 diagnostics). No build, no Vita3K, no hardware. Line numbers refer to
+`staging/scripts/Mission02.cpp` after this change (SHA-256 `27eb945f…6293`).
+
+Patch: `port/patches/scripts-a38-m02-followup-midtro-mendoza-repair-latch.patch`.
+It is registered after `scripts-a36-m02-respawn-area-bounds.patch`, which was
+the last M02 patch.
+
+### Fixed
+
+1. **Midtro zone 400193 had no latch (:841-852).** Entering the zone again
+   during the 1 s before timer 9 destroys it started a second
+   `X2K_Midtro.txt` controller. It also queued a second delayed 1000/1002
+   keycard custom and a second timer 9, which died with the zone. The case
+   now returns early when `was_entered` is set. The flag is set only after
+   the `Invisible_Object` is created. If creation fails, a re-entry retries,
+   as before. `was_entered` is already saved (ID 3), and the 400193 instance
+   used it for nothing else.
+2. **Mendoza's extra conversations (:5181).** `M02_Mendoza::Timer_Expired`
+   began every 7 s tick with
+   `int id = Create_Conversation("MX2DSGN_DSGN0019", …)`. The `switch` then
+   overwrote `id`, so that conversation was never joined or started.
+   - `Create_New_Conversation` adds every conversation to
+     `ActiveConversationList` (`staging/combat/conversationmgr.cpp:1289`).
+   - A conversation that never starts stays in `STATE_INITIALIZING` until
+     `InitializingTimeLeft` runs out. That timer starts at 60000 s
+     (`activeconversation.cpp:104`, `:462`).
+   - So the extras did not go away when Mendoza left, as earlier sections
+     said. They stayed in the active list and in saves until the level ended.
+   - The growth was about 514 per hour for as long as he fought (he is
+     invulnerable and optional).
+   - No conversation slots leaked: the list is a dynamic vector.
+   - The only consumer of the active count is the innate-chatter check
+     (`soldierobserver.cpp:949`), and it is compiled out because
+     `ENABLE_INNATE_CONVERSATIONS` is undefined.
+   - `MX2DSGN_DSGN0019` is non-key (1 remark), so the extras never cut off
+     other speech.
+
+   Fix: `id` starts at -1. Every `counter` value assigns `id`, and the
+   removed conversation was never audible, so the taunts that play are
+   unchanged.
+3. **Unsaved repair-announcement latches.** `M02_Obelisk` and `M02_Power_Plant`
+   had no `REGISTER_VARIABLES`, so `info_given` was indeterminate after a
+   load. The one-time EVA repair line, together with its
+   `Stop_All_Conversations`, could then replay or never play. Both now save
+   `info_given` as ID 1 (:3911, :3994). `audit_script_save_state_gaps` now
+   reports `gap_vars=0` for Mission02; it was 2.
+
+### Completion before activation (203/202/217/213): not patched here
+
+This is left to the ObjectiveManager early-status memory that is being added
+in `objectives.cpp`. Mission02 changes would only duplicate it. The M02 path
+that fix needs to cover:
+- The controller's `(id, 1)` case (:118-123) calls `Set_Objective_Status`
+  before the objective exists.
+- The convoy count (:130-142) calls `Set_Objective_Status(213, ACCOMPLISHED)`
+  directly.
+- Zone 400269/400188 later send `(id, 0)`, which reaches `Add_An_Objective`.
+  That function calls `Add_Objective(PENDING)`, then
+  `Set_Objective_Radar_Blip` and `Set_Objective_HUD_Info_Position`.
+
+Applying a remembered status inside `Add_Objective` is enough for M02, because
+the radar (`radar.cpp:614`) and the HUD POG list (`objectives.cpp:723-730`)
+show only pending objectives. One caveat for that fix:
+`Get_Num_HUD_Objectives` assumes the pending objectives come first, and
+`Add_Objective` does not call `Sort_Objectives`. The fix should therefore sort
+after it applies a remembered status. The `(id, 1)` FINISH conversation timer
+(id+200) still plays, unchanged.
+
+### Deferred
+
+- Saves made before this change keep the old behaviour: no latch is set for
+  a pre-existing 400193 entry, and the extra Mendoza conversations already in
+  the save remain until the level ends.
+- Physical check:
+  - Enter 400193 and step back out and in during the first second. Exactly
+    one midtro should play, and the keycard should be granted once.
+  - Fight Mendoza for several minutes, quicksave, and confirm the save loads.
+  - Damage the Obelisk and the Power Plant after a load. The repair line
+    should play at most once.

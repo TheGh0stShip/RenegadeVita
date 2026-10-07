@@ -48,6 +48,7 @@
 #include "wwaudio.h"
 #include "hud.h"
 #include "string_ids.h"
+#include "a30_vita_runtime.h"
 
 
 /*
@@ -58,6 +59,97 @@ ObjectivesViewerClass			ObjectiveManager::Viewer;
 bool									ObjectiveManager::DebugMode = false;
 bool									ObjectiveManager::HUDUpdate = true;
 int									ObjectiveManager::NumSpecifiedTertiaryObjectives;
+
+
+/*
+**	Vita port: early objective status.  Mission scripts can report an objective
+**	accomplished or failed before the script that adds it has run (the add is
+**	often gated on a conversation end or a zone).  Set_Objective_Status dropped
+**	that report and the later Add_Objective left the objective pending for the
+**	rest of the mission (HUD, EVA, score screen).  Remember the latest terminal
+**	status of each unknown ID (bounded, cleared by Reset, saved with the
+**	manager) and replay it through Set_Objective_Status when Add_Objective
+**	creates that ID as pending.  A replay marker absorbs one same-status repeat
+**	before the next Update (scripts that credit a late add themselves).
+**	Objectives that are added first never touch the table.
+**	See reports/campaign/OBJECTIVE_EARLY_STATUS.md.
+*/
+namespace {
+	enum { EARLY_STATUS_CAPACITY = 32 };
+
+	struct EarlyObjectiveStatus {
+		int	ID;
+		int	Status;
+		bool	Replayed;
+	};
+
+	EarlyObjectiveStatus	EarlyStatus[EARLY_STATUS_CAPACITY];
+	int						EarlyStatusCount = 0;
+	int						EarlyStatusLogBudget = 64;
+
+	bool	Early_Status_Is_Terminal( int status )
+	{
+		return	status == ObjectiveManager::STATUS_ACCOMPLISHED ||
+					status == ObjectiveManager::STATUS_FAILED;
+	}
+
+	int	Early_Status_Find( int id )
+	{
+		for ( int i = 0; i < EarlyStatusCount; i++ ) {
+			if ( EarlyStatus[i].ID == id ) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	void	Early_Status_Remove( int index )
+	{
+		for ( int i = index + 1; i < EarlyStatusCount; i++ ) {
+			EarlyStatus[i - 1] = EarlyStatus[i];
+		}
+		EarlyStatusCount--;
+	}
+
+	void	Early_Status_Log( const char * event, int id, int status )
+	{
+		if ( EarlyStatusLogBudget > 0 ) {
+			EarlyStatusLogBudget--;
+			A30_Vita_Log( "A4 objective early status: %s id=%d status=%d entries=%d\n", event, id, status, EarlyStatusCount );
+		}
+	}
+
+	void	Early_Status_Append( int id, int status, bool replayed )
+	{
+		if ( EarlyStatusCount == EARLY_STATUS_CAPACITY ) {
+			Early_Status_Log( "evict", EarlyStatus[0].ID, EarlyStatus[0].Status );
+			Early_Status_Remove( 0 );
+		}
+		EarlyStatus[EarlyStatusCount].ID = id;
+		EarlyStatus[EarlyStatusCount].Status = status;
+		EarlyStatus[EarlyStatusCount].Replayed = replayed;
+		EarlyStatusCount++;
+	}
+
+	void	Early_Status_Forget( int id )
+	{
+		int index = Early_Status_Find( id );
+		if ( index >= 0 ) {
+			Early_Status_Remove( index );
+		}
+	}
+
+	//	Latest status wins: a pending or hidden report for an unknown ID clears an
+	//	earlier terminal one, so the later add keeps its own status.
+	void	Early_Status_Remember( int id, int status )
+	{
+		Early_Status_Forget( id );
+		if ( id > 0 && Early_Status_Is_Terminal( status ) ) {
+			Early_Status_Append( id, status, false );
+			Early_Status_Log( "remember", id, status );
+		}
+	}
+}
 
 
 /*
@@ -379,6 +471,8 @@ void	ObjectiveManager::Shutdown( void )
 void	ObjectiveManager::Reset( void )
 {
 	HUDUpdate = true;
+	EarlyStatusCount = 0;
+	EarlyStatusLogBudget = 64;
 	while ( ObjectiveList.Count() != 0 ) {
 		Objective * objective = ObjectiveList[0];
 		ObjectiveList.Delete( 0 );
@@ -394,6 +488,7 @@ enum	{
 	CHUNKID_MANAGER_VARIABLES,
 
 	MICROCHUNKID_NUM_SPECIFIED_TERTIARY_OBJECTIVES		=	1,
+	MICROCHUNKID_EARLY_OBJECTIVE_STATUS,	// Vita port: { ID, Status } per remembered entry
 };
 
 /*
@@ -413,6 +508,13 @@ bool	ObjectiveManager::Save( ChunkSaveClass &csave )
 
 	csave.Begin_Chunk( CHUNKID_MANAGER_VARIABLES );
 		WRITE_MICRO_CHUNK( csave, 	MICROCHUNKID_NUM_SPECIFIED_TERTIARY_OBJECTIVES,	NumSpecifiedTertiaryObjectives );
+		// Replay markers are transient (cleared by the next Update) and not saved.
+		for ( int i = 0; i < EarlyStatusCount; i++ ) {
+			if ( !EarlyStatus[i].Replayed ) {
+				int entry[2] = { EarlyStatus[i].ID, EarlyStatus[i].Status };
+				WRITE_MICRO_CHUNK( csave, 	MICROCHUNKID_EARLY_OBJECTIVE_STATUS,	entry );
+			}
+		}
 	csave.End_Chunk();
 
 	return !csave.Has_Error();
@@ -425,6 +527,9 @@ bool	ObjectiveManager::Load( ChunkLoadClass &cload )
 	bool loaded = true;
 	int tertiary_objectives = 0;
 	bool tertiary_seen = false;
+	// Vita port: optional; absent in older saves, ignored by older loaders.
+	EarlyObjectiveStatus early_status[EARLY_STATUS_CAPACITY];
+	int early_count = 0;
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
@@ -442,6 +547,20 @@ bool	ObjectiveManager::Load( ChunkLoadClass &cload )
 								cload.Read(&tertiary_objectives, sizeof(tertiary_objectives)) != sizeof(tertiary_objectives)) loaded = false;
 							else tertiary_seen = true;
 							break;
+						case MICROCHUNKID_EARLY_OBJECTIVE_STATUS:
+						{
+							int entry[2];
+							if (early_count >= EARLY_STATUS_CAPACITY || cload.Cur_Micro_Chunk_Length() != sizeof(entry) ||
+								cload.Read(entry, sizeof(entry)) != sizeof(entry) || entry[0] <= 0 ||
+								!Early_Status_Is_Terminal(entry[1])) loaded = false;
+							else {
+								early_status[early_count].ID = entry[0];
+								early_status[early_count].Status = entry[1];
+								early_status[early_count].Replayed = false;
+								early_count++;
+							}
+							break;
+						}
 						default:
 							Debug_Say(("Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 							break;
@@ -475,7 +594,18 @@ bool	ObjectiveManager::Load( ChunkLoadClass &cload )
 	}
 
 	loaded = loaded && variables_seen && tertiary_seen && !cload.Has_Error();
+	// The saver writes each unknown ID once and never an ID that is in the list.
+	for (int index = 0; loaded && index < early_count; ++index) {
+		if (Find_Objective(early_status[index].ID) != NULL) loaded = false;
+		for (int other = 0; other < index; ++other) {
+			if (early_status[other].ID == early_status[index].ID) loaded = false;
+		}
+	}
 	if (loaded) {
+		for (int index = 0; index < early_count; ++index) {
+			EarlyStatus[index] = early_status[index];
+		}
+		EarlyStatusCount = early_count;
 		NumSpecifiedTertiaryObjectives = tertiary_objectives;
 		Viewer.Update ();
 		HUDUpdate = true;
@@ -491,6 +621,15 @@ void	ObjectiveManager::Add_Objective( int id, int type, int status, int short_de
 	if ( Find_Objective( id ) != NULL ) {
 		Debug_Say(( "Adding a duplicate Objective ID\n" ));
 		return;
+	}
+
+	// Vita port: any add consumes a status reported before it; only a pending
+	// add replays it (below).
+	int early_status = STATUS_IS_PENDING;
+	int early_index = Early_Status_Find( id );
+	if ( early_index >= 0 ) {
+		early_status = EarlyStatus[early_index].Status;
+		Early_Status_Remove( early_index );
 	}
 
 	Objective * objective = Add_Loadable_Objective();
@@ -528,11 +667,20 @@ void	ObjectiveManager::Add_Objective( int id, int type, int status, int short_de
 
 	Viewer.Update ();
 	HUDUpdate = true;
+
+	// Vita port: replay the early status through the original status path
+	// (EVA message, OBCO/OBFA log, blip reset, sort) as if the add came first.
+	if ( early_status != STATUS_IS_PENDING && status == STATUS_IS_PENDING ) {
+		Early_Status_Log( "replay", id, early_status );
+		Set_Objective_Status( id, early_status );
+		Early_Status_Append( id, early_status, true );
+	}
 	return ;
 }
 
 void	ObjectiveManager::Remove_Objective( int id )
 {
+	Early_Status_Forget( id );	// Vita port: a removal supersedes an early status
 	Objective * objective = Find_Objective( id );
 	if ( objective != NULL ) {
 
@@ -560,7 +708,18 @@ void	ObjectiveManager::Set_Objective_Status( int id, int status )
 	Objective * objective = Find_Objective( id );
 	if ( objective != NULL ) {
 
-		bool is_unhiding =	(objective->Status == ObjectiveManager::STATUS_HIDDEN) && 
+		// Vita port: Add_Objective already replayed this status before the next
+		// Update; absorb the script's own same-status credit once.
+		int early_index = Early_Status_Find( id );
+		if ( early_index >= 0 ) {
+			bool repeat = EarlyStatus[early_index].Replayed && status == objective->Status;
+			Early_Status_Remove( early_index );
+			if ( repeat ) {
+				return;
+			}
+		}
+
+		bool is_unhiding =	(objective->Status == ObjectiveManager::STATUS_HIDDEN) &&
 									(status != ObjectiveManager::STATUS_HIDDEN);
 
 		objective->Status = status;
@@ -600,6 +759,7 @@ void	ObjectiveManager::Set_Objective_Status( int id, int status )
 
 	} else {
 		Debug_Say(( "Objective not found to set status\n" ));
+		Early_Status_Remember( id, status );	// Vita port: replayed by a later add
 	}
 
 	Sort_Objectives();
@@ -786,6 +946,13 @@ int		ObjectiveManager::Get_Num_Completed_Objectives( int type )
 
 void	ObjectiveManager::Update( float dt )
 {
+	// Vita port: replay markers only absorb a repeat made before this Update.
+	for ( int i = EarlyStatusCount - 1; i >= 0; i-- ) {
+		if ( EarlyStatus[i].Replayed ) {
+			Early_Status_Remove( i );
+		}
+	}
+
 	for ( int i = 0; i < ObjectiveList.Count(); i++ ) {
 		if ( ObjectiveList[i]->Status != STATUS_HIDDEN ) {
 			ObjectiveList[i]->Age += dt;

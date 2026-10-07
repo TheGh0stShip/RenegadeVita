@@ -168,6 +168,18 @@ void	TimeManager::Update_Frame_Time()
 	if ( LastTicks == 0) {		// sync first time
 		LastTicks = ticks;
 	}
+#if defined(__vita__) && defined(RENEGADE_VITA_PORT)
+	// Vita system suspend/resume: process time may keep advancing while the
+	// title is suspended.  At the first update after an observed resume the
+	// port limits the pending real step to the original simulated cap, so
+	// Get_Frame_Real_Seconds consumers (Mendoza death camera, input
+	// acceleration, recoil, MP timers) never receive the suspended interval.
+	// FrameTicks is unchanged: it was already capped below.
+	extern int Renegade_Vita_Resume_Frame_Clock_Rebase( int ticks, int last_ticks,
+		int previous_real_ticks, int max_step_ticks );
+	LastTicks = Renegade_Vita_Resume_Frame_Clock_Rebase( ticks, LastTicks,
+		RealFrameTicks, TICKS_PER_SECOND / SLOWEST_FPS );
+#endif
 
 	FrameTicks = ticks - LastTicks;
 	RealFrameTicks = ticks - LastTicks;

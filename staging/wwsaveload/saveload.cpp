@@ -193,6 +193,7 @@ void SaveLoadSystemClass::Discard_Post_Load_Callbacks (void)
 {
 	PostLoadableClass *obj = PostLoadList.Remove_Head();
 	while (obj != NULL) {
+		obj->On_Post_Load_Discarded();
 		obj->Set_Post_Load_Registered(false);
 		obj = PostLoadList.Remove_Head();
 	}

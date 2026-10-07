@@ -348,3 +348,122 @@ Physical check: poke the PCT, quicksave within about 5 s, load, and wait. The
 unlock should arrive about 30 s after the poke, with the watchdog log line.
 Then kill the SAM first and poke the PCT during the Kane talk. The "Open the
 gate" objective should appear within 30 s.
+
+## Follow-up fixes (2026-10-07)
+
+Evidence class: static source review, retail metadata (Vita3K retail copy,
+read-only: `m01.ldd` conversation records, `M01.mix` `x1d_gtower_flaredrop.txt`),
+deterministic staging (`bash tools/stage_sources.sh` rc 0, zero fuzz, 572 ordered
+patches, inventory `bb6441b9…21d5`), `tools/audit_script_save_state_gaps.py`
+and `arm-vita-eabi-g++ -fsyntax-only` of the patched `Mission01.cpp` (rc 0, no
+diagnostics on changed lines). No build, no Vita3K, no hardware. Line numbers
+are `staging/scripts/Mission01.cpp` after this change (SHA-256 `c492bcb4…f11a`).
+
+Patch: `port/patches/scripts-a38-m01-followup-save-and-turrets-fallback.patch`.
+It is registered after `scripts-a38-m01-open-gate-objective-fallback.patch` and
+anchored to that patch's output (`c05156b1…fff5`). No earlier anchor moved.
+
+### Fixed
+
+1. **Unsaved members that are read after a load.** These were the last two
+   M01 save gaps. `audit_script_save_state_gaps` now reports `gap_vars=0` for
+   Mission01.
+   - `M01_TurretBeach_Engineer_JDG::last_health` (now ID 6, :15965).
+     `Damaged` restores it with `Set_Health` whenever the gunboat hits the
+     engineer. After a load it held indeterminate memory, so the next gunboat
+     hit set his health to a garbage float.
+   - `M01_MediumTank_ReminderZone_JDG::reminderConv` (now ID 5, :19420; also
+     set to 0 in `Created`, :19428). `Action_Complete` re-arms the 30 s
+     reminder timer only when the ending conversation matches this ID.
+     Conversation monitors are relinked on load, so after a load during a
+     reminder the comparison failed and the second "get in the tank" reminder
+     never came. Cosmetic, but it changed behaviour after a load.
+2. **LOW gate: turrets objective (`CONVERSATION_GATED_OBJECTIVES.md`,
+   `M01_Mission_Controller_JDG` turrets_conv).** `M01_Add_Turrets_Objective` is
+   non-key and has 2 remarks in `m01.ldd`. It starts on the first barn
+   approach (:1974 -> :2026). If a key conversation is active at that moment,
+   `ActiveConversationClass::Start_Conversation` interrupts it before
+   `Monitor_Conversation` runs, so `M01_ADD_TURRETS_OBJECTIVE_JDG` never fires.
+   That loses:
+   - secondary objective 109, its POG and the two turret radar blips;
+   - `M01_Locke_Sending_C4_Conversation`;
+   - the `X1D_GTower_FlareDrop.txt` supply drop (:2089). In retail `M01.mix`
+     that drop is a `SignalFlare_Gold_Phys3` plus two `POW_MineRemote_Player`
+     crates.
+
+   None of these gates success. The turrets can still be destroyed and the
+   turret pass custom still runs.
+   Fix, using the same pattern as the open-gate fallback:
+   - The announce arms a 30 s controller custom
+     `M01_A38_TURRETS_OBJECTIVE_FALLBACK_JDG` (438003, :2037). Custom timers
+     are saved.
+   - The fallback (:2041) resends `M01_ADD_TURRETS_OBJECTIVE_JDG` only if it
+     has not run yet. It logs `A4 M01 turrets objective fallback`.
+   - The ADD case (:2051) is latched by `turrets_objective_added` (save ID 91,
+     :275). The objective, the blips, the C4 line and the supply drop
+     therefore happen exactly once, whether the callback or the fallback
+     comes first.
+
+   On the normal path the 2-remark conversation ends well before 30 s, and
+   the fallback does nothing.
+
+### Idempotency review: PCT watchdog, open-gate fallback, Comm Center destroyed (no change)
+
+Three writers set `player_has_unlocked_pen` and send
+`M01_CLEAR_UNLOCK_GATE_OBJECTIVE_JDG` (:1519):
+
+| Writer | Location | Guard |
+| --- | --- | --- |
+| EVA line 5 `SOUND_ENDED` | :460 | none (retail) |
+| Comm Center destroyed | :606 | `player_has_unlocked_pen == false` |
+| PCT watchdog | :1396 | `player_has_unlocked_pen == false` |
+
+- **Watchdog vs. Comm Center destroyed.** Both check the flag and set it in
+  the same synchronous handler, so at most one of them unlocks. The watchdog
+  cannot double-fire with the destroyed path in either order.
+- **Watchdog vs. line 5.** If the watchdog fires first, it zeroes the five
+  line IDs. Sound IDs are >= 1000000000, so a late `SOUND_ENDED` can never
+  match a zeroed ID. If line 5 ends first, the flag is already set and the
+  watchdog does nothing.
+- **Comm Center destroyed vs. line 5 (retail duplicate, kept).** If the Comm
+  Center dies during the ~8.2 s EVA chain, line 5 still sends a second CLEAR.
+  The effects are:
+  - duplicate `Remove_Unlock_Gate_Objective` or `Add_Comm_SAM_Objective`
+    speech;
+  - a second `M01_PASS_UNLOCK_GATE_OBJECTIVE_JDG`;
+  - a duplicate SAM `Add_Objective`, which `ObjectiveManager::Add_Objective`
+    ignores (`staging/combat/objectives.cpp:491`).
+
+  `commcenter_sam_objective_active` cannot be re-armed after the SAM pass,
+  because CLEAR takes the SAM-destroyed branch once `commcenter_sam_destroyed`
+  is set. This was left unguarded on purpose. `M01_ADD_UNLOCK_GATE_OBJECTIVE_JDG`
+  arrives 10 s after the prisoner announcement (:1603). If it lands between
+  the two CLEARs, the second CLEAR is what marks that objective accomplished.
+- **Open-gate fallback.** It can be armed up to three times: the SAM-destroyed
+  path (:840), CLEAR, and the duplicate CLEAR. Each arm, and the conversation
+  callback, goes through `A38_Add_Open_Gate_Objective` (:280), which is
+  latched by `open_gate_objective_added` (ID 90). Each fallback also skips
+  when `gate_objective_done` is set. The objective is added at most once.
+- Residual completion-before-activation cases, retail-identical and not
+  blocking:
+  - "Unlock the gate" is added after an early unlock and stays pending.
+  - The conversation callback can add "Open the gate" after the gate was
+    already poked.
+
+  Both are left to the ObjectiveManager early-status memory being added in
+  `objectives.cpp`.
+
+### Deferred
+
+- Saves made before this change lack IDs 5, 6 and 91. Those members stay
+  indeterminate on such saves, and no turrets fallback timer exists in them.
+- The tank reminder conversations are non-key and monitored. A key
+  conversation can still pre-empt one, which ends the reminder chain. This is
+  cosmetic.
+- `CONVERSATION_GATED_OBJECTIVES.md` still lists the turrets gate as LOW until
+  the audit is re-run against this staging.
+- Physical check: on the first barn approach, the turrets objective, the Locke
+  C4 line and the flare/C4 supply drop should appear once (no second drop).
+  The fallback log line should be absent on the normal path. After a
+  save/load near the turret beach, gunboat hits on the engineer should not
+  change his health oddly.

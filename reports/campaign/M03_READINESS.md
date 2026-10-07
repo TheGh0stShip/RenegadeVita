@@ -390,3 +390,79 @@ accomplished prints a new-objective line followed by a status-changed line in
 the same frame. If 1002 is reported by the fallback timer, the
 `M03CON020` transition-end record has no kind-3 observer call, and 1002
 becomes accomplished 30 s after the second village SAM dies.
+
+## Follow-up fixes (2026-10-07)
+
+Scope: four follow-ups from the soft-lock hunt, limited to the `M03_*` scripts
+(the `M10_*` scripts in Mission03.cpp were not changed). Evidence class: staged
+source plus read-only host parsing of the unchanged Vita3K retail `M03.mix`
+and `always.dbs`. Nothing was built, launched or run on a device.
+
+Checks:
+
+- Staging exits 0 with 573 ordered patches. The three new patches apply
+  with zero fuzz and no offset.
+- ARM `-fsyntax-only` of the patched file exits 0 with 139 warnings, the
+  same count as before.
+- Host tests `tools.test_m03_pointer_exchange`,
+  `tools.test_custom_event_delivery`,
+  `tools.test_audit_conversation_gated_objectives` and
+  `tools.test_objective_state_lifecycle` pass (27 tests, OK).
+
+Line numbers are staged lines after all patches. These fixes supersede the
+"Gunboat killed by anything except the shore cannon", "1000 / BASE_ENTERED on
+the west route" and "Escape 1010" bullets in the soft-lock hunt above.
+
+| Patch | Issue | Fix (staged lines) | Normal path |
+|---|---|---|---|
+| `scripts-a38-m03-gunboat-any-killer-outcome` | Only a shore-cannon kill sent `GUNBOAT_KILLED`. Other killers are reachable: `M03_Beach_Turret` attacks 1100003 continuously, and `M00_Damage_Modifier_DME` (`0.30,1,0,0,1`) only protects it from the star. After such a kill, 1001, 1002 and 1004 can neither finish nor fail. The beach controller needs the gunboat for 301,1, and 302/304 are dropped once it is gone. At HUD priority 99/98/97, the stuck secondaries outrank every primary (96..93), so the default HUD pointer (index 0, `hud.cpp:2054-2088`) stays on the beach or SAMs. | The non-cannon `Killed` branch also sends `GUNBOAT_KILLED` to 1100004 (:1273-1276). The controller (:188-203) then fails the unfinished objectives, which is the cannon outcome. The designers' commented-out `302,2` in that branch shows the same intent. M03CON018 is unchanged. | Unchanged: the gunboat survives, or the cannon kills it |
+| `scripts-a38-m03-comm-center-located-at-terminal` | Zone 1144502 starts M03CON003 and deletes itself (`RMV_Trigger_Zone`). The `GameObjReference` monitor goes NULL, so its 300,1 is lost. It also marks 1100005 entered. Crossing 1100005 before con-yard zone 1144636 sends 900 to 1144636 and silences the last 300,1 sender. Primary 1000 then stays pending for the mission at priority 96, above Escape at 93. The Comm Center keeps healing, so tertiary 1012 is unearnable. The exit is not blocked: it needs key 6 from Sakura. | When the mainframe is poked (308,1 → `Complete_Mission_Objective(1008)`), complete 1000 once if it is not already done (:664-668). Terminal 1100009 is the object 1000 points at. The same poke sends `MCT_ACCESSED` (`M03_Mct_Poke`), so the Comm Center becoming damageable cannot start the fail timer. A later 300,1 is skipped after the fallback (:219-222). The flag is a new saved controller variable, id 13 (:69, :85, :102, :600). | Unchanged: on the east route 300,1 arrives before the poke, so the branch is never taken, and repeated 300,1 events behave as before |
+| `scripts-a38-m03-escape-objective-at-exit` | 1010 has no live completer, because `M03_Outro_Cinematic` is unbound. The mission ended with Escape pending. | Inside the saved `already_entered` guard, `M03_Mission_Complete_Zone` sends 310,1 to 1100004 synchronously (no delay), immediately before `Mission_Complete(true)` (:6062-6067). If 1010 was never added, this reaches the original "objective not found" no-op. | Mission completion is unchanged. The only addition is one "Escape accomplished" status line |
+
+Supporting facts:
+
+- **Key 20 is cosmetic.** Key 20 is the one granted only while the gunboat
+  lives (`M03_Beach_Scenario_Controller`). No door in `objects.ddb`,
+  `m03.ldd` or `m03.lsd` uses lock code 20; the lock codes present are 1, 2,
+  3, 5, 6, 9 and 10. So a dead gunboat locks nothing.
+- **No other conversation zone is affected.** The conversation zones
+  2013086/2013087 (conv 4 → 307,3), 2013899-2013901 (conv 7) and 2014713
+  (conv 9) carry no self-deleting script. Only 1100001, 1100005, 1100013 and
+  1144502 do.
+
+**Conversation gates (item 4).** The audit was re-run for M03 into a private
+scratch file against the patched staging. The shared report was not
+regenerated. Classes are unchanged: LOW 1, SAFE (key) 8, SAFE (alt path) 3,
+NO EFFECT 27, AT RISK 0.
+
+- **The LOW item.** The only LOW item is M03CON020 → 1002 (non-key). It stays
+  covered by the 30 s `VILLAGE_SAM_REPORT_TIMER` fallback (:693, :336). It
+  does not interact with the gunboat fix. If the gunboat dies after the second
+  village SAM, `gunboat2` is already set, so 1002 is not failed. If it dies
+  before, 302,1 is dropped and no report is pending.
+- **A loss the audit does not model.** The tool marks M03CON003 and M03CON002
+  as SAFE (key), but on the 1144502/1100005 entries both callbacks die with
+  their zone through monitor or timer-owner deletion. That loss is covered by
+  the 1008 late-add and the new 1000 fallback.
+- **The alt-path items.** M03CON043 (timer 9998 never started) and both
+  M03CON061 gates are dead or have an alternative path.
+
+**Deferred.**
+
+- 1004 can return to pending if M03CON026 ends after a gunboat death, because
+  `Action_Complete(2)` calls `Add_Objective` again. The cannon path has the
+  same behavior, and M03CON026 starts only while the gunboat lives.
+- An Escape objective added after the exit fires cannot happen in practice:
+  `PendingCampaignContinue` ends the level.
+- Zone positions on the west route (1144502, 1100005, 1144636) were not
+  derived.
+- All of this still needs a Vita3K and a physical run.
+
+Physical signatures:
+
+- **Gunboat lost to turrets:** M03CON018, then failed status lines for the
+  unfinished ones among 1001, 1002 and 1004.
+- **West-route poke:** "1000 accomplished" immediately before "1008
+  accomplished" in the same frame.
+- **Exit:** an "Escape accomplished" line just before the mission-complete
+  transition.

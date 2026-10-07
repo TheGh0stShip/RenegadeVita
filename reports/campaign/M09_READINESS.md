@@ -287,3 +287,47 @@ are the staged file after this pass.
   floor after `Static_Anim_Phys_Goto_Frame`.
 
 No runtime, visual or physical claim follows from this pass.
+
+## Follow-up fixes — 2026-10-07
+
+Evidence class: staged-source review; level bindings from the Vita3K M09.mix
+(`059fc7de…`) receipt; `X9C_MIDTRO.txt` read from that archive; `bash
+tools/stage_sources.sh` (573 patches, zero fuzz, inventory PASS);
+`arm-vita-eabi-g++ -fsyntax-only` on the patched `Mission09.cpp` (0 errors,
+no new warnings). Nothing was built, linked, packaged or run. Line numbers are
+the staged file after this pass.
+
+| # | Issue | Fix | Location |
+|---|---|---|---|
+| 6 (was deferred) | One-way lifts 1265150 (controller 2000491, waypoint 2001753, exit 2000995), 1265149 (2000580, 2001516, 2002219) and 1265126 (2000587, 2002511, 2002512) have only a Direction 0 controller. If the car does not carry Mobius, nothing recovers him. | `scripts-a39-m09-one-way-lift-mobius-recovery.patch`. On `ACTIVATE` for those three only, a 10 s sim-time check starts (longest ride is 70 frames at 15 fps, 4.7 s). The levels come from the controller's own authored points: `Waypoint_num` is the origin and `Mobius_exit_goto` (the original `ELEVATOR_EXIT` target) is the destination. When Havoc is nearer the destination Z and Mobius is nearer the origin Z, Mobius is reset, moved with `Set_Position` to the exit point, and sent the original `ELEVATOR_EXIT` resume. A carried Mobius is left untouched. The check repeats every 5 s, up to 6 times, while Havoc is not yet up. It skips if any actor or point is missing, an actor is dead, or the authored points differ by less than 2 m in Z. Breadcrumb: `A4 M09 lift recovery v1: … action=teleport\|none`, capped at 16 per process. New saved ids 8 and 9. | `Mission09.cpp:3448-3566`, `:3612`, `:3740-3746` |
+| 7 (was deferred) | The `TOO_FAR` catch-up loop ends for good after `NO_FOLLOW ON` (zone 1100238). `NO_FOLLOW OFF` (zone 2000991) did not restart it. | `scripts-a39-m09-catchup-timer-restart.patch`. The loop records that it stopped (saved id 12). `NO_FOLLOW OFF` restarts it once, only while it is stopped, so repeated OFF events cannot start a second loop. Old saves read false and keep the retail behaviour. | `:1020`, `:1037`, `:1108-1118`, `:1401-1406` |
+| new | The midtro reposition depends on `X9C_MIDTRO.txt` line 361 (`Send_Custom 2000612 8888`). It is the only thing that moves Havoc and Mobius from the +7 m hold in `M09_Mobius_Suit_Objective::Entered` to points 1100497 and 2002239. Players cannot skip cinematics. The dispatcher runs every due line, including at low frame rates (`CINEMATIC_LOW_FPS.md`). X9C creates no real objects, so the primary-killed skip cannot drop the line. The remaining failure modes were a control file that fails to open or a controller destroyed early, and they had no fallback. | `scripts-a39-m09-midtro-reposition-fallback.patch`. A 20 s sim-time timer starts with the cinematic; line 361 is at 12.0 s. If 8888 has not arrived, the timer makes the same two `Set_Position` calls (each guarded on the point existing) and logs `A4 M09 midtro reposition fallback v1` once. When 8888 arrives it sets the flag, so the normal path is unchanged. New saved id 2. | `:363-411`, `:417`, `:457` |
+
+All three are registered in `tools/stage_sources.sh` after
+`scripts-a38-m09-intro-conversation-resume`. No anchor moved.
+
+### Hardware signatures
+
+- Lift: `A4 M09 lift recovery v1` should not appear on a normal run.
+  `action=teleport` means Mobius was left at the origin and was moved.
+  `action=none` means Havoc never reached the destination level within about 35 s.
+- Catch-up: after zone 2000991, Mobius walks to Havoc when 25 m or more away
+  (5 s cadence). Before this fix that happened only through the Goto zones.
+- Midtro: `A4 M09 midtro reposition fallback v1` should not appear. If it
+  does, the cinematic failed to send 8888.
+
+### Deferred
+
+- The safety of the exit points as teleport targets is inferred, not measured.
+  They are the original `ELEVATOR_EXIT` targets, which Mobius walks to without
+  pathfinding, so they sit on the destination floor. Object transforms for
+  these simple objects were not decoded from m09.ldd, and Havoc standing on
+  the point could overlap Mobius. `Set_Position` is the same raw move the
+  original suit zone uses.
+- If Havoc steps off before the ride and the empty car leaves, both actors are
+  stranded at the origin. Retail behaviour; not changed.
+- The geometry at the +7 m hold is unverified. If the midtro fails, the
+  fallback places both actors at the authored points about 8 s later than the
+  cinematic would have.
+
+No runtime, visual or physical claim follows from this pass.

@@ -681,6 +681,11 @@ RaveshawBossGameObjClass::Get_Definition (void) const
 bool
 RaveshawBossGameObjClass::Save (ChunkSaveClass & csave)
 {
+	//
+	//	Vita: never save (and later remap) a pointer to a destroyed object
+	//
+	Verify_Thrown_Object ();
+
 	bool saved = true;
 	csave.Begin_Chunk (CHUNKID_PARENT);
 		saved = SoldierGameObj::Save(csave) && saved;
@@ -861,6 +866,10 @@ RaveshawBossGameObjClass::On_Post_Load (void)
 		Peek_Physical_Object ()->Add_Effect_To_Me (TiberiumEffect);
 	}
 
+	//
+	//	Vita: track the remapped thrown object (NULL if it was not saved)
+	//
+	ThrownObjectRef = ThrownObject;
 	return ;
 }
 
@@ -1021,6 +1030,7 @@ RaveshawBossGameObjClass::Think (void)
 	if (ok_to_think) {
 
 		Verify_Stealth_Soldier ();
+		Verify_Thrown_Object ();
 
 		//
 		//	Get the position of both Raveshaw and the star (this information
@@ -1118,6 +1128,44 @@ RaveshawBossGameObjClass::Verify_Stealth_Soldier (void)
 		return ;
 	}
 
+	return ;
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+//	Verify_Thrown_Object
+//
+///////////////////////////////////////////////////////////////////////////
+void
+RaveshawBossGameObjClass::Verify_Thrown_Object (void)
+{
+	//
+	//	Vita: ThrownObject is a raw pointer with no liveness check.  The
+	// engine clears ThrownObjectRef when that object is destroyed, so a NULL
+	// reference with a non-NULL pointer means it was deleted by something
+	// other than the throw itself (the retail "(Raveshaw Ammo)" presets are
+	// Blamo, so only a BlamoKiller warhead or a script can do this).  Drop the
+	// stale pointer before any state reads it.  The walk-to state then takes
+	// the original nothing-to-throw branch, and a grab or throw already under
+	// way finishes empty-handed and decides its next state as usual.
+	//
+	if (ThrownObject == NULL || ThrownObjectRef.Get_Ptr () != NULL) {
+		return ;
+	}
+
+	ThrownObject = NULL;
+	if (ThrownObjectState.Get_State () != THROWN_OBJECT_STATE_NONE) {
+		ThrownObjectState.Set_State (THROWN_OBJECT_STATE_NONE);
+	}
+
+#if defined(__vita__)
+	static int reported = 0;
+	if (reported < 4) {
+		reported ++;
+		A30_Vita_Log ("A3.8 Raveshaw thrown object: destroyed before landing; dropped stale pointer\n");
+	}
+#endif
 	return ;
 }
 
@@ -1264,6 +1312,7 @@ void
 RaveshawBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_THROWING_OBJECT) (void)
 {
 	ThrownObject = Find_Object_To_Throw ();
+	ThrownObjectRef = ThrownObject;
 	if (ThrownObject != NULL) {
 
 		//
@@ -1751,6 +1800,15 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_GOTO_THROW_OBJECT) (void)
 void
 RaveshawBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_GOTO_THROW_OBJECT) (void)
 {
+	//
+	//	Vita: the object was destroyed on the way, so there is nothing to
+	// throw.  Take the same branch as STATE_IMPL_BEGIN(OVERALL_STATE_THROWING_OBJECT).
+	//
+	if (ThrownObject == NULL) {
+		OverallState.Set_State (OVERALL_STATE_CHASE_STAR);
+		return ;
+	}
+
 	Vector3 obj_pos;
 	ThrownObject->Get_Position (&obj_pos);
 	if ((RaveshawPos - obj_pos).Length2 () < 3.0F || Get_Action ()->Is_Active () == false) {
@@ -3518,6 +3576,10 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(THROWN_OBJECT_STATE_PICKUP) (void)
 void
 RaveshawBossGameObjClass::STATE_IMPL_BEGIN(THROWN_OBJECT_STATE_FLYING) (void)
 {
+	if (ThrownObject == NULL) {
+		return ;
+	}
+
 	Vector3 object_pos;
 	ThrownObject->Get_Position (&object_pos);
 
@@ -3542,6 +3604,14 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(THROWN_OBJECT_STATE_FLYING) (void)
 {
 	const float RATE		= 15.0F;
 
+	//
+	//	Vita: nothing left in flight (destroyed before or during the throw)
+	//
+	if (ThrownObject == NULL) {
+		ThrownObjectState.Set_State (THROWN_OBJECT_STATE_NONE);
+		return ;
+	}
+
 	Vector3 object_pos;
 	ThrownObject->Get_Position (&object_pos);
 	
@@ -3565,6 +3635,7 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(THROWN_OBJECT_STATE_FLYING) (void)
 		ThrownObject->Completely_Damaged (offense_obj);
 		ThrownObject->Set_Delete_Pending ();
 		ThrownObject = NULL;
+		ThrownObjectRef = NULL;
 
 		//
 		//	Now, revert back to the nothing state
@@ -4205,7 +4276,9 @@ RaveshawBossGameObjClass::Find_Object_To_Throw (void)
 		//	Is this a simple game object?
 		//
 		PhysicalGameObj *phys_game_obj = obj_node->Data ()->As_PhysicalGameObj ();
-		if (phys_game_obj != NULL && phys_game_obj->As_SimpleGameObj () != NULL) {
+		if (phys_game_obj != NULL && phys_game_obj->As_SimpleGameObj () != NULL &&
+			 phys_game_obj->Is_Delete_Pending () == false)	// Vita: freed at frame end
+		{
 			SimpleGameObj *object = phys_game_obj->As_SimpleGameObj ();
 			if (object != NULL) {
 				

@@ -1,0 +1,27 @@
+M03 follow-up: primary objective 1010 (Escape) is added when M03CON010 ends
+(310,3). Its only completer, 310,1, is in M03_Outro_Cinematic, which is not
+bound in m03.ldd, m03.lsd or objects.ddb and is never attached. The mission
+therefore ends through exit zone 2000817 with Escape still pending.
+
+Complete it from the exit zone instead. M03_Mission_Complete_Zone sends
+310,1 to the objective controller (1100004) inside its existing
+already_entered guard (saved), immediately before Mission_Complete(true).
+Delivery has no delay, so it is synchronous, and the objective is
+accomplished before the mission ends. If 1010 was never added, the
+controller's Set_Objective_Status reaches the original "objective not
+found" no-op. Mission completion itself is unchanged.
+
+--- a/Mission03.cpp
++++ b/Mission03.cpp
+@@ -6059,6 +6059,11 @@
+ 		{
+ 			already_entered = true;
+ 			
++			// Vita port: Escape (1010) has no live completer; its 310,1 sender
++			// M03_Outro_Cinematic is not bound. Complete it here, once, before the
++			// mission ends (synchronous; a no-op if 1010 was never added).
++			Commands->Send_Custom_Event(obj, Commands->Find_Object(1100004), 310, 1, 0);
++
+ 			Commands->Mission_Complete ( true );
+ 		}
+ 	}

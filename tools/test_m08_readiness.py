@@ -83,5 +83,66 @@ class CompletionRoute(unittest.TestCase):
         self.assertIn("Commands->Mission_Complete ( true );", controller)
 
 
+def function_body(text, signature):
+    start = text.index(signature)
+    return text[start:text.index("\n}\n", start)]
+
+
+class RaveshawThrownObjectLiveness(unittest.TestCase):
+    def setUp(self):
+        self.text = RAVESHAW.read_text(encoding="latin-1")
+        self.header = (ROOT / "staging/combat/raveshawbossgameobj.h").read_text(encoding="latin-1")
+
+    def test_reference_tracks_pointer(self):
+        self.assertIn("GameObjReference\t\t\tThrownObjectRef;", self.header)
+        begin = function_body(self.text, "STATE_IMPL_BEGIN(OVERALL_STATE_THROWING_OBJECT) (void)")
+        self.assertIn("ThrownObject = Find_Object_To_Throw ();\n\tThrownObjectRef = ThrownObject;", begin)
+        self.assertIn("ThrownObjectRef = ThrownObject;", function_body(self.text, "::On_Post_Load (void)"))
+        verify = function_body(self.text, "::Verify_Thrown_Object (void)")
+        self.assertIn("if (ThrownObject == NULL || ThrownObjectRef.Get_Ptr () != NULL) {", verify)
+        self.assertIn("ThrownObject = NULL;", verify)
+
+    def test_verified_before_think_and_save(self):
+        think = function_body(self.text, "RaveshawBossGameObjClass::Think (void)")
+        self.assertLess(think.index("Verify_Thrown_Object ();"), think.index("OverallState.Think ();"))
+        save = function_body(self.text, "RaveshawBossGameObjClass::Save (ChunkSaveClass & csave)")
+        self.assertLess(save.index("Verify_Thrown_Object ();"), save.index("csave.Begin_Chunk"))
+
+    def test_every_dereference_is_guarded(self):
+        goto = function_body(self.text, "STATE_IMPL_THINK(MOVE_STATE_GOTO_THROW_OBJECT) (void)")
+        self.assertLess(goto.index("if (ThrownObject == NULL) {"), goto.index("ThrownObject->Get_Position"))
+        self.assertIn("OverallState.Set_State (OVERALL_STATE_CHASE_STAR);", goto)
+        for state in ("STATE_IMPL_BEGIN(THROWN_OBJECT_STATE_FLYING) (void)",
+                      "STATE_IMPL_THINK(THROWN_OBJECT_STATE_FLYING) (void)"):
+            body = function_body(self.text, state)
+            self.assertLess(body.index("if (ThrownObject == NULL) {"), body.index("ThrownObject->Get_Position"))
+
+    def test_patch_applies_after_grounded_landing(self):
+        text = STAGE_SCRIPT.read_text()
+        self.assertLess(text.index("combat-a38-raveshaw-jump-grounded-landing.patch"),
+                        text.index("combat-a38-raveshaw-thrown-object-liveness.patch"))
+
+
+class ObjectiveConversationGates(unittest.TestCase):
+    GATES = (("M08_Activate_Objective_802", "300502"), ("M08_Activate_Objective_803", "300803"),
+             ("M08_Activate_Objective_804", "300804"), ("M08_Activate_Objective_806", "300806"))
+
+    def test_monitor_precedes_start_and_sends_once(self):
+        source = STAGED.read_text(encoding="latin-1")
+        for name, action in self.GATES:
+            body = script_body(source, name)
+            self.assertLess(body.index("Commands->Monitor_Conversation (obj, conv_id);"),
+                            body.index("Commands->Start_Conversation (conv_id, %s);" % action), name)
+            self.assertIn("SAVE_VARIABLE( objective_sent, 2 );", body)
+            self.assertIn("objective_sent = false;", body)
+            self.assertIn("if(action_id == %s && !objective_sent && " % action, body)
+            self.assertEqual(body.count("objective_sent = true;"), 1, name)
+
+    def test_patch_applies_after_mobile_vehicle_slot(self):
+        text = STAGE_SCRIPT.read_text()
+        self.assertLess(text.index(PATCH.name),
+                        text.index("scripts-a38-m08-objective-conversation-monitor-first.patch"))
+
+
 if __name__ == "__main__":
     unittest.main()

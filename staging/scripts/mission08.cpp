@@ -335,17 +335,21 @@ DECLARE_SCRIPT(M08_Activate_Objective_802, "")
 {
 		
 	bool already_entered;
+	bool objective_sent;
 		
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( already_entered, 1 );
+		// Vita: objectives 802 (added) and 801 (accomplished) are sent once, from M08_CON001's end or its preemption.
+		SAVE_VARIABLE( objective_sent, 2 );
 	}
 
 	void Created (GameObject * obj)
 	{
 		already_entered = false;
+		objective_sent = false;
 	}
 
 	void Entered (GameObject * obj, GameObject * enterer)
@@ -359,8 +363,10 @@ DECLARE_SCRIPT(M08_Activate_Objective_802, "")
 			int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
 			Commands->Join_Conversation(NULL, conv_id, false, true);
 			Commands->Join_Conversation(STAR, conv_id, false, true);
-			Commands->Start_Conversation (conv_id, 300502);
+			// Vita: monitor before Start so a key-conversation preemption inside Start
+			// still reaches Action_Complete.
 			Commands->Monitor_Conversation (obj, conv_id);	
+			Commands->Start_Conversation (conv_id, 300502);
 
 			
 		}
@@ -380,8 +386,9 @@ DECLARE_SCRIPT(M08_Activate_Objective_802, "")
 	{
 		ActionParamsStruct params;
 
-		if(action_id == 300502 && (reason == ACTION_COMPLETE_CONVERSATION_ENDED || reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED))
+		if(action_id == 300502 && !objective_sent && (reason == ACTION_COMPLETE_CONVERSATION_ENDED || reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED))
 		{
+			objective_sent = true;
 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100002), 802, 3, 0.0f);
 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100002), 801, 1, 3.0f);
 		}
@@ -394,17 +401,21 @@ DECLARE_SCRIPT(M08_Activate_Objective_803, "")
 {
 		
 	bool already_entered;
+	bool objective_sent;
 		
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( already_entered, 1 );
+		// Vita: objectives 803 (added) and 802 (accomplished) are sent once, from M08_CON002's end or its preemption.
+		SAVE_VARIABLE( objective_sent, 2 );
 	}
 
 	void Created (GameObject * obj)
 	{
 		already_entered = false;
+		objective_sent = false;
 	}
 
 	void Entered (GameObject * obj, GameObject * enterer)
@@ -418,8 +429,10 @@ DECLARE_SCRIPT(M08_Activate_Objective_803, "")
 			int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
 			Commands->Join_Conversation(NULL, conv_id, false, true);
 			Commands->Join_Conversation(STAR, conv_id, false, true);
-			Commands->Start_Conversation (conv_id, 300803);
+			// Vita: monitor before Start so a key-conversation preemption inside Start
+			// still reaches Action_Complete.
 			Commands->Monitor_Conversation (obj, conv_id);	
+			Commands->Start_Conversation (conv_id, 300803);
 		
 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100008), 100, 100, 0.0f);
 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100009), 100, 100, 0.0f);
@@ -440,8 +453,9 @@ DECLARE_SCRIPT(M08_Activate_Objective_803, "")
 	{
 		ActionParamsStruct params;
 
-		if(action_id == 300803 && (reason == ACTION_COMPLETE_CONVERSATION_ENDED || reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED))
+		if(action_id == 300803 && !objective_sent && (reason == ACTION_COMPLETE_CONVERSATION_ENDED || reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED))
 		{
+			objective_sent = true;
 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100002), 803, 3, 0.0f);
 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100002), 802, 1, 3.0f);
 		}
@@ -454,17 +468,21 @@ DECLARE_SCRIPT(M08_Activate_Objective_804, "")
 {
 		
 	bool already_entered;
+	bool objective_sent;
 		
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( already_entered, 1 );
+		// Vita: secondary objective 804 are sent once, from M08_CON003's end or its preemption.
+		SAVE_VARIABLE( objective_sent, 2 );
 	}
 
 	void Created (GameObject * obj)
 	{
 		already_entered = false;
+		objective_sent = false;
 	}
 
 	void Entered (GameObject * obj, GameObject * enterer)
@@ -478,8 +496,10 @@ DECLARE_SCRIPT(M08_Activate_Objective_804, "")
 			int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
 			Commands->Join_Conversation(NULL, conv_id, false, true);
 			Commands->Join_Conversation(STAR, conv_id, false, true);
-			Commands->Start_Conversation (conv_id, 300804);
+			// Vita: monitor before Start so a key-conversation preemption inside Start
+			// still reaches Action_Complete.
 			Commands->Monitor_Conversation (obj, conv_id);	
+			Commands->Start_Conversation (conv_id, 300804);
 		
 			// Disable all activate_804 zones
 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100003), 100, 100, 0.0f);
@@ -501,8 +521,9 @@ DECLARE_SCRIPT(M08_Activate_Objective_804, "")
 	{
 		ActionParamsStruct params;
 
-		if(action_id == 300804 && (reason == ACTION_COMPLETE_CONVERSATION_ENDED || reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED))
+		if(action_id == 300804 && !objective_sent && (reason == ACTION_COMPLETE_CONVERSATION_ENDED || reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED))
 		{
+			objective_sent = true;
 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100002), 804, 3, 0.0f);
 		}
 		
@@ -514,17 +535,21 @@ DECLARE_SCRIPT(M08_Activate_Objective_806, "")
 {
 		
 	bool already_entered;
+	bool objective_sent;
 		
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE( already_entered, 1 );
+		// Vita: secondary objectives 806 and 807 are sent once, from M08_CON004's end or its preemption.
+		SAVE_VARIABLE( objective_sent, 2 );
 	}
 
 	void Created (GameObject * obj)
 	{
 		already_entered = false;
+		objective_sent = false;
 	}
 
 	void Entered (GameObject * obj, GameObject * enterer)
@@ -537,8 +562,10 @@ DECLARE_SCRIPT(M08_Activate_Objective_806, "")
 			const char *conv_name = ("M08_CON004");
 			int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
 			Commands->Join_Conversation(STAR, conv_id, false, true);
-			Commands->Start_Conversation (conv_id, 300806);
+			// Vita: monitor before Start so a key-conversation preemption inside Start
+			// still reaches Action_Complete.
 			Commands->Monitor_Conversation (obj, conv_id);	
+			Commands->Start_Conversation (conv_id, 300806);
 
 			
 		}
@@ -548,8 +575,9 @@ DECLARE_SCRIPT(M08_Activate_Objective_806, "")
 	{
 		ActionParamsStruct params;
 
-		if(action_id == 300806 && (reason == ACTION_COMPLETE_CONVERSATION_ENDED || reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED))
+		if(action_id == 300806 && !objective_sent && (reason == ACTION_COMPLETE_CONVERSATION_ENDED || reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED))
 		{
+			objective_sent = true;
 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100002), 806, 3, 0.0f);
 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100002), 807, 3, 2.0f);
 		}

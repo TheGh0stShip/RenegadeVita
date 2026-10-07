@@ -1,0 +1,295 @@
+M11 Sydney rally zones re-check a player who is already inside.
+M11_Sydney_Rally_Zone_01/02/03/03b_JDG send Sydney on only when STAR enters
+after Sydney's arrival custom set sydneyInPosition. If the player was already
+standing in the zone when she arrived, nothing happened until they stepped
+out and back in.
+
+Track STAR presence with Entered/Exited (saved id 2). When Sydney's arrival
+custom finds the player inside, start a 0.5 s timer that runs the original
+Entered branch for STAR if the player is still inside. A saved one-shot flag
+(id 3) makes the branch run once whichever way it is reached. Entering after
+Sydney arrives behaves as before.
+
+diff --git a/Mission11.cpp b/Mission11.cpp
+--- a/Mission11.cpp
++++ b/Mission11.cpp
+@@ -9146,15 +9146,24 @@
+ DECLARE_SCRIPT(M11_Sydney_Rally_Zone_01_JDG, "")
+ {
+ 	bool sydneyInPosition;
++	// Vita port: whether STAR is inside (Entered/Exited), and a one-shot guard.
++	bool starInside;
++	bool fired;
++
++	enum { VITA_RALLY_RECHECK_TIMER = 1101 };
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE(sydneyInPosition, 1);
++		SAVE_VARIABLE(starInside, 2);
++		SAVE_VARIABLE(fired, 3);
+ 	}
+ 
+ 	void Created( GameObject * obj ) 
+ 	{
+ 		sydneyInPosition = false;
++		starInside = false;
++		fired = false;
+ 	}
+ 
+ 	void Custom( GameObject * obj, int type, int param, GameObject * sender ) 
+@@ -9162,13 +9171,43 @@
+ 		if (param == M01_MODIFY_YOUR_ACTION_JDG)
+ 		{
+ 			sydneyInPosition = true;
++			// Vita port: the rally fires on STAR entry only. If the player is
++			// already standing inside when Sydney arrives, re-check shortly.
++			if (starInside == true && fired == false)
++			{
++				Commands->Start_Timer( obj, this, 0.5f, VITA_RALLY_RECHECK_TIMER );
++			}
++		}
++	}
++
++	void Timer_Expired( GameObject * obj, int timer_id )
++	{
++		GameObject * star = STAR;
++		if (timer_id == VITA_RALLY_RECHECK_TIMER && starInside == true && fired == false && star != NULL)
++		{
++			A30_Vita_Log("A4 M11 M11_Sydney_Rally_Zone_01_JDG: player already inside when Sydney arrived; firing rally\n");
++			Entered( obj, star );
++		}
++	}
++
++	void Exited( GameObject * obj, GameObject * exiter ) 
++	{
++		if (exiter == STAR)
++		{
++			starInside = false;
+ 		}
+ 	}
+ 
+ 	void Entered( GameObject * obj, GameObject * enterer ) 
+ 	{
+-		if (enterer == STAR && sydneyInPosition == true)
++		if (enterer == STAR)
++		{
++			starInside = true;
++		}
++
++		if (enterer == STAR && sydneyInPosition == true && fired == false)
+ 		{
++			fired = true;
+ 			GameObject * sydney = Commands->Find_Object ( M11_REAL_SYDNEY_MOBIUS_JDG );
+ 			if (sydney != NULL )
+ 			{
+@@ -9183,15 +9222,24 @@
+ DECLARE_SCRIPT(M11_Sydney_Rally_Zone_02_JDG, "")
+ {
+ 	bool sydneyInPosition;
++	// Vita port: whether STAR is inside (Entered/Exited), and a one-shot guard.
++	bool starInside;
++	bool fired;
++
++	enum { VITA_RALLY_RECHECK_TIMER = 1101 };
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE(sydneyInPosition, 1);
++		SAVE_VARIABLE(starInside, 2);
++		SAVE_VARIABLE(fired, 3);
+ 	}
+ 
+ 	void Created( GameObject * obj ) 
+ 	{
+ 		sydneyInPosition = false;
++		starInside = false;
++		fired = false;
+ 	}
+ 
+ 	void Custom( GameObject * obj, int type, int param, GameObject * sender ) 
+@@ -9199,13 +9247,43 @@
+ 		if (param == M01_MODIFY_YOUR_ACTION_JDG)
+ 		{
+ 			sydneyInPosition = true;
++			// Vita port: the rally fires on STAR entry only. If the player is
++			// already standing inside when Sydney arrives, re-check shortly.
++			if (starInside == true && fired == false)
++			{
++				Commands->Start_Timer( obj, this, 0.5f, VITA_RALLY_RECHECK_TIMER );
++			}
++		}
++	}
++
++	void Timer_Expired( GameObject * obj, int timer_id )
++	{
++		GameObject * star = STAR;
++		if (timer_id == VITA_RALLY_RECHECK_TIMER && starInside == true && fired == false && star != NULL)
++		{
++			A30_Vita_Log("A4 M11 M11_Sydney_Rally_Zone_02_JDG: player already inside when Sydney arrived; firing rally\n");
++			Entered( obj, star );
++		}
++	}
++
++	void Exited( GameObject * obj, GameObject * exiter ) 
++	{
++		if (exiter == STAR)
++		{
++			starInside = false;
+ 		}
+ 	}
+ 
+ 	void Entered( GameObject * obj, GameObject * enterer ) 
+ 	{
+-		if (enterer == STAR && sydneyInPosition == true)
++		if (enterer == STAR)
++		{
++			starInside = true;
++		}
++
++		if (enterer == STAR && sydneyInPosition == true && fired == false)
+ 		{
++			fired = true;
+ 			GameObject * sydney = Commands->Find_Object ( M11_REAL_SYDNEY_MOBIUS_JDG );
+ 			if (sydney != NULL )
+ 			{
+@@ -9220,15 +9298,24 @@
+ DECLARE_SCRIPT(M11_Sydney_Rally_Zone_03_JDG, "")
+ {
+ 	bool sydneyInPosition;
++	// Vita port: whether STAR is inside (Entered/Exited), and a one-shot guard.
++	bool starInside;
++	bool fired;
++
++	enum { VITA_RALLY_RECHECK_TIMER = 1101 };
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE(sydneyInPosition, 1);
++		SAVE_VARIABLE(starInside, 2);
++		SAVE_VARIABLE(fired, 3);
+ 	}
+ 
+ 	void Created( GameObject * obj ) 
+ 	{
+ 		sydneyInPosition = false;
++		starInside = false;
++		fired = false;
+ 	}
+ 
+ 	void Custom( GameObject * obj, int type, int param, GameObject * sender ) 
+@@ -9236,13 +9323,43 @@
+ 		if (param == M01_MODIFY_YOUR_ACTION_JDG)
+ 		{
+ 			sydneyInPosition = true;
++			// Vita port: the rally fires on STAR entry only. If the player is
++			// already standing inside when Sydney arrives, re-check shortly.
++			if (starInside == true && fired == false)
++			{
++				Commands->Start_Timer( obj, this, 0.5f, VITA_RALLY_RECHECK_TIMER );
++			}
++		}
++	}
++
++	void Timer_Expired( GameObject * obj, int timer_id )
++	{
++		GameObject * star = STAR;
++		if (timer_id == VITA_RALLY_RECHECK_TIMER && starInside == true && fired == false && star != NULL)
++		{
++			A30_Vita_Log("A4 M11 M11_Sydney_Rally_Zone_03_JDG: player already inside when Sydney arrived; firing rally\n");
++			Entered( obj, star );
++		}
++	}
++
++	void Exited( GameObject * obj, GameObject * exiter ) 
++	{
++		if (exiter == STAR)
++		{
++			starInside = false;
+ 		}
+ 	}
+ 
+ 	void Entered( GameObject * obj, GameObject * enterer ) 
+ 	{
+-		if (enterer == STAR && sydneyInPosition == true)
++		if (enterer == STAR)
++		{
++			starInside = true;
++		}
++
++		if (enterer == STAR && sydneyInPosition == true && fired == false)
+ 		{
++			fired = true;
+ 			GameObject * sydney = Commands->Find_Object ( M11_REAL_SYDNEY_MOBIUS_JDG );
+ 			if (sydney != NULL )
+ 			{
+@@ -9267,15 +9384,24 @@
+ DECLARE_SCRIPT(M11_Sydney_Rally_Zone_03b_JDG, "")
+ {
+ 	bool sydneyInPosition;
++	// Vita port: whether STAR is inside (Entered/Exited), and a one-shot guard.
++	bool starInside;
++	bool fired;
++
++	enum { VITA_RALLY_RECHECK_TIMER = 1101 };
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE(sydneyInPosition, 1);
++		SAVE_VARIABLE(starInside, 2);
++		SAVE_VARIABLE(fired, 3);
+ 	}
+ 
+ 	void Created( GameObject * obj ) 
+ 	{
+ 		sydneyInPosition = false;
++		starInside = false;
++		fired = false;
+ 	}
+ 
+ 	void Custom( GameObject * obj, int type, int param, GameObject * sender ) 
+@@ -9283,13 +9409,43 @@
+ 		if (param == M01_MODIFY_YOUR_ACTION_JDG)
+ 		{
+ 			sydneyInPosition = true;
++			// Vita port: the rally fires on STAR entry only. If the player is
++			// already standing inside when Sydney arrives, re-check shortly.
++			if (starInside == true && fired == false)
++			{
++				Commands->Start_Timer( obj, this, 0.5f, VITA_RALLY_RECHECK_TIMER );
++			}
++		}
++	}
++
++	void Timer_Expired( GameObject * obj, int timer_id )
++	{
++		GameObject * star = STAR;
++		if (timer_id == VITA_RALLY_RECHECK_TIMER && starInside == true && fired == false && star != NULL)
++		{
++			A30_Vita_Log("A4 M11 M11_Sydney_Rally_Zone_03b_JDG: player already inside when Sydney arrived; firing rally\n");
++			Entered( obj, star );
++		}
++	}
++
++	void Exited( GameObject * obj, GameObject * exiter ) 
++	{
++		if (exiter == STAR)
++		{
++			starInside = false;
+ 		}
+ 	}
+ 
+ 	void Entered( GameObject * obj, GameObject * enterer ) 
+ 	{
+-		if (enterer == STAR && sydneyInPosition == true)
++		if (enterer == STAR)
++		{
++			starInside = true;
++		}
++
++		if (enterer == STAR && sydneyInPosition == true && fired == false)
+ 		{
++			fired = true;
+ 			GameObject * sydney = Commands->Find_Object ( M11_REAL_SYDNEY_MOBIUS_JDG );
+ 			if (sydney != NULL )
+ 			{

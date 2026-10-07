@@ -1,0 +1,42 @@
+Area 4 star area keeps the furthest report (M13 follow-up fixes 2026-10-07).
+
+MX0_Area4_Zone_DLS zones report the star area to MX0_Area4_Controller_DLS
+only on their first star entry. The paired planes report 0,1 / 1,2 / 2,3 on a
+forward pass; a pair first crossed backwards reports the higher area and then
+the lower one, after which both zones are spent. star_area then stays below an
+area Havoc already reached and the MEDIUM_TANK/OBELISK/SAMS/A10 timers re-arm
+in case 2 forever. The controller now keeps the furthest area reported and
+activates on the first report of area 1 or more. A fired zone always leaves
+star_area at or above its own area, so zone re-reporting is not needed. On a
+forward pass the reports are already monotonic and the first non-zero report
+is 1, so the normal path is unchanged. A suppressed regression is logged.
+
+diff --git a/Test_DLS.cpp b/Test_DLS.cpp
+--- a/Test_DLS.cpp
++++ b/Test_DLS.cpp
+@@ -1914,8 +1914,23 @@
+ 		// What zone is the star in?
+ 		if(type == MX0_STAR_AREA)
+ 		{
+-			star_area = param;
+-			if(star_area == 1 && !area4_activated)
++			// Vita port: every Area 4 zone reports only on its first star entry,
++			// so a plane pair first crossed backwards (3 then 2) left star_area
++			// below an area Havoc had already reached, with every zone spent and
++			// the A04 timers waiting for it forever. Keep the furthest area
++			// reported. A forward pass reports 0,1,1,2,2,3 and is unchanged;
++			// activation then also follows the first report of area 1 or more.
++			if (param < star_area)
++			{
++				#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
++				A30_Vita_Log("M13 area4: kept star area %d over late report %d\n", star_area, param);
++				#endif
++			}
++			else
++			{
++				star_area = param;
++			}
++			if(star_area >= 1 && !area4_activated)
+ 			{
+ 				area4_activated = true;
+ 				Commands->Start_Timer (obj, this, 3.0f, AREA4_ACTIVATED);

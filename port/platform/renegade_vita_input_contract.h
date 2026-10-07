@@ -36,7 +36,8 @@ private:
 // Handheld Vita crouch: the right thumb cannot hold Circle and aim with the
 // right stick at once, and there is no L3. Circle keeps the original
 // hold-to-crouch key; a short solo tap additionally latches that key until
-// the next Circle press, an Action press (vehicle entry, ladder, poke), or
+// the next Circle press, an Action press (vehicle entry, ladder, poke), a
+// release condition from original player state (CrouchContextGate below), or
 // loss of ordinary gameplay input. The original Input/Soldier code still owns
 // what crouch does; this only decides whether the logical key is held.
 class CrouchLatch
@@ -44,10 +45,10 @@ class CrouchLatch
 public:
 	enum { TAP_MICROSECONDS = 250000U };
 	CrouchLatch() : latched(false), pressed(false), consumed(false),
-		was_latched(false), press_us(0U) {}
+		was_latched(false), armed(false), press_us(0U) {}
 	void Reset()
 	{
-		latched = pressed = consumed = was_latched = false;
+		latched = pressed = consumed = was_latched = armed = false;
 		press_us = 0U;
 	}
 	bool Latched() const { return latched; }
@@ -57,26 +58,34 @@ public:
 	// sticks do not count: crouching while firing or moving still latches.
 	// cancel: original Action key hit this poll.
 	// enabled: ordinary gameplay input is active.
+	// release: original player state says the crouch key must not stay
+	// latched (vehicle, script control, cinematic, death, beacon fire...).
+	// It clears any latch and keeps this press (and a tap) from latching, but
+	// a Circle that is physically held still reports the momentary hold key.
 	bool Sample(bool circle, bool other, bool cancel, bool enabled,
-		uint32_t frame_us)
+		uint32_t frame_us, bool release = false)
 	{
 		if (!enabled) { Reset(); return false; }
-		if (cancel) latched = false;
+		if (cancel || release) latched = false;
 		if (circle) {
 			if (!pressed) {
 				pressed = true;
-				consumed = false;
+				// A press that was already down when gameplay input returned
+				// (closing the EVA/dialog with Circle) is a hold, never a tap.
+				consumed = !armed;
 				was_latched = latched;
 				press_us = 0U;
 			} else if (press_us < TAP_MICROSECONDS) {
 				press_us += frame_us;
 			}
-			if (other || cancel) consumed = true;
+			if (other || cancel || release) consumed = true;
 			return true;
 		}
+		armed = true;
 		if (pressed) {
 			pressed = false;
-			latched = !was_latched && !consumed && press_us < TAP_MICROSECONDS;
+			latched = !release && !was_latched && !consumed &&
+				press_us < TAP_MICROSECONDS;
 		}
 		return latched;
 	}
@@ -85,7 +94,81 @@ private:
 	bool pressed;
 	bool consumed;
 	bool was_latched;
+	bool armed;
 	uint32_t press_us;
+};
+
+// Snapshot of the original star (player) state that decides whether a latched
+// crouch is still meaningful. A31_Interactive_Sample_Crouch_Player_Context()
+// fills it below Combat; every flag is read-only original state, nothing here
+// drives movement. A zero-initialized value (no star) always releases.
+struct CrouchPlayerContext
+{
+	bool star_present;        // CombatManager::Get_The_Star() != NULL
+	bool in_vehicle;          // Get_Vehicle() or HumanState IN_VEHICLE (any seat)
+	bool control_disabled;    // script Control_Enable(star, false)
+	bool cinematic;           // camera hosted on a cinematic model
+	bool dead;                // HumanState DEATH or DESTROY
+	bool scripted_animation;  // HumanState locked: beacon arming, C4 placement,
+	                          // transitions, script animations
+	bool beacon_weapon;       // current weapon hold style is Beacon
+	uint32_t object_id;       // star game-object ID
+	uintptr_t object_address; // star object identity (new object = new player)
+};
+
+// Why a latched crouch is released. Bits are stable: they are logged by name.
+enum CrouchReleaseReason : uint32_t {
+	CROUCH_RELEASE_NO_PLAYER = 1U << 0,
+	CROUCH_RELEASE_NEW_PLAYER = 1U << 1,  // respawn, restart or load made a new star
+	CROUCH_RELEASE_VEHICLE = 1U << 2,
+	CROUCH_RELEASE_CONTROL_DISABLED = 1U << 3,
+	CROUCH_RELEASE_CINEMATIC = 1U << 4,
+	CROUCH_RELEASE_DEAD = 1U << 5,
+	CROUCH_RELEASE_SCRIPTED_ANIMATION = 1U << 6,
+	CROUCH_RELEASE_BEACON_FIRE = 1U << 7
+};
+
+// Turns CrouchPlayerContext into CrouchLatch's release input. Beacon fire is
+// the R trigger (original FireWeaponPrimary) while a Beacon weapon is held.
+// Original WeaponClass only requires HumanState UPRIGHT (the crouch flag is
+// not tested), so this is a conservative guarantee that the M13 ion beacon is
+// never deployed from a latched crouch, not a reproduction of a game rule.
+// C4 placement and beacon arming both lock the human state with a scripted
+// animation, which CROUCH_RELEASE_SCRIPTED_ANIMATION covers.
+class CrouchContextGate
+{
+public:
+	CrouchContextGate() : seen(false), object_id(0U), object_address(0U) {}
+	void Reset() { seen = false; object_id = 0U; object_address = 0U; }
+	// Returns a CrouchReleaseReason mask; non-zero means release this poll.
+	uint32_t Evaluate(const CrouchPlayerContext &context, bool fire_primary)
+	{
+		if (!context.star_present) {
+			Reset();
+			return CROUCH_RELEASE_NO_PLAYER;
+		}
+		uint32_t reasons = 0U;
+		// First sight of a star is not a change: the latch is reset whenever
+		// this gate is (Flush, dialog, loss of gameplay input).
+		if (seen && (context.object_id != object_id ||
+				context.object_address != object_address)) {
+			reasons |= CROUCH_RELEASE_NEW_PLAYER;
+		}
+		seen = true;
+		object_id = context.object_id;
+		object_address = context.object_address;
+		if (context.in_vehicle) reasons |= CROUCH_RELEASE_VEHICLE;
+		if (context.control_disabled) reasons |= CROUCH_RELEASE_CONTROL_DISABLED;
+		if (context.cinematic) reasons |= CROUCH_RELEASE_CINEMATIC;
+		if (context.dead) reasons |= CROUCH_RELEASE_DEAD;
+		if (context.scripted_animation) reasons |= CROUCH_RELEASE_SCRIPTED_ANIMATION;
+		if (context.beacon_weapon && fire_primary) reasons |= CROUCH_RELEASE_BEACON_FIRE;
+		return reasons;
+	}
+private:
+	bool seen;
+	uint32_t object_id;
+	uintptr_t object_address;
 };
 
 enum : int32_t {
@@ -255,3 +338,11 @@ inline int32_t To_Camera_Mouse_Delta(float normalized, float frame_seconds,
 }
 
 } // namespace RenegadeVitaInput
+
+// Implemented by the Combat-aware A3.1 boundary (a31_gameplay_boundary.cpp),
+// which is linked wherever renegade_directinput.cpp is. Reads original star
+// state only; returns false (context zeroed, star_present false) without a
+// star. renegade_directinput.cpp calls it on device while gameplay input is
+// active and never from the host ABI contract tests.
+bool A31_Interactive_Sample_Crouch_Player_Context(
+	RenegadeVitaInput::CrouchPlayerContext &context);

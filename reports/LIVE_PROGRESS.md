@@ -18,6 +18,34 @@ Evidence: staging 585 patches, inventory PASS, byte-identical regeneration; pure
 Next: ARM build plus the compiled/sanitizer host lanes, Vita3K install, then the tutorial benchmark A/B.
 Blocker: building was out of scope for this round; merging to main also lands unaccepted dev240.
 
+# Campaign development push 5 (follow-ups and hardening) — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Completed (static evidence, ARM -fsyntax-only and host tests only; nothing linked, emulated or run on
+hardware). Mission reports carry dated "Follow-up fixes" sections.
+- Conversation gates: M04 (7) and M11 (5) objective conversations now deliver on key-conversation
+  preemption; M05 Escapee/Babushka, M06 hidden talks, M08 802–807 monitor-first; M10 NE gate briefing.
+  Only cosmetic/LOW gates remain.
+- Mission fallbacks: M03 gunboat any-killer outcome, west-route Comm Center at terminal, escape 1010 at
+  exit; M05 Town Square >= counts and Black Hand re-drop on non-kill removal; M06 Mendoza end-position
+  15 s timeout; M07 rope-climb save/load, CON001 briefing, evac retry, para-drop save; M09 one-way lift
+  Mobius recovery, catch-up timer restart, midtro reposition fallback; M10 stale primaries, attack
+  table saves; M11 rally-leg retry and rally-zone recheck; M13 Area 4 monotonic star area; M01/M02
+  save gaps, turrets fallback, midtro latch, Mendoza conversation leak; Raveshaw thrown-object liveness.
+- Engine/port: objectives completed before they are added replay their status (saved, bounded);
+  rejected-load discard unlinks referencers/carriers/NULL observers (F4, ASan host probe); first real
+  frame after resume capped; missing cinematic model keeps the placeholder model; model-less
+  animation guard; pointer-remap tables and release asset-status names freed per load; crouch latch
+  released on vehicle/cinematic/death/load/C4/beacon; script zone swept entries logged on Vita.
+- QA: A38 interplay review applied (M03 speaker save id, M05 Deadeye alive-only re-arm, M09 single
+  keycard loop). Path following at low FPS measured: slower, never unsafe (no change).
+- Test plan: reports/campaign/PHYSICAL_CAMPAIGN_TEST_PLAN.md + tools/extract_campaign_log_signatures.py.
+  Note: Debug_Say lines are compiled out on Vita; grep the A3.x/A4 runtime lines instead.
+Staging: 608 patches, inventory PASS. CONVERSATION_GATED_OBJECTIVES.md predates these fixes.
+
+Next: full ARM build from HEAD (vitaGL rebuild), Vita3K install, then the physical test plan legs.
+
 # Campaign development push 4 (soft-lock hunt) — 2026-10-07
 
 Renegade Vita — v3.5 active

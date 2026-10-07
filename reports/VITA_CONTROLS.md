@@ -17,7 +17,7 @@ bindings still own the action) and `port/platform/renegade_vita_tutorial_help.h`
 | L trigger | Joystick button 0 | Secondary fire: sniper scope on/off, detonate C4 |
 | Cross | DIK_SPACE | Jump |
 | Circle (hold) | DIK_LCONTROL | Crouch while held (original) |
-| Circle (quick solo tap) | DIK_LCONTROL latched | Crouch stays on until the next Circle press, Triangle/Action, or a menu/dialog |
+| Circle (quick solo tap) | DIK_LCONTROL latched | Crouch stays on until the next Circle press, Triangle/Action, a menu/dialog, or an original-state release (vehicle, script control, cinematic, death, new player, beacon fire, locked C4/beacon animation; see below) |
 | Triangle | DIK_E | Action/Use: enter vehicle, ladder, talk |
 | Square | DIK_R | Reload |
 | D-pad Left/Right | DIK_LEFT/RIGHT | Cycle weapons |
@@ -91,11 +91,11 @@ during in-engine cinematics.
 | Enter vehicle, incl. passenger seat | ACTION via TransitionManager | E | Triangle | Triangle exits |
 | Get on a ladder | ACTION in ladder zone; exits are automatic | E | Triangle, then left stick | n/a |
 | Jump onto ledges | JUMP (hit) | Space | Cross | Aircraft up (not used in campaign) |
-| Crouch | CROUCH (held) | C | Circle hold, or tap to latch; PSTV L3 | Not used |
+| Crouch | CROUCH (held) | C | Circle hold, or tap to latch; PSTV L3 | Latch never stays on; a held Circle still feeds the original key (ground vehicles lose ~29% throttle, see below) |
 | Crouch-jump | CROUCH held + JUMP (no extra height in original) | C+Space | Tap Circle, then Cross; or Circle+Cross together | n/a |
 | Fire; place timed/proximity C4 | FIRE_WEAPON_PRIMARY (held) | LMB | R trigger | Fires vehicle weapon |
 | Detonate remote C4 | USE_WEAPON (hit, copied from secondary fire), remote C4 selected | RMB | L trigger tap | n/a |
-| Deploy ion/nuke beacon | FIRE_WEAPON_PRIMARY held through charge; must be upright | LMB hold | R trigger hold; stand up first | n/a |
+| Deploy ion/nuke beacon | FIRE_WEAPON_PRIMARY held through charge; HumanState must be UPRIGHT (not airborne/animating) | LMB hold | R trigger hold; a latched crouch is released the moment R is pressed with a beacon equipped | n/a |
 | Cancel beacon arming | Any move, jump, weapon switch, reload, use or action while arming | Move | Left stick (ammo returned) | n/a |
 | Sniper scope on/off | USE_WEAPON (hit) on a snipe weapon | RMB | L trigger tap | n/a |
 | Sniper zoom in/out | ZOOM_IN/ZOOM_OUT (held, only while scoped) | Wheel, T/G | D-pad Up/Down | n/a |
@@ -135,10 +135,48 @@ Fixes in this audit:
   Pressing Circle again, Triangle/Action (vehicle entry, ladder, poke), or
   opening any dialog, chord or IME releases the latch. A one-shot breadcrumb
   "Circle tap latched original crouch key DIK_LCONTROL" records first use.
+  A Circle that was already down when gameplay input returned (closing the
+  EVA or a dialog with Circle) is a hold only and never latches, even if it
+  ends inside the tap window.
 
-Remaining risks (need hardware): the tap window and latch feel; beacons do
-not fire while crouched (original rule), so a latched crouch must be released
-first; a vehicle entered by script while crouch is latched gets the original
-crouch-key throttle scaling until Circle is tapped; accidental rear-touch
-camera toggles; Select+Square is a stretch for one thumb (the EVA Save button
-is the alternative).
+Crouch latch release from original state (2026-10-07). `DirectInput::Read`
+asks `A31_Interactive_Sample_Crouch_Player_Context()` (read-only, in
+`port/platform/a31_gameplay_boundary.cpp`) for the star's state while
+ordinary gameplay input is active, and `RenegadeVitaInput::CrouchContextGate`
+(`renegade_vita_input_contract.h`) turns it into a reason mask that clears the
+latch and keeps any tap under that condition from latching. A physically held
+Circle (and PSTV L3) still feeds the original momentary crouch key. Values are
+the previous frame's, because `Input::Update` runs before the star's `Think`.
+
+| Condition | Observable signal (original state) | Why |
+|---|---|---|
+| Vehicle, any seat, incl. scripted entry | `SoldierGameObj::Get_Vehicle() != NULL` or HumanState `IN_VEHICLE` | `FollowInputActionCodeClass::Act` normalizes forward/left by the length of (forward, left, MoveUp-MoveDown) and MoveDown is the crouch key, so a held key costs ~29% throttle |
+| Script took control | `!SmartGameObj::Is_Control_Enabled()` (script `Control_Enable(star, false)`) | Control must come back with the player standing |
+| Cinematic | `CCameraClass::Is_In_Cinematic()` (camera hosted on a model) | `Input::Update` zeroes every function during cinematics, so the latch would otherwise re-crouch the player afterwards |
+| Death | `Is_Dead()` or `Is_Destroyed()` (HumanState `DEATH`/`DESTROY`) | Corpse state must not carry a held key into the next life |
+| Respawn, restart, load | star object ID or address changes; no star at all; `Post_Load_Level` and round exit already `Input::Flush()` | A new player starts standing. EVA/death dialogs also reset the latch while open |
+| C4 placement, beacon arming, transitions, script animations | `Is_State_Locked()` (HumanState locked scripted/transition animation) | Both deploy paths lock the state with a scripted animation; the player stands afterwards |
+| Beacon fire | current weapon hold style `WEAPON_HOLD_STYLE_BEACON` and R trigger down | Insurance that the M13 ion beacon is never deployed from a latched crouch |
+
+Each reason that ends an active latch writes one breadcrumb
+"crouch latch released by original player state mask=NNNNNNNN" (bit 0 no
+player, 1 new player, 2 vehicle, 3 control disabled, 4 cinematic, 5 dead,
+6 scripted animation, 7 beacon fire).
+
+Beacon note: reading the original source, `WeaponClass::Update_State` only
+requires `SoldierGameObj::Is_Upright()` (HumanState `UPRIGHT`) to charge a
+beacon, and crouch is a separate `CROUCHED_FLAG`, so a crouched soldier is
+still upright. The earlier "beacons will not deploy while crouched" statement
+was not supported by the source; the release above is kept as cheap insurance
+because the M13 finale depends on the ion beacon. Hardware has not checked
+either way. `tools/test_vita_campaign_control_coverage.py` locks the signals
+and these original-source facts.
+
+Remaining risks (need hardware): the tap window and latch feel; release
+decisions use the previous frame's star state (one frame late at most);
+planting C4 or arming a beacon stands the player up (the locked animation
+releases the latch), which a player sneaking with a latched crouch may not
+expect; a held Circle in a ground vehicle still applies the original
+throttle scaling (only the latch is blocked); accidental rear-touch camera
+toggles; Select+Square is a stretch for one thumb (the EVA Save button is the
+alternative).

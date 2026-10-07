@@ -1,0 +1,28 @@
+--- a/movephys.cpp
++++ b/movephys.cpp
+@@ -532,6 +532,15 @@
+ 	Link_To_Carrier(tmp_carrier);
+ }
+ 
++// Vita port: a rejected load remaps Carrier but never links this rider into the
++// carrier's rider list, so the carrier cannot clear it on destruction. Drop it.
++void MoveablePhysClass::On_Post_Load_Discarded(void)
++{
++	DynamicPhysClass::On_Post_Load_Discarded();
++	Carrier = NULL;
++	CarrierSubObject = NULL;
++}
++
+ 
+ /***********************************************************************************************
+ **
+--- a/movephys.h
++++ b/movephys.h
+@@ -116,6 +116,7 @@
+ 	virtual bool					Save (ChunkSaveClass &csave);
+ 	virtual bool					Load (ChunkLoadClass &cload);
+ 	virtual void					On_Post_Load (void);
++	virtual void					On_Post_Load_Discarded (void);
+ 	
+ 	/*
+ 	** Access to the state of the object

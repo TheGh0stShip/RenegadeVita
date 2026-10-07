@@ -192,6 +192,7 @@ protected:
 	SimpleGameObj *					Find_Object_To_Throw (void);
 	WWINLINE SoldierGameObj *		Peek_Stealth_Soldier (void);
 	void									Verify_Stealth_Soldier (void);
+	void									Verify_Thrown_Object (void);
 
 	void									Link_Player_To_Hands (void);
 
@@ -433,6 +434,7 @@ private:
 	GameObjReference			StealthSoldier;
 	StealthEffectClass *		StealthEffect;
 	SimpleGameObj *			ThrownObject;
+	GameObjReference			ThrownObjectRef;	// Vita: liveness of ThrownObject
 	Vector3						FlyingObjectVector;
 	Vector3						FlyingObjectDest;
 	float							FlyingDist;

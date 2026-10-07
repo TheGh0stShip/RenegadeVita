@@ -1,0 +1,64 @@
+--- a/reflist.cpp
++++ b/reflist.cpp
+@@ -108,6 +108,16 @@
+ }
+ 
+ 
++// Vita port: a registered referencer was never linked into its remapped
++// target's list (Load leaves the link NULL), so drop the target instead of
++// letting the destructor search a list that does not contain it.
++void	ReferencerClass::On_Post_Load_Discarded(void)
++{
++	ReferenceTarget = NULL;
++	TargetReferencerListNext = NULL;
++}
++
++
+ const ReferencerClass & ReferencerClass::operator = ( const ScriptableGameObj * reference_target )
+ {
+ 	if ( ReferenceTarget != NULL ) {		// if I currently have a target
+--- a/reflist.h
++++ b/reflist.h
+@@ -104,6 +104,7 @@
+ 		virtual ~ReferencerClass( void ) { operator = ((const ScriptableGameObj*)NULL); }
+ 
+ 		virtual void	On_Post_Load(void);
++		virtual void	On_Post_Load_Discarded(void);
+ 
+ 		bool	Save( ChunkSaveClass & csave );
+ 		bool	Load( ChunkLoadClass & cload );
+--- a/scriptablegameobj.cpp
++++ b/scriptablegameobj.cpp
+@@ -638,6 +638,22 @@
+ 	}
+ }
+ 
++// Vita port: a rejected load still holds NULL observers (unrecreatable scripts
++// or unresolved remaps). Purge them as On_Post_Load does, without running any
++// post-load behavior, so Remove_All_Observers never calls NULL->Detach.
++void ScriptableGameObj::On_Post_Load_Discarded( void )
++{
++	BaseGameObj::On_Post_Load_Discarded();
++
++	GameObjObserverList & observer_list = (GameObjObserverList &)Get_Observers();
++	for( int index = 0; index < observer_list.Count(); index++ ) {
++		if ( observer_list[ index ] == NULL ) {
++			observer_list.Delete( index );
++			index--;
++		}
++	}
++}
++
+ /*
+ **
+ */
+--- a/scriptablegameobj.h
++++ b/scriptablegameobj.h
+@@ -122,6 +122,7 @@
+ 	virtual	bool	Save( ChunkSaveClass & csave );
+ 	virtual	bool	Load( ChunkLoadClass & cload );
+ 	virtual	void	On_Post_Load( void );
++	virtual	void	On_Post_Load_Discarded( void );
+ 
+ 	//	Thinking
+ 	virtual	void	Think();

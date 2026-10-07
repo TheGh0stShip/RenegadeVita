@@ -4,23 +4,23 @@
  "regenerate": "python3 tools/run_host_tests.py --write-manifest",
  "note": "Static classification only; lanes: pure, retail, artifact, compiled, sanitizer, device.",
  "counts": {
-  "modules": 277,
+  "modules": 282,
   "lanes": {
-   "pure": 174,
+   "pure": 176,
    "retail": 3,
    "artifact": 6,
-   "compiled": 38,
-   "sanitizer": 56,
+   "compiled": 39,
+   "sanitizer": 58,
    "device": 0
   },
   "kinds": {
    "cli-driver": 3,
    "functions": 2,
    "script": 1,
-   "unittest": 271
+   "unittest": 276
   },
   "tags": {
-   "compiles-host-c++": 94,
+   "compiles-host-c++": 97,
    "compiles-vita-arm": 6,
    "kind:cli-driver": 3,
    "kind:functions": 2,
@@ -28,11 +28,11 @@
    "needs-build-artifact": 10,
    "needs-module:yaml": 1,
    "needs-retail-data": 4,
-   "needs-upstream": 36,
+   "needs-upstream": 38,
    "optional-build-artifact": 3,
    "override": 3,
-   "pure-python": 174,
-   "sanitizer": 56,
+   "pure-python": 176,
+   "sanitizer": 58,
    "sanitizer-optional": 12,
    "skips-without-retail": 4,
    "tsan": 4,
@@ -1101,6 +1101,17 @@
     "-fsanitize always on"
    ]
   },
+  "tools/test_m04_conversation_gate_preempt.py": {
+   "module": "tools.test_m04_conversation_gate_preempt",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "needs-upstream",
+    "pure-python"
+   ],
+   "reasons": []
+  },
   "tools/test_m08_readiness.py": {
    "module": "tools.test_m08_readiness",
    "kind": "unittest",
@@ -1125,6 +1136,16 @@
     "compiler: c++",
     "-fsanitize always on"
    ]
+  },
+  "tools/test_m10_follow_up_fixes.py": {
+   "module": "tools.test_m10_follow_up_fixes",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "pure",
+   "tags": [
+    "pure-python"
+   ],
+   "reasons": []
   },
   "tools/test_m10_objective_conversation_resend.py": {
    "module": "tools.test_m10_objective_conversation_resend",
@@ -1337,6 +1358,19 @@
    "lane": "compiled",
    "tags": [
     "compiles-host-c++"
+   ],
+   "reasons": [
+    "compiler: g++"
+   ]
+  },
+  "tools/test_objective_early_status.py": {
+   "module": "tools.test_objective_early_status",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "compiled",
+   "tags": [
+    "compiles-host-c++",
+    "needs-upstream"
    ],
    "reasons": [
     "compiler: g++"
@@ -1562,6 +1596,20 @@
    ],
    "reasons": [
     "compiler: c++"
+   ]
+  },
+  "tools/test_rejected_load_discard.py": {
+   "module": "tools.test_rejected_load_discard",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: c++",
+    "-fsanitize always on"
    ]
   },
   "tools/test_remote_world.py": {
@@ -1969,6 +2017,20 @@
     "pure-python"
    ],
    "reasons": []
+  },
+  "tools/test_suspend_resume_frame_clock.py": {
+   "module": "tools.test_suspend_resume_frame_clock",
+   "kind": "unittest",
+   "run": "module",
+   "lane": "sanitizer",
+   "tags": [
+    "compiles-host-c++",
+    "sanitizer"
+   ],
+   "reasons": [
+    "compiler: g++",
+    "-fsanitize always on"
+   ]
   },
   "tools/test_sweep_cpp_functions.py": {
    "module": "tools.test_sweep_cpp_functions",

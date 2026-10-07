@@ -1,6 +1,27 @@
+--- a/scriptzone.h
++++ b/scriptzone.h
+@@ -161,6 +161,18 @@
+ 	bool		In_List( SmartGameObj * obj );
+ 	bool		Inside_Me( const SmartGameObj * obj );
+ 
++	// Vita port: swept-entry fallback for star (and star vehicle) moves longer
++	// than the zone's thinnest side between two consecutive Thinks. Not saved.
++	enum { SWEEP_SAMPLE_COUNT = 4 };
++	struct SweepSampleStruct {
++		int				ObjID;
++		unsigned int	SyncTime;
++		int				FrameTicks;
++		Vector3			Position;
++	};
++	SweepSampleStruct	SweepSamples[SWEEP_SAMPLE_COUNT];
++	bool		Update_Sweep_Sample( const SmartGameObj * obj );
++
+ };
+ 
+ #endif
 --- a/scriptzone.cpp
 +++ b/scriptzone.cpp
-@@ -51,6 +51,10 @@
+@@ -51,6 +51,13 @@
  #include "pscene.h"
  #include "phys.h"
  #include "soldier.h"
@@ -8,10 +29,13 @@
 +#include "lineseg.h"
 +#include "timemgr.h"
 +#include "ww3d.h"
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++#include "a30_vita_runtime.h"
++#endif
  
  /*
  ** ScriptZoneGameObjDef
-@@ -202,6 +206,12 @@
+@@ -202,6 +209,12 @@
  ScriptZoneGameObj::ScriptZoneGameObj( void ) :
  	PlayerType( PLAYERTYPE_NEUTRAL )
  {
@@ -24,7 +48,7 @@
  }
  
  ScriptZoneGameObj::~ScriptZoneGameObj( void )
-@@ -384,7 +394,8 @@
+@@ -384,7 +397,8 @@
  		SLNode<SoldierGameObj> *objnode;
  		for (	objnode = GameObjManager::Get_Star_Game_Obj_List()->Head(); objnode; objnode = objnode->Next()) {
  			SoldierGameObj * obj = objnode->Data();
@@ -34,7 +58,7 @@
  				Entered( obj );
  			}
  		}
-@@ -405,8 +416,92 @@
+@@ -405,8 +419,101 @@
  				}
  			}
  		}
@@ -105,6 +129,15 @@
 +			  CollisionMath::Overlap_Test( BoundingBox, LineSegClass( sample->Position, pos ) ) != CollisionMath::OUTSIDE ) {
 +			crossed = true;
 +			Debug_Say(( "ScriptZone %d swept entry by %d (%.2f m)\n", Get_ID(), id, dist ));
++#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
++			// Debug_Say is compiled out of Vita builds; keep a bounded runtime record
++			// so a hardware log shows when the sweep supplied an entry.
++			static unsigned vita_swept_reports = 0U;
++			if ( vita_swept_reports < 32U ) {
++				vita_swept_reports++;
++				A30_Vita_Log( "A4 script zone swept entry v1: zone=%d obj=%d dist=%.2f\n", Get_ID(), id, dist );
++			}
++#endif
 +		}
 +	} else {
 +		// Reuse a slot not refreshed by this Think; beyond SWEEP_SAMPLE_COUNT
@@ -127,24 +160,3 @@
  }
  
  /*
---- a/scriptzone.h
-+++ b/scriptzone.h
-@@ -161,6 +161,18 @@
- 	bool		In_List( SmartGameObj * obj );
- 	bool		Inside_Me( const SmartGameObj * obj );
- 
-+	// Vita port: swept-entry fallback for star (and star vehicle) moves longer
-+	// than the zone's thinnest side between two consecutive Thinks. Not saved.
-+	enum { SWEEP_SAMPLE_COUNT = 4 };
-+	struct SweepSampleStruct {
-+		int				ObjID;
-+		unsigned int	SyncTime;
-+		int				FrameTicks;
-+		Vector3			Position;
-+	};
-+	SweepSampleStruct	SweepSamples[SWEEP_SAMPLE_COUNT];
-+	bool		Update_Sweep_Sample( const SmartGameObj * obj );
-+
- };
- 
- #endif

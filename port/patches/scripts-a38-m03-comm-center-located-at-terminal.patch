@@ -1,0 +1,90 @@
+M03 follow-up: primary objective 1000 (Locate Comm Center) completes on 300,1.
+Completing it also sends BASE_ENTERED to the Comm Center (1150002), which
+stops M03_Comm_Killed from healing it. On the west (elevator) route, zone
+1144502 starts the key conversation M03CON003 and deletes itself in the
+same Entered (RMV_Trigger_Zone). The monitor reference goes NULL, so the
+end callback that sends 300,1 never runs. Zone 1144502 also marks east
+zone 1100005 as entered. If the star then crosses 1100005 before con-yard
+zone 1144636, 1100005's RMV_Trigger_Zone sends 900 to 1144636, which
+silences M03_ConYardSeen, the last 300,1 sender. In that case 1000 stays
+pending for the whole mission at HUD priority 96, above Escape (93). The
+Comm Center also stays undamageable, so tertiary 1012 cannot be earned.
+The exit itself is not blocked, because it is gated by key 6 from Sakura.
+
+Fallback: when the mainframe is poked (308,1 from terminal 1100009, the
+1000 marker object), complete 1000 once if it has not completed yet. The
+same star poke sends MCT_ACCESSED (M03_Mct_Poke), so the newly damageable
+Comm Center can no longer trigger the mission-fail timer. A later
+base-entry 300,1 after the fallback is skipped instead of reannounced. The
+state lives in a new saved controller variable (id 13). On the normal
+route 300,1 arrives before the poke, so the fallback branch is never taken
+and repeated 300,1 events behave as before.
+
+--- a/Mission03.cpp
++++ b/Mission03.cpp
+@@ -65,6 +65,8 @@
+ 	int shore_sam_objective_flags;
+ 	// Vita port: bit 0 = objective 1002 added, bit 1 = village SAMs reported.
+ 	int village_sam_objective_flags;
++	// Vita port: bit 0 = objective 1000 completed, bit 1 = credited at the terminal poke.
++	int base_objective_flags;
+ 
+ 	REGISTER_VARIABLES()
+ 	{
+@@ -80,6 +82,7 @@
+ 		SAVE_VARIABLE(mainframe_objective_flags, 10);
+ 		SAVE_VARIABLE(shore_sam_objective_flags, 11);
+ 		SAVE_VARIABLE(village_sam_objective_flags, 12);
++		SAVE_VARIABLE(base_objective_flags, 13);
+ 	}
+ 
+ 	void Created(GameObject * obj)
+@@ -96,6 +99,7 @@
+ 		mainframe_objective_flags = 0;
+ 		shore_sam_objective_flags = 0;
+ 		village_sam_objective_flags = 0;
++		base_objective_flags = 0;
+ 	//	Commands->Add_Objective(1006, OBJECTIVE_TYPE_TERTIARY, OBJECTIVE_STATUS_HIDDEN, 1008, IDS_Enc_ObjTitle_Hidden_M03_02, NULL, IDS_Enc_Obj_Hidden_M03_02);
+ 	//	Commands->Add_Objective(1007, OBJECTIVE_TYPE_SECONDARY, OBJECTIVE_STATUS_HIDDEN, 1009);
+ 	//	Commands->Add_Objective(1008, OBJECTIVE_TYPE_PRIMARY, OBJECTIVE_STATUS_HIDDEN, 1010);
+@@ -210,6 +214,13 @@
+ 			sender1 = Commands->Get_ID ( sender );
+ 		}
+ 		
++		// Vita port: 1000 was already credited at the terminal poke (see
++		// Complete_Mission_Objective(1008)). A later base-entry 300,1 is a repeat.
++		if (type == 300 && param == 1 && (base_objective_flags & 2))
++		{
++			return;
++		}
++
+ 		if (type >= 300 && type <= 312)
+ 		{
+ 			switch(param)
+@@ -586,6 +597,7 @@
+ 
+ 		if (id == 1000)
+ 		{
++			base_objective_flags |= 1; // Vita port: see Complete_Mission_Objective(1008).
+ 			GameObject * com_center = Commands->Find_Object (1150002);
+ 			Commands->Send_Custom_Event(controller, com_center, BASE_ENTERED, 0);
+ 		}
+@@ -642,6 +654,18 @@
+ 		if (id == 1008)
+ 		{
+ 			mainframe_objective_flags |= 2; // Vita port: see Add_Mission_Objective(1008).
++
++			// Vita port: on the west (elevator) route zone 1144502 deletes itself
++			// before M03CON003 ends, so its 300,1 is lost, and crossing east zone
++			// 1100005 next suppresses con-yard zone 1144636. Then 1000 never
++			// completes and the Comm Center keeps healing. Poking its mainframe
++			// proves it was located. The same poke sends MCT_ACCESSED
++			// (M03_Mct_Poke), so destroying the Comm Center can no longer fail.
++			if (!(base_objective_flags & 1))
++			{
++				base_objective_flags |= 2;
++				Complete_Mission_Objective(1000);
++			}
+ 		}
+ 
+ 		if (id == 1002)

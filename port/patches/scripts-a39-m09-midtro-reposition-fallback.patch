@@ -1,0 +1,80 @@
+M09_Mobius_Suit_Objective midtro reposition fallback. X9C_MIDTRO.txt line
+361 (Send_Custom 2000612 8888) is the only thing that moves Havoc and Mobius
+from their +7 m hold to the authored points 1100497/2002239. If it never
+arrives (control file fails to open or the controller dies early), make the
+same move 20 s (sim time) after the cinematic starts and log once. When 8888
+arrives (12.0 s) the flag is set and the timer does nothing.
+
+--- a/Mission09.cpp
++++ b/Mission09.cpp
+@@ -361,18 +361,52 @@
+ DECLARE_SCRIPT (M09_Mobius_Suit_Objective, "")
+ {
+ 	bool already_entered;
+-	
++	// Vita guard: set once Havoc and Mobius are placed at the post-midtro points.
++	bool vita_midtro_placed;
++
++	enum { VITA_MIDTRO_CHECK = 9041 };
+ 		
+ 	// Register variables to be Auto-Saved
+ 	// All variables must have a unique ID, less than 256, that never changes
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE( already_entered, 1 );
++		SAVE_VARIABLE( vita_midtro_placed, 2 );
+ 	}
+ 
+ 	void Created (GameObject * obj)
+ 	{
+ 		already_entered = false;			
++		vita_midtro_placed = false;
++	}
++
++	// Vita guard: X9C_MIDTRO.txt line 361 (Send_Custom 2000612 8888) is the
++	// only thing that moves Havoc and Mobius off their +7 m hold to the
++	// authored points 1100497/2002239. If the cinematic never sends it (the
++	// file fails to open or its controller dies early), do the same move.
++	void Timer_Expired (GameObject * obj, int timer_id)
++	{
++		if ((timer_id == VITA_MIDTRO_CHECK) && !vita_midtro_placed)
++		{
++			GameObject *mobius = Commands->Find_Object (2000010);
++			GameObject *star = STAR;
++			GameObject *havoc_point = Commands->Find_Object (1100497);
++			GameObject *mobius_point = Commands->Find_Object (2002239);
++
++			vita_midtro_placed = true;
++			A30_Vita_Log("A4 M09 midtro reposition fallback v1: no 8888 after 20 s star=%d mobius=%d points=%d/%d\n",
++				(star != NULL) ? 1 : 0, (mobius != NULL) ? 1 : 0,
++				(havoc_point != NULL) ? 1 : 0, (mobius_point != NULL) ? 1 : 0);
++
++			if ((star != NULL) && (havoc_point != NULL))
++			{
++				Commands->Set_Position (star, Commands->Get_Position (havoc_point));
++			}
++			if ((mobius != NULL) && (mobius_point != NULL))
++			{
++				Commands->Set_Position (mobius, Commands->Get_Position (mobius_point));
++			}
++		}
+ 	}
+ 
+ 	void Custom (GameObject *obj, int type, int param, GameObject *sender)
+@@ -380,6 +414,7 @@
+ 		if (type == 8888)
+ 		{
+ 			GameObject *mobius = Commands->Find_Object (2000010);
++			vita_midtro_placed = true;
+ 
+ 			Vector3 havoc_loc = Commands->Get_Position (Commands->Find_Object (1100497));
+ 			Vector3 mobius_loc = Commands->Get_Position (Commands->Find_Object (2002239));
+@@ -418,6 +453,8 @@
+ 				GameObject * powermob = Commands->Create_Object ( "Invisible_Object", Vector3(0.0f, 0.0f, 0.0f));
+ 				Commands->Set_Facing(powermob, 0.0f);
+ 				Commands->Attach_Script(powermob, "Test_Cinematic", "X9C_MIDTRO.txt");
++				// Line 361 is 12.0 s in; both clocks are simulation time.
++				Commands->Start_Timer (obj, this, 20.0f, VITA_MIDTRO_CHECK);
+ 				
+ 				Commands->Set_Model ( mobius, "c_ag_gdi_pmob" );
+ 				Commands->Give_PowerUp(mobius, "POW_LaserChaingun_AI");

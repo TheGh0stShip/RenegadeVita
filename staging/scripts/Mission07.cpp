@@ -45,8 +45,9 @@ DECLARE_SCRIPT(M07_Objective_Controller, "") // 100657
 {
 	bool accomplished_705;
 	bool accomplished_701;
-	
-	enum {HAVOCS_SCRIPT, M07_DEAD_HAVOC, INITIAL_CONV, PROTECT_TEAM};
+	bool briefing_done;
+
+	enum {HAVOCS_SCRIPT, M07_DEAD_HAVOC, INITIAL_CONV, PROTECT_TEAM, BRIEFING_FALLBACK};
 
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
@@ -54,6 +55,7 @@ DECLARE_SCRIPT(M07_Objective_Controller, "") // 100657
 	{
 		SAVE_VARIABLE( accomplished_705, 1 );
 		SAVE_VARIABLE( accomplished_701, 2 );
+		SAVE_VARIABLE( briefing_done, 3 );
 	}
 
 	void Created(GameObject * obj)
@@ -299,13 +301,44 @@ DECLARE_SCRIPT(M07_Objective_Controller, "") // 100657
 		{
 			Add_An_Objective(710);
 		}
+		if(timer_id == BRIEFING_FALLBACK && !briefing_done)
+		{
+			GameObject * havoc = STAR;
+			GameObject * gunner = GUNNER;
+			if (havoc != NULL && gunner != NULL &&
+				Commands->Get_Health(havoc) > 0.0f && Commands->Get_Health(gunner) > 0.0f)
+			{
+				Briefing_Ended(obj);
+			}
+		}
 	}
 
 	void Action_Complete(GameObject * obj, int action_id, ActionCompleteReason reason)
 	{
-		ActionParamsStruct params;
-
 		if(action_id == 300701 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
+		{
+			Briefing_Ended(obj);
+		}
+		// M07_CON001 is stopped early (INTERRUPTED/UNABLE_TO_INIT) only by a
+		// dead orator or by Havoc leaving the 200 m audience radius. Without the
+		// ENDED branch the 701/710 objectives, the nuke countdown and the team
+		// move never happen. Run it from a short timer instead, so teardown
+		// stops never act and a dead orator (mission already failed) is skipped.
+		else if(action_id == 300701 && !briefing_done &&
+			(reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED ||
+			 reason == ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT))
+		{
+			Commands->Start_Timer (obj, this, 1.0f, BRIEFING_FALLBACK);
+		}
+	}
+
+	void Briefing_Ended(GameObject * obj)
+	{
+		if (briefing_done)
+		{
+			return;
+		}
+		briefing_done = true;
 		{
 			Add_An_Objective(701);
 
@@ -977,9 +1010,11 @@ DECLARE_SCRIPT(M07_Dead6_Engineer, "")  // Hotwire
 	bool evac;
 	float health;
 	float shield;
+	bool evac_reported;
 
 	enum{GO_SAM1, ATTACK_SAM1, GO_SAM2, ATTACK_SAM2, 
-		HOTWIRE_MOVE_LOC, MOVE_LOC_LOW_PRIORITY, TANK_STILL_THERE, ARRIVE_EVAC_SPOT};
+		HOTWIRE_MOVE_LOC, MOVE_LOC_LOW_PRIORITY, TANK_STILL_THERE, ARRIVE_EVAC_SPOT,
+		ARRIVE_EVAC_RETRY};
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
 	REGISTER_VARIABLES()
@@ -992,12 +1027,34 @@ DECLARE_SCRIPT(M07_Dead6_Engineer, "")  // Hotwire
 		SAVE_VARIABLE( health, 6 );
 		SAVE_VARIABLE( shield, 7 );
 		SAVE_VARIABLE( move_loc, 8 );
+		SAVE_VARIABLE( evac_reported, 9 );
+	}
+
+	void Go_Evac_Spot(GameObject * obj)
+	{
+		ActionParamsStruct params;
+		params.Set_Basic (this, (INNATE_PRIORITY_ENEMY_SEEN + 5), ARRIVE_EVAC_SPOT);
+		params.Set_Movement (Commands->Find_Object(105151), RUN, 3.0f);
+		Commands->Action_Goto (obj, params);
+	}
+
+	void Report_Evac(GameObject * obj)
+	{
+		// Hotwire is the fifth inn evacuee; report her once only.
+		if (evac_reported)
+		{
+			return;
+		}
+		evac_reported = true;
+		int dead6_id = Commands->Get_ID(obj);
+		Commands->Send_Custom_Event(obj, Commands->Find_Object(104496), M07_DEAD6_EVAC, dead6_id, 0.0f);
 	}
 
 	void Created(GameObject * obj)
 	{
 		Commands->Enable_Hibernation(obj, false);
 
+		evac_reported = false;
 		nuke_blast = true;
 		go_evac_site = false;
 		Commands->Set_Innate_Is_Stationary(obj, true);
@@ -1026,9 +1083,7 @@ DECLARE_SCRIPT(M07_Dead6_Engineer, "")  // Hotwire
 		if (type == M07_EVAC_INN) //SAM sites captured, evac DEAD6 and Sydney
 		{
 			evac = true;
-			params.Set_Basic (this, (INNATE_PRIORITY_ENEMY_SEEN + 5), ARRIVE_EVAC_SPOT);
-			params.Set_Movement (Commands->Find_Object(105151), RUN, 3.0f);
-			Commands->Action_Goto (obj, params);
+			Go_Evac_Spot(obj);
 		}
 		if ( type == M07_GO_ASSEMBLY ) 
 		{
@@ -1159,6 +1214,11 @@ DECLARE_SCRIPT(M07_Dead6_Engineer, "")  // Hotwire
 			Commands->Send_Custom_Event (obj, obj, M07_HOTWIRE_CAPTURE_SAMS, 1, 0.0f);
 
 		}
+
+		if(timer_id == ARRIVE_EVAC_RETRY && evac && !evac_reported)
+		{
+			Go_Evac_Spot(obj);
+		}
 	}
 
 	void Action_Complete(GameObject * obj, int action_id, ActionCompleteReason reason)
@@ -1182,15 +1242,22 @@ DECLARE_SCRIPT(M07_Dead6_Engineer, "")  // Hotwire
 
 		if (action_id == ARRIVE_EVAC_SPOT && reason == ACTION_COMPLETE_NORMAL && evac)
 		{
-			int dead6_id = Commands->Get_ID(obj);
-			Commands->Send_Custom_Event(obj, Commands->Find_Object(104496), M07_DEAD6_EVAC, dead6_id, 0.0f);
+			Report_Evac(obj);
 		}
 
 		if (action_id == ARRIVE_EVAC_SPOT && reason == ACTION_COMPLETE_MOVE_NO_PROGRESS_MADE && evac)
 		{
 			// This is a hack for the moment, need to have pathfinding around dec_phys vehicles at inn
-			int dead6_id = Commands->Get_ID(obj);
-			Commands->Send_Custom_Event(obj, Commands->Find_Object(104496), M07_DEAD6_EVAC, dead6_id, 0.0f);
+			Report_Evac(obj);
+		}
+
+		// A rejected or preempted evac goto (LOW_PRIORITY) left Hotwire idle at
+		// 4 of 5 evacuees. A rejection is notified synchronously inside
+		// M07_Inn_Evac::Custom, so never report from here; retry the goto
+		// later, like the GO_SAM1 retry, until she has reported once.
+		if (action_id == ARRIVE_EVAC_SPOT && reason == ACTION_COMPLETE_LOW_PRIORITY && evac && !evac_reported)
+		{
+			Commands->Start_Timer(obj, this, 2.0f, ARRIVE_EVAC_RETRY);
 		}
 
 		if (action_id == M07_GO_EVAC_SITE && reason == ACTION_COMPLETE_NORMAL && !evac)
@@ -5440,11 +5507,12 @@ DECLARE_SCRIPT(M07_Para_Drop_Controller, "")
 		SAVE_VARIABLE( m07_paradrop_unit3_killed, 5 );
 		SAVE_VARIABLE( m07_paradrop_unit4_killed, 6 );
 		SAVE_VARIABLE( active, 7 );
+		// para_drop is set only in Created, which a load does not rerun.
+		SAVE_VARIABLE( para_drop, 8 );
 	}
 
-	void Created (GameObject * obj)
+	void Init_Para_Drop (void)
 	{
-		
 		para_drop[0] = 101134;
 		para_drop[1] = 101138;
 		para_drop[2] = 101139;
@@ -5452,6 +5520,12 @@ DECLARE_SCRIPT(M07_Para_Drop_Controller, "")
 		para_drop[4] = 101141;
 		para_drop[5] = 101142;
 		para_drop[6] = 101143;
+	}
+
+	void Created (GameObject * obj)
+	{
+		
+		Init_Para_Drop();
 		
 		
 		drop_zone = 0;
@@ -5488,6 +5562,11 @@ DECLARE_SCRIPT(M07_Para_Drop_Controller, "")
 					m07_paradrop_unit1_killed++;
 					if(m07_paradrop_unit1_killed%3 == 0 && m07_paradrop_unit1_killed < 9)
 					{
+						if (para_drop[0] == 0)
+						{
+							// Loaded from a save made before para_drop was saved.
+							Init_Para_Drop();
+						}
 						GameObject * drop_loc = Commands->Find_Object(para_drop[drop_zone]);
 						float drop_facing = Commands->Get_Facing(drop_loc);
 						
@@ -6121,25 +6200,58 @@ DECLARE_SCRIPT(M07_Inn_Evac_Climb, "Dead6_ID=0:int")
 
 DECLARE_SCRIPT(M07_Climb_Rope, "")
 {
-	enum{CLIMB_ROPE};
+	bool climb_finished;
+
+	enum{CLIMB_ROPE, CLIMB_ROPE_FALLBACK};
+
+	REGISTER_VARIABLES()
+	{
+		SAVE_VARIABLE( climb_finished, 1 );
+	}
 	
 	void Created( GameObject * obj ) 
 	{
 		ActionParamsStruct params;
 
+		climb_finished = false;
 		params.Set_Basic( this, INNATE_PRIORITY_ENEMY_SEEN + 5, CLIMB_ROPE );
 		params.Set_Animation ("S_A_Human.XG_EV5_Troop", false);
 	//	params.Set_Animation ("S_A_HUMAN.H_A_A0F0", true);
 		Commands->Action_Play_Animation (obj, params);
+		// The climb animation is 30 frames at 15 fps (2 s). If the action is
+		// preempted, or does not resume after a mid-climb save/load, the
+		// evacuee (Hotwire included) would stay on the rope and the
+		// M07_Hotwire_Dead zone would later fail the mission. Finish the climb
+		// from this saved timer instead; on the normal path the object is
+		// already destroyed and the timer never fires.
+		Commands->Start_Timer(obj, this, 10.0f, CLIMB_ROPE_FALLBACK);
+	}
+
+	void Finish_Climb(GameObject * obj)
+	{
+		if (climb_finished)
+		{
+			return;
+		}
+		climb_finished = true;
+		Commands->Destroy_Object(obj);
 	}
 
 	void Action_Complete(GameObject * obj, int action_id, ActionCompleteReason reason)
 	{
 		if(action_id == CLIMB_ROPE && reason == ACTION_COMPLETE_NORMAL)
 		{
-			Commands->Destroy_Object(obj);
+			Finish_Climb(obj);
 		}
 		
+	}
+
+	void Timer_Expired(GameObject * obj, int timer_id)
+	{
+		if (timer_id == CLIMB_ROPE_FALLBACK)
+		{
+			Finish_Climb(obj);
+		}
 	}
 
 };

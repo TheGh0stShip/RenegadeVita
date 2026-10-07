@@ -417,3 +417,68 @@ dropped before the save.
   race, poke both torpedoes before crossing 105238/105239, then cross. Expect
   objective 400 to appear already accomplished, and the rally-zone end check to
   pass.
+
+## Conversation-gate fixes — 2026-10-07
+
+Evidence class: staged source and read-only retail data only. Nothing was
+built, linked, packaged, launched in Vita3K or run on a Vita. Checks: one
+`arm-vita-eabi-g++ -fsyntax-only` of the patched `Mission04.cpp` with the
+candidate flags (exit 0; the same 120 warnings as before the patch, no new
+ones), a full `tools/stage_sources.sh` run (Patch inventory PASS, 571 ordered
+patches, zero fuzz; only `Mission04.cpp` and `PATCH_INVENTORY.json` change),
+`tools/test_m04_conversation_gate_preempt.py` (9 tests, all pass with the
+upstream tree present), and `tools.audit_conversation_gated_objectives
+--mission M04` (now 8 FIXED, 0 AT RISK, 0 REVIEW; was 5 AT RISK, 2 REVIEW).
+`CONVERSATION_GATED_OBJECTIVES.md` was not regenerated. Line numbers refer to
+the newly staged `staging/scripts/Mission04.cpp` (sha256 `2e7bfadc…59cc0`).
+This section supersedes item (a) of "Reviewed, no soft-lock" and the
+"objective-list entries" and partial torpedo race marker items under
+"Deferred" above.
+
+Patch: `port/patches/scripts-a38-m04-conversation-gate-preempt.patch`,
+registered after `scripts-a38-m04-missile-briefing-drop.patch`.
+
+**Mechanism.** Retail starts each briefing, then registers the monitor. While a
+key conversation plays, `ActiveConversationClass::Start_Conversation` stops the
+non-key briefing with INTERRUPTED before the monitor exists, so the
+`Action_Complete` step never runs. The fix uses the M10 pattern. The monitor
+is registered before Start. A transient `conversation_starting` (not saved, 0
+outside the start window) names the briefing for the length of the Start call.
+The `Action_Complete` switch also accepts INTERRUPTED and UNABLE_TO_INIT, but
+only when `action_id == conversation_starting`. INTERRUPTED from anywhere else
+(for example `ConversationMgrClass::Reset` on a level reset or load) keeps the
+retail result. `Briefing_Start_Done` (`:255`) closes the window. If
+`Create_Conversation` failed (id < 0), it runs the step directly. Saved
+once-flags use the unused controller ids 49–53, so each step runs once. When
+no key conversation is playing, Start does not touch the monitor array, so the
+order, timing and effects match retail.
+
+| Gate (old line) | Step side effects (Action_Complete branch) | Not in the branch (unaffected) | Impact of a drop before the fix | Fix (new lines) |
+|---|---|---|---|---|
+| Mission start, 400 (`:401`) | self-custom 1 (Havoc twiddler), `Add_Objective 100`, markers 101–103 on prisoners 1–3, HUD position of 100 | `prisoner_primary_active`, `mission_started`, reminder pog 0 | Objective 100, its markers and HUD missing. 500 later completes an objective that was never added. Not blocking. | Monitor `:462`, start `:464`, branch `:278`, flag `mission_intro_step_done` (49) |
+| Prison key, 401 (`:425`) | `Add_Objective 110`, then starts the non-key Eva hint, whose end adds marker 111 on the warden and the HUD position of 110 | reminder pog 2, twiddler | Objective 110 and the Eva hint lost. The warden still drops key 1. | Monitor `:488`, branch `:379`, flag `prison_key_step_done` (50). The nested Eva start is also monitor-first (`:387`–`:390`). On the preempted path, the key conversation is still playing, so the hint would otherwise always be dropped. |
+| Missile room, 440 (`:469`) | `Add_Objective 300`, `M01_START_ACTING_JDG` to racks 100420–100423 (unpokable until then), pog 300 | `missile_primary_active`, reminder pog 1 | Hard soft-lock. Already covered by the 441 fallback. | Verified and kept: 441 (`:558`) runs the step through `Action_Complete(…, ENDED)` only while flag 48 is false. Now also monitor-first (`:538`), so a preempted briefing runs the step immediately. 441 stays as a backstop, for example when `Register_Monitor` finds no free slot. |
+| First mate, 410 (`:542`) | sound `00-n040e`, `Add_Objective 600`, marker 601 on the first mate, self-custom 1 after 2 s, HUD position of 600 | `first_mate_primary_triggered`/`_active` (set before Start), reminder pog 3 | Objective 600, marker and HUD lost. 510 completes it independently. Not blocking. | Monitor `:624`, branch `:405`, flag `first_mate_step_done` (52) |
+| Protect POWs, 470 (`:582`) | `Add_Objective 800`, marker 801, HUD position of 800 | reminder pog 6 | Objective 800 entry and marker lost. The end check does not use 800. | Monitor `:667`, branch `:421`, flag `protect_pows_step_done` (53) |
+| REVIEW engine room, 430 (`:460`) | secondary `Add_Objective 200`. The unresolved "custom 6/200" is `M01_ADD_OBJECTIVE_POG_JDG`/200 to 104693 = `M04_Pog_Controller_JDG` (binding receipt), which sets the 200 HUD on the first live terminal. Also objective blips on the 4 engine terminals. | none | Secondary objective, pog and blips lost. Completion 530 (kill count, power-ups) is independent, so mission completion is not gated. | Fixed anyway with the same pattern: monitor `:527`, branch `:336`, flag `engine_room_step_done` (51) |
+| REVIEW torpedo zone (`:10135`) | Custom 450 to the controller (100424), which sets `torpedo_primary_active`, adds 400, markers 401/402, twiddler and reminder pog 5, or takes the race branch. Also pog 400 to 104693 and destroys both zones 105238/105239. | none | The zone stays latched (`conversationPlaying`). If the other zone is not crossed, primary 400 is never announced and the torpedoes are silently not required (permissive). | Monitor-first and the same guarded accept in the zone (`:10228`, `:10247`–`:10250`). Each zone starts the announcement once through its existing saved `conversationPlaying` latch, so no new flag is needed. |
+
+**Cosmetic (partial torpedo race).** The controller now records each sabotaged
+torpedo (`torpedo_01_done`/`torpedo_02_done`, ids 54/55, set at `:1107` and
+`:1126`). A 450 that arrives after one torpedo was sabotaged no longer re-adds
+that torpedo's marker 401/402 (`:590`–`:597`). Nothing would clear that
+marker. The pog controller labelling 100410 as "target01" is unchanged
+(cosmetic only).
+
+**Saves.** Scripts are value-initialised (`scriptregistrant.h`), so saves
+written before this patch load the new flags as false and
+`conversation_starting` as 0. That keeps retail behaviour. A briefing that
+was already dropped before such a save is not recovered, except the missile
+step (441 timer).
+
+**Physical check.** In M04, kill the first mate, collect key 2 and, while the
+captain-key line plays (about 10 s after the pickup), enter the missile-room
+zone. Expect objective 300 to appear at once and the racks to be pokable.
+Independently, trigger the first-mate announce (410) or the prison-key
+announce (401) during a key line. Expect objective 600, or objective 110 plus
+the warden marker, to appear at once.

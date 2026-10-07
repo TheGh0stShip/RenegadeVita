@@ -1,0 +1,33 @@
+M03 follow-up: the gunboat (1100003) reports GUNBOAT_KILLED to the objective
+controller (1100004) only when the shore cannon (1100002) kills it. The
+controller then fails whichever of 1001/1002/1004 is unfinished. The beach
+turrets (M03_Beach_Turret) attack the gunboat continuously, and other Nod
+fire can also kill it (M00_Damage_Modifier_DME on the gunboat only protects
+it from the star). After such a kill nothing can finish those objectives:
+M03_Beach_Scenario_Controller needs the gunboat to send 301,1, and the
+controller drops every 302/304 event once 1100003 is gone. The pending
+secondaries keep HUD priorities 99/98/97, above the primaries (96..93), so
+the default HUD objective pointer stays on the beach or the SAMs for the
+rest of the mission.
+
+Give every gunboat death the cannon outcome for the objectives: also send
+GUNBOAT_KILLED to 1100004 from the non-cannon branch. The designers'
+commented-out 302,2 in that branch shows the same intent. The M03CON018
+conversation and the self-addressed cannon-branch event are unchanged. The
+normal path, where the gunboat survives or the shore cannon kills it, is
+unchanged.
+
+--- a/Mission03.cpp
++++ b/Mission03.cpp
+@@ -1246,6 +1246,11 @@
+ 			Commands->Start_Conversation(id, 100018);
+ 			Commands->Monitor_Conversation(obj, id);
+ 
++			// Vita port: give any gunboat death the shore cannon outcome. Otherwise
++			// 1001/1002/1004 stay pending for the rest of the mission and, at HUD
++			// priority 99/98/97, keep the default objective pointer off the primaries.
++			Commands->Send_Custom_Event(obj, Commands->Find_Object (1100004), GUNBOAT_KILLED, 0);
++
+ 			//Commands->Send_Custom_Event(obj, Commands->Find_Object (1100004), 302, 2);
+ 		}
+ 	}

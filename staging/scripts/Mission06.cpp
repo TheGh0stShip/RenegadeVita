@@ -49,6 +49,8 @@ DECLARE_SCRIPT(M06_Objective_Controller, "") // 100018
 {
 	int mendoza_id;
 	bool accomplished_609;
+	// Vita: 603 was accomplished (Sydney relocated) before it was added.
+	bool accomplished_603;
 
 	enum {HAVOCS_SCRIPT, M06_INITIAL_APACHES};
 
@@ -58,6 +60,7 @@ DECLARE_SCRIPT(M06_Objective_Controller, "") // 100018
 	{
 		SAVE_VARIABLE( mendoza_id, 1 );
 		SAVE_VARIABLE( accomplished_609, 2 );
+		SAVE_VARIABLE( accomplished_603, 3 );
 	}
 
 	void Created(GameObject * obj)
@@ -71,6 +74,7 @@ DECLARE_SCRIPT(M06_Objective_Controller, "") // 100018
 		Commands->Enable_Hibernation(obj, false);
 		mendoza_id = 0;
 		accomplished_609 = false;
+		accomplished_603 = false;
 		
 		// EVA - Give me a position on the scientists.\n
 		const char *conv_name = ("M06_CON059");
@@ -240,6 +244,10 @@ DECLARE_SCRIPT(M06_Objective_Controller, "") // 100018
 					{
 						accomplished_609 = true;
 					}
+					if(type == 603)
+					{
+						accomplished_603 = true;
+					}
 						
 
 				}
@@ -256,6 +264,14 @@ DECLARE_SCRIPT(M06_Objective_Controller, "") // 100018
 				break;
 			case 3: 
 					Add_An_Objective(type);
+					// Vita: an objective completed before it was added (alarm
+					// terminal before M06_CON060; relocation before the war-room
+					// hack) is shown accomplished instead of staying pending.
+					if((type == 609 && accomplished_609) || (type == 603 && accomplished_603))
+					{
+						Commands->Clear_Radar_Marker (type);
+						Commands->Set_Objective_Status(type, OBJECTIVE_STATUS_ACCOMPLISHED);
+					}
 				break;
 			case 4: 
 					Commands->Set_Objective_Status(type, OBJECTIVE_STATUS_PENDING);
@@ -871,12 +887,14 @@ DECLARE_SCRIPT(M06_GDI_Prisoner, "")
 			int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
 			Commands->Join_Conversation(obj, conv_id, false, true);
 			Commands->Join_Conversation(poker, conv_id, false, true);
-			Commands->Start_Conversation (conv_id, 300607);
-			Commands->Monitor_Conversation (obj, conv_id);	
-
+			// Vita: poke state and monitor before Start, so a start refused by a
+			// playing key conversation reaches Action_Complete (INTERRUPTED) and
+			// re-arms the poke instead of losing the release and objective 607.
 			conversation = true;
 			poked = true;
 			Commands->Enable_HUD_Pokable_Indicator( obj, false );
+			Commands->Monitor_Conversation (obj, conv_id);
+			Commands->Start_Conversation (conv_id, 300607);
 			Commands->Grant_Key (STAR, 3, true);
 		}
 	}
@@ -885,6 +903,13 @@ DECLARE_SCRIPT(M06_GDI_Prisoner, "")
 	{
 		ActionParamsStruct params;
 
+		// Vita: a refused or interrupted release talk re-arms the poke.
+		if(action_id == 300607 && reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED && conversation)
+		{
+			conversation = false;
+			poked = false;
+			Commands->Enable_HUD_Pokable_Indicator( obj, true );
+		}
 		
 		if(action_id == 300607 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
 		{
@@ -954,8 +979,11 @@ DECLARE_SCRIPT(M06_Activate_Secret_Door, "Secret_Door_ID=0:int")
 			const char *conv_name = ("M06_CON061");
 			int conv_id = Commands->Create_Conversation (conv_name, INNATE_PRIORITY_ENEMY_SEEN + 5);
 			Commands->Join_Conversation(STAR, conv_id, false, true);
+			// Vita: monitor before Start, so a start refused by a playing key
+			// conversation reaches Action_Complete (INTERRUPTED) and re-arms the
+			// poke; retail left already_poked set and the stash never opened.
+			Commands->Monitor_Conversation (obj, conv_id);
 			Commands->Start_Conversation (conv_id, 300608);
-			Commands->Monitor_Conversation (obj, conv_id);	
 		}
 	}
 
@@ -963,6 +991,11 @@ DECLARE_SCRIPT(M06_Activate_Secret_Door, "Secret_Door_ID=0:int")
 	{
 		ActionParamsStruct params;
 
+		// Vita: a refused or interrupted stash line re-arms the bookcase poke.
+		if(action_id == 300608 && reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED)
+		{
+			already_poked = false;
+		}
 		if(action_id == 300608 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
 		{
 			Commands->Static_Anim_Phys_Goto_Last_Frame ( Get_Int_Parameter("Secret_Door_ID"), "BK.BK" );
@@ -1017,8 +1050,16 @@ DECLARE_SCRIPT(M06_Civ_Prisoner, "")
 				int conv_id = Commands->Create_Conversation (conv_name, INNATE_PRIORITY_ENEMY_SEEN + 5);
 				Commands->Join_Conversation(obj, conv_id, false, true);
 				Commands->Join_Conversation(STAR, conv_id, false, true);
-				Commands->Start_Conversation (conv_id, 300123);
+				// Vita: monitor before Start, so a start refused by a playing key
+				// conversation reaches Action_Complete, whose INTERRUPTED branch
+				// clears conversation. The poke then stays armed for objective
+				// 605 and the health drop waits for a talk that really starts.
 				Commands->Monitor_Conversation (obj, conv_id);
+				Commands->Start_Conversation (conv_id, 300123);
+				if (!conversation)
+				{
+					break;
+				}
 				
 				Vector3 pos = Commands->Get_Position(obj);
 				float facing = Commands->Get_Facing(obj);
@@ -1037,8 +1078,9 @@ DECLARE_SCRIPT(M06_Civ_Prisoner, "")
 				int conv_id = Commands->Create_Conversation (conv_name, INNATE_PRIORITY_ENEMY_SEEN + 5);
 				Commands->Join_Conversation(obj, conv_id, false, true);
 				Commands->Join_Conversation(STAR, conv_id, false, true);
+				// Vita: monitor before Start (see case 1).
+				Commands->Monitor_Conversation (obj, conv_id);
 				Commands->Start_Conversation (conv_id, 300124);
-				Commands->Monitor_Conversation (obj, conv_id);	
 			}
 			break;
 		
@@ -1053,6 +1095,12 @@ DECLARE_SCRIPT(M06_Civ_Prisoner, "")
 		if(reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED)
 		{
 			conversation = false;
+		}
+		// Vita: a refused or interrupted rescue talk leaves the prisoner
+		// pokable (cleared above); show the poke indicator again.
+		if(action_id == 300123 && reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED)
+		{
+			Commands->Enable_HUD_Pokable_Indicator( obj, true );
 		}
 		if(action_id == 300123 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
 		{
@@ -3505,15 +3553,24 @@ DECLARE_SCRIPT(M06_Resistance_Raider_DLS, "")
 			int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
 			Commands->Join_Conversation(STAR, conv_id, false, true);
 			Commands->Join_Conversation(obj, conv_id, false, true);
-			Commands->Start_Conversation (conv_id, 100823);
-			Commands->Monitor_Conversation (obj, conv_id);
+			// Vita: monitor before Start, so a start refused by a playing key
+			// conversation reaches Action_Complete (INTERRUPTED) and re-arms the poke.
 			Commands->Enable_HUD_Pokable_Indicator( obj, false );
+			Commands->Monitor_Conversation (obj, conv_id);
+			Commands->Start_Conversation (conv_id, 100823);
 
 		}
 	}
 
 	void Action_Complete(GameObject * obj, int action_id, ActionCompleteReason reason)
 	{
+		// Vita: a refused or interrupted talk re-arms the poke instead of
+		// leaving the raider silent and the grenade launcher undropped.
+		if(action_id == 100823 && reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED && talking)
+		{
+			talking = false;
+			Commands->Enable_HUD_Pokable_Indicator( obj, true );
+		}
 		if(action_id == 100823 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
 		{
 			Commands->Apply_Damage( obj, 10000.0f, "STEEL");
@@ -3535,6 +3592,8 @@ DECLARE_SCRIPT(M06_Assistance_Farmer_DLS, "")
 
 	int poke_id;
 	bool give_health;
+	// Vita: true only inside Start_Conversation of M06_CON046 (not saved).
+	bool talk_starting;
 
 	enum {GO_STAR, TALK_STAR, GIVE_HEALTH};
 	// Register variables to be Auto-Saved
@@ -3549,6 +3608,7 @@ DECLARE_SCRIPT(M06_Assistance_Farmer_DLS, "")
 	{
 		Commands->Innate_Disable(obj);
 		give_health = false;
+		talk_starting = false;
 		
 	}
 
@@ -3573,8 +3633,13 @@ DECLARE_SCRIPT(M06_Assistance_Farmer_DLS, "")
 		ActionParamsStruct params;
 		
 		
-		if(action_id == TALK_STAR && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
+		// Vita: a start refused by a playing key conversation (INTERRUPTED
+		// inside Start_Conversation) runs the ENDED branch once, so the
+		// grenade launcher and the maintenance-shaft trigger are not lost.
+		if(action_id == TALK_STAR && (reason == ACTION_COMPLETE_CONVERSATION_ENDED ||
+			(reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED && talk_starting)))
 		{
+			talk_starting = false;
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);
 			float a = cos(DEG_TO_RADF(facing)) * 1.5;
@@ -3597,8 +3662,12 @@ DECLARE_SCRIPT(M06_Assistance_Farmer_DLS, "")
 			const char *conv_name = ("M06_CON046");
 			int conv_id = Commands->Create_Conversation (conv_name);
 			Commands->Join_Conversation(obj, conv_id, false, true);
+			// Vita: monitor before Start so a key-conversation preemption
+			// inside Start still reaches Action_Complete.
+			Commands->Monitor_Conversation (obj, conv_id);
+			talk_starting = true;
 			Commands->Start_Conversation (conv_id, TALK_STAR);
-			Commands->Monitor_Conversation (obj, conv_id);	
+			talk_starting = false;
 		}
 	}
 
@@ -4289,8 +4358,10 @@ DECLARE_SCRIPT(M06_KaneHead, "")
 		int conv_id = Commands->Create_Conversation (conv_name, INNATE_PRIORITY_ENEMY_SEEN - 5);
 		Commands->Join_Conversation(obj, conv_id, false, true);
 		Commands->Join_Conversation(Commands->Find_Object(101008), conv_id, false, true);
+		// Vita: monitor before Start, so a start refused by a playing key
+		// conversation reaches the existing INTERRUPTED branch below.
+		Commands->Monitor_Conversation (obj, conv_id);
 		Commands->Start_Conversation (conv_id, 300123);
-		Commands->Monitor_Conversation (obj, conv_id);	
 	}
 
 	void Action_Complete(GameObject * obj, int action_id, ActionCompleteReason reason)
@@ -4303,8 +4374,9 @@ DECLARE_SCRIPT(M06_KaneHead, "")
 			int conv_id = Commands->Create_Conversation (conv_name, INNATE_PRIORITY_ENEMY_SEEN + 5);
 			Commands->Join_Conversation(obj, conv_id, false, true);
 			Commands->Join_Conversation(STAR, conv_id, false, true);
+			// Vita: monitor before Start (as above), so the head is still removed.
+			Commands->Monitor_Conversation (obj, conv_id);
 			Commands->Start_Conversation (conv_id, 300124);
-			Commands->Monitor_Conversation (obj, conv_id);	
 		}
 		if((action_id == 300124 && reason == ACTION_COMPLETE_CONVERSATION_ENDED) || (action_id == 300124 && reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED))
 		{

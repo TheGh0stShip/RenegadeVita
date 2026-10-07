@@ -1,0 +1,98 @@
+M05_Escapee_Brother (100038, secondary 509 plus the Personal Ion Cannon
+reward, invaders and visceroid) and M05_Babushka (100050, secondary 510)
+start the non-key conversations M05_CON022/M05_CON023 (both action 300509)
+before Monitor_Conversation, and act only on ENDED. A start refused by a
+playing key conversation (M05_CON038/M05_CON008 are the radio briefings
+of these two objectives) stops with INTERRUPTED before any monitor
+exists, and an INTERRUPTED end (player left the range, orator lost) was
+ignored. Either way poke_id was 2 and conversation stayed true, so the
+character could never be poked again and the objective stayed pending
+(retail behaviour).
+
+Set the poke state and the monitor before starting, and re-arm the poke
+on an INTERRUPTED or UNABLE_TO_INIT end of 300509. Babushka re-arms to a
+new case 3 that replays only the thanks conversation; her first-poke
+animation, Action_Reset and team change still run once. The ENDED
+handlers are guarded by the existing saved complete/saved flags, so 509/1
+and 510/1 are sent exactly once. The ENDED path is otherwise unchanged.
+
+--- a/Mission05.cpp
++++ b/Mission05.cpp
+@@ -2407,11 +2407,12 @@
+ 					int conv_id = Commands->Create_Conversation (conv_name, 100.0f, 200.0f, false);
+ 					Commands->Join_Conversation(STAR, conv_id, false, true);
+ 					Commands->Join_Conversation(obj, conv_id, false, true);
+-					Commands->Start_Conversation (conv_id, 300509);
+-					Commands->Monitor_Conversation (obj, conv_id);
+-
++					// Vita: poke state and monitor before starting, so a start
++					// refused by a playing key conversation reaches Action_Complete.
+ 					poke_id = 2;
+ 					Commands->Enable_HUD_Pokable_Indicator( obj, false );
++					Commands->Monitor_Conversation (obj, conv_id);
++					Commands->Start_Conversation (conv_id, 300509);
+ 				}
+ 				break;
+ 			}
+@@ -2427,7 +2428,16 @@
+ 			conversation = false;
+ 		}
+ 
+-		if(action_id == 300509 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
++		// Vita: an interrupted or refused talk re-arms the poke instead of
++		// leaving 509 and the reward pending forever.
++		if(action_id == 300509 && (reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED || reason == ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT) && poke_id == 2 && !complete)
++		{
++			conversation = false;
++			poke_id = 1;
++			Commands->Enable_HUD_Pokable_Indicator( obj, true );
++		}
++
++		if(action_id == 300509 && reason == ACTION_COMPLETE_CONVERSATION_ENDED && !complete)
+ 		{
+ 			
+ 			Commands->Select_Weapon(obj, "Weapon_Shotgun_Ai" );
+@@ -2727,16 +2737,22 @@
+ 			//		Commands->Give_PowerUp(obj, "POW_Chaingun_AI");
+ 					Commands->Start_Timer (obj, this, 1.0f, ARM_SHOTGUN);
+ 					Commands->Set_Player_Type(obj, SCRIPT_PLAYERTYPE_GDI );
++				}
++				// Vita: case 3 replays only the thanks talk below.
++				// fall through
++			case 3:
++				{
+ 					// You have my thanks, brave warrior. Our village is in debt to you.\n
+ 					const char *conv_name = ("M05_CON023");
+ 					int conv_id = Commands->Create_Conversation (conv_name, INNATE_PRIORITY_ENEMY_SEEN - 5, 200.0f, false);
+ 					Commands->Join_Conversation(obj, conv_id, false, true);
+ 					Commands->Join_Conversation(STAR, conv_id, false, true);
+-					Commands->Start_Conversation (conv_id, 300509);
+-					Commands->Monitor_Conversation (obj, conv_id);
+-
++					// Vita: poke state and monitor before starting, so a start
++					// refused by a playing key conversation reaches Action_Complete.
+ 					poke_id = 2;
+ 					Commands->Enable_HUD_Pokable_Indicator( obj, false );
++					Commands->Monitor_Conversation (obj, conv_id);
++					Commands->Start_Conversation (conv_id, 300509);
+ 				}
+ 				break;
+ 			}
+@@ -2762,7 +2778,16 @@
+ 			conversation = false;
+ 		}
+ 
+-		if(action_id == 300509 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
++		// Vita: an interrupted or refused talk re-arms the poke (thanks talk
++		// only) instead of leaving 510 pending forever.
++		if(action_id == 300509 && (reason == ACTION_COMPLETE_CONVERSATION_INTERRUPTED || reason == ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT) && poke_id == 2 && !saved)
++		{
++			conversation = false;
++			poke_id = 3;
++			Commands->Enable_HUD_Pokable_Indicator( obj, true );
++		}
++
++		if(action_id == 300509 && reason == ACTION_COMPLETE_CONVERSATION_ENDED && !saved)
+ 		{
+ 			saved = true;
+ 			Commands->Send_Custom_Event(obj, Commands->Find_Object(100001), 510, 1, 0.0f);

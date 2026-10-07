@@ -532,6 +532,15 @@ void MoveablePhysClass::On_Post_Load(void)
 	Link_To_Carrier(tmp_carrier);
 }
 
+// Vita port: a rejected load remaps Carrier but never links this rider into the
+// carrier's rider list, so the carrier cannot clear it on destruction. Drop it.
+void MoveablePhysClass::On_Post_Load_Discarded(void)
+{
+	DynamicPhysClass::On_Post_Load_Discarded();
+	Carrier = NULL;
+	CarrierSubObject = NULL;
+}
+
 
 /***********************************************************************************************
 **

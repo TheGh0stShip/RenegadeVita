@@ -2503,7 +2503,8 @@ void Reassert_Performance_Clocks(uint32_t frame)
 }
 
 // System suspend/resume. The original TimeManager already caps the simulated
-// frame step at 1/SLOWEST_FPS, so the resume gap does not reach physics; the
+// frame step at 1/SLOWEST_FPS, so the resume gap does not reach physics, and
+// Renegade_Vita_Resume_Frame_Clock_Rebase caps the real step the same way; the
 // remaining effects are that gameplay continues unattended after resume and
 // clocks may be back at defaults. A dedicated callback thread records the
 // event; the gameplay loop consumes it and routes it to the original EVA
@@ -2517,6 +2518,9 @@ std::atomic<uint32_t> g_power_low_battery_events(0U);
 // Any resume-type callback (system, after-system or application resume);
 // read by the RVCK1 clock watchdog on the callback thread.
 std::atomic<uint32_t> g_power_clock_events(0U);
+// Application resume (return from the LiveArea). Used only by the frame clock
+// rebase below; the EVA pause routing stays on SCE_POWER_CB_SYSTEM_RESUME.
+std::atomic<uint32_t> g_power_app_resume_events(0U);
 
 // Runs on the callback thread: atomic counters only, no logging or locks.
 int Power_Event_Callback(int, int, int power_info, void *)
@@ -2539,6 +2543,8 @@ int Power_Event_Callback(int, int, int power_info, void *)
 	}
 	if ((power_info & RenegadeVitaClocks::kResumeEventMask) != 0)
 		g_power_clock_events.fetch_add(1U, std::memory_order_release);
+	if ((power_info & SCE_POWER_CB_APP_RESUME) != 0)
+		g_power_app_resume_events.fetch_add(1U, std::memory_order_release);
 	return 0;
 }
 
@@ -5151,6 +5157,44 @@ bool Run_Original_Campaign_Intermission(WWAudioClass *audio,
 #endif
 
 } // namespace
+
+// Called by the original TimeManager::Update_Frame_Time on its own thread
+// (staged combat-a38-timemgr-resume-real-step-cap.patch) before the frame
+// deltas are taken; returns the LastTicks value to use. timeGetTime is
+// sceKernelGetProcessTimeWide here. If that clock advanced while the title was
+// suspended, the first update after an observed resume would hand the whole
+// suspended interval to every Get_Frame_Real_Seconds consumer. Cap that one
+// pending step at the original simulated cap (1/SLOWEST_FPS); FrameTicks was
+// already capped there, so simulation stepping is unchanged. Only the first
+// update after a resume notification is touched, so ordinary long frames keep
+// original semantics. The record also answers whether the clock advanced.
+int Renegade_Vita_Resume_Frame_Clock_Rebase(int ticks, int last_ticks,
+	int previous_real_ticks, int max_step_ticks)
+{
+	static uint32_t seen_epoch = 0U;
+	static unsigned reports = 0U;
+	static int recent_real_ticks[8] = {};
+	static unsigned recent_index = 0U;
+	recent_real_ticks[recent_index++ & 7U] = previous_real_ticks;
+	const uint32_t system_resumes = g_power_resume_events.load(std::memory_order_acquire);
+	const uint32_t app_resumes = g_power_app_resume_events.load(std::memory_order_acquire);
+	const uint32_t epoch = system_resumes + app_resumes;
+	if (epoch == seen_epoch) return last_ticks;
+	seen_epoch = epoch;
+	const int pending = ticks - last_ticks;
+	const bool capped = max_step_ticks > 0 && pending > max_step_ticks;
+	if (reports < 32U) {
+		++reports;
+		int recent_max = 0;
+		for (int value : recent_real_ticks) recent_max = value > recent_max ? value : recent_max;
+		// recent_max_real_ms above cap_ms with action=unchanged means the
+		// notification arrived after the resumed gap was already consumed.
+		A30_Vita_Log("A3.6 power: resume frame clock pending_real_ms=%d cap_ms=%d action=%s recent_max_real_ms=%d system_resumes=%u app_resumes=%u\n",
+			pending, max_step_ticks, capped ? "capped" : "unchanged", recent_max,
+			system_resumes, app_resumes);
+	}
+	return capped ? ticks - max_step_ticks : last_ticks;
+}
 
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 void A31_Vita_Request_Gameplay_Pause(void)

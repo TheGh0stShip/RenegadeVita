@@ -2463,7 +2463,10 @@ bool Bind_Offscreen_Render_Target(uint32_t framebuffer, uint32_t width,
 		++g_statistics.backend_errors;
 		return false;
 	}
+	// IDirect3DDevice8::SetRenderTarget resets the viewport to the full
+	// target with MinZ=0, MaxZ=1.
 	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+	glDepthRangef(0.0f, 1.0f);
 	if (glGetError() != GL_NO_ERROR) {
 		glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previous_framebuffer));
 		glViewport(previous_viewport[0], previous_viewport[1],
@@ -2667,7 +2670,25 @@ bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
 	uint32_t logical_width, uint32_t logical_height)
 {
 	NativeViewport viewport = {};
-	if (!Build_Native_Viewport(d3d_x, d3d_y, width, height, min_depth,
+	if (g_active_render_target_width != 0U && g_active_render_target_height != 0U) {
+		// DX8 viewports are relative to the current render-target surface, not
+		// the back buffer. An offscreen target bypasses presentation scaling and
+		// maps in its own pixel space (GL origin bottom-left).
+		const uint32_t rt_width = g_active_render_target_width;
+		const uint32_t rt_height = g_active_render_target_height;
+		if (width == 0U || height == 0U || d3d_x > rt_width ||
+			d3d_y > rt_height || width > rt_width - d3d_x ||
+			height > rt_height - d3d_y || min_depth < 0.0f ||
+			max_depth > 1.0f || min_depth > max_depth) {
+			return false;
+		}
+		viewport.x = d3d_x;
+		viewport.y = rt_height - (d3d_y + height);
+		viewport.width = width;
+		viewport.height = height;
+		viewport.min_depth = min_depth;
+		viewport.max_depth = max_depth;
+	} else if (!Build_Native_Viewport(d3d_x, d3d_y, width, height, min_depth,
 		max_depth, logical_width, logical_height, viewport)) {
 		return false;
 	}

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "bd9191ba156982b6c53c90c148992397c2abe67766c912f15a63d73014e41e4c",
-  "patch_count": 544,
+  "stage_script_sha256": "d934306bbff882deeb49bebb87482e67a9d39465635b9a8d20745dd9934780b7",
+  "patch_count": 546,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -18,6 +18,11 @@
       "path": "port/patches/wwdebug-a36-vita-frame-profile.patch",
       "stage_directory": "wwdebug",
       "sha256": "3c508221457f5aacf069c6cc6a6e78fb0c104f77d04a38ac564f87f7de80a5f7"
+    },
+    {
+      "path": "port/patches/wwdebug-a36-frame-profile-tu-opt-out.patch",
+      "stage_directory": "wwdebug",
+      "sha256": "4d186d2712291119990f54e94e88c39fe21a2e98a250d5ec435c83b8455bae70"
     },
     {
       "path": "port/patches/wwlib-a21-posix.patch",
@@ -263,6 +268,11 @@
       "path": "port/patches/wwphys-a36-grid-texture-release.patch",
       "stage_directory": "wwphys",
       "sha256": "ac44a8ebfd105fba9ef4ef0ca5b9479ebf33b0a15e11c2e9ceb8eb2ec6cfb3ab"
+    },
+    {
+      "path": "port/patches/wwphys-a36-scene-cast-counters.patch",
+      "stage_directory": "wwphys",
+      "sha256": "f5f35644c07df0fc305da339aefb254a8567756636164355780563d9ac07499d"
     },
     {
       "path": "port/patches/combat-a30-pointer-tokens.patch",
@@ -2725,5 +2735,5 @@
       "sha256": "8344203252d190bbfabc8d76ae51164cabec4a81d780578383284115c478cf5d"
     }
   ],
-  "registry_sha256": "5847ad957dc5c3b5b68cd51ae0201ce15d456d63bc787449f701d317321a061c"
+  "registry_sha256": "16781757c950a17a44616e0d5f1a038c91c7ab61b4ff5747b0b5645865c7d9c8"
 }

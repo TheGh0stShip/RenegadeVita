@@ -1,0 +1,19 @@
+--- a/raveshawbossgameobj.cpp
++++ b/raveshawbossgameobj.cpp
+@@ -3651,10 +3651,14 @@
+ 		}
+ 
+ 		//
+-		//	Randomly strike the player
++		//	Randomly strike the player.  The distance truncates to 0 when the
++		//	player is within 1 m of TIBERIUM_POS, and Get_Int (0) is a modulo
++		//	by zero (WWASSERT is compiled out of release builds).  Get_Int (1)
++		//	never returns 1 either, so skipping the roll keeps the original
++		//	odds for every reachable distance.
+ 		//
+ 		int star_dist = (StarPos - TIBERIUM_POS).Length ();
+-		if (FreeRandom.Get_Int (star_dist) == 1) {
++		if (star_dist > 0 && FreeRandom.Get_Int (star_dist) == 1) {
+ 
+ 			//
+ 			//	Apply 5 points of "steel" damage to the player

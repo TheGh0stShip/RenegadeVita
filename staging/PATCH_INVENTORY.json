@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "fbc6b2e6e0e8a7924bb4489acb9836370e563f4f4a859474135793136725084c",
-  "patch_count": 526,
+  "stage_script_sha256": "b910f15c5d156c5075d4f37542d216ed4e0bd72eafe25854236315febd5f59d4",
+  "patch_count": 527,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -2625,15 +2625,20 @@
       "sha256": "71433b8b6e1764ad0707ba04f95022a43fa54fb1dd0d0156a0c538cfdc324301"
     },
     {
+      "path": "port/patches/combat-a36-raveshaw-star-dist-modulo-guard.patch",
+      "stage_directory": "combat",
+      "sha256": "8db90499831ea7491c2e6486d4094ccda4c5774ed04d7582149e83b58038e73b"
+    },
+    {
+      "path": "port/patches/combat-a36-raveshaw-stealth-soldier-create-guard.patch",
+      "stage_directory": "combat",
+      "sha256": "8696762046ee73979d8e8f279e5cef0b9071054cdbd288251690c96dc935d890"
+    },
+    {
       "path": "port/patches/scripts-a36-m01-intro-command-breadcrumbs.patch",
       "stage_directory": "scripts",
       "sha256": "30f0ad3ed7b87ca32095d32d6f800ae73043544a75cd96a5d2d0272cba7c3f73"
-    },
-    {
-      "path": "port/patches/combat-a36-scriptcommands-null-guards.patch",
-      "stage_directory": "combat",
-      "sha256": "d41a91caa9052ce951998d269fbc92bbfe1b0b3ac9e9a7ce449bed502118cef5"
     }
   ],
-  "registry_sha256": "bda5c16200beddda006c546cc9f03e2179a97b95d20feec9dc09ed405e9ccbec"
+  "registry_sha256": "cd305728beb9ee614f0c92fe4cc465ba68a12fe1de11dddf91d62a836b17d5e3"
 }

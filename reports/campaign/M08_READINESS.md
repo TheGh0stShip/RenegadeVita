@@ -125,3 +125,135 @@ cinematic command bounds/timing.
 6. Pull `ux0:data/renegade/user/logs/` and record cinematic frame progress,
    the mission-completion latch and any PSP2 dump. Quicksave once before step 4
    and once inside the arena, then reload both.
+
+## Full audit — 2026-10-07
+
+Evidence class: read-only retail metadata (`tools/audit_mission_content_bindings.py
+--map M08.mix`, `tools/audit_mission_conversations.py --map M08.mix`, MIX
+index lookups through `renegade_cinematic_dependency_scan.MixArchive`),
+`reports/generated/sweeps/live_script_parameters.json`, manual source review,
+zero-fuzz staging replay (527 ordered patches, inventory PASS), ARM
+`-fsyntax-only` of `raveshawbossgameobj.cpp`, `tools/test_m08_readiness.py`
+(8 tests). No build, emulator or Vita run. Detailed receipts stay under the
+ignored `build/m08-audit/`.
+
+### 1. Script bindings and parameter counts
+
+- 766 discovered bindings (714 level, 52 definition), 80 distinct bound
+  scripts, 96 scripts in the discovered closure, 0 unknown/unregistered, 0
+  binding decode findings. Owners: `mission08.cpp`, Toolkit*, Test_DAK/DAY/RMV,
+  `Mission05.cpp` (`M05_APC_Deploy`) and `Test_Cinematic.cpp`; all are
+  Scripts.dsp units linked into the executable.
+- Positional shape (sweep row `M08.mix`): 344 equal, 421 "excess" and 1
+  unrecorded, 0 fewer. Every excess row is one placeholder value on a
+  zero-parameter descriptor, the editor pattern seen in all 27 maps, and is
+  never read. The unrecorded row is `M08_Havoc_DLS`, the combat start script,
+  which has no parameters.
+- Index-like parameters are in range: `M08_Elevator_Movement_Zone` (zone
+  108588) passes `Anim_num=0` into `elevators[1]`.
+  `M08_Mobile_Vehicle` slots are bounded by the earlier patch.
+
+### 2. Custom events, timers and hard-coded IDs
+
+- Completion chain receivers are present: 802/803 zones → controller
+  100002 (`801/802/803`, params 1/3 after M08_CON001/M08_CON002 end).
+  Retail `x8a_midtro.txt:69` sends `100002, 8047, 0`, which reaches the
+  controller's `M08_RELOCATE`. That handler sends `803,1` to itself and
+  `M08_RELOCATE` to STAR, and `M08_Havoc_DLS` (the combat start script) handles
+  it.
+- Retail-identical unreceived events, both harmless: `M08_STAR_IMMORTAL` to
+  STAR (`M08_Immortal_Star_DLS` is not bound or attached anywhere), and the
+  controller's `HAVOCS_SCRIPT` timer, which has no `Timer_Expired` (the base
+  no-op).
+- 119 literal `Find_Object` IDs. Not serialized: 100326/100327
+  (`M08_Activate_Convoy`), 100262/100289 (`M08_Activate_PetraA21`), 100347,
+  100362 and 100436. These are all in scripts outside the bound closure.
+  In-closure misses 100389 (Petra C) and 100356 (Sakura) were already
+  recorded. Every use goes through `SCRIPT_PTR_CHECK` NULL-tolerant commands,
+  so none is a crash risk.
+
+### 3. Content resolution
+
+- Cinematics: all 19 closure `.txt` resolve (10 `M08.mix`, 9 `always.dat`),
+  and so do `X8D_CHTroopdrop1/2.txt`. `X8I_TroopDrop1/2/3.txt`
+  (`mission08.cpp:1480, 2138, 2149`) are absent from every retail archive.
+  Only unbound scripts (`M08_Activate_PetraA21`,
+  `M08_Archaelogical_Site_Controller`) reference them. This is a
+  retail-PC-identical miss.
+- Cinematic dependencies: all 24 models present. 51 of 52 animations are
+  present. `s_a_human.H_A_X8A_MLoop` (`x8a_midtro.txt:100`, slot 2
+  `Commando_Desert_Midtro`, frames 795–1599) is in no retail archive. This is
+  retail-identical. `AnimChannelClass::Set_Animation`
+  (`animcontrol.cpp:183-193`) tolerates the NULL `Get_HAnim`, so the midtro
+  still runs to frame 1940. It is cosmetic only. The 17 cinematic real-object
+  presets (including `Nod_Stealth_Tank` and `Mutant_3Boss_Raveshaw`) and all
+  literal script presets resolve (0 missing).
+- Media: `08-Sniper.mp3` and `Raveshaw_Act on Instinct.mp3` are in
+  `always.dat`. The `POG_M08_*.tga` literals resolve as `.dds` in
+  `always.dat` through the original tga→dds lookup. Conversations: 41 level
+  conversations, all 40 literal name leads located, 0 invalid orator indices.
+  Missing texts: 0.
+
+### 4. Crash-prone code — defects fixed (one patch each)
+
+1. **Raveshaw lightning-strike modulo by zero** (crash, boss arena):
+   `STATE_IMPL_THINK(LIGHTNING_ROD_STATE_ACTIVE)` truncates
+   `(StarPos - TIBERIUM_POS).Length ()` to `int` and calls
+   `FreeRandom.Get_Int (star_dist)`. This is `% max`, guarded only by a
+   compiled-out WWASSERT, so it divides by zero when the player is within 1 m
+   of `TIBERIUM_POS`. New `combat-a36-raveshaw-star-dist-modulo-guard.patch`
+   skips the roll when `star_dist == 0`, at staged
+   `raveshawbossgameobj.cpp:3661`. `Get_Int (1)` never returns 1, so the
+   original odds are unchanged at every reachable distance.
+2. **Unchecked `Raveshaw Boss Fodder` create** (crash if the preset ever fails
+   or is not a soldier): `Create_Stealth_Soldier` dereferenced the result
+   with only a WWASSERT. New
+   `combat-a36-raveshaw-stealth-soldier-create-guard.patch` (staged
+   `:3829-3845`) leaves `StealthSoldier` empty instead, after deleting a
+   non-soldier object. The caller, `STATE_IMPL_BEGIN(STEALTH_SOLDIER_STATE_DISPLAY)`,
+   already handles a NULL `Peek_Stealth_Soldier ()` by roaring and choosing a
+   new overall state. The retail preset exists, so normal behaviour is
+   unchanged.
+
+Both patches apply after `combat-a36-boss-waypath-release-guard.patch` and
+staging replays with zero fuzz.
+
+Reviewed with no defect found: the `Prisoner_Conv_Table` index (bounded to
+10–19/20–29 of 30); the flyover index (`Get_Random_Int (0, 7)` into 8); every
+`Get_Random_Int` range in `mission08.cpp` is non-empty;
+`M08_Nod_Stealth_Tank` (`Action_Attack (NULL)` is the original stop idiom);
+`Find_Object_To_Throw` NULL handling; the boss think stops when
+`COMBAT_STAR` is NULL or dead; the lightning-rod count >= 2 guard.
+
+### 5. Objective chain
+
+The chain is intact, as in the table above. 801→802 and 802→803 need the
+two conversations to end, 803 and 805 come from the midtro relocate, and
+`Mission_Complete (true)` comes from `RAVESHAW_STATE_DEATH_LANDING`. None of
+the fixes changes the chain.
+
+### 6. Port patches touching M08
+
+The following stage cleanly, in the order recorded in `tools/stage_sources.sh`:
+
+- `scripts-a35-apache-controller-bounds.patch`
+- `scripts-a36-m08-mobile-vehicle-attack-slot.patch`
+- `combat-a36-boss-save-status.patch`
+- `combat-a36-boss-load-status.patch`
+- `combat-a36-raveshaw-arc-effect-null-guards.patch`
+- `combat-a36-boss-waypath-release-guard.patch`
+- the two new guards above
+
+The waypath and arc guards only skip cosmetic work or keep the previous
+position when data is missing. They do not alter behaviour when retail data
+is present.
+
+### Deferred
+
+- `audit_mission_event_routes.py` needs all-map binding receipts and was not
+  run. Custom and timer receivers were traced by hand for the completion
+  chain and the boss only, not for all 80 bound scripts.
+- Shared Toolkit scripts (M00_*) were not re-audited here for `Get_Random_Int`
+  ranges with `min == max`.
+- Not checked: a mid-fight save/restore, and the boss landing on Vita
+  physics. Both need hardware.

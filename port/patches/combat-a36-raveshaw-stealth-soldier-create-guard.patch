@@ -1,0 +1,30 @@
+--- a/raveshawbossgameobj.cpp
++++ b/raveshawbossgameobj.cpp
+@@ -3828,12 +3828,26 @@
+ 	//
+ 	PhysicalGameObj *phys_game_obj = ObjectLibraryManager::Create_Object ("Raveshaw Boss Fodder");
+ 	WWASSERT (phys_game_obj != NULL);
++
++	//
++	//	WWASSERT is compiled out of release builds.  If the preset could not be
++	//	created (or is not a soldier), leave StealthSoldier empty: the caller,
++	//	STATE_IMPL_BEGIN(STEALTH_SOLDIER_STATE_DISPLAY), already handles a NULL
++	//	Peek_Stealth_Soldier () by roaring and choosing a new overall state.
++	//
++	SoldierGameObj *soldier = (phys_game_obj != NULL) ? phys_game_obj->As_SoldierGameObj () : NULL;
++	if (soldier == NULL || soldier->Peek_Physical_Object () == NULL) {
++		if (phys_game_obj != NULL) {
++			phys_game_obj->Set_Delete_Pending ();
++		}
++		StealthSoldier = NULL;
++		return ;
++	}
+ 	StealthSoldier = phys_game_obj;
+ 
+ 	//
+ 	//	Position the stealth soldier accordingly
+ 	//
+-	SoldierGameObj *soldier = phys_game_obj->As_SoldierGameObj ();
+ 	soldier->Set_Transform (tm);
+ 
+ 	//

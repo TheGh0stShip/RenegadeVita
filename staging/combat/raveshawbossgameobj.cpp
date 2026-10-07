@@ -3651,10 +3651,14 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(LIGHTNING_ROD_STATE_ACTIVE) (void)
 		}
 
 		//
-		//	Randomly strike the player
+		//	Randomly strike the player.  The distance truncates to 0 when the
+		//	player is within 1 m of TIBERIUM_POS, and Get_Int (0) is a modulo
+		//	by zero (WWASSERT is compiled out of release builds).  Get_Int (1)
+		//	never returns 1 either, so skipping the roll keeps the original
+		//	odds for every reachable distance.
 		//
 		int star_dist = (StarPos - TIBERIUM_POS).Length ();
-		if (FreeRandom.Get_Int (star_dist) == 1) {
+		if (star_dist > 0 && FreeRandom.Get_Int (star_dist) == 1) {
 
 			//
 			//	Apply 5 points of "steel" damage to the player
@@ -3824,12 +3828,26 @@ RaveshawBossGameObjClass::Create_Stealth_Soldier (const Matrix3D &tm)
 	//
 	PhysicalGameObj *phys_game_obj = ObjectLibraryManager::Create_Object ("Raveshaw Boss Fodder");
 	WWASSERT (phys_game_obj != NULL);
+
+	//
+	//	WWASSERT is compiled out of release builds.  If the preset could not be
+	//	created (or is not a soldier), leave StealthSoldier empty: the caller,
+	//	STATE_IMPL_BEGIN(STEALTH_SOLDIER_STATE_DISPLAY), already handles a NULL
+	//	Peek_Stealth_Soldier () by roaring and choosing a new overall state.
+	//
+	SoldierGameObj *soldier = (phys_game_obj != NULL) ? phys_game_obj->As_SoldierGameObj () : NULL;
+	if (soldier == NULL || soldier->Peek_Physical_Object () == NULL) {
+		if (phys_game_obj != NULL) {
+			phys_game_obj->Set_Delete_Pending ();
+		}
+		StealthSoldier = NULL;
+		return ;
+	}
 	StealthSoldier = phys_game_obj;
 
 	//
 	//	Position the stealth soldier accordingly
 	//
-	SoldierGameObj *soldier = phys_game_obj->As_SoldierGameObj ();
 	soldier->Set_Transform (tm);
 
 	//

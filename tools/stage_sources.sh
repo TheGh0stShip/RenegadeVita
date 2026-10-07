@@ -1528,6 +1528,14 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 # waypath. Apply after the boss Save/Load status patches that share these files.
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-boss-waypath-release-guard.patch"
+# M08 Raveshaw boss fight: the lightning-rod strike roll is a modulo by zero
+# when the player stands within 1 m of TIBERIUM_POS, and the "Raveshaw Boss
+# Fodder" create was only WWASSERTed.  Both run in release builds on the path
+# to the boss class's Mission_Complete (true).  Apply after the waypath guard.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-raveshaw-star-dist-modulo-guard.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a36-raveshaw-stealth-soldier-create-guard.patch"
 # M01 intro hang locator: bounded begin/end records for X1* cinematic
 # commands. Anchored to the final Test_Cinematic.cpp so no earlier anchor moves.
 test "$(sha256sum "$rv_stage/scripts/Test_Cinematic.cpp" | cut -d' ' -f1)" = \

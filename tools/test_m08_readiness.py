@@ -44,6 +44,29 @@ class MobileVehicleAttackSlot(unittest.TestCase):
         self.assertTrue(PATCH.exists())
 
 
+class RaveshawReleaseGuards(unittest.TestCase):
+    def setUp(self):
+        self.text = RAVESHAW.read_text(encoding="latin-1")
+
+    def test_lightning_strike_roll_never_divides_by_zero(self):
+        self.assertIn("if (star_dist > 0 && FreeRandom.Get_Int (star_dist) == 1) {", self.text)
+        self.assertNotIn("if (FreeRandom.Get_Int (star_dist) == 1)", self.text)
+
+    def test_stealth_soldier_create_is_checked_before_use(self):
+        body = self.text[self.text.index("RaveshawBossGameObjClass::Create_Stealth_Soldier"):]
+        body = body[:body.index("Link_Thrown_Object_To_Hands")]
+        guard = body.index("if (soldier == NULL || soldier->Peek_Physical_Object () == NULL) {")
+        self.assertLess(guard, body.index("StealthSoldier = phys_game_obj;"))
+        self.assertLess(guard, body.index("soldier->Set_Transform (tm);"))
+        self.assertNotIn("phys_game_obj->As_SoldierGameObj ();\n\tsoldier->", body)
+
+    def test_guards_apply_after_waypath_guard(self):
+        text = STAGE_SCRIPT.read_text()
+        waypath = text.index("combat-a36-boss-waypath-release-guard.patch")
+        self.assertLess(waypath, text.index("combat-a36-raveshaw-star-dist-modulo-guard.patch"))
+        self.assertLess(waypath, text.index("combat-a36-raveshaw-stealth-soldier-create-guard.patch"))
+
+
 class CompletionRoute(unittest.TestCase):
     def test_original_raveshaw_boss_reports_success(self):
         text = RAVESHAW.read_text(encoding="latin-1")

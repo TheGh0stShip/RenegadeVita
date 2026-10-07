@@ -559,7 +559,11 @@ void Release_Decoder_State()
 {
 	Stop_Audio_Output();
 	for (AVPacket *packet : g_prefetched_video_packets) av_packet_free(&packet);
-	g_prefetched_video_packets.clear();
+	// Release capacity, not just contents: the campaign plays one movie per
+	// level transition and then runs the next mission in the same process.
+	// clear() would keep the 320x240 RGBA upload buffer (300 KiB) and the 2 s
+	// stereo ring (375 KiB) allocated through every following mission.
+	std::deque<AVPacket *>().swap(g_prefetched_video_packets);
 	g_prefetched_video_bytes = 0U;
 	g_prefetched_video_high_water = 0U;
 	g_video_prefetch_failed = false;
@@ -569,9 +573,9 @@ void Release_Decoder_State()
 	g_texture_width = 0;
 	g_texture_height = 0;
 	g_pending_video = false;
-	g_pending_video_pixels.clear();
-	g_audio_ring.clear();
-	g_audio_conversion.clear();
+	std::vector<uint8_t>().swap(g_pending_video_pixels);
+	std::vector<int16_t>().swap(g_audio_ring);
+	std::vector<int16_t>().swap(g_audio_conversion);
 	if (g_resampler != NULL) swr_free(&g_resampler);
 	if (g_scaler != NULL) sws_freeContext(g_scaler);
 	g_scaler = NULL;

@@ -189,7 +189,7 @@ in the global objects.ddb (not M09-specific).
 | Defect | Location | Severity | Fix |
 |---|---|---|---|
 | Gunner id formatted into `char param1[10]`; dynamic ids are 10 digits, so the write is 11 bytes | `Mission09.cpp:3935` (`M09_Evac_Transport::Entered`, on the evac path) | Medium (UB on the completion path; in the current fast-candidate frame the extra NUL lands in padding at `sp+26`) | `scripts-a36-m09-evac-gunner-param-buffer.patch` (16 bytes + `snprintf`, same text) |
-| `Static_Anim_Phys_Goto_Last_Frame` dereferences `Peek_Animation()` unchecked | `scriptcommands.cpp:2279` (every M09 lift `Created`, `ACTIVATEDOWN`) | Medium-latent (all live M09 names resolve; a failed on-demand load on Vita would crash) | `combat-a36-static-anim-last-frame-null-guard.patch` (skip only the target when no animation; unchanged when it loads) |
+| `Static_Anim_Phys_Goto_Last_Frame` dereferences `Peek_Animation()` unchecked | `scriptcommands.cpp:2279` (every M09 lift `Created`, `ACTIVATEDOWN`) | Medium-latent (all live M09 names resolve; a failed on-demand load on Vita would crash) | `combat-a36-scriptcommands-null-guards.patch` (skip only the target when no animation; unchanged when it loads) |
 
 Both patches are registered last in `tools/stage_sources.sh`; staging exited
 0 at zero fuzz and no existing anchor moved.

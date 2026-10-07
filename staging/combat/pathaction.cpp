@@ -43,6 +43,19 @@
 #include "path.h"
 #include "chunkio.h"
 #include "saveload.h"
+#if defined(RENEGADE_VITA_PORT)
+#include "colmath.h"
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+#include "a30_vita_runtime.h"
+#endif
+
+//
+//	Vita port: simulated seconds an AI rider may spend in ELEVATOR_STATE_ENTERING
+// before the inside-zone fallback applies.  Mirrors the original 5 s EXITING
+// and door timers.
+//
+static const float VITA_ELEVATOR_ENTRY_TIMEOUT = 5.0F;
+#endif
 
 
 ////////////////////////////////////////////////////////////////
@@ -95,6 +108,10 @@ PathActionClass::PathActionClass (void) :
 	FacePos (0, 0, 0),
 	Timer (0)
 {
+#if defined(RENEGADE_VITA_PORT)
+	VitaEntrySeconds	= 0;
+	VitaEntryLogMask	= 0;
+#endif
 	return ;
 }
 
@@ -342,6 +359,10 @@ PathActionClass::Handle_Elevator (void)
 				elevator->Set_Current_Rider (GameObj);
 				ElevatorState	= ELEVATOR_STATE_ENTERING;
 				State				= STATE_MOVING;
+#if defined(RENEGADE_VITA_PORT)
+				VitaEntrySeconds	= 0;
+				VitaEntryLogMask	= 0;
+#endif
 
 				//
 				//	Calculate where we want the unit to walk to in order
@@ -390,7 +411,11 @@ PathActionClass::Handle_Elevator (void)
 			if (elevator->Is_Moving ()) {
 				ElevatorState	= ELEVATOR_STATE_RIDING;
 				State				= STATE_WAITING;
+#if defined(RENEGADE_VITA_PORT)
+			} else if (Has_Arrived () || Vita_Elevator_Entry_Timed_Out (elevator)) {
+#else
 			} else if (Has_Arrived ()) {
+#endif
 
 				//
 				//	Make the unit face the exit
@@ -566,6 +591,74 @@ PathActionClass::Get_Elevator_Zone_Pos (ELEVATOR_ZONE zone_id, Vector3 *position
 }
 
 
+#if defined(RENEGADE_VITA_PORT)
+////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	Vita_Elevator_Entry_Timed_Out
+//
+//	Vita port stall breaker for ELEVATOR_STATE_ENTERING, which has no timeout in
+// the original code.  Called only while the elevator is at rest and the rider
+// has not reached the 0.15 m inside point.  After VITA_ELEVATOR_ENTRY_TIMEOUT
+// seconds of simulated time it reports "arrived" when the rider's position is
+// inside the inside zone, using the point-in-zone test that
+// ElevatorPhysClass::Triggered applies to players.  A rider outside the zone
+// keeps the original steering.  Inert when the rider arrives normally.
+//
+////////////////////////////////////////////////////////////////////////////////////////////
+bool
+PathActionClass::Vita_Elevator_Entry_Timed_Out (ElevatorPhysClass *elevator)
+{
+	const float frame_seconds = TimeManager::Get_Frame_Seconds ();
+	if (frame_seconds > 0.0F) {
+		VitaEntrySeconds += frame_seconds;
+	}
+
+	if (VitaEntrySeconds < VITA_ELEVATOR_ENTRY_TIMEOUT) {
+		return false;
+	}
+
+	//
+	//	The elevator is at rest here, so its floor selects the inside zone the
+	// rider was sent to (see ELEVATOR_STATE_WAITING).
+	//
+	const ElevatorPhysDefClass *definition = elevator->Get_ElevatorPhysDef ();
+	ELEVATOR_ZONE zone_id = (elevator->Get_Floor () == 0) ? ZONE_LOWER_INSIDE : ZONE_UPPER_INSIDE;
+	OBBoxClass zone_box;
+	OBBoxClass::Transform (elevator->Get_Transform (), definition->Get_Zone (zone_id), &zone_box);
+
+	Vector3 curr_pos;
+	GameObj->Get_Position (&curr_pos);
+	const bool inside = (CollisionMath::Overlap_Test (zone_box, curr_pos) == CollisionMath::INSIDE);
+
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	//
+	//	Bounded breadcrumb: at most one "expired" and one "fired" record per
+	// entry, 32 records per run.
+	//
+	const int log_bit = inside ? 2 : 1;
+	static unsigned vita_reports = 0U;
+	if ((VitaEntryLogMask & log_bit) == 0 && vita_reports < 32U) {
+		VitaEntryLogMask |= log_bit;
+		vita_reports ++;
+		Vector3 delta = curr_pos - Destination;
+		delta.Z = 0;
+		A30_Vita_Log ("A4 elevator entry timeout v1: obj=%d def=%s elevator=%u floor=%d entry_seconds=%.3f dist=%.3f inside=%d action=%s\n",
+			GameObj->Get_ID (),
+			GameObj->Get_Definition ().Get_Name (),
+			(unsigned)elevator->Get_ID (),
+			elevator->Get_Floor (),
+			VitaEntrySeconds,
+			delta.Length (),
+			inside ? 1 : 0,
+			inside ? "request_elevator" : "keep_steering");
+	}
+#endif
+
+	return inside;
+}
+#endif
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Save
@@ -628,6 +721,14 @@ PathActionClass::Load (ChunkLoadClass &cload)
 void
 PathActionClass::Load_Variables (ChunkLoadClass &cload)
 {
+#if defined(RENEGADE_VITA_PORT)
+	//
+	//	The entry timer is not saved; a loaded ENTERING rider gets a fresh window.
+	//
+	VitaEntrySeconds	= 0;
+	VitaEntryLogMask	= 0;
+#endif
+
 	//
 	//	Loop through all the microchunks that define the variables
 	//

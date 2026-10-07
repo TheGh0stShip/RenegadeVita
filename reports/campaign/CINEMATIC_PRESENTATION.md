@@ -121,6 +121,9 @@ behavior was not re-traced.
 - `Set_Screen_Overlay_Opacity` is not clamped (color is). `FRGBA_TO_INT32`
   would wrap or hit float-to-unsigned UB for opacity outside 0..1. Retail
   scripts use 0 and 1 only.
+  Update 2026-10-07: now clamped by
+  `port/patches/combat-a37-screen-overlay-opacity-clamp.patch`, the same
+  `WWMath::Clamp` the color setters use. Source-only: not built or run.
 - Fade durations use `TimeManager::Get_Frame_Seconds`; cinematic event times
   use script frames. Relative pacing of the two under Vita frame times was not
   examined here.

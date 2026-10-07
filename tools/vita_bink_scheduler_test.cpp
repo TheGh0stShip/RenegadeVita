@@ -84,6 +84,12 @@ void Flush_Decoders() {}
 bool Receive_Video_Frame() { return false; }
 void Drain_Deferred_Audio_Output() { g_audio_drained.store(queued_audio == 0); }
 
+// BINKMovie::Update keeps the display awake during movies (power tick seam).
+#define SCE_KERNEL_POWER_TICK_DISABLE_AUTO_SUSPEND 1
+#define SCE_KERNEL_POWER_TICK_DISABLE_OLED_DIMMING 6
+static unsigned g_power_ticks = 0;
+static void sceKernelPowerTick(int) { ++g_power_ticks; }
+
 #include "bink-scheduler-production.inc"
 
 int main(int argc, char **argv) {

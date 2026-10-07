@@ -1,5 +1,66 @@
 # Live engineering progress
 
+# Campaign development push 3 (full mission audits) — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Completed (static source/retail-data evidence, ARM -fsyntax-only and host tests only; nothing linked,
+emulated or run on hardware). Full audits of M13 and M01–M11 (bindings, events, ids, assets, crash code,
+objective chain, port patches) are in each reports/campaign/Mxx_READINESS.md "Full audit" section.
+- Link: LAN team-select helpers were compiled out but still referenced (would fail the next ARM link); fixed.
+  vitaGL must be rebuilt for vglRenegadeInvalidateVertexAttributes (normal build.sh does this).
+- Crash/hang fixes: ScriptCommands NULL guards (Has_Key, 3D sound at bone, missing models/anims, text files);
+  10-digit dynamic-id buffer overflows in M03 paradrop, M07 inn evac, M09 evac gunner; M05/M07 resistance
+  poke infinite loop; M10 stealth attack loc=100 read; M07 vehicle drop index; M02 respawn area 99 write;
+  Raveshaw strike modulo-by-zero and fodder create; weaponless vehicle with control disabled.
+- State: script factory value-initialises every DECLARE_SCRIPT (new T()), plus explicit id init in M01
+  controller, M11 Sydney/controller, M13 area-4 controller; M01 position tables rebuilt after load; M05
+  fire_loc saved.
+- Session chain: movie and DX8 scratch buffers released between missions; per-session [LIFECYCLE]
+  SESSION residual memory line.
+- Assets: M08.mix fallback for lv8_hbag.tga in M01/M04. Tools: campaign asset closure, script binding
+  closure, text/conversation closure. Fix-ledger: registry clean; dialog template style flags fixed
+  (seven MP/credits dialogs change — needs a Vita3K look); 15 stale host test files repaired.
+- Open decisions: M10 objective conversations can be dropped if a key conversation is playing
+  (retail behaviour; fix needs an owner choice). Elevator entry timeout deferred.
+Staging: 543 patches, inventory PASS.
+
+Next: full ARM build (vitaGL rebuild), Vita3K install, M01 intro breadcrumbs and campaign routes.
+
+# Campaign asset closure audit — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Completed (host Python over the unchanged retail archives; nothing built, linked, emulated or run on hardware):
+- `tools/audit_campaign_asset_closure.py` (+13-case unittest) resolves M13 and M01–M11 the way the Vita
+  FileFactoryList does (loose, Always2.dat, always.dbs, always.dat, M00, mission MIX; M09 first) and, side by
+  side, the PC order (every `data\*.mix` mounted). Covers always.dep + mission .dep preload lists, mission W3D
+  members, HLOD/aggregate children, hierarchy names, mesh/emitter textures under the Vita DDS-then-TGA rule,
+  cinematic models/animations/audio, level static sounds and music, reachable sound presets, conversation
+  text/voice and the 12 campaign movies. Report: reports/campaign/ASSET_CLOSURE.md.
+- Result: 470 distinct unresolved name/category pairs (2,811 mission-level occurrences), all retail-data
+  defects the PC game shares except one port-side gap: `lv8_hbag.tga` (prop `DSP_H-BAG`, preloaded by M01 and
+  M04) ships only in M08.mix, which the PC mounts and the Vita does not for those missions. Every miss class
+  degrades without a crash on the Vita code path. Static sounds, music, conversation text/voice, always.dep
+  records, mission members, hierarchy names and all 12 movies resolve; no unresolved name has a case or
+  mangling look-alike. The preload is not needed for resolution (0 preload-dependent prototypes).
+- Follow-up applied: a31_vita_runtime.cpp mounts M08.mix as the lowest-priority fallback for M01/M04
+  (ARM syntax-checked only).
+
+# Campaign script binding closure — 2026-10-07
+
+Static evidence only (nothing built, linked, emulated or run). New deterministic
+`tools/audit_campaign_script_closure.py` (+ 8-case unittest) joins M00/M01..M11/M13 level
+data, all objects.ddb presets and every always.dat/Always2.dat/mission cinematic
+`Attach_Script` against the CMake-selected Vita script units: 7,667 authored bindings, 1,636
+compiled registrations (no case-insensitive name collisions), 44 selected units. All 21
+unresolved names (M01 HON-escort evac cinematic x3, M11 fodder spawners x3, 7 unplaced presets,
+8 shared-cinematic attachments) are absent from the retail Scripts2.dll/scripts.dll while all
+1,636 compiled names are recognised there, so they are retail-identical; zero block completion
+and no CMake gap exists (the 3 unselected registrations are not in Scripts.dsp or the retail
+DLLs). Custom-event closure: staging event surface equals upstream, no sender lacks a receiver.
+See [campaign/SCRIPT_BINDING_CLOSURE.md](campaign/SCRIPT_BINDING_CLOSURE.md).
+
 # Campaign development push 2 — 2026-10-07
 
 Renegade Vita — v3.5 active

@@ -158,20 +158,32 @@ class MissionConversationDiagnosticsContractTests(unittest.TestCase):
         self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_TURN_LEFT, 0);", controls)
         self.assertIn("Input::Set_Primary_Key_For_Function(INPUT_FUNCTION_TURN_RIGHT, 0);", controls)
         self.assertIn("const bool gameplay_input_active = !dialog_navigation;", directinput)
+        # Since 17d6d5f the ordinary-gameplay gate also excludes radio pages and
+        # multiplayer chords (ordinary_gameplay_input), and dialog navigation
+        # keeps driving the same original keys. Each original key still has its
+        # own distinct button: Triangle=E (action), Square=R (reload), rear
+        # touch=F, D-pad=arrows. Compare whitespace-normalized source.
+        flat_directinput = " ".join(directinput.split())
         for token in (
-            "gameplay_input_active && (buttons & SCE_CTRL_TRIANGLE) != 0",
-            "gameplay_input_active && back_touch.down",
+            "Set_Button(DIKeyboardButtons, DIK_E, (ordinary_gameplay_input || dialog_navigation) && "
+            "(buttons & SCE_CTRL_TRIANGLE) != 0 && !public_chat_chord);",
+            "Set_Button(DIKeyboardButtons, DIK_F, ordinary_gameplay_input && (back_touch.down",
             "Set_Button(DIMouseButtons, DirectInput::BUTTON_MOUSE_LEFT & 0xFF",
             "front_touch.down",
             "CursorPos.X = front_touch.x;",
             "CursorPos.Y = front_touch.y;",
-            "gameplay_input_active && (buttons & SCE_CTRL_SQUARE) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_UP) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_DOWN) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_LEFT) != 0",
-            "gameplay_input_active && (buttons & SCE_CTRL_RIGHT) != 0",
+            "Set_Button(DIKeyboardButtons, DIK_R, (ordinary_gameplay_input || dialog_navigation) && "
+            "(buttons & SCE_CTRL_SQUARE) != 0 && !quicksave_chord);",
+            "Set_Button(DIKeyboardButtons, DIK_UP, (ordinary_gameplay_input || dialog_navigation) && "
+            "(buttons & SCE_CTRL_UP) != 0);",
+            "Set_Button(DIKeyboardButtons, DIK_DOWN, (ordinary_gameplay_input || dialog_navigation) && "
+            "(buttons & SCE_CTRL_DOWN) != 0);",
+            "Set_Button(DIKeyboardButtons, DIK_LEFT, (ordinary_gameplay_input || dialog_navigation) && "
+            "(buttons & SCE_CTRL_LEFT) != 0);",
+            "Set_Button(DIKeyboardButtons, DIK_RIGHT, (ordinary_gameplay_input || dialog_navigation) && "
+            "(buttons & SCE_CTRL_RIGHT) != 0);",
         ):
-            self.assertIn(token, directinput)
+            self.assertIn(token, flat_directinput)
         self.assertIn('#include "a4_frontend_lifecycle_boundary.h"', directinput)
         self.assertIn("const bool frontend_menu_navigation = A4_Frontend_Is_Menu_Loop_Active();", directinput)
         self.assertIn("Set_Virtual_Key(VK_LEFT,", directinput)

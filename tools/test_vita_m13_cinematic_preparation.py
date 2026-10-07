@@ -82,7 +82,11 @@ def test_m01_referenced_textures_prepare_before_first_world_frame():
     assert 'Warm_Original_Campaign_Referenced_Textures(presenter, label)' in m01_block
     prepare_call = text.index('Prepare_Original_Level_Loading_Resources(loading_presenter,\n\t\t\t\tselected_archive')
     assert prepare_call < text.index('A3.1 breadcrumb: original M00 level loaded', prepare_call)
-    assert 'additional_budget = 48ULL * 1024ULL * 1024ULL' in text
+    # The 48 MiB budget is now the retained minimum of a pool-headroom-scaled
+    # budget (Select_Campaign_Texture_Prepare_Budget, clamped 48..96 MiB).
+    assert 'const uint64_t base_budget = 48ULL * 1024ULL * 1024ULL;' in text
+    assert 'Select_Campaign_Texture_Prepare_Budget(' in text
+    assert 'if (budget < base_budget) budget = base_budget;' in text
 
 
 def test_saved_path_action_remaps_borrowed_pointers_without_new_references():

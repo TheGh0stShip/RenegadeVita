@@ -139,6 +139,10 @@ private:
 
 	void				Set_Finished (void);
 
+#if defined(RENEGADE_VITA_PORT)
+	bool				Vita_Elevator_Entry_Timed_Out (ElevatorPhysClass *elevator);
+#endif
+
 	////////////////////////////////////////////////////////////////
 	//	Private constants
 	////////////////////////////////////////////////////////////////
@@ -185,6 +189,10 @@ private:
 	Vector3					FacePos;
 	float						Timer;
 	int						LadderIndex;
+#if defined(RENEGADE_VITA_PORT)
+	float						VitaEntrySeconds;
+	int						VitaEntryLogMask;
+#endif
 	
 	static DynamicVectorClass<GameObjReference>	LadderList;
 };

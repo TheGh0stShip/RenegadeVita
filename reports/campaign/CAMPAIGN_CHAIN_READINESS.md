@@ -65,5 +65,6 @@ No runtime code defect was found in the campaign chain by source review.
 
 - Movie → M01 entry, and every M01 → M11 handoff, at runtime.
 - Finale movie → main menu → New Campaign or Exit.
-- Repeated-session memory and resource behaviour across 12 handoffs.
+- Repeated-session memory and resource behaviour across 12 handoffs. The source audit and
+  the per-session `[LIFECYCLE] SESSION residual` probe are in SESSION_CHAIN_ACCUMULATION.md.
 - Physical Vita/PSTV movie decode for R_L02 to R_L11 and R_Finale.

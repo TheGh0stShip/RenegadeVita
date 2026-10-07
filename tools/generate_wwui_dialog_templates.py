@@ -134,7 +134,7 @@ REQUIRED_DIALOG_CONTROLS = {
 }
 FLAGS = {'DS_MODALFRAME':0x80,'DS_SETFONT':0x40,'WS_POPUP':0x80000000,'WS_CAPTION':0x00C00000,'WS_GROUP':0x20000,'WS_TABSTOP':0x10000,
  'BS_PUSHBUTTON':0,'BS_DEFPUSHBUTTON':1,'BS_CHECKBOX':2,'BS_AUTOCHECKBOX':3,'BS_OWNERDRAW':0xB,'BS_LEFT':0x100,'BS_CENTER':0x300,'BS_FLAT':0x8000,
- 'SS_LEFT':0,'SS_CENTER':1,'SS_RIGHT':2,'SS_BITMAP':0xE,'ES_MULTILINE':4,'ES_AUTOVSCROLL':0x40,'LBS_NOTIFY':1}
+ 'SS_LEFT':0,'SS_CENTER':1,'SS_RIGHT':2,'SS_BITMAP':0xE,'ES_CENTER':1,'ES_MULTILINE':4,'ES_PASSWORD':0x20,'ES_OEMCONVERT':0x400,'ES_NUMBER':0x2000,'ES_AUTOVSCROLL':0x40,'LBS_NOTIFY':1}
 FLAGS.update({'WS_SYSMENU':0x80000,'WS_BORDER':0x800000,
  'WS_CHILD':0x40000000,'WS_VISIBLE':0x10000000,'WS_DISABLED':0x08000000,
  'SS_BLACKFRAME':7,
@@ -143,7 +143,7 @@ FLAGS.update({'WS_SYSMENU':0x80000,'WS_BORDER':0x800000,
  'LVS_SINGLESEL':4,'LVS_SHOWSELALWAYS':8,'LVS_SORTASCENDING':0x10,
  'LVS_AUTOARRANGE':0x100,'LVS_NOSORTHEADER':0x8000,
  'TBS_AUTOTICKS':1,'TBS_BOTH':8,'TBS_NOTICKS':0x10,
- 'CBS_DROPDOWNLIST':3,'WS_VSCROLL':0x200000,'SS_ETCHEDHORZ':0x10})
+ 'CBS_DROPDOWNLIST':3,'CBS_SORT':0x100,'WS_VSCROLL':0x200000,'SS_ETCHEDHORZ':0x10})
 CAPTIONLESS = {'EDITTEXT','LISTBOX','COMBOBOX','SCROLLBAR'}
 CLASS = {'PUSHBUTTON':0x80,'DEFPUSHBUTTON':0x80,'CHECKBOX':0x80,'AUTOCHECKBOX':0x80,'LTEXT':0x82,'CTEXT':0x82,'RTEXT':0x82,'GROUPBOX':0x82,'EDITTEXT':0x81,'LISTBOX':0x83,'COMBOBOX':0x85,'SCROLLBAR':0x84}
 # RC statements supply these styles even when they are absent from chat.rc.
@@ -230,7 +230,8 @@ def parse(rc,d,selected_ids=IDS):
    s=lines[i].split('//')[0].strip(); i+=1
    if not s:continue
    stmt+=((' ' if stmt else '')+s)
-   if s.endswith(',') or s.endswith('|'):continue
+   # A statement may also wrap right after a leading NOT (NOT / WS_GROUP).
+   if s.endswith(',') or s.endswith('|') or re.search(r'(^|[\s,|])NOT$',s):continue
    p=split(stmt); stmt=''
    if ident in selected_ids and p and (p[0].split(None,1)[0].upper() in CLASS or p[0].split(None,1)[0].upper()=='CONTROL'):
     body.append(control(p,d)); control_ids.add(control_ident(p,d))

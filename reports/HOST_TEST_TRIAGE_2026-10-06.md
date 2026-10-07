@@ -1,5 +1,10 @@
 # Host test triage — 2026-10-06
 
+> Superseded in part by [FIX_LEDGER_INTEGRITY_2026-10-07.md](FIX_LEDGER_INTEGRITY_2026-10-07.md):
+> that run re-triaged every failure below, fixed the stale harnesses, and found that the
+> `ES_CENTER` failure was a real dialog-generator defect, not a toolchain problem. The
+> `logical_stimulus` 'offset' failure was a pure line offset, not a zero-fuzz violation.
+
 Scope: host-only Python `tools/test_*.py`. 216 modules exist; 20 were skipped because
 they invoke `arm-vita-eabi` or `cmake`. 196 were run, 8 at a time, each with a 120 s timeout.
 For this run only, the empty `upstream/CnC_Renegade` was symlinked to the active tree's copy;

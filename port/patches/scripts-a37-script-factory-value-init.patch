@@ -1,0 +1,28 @@
+Script factory value-initialisation (campaign full audits 2026-10-07).
+
+Several mission scripts read members before Created() or a custom event
+assigns them (M01 controller ids, M05 poke index, M11 Sydney conversation ids,
+M13 area-4 controller ids, M09 innate zone flag ...). The scripts are created
+with new T, so those members hold leftover heap contents; on Vita the 12+
+campaign sessions reuse one process heap, so stale conversation ids (which
+restart at 1000 every level) can match live ones. DECLARE_SCRIPT classes have
+no user-provided default constructor, so new T() zero-initialises the whole
+object before the implicit constructor runs. Valid-path behaviour is
+unchanged; members a script assigns are overwritten as before.
+
+--- a/ScriptRegistrant.h
++++ b/ScriptRegistrant.h
+@@ -49,7 +49,12 @@
+ 
+ 		virtual ScriptImpClass* Create(void)
+ 			{
+-			T* script = new T;
++			// Vita port: value-initialise. DECLARE_SCRIPT classes have no user-provided
++			// constructor, so new T() zero-fills members a script reads before
++			// assigning (ids, counters, conversation handles) instead of leaving
++			// whatever a previous mission's session left in the reused heap. Loaded
++			// scripts still restore their saved variables after Create().
++			T* script = new T();
+ 			assert(script != NULL);
+ 			script->SetFactory(this);
+ 			script->Register_Auto_Save_Variables();

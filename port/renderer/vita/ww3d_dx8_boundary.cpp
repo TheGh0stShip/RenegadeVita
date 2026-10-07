@@ -355,6 +355,14 @@ IDirect3DBaseTexture8 *g_texture_stage_textures[MAX_TEXTURE_STAGES] = {};
 D3DMATRIX g_applied_texture_transforms[MAX_TEXTURE_STAGES] = {};
 DWORD g_applied_texture_transform_flags[MAX_TEXTURE_STAGES] = {};
 bool g_applied_texture_transform_valid[MAX_TEXTURE_STAGES] = {};
+// Grow-only conversion/expansion scratch reused across uploads and draws within
+// one WW3D session. Its capacity is the largest surface level or strip seen,
+// so it is released at WW3D shutdown (RenegadeVita_Release_DX8_Scratch);
+// otherwise one level's high-water (up to 4 MiB RGBA) would stay allocated
+// through every later campaign mission in the same process.
+thread_local std::vector<unsigned char> g_surface_upload_rgba;
+std::unique_ptr<uint16_t[]> g_strip_expanded_indices;
+size_t g_strip_expanded_capacity = 0U;
 // This cache owns one permanent reference for the native renderer's process
 // lifetime.  Failed TextureClass requests receive a separate AddRef(), so an
 // ordinary caller release cannot leave the cache dangling or delete a texture
@@ -1072,7 +1080,7 @@ bool Upload_Texture_Level_From_Surface(IDirect3DTexture8 *texture, UINT level)
 	// Reused conversion scratch: dynamic surfaces (Render2D/HUD text, video)
 	// re-upload on Unlock; keep capacity instead of a heap round trip each time.
 	// Convert_Surface_To_RGBA assign()s the full size, so contents are unchanged.
-	static thread_local std::vector<unsigned char> rgba;
+	std::vector<unsigned char> &rgba = g_surface_upload_rgba;
 	uint32_t checksum = 0U;
 	if (!Convert_Surface_To_RGBA(texture->SurfaceLevels[level], rgba, &checksum)) {
 		return false;
@@ -1875,8 +1883,8 @@ void Submit_Bound_Triangles(const RenderStateStruct &state,
 	// Strip expansion scratch is reused across draws: Submit_Indexed_Triangles
 	// consumes the indices synchronously and never retains this pointer, so a
 	// grow-only buffer replaces one heap allocation per strip draw.
-	static std::unique_ptr<uint16_t[]> expanded_indices;
-	static size_t expanded_capacity = 0U;
+	std::unique_ptr<uint16_t[]> &expanded_indices = g_strip_expanded_indices;
+	size_t &expanded_capacity = g_strip_expanded_capacity;
 	if (strip) {
 		const size_t expanded_count = static_cast<size_t>(polygon_count) * 3U;
 		if (expanded_count > expanded_capacity) {
@@ -2711,6 +2719,15 @@ HRESULT D3DXFilterTexture(IDirect3DTexture8 *texture, const void *palette,
 void RenegadeVita_Release_DX8_Bound_Textures()
 {
 	Release_Bound_Texture_Stages();
+}
+
+void RenegadeVita_Release_DX8_Scratch()
+{
+	// Called on the WW3D (vitaGL) thread, the only thread that uploads or
+	// draws, so this releases the thread_local instance that was used.
+	std::vector<unsigned char>().swap(g_surface_upload_rgba);
+	g_strip_expanded_indices.reset();
+	g_strip_expanded_capacity = 0U;
 }
 
 bool RenegadeVita_Get_DX8_Texture_Coordinate_State(DWORD stage,

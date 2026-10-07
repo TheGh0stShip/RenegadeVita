@@ -117,3 +117,130 @@ receipt was written to the git-ignored `build/m07/` and is not committed.
 8. Capture the runtime log for "native provider missing script" (expect none
    for M07) and the NULL Script Ptr lines (expect the 100952 one only if that
    zone is entered).
+
+## Full audit (2026-10-07)
+
+Evidence class: source review, read-only host audits of the user's retail data,
+ARM `-fsyntax-only` of the patched `Mission07.cpp`/`Mission05.cpp` (rc 0), and
+`objdump` of the existing `vita-fast-candidate` object. No build, emulator or
+physical Vita run. Receipts are in the git-ignored `build/m07audit/`.
+
+### Fixed
+
+| Patch | Severity | Defect |
+|---|---|---|
+| `scripts-a36-m07-evac-param-id-buffer.patch` | Medium (main path) | `M07_Inn_Evac::Custom` (`Mission07.cpp:5931`) writes `sprintf("%d")` into `char param1[10]`. Sydney2 and the three DEAD-6 "2" units come from spawners 103833-103836, so their ids are 10-digit dynamic ids (`NETID_DYNAMIC_OBJECT_MIN` = 1,500,000,000). That is an 11-byte write for 4 of the 5 inn evacuations. In the current object the extra NUL lands in padding (`param1` at `sp+20`, `evacPosition` at `sp+32`), so the stack layout is all that keeps it safe. The fix uses 16 bytes plus `snprintf`. The same pattern at `:4135`/`:5138` (`M07_Inn_APC`, `M07_APC_Dec`) is fixed too; neither script is bound in retail M07. |
+| `scripts-a36-m07-vehicle-drop-zone-bounds.patch` | Low | `M07_Vehicle_Drop_Controller` (`:3056`) stores the park zone's `10` as `drop_zone` once 7 or more player vehicles have been lost. The next drop then reads `vehicle_drop[10]` of 8. Only params 0-7 are now accepted. |
+| `scripts-a36-m05-resistance-poke-index-hang.patch` (M05 audit; covers M07 too) | Medium (hang, optional) | `M05_Resistance_Poke_Conversation` (bound to M07 spawners 101057, 101058, 101109 and 101114) never initializes `last`. Retail spawner definition `M07_Civ_Resist_dsbl` (82050294) can spawn `Civ_Resist_Male_v2b`/`v2c`, which match none of the three `strncmp` groups. That gives `Min == Max == 0`, so `Index()` never ends on the first poke if `last` happens to be 0. `last` now starts at -1. |
+
+Staging was verified with `bash tools/stage_sources.sh`: exit 0, zero fuzz,
+528 ordered patches. `renegade_patch_inventory.py --check-staging` passes. No
+existing sha256 anchor touches these files.
+
+### (1) Script bindings and parameter counts
+
+- 567/567 bindings are registered (`live_script_bindings.json`, M07 row). The
+  discovered closure is 124 scripts; 100 of the 122 `Mission07.cpp` scripts are
+  reachable.
+- Parameter-count categories: 235 equal, 331 excess, 1 unrecorded. Every excess
+  binding is the standard single `"0"` value on a script with no parameters.
+  The unrecorded one is `M07_Havoc_DLS`, the combat start script, which has no
+  parameters. No M07 binding has fewer values than its descriptor.
+- All 74 named `Get_*_Parameter` reads in `Mission07.cpp` match their
+  `DECLARE_SCRIPT` descriptors (`script_parameter_reads.json`). Shared outliers
+  owned by other units: `RMV_Camera_Behavior` (indexed reads) and
+  `M00_Play_Sound_Object_Bone_DAY` (reads `Offset`, which is not declared).
+
+### (2) Event, timer and object-id routes
+
+- Every `Send_Custom_Event` aimed at a literal or macro object id reaches a
+  script that handles that type. The objective controller handles all of them
+  through `switch(param)`. Unhandled routes, all in scripts not bound in M07 or
+  identical on retail PC:
+  - `M07_Park_Zone` → 100801 `M07_MOVE_STEALTH_TANK` (unbound)
+  - `M07_Prisoner_Gate` → `M07_FREE_CIV` (unbound)
+  - `M07_Biohazard_Barrel` (unbound)
+  - `M07_Fancy_Inn_Controller` starts timer `CONTROL_SAMS` but has no
+    `Timer_Expired` (harmless)
+  - Objective controller timer `HAVOCS_SCRIPT` (harmless)
+- The duplicate value 7002 (`M07_CUSTOM_ACTIVATE` and
+  `M07_REINFORCEMENT_KILLED`) never reaches an object that handles both.
+- Literal object ids: 137/138 are serialized; 100952 remains the known lead.
+- Waypath ids: all are in the 39 serialized waypaths except 101033
+  (`M07_Triangle_Apache`, unbound). A missing waypath fails safe
+  (`PathClass::Initialize(NULL)`).
+- Spawner ids 100795 and 101010 are not in `m07.ldd`. `Spawner_Enable` is a
+  no-op loop, and the callers are optional.
+- `M07_Custom_Activate` targets 107794, 107802 and 109138 and
+  `M07_Deactivate_Encounter` 111205 are absent. The calls return early through
+  `SCRIPT_PTR_CHECK`, the same as on PC.
+
+### (3) Content
+
+- All 21 literal cinematic `.txt` names are present except
+  `X7A_Apache_00-03`/`X7A_CPlane_00-03`. Those are used only by
+  `M07_Flyover_Controller`, which is not bound.
+- From the 13 reachable files: 16 models, 38 animations, 6 audio presets and 9
+  real-object presets all resolve.
+- All 29 `M07_CON*` conversations and all 38 direct text ids resolve, as do all
+  objective POG textures (`audit_mission_conversations`,
+  `audit_mission_text_routes`).
+- Source misses:
+  - `Ramjet_Weapon_Powerup` (known)
+  - `M07_Nod_APC` and `o_barrl_bio`: unbound scripts only
+  - `Set_Background_Music("Raveshaw_Act on Instinct")` has no extension. Only
+    the `.mp3` exists, so playback depends on the original audio lookup. The
+    source is retail-identical. This is a physical audio check, not a blocker.
+
+### (4) Crash review
+
+- `Mission07.cpp` has no raw `->` dereference outside `Commands`. Every
+  `Commands` entry point M07 uses checks its `GameObject*`. The unchecked ones
+  (`Create_3D_*_At_Bone`, `Monitor_Sound`, `Has_Key`) are not called.
+- Arrays:
+  - `move_loc`: Hotwire params 1-9 into `[10]`
+  - `para_drop`: zones 0-6 into `[7]`
+  - `ignore_ids`: guarded
+  - `attack_id`: `Get_Random_Int(0,2)` is in [0,2)
+  - The vehicle-drop case is fixed above.
+- Leads (not patched; on retail PC they behave the same and fail safe):
+  - `M07_Para_Drop_Controller::para_drop` is not registered for save (the
+    `SAVE_VARIABLE` is commented out). After a load, troop drops look up
+    indeterminate ids, so `Find_Object` returns NULL and the drop lands at
+    the origin.
+  - `M08_Mobile_Vehicle` on 100801 is covered by the existing attack-slot
+    patch.
+
+### (5) Objective chain
+
+Unchanged and intact:
+
+1. Havoc start (`:332`).
+2. 709 → `M07_CON001` → 701 + nuke countdown (100663).
+3. 710 accomplished on escape (`:1549`).
+4. SAM conversion (`:2091`) → inn evac.
+5. The fifth `M07_DEAD6_EVAC` → `M07_CON017` → 703 added (`:5989`); 701/709
+   accomplished (`:6047-6049`).
+6. 100796 + 100798 killed → 100799 → 703/param 1 after 5 s →
+   `Mission_Complete(true)` (`:237-239`).
+
+None of the new patches touch this chain, except that the inn-evac step no
+longer overflows. `Set_Wind(90,5,2,0)` at `:1531` is rejected by
+`WeatherMgrClass::Set_Wind` (variability > 1). It returns before changing any
+parameter, as on PC, while `Set_Ash(0.15,3)` applies.
+
+### (6) Port patches on the M07 path
+
+No earlier patch touches `Mission07.cpp`. Reviewed and consistent for M07:
+
+- `scripts-a36-m08-mobile-vehicle-attack-slot` (`loc` sentinel 100)
+- `scripts-a36-m05-apc-deploy-param-buffer` (9 `M05_APC_Deploy` bindings in M07)
+- The Test_Cinematic dispatch/load-bounds patches (shared)
+- `Start_Custom_Timer` / `SCRIPT_PTR_CHECK` behavior in `scriptcommands.cpp`
+
+### Deferred
+
+- Physical check of the inn evac with spawned evacuees (patched path).
+- Raveshaw music playback.
+- A >7-vehicle-loss park entry.
+- `para_drop` after a mid-mission load.

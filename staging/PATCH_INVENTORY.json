@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "d934306bbff882deeb49bebb87482e67a9d39465635b9a8d20745dd9934780b7",
-  "patch_count": 546,
+  "stage_script_sha256": "27fd1f6974baf3133cc40ccb1fb69f4741b751aee02b1b515fccb754de6b6d4e",
+  "patch_count": 551,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -863,6 +863,11 @@
       "path": "port/patches/scripts-a45-m13-intro-camera-trace.patch",
       "stage_directory": "scripts",
       "sha256": "b1711f161762b559176656d68fe36343147a720ea86735f1e2f9475b66950743"
+    },
+    {
+      "path": "port/patches/scripts-a37-script-factory-value-init.patch",
+      "stage_directory": "scripts",
+      "sha256": "9a8a4729e480a1bb4882e6aa122a5b61a81455f58ed174bc80091e3504daa071"
     },
     {
       "path": "port/patches/a4-post-movie-mainmenu-hardening.patch",
@@ -1768,6 +1773,16 @@
       "path": "port/patches/scripts-a36-m11-conversation-id-init.patch",
       "stage_directory": "scripts",
       "sha256": "9579e0bd770447ae71d7bccd0247b6147d87191721cc84ec96caa5677b0001ad"
+    },
+    {
+      "path": "port/patches/scripts-a36-m07-evac-param-id-buffer.patch",
+      "stage_directory": "scripts",
+      "sha256": "2862802fdcc436951fb6b0fb48d6c2a04f048a0ae67722583d8a0d69aadfff12"
+    },
+    {
+      "path": "port/patches/scripts-a36-m07-vehicle-drop-zone-bounds.patch",
+      "stage_directory": "scripts",
+      "sha256": "0f621e8d0da297ed6d79dfef7bdff55b4312a656009058767f9f394ee736f62b"
     },
     {
       "path": "port/patches/combat-a35-save-phase-diagnostics.patch",
@@ -2733,7 +2748,17 @@
       "path": "port/patches/scripts-a36-m01-controller-id-init.patch",
       "stage_directory": "scripts",
       "sha256": "8344203252d190bbfabc8d76ae51164cabec4a81d780578383284115c478cf5d"
+    },
+    {
+      "path": "port/patches/combat-a37-screen-overlay-opacity-clamp.patch",
+      "stage_directory": "combat",
+      "sha256": "1fd9784eff93c659fa39a08322828cb55ab49dca36582e540f51be432e85a82a"
+    },
+    {
+      "path": "port/patches/combat-a37-pathaction-elevator-entry-timeout.patch",
+      "stage_directory": "combat",
+      "sha256": "3fc0932b5dc0fd1950bfb7c54ee74578ef9d3c75b1762c26641904a0bb4a62b3"
     }
   ],
-  "registry_sha256": "16781757c950a17a44616e0d5f1a038c91c7ab61b4ff5747b0b5645865c7d9c8"
+  "registry_sha256": "ee8d467bf1831a428d1653f232cf06d3f585b6aa10960b240f335e1f91fbfe7f"
 }

@@ -77,6 +77,9 @@
 #include "stealtheffect.h"
 #include "damageablestaticphys.h"
 #include "boxrobj.h"
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
 
 
 DECLARE_FORCE_LINK (RaveshawBoss)
@@ -1534,6 +1537,22 @@ RaveshawBossGameObjClass::Find_Closest_Catwalk_Pos (const Vector3 &curr_pos, Vec
 	//
 	WaypathClass *waypath = PathfindClass::Get_Instance ()->Find_Waypath (CATWALK_WAYPATH_ID);
 	WWASSERT (waypath != NULL);
+
+	//
+	//	WWASSERT is compiled out of release builds.  A missing catwalk waypath
+	//	behaves like an empty one (the loop below never runs and the caller's
+	//	position is left untouched) instead of dereferencing NULL mid-fight.
+	//
+	if (waypath == NULL) {
+#if defined(__vita__)
+		static bool reported = false;
+		if (reported == false) {
+			reported = true;
+			A30_Vita_Log ("A3.5 Raveshaw catwalk lookup: waypath %d missing; keeping previous catwalk position\n", (int)CATWALK_WAYPATH_ID);
+		}
+#endif
+		return ;
+	}
 
 	//
 	//	Now find the closest point which is in-between the waypath points
@@ -4574,6 +4593,24 @@ RaveshawBossGameObjClass::Find_Death_Facing_Pos (Vector3 *facing_pos)
 	//
 	WaypathClass *waypath = PathfindClass::Get_Instance ()->Find_Waypath (CATWALK_WAYPATH_ID);
 	WWASSERT (waypath != NULL);
+
+	//
+	//	WWASSERT is compiled out of release builds.  This runs every think of
+	//	RAVESHAW_STATE_DYING, which leads to the original Mission_Complete (true)
+	//	in RAVESHAW_STATE_DEATH_LANDING, so a missing waypath must not crash.
+	//	It behaves like an empty waypath (the loop below never runs and the
+	//	caller's facing position is left untouched).
+	//
+	if (waypath == NULL) {
+#if defined(__vita__)
+		static bool reported = false;
+		if (reported == false) {
+			reported = true;
+			A30_Vita_Log ("A3.5 Raveshaw death facing: waypath %d missing; keeping default facing, mission completion proceeds\n", (int)CATWALK_WAYPATH_ID);
+		}
+#endif
+		return ;
+	}
 
 	//
 	//	Now find the closest point which is in-between the waypath points

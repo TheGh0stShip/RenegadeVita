@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "961d53fb1c74ec212cfbd634db75f05f784c29da43c7eb59580b23ed52a1cf5f",
+  "stage_script_sha256": "b4be22ab5428b1aba8b95fb6ad61a4e8b295fa8b25e9ad246251217b175c8431",
   "patch_count": 514,
   "patches": [
     {
@@ -2570,10 +2570,10 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     },
     {
-      "path": "port/patches/combat-a47-ccamera-cinematic-sniper-handoff.patch",
+      "path": "port/patches/combat-a36-boss-waypath-release-guard.patch",
       "stage_directory": "combat",
-      "sha256": "6ab27330bf06c73f7d788da097d5422f1bc4514da175fd510162cab160078f67"
+      "sha256": "71433b8b6e1764ad0707ba04f95022a43fa54fb1dd0d0156a0c538cfdc324301"
     }
   ],
-  "registry_sha256": "5949a9780de989dc505c0b44a632a1c9802eacdb5a7eb3214a2e0e50a5059ff5"
+  "registry_sha256": "f03e110b8aca9135bc800f5336df48552d167226b5fd0060f52044e14d006ad8"
 }

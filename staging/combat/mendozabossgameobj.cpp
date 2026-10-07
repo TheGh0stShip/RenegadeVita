@@ -74,6 +74,9 @@
 #include "physcoltest.h"
 #include "objlibrary.h"
 #include "hudinfo.h"
+#if defined(__vita__)
+#include "a30_vita_runtime.h"
+#endif
 
 
 DECLARE_FORCE_LINK (MendozaBoss)
@@ -1463,23 +1466,46 @@ MendozaBossGameObjClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Begin (void)
 	WWASSERT (waypath != NULL);
 
 	//
-	//	Add the points from the waypath to the spline
+	//	Add the points from the waypath to the spline.  WWASSERT is compiled
+	//	out of release builds, so tolerate a missing/empty waypath here
+	//	instead of dereferencing NULL.
 	//
+	int point_count = (waypath != NULL) ? waypath->Get_Point_Count () : 0;
 	float percent = 0.0F;
-	float percent_inc = 1.0F / waypath->Get_Point_Count ();
-	for (int index = 0; index < waypath->Get_Point_Count (); index ++) {
+	float percent_inc = (point_count > 0) ? (1.0F / point_count) : 0.0F;
+	for (int index = 0; index < point_count; index ++) {
 		
 		//
 		//	Add this point to the spline
 		//
 		WaypointClass *waypoint = waypath->Get_Point (index);
 		WWASSERT (waypoint != NULL);
-		CameraSpline.Add_Key (waypoint->Get_Position (), percent);
+		if (waypoint != NULL) {
+			CameraSpline.Add_Key (waypoint->Get_Position (), percent);
+		}
 		
 		//
 		//	Increment the percent
 		//
 		percent += percent_inc;
+	}
+
+	//
+	//	The camera fly-through is cosmetic.  If the waypath could not supply a
+	//	usable spline (a spline segment needs two keys), skip it and go straight
+	//	to the LOOK_AT_DEAD_BOSS state, whose Think still reports mission
+	//	success through the original CombatManager::Mission_Complete (true).
+	//	Set_State records the new state before calling its Begin handler, so
+	//	this nested transition is safe from inside a Begin handler.
+	//
+	if (CameraSpline.Key_Count () < 2) {
+#if defined(__vita__)
+		A30_Vita_Log ("A3.5 Mendoza death camera: waypath 3000100 unusable (waypath=%p points=%d keys=%d); skipping camera path, mission completion proceeds\n",
+			(void *)waypath, point_count, CameraSpline.Key_Count ());
+#endif
+		CameraSpline.Clear_Keys ();
+		CameraState.Set_State (CAMERA_STATE_LOOK_AT_DEAD_BOSS, true);
+		return ;
 	}
 
 	//

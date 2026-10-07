@@ -36,6 +36,8 @@
 
 
 #include "pointerremap.h"
+#include <stdint.h>
+extern int A30_Vita_Log(const char *format, ...) __attribute__((weak));
 #include "refcount.h"
 #include "wwdebug.h"
 
@@ -123,7 +125,15 @@ bool PointerRemapClass::Process_Request_Table(DynamicVectorClass<PtrRemapStruct>
 			// If this happens, things could be going very wrong.  (find out why its happening!)
 			pair_index = pre_search_index;
 			*request_table[pointer_index].PointerToRemap = NULL;
-			remapped = false;
+			// Original release behavior: warn and continue with NULL. Retail
+			// level data contains such references; failing the whole load
+			// rejected every shipped mission on the Vita.
+			static unsigned rv_remap_miss_logs = 0U;
+			if (A30_Vita_Log != NULL && rv_remap_miss_logs < 16U) {
+				++rv_remap_miss_logs;
+				A30_Vita_Log("A3.9 saveload: pointer remap miss old=%08X refcount=%d (set NULL, original warn-and-continue)\n",
+					(unsigned)(uintptr_t)pointer_to_remap, refcount ? 1 : 0);
+			}
 #ifdef WWDEBUG			
 			const char * file = request_table[pointer_index].File;
 			int line = request_table[pointer_index].Line;

@@ -1,5 +1,18 @@
 # Known gaps
 
+- Retail M11 spawners 100581, 100582 and 100586 name scripts
+  `M11_ObeliskWall_FodderGuy01_JDG`, `M11_ObeliskWall_FodderGuy02_JDG` and
+  `M11_TempleRoof_FodderGuy02_JDG`, which are absent from the released Scripts
+  source (`reports/generated/sweeps/live_script_bindings.json`). The miss is
+  graceful: `ScriptRegistrar::CreateScript` returns NULL, the static provider
+  records a lookup-telemetry miss, `ScriptManager::Create_Script`
+  (`staging/combat/scripts.cpp`) logs "native provider missing script" and
+  returns NULL, and `SpawnerClass` (`staging/combat/spawn.cpp`) only attaches
+  non-NULL scripts. Save/load also skips unknown names. The spawned soldiers
+  exist without that per-unit script behavior (likely scripted movement/death
+  hooks), which the retail PC build would also lack unless its Scripts.dll had
+  them. Not physically checked in M11.
+
 - Save writes are now staged, written to `<slot>.pending` and moved over the
   slot (with a `.previous` fallback because Vita `sceIoRename` cannot
   replace). A crash between the two renames leaves only `<slot>.previous`;

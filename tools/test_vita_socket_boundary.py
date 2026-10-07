@@ -27,11 +27,12 @@ class SocketBoundaryTests(unittest.TestCase):
     def test_native_remote_session_never_creates_local_player(self):
         source = (ROOT / "port/platform/vita/a31_vita_runtime.cpp").read_text()
         self.assertIn("remote_join.Begin_World_Load()", source)
-        remote = source.split("if (remote_client) {\n\t\t\t\tif (!remote_join.Complete_World_Load", 1)[1]
+        remote = source.split("if (direct_client) {\n\t\t\t\tif (!remote_join.Complete_World_Load", 1)[1]
         remote = remote.split("} else if (loading_checkpoint)", 1)[0]
         self.assertIn("cNetwork::Get_My_Player_Object()", remote)
         self.assertNotIn("cGod::Create_Player", remote)
-        self.assertIn("if (!remote_client) cGod::Think();", source)
+        self.assertIn("const bool multiplayer_client = direct_client || lan_client;", source)
+        self.assertIn("if (!multiplayer_client) cGod::Think();", source)
         self.assertIn("remote_network_initialized) The_Game()->On_Game_End();", source)
 
 

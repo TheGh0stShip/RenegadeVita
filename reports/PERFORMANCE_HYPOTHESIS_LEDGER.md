@@ -1424,3 +1424,19 @@ bound its own overhead).
   results (incl. signed zero/NaN) are bit-identical. Hypothesis: <5% of lit
   skin colour evaluation. Risk: none by construction. Before/after:
   unmeasured. Decision: adopted as hygiene pending fixed-benchmark measurement.
+
+# Per-level loading-time preparation (2026-10-07, unbuilt)
+
+`Prepare_Original_Level_Loading_Resources` now owns the post-`Load_Level`
+warm-up for every level and also runs after in-session campaign restarts and
+round reloads (under a fresh original loading screen), which previously
+skipped it after clearing the M13/M01 retained templates. Generalized parts:
+cinematic `Play_Animation` HAnims parsed from each level's control `.txt`
+files, world killed-explosion prototypes for every campaign mission
+(M01..M13, formerly M13-only), then referenced textures last so warmed
+prototypes' textures fall inside the existing 48 MB soft budget and 24 MB
+free-memory floor. The Dev155-157 retained templates stay hand-selected for
+M13/M01. Hypothesis: removes first-use HAnim/explosion stalls in M02..M11
+and after restart. Risk: longer load and higher prototype residency; the
+floor bounds it. Before/after: unmeasured. Decision: deferred pending a fixed
+route with load time and first-event frame times measured.

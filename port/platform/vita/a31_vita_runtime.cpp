@@ -3534,6 +3534,53 @@ static const ScriptSpawnPresetSupplement kScriptSpawnPresetSupplements[] = {
 		sizeof(kM11ScriptSpawnPresets) / sizeof(kM11ScriptSpawnPresets[0]) },
 };
 
+// Mirrors the original Test_Cinematic Load_Control_File, Title_Match and
+// Get_Command_Parameter rules for one authored line:
+// "<time> Play_Animation, <slot>, \"<Skeleton.Anim>\", <looping>, ...".
+// Returns the animation name exactly as Command_Play_Animation passes it to
+// Commands->Set_Animation. Comments and other commands return false.
+static bool Parse_Cinematic_Play_Animation_Name(const std::string &raw_line,
+	std::string &animation)
+{
+	std::string line(raw_line);
+	for (char &c : line) if (c == '\t') c = ' ';
+	size_t cursor = 0U;
+	while (cursor < line.size() && static_cast<unsigned char>(line[cursor]) <= ' ') ++cursor;
+	if (cursor == line.size() || line[cursor] == ';') return false;
+	// Skip the time/frame token and the separating whitespace.
+	while (cursor < line.size() && static_cast<unsigned char>(line[cursor]) > ' ') ++cursor;
+	while (cursor < line.size() && static_cast<unsigned char>(line[cursor]) <= ' ') ++cursor;
+	static const char kTitle[] = "Play_Animation";
+	const size_t title_length = sizeof(kTitle) - 1U;
+	if (line.size() - cursor < title_length ||
+		strncasecmp(line.c_str() + cursor, kTitle, title_length) != 0) return false;
+	cursor += title_length;
+	while (cursor < line.size() && line[cursor] != ',') ++cursor;
+	if (cursor < line.size()) ++cursor;
+	// Parameter 1 is the slot; parameter 2 is the animation name.
+	for (unsigned parameter = 0U; parameter < 2U; ++parameter) {
+		while (cursor < line.size() && static_cast<unsigned char>(line[cursor]) <= ' ') ++cursor;
+		size_t begin = cursor;
+		size_t scan = cursor;
+		if (scan < line.size() && line[scan] == '"') {
+			begin = ++scan;
+			while (scan < line.size() && line[scan] != '"') ++scan;
+		}
+		while (scan < line.size() && line[scan] != ',') ++scan;
+		size_t end = scan;
+		cursor = scan < line.size() ? scan + 1U : scan;
+		while (end > begin && static_cast<unsigned char>(line[end - 1U]) <= ' ') --end;
+		if (end > begin && line[end - 1U] == '"') --end;
+		if (parameter == 1U) {
+			// "<htree>.<anim>" is two W3D names; reject anything implausible.
+			if (end <= begin || end - begin >= 64U) return false;
+			animation.assign(line, begin, end - begin);
+			return true;
+		}
+	}
+	return false;
+}
+
 // Dev236 physical M13: the first Create_Real_Object of each new soldier
 // preset in an authored cinematic cost 0.2-0.6 s inside one frame (for
 // example Nod_minigunner_2sf, gdi_rocketsoldier_0, GDI_Engineer_0,
@@ -3556,6 +3603,7 @@ void Warm_Level_Cinematic_Preset_Models(A31VitaLoadingPresenter &presenter,
 	}
 	const uint64_t started_us = sceKernelGetProcessTimeWide();
 	std::vector<std::string> presets;
+	std::vector<std::string> animations;
 	unsigned scripts = 0U;
 	for (int index = 0; index < names.Count(); ++index) {
 		const char *name = names[index];
@@ -3585,6 +3633,15 @@ void Warm_Level_Cinematic_Preset_Models(A31VitaLoadingPresenter &presenter,
 			line_start = line_end + 1U;
 			const size_t first = line.find_first_not_of(" \t");
 			if (first == std::string::npos || line[first] == ';') continue;
+			std::string animation;
+			if (Parse_Cinematic_Play_Animation_Name(line, animation)) {
+				bool seen = false;
+				for (const std::string &existing : animations) {
+					if (strcasecmp(existing.c_str(), animation.c_str()) == 0) { seen = true; break; }
+				}
+				if (!seen) animations.push_back(animation);
+				continue;
+			}
 			const char *command = strcasestr(line.c_str(), "Create_Real_Object");
 			if (command == NULL) continue;
 			const char *open_quote = strchr(command, '"');
@@ -3680,15 +3737,56 @@ void Warm_Level_Cinematic_Preset_Models(A31VitaLoadingPresenter &presenter,
 		}
 		presenter.Render_Original_Progress("after_cinematic_preset_prepare");
 	}
+	// Each authored Play_Animation reaches Commands->Set_Animation, whose
+	// first use loads the HAnim from the level/always archives inside a
+	// gameplay frame. Load each named animation once here; the asset manager
+	// keeps it until the original Free_Assets. Playback is unchanged.
+	unsigned animations_loaded = 0U;
+	unsigned animations_attempted = 0U;
+	const uint64_t animations_started_us = sceKernelGetProcessTimeWide();
+	WW3DAssetManager *assets = WW3DAssetManager::Get_Instance();
+	for (size_t index = 0U;
+		!memory_floor_reached && assets != NULL && index < animations.size(); ++index) {
+		if (index % 8U == 0U) {
+			RenegadeVitaRenderer::BackendMemoryStatistics memory = {};
+			if (RenegadeVitaRenderer::Query_Backend_Memory(memory) &&
+				memory.all_free < free_memory_floor) {
+				memory_floor_reached = true;
+				break;
+			}
+		}
+		++animations_attempted;
+		HAnimClass *animation = assets->Get_HAnim(animations[index].c_str());
+		if (animation != NULL) {
+			++animations_loaded;
+			animation->Release_Ref();
+		} else {
+			A30_Vita_Log("A4 cinematic animation preparation: archive=%s name=%s loaded=0\n",
+				archive, animations[index].c_str());
+		}
+		if ((index + 1U) % 8U == 0U || index + 1U == animations.size()) {
+			presenter.Render_Original_Progress("after_cinematic_animation_prepare");
+		}
+	}
+	A30_Vita_Log("A4 cinematic animation preparation: archive=%s named=%u attempted=%u loaded=%u memory_floor=%u elapsed_us=%llu\n",
+		archive, static_cast<unsigned>(animations.size()), animations_attempted,
+		animations_loaded, memory_floor_reached ? 1U : 0U,
+		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - animations_started_us));
 	A30_Vita_Log("A4 cinematic preset preparation: archive=%s scripts=%u presets=%u warmed=%u memory_floor=%u elapsed_us=%llu\n",
 		archive, scripts, static_cast<unsigned>(presets.size()), warmed,
 		memory_floor_reached ? 1U : 0U,
 		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - started_us));
 }
 
-void Warm_M13_World_Killed_Explosions(A31VitaLoadingPresenter &presenter)
+// Generalized from the Dev150-157 M13 preparation. Every placed object's
+// original killed explosion is created on demand at its first death
+// (TimedDecorationPhys model plus animation). Warm each unique explosion
+// prototype once on the loading screen. The temporary phys object is
+// released; game objects, death timing and explosion damage are unchanged.
+void Warm_Level_World_Killed_Explosions(A31VitaLoadingPresenter &presenter,
+	const char *mission)
 {
-	int explosion_ids[64] = {};
+	int explosion_ids[128] = {};
 	unsigned explosion_count = 0U;
 	unsigned referenced_objects = 0U;
 	for (SLNode<BaseGameObj> *node = GameObjManager::Get_Game_Obj_List()->Head();
@@ -3702,29 +3800,265 @@ void Warm_M13_World_Killed_Explosions(A31VitaLoadingPresenter &presenter)
 		for (; index < explosion_count && explosion_ids[index] != id; ++index) {}
 		if (index != explosion_count) continue;
 		if (explosion_count == sizeof(explosion_ids) / sizeof(explosion_ids[0])) {
-			A30_Vita_Log("A4 M13 world explosion preparation: unique ID limit reached\n");
+			A30_Vita_Log("A4 %s world explosion preparation: unique ID limit reached\n",
+				mission);
 			break;
 		}
 		explosion_ids[explosion_count++] = id;
 		DefinitionClass *definition = DefinitionMgrClass::Find_Definition(id, false);
-		A30_Vita_Log("A4 M13 world explosion reference: preset=%s id=%d explosion=%s\n",
-			physical->Get_Definition().Get_Name(), id,
+		A30_Vita_Log("A4 %s world explosion reference: preset=%s id=%d explosion=%s\n",
+			mission, physical->Get_Definition().Get_Name(), id,
 			definition != NULL ? definition->Get_Name() : "(missing)");
 	}
+	// Warmed prototypes stay resident until the original Free_Assets. Keep
+	// the same vitaGL free-memory floor as the other optional preparation.
+	const uint64_t free_memory_floor = 24ULL * 1024ULL * 1024ULL;
+	bool memory_floor_reached = false;
+	unsigned attempted = 0U;
 	for (unsigned index = 0U; index < explosion_count; ++index) {
+		RenegadeVitaRenderer::BackendMemoryStatistics memory = {};
+		if (RenegadeVitaRenderer::Query_Backend_Memory(memory) &&
+			memory.all_free < free_memory_floor) {
+			memory_floor_reached = true;
+			break;
+		}
 		DefinitionClass *definition =
 			DefinitionMgrClass::Find_Definition(explosion_ids[index], false);
 		const char *name = definition != NULL ? definition->Get_Name() : "(missing)";
 		const uint64_t started_us = sceKernelGetProcessTimeWide();
 		const bool prepared = Prepare_Explosion_Choice(definition, name, 0U);
-		A30_Vita_Log("A4 M13 world explosion preparation: id=%d name=%s prepared=%d elapsed_us=%llu\n",
-			explosion_ids[index], name, prepared ? 1 : 0,
+		++attempted;
+		A30_Vita_Log("A4 %s world explosion preparation: id=%d name=%s prepared=%d elapsed_us=%llu\n",
+			mission, explosion_ids[index], name, prepared ? 1 : 0,
 			static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - started_us));
-		presenter.Render_Original_Progress("after_m13_world_explosion_prepare");
+		presenter.Render_Original_Progress("after_level_world_explosion_prepare");
 	}
-	A30_Vita_Log("A4 M13 world explosion preparation: objects=%u unique=%u\n",
-		referenced_objects, explosion_count);
+	A30_Vita_Log("A4 %s world explosion preparation: objects=%u unique=%u attempted=%u memory_floor=%u\n",
+		mission, referenced_objects, explosion_count, attempted,
+		memory_floor_reached ? 1U : 0U);
 }
+
+#if !RENEGADE_VITA_M00_DEMO
+// Campaign mission archives M01..M13 (the tutorial is M00_Tutorial.mix and
+// keeps its own presentation prewarm).
+static bool Is_Original_Campaign_Mission_Archive(const char *archive)
+{
+	if (archive == NULL || (archive[0] != 'M' && archive[0] != 'm')) return false;
+	if (archive[1] < '0' || archive[1] > '9' || archive[2] < '0' || archive[2] > '9') return false;
+	if (strcasecmp(archive + 3, ".mix") != 0) return false;
+	const int mission = (archive[1] - '0') * 10 + (archive[2] - '0');
+	return mission >= 1 && mission <= 13;
+}
+
+// Loading-time preparation for one loaded level. Runs after the original
+// Load_Level (initial session load and in-session restart/round reload)
+// and before gameplay resumes. Everything here is optional cache warming of
+// original assets with vitaGL free-memory floors; it creates no game
+// objects and does not change script, spawn, timing or gameplay semantics.
+// Order: models/animations/explosions first, then referenced textures so
+// textures held by the newly warmed prototypes are included in the budget.
+void Prepare_Original_Level_Loading_Resources(A31VitaLoadingPresenter &presenter,
+	const char *archive, FileFactoryClass &root_factory, const char *owner)
+{
+	if (archive == NULL || archive[0] == '\0') return;
+	const uint64_t level_prepare_started_us = sceKernelGetProcessTimeWide();
+	const bool campaign = Is_Original_Campaign_Mission_Archive(archive);
+	const bool m13 = stricmp(archive, "M13.mix") == 0;
+	const bool m01 = stricmp(archive, "M01.mix") == 0;
+	// M13/M01 keep their established short log labels.
+	const char *label = m13 ? "M13" : (m01 ? "M01" : archive);
+	A30_Vita_Log("A4 level preparation: begin owner=%s archive=%s campaign=%d\n",
+		owner != NULL ? owner : "(none)", archive, campaign ? 1 : 0);
+	Warm_Level_Cinematic_Preset_Models(presenter, archive, root_factory);
+	// Dev155-157 measured retained aggregate/HLOD templates and the M13 intro
+	// set remain hand-selected: generic per-instance retention is unmeasured.
+	if (m13) {
+		A35_Vita_Clear_Prepared_Render_Objs();
+		struct A35PreparedMissionModel {
+			const char *name;
+			bool retain;
+			unsigned count;
+		};
+		const A35PreparedMissionModel prepare_models[] = {
+			{ "X00_AG_Explode", true, 2U },
+			{ "X0F_AG_EFFECTS", true, 2U },
+			{ "X0D_AG_Explode", true, 2U },
+			{ "X0E_Obelisk", true, 1U },
+			{ "X0E_AG_OrcaPart", true, 1U },
+			{ "ag_rocketl", true, 4U },
+			{ "ag_fiery_ex06", true, 2U },
+			{ "ag_tank_exp01", false, 0U },
+			{ "ag_tank_expld02", false, 0U },
+			{ "ag_humvee_exp1", false, 0U },
+			{ "ag_gdi_apc_exp1", false, 0U },
+			{ "ag_nod_apc_exp1", false, 0U },
+			{ "ag_ob_exp1", false, 0U },
+			{ "V_NOD_LTANK", false, 0U },
+			{ "V_NOD_MGUN", false, 0U },
+			{ "V_NOD_ART", false, 0U },
+			{ "B_SAMSITE", false, 0U },
+			{ "BX_SAMSITE", false, 0U },
+			{ "v_GDI_trnspt", false, 0U },
+			{ "V_GDI_ORCA", false, 0U },
+			{ "v_Nod_cplane", false, 0U },
+			{ "V_GDI_A10", false, 0U },
+			{ "X00_MTank_traj", false, 0U },
+			{ "X00_Humvee_Traj", false, 0U },
+			{ "X00_apc_Traj", false, 0U },
+			{ "X00_GDI_Troops", false, 0U },
+			{ "X00_Havoc_Traj", false, 0U },
+			{ "X00_Trnspt_traj", false, 0U },
+			{ "X00_Rope", false, 0U },
+			{ "X00_Ltank_traj", false, 0U },
+			{ "X00_NOD_Troops", false, 0U },
+			{ "X00_Scorpion", false, 0U },
+			{ "X00_ROC2_traj", false, 0U },
+			{ "X00_ENG1_traj", false, 0U },
+			{ "X00_ENG2_traj", false, 0U },
+			{ "X0Z_Effects", true, 2U },
+			{ "X0Z_Orca01_Traj", true, 2U },
+			{ "X0Z_Orca02_Traj", true, 2U },
+			{ "X0D_A10_Traj", true, 1U },
+			{ "L00.HND^FRONT", false, 0U },
+			{ "L00.HND^ROOF", false, 0U },
+			{ "L00.AR_04_03", false, 0U }
+		};
+		for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
+			const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
+			const bool prepared = A35_Vita_Prepare_Render_Obj(
+				prepare_models[i].name,
+				prepare_models[i].retain,
+				prepare_models[i].count);
+			A30_Vita_Log("A4 M13 %s preparation: model=%s created=%d retained=%d count=%u elapsed_us=%llu\n",
+				prepare_models[i].retain ? "retained" : "warmed",
+				prepare_models[i].name,
+				prepared ? 1 : 0,
+				prepare_models[i].retain ? 1 : 0,
+				prepare_models[i].retain ? prepare_models[i].count : 0U,
+				static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
+			presenter.Render_Original_Progress("after_m13_model_prepare");
+		}
+		const char *const intro_animations[] = {
+			"X00_MTank_traj.X00_MTank_traj",
+			"v_gdi_medtnk.x00_Mtank_anim",
+			"X00_Humvee_Traj.X00_Humvee_Traj",
+			"X00_apc_Traj.X00_apc_Traj",
+			"X00_GDI_Troops.X00_GDI_Troops",
+			"S_A_Human.H_A_x00_walk_01",
+			"S_A_Human.H_A_X00_WALK_04",
+			"S_A_Human.H_A_X00_Walk_02",
+			"X00_Havoc_Traj.X00_Havoc_Traj",
+			"S_A_Human.H_A_X00_Havoc",
+			"X00_Trnspt_traj.X00_Trnspt_traj",
+			"V_GDI_Trnspt.X00_Trnspt_anim",
+			"X00_Rope.X00_Rope",
+			"X00_Ltank_traj.X00_Ltank_traj",
+			"V_Nod_Ltank.X00_Ltank_Anim",
+			"X00_NOD_Troops.X00_NOD_Troops",
+			"X00_Scorpion.X00_Scorpion",
+			"X00_ROC2_traj.X00_ROC2_traj",
+			"S_A_Human.H_A_X00_ROC2",
+			"X00_ENG1_traj.X00_ENG1_traj",
+			"S_A_Human.H_A_X00_ENG1",
+			"X00_ENG2_traj.X00_ENG2_traj",
+			"S_A_Human.H_A_X00_ENG2"
+		};
+		for (unsigned i = 0; i < sizeof(intro_animations) / sizeof(intro_animations[0]); ++i) {
+			HAnimClass *animation = WW3DAssetManager::Get_Instance()->Get_HAnim(intro_animations[i]);
+			A30_Vita_Log("A4 M13 intro animation preparation: name=%s loaded=%d frames=%d\n",
+				intro_animations[i], animation != NULL ? 1 : 0,
+				animation != NULL ? animation->Get_Num_Frames() : 0);
+			if (animation != NULL) animation->Release_Ref();
+			presenter.Render_Original_Progress("after_m13_intro_animation_prepare");
+		}
+		const char *const prepare_explosions[] = {
+			"Explosion_SAM_Site",
+			"Rocket Launcher Explosion Twiddler",
+			"Ground Explosions Twiddler",
+			"Air Explosions Twiddler"
+		};
+		for (unsigned i = 0; i < sizeof(prepare_explosions) / sizeof(prepare_explosions[0]); ++i) {
+			const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
+			const bool prepared = Prepare_Explosion_Definition(prepare_explosions[i]);
+			A30_Vita_Log("A4 M13 retained preparation: explosion_result=%s prepared=%d elapsed_us=%llu\n",
+				prepare_explosions[i], prepared ? 1 : 0,
+				static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
+			presenter.Render_Original_Progress("after_m13_explosion_prepare");
+		}
+	}
+	if (m01) {
+		A35_Vita_Clear_Prepared_Render_Objs();
+		struct A35PreparedMissionModel {
+			const char *name;
+			bool retain;
+			unsigned count;
+		};
+		const A35PreparedMissionModel prepare_models[] = {
+			{ "v_Nod_cplane", true, 1U },
+			{ "v_GDI_trnspt", true, 1U },
+			{ "v_Nod_trnspt", true, 1U },
+			{ "v_nod_Apache", true, 1U },
+			{ "Vxag_Nod_apache", true, 2U },
+			{ "vxag_nod_heli", false, 2U },
+			{ "V_GDI_ORCA", true, 1U },
+			{ "V_GDI_A10", true, 1U },
+			{ "V_AG_X1bGBoat", true, 1U },
+			{ "V_AG_X1Borca", true, 1U },
+			{ "VxAG_X1Borca", false, 2U },
+			{ "X1B_AG_Missiles", true, 2U },
+			{ "X1B_AG_xplosion", true, 2U },
+			{ "X1C_AG_Missile", false, 2U },
+			{ "X1c_AG_xplosion", false, 2U },
+			{ "X1D_AG_Missile", true, 2U },
+			{ "X1D_AG_xplosion", true, 2U },
+			{ "X1D_Apache", true, 1U },
+			{ "X1D_MTank", true, 1U },
+			{ "X1d_Trajectory", true, 1U },
+			{ "X1G_A-10_Traj", true, 1U },
+			{ "X1G_AG_Effects", true, 2U },
+			{ "XG_AG_AT_Misl", true, 2U },
+			{ "XG_AG_AT_Xplsn", true, 2U },
+			{ "XG_At_ApTraj", true, 1U },
+			{ "XG_At_TrnTraj", true, 1U },
+			{ "XG_EV5_Path", true, 1U },
+			{ "XG_EV5_rope", true, 1U },
+			{ "XG_EV5_troopBN", true, 1U },
+			{ "XG_HD_Harness", true, 1U },
+			{ "XG_HD_HTraj", true, 1U },
+			{ "XG_TransprtBone", true, 1U }
+		};
+		for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
+			const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
+			const bool prepared = A35_Vita_Prepare_Render_Obj(
+				prepare_models[i].name,
+				prepare_models[i].retain,
+				prepare_models[i].count);
+			A30_Vita_Log("A4 M01 %s preparation: model=%s created=%d retained=%d count=%u elapsed_us=%llu\n",
+				prepare_models[i].retain ? "retained" : "warmed",
+				prepare_models[i].name,
+				prepared ? 1 : 0,
+				prepare_models[i].retain ? 1 : 0,
+				prepare_models[i].retain ? prepare_models[i].count : 0U,
+				static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
+			presenter.Render_Original_Progress("after_m01_model_prepare");
+		}
+	}
+	if (campaign) {
+		Warm_Level_World_Killed_Explosions(presenter, label);
+	}
+	// The original loader initialized every foreground texture on the
+	// loading screen (TextureLoader Init_Textures). Without that, each
+	// mission and skirmish map decoded its textures inside the gameplay
+	// frame that first drew them. The M00 tutorial keeps its own
+	// presentation prewarm.
+	if (stricmp(archive, "M00_Tutorial.mix") != 0) {
+		Warm_Original_Campaign_Referenced_Textures(presenter, label);
+	}
+	A30_Vita_Log("A4 level preparation: complete owner=%s archive=%s elapsed_us=%llu\n",
+		owner != NULL ? owner : "(none)", archive,
+		static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - level_prepare_started_us));
+}
+#endif
 
 #if !RENEGADE_VITA_M00_DEMO
 int Try_Begin_Direct_Client_Text(const char *text, RenegadeNetworkProvider::Port default_port,
@@ -5163,191 +5497,8 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				break;
 			}
 #if !RENEGADE_VITA_M00_DEMO
-			Warm_Level_Cinematic_Preset_Models(loading_presenter, selected_archive, root_factory);
-			if (stricmp(selected_archive, "M13.mix") == 0) {
-				A35_Vita_Clear_Prepared_Render_Objs();
-				struct A35PreparedMissionModel {
-					const char *name;
-					bool retain;
-					unsigned count;
-				};
-				const A35PreparedMissionModel prepare_models[] = {
-					{ "X00_AG_Explode", true, 2U },
-					{ "X0F_AG_EFFECTS", true, 2U },
-					{ "X0D_AG_Explode", true, 2U },
-					{ "X0E_Obelisk", true, 1U },
-					{ "X0E_AG_OrcaPart", true, 1U },
-					{ "ag_rocketl", true, 4U },
-					{ "ag_fiery_ex06", true, 2U },
-					{ "ag_tank_exp01", false, 0U },
-					{ "ag_tank_expld02", false, 0U },
-					{ "ag_humvee_exp1", false, 0U },
-					{ "ag_gdi_apc_exp1", false, 0U },
-					{ "ag_nod_apc_exp1", false, 0U },
-					{ "ag_ob_exp1", false, 0U },
-					{ "V_NOD_LTANK", false, 0U },
-					{ "V_NOD_MGUN", false, 0U },
-					{ "V_NOD_ART", false, 0U },
-					{ "B_SAMSITE", false, 0U },
-					{ "BX_SAMSITE", false, 0U },
-					{ "v_GDI_trnspt", false, 0U },
-					{ "V_GDI_ORCA", false, 0U },
-					{ "v_Nod_cplane", false, 0U },
-					{ "V_GDI_A10", false, 0U },
-					{ "X00_MTank_traj", false, 0U },
-					{ "X00_Humvee_Traj", false, 0U },
-					{ "X00_apc_Traj", false, 0U },
-					{ "X00_GDI_Troops", false, 0U },
-					{ "X00_Havoc_Traj", false, 0U },
-					{ "X00_Trnspt_traj", false, 0U },
-					{ "X00_Rope", false, 0U },
-					{ "X00_Ltank_traj", false, 0U },
-					{ "X00_NOD_Troops", false, 0U },
-					{ "X00_Scorpion", false, 0U },
-					{ "X00_ROC2_traj", false, 0U },
-					{ "X00_ENG1_traj", false, 0U },
-					{ "X00_ENG2_traj", false, 0U },
-					{ "X0Z_Effects", true, 2U },
-					{ "X0Z_Orca01_Traj", true, 2U },
-					{ "X0Z_Orca02_Traj", true, 2U },
-					{ "X0D_A10_Traj", true, 1U },
-					{ "L00.HND^FRONT", false, 0U },
-					{ "L00.HND^ROOF", false, 0U },
-					{ "L00.AR_04_03", false, 0U }
-				};
-				for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
-					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
-					const bool prepared = A35_Vita_Prepare_Render_Obj(
-						prepare_models[i].name,
-						prepare_models[i].retain,
-						prepare_models[i].count);
-					A30_Vita_Log("A4 M13 %s preparation: model=%s created=%d retained=%d count=%u elapsed_us=%llu\n",
-						prepare_models[i].retain ? "retained" : "warmed",
-						prepare_models[i].name,
-						prepared ? 1 : 0,
-						prepare_models[i].retain ? 1 : 0,
-						prepare_models[i].retain ? prepare_models[i].count : 0U,
-						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
-					loading_presenter.Render_Original_Progress("after_m13_model_prepare");
-				}
-				const char *const intro_animations[] = {
-					"X00_MTank_traj.X00_MTank_traj",
-					"v_gdi_medtnk.x00_Mtank_anim",
-					"X00_Humvee_Traj.X00_Humvee_Traj",
-					"X00_apc_Traj.X00_apc_Traj",
-					"X00_GDI_Troops.X00_GDI_Troops",
-					"S_A_Human.H_A_x00_walk_01",
-					"S_A_Human.H_A_X00_WALK_04",
-					"S_A_Human.H_A_X00_Walk_02",
-					"X00_Havoc_Traj.X00_Havoc_Traj",
-					"S_A_Human.H_A_X00_Havoc",
-					"X00_Trnspt_traj.X00_Trnspt_traj",
-					"V_GDI_Trnspt.X00_Trnspt_anim",
-					"X00_Rope.X00_Rope",
-					"X00_Ltank_traj.X00_Ltank_traj",
-					"V_Nod_Ltank.X00_Ltank_Anim",
-					"X00_NOD_Troops.X00_NOD_Troops",
-					"X00_Scorpion.X00_Scorpion",
-					"X00_ROC2_traj.X00_ROC2_traj",
-					"S_A_Human.H_A_X00_ROC2",
-					"X00_ENG1_traj.X00_ENG1_traj",
-					"S_A_Human.H_A_X00_ENG1",
-					"X00_ENG2_traj.X00_ENG2_traj",
-					"S_A_Human.H_A_X00_ENG2"
-				};
-				for (unsigned i = 0; i < sizeof(intro_animations) / sizeof(intro_animations[0]); ++i) {
-					HAnimClass *animation = WW3DAssetManager::Get_Instance()->Get_HAnim(intro_animations[i]);
-					A30_Vita_Log("A4 M13 intro animation preparation: name=%s loaded=%d frames=%d\n",
-						intro_animations[i], animation != NULL ? 1 : 0,
-						animation != NULL ? animation->Get_Num_Frames() : 0);
-					if (animation != NULL) animation->Release_Ref();
-					loading_presenter.Render_Original_Progress("after_m13_intro_animation_prepare");
-				}
-				const char *const prepare_explosions[] = {
-					"Explosion_SAM_Site",
-					"Rocket Launcher Explosion Twiddler",
-					"Ground Explosions Twiddler",
-					"Air Explosions Twiddler"
-				};
-				for (unsigned i = 0; i < sizeof(prepare_explosions) / sizeof(prepare_explosions[0]); ++i) {
-					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
-					const bool prepared = Prepare_Explosion_Definition(prepare_explosions[i]);
-					A30_Vita_Log("A4 M13 retained preparation: explosion_result=%s prepared=%d elapsed_us=%llu\n",
-						prepare_explosions[i], prepared ? 1 : 0,
-						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
-					loading_presenter.Render_Original_Progress("after_m13_explosion_prepare");
-				}
-				Warm_M13_World_Killed_Explosions(loading_presenter);
-				Warm_Original_Campaign_Referenced_Textures(loading_presenter, "M13");
-			}
-			if (stricmp(selected_archive, "M01.mix") == 0) {
-				A35_Vita_Clear_Prepared_Render_Objs();
-				struct A35PreparedMissionModel {
-					const char *name;
-					bool retain;
-					unsigned count;
-				};
-				const A35PreparedMissionModel prepare_models[] = {
-					{ "v_Nod_cplane", true, 1U },
-					{ "v_GDI_trnspt", true, 1U },
-					{ "v_Nod_trnspt", true, 1U },
-					{ "v_nod_Apache", true, 1U },
-					{ "Vxag_Nod_apache", true, 2U },
-					{ "vxag_nod_heli", false, 2U },
-					{ "V_GDI_ORCA", true, 1U },
-					{ "V_GDI_A10", true, 1U },
-					{ "V_AG_X1bGBoat", true, 1U },
-					{ "V_AG_X1Borca", true, 1U },
-					{ "VxAG_X1Borca", false, 2U },
-					{ "X1B_AG_Missiles", true, 2U },
-					{ "X1B_AG_xplosion", true, 2U },
-					{ "X1C_AG_Missile", false, 2U },
-					{ "X1c_AG_xplosion", false, 2U },
-					{ "X1D_AG_Missile", true, 2U },
-					{ "X1D_AG_xplosion", true, 2U },
-					{ "X1D_Apache", true, 1U },
-					{ "X1D_MTank", true, 1U },
-					{ "X1d_Trajectory", true, 1U },
-					{ "X1G_A-10_Traj", true, 1U },
-					{ "X1G_AG_Effects", true, 2U },
-					{ "XG_AG_AT_Misl", true, 2U },
-					{ "XG_AG_AT_Xplsn", true, 2U },
-					{ "XG_At_ApTraj", true, 1U },
-					{ "XG_At_TrnTraj", true, 1U },
-					{ "XG_EV5_Path", true, 1U },
-					{ "XG_EV5_rope", true, 1U },
-					{ "XG_EV5_troopBN", true, 1U },
-					{ "XG_HD_Harness", true, 1U },
-					{ "XG_HD_HTraj", true, 1U },
-					{ "XG_TransprtBone", true, 1U }
-				};
-				for (unsigned i = 0; i < sizeof(prepare_models) / sizeof(prepare_models[0]); ++i) {
-					const uint64_t prepare_started_us = sceKernelGetProcessTimeWide();
-					const bool prepared = A35_Vita_Prepare_Render_Obj(
-						prepare_models[i].name,
-						prepare_models[i].retain,
-						prepare_models[i].count);
-					A30_Vita_Log("A4 M01 %s preparation: model=%s created=%d retained=%d count=%u elapsed_us=%llu\n",
-						prepare_models[i].retain ? "retained" : "warmed",
-						prepare_models[i].name,
-						prepared ? 1 : 0,
-						prepare_models[i].retain ? 1 : 0,
-						prepare_models[i].retain ? prepare_models[i].count : 0U,
-						static_cast<unsigned long long>(sceKernelGetProcessTimeWide() - prepare_started_us));
-					loading_presenter.Render_Original_Progress("after_m01_model_prepare");
-				}
-				Warm_Original_Campaign_Referenced_Textures(loading_presenter, "M01");
-			}
-			// The original loader initialized every foreground texture on the
-			// loading screen (TextureLoader Init_Textures). Without that, each
-			// other mission and skirmish map decoded its textures inside the
-			// gameplay frame that first drew them. The M00 tutorial keeps its
-			// own presentation prewarm below.
-			if (stricmp(selected_archive, "M13.mix") != 0 &&
-				stricmp(selected_archive, "M01.mix") != 0 &&
-				stricmp(selected_archive, "M00_Tutorial.mix") != 0) {
-				Warm_Original_Campaign_Referenced_Textures(loading_presenter, selected_archive);
-			}
+			Prepare_Original_Level_Loading_Resources(loading_presenter,
+				selected_archive, root_factory, "initial-load");
 #endif
 			A30_Vita_Log("A3.1 breadcrumb: original M00 level loaded\n");
 
@@ -5843,6 +5994,23 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 						A30_Vita_Log("A4 %s: required reload failed code=%u; session cleanup\n",
 							reload_owner, static_cast<unsigned>(restart_failure));
 						break;
+					}
+					// The original reload released the previous level's assets and
+					// the retained templates were cleared before it. Its own loading
+					// screen is gone, so repeat the initial-load per-level preparation
+					// under a fresh original loading screen before gameplay resumes.
+					if (CombatManager::Get_Scene() != NULL) {
+						A31VitaScopedLoadingRenderResolution reload_prepare_resolution;
+						A31VitaLoadingPresenter reload_prepare_presenter;
+						const bool reload_prepare_presenter_ready =
+							reload_prepare_presenter.Initialize(next_archive,
+								selected_source.skirmish_selected, multiplayer_client);
+						A31VitaScopedLoadingPresenterCallback reload_prepare_callback(
+							reload_prepare_presenter);
+						A30_Vita_Log("A4 %s: level preparation map=%s presenter_ready=%d\n",
+							reload_owner, next_archive, reload_prepare_presenter_ready ? 1 : 0);
+						Prepare_Original_Level_Loading_Resources(reload_prepare_presenter,
+							next_archive, root_factory, reload_owner);
 					}
 					// Original Load_Level restarted the installed observation before
 					// object/script creation. Do not erase callbacks produced there.

@@ -679,7 +679,10 @@ A31MissionProgressState A31_Interactive_Get_Mission_Progress_State()
 					state.active_conversation_current_remark;
 				if (current_remark >= 0 &&
 					current_remark < conversation->Get_Remark_Count()) {
-					ConversationRemarkClass remark;
+					// Polled every frame while a remark is current. The copy's
+					// AnimationName keeps its buffer between frames, so the
+					// diagnostic no longer allocates and frees one per frame.
+					static ConversationRemarkClass remark;
 					conversation->Get_Remark_Info(current_remark, remark);
 					state.active_conversation_text_id = remark.Get_Text_ID();
 					TDBObjClass *text = TranslateDBClass::Find_Object(

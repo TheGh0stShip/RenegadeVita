@@ -392,6 +392,8 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a35-flush-enqueue-order.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwaudio" -p1 < "$rv_root/port/patches/wwaudio-a36-completed-sounds-retain.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a30-gcc15.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/wwnet" -p1 < "$rv_root/port/patches/wwnet-a31-transport-boundary.patch"

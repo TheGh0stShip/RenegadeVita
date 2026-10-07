@@ -1327,7 +1327,14 @@ WWAudioClass::Free_Completed_Sounds (void)
 		//
 		// Free the list structure
 		//
+#if defined(RENEGADE_VITA_PORT)
+		// Delete_All frees and reallocates the same capacity. The entries are
+		// raw pointers, so emptying in place leaves identical list state
+		// without heap traffic on every frame a sound completes.
+		m_CompletedSounds.Reset_Active ();
+#else
 		m_CompletedSounds.Delete_All ();
+#endif
 
 		//
 		// Try to give a play-handle back to a sound that was priority-bumped.

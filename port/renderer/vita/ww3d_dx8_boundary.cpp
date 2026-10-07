@@ -106,12 +106,50 @@ NativeMaterialPassQueue g_rigid_material_passes;
 NativeMaterialPassQueue g_skin_material_passes;
 NativeMaterialPassQueue g_delayed_rigid_material_passes;
 
+// Queued passes live for one frame. Recycle their storage (bounded) instead of
+// one heap allocation and free per additional material pass per frame; the
+// task's references are still taken and dropped exactly as before.
+union NativeMaterialPassSlot {
+	NativeMaterialPassSlot *NextFree;
+	alignas(NativeMaterialPassTask) unsigned char Storage[sizeof(NativeMaterialPassTask)];
+};
+const unsigned kMaxFreeMaterialPassSlots = 256U;
+NativeMaterialPassSlot *g_free_material_pass_slots = NULL;
+unsigned g_free_material_pass_slot_count = 0U;
+
+NativeMaterialPassTask *New_Native_Material_Pass_Task(MaterialPassClass *pass,
+	MeshClass *mesh)
+{
+	void *memory = g_free_material_pass_slots;
+	if (memory != NULL) {
+		g_free_material_pass_slots = g_free_material_pass_slots->NextFree;
+		--g_free_material_pass_slot_count;
+	} else {
+		memory = ::operator new(sizeof(NativeMaterialPassSlot), std::nothrow);
+		if (memory == NULL) return NULL;
+	}
+	return new (memory) NativeMaterialPassTask(pass, mesh);
+}
+
+void Delete_Native_Material_Pass_Task(NativeMaterialPassTask *task)
+{
+	task->~NativeMaterialPassTask();
+	if (g_free_material_pass_slot_count >= kMaxFreeMaterialPassSlots) {
+		::operator delete(static_cast<void *>(task));
+		return;
+	}
+	NativeMaterialPassSlot *slot = new (static_cast<void *>(task)) NativeMaterialPassSlot;
+	slot->NextFree = g_free_material_pass_slots;
+	g_free_material_pass_slots = slot;
+	++g_free_material_pass_slot_count;
+}
+
 void Drain_Native_Material_Pass_Queue(NativeMaterialPassQueue &queue)
 {
 	while (queue.Head != NULL) {
 		NativeMaterialPassTask *task = queue.Head;
 		queue.Head = task->Next;
-		delete task;
+		Delete_Native_Material_Pass_Task(task);
 	}
 	queue.Tail = NULL;
 }
@@ -128,7 +166,7 @@ void Render_Native_Material_Pass_Queue(NativeMaterialPassQueue &queue,
 			RenegadeVitaRenderer::Submit_Material_Pass(*task->Mesh, *task->Pass,
 				render_info);
 		}
-		delete task;
+		Delete_Native_Material_Pass_Task(task);
 	}
 	queue.Tail = NULL;
 }
@@ -167,7 +205,7 @@ bool DX8MeshRendererClass::Queue_Material_Pass(MaterialPassClass *pass,
 	MeshClass *mesh, bool skin, bool delayed)
 {
 	if (pass == NULL || mesh == NULL) return false;
-	NativeMaterialPassTask *task = new (std::nothrow) NativeMaterialPassTask(pass, mesh);
+	NativeMaterialPassTask *task = New_Native_Material_Pass_Task(pass, mesh);
 	if (task == NULL) return false;
 	NativeMaterialPassQueue &queue = skin ? g_skin_material_passes :
 		(delayed ? g_delayed_rigid_material_passes : g_rigid_material_passes);

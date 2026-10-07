@@ -75,6 +75,7 @@ public:
 
 	// Vita loading-screen warm-up reads the primary weapon preset (read-only).
 	int										Get_Weapon_Def_ID( void ) const	{ return WeaponDefID; }
+	int										Get_Secondary_Weapon_Def_ID( void ) const	{ return SecondaryWeaponDefID; }
 
 protected:
 	float											WeaponTiltRate;

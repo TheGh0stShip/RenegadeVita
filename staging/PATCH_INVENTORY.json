@@ -2122,7 +2122,7 @@
     {
       "path": "port/patches/combat-a36-armed-def-weapon-id.patch",
       "stage_directory": "combat",
-      "sha256": "d67e1d14c8f275019401b6ea1e65a048c28b689d08b178fb36fc45e3b9f06c6a"
+      "sha256": "7bcbbe42f1bf8aa21f38075ec89edc9ff7fb943e8ff659af4062ce8376cf99e3"
     },
     {
       "path": "port/patches/combat-a36-bullet-load-admission.patch",
@@ -2535,5 +2535,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "5897692e7dc5f50c1d88f52291f00db76b8ca8071c80bbd1c163ec050c8b51f1"
+  "registry_sha256": "bd76b4eabcce31a9b7542c042c7283755dbdea3fc72782b0c969f287f9f5bfef"
 }

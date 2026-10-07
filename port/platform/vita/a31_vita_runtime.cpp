@@ -3464,13 +3464,35 @@ void Warm_Level_Cinematic_Preset_Models(A31VitaLoadingPresenter &presenter,
 		if (A35_Vita_Warm_Render_Obj(model.Peek_Buffer())) ++warmed;
 		// Soldier and vehicle definitions are ArmedGameObjDefs. Their primary
 		// weapon's third-person and back models load on the same first spawn.
+		// The secondary weapon is warmed too, skipping models the primary
+		// already warmed.
+		const ArmedGameObjDef *armed_definition =
+			static_cast<const ArmedGameObjDef *>(object_definition);
 		const WeaponDefinitionClass *weapon = WeaponManager::Find_Weapon_Definition(
-			static_cast<const ArmedGameObjDef *>(object_definition)->Get_Weapon_Def_ID());
+			armed_definition->Get_Weapon_Def_ID());
 		if (weapon != NULL) {
 			if (!weapon->Model.Is_Empty() &&
 				A35_Vita_Warm_Render_Obj(weapon->Model.Peek_Buffer())) ++warmed;
 			if (!weapon->BackModel.Is_Empty() &&
 				A35_Vita_Warm_Render_Obj(weapon->BackModel.Peek_Buffer())) ++warmed;
+		}
+		const WeaponDefinitionClass *secondary = WeaponManager::Find_Weapon_Definition(
+			armed_definition->Get_Secondary_Weapon_Def_ID());
+		if (secondary != NULL && secondary != weapon) {
+			const StringClass *secondary_models[2] = { &secondary->Model, &secondary->BackModel };
+			for (const StringClass *secondary_model : secondary_models) {
+				if (secondary_model->Is_Empty()) continue;
+				const char *name = secondary_model->Peek_Buffer();
+				if (weapon != NULL &&
+					((!weapon->Model.Is_Empty() &&
+						strcasecmp(name, weapon->Model.Peek_Buffer()) == 0) ||
+					(!weapon->BackModel.Is_Empty() &&
+						strcasecmp(name, weapon->BackModel.Peek_Buffer()) == 0))) continue;
+				if (secondary_model == &secondary->BackModel &&
+					!secondary->Model.Is_Empty() &&
+					strcasecmp(name, secondary->Model.Peek_Buffer()) == 0) continue;
+				if (A35_Vita_Warm_Render_Obj(name)) ++warmed;
+			}
 		}
 		presenter.Render_Original_Progress("after_cinematic_preset_prepare");
 	}

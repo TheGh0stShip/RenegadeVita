@@ -6272,6 +6272,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 				level_unload_pending = false;
 				A30_Vita_Log("A4 breadcrumb: original Combat level unload complete\n");
 			}
+			/* Retained M13/M01 preparations that the level never consumed must not
+			 * survive into the next session (campaign advance, restart, M13 -> M01):
+			 * they pin models/textures from the previous level's MIX factory. */
+			A35_Vita_Clear_Prepared_Render_Objs();
 			if (radar_initialized) {
 				RadarManager::Shutdown();
 				A30_Vita_Log("A4 breadcrumb: original RadarManager shutdown complete\n");

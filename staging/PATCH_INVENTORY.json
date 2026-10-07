@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "6e573a96843c0c9189dd5a56588f7263bd8a2e8db28ab02c1cca56ad14e3417e",
-  "patch_count": 512,
+  "stage_script_sha256": "753d4bad8c29c838e80e1f1311de1813dfd1bad835820e47ce9b1f7465f85cda",
+  "patch_count": 513,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -127,7 +127,7 @@
     {
       "path": "port/patches/wwtranslatedb-a36-load-admission.patch",
       "stage_directory": "wwtranslatedb",
-      "sha256": "3d5633dcc722fbe531461fbd40c7d9334e00774dc355735cdbcf41efa244e9a9"
+      "sha256": "4edfd782d4e17c4e4708dd2c46a76c3e9b992d447fa3655cc571eb94adb13d92"
     },
     {
       "path": "port/patches/ww3d2-a22-gcc15.patch",
@@ -1625,6 +1625,11 @@
       "sha256": "5c31179abe21e31fe2ed953a340b1b59beb741ddef0bf06b5dcccb0819c52c76"
     },
     {
+      "path": "port/patches/ww3d2-a37-prim-anim-set-time-return.patch",
+      "stage_directory": "ww3d2",
+      "sha256": "089654f9b5721d88f3b2194ff5202d06ed0a574c5ea721c52c7be5026e046c13"
+    },
+    {
       "path": "port/patches/ww3d2-a35-dx8renderer-gcc-syntax.patch",
       "stage_directory": "ww3d2",
       "sha256": "027962c92ac86bce20036a7cfeedfb58dc85f795c955a5296bb6d31e93a9d7e0"
@@ -2407,7 +2412,7 @@
     {
       "path": "port/patches/combat-a36-definition-load-admission.patch",
       "stage_directory": "combat",
-      "sha256": "9a52a9fa01801f7647044401b6a1c12b6a95fa6179a5e8fcd197ab929832884f"
+      "sha256": "b25144f542209a0f0b88f471014f7961cbae94277ebf9b78051ab396c3eee919"
     },
     {
       "path": "port/patches/combat-a36-corrupt-ddb-rejects-level-data.patch",
@@ -2565,5 +2570,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "1bab03b255f58539940cc469e92ec9f61cdd668a50854148654cc164e383a22b"
+  "registry_sha256": "4cd72808296071a10b919d4aa978e98b14950518a563ec07c2f4475f376ba6ee"
 }

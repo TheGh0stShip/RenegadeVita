@@ -1,0 +1,55 @@
+--- a/ccamera.cpp
++++ b/ccamera.cpp
+@@ -556,19 +556,31 @@
+ 	DisableLag = true;
+ 
+ 	static	StringClass		SavedProfileName;
++	static	float				SavedSniperZoom = 0.0f;
+ 
+-	// If dropping host 
++	// If dropping host
+ 	if ( HostModel != NULL && host == NULL ) {
+ 		if ( SavedProfileName.Is_Empty() ) {
+ 			Use_Default_Profile();
+ 		} else {
+ 			Use_Profile( SavedProfileName );		// Return to saved profile
+ 		}
+-	} 
+ 
+-	// If getting host 
++		// The cinematic sniper state belongs to the camera hand-off. A script
++		// that never sent Sniper_Control 0 (or a level unload that releases the
++		// host) must not leave CinematicSnipingEnabled latched: Handle_Input
++		// would keep forcing Set_Zoom on the player's profile, and
++		// MainCamera outlives the level. Restore the zoom the star had before
++		// the cinematic so a later sniping session starts where it left off.
++		CinematicSnipingEnabled = false;
++		CinematicSnipingDesiredZoom = 0;
++		SniperZoom = SavedSniperZoom;
++	}
++
++	// If getting host
+ 	if ( HostModel == NULL && host != NULL ) {
+ 		SavedProfileName = CurrentProfileName;
++		SavedSniperZoom = SniperZoom;
+ 		Use_Profile( "Cinematic" );
+ //		CurrentProfile->Set_Zoom( 0 );
+ 		CurrentProfile->FOV = DEG_TO_RADF( 75.0f );
+@@ -1488,6 +1500,17 @@
+ 		// Update Zooming Sound.....
+ 	}
+ 
++#if defined(RENEGADE_VITA_PORT)
++	// A host-owned (cinematic) camera takes its transform from the host bone and
++	// ignores Tilt/Heading. M02's midtro re-enables star control one second in
++	// while the cinematic still owns the camera, so the look stick would
++	// otherwise accumulate Tilt for the whole cinematic and hand the player a
++	// skewed camera on release. Keep look input out of the camera until the host
++	// is dropped.
++	if ( Is_Using_Host_Model() ) {
++		return;
++	}
++#endif
+ 
+ 	//	Adjust Tilt
+ 	float tilt_amount =	Input::Get_Amount( INPUT_FUNCTION_WEAPON_UP ) - 

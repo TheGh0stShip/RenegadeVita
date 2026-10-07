@@ -136,6 +136,8 @@ The critical path has these single points of failure:
 - **Sniper zoom:** `X2K_Midtro.txt` (~39 s) runs 21 `sniper_control` zoom
   steps through the original sniper HUD and zoom. Whether the sniper overlay
   draws correctly on the physical Vita is still an open item in KNOWN_GAPS.
+  Source trace, input-leak audit and the hand-off fix are in
+  `M02_SNIPER_CONTROL.md`.
 - **Input during the midtro:** timer 9 re-enables star control at 1 s while
   the midtro camera still has control. This is the original ordering; confirm
   that player input does not leak through during the cinematic.

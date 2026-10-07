@@ -240,14 +240,18 @@ DialogParserClass::Parse_Template
 		WCHAR *string_id = const_cast<WCHAR *>(rv_utf16_strstr (dlg_title->Peek_Buffer (), L"IDS_"));
 		if (string_id != NULL) {
 #if defined(__vita__)
-			WideStringClass untranslated_title = dlg_title->Peek_Buffer ();
+			const bool vita_title_log_budget = g_vita_dialog_template_logs < 96U;
+			WideStringClass untranslated_title;
+			if (vita_title_log_budget) {
+				untranslated_title = dlg_title->Peek_Buffer ();
+			}
 #endif
 			WideStringClass wide_string_id = string_id;				
 			StringClass ascii_string_id;
 			wide_string_id.Convert_To (ascii_string_id);
 			(*dlg_title) = TRANSLATE_BY_DESC(ascii_string_id);
 #if defined(__vita__)
-			if (g_vita_dialog_template_logs < 96U) {
+			if (vita_title_log_budget) {
 				++g_vita_dialog_template_logs;
 				A30_Vita_Log("A3.5 WWUI dialog template: res=%d title_desc=%s untranslated_len=%u translated_len=%u log=%u/96\n",
 					res_id, static_cast<const char *>(ascii_string_id),
@@ -323,7 +327,11 @@ DialogParserClass::Parse_Template
 			WCHAR *string_id = const_cast<WCHAR *>(rv_utf16_strstr (text_buffer, L"IDS_"));
 #if defined(__vita__)
 			const bool vita_had_string_id = string_id != NULL;
-			WideStringClass vita_untranslated_text = text_buffer;
+			const bool vita_log_budget = g_vita_dialog_template_logs < 96U;
+			WideStringClass vita_untranslated_text;
+			if (vita_log_budget) {
+				vita_untranslated_text = text_buffer;
+			}
 			StringClass vita_ascii_string_id;
 			unsigned vita_translation_len = 0U;
 			unsigned vita_copied_len = 0U;
@@ -334,7 +342,9 @@ DialogParserClass::Parse_Template
 				StringClass ascii_string_id;
 				wide_string_id.Convert_To (ascii_string_id);
 #if defined(__vita__)
-				vita_ascii_string_id = ascii_string_id;
+				if (vita_log_budget) {
+					vita_ascii_string_id = ascii_string_id;
+				}
 #endif
 				WideStringClass translation = TRANSLATE_BY_DESC(ascii_string_id);
 #if defined(__vita__)
@@ -347,7 +357,7 @@ DialogParserClass::Parse_Template
 #endif
 			}
 #if defined(__vita__)
-			if (g_vita_dialog_template_logs < 96U && (res_id == 128 || res_id == 130 || res_id == 131 || vita_had_string_id)) {
+			if (vita_log_budget && (res_id == 128 || res_id == 130 || res_id == 131 || vita_had_string_id)) {
 				++g_vita_dialog_template_logs;
 				A30_Vita_Log("A3.5 WWUI dialog template: res=%d control=%d type=%u style=%08X rect=%d,%d %dx%d had_ids=%d desc=%s untranslated_len=%u translated_len=%u copied_len=%u final_len=%u truncated=%d log=%u/96\n",
 					res_id, static_cast<int>(dlg_item_template->id), static_cast<unsigned>(ctrl_type),

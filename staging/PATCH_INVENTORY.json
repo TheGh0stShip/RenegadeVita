@@ -787,7 +787,7 @@
     {
       "path": "port/patches/wwui-a35-dialog-template-vita-diagnostics.patch",
       "stage_directory": "wwui",
-      "sha256": "acaf622989414c17c75aeb41e0bf106388d8af27f0285db73ab9bff98f2ebe55"
+      "sha256": "f7863a51c751c5ddcd17e2b2bc41d827e372ded3ef7eced49b9a1f88275e654a"
     },
     {
       "path": "port/patches/wwui-a35-dialogparser-utf16.patch",
@@ -2535,5 +2535,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "e1edf4a78bd2981892fe090d3efc24b884483454805aa8b971fafd49f993c405"
+  "registry_sha256": "5897692e7dc5f50c1d88f52291f00db76b8ca8071c80bbd1c163ec050c8b51f1"
 }

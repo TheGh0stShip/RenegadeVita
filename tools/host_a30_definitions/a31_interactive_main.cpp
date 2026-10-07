@@ -1331,8 +1331,21 @@ int main(int argc, char **argv)
 						INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE) == 0 &&
 						Input::Get_Secondary_Key_For_Function(
 							INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE) == 0 &&
-						Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON) == DIK_E &&
-						Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON) == 0;
+						// Triangle/DIK_E is Action only. The original setter derives the
+						// edge-triggered UseWeapon function (sniper scope on/off, remote C4
+						// detonation) from FireWeaponSecondary, which is the L trigger.
+						Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_FIRE_WEAPON_PRIMARY) ==
+							DirectInput::BUTTON_JOYSTICK_B &&
+						Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_FIRE_WEAPON_SECONDARY) ==
+							DirectInput::BUTTON_JOYSTICK_A &&
+						Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON) ==
+							DirectInput::BUTTON_JOYSTICK_A &&
+						Input::Get_Secondary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON) == 0 &&
+						// Original setters mirror Jump/Crouch onto MoveUp/MoveDown.
+						Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_JUMP) == DIK_SPACE &&
+						Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_UP) == DIK_SPACE &&
+						Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_CROUCH) == DIK_LCONTROL &&
+						Input::Get_Primary_Key_For_Function(INPUT_FUNCTION_MOVE_DOWN) == DIK_LCONTROL;
 			Print("vita_controls_use_original_action_sliders", vita_control_bindings);
 			if (!vita_control_bindings) { passed = false; break; }
 			input_initialized = true;

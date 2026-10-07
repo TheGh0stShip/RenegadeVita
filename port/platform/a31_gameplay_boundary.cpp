@@ -598,6 +598,36 @@ void A31_Interactive_Configure_Vita_Controls()
 	Input::Set_Secondary_Key_For_Function(INPUT_FUNCTION_USE_WEAPON, 0);
 }
 
+// Read-only view of the original star used by the DirectInput boundary to
+// decide when the handheld crouch latch (a held logical DIK_LCONTROL) is no
+// longer meaningful. Every field is original Combat state; nothing here moves,
+// crouches, or fires the player. DirectInput::Read runs before the star's
+// Think within a frame, so values are the previous frame's, which is
+// sufficient for a release decision.
+bool A31_Interactive_Sample_Crouch_Player_Context(
+	RenegadeVitaInput::CrouchPlayerContext &context)
+{
+	context = RenegadeVitaInput::CrouchPlayerContext();
+	SoldierGameObj *star = CombatManager::Get_The_Star();
+	if (star == NULL) return false;
+	context.star_present = true;
+	context.object_id = static_cast<uint32_t>(star->Get_ID());
+	context.object_address = reinterpret_cast<uintptr_t>(star);
+	// Any seat, including scripted entry that bypasses the Action key.
+	context.in_vehicle = star->Get_Vehicle() != NULL || star->Is_In_Vehicle();
+	context.control_disabled = !star->Is_Control_Enabled();
+	CCameraClass *camera = CombatManager::Get_Camera();
+	context.cinematic = camera != NULL && camera->Is_In_Cinematic();
+	context.dead = star->Is_Dead() || star->Is_Destroyed();
+	// Beacon arming, C4 placement, vehicle/ladder transitions and script
+	// animations all lock the human state.
+	context.scripted_animation = star->Is_State_Locked();
+	WeaponClass *weapon = star->Get_Weapon();
+	context.beacon_weapon = weapon != NULL &&
+		weapon->Get_Style() == WEAPON_HOLD_STYLE_BEACON;
+	return true;
+}
+
 void A31_Interactive_Begin_Mission_Completion_Observation()
 {
 	g_mission_completion_observation_active = true;

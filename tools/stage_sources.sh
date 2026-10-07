@@ -1097,6 +1097,8 @@ test "$(sha256sum "$rv_stage/scripts/Test_DLS.cpp" | cut -d' ' -f1)" = \
 	"357ac12b67ff3060f20cd0854e2fb60e9926e9fcf86b5f07530d68978263caab"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a37-mx0-area4-controller-id-init.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m13-area4-star-area-monotonic.patch"
 test "$(sha256sum "$rv_stage/scripts/Test_RAD.cpp" | cut -d' ' -f1)" = \
 	"5699f1fc5df5441cc33b9ccc50b09d9017068bff776b2a99e98912bf4c87753a"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \

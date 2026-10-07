@@ -1914,8 +1914,23 @@ DECLARE_SCRIPT (MX0_Area4_Controller_DLS, "")
 		// What zone is the star in?
 		if(type == MX0_STAR_AREA)
 		{
-			star_area = param;
-			if(star_area == 1 && !area4_activated)
+			// Vita port: every Area 4 zone reports only on its first star entry,
+			// so a plane pair first crossed backwards (3 then 2) left star_area
+			// below an area Havoc had already reached, with every zone spent and
+			// the A04 timers waiting for it forever. Keep the furthest area
+			// reported. A forward pass reports 0,1,1,2,2,3 and is unchanged;
+			// activation then also follows the first report of area 1 or more.
+			if (param < star_area)
+			{
+				#if defined(__vita__) && defined(RENEGADE_VITA_PORT) && !RENEGADE_VITA_M00_DEMO
+				A30_Vita_Log("M13 area4: kept star area %d over late report %d\n", star_area, param);
+				#endif
+			}
+			else
+			{
+				star_area = param;
+			}
+			if(star_area >= 1 && !area4_activated)
 			{
 				area4_activated = true;
 				Commands->Start_Timer (obj, this, 3.0f, AREA4_ACTIVATED);

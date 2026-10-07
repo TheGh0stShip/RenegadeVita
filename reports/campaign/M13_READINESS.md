@@ -270,3 +270,139 @@ The fix:
 - With the value-initializing factory, a load restores defined values.
 - Havoc's death goes through `Havoc_Script` to `Mission_Complete(false)`. A
   restart reloads the level and runs fresh `Created` handlers.
+
+## Follow-up fixes (2026-10-07)
+
+Evidence class: static review of staged `MissionX0.cpp`, `Test_DLS.cpp` and
+`Test_RAD.cpp`, plus read-only parsing of the unchanged retail `M13.mix`
+(SHA-256 `54d41ea0…bbfc4`): zone OBBoxes, persisted script bindings, the
+original pathfind sectors and the `X0Z_Finale.txt` text. Also a zero-fuzz
+restage and an `arm-vita-eabi-g++ -fsyntax-only` check of the patched TU. No
+build, no emulator and no device run. Line numbers refer to staged files.
+
+### Fixed: Area 4 star area could move backwards
+
+`scripts-a38-m13-area4-star-area-monotonic.patch` (Test_DLS.cpp :1915-1933).
+Severity: hard soft-lock. Reachability: off the normal path (see below).
+
+- `MX0_Area4_Zone_DLS` reports its area only on the first star entry, and the
+  controller copied each report into `star_area`. A pair whose higher-area
+  plane fired first (3 then 2) left `star_area` below an area Havoc had
+  reached. Both zones were then spent, so `MEDIUM_TANK`, `OBELISK`, `SAMS`
+  and `A10` re-armed in `case 2` every 5 s forever.
+- The controller now keeps the furthest area reported. Activation uses
+  `star_area >= 1`, so a report of 2 or 3 that arrives before any 1 still
+  starts Area 4. That case could not recover otherwise.
+- Zone re-reporting is not needed. Once a zone fires, `star_area` is at least
+  that zone's area. Zones and their saved `first_time` flags are unchanged.
+- On the normal path, a forward pass reports 0, 1, 1, 2, 2, 3. That sequence is
+  already monotonic, and its first non-zero report is 1. The waits in the
+  normal path still run: `HUMMVEE_DESTRUCTION` while the area is 1, and the
+  `case 2` re-arms while the area is 2. What becomes unreachable are the
+  `Wrong_Way` (`case 0/1`) and `MX0_NEED_YOU_HERE` branches. They could only
+  run after a regression.
+- A rejected report logs `M13 area4: kept star area A over late report B` on
+  Vita.
+- Staging: 571 ordered patches, PASS, inventory `63e7ab13…8afd2e61`. The
+  patch is registered after `scripts-a37-mx0-area4-controller-id-init`.
+  Existing anchors are unchanged.
+- The staged TU passes `-fsyntax-only` with 0 errors. 62 host tests pass:
+  M13 script coverage and level owners, script zones, the staging
+  incremental contract, and conversation-gated objectives. Two of them need
+  the upstream link.
+
+Geometry correction. In `ScriptZoneGameObj`'s `OBBox`, local axis *j* is
+column *j* of the row-major basis (`Overlap_Test` uses
+`Transpose_Rotate_Vector`). The soft-lock hunt above read rows, which
+transposes the rotated pairs. The corrected geometry:
+
+| Pair (areas) | Forward normal | Plane ends (x, y) | Clear gap between planes |
+| --- | --- | --- | ---: |
+| 1500006/1500001 (0, 1) | (0.996, 0.087) | (35.6, 49.4) to (43.4, -6.3) | 1.21 m |
+| 1500003/1500002 (1, 2) | (0.966, -0.259) | (78.0, -3.0) to (91.8, 35.8) | 1.37 m |
+| 1500004/1500005 (2, 3) | (0.707, -0.707) | (82.7, -9.0) to (114.7, 19.6) | 0.57 m |
+
+- The area-2 and area-3 planes do not meet. Their south ends are about 5 m
+  apart, and their north-east ends are about 28 m apart.
+- Pathfind check: the m13 level data has 2,313 original pathfind sector
+  boxes. Sectors whose boxes touch were treated as connected.
+  - With all sectors present, each pair's two sides connect.
+  - With the sectors that overlap either plane of a pair removed, no pair
+    can be bypassed, even by a detour across the whole level.
+  - No plane end lies inside a walkable sector.
+  - So on ground that AI can walk, every crossing goes through both planes.
+- Ways the regression can still happen:
+  - **Off the sector mesh**: player vehicles, jumps and cliff edges are not
+    limited to pathfind sectors.
+  - **Under a plane's floor**: 1500003's box starts at z 1.55. The adjacent
+    sector reaches down to z 1.1.
+  - **Both planes entered in one frame**: the swept star entry makes this
+    possible on a long Vita frame. Callbacks then follow the game-object
+    list order, not the crossing order. Pair 3 needs a step of at least
+    2.39 m.
+- The fix does not depend on any of these, including callback order.
+
+### Resolved: REVIEW gate `MX0_MissionStart_DME`:362 (`MX0CON004`)
+
+- Receiver: custom 110 (`SEND_EM`) goes to 1200015, a script zone. In
+  retail it is bound to `MX0_Engineer_Goto2 "1200010,1200011,4"`.
+- Its handler (MissionX0.cpp:1055) does three things:
+  - Sends `RUNNING_CONV`. That handler's body is commented out.
+  - Sends `COUNTER 4`.
+  - Through `CHECK_ENGINEER`, sends `LEAD` to the engineers toward
+    1200010/1200011. Engineer 2 then crouches at count 4.
+- This is staging for the tutorial walk only:
+  - A02 starts from intro custom 99, then `SNIPER_CREATE`, then sniper 2's
+    `M00_Send_Object_ID`, then `SNIPER_EXCHANGE`, then `MAIN_STARTUP`
+    (:107). None of these depend on `SEND_EM`.
+  - The sniper zone 1200016 fires for any enterer, including Havoc.
+- The gate also cannot be lost:
+  - `Action_Complete` for 100004 (:86) has no reason filter.
+  - No key conversation exists before A03.
+- No fix.
+
+### Verified: `MX0_A02_Controller::MX0_A02_UNIT_ID` (Test_RAD.cpp :27)
+
+- The array is not cleared in `Created` (:79). Every other member is.
+- `new T()` (`scripts-a37-script-factory-value-init`, ScriptRegistrant.h:57)
+  zero-fills it. `DECLARE_SCRIPT` (scripts.h:196) declares no constructor, so
+  value-initialisation applies.
+- The level does not restore script data:
+  - `m13.ldd` has 94 script headers and **0** `CHUNKID_SCRIPT_DATA` chunks.
+    The editor saves no observer data.
+  - So a level start always begins from zero and then runs `Created`.
+  - A saved game restores the whole array (save id 1).
+- The reads that depend on zero are now defined: `:446`, `:569`, `:1033` and
+  `MX0_A02_Fill_Empty_Slot` `:1254`.
+- Slot 0 is never written. It is read only through `current_nod_target == 0`,
+  which gives `Find_Object(0)`, which returns NULL.
+- Indices stay within 0..8:
+  - `Get_Int_Random` is inclusive and clamped, so `(5,8)` and `(1,4)` are in
+    range.
+  - `wrong_way_count` wraps through 2..4.
+- `MX0_A02_ACTOR` sets all 11 of its members in `Created`.
+- No uninitialised read remains. No change.
+
+### Checked: M13 → M01 handoff
+
+- `X0Z_Finale.txt` frame 440 sends `Send_Custom 1500017, 445009`. Slot 0,
+  which is destroyed in the same frame, is the camera. Destruction is
+  deferred.
+- 1500017 is a serialized `Invisible_Object` that nothing destroys.
+- `MX0_MISSION_SUCCESS` (Test_DLS.cpp :2060) calls `Mission_Complete(true)`
+  with no state guard.
+- No cinematic sends 445000. Only the zone script does.
+- The finale chain is guarded and traced by
+  `scripts-a36-m13-finale-delivery-trace`, which emits the `M13 finale:`
+  breadcrumbs.
+- No fallback was added. A synthetic success path would invent behaviour,
+  and no missing receiver or failure mode was found.
+
+### Deferred
+
+- Runtime evidence for Area 4:
+  - The `M13 area4:` breadcrumb should be absent on a normal pass.
+  - Check whether vehicles or jumps can leave the sector mesh at the plane
+    ends.
+- The finale timing and the Score → `R_L01.bik` → M01 gates are unchanged
+  from the full audit.

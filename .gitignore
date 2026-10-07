@@ -42,3 +42,6 @@ tt-identity-v1.txt
 # Local gh-pages player working copy; the full MP4/player artifact lives on the
 # dedicated gh-pages branch, not on main.
 /docs/video-player/
+
+# Claude Code agent worktrees (local, untracked)
+.claude/worktrees/

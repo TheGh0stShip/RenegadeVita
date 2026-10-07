@@ -2422,6 +2422,61 @@ void Reassert_Performance_Clocks(uint32_t frame)
 		scePowerGetGpuXbarClockFrequency());
 }
 
+// System suspend/resume. The original TimeManager already caps the simulated
+// frame step at 1/SLOWEST_FPS, so the resume gap does not reach physics; the
+// remaining effects are that gameplay continues unattended after resume and
+// clocks may be back at defaults. A dedicated callback thread records the
+// event; the gameplay loop consumes it and routes it to the original EVA
+// pause owner (same path as the menu button), never a new pause mechanism.
+std::atomic<uint32_t> g_power_resume_events(0U);
+std::atomic<uint32_t> g_power_suspend_events(0U);
+
+int Power_Event_Callback(int, int, int power_info, void *)
+{
+	if ((power_info & (SCE_POWER_CB_SYSTEM_SUSPEND |
+		SCE_POWER_CB_THERMAL_SUSPEND | SCE_POWER_CB_LOW_BATTERY_SUSPEND)) != 0) {
+		g_power_suspend_events.fetch_add(1U, std::memory_order_relaxed);
+	}
+	if ((power_info & SCE_POWER_CB_SYSTEM_RESUME) != 0) {
+		g_power_resume_events.fetch_add(1U, std::memory_order_release);
+	}
+	return 0;
+}
+
+int Power_Callback_Thread(SceSize, void *)
+{
+	const SceUID callback = sceKernelCreateCallback("RenegadePowerCb", 0,
+		Power_Event_Callback, NULL);
+	if (callback < 0 || scePowerRegisterCallback(callback) < 0) return 0;
+	for (;;) sceKernelDelayThreadCB(1000000U);
+	return 0;
+}
+
+void Ensure_Power_Callback_Registered()
+{
+	static bool registered = false;
+	if (registered) return;
+	registered = true;
+	const SceUID thread = sceKernelCreateThread("RenegadePowerCbThread",
+		Power_Callback_Thread, 0x10000100, 0x1000, 0, 0, NULL);
+	const int start = thread >= 0 ? sceKernelStartThread(thread, 0, NULL) : thread;
+	A30_Vita_Log("A3.6 power: suspend/resume callback thread=%08X start=%08X\n",
+		static_cast<unsigned>(thread), static_cast<unsigned>(start));
+}
+
+// Returns true once per observed resume (coalesced).
+bool Consume_Power_Resume(uint32_t frame)
+{
+	static uint32_t seen = 0U;
+	const uint32_t now = g_power_resume_events.load(std::memory_order_acquire);
+	if (now == seen) return false;
+	seen = now;
+	A30_Vita_Log("A3.6 power: resume observed frame=%u suspends=%u resumes=%u\n",
+		frame, g_power_suspend_events.load(std::memory_order_relaxed), now);
+	Reassert_Performance_Clocks(frame);
+	return true;
+}
+
 void Copy_Flight_Memory(A31MemoryTelemetry &output)
 {
 	// A kernel query plus seven vitaGL allocator statistics walks is too much
@@ -3888,6 +3943,7 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 {
 	A31VitaInteractiveResult result = {};
 	result.attempted = true;
+	Ensure_Power_Callback_Registered();
 	Renegade_File_Factory_Reset_Statistics();
 	A31ScopedStartupStatusRepaint startup_status_repaint(startup_screen_result);
 
@@ -5594,6 +5650,14 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 					}
 				}
 #endif
+				if (Consume_Power_Resume(result.frames)) {
+#if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
+					// Hand the resumed player the original EVA pause menu.
+					GameModeClass *resumed_combat = GameModeManager::Find("Combat");
+					if (resumed_combat != NULL && resumed_combat->Is_Active())
+						g_gameplay_pause_requested = true;
+#endif
+				}
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 				if (g_gameplay_pause_requested) {
 					g_gameplay_pause_requested = false;

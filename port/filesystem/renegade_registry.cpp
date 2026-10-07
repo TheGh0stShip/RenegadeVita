@@ -89,15 +89,18 @@ bool Is_Movie_Key(int key)
 		RenegadeMovieUnlocks::Matches_Key(g_registry[key].path);
 }
 
-void Report_Mission_Rank_Write(bool ok)
+// The key and value make each original ScoreScreen rank submission countable
+// from the runtime log (one set per completed mission: M13, M01..M11).
+void Report_Mission_Rank_Write(bool ok, const char *operation, const char *name, int value)
 {
 	const RenegadeMissionRanks::Status status = RenegadeMissionRanks::Get_Status();
 #if defined(__vita__)
-	A30_Vita_Log("A3.5 mission ranks: write=%d entries=%u error=%d original_registry=1\n",
-		ok ? 1 : 0, status.count, status.error);
+	A30_Vita_Log("A3.5 mission ranks: write=%d op=%s key=%s value=%d entries=%u error=%d original_registry=1\n",
+		ok ? 1 : 0, operation, name != NULL ? name : "-", value, status.count, status.error);
 #else
 	if (!ok) {
-		fprintf(stderr, "Renegade mission ranks: user-config write failed error=%d\n", status.error);
+		fprintf(stderr, "Renegade mission ranks: user-config %s %s=%d failed error=%d\n",
+			operation, name != NULL ? name : "-", value, status.error);
 	}
 #endif
 }
@@ -202,7 +205,7 @@ void RegistryClass::Set_Int(const char *name, int value)
 {
 	if (!IsLocked) {
 		if (Is_Mission_Rank_Key(Key)) {
-			Report_Mission_Rank_Write(RenegadeMissionRanks::Set(name, value));
+			Report_Mission_Rank_Write(RenegadeMissionRanks::Set(name, value), "set", name, value);
 			return;
 		}
 		RegistryValue *entry = Find_Value(Key, name, true);
@@ -359,7 +362,7 @@ void RegistryClass::Delete_Value(const char *name)
 {
 	if (IsLocked || Key < 0 || Key >= g_registry_count || name == NULL) return;
 	if (Is_Mission_Rank_Key(Key)) {
-		Report_Mission_Rank_Write(RenegadeMissionRanks::Delete(name));
+		Report_Mission_Rank_Write(RenegadeMissionRanks::Delete(name), "delete", name, 0);
 		return;
 	}
 	if (Is_Movie_Key(Key)) {
@@ -378,7 +381,7 @@ void RegistryClass::Delete_Value(const char *name)
 void RegistryClass::Deleta_All_Values(void)
 {
 	if (!IsLocked && Is_Mission_Rank_Key(Key)) {
-		Report_Mission_Rank_Write(RenegadeMissionRanks::Clear());
+		Report_Mission_Rank_Write(RenegadeMissionRanks::Clear(), "clear", NULL, 0);
 		return;
 	}
 	if (!IsLocked && Is_Movie_Key(Key)) {

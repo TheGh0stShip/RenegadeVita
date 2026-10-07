@@ -719,6 +719,13 @@ if [[ "$rv_m01_duncan_beacon_sha" != "ebc0373a57ecf2b751fd3e8b009a6d51892b6a162b
 fi
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a35-m01-duncan-beacon-handoff.patch"
 echo "Applied: port/patches/scripts-a35-m01-duncan-beacon-handoff.patch"
+rv_m01_save_ids_sha=$(sha256sum "$rv_stage/scripts/Mission01.cpp" | cut -d' ' -f1)
+if [[ "$rv_m01_save_ids_sha" != "9c28882b6476c6631c3eec5fadeb8383af46e668c9fc1b198c017d4b474cb901" ]]; then
+	echo "Refusing unanchored M01 save-variable ID patch: Mission01.cpp changed ($rv_m01_save_ids_sha)" >&2
+	exit 1
+fi
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch -d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m01-save-variable-ids.patch"
+echo "Applied: port/patches/scripts-a36-m01-save-variable-ids.patch"
 rv_model_install_sha=$(sha256sum "$rv_stage/wwphys/phys.cpp" | cut -d' ' -f1)
 if [[ "$rv_model_install_sha" != "820e2552cb29ee7dba38ae1c37017043acb98a16dd6bed9263ec34e29fb571da" ]]; then
 	echo "Refusing unanchored model install timing patch: phys.cpp changed ($rv_model_install_sha)" >&2

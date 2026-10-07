@@ -1,0 +1,21 @@
+diff --git a/Mission01.cpp b/Mission01.cpp
+--- a/Mission01.cpp
++++ b/Mission01.cpp
+@@ -6988,7 +6988,7 @@
+ 	{
+ 		SAVE_VARIABLE(deadYet, 1);
+ 		SAVE_VARIABLE(firstTimeDamaged, 2);
+-		SAVE_VARIABLE(playerSeen, 2);
++		SAVE_VARIABLE(playerSeen, 3);
+ 	}
+ 
+ 	void Created( GameObject * obj ) 
+@@ -12096,7 +12096,7 @@
+ 	REGISTER_VARIABLES()
+ 	{
+ 		SAVE_VARIABLE(lucky_charms, 1);
+-		SAVE_VARIABLE(prayerSound, 1);
++		SAVE_VARIABLE(prayerSound, 2);
+ 	}
+ 
+ 	void Created( GameObject * obj ) 

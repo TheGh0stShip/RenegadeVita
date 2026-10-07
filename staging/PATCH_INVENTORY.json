@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "2a2f5d43e240279660a8ba47850a41019166def899ab9baf7e76a9fdaccb31e5",
-  "patch_count": 506,
+  "stage_script_sha256": "5a2d3d5afaaa2819accd51e8bb678e50e1b8d28f28aba21c3a30c1aaaac37c2f",
+  "patch_count": 507,
   "patches": [
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
@@ -1058,6 +1058,11 @@
       "path": "port/patches/scripts-a35-m01-duncan-beacon-handoff.patch",
       "stage_directory": "scripts",
       "sha256": "939655508ca44caebc7b7a7d6bee0d1f54fce7e2b1d805e9c0c7a9d6cc4417e8"
+    },
+    {
+      "path": "port/patches/scripts-a36-m01-save-variable-ids.patch",
+      "stage_directory": "scripts",
+      "sha256": "98ee8984385ec0c333cfdb38bb885d2b8d139cd6181dda9d6583ba23e21a7396"
     },
     {
       "path": "port/patches/wwphys-a35-model-install-timing.patch",
@@ -2362,7 +2367,7 @@
     {
       "path": "port/patches/combat-a36-boss-load-status.patch",
       "stage_directory": "combat",
-      "sha256": "7ef70017f7b1f4ebe4d1e65dffb404637f802108f3e4ec2e9fc8c624e1360a06"
+      "sha256": "c69c59d86e887651aeb68c14d30e69672c57938d83098ef232f3733c42fa28af"
     },
     {
       "path": "port/patches/wwphys-a36-base-load-status.patch",
@@ -2535,5 +2540,5 @@
       "sha256": "ce6dc2a5463e15ce686ef5046d18b6d968238688b6b150baf5df8590ee1abe85"
     }
   ],
-  "registry_sha256": "0ce6dd9e433981ed79c0bc3eaafbef1ed67066572a79a608893e0a0ecc5d07bd"
+  "registry_sha256": "3e26cc91ed64675e91bc6f2a2a892ba7b7b74a8f7a4ae71efecd9b9b8cff1e0f"
 }

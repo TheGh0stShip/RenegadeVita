@@ -6988,7 +6988,7 @@ DECLARE_SCRIPT(M01_TailgunRun_NOD_Commander_JDG, "")//this guys ID is M01_TAILGU
 	{
 		SAVE_VARIABLE(deadYet, 1);
 		SAVE_VARIABLE(firstTimeDamaged, 2);
-		SAVE_VARIABLE(playerSeen, 2);
+		SAVE_VARIABLE(playerSeen, 3);
 	}
 
 	void Created( GameObject * obj ) 
@@ -12096,7 +12096,7 @@ DECLARE_SCRIPT(M01_Church_Priest_JDG, "")
 	REGISTER_VARIABLES()
 	{
 		SAVE_VARIABLE(lucky_charms, 1);
-		SAVE_VARIABLE(prayerSound, 1);
+		SAVE_VARIABLE(prayerSound, 2);
 	}
 
 	void Created( GameObject * obj ) 

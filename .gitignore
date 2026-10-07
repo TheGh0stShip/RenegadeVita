@@ -16,6 +16,8 @@ source-cache/
 retail-pc
 migration-backups/
 local-builder/
+# Original Renegade saves are user data (tutorial checkpoint masters included).
+*.sav
 
 # Editor and Python transient files.
 __pycache__/

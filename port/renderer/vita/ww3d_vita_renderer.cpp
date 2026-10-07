@@ -67,6 +67,7 @@ void RenegadeVita_Release_DX8_Render_Target();
 #include "ww3d_vita_indexed_mesh_batch.h"
 #include "ww3d_vita_indexed_vertex_records.h"
 #include "ww3d_vita_static_mesh_cache.h"
+#include "ww3d_vita_opaque_sort.h"
 #include "ww3d_vita_ffp_program_warm.h"
 #include "ww3d_vita_vertex_array_batch.h"
 extern "C" void vglRenegadeEndIndexed(GLsizei count, const GLushort *indices);
@@ -2488,6 +2489,14 @@ void Log_Indexed_Rejection(const char *reason, uint32_t vertex_format)
 	g_logged_first_indexed_rejection = true;
 }
 
+// render-sort-v1 (ww3d_vita_opaque_sort.h): draws other than a queued static
+// replay call this first, so queued draws keep their place before them.
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+bool Opaque_Sort_Barrier();
+#else
+inline bool Opaque_Sort_Barrier() { return false; }
+#endif
+
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 
 enum : uint32_t {
@@ -2506,6 +2515,21 @@ StaticMeshCacheStatistics g_static_mesh_statistics = {};
 bool g_static_mesh_cache_enabled = true;
 bool g_logged_first_static_mesh_build = false;
 
+// render-sort-v1 state. The window is open only inside the wwphys
+// world-space-mesh loop (Begin/End_Opaque_Sort_Window); the queue is empty
+// whenever it is closed.
+#if !defined(RENEGADE_VITA_OPAQUE_SORT_DEFAULT)
+#define RENEGADE_VITA_OPAQUE_SORT_DEFAULT 0
+#endif
+uint32_t g_opaque_sort_mode = RENEGADE_VITA_OPAQUE_SORT_DEFAULT;
+bool g_opaque_sort_window = false;
+bool g_opaque_sort_flushing = false;
+bool g_opaque_sort_culling_inverted = false;
+uint32_t g_opaque_sort_flush_epoch = 0U;
+OpaqueSortQueue g_opaque_sort_queue;
+OpaqueSortStatistics g_opaque_sort_statistics = {};
+uint16_t g_opaque_sort_order[OpaqueSortQueue::MaxBatches];
+
 void Release_Static_Mesh_Builder()
 {
 	g_static_mesh_builder.Release();
@@ -2513,6 +2537,8 @@ void Release_Static_Mesh_Builder()
 
 void Release_Static_Mesh_Buffers(uint32_t vertex_buffer, uint32_t index_buffer)
 {
+	// Queued replays still name these buffers; draw them before the release.
+	Opaque_Sort_Barrier();
 	// vitaGL defers the storage release while recent frames may still read it.
 	GLuint buffers[2] = { vertex_buffer, index_buffer };
 	glDeleteBuffers(2, buffers);
@@ -2582,6 +2608,55 @@ void Log_Static_Mesh_Cache_Statistics()
 		static_cast<unsigned long long>(g_static_mesh_statistics.stale_instances));
 	g_static_mesh_statistics.max_frame_builds = 0U;
 	g_static_mesh_statistics.max_frame_upload_bytes = 0U;
+}
+
+// Build default 0 (off). A user config file containing exactly "RVSO1 N\n"
+// selects mode N: 0 off, 1 pass-major, 2 pass-major grouped by batch state,
+// 3 queue in submission order (control). See ww3d_vita_opaque_sort.h.
+void Read_Opaque_Sort_Mode()
+{
+	g_opaque_sort_mode = static_cast<uint32_t>(RENEGADE_VITA_OPAQUE_SORT_DEFAULT) <
+		static_cast<uint32_t>(OPAQUE_SORT_MODE_COUNT) ?
+		static_cast<uint32_t>(RENEGADE_VITA_OPAQUE_SORT_DEFAULT) : 0U;
+	FILE *file = fopen("ux0:data/renegade/user/config/render-sort-v1.flag", "rb");
+	if (file != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok && size == 8U && memcmp(value, "RVSO1 ", 6U) == 0 &&
+			value[7] == '\n' && value[6] >= '0' &&
+			value[6] < static_cast<char>('0' + static_cast<int>(OPAQUE_SORT_MODE_COUNT))) {
+			g_opaque_sort_mode = static_cast<uint32_t>(value[6] - '0');
+		}
+	}
+	Vita_Append_A22_Runtime_Breadcrumb("render-sort",
+		"version=1 mode=%u default=%u queue_items=%u queue_batches=%u acceptance=unassessed",
+		static_cast<unsigned>(g_opaque_sort_mode),
+		static_cast<unsigned>(RENEGADE_VITA_OPAQUE_SORT_DEFAULT),
+		static_cast<unsigned>(OpaqueSortQueue::MaxItems),
+		static_cast<unsigned>(OpaqueSortQueue::MaxBatches));
+}
+
+void Log_Opaque_Sort_Statistics()
+{
+	const OpaqueSortStatistics &counters = g_opaque_sort_statistics;
+	Vita_Append_A22_Runtime_Breadcrumb("render-sort",
+		"frame=%u mode=%u windows=%llu flushes=%llu items=%llu batches=%llu ineligible=%llu oversize=%llu capacity_flushes=%llu state=%llu/%llu shader=%llu/%llu binds=%llu/%llu",
+		g_statistics.frames, static_cast<unsigned>(g_opaque_sort_mode),
+		static_cast<unsigned long long>(counters.windows),
+		static_cast<unsigned long long>(counters.flushes),
+		static_cast<unsigned long long>(counters.items),
+		static_cast<unsigned long long>(counters.batches),
+		static_cast<unsigned long long>(counters.ineligible),
+		static_cast<unsigned long long>(counters.oversize),
+		static_cast<unsigned long long>(counters.capacity_flushes),
+		static_cast<unsigned long long>(counters.submitted_state_changes),
+		static_cast<unsigned long long>(counters.executed_state_changes),
+		static_cast<unsigned long long>(counters.submitted_shader_changes),
+		static_cast<unsigned long long>(counters.executed_shader_changes),
+		static_cast<unsigned long long>(counters.submitted_binds),
+		static_cast<unsigned long long>(counters.executed_binds));
 }
 
 void Read_Skin_Deform_Cache_Mode()
@@ -2898,6 +2973,156 @@ bool Static_Mesh_Passthrough_Stage(const OriginalTextureCoordinateState &state)
 		state.texture_transform_flags == D3DTTFF_DISABLE;
 }
 
+// render-sort-v1: replays the queued static meshes in the planned order with
+// Replay_Static_Mesh_Entry's state sequence. Consecutive batches with the same
+// state skip the reapplication even across meshes: nothing between them
+// touches that state. A mesh change loads its transforms through the shadow
+// and rebinds its buffers; vitaGL captures the bound buffer in each pointer,
+// so the pointers are set again too.
+void Opaque_Sort_Flush()
+{
+	RENEGADE_FRAME_PROFILE("Vita Render Opaque Sort Flush");
+	OpaqueSortQueue &queue = g_opaque_sort_queue;
+	if (queue.Empty()) return;
+	g_opaque_sort_flushing = true;
+	const uint32_t count = queue.Plan(g_opaque_sort_mode, g_opaque_sort_order);
+	queue.Count_Changes(g_opaque_sort_order, count, g_opaque_sort_statistics);
+	// Same layout contract as Replay_Static_Mesh_Entry.
+	vglRenegadeInvalidateVertexAttributes();
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
+	const StaticMeshBatch *previous = NULL;
+	uint32_t item_index = 0xffffffffU;
+	uint32_t window = 0xffffffffU;
+	for (uint32_t position = 0U; position < count; ++position) {
+		const uint32_t slot = g_opaque_sort_order[position];
+		const StaticMeshBatch &batch = queue.Batch(slot);
+		if (queue.Batch_Item(slot) != item_index) {
+			item_index = queue.Batch_Item(slot);
+			const OpaqueSortItem &item = queue.Item(item_index);
+			Shadow_Load_Transforms(item.projection, item.modelview);
+			glBindBuffer(GL_ARRAY_BUFFER, item.vertex_buffer);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, item.index_buffer);
+			window = 0xffffffffU;
+		}
+		TextureClass *texture0 = static_cast<TextureClass *>(batch.texture0);
+		TextureClass *texture1 = static_cast<TextureClass *>(batch.texture1);
+		if (previous == NULL || !Opaque_Sort_Same_State(*previous, batch)) {
+			const ShaderClass shader(batch.shader_bits);
+			Apply_Original_Shader_State(shader);
+			if (texture0 != NULL) Apply_Platform_Texture_Stage(*texture0, 0U);
+			else Bind_Texture(0U, false);
+			if (batch.detail_stage) Apply_Platform_Texture_Stage(*texture1, 1U);
+			else Disable_Texture_Stage(1U);
+			Apply_Original_Texture_Coordinate_State(
+				static_cast<VertexMaterialClass *>(batch.material));
+			OriginalTextureCoordinateState coordinates;
+			for (unsigned stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+				Capture_Original_Texture_Coordinate_State(stage, &coordinates);
+			}
+			Apply_Original_Texture_Stage_State(shader, texture0 != NULL, batch.detail_stage);
+		}
+		previous = &batch;
+		if (batch.window_base != window) {
+			window = batch.window_base;
+			const uintptr_t base = static_cast<uintptr_t>(window) *
+				STATIC_MESH_VERTEX_STRIDE;
+			glVertexPointer(3, GL_FLOAT, STATIC_MESH_VERTEX_STRIDE,
+				reinterpret_cast<const GLvoid *>(base + STATIC_MESH_POSITION_OFFSET));
+			glColorPointer(4, GL_UNSIGNED_BYTE, STATIC_MESH_VERTEX_STRIDE,
+				reinterpret_cast<const GLvoid *>(base + STATIC_MESH_COLOR_OFFSET));
+			glClientActiveTexture(GL_TEXTURE0);
+			glTexCoordPointer(2, GL_FLOAT, STATIC_MESH_VERTEX_STRIDE,
+				reinterpret_cast<const GLvoid *>(base + STATIC_MESH_UV0_OFFSET));
+			glClientActiveTexture(GL_TEXTURE1);
+			glTexCoordPointer(2, GL_FLOAT, STATIC_MESH_VERTEX_STRIDE,
+				reinterpret_cast<const GLvoid *>(base + STATIC_MESH_UV1_OFFSET));
+		}
+		glClientActiveTexture(GL_TEXTURE0);
+		if (texture0 != NULL) glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		else glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE1);
+		if (batch.detail_stage) glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		else glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE0);
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(batch.index_count),
+			GL_UNSIGNED_SHORT, reinterpret_cast<const GLvoid *>(
+				static_cast<uintptr_t>(batch.first_index) * sizeof(uint16_t)));
+	}
+	glClientActiveTexture(GL_TEXTURE1);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glClientActiveTexture(GL_TEXTURE0);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	vglRenegadeInvalidateVertexAttributes();
+	++g_statistics.state_changes;
+	// The tail each queued Submit_Mesh_Internal already ran after queueing.
+	Disable_Texture_Stage(1U);
+	Apply_Original_Texture_Coordinate_State(NULL);
+	Release_Submission_Transforms();
+	queue.Clear();
+	++g_opaque_sort_flush_epoch;
+	++g_opaque_sort_statistics.flushes;
+	g_opaque_sort_flushing = false;
+}
+
+bool Opaque_Sort_Barrier()
+{
+	if (g_opaque_sort_flushing || g_opaque_sort_queue.Empty()) return false;
+	Opaque_Sort_Flush();
+	return true;
+}
+
+// Queues a cache-hit replay while a window is open and every batch is
+// order-independent (Opaque_Sort_Entry_Eligible). False: replay it now.
+bool Opaque_Sort_Enqueue(const StaticMeshEntry &entry,
+	const IndexedTransformMatrices &transforms)
+{
+	if (!g_opaque_sort_window || g_opaque_sort_flushing) return false;
+	if (entry.batches == NULL || entry.batch_count == 0U ||
+		entry.batch_count > static_cast<uint32_t>(OpaqueSortQueue::MaxBatches)) {
+		++g_opaque_sort_statistics.oversize;
+		return false;
+	}
+	uint8_t classes[OpaqueSortQueue::MaxBatches];
+	for (uint32_t index = 0U; index < entry.batch_count; ++index) {
+		const ShaderStateContract state =
+			Translate_Shader_State(ShaderClass(entry.batches[index].shader_bits));
+		classes[index] = static_cast<uint8_t>(Opaque_Sort_Classify(state.blend,
+			state.depth_write, state.color_write, state.alpha_test,
+			static_cast<int>(state.depth_compare)));
+	}
+	if (!Opaque_Sort_Entry_Eligible(entry.batches, classes, entry.batch_count)) {
+		++g_opaque_sort_statistics.ineligible;
+		return false;
+	}
+	// Apply_Original_Shader_State reads the global culling inversion when the
+	// queue replays, so one queue never spans a change of it.
+	const bool culling_inverted = ShaderClass::Is_Backface_Culling_Inverted();
+	if (culling_inverted != g_opaque_sort_culling_inverted) Opaque_Sort_Barrier();
+	if (!g_opaque_sort_queue.Fits(entry.batch_count) && Opaque_Sort_Barrier())
+		++g_opaque_sort_statistics.capacity_flushes;
+	g_opaque_sort_culling_inverted = culling_inverted;
+	if (!g_opaque_sort_queue.Push(entry.vertex_buffer, entry.index_buffer, entry.batches,
+		entry.batch_count, transforms.projection, transforms.modelview)) return false;
+	++g_opaque_sort_statistics.items;
+	g_opaque_sort_statistics.batches += entry.batch_count;
+	return true;
+}
+
+// Before a static replay or immediate draw that was not queued: flush the
+// queue, then reload this mesh's transforms if a flush since the caller loaded
+// them (here, or a buffer release during its cache lookup) replaced them.
+void Opaque_Sort_Draw_Now(uint32_t flush_epoch, const IndexedTransformMatrices &transforms)
+{
+	Opaque_Sort_Barrier();
+	if (flush_epoch != g_opaque_sort_flush_epoch)
+		Shadow_Load_Transforms(transforms.projection, transforms.modelview);
+}
+
 // Mirrors Submit_Mesh's original pass/triangle traversal and its state-run
 // boundaries, but records each run's first-use vertex attributes once.
 // Returns false when any run depends on generated or transformed UVs, or when
@@ -2992,6 +3217,7 @@ bool Build_Static_Mesh_Streams(MeshClass &mesh, MeshModelClass *model,
 				state.material = current_material;
 				state.shader_bits = current_shader_bits;
 				state.detail_stage = current_detail_stage;
+				state.pass = static_cast<uint8_t>(pass);
 				if (!builder.Begin_Batch(state)) return false;
 				primitive_open = true;
 			}
@@ -3324,12 +3550,19 @@ struct StaticMeshCacheOps {
 // Draws every pass of a rigid mesh from its cached streams when it is
 // eligible. Returns false when the immediate path must draw it instead.
 // Instances share unlit entries; lit ones are keyed by this MeshClass too.
+// Inside an open render-sort-v1 window an eligible hit is queued instead;
+// whatever draws now first flushes the queue (Opaque_Sort_Draw_Now).
 bool Submit_Static_Mesh_Cache(MeshClass &mesh, MeshModelClass *model,
 	const RenderInfoClass &render_info, const Vector3 *vertices,
 	const Vector3 *normals, const TriIndex *triangles, int vertex_count,
-	int triangle_count, int base_pass_count, const Matrix3D &world_transform)
+	int triangle_count, int base_pass_count, const Matrix3D &world_transform,
+	const IndexedTransformMatrices &transforms)
 {
-	if (!g_static_mesh_cache_enabled) return false;
+	const uint32_t flush_epoch = g_opaque_sort_flush_epoch;
+	if (!g_static_mesh_cache_enabled) {
+		Opaque_Sort_Draw_Now(flush_epoch, transforms);
+		return false;
+	}
 	const uint32_t frame = g_statistics.frames;
 	StaticMeshCacheOps ops = { mesh, model, render_info, vertices, normals, triangles,
 		vertex_count, triangle_count, base_pass_count, world_transform, frame };
@@ -3337,7 +3570,10 @@ bool Submit_Static_Mesh_Cache(MeshClass &mesh, MeshModelClass *model,
 	const StaticMeshEntry *entry = Static_Mesh_Cache_Lookup(g_static_mesh_cache,
 		g_static_mesh_statistics, model, mesh.Get_User_Lighting_Array(false), &mesh,
 		frame, STATIC_MESH_CACHE_RETRY_FRAMES, STATIC_MESH_CACHE_STALE_FRAMES, ops, built);
-	if (entry == NULL) return false;
+	if (entry == NULL) {
+		Opaque_Sort_Draw_Now(flush_epoch, transforms);
+		return false;
+	}
 	if (built && !g_logged_first_static_mesh_build) {
 		Vita_Append_A22_Runtime_Breadcrumb("static-mesh-cache",
 			"first cached mesh: mesh=%s vertices=%u indices=%u batches=%u materials=%u bytes=%u",
@@ -3346,6 +3582,8 @@ bool Submit_Static_Mesh_Cache(MeshClass &mesh, MeshModelClass *model,
 			entry->material_count, entry->bytes);
 		g_logged_first_static_mesh_build = true;
 	}
+	if (Opaque_Sort_Enqueue(*entry, transforms)) return true;
+	Opaque_Sort_Draw_Now(flush_epoch, transforms);
 	Replay_Static_Mesh_Entry(*entry);
 	return true;
 }
@@ -3396,6 +3634,7 @@ void Invalidate_Texture_State_Cache()
 bool Bind_Offscreen_Render_Target(uint32_t framebuffer, uint32_t width,
 	uint32_t height)
 {
+	Opaque_Sort_Barrier();
 	if (framebuffer == 0U || width == 0U || height == 0U) return false;
 #if defined(__vita__)
 	GLint previous_framebuffer = 0;
@@ -3433,6 +3672,7 @@ bool Bind_Offscreen_Render_Target(uint32_t framebuffer, uint32_t width,
 
 bool Restore_Default_Render_Target()
 {
+	Opaque_Sort_Barrier();
 #if defined(__vita__)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0U);
 	if (glGetError() != GL_NO_ERROR) {
@@ -3644,6 +3884,7 @@ bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
 	uint32_t height, float min_depth, float max_depth,
 	uint32_t logical_width, uint32_t logical_height)
 {
+	Opaque_Sort_Barrier();
 	NativeViewport viewport = {};
 	if (g_active_render_target_width != 0U && g_active_render_target_height != 0U) {
 		// DX8 viewports are relative to the current render-target surface, not
@@ -3853,6 +4094,7 @@ bool Initialize()
 	Read_Static_Mesh_Cache_Mode();
 	Read_Skin_Deform_Cache_Mode();
 	Read_Vertex_Array_Mode();
+	Read_Opaque_Sort_Mode();
 #endif
 	Invalidate_Native_State_Cache();
 
@@ -4036,6 +4278,7 @@ void Shutdown()
 void Begin_Frame(bool clear_color, bool clear_depth, float red, float green,
 	float blue)
 {
+	Opaque_Sort_Barrier();
 	if (!g_statistics.initialized) {
 		return;
 	}
@@ -4072,6 +4315,7 @@ void Begin_Frame(bool clear_color, bool clear_depth, float red, float green,
 
 void End_Frame(bool present)
 {
+	Opaque_Sort_Barrier();
 #if defined(__vita__)
 	if (g_statistics.initialized && present) {
 		if (!g_logged_first_present) {
@@ -4156,6 +4400,7 @@ void End_Frame(bool present)
 			Log_Static_Mesh_Cache_Statistics();
 			Log_Skin_Deform_Cache_Statistics();
 			Log_Vertex_Array_Statistics();
+			Log_Opaque_Sort_Statistics();
 #if defined(RENEGADE_VITA_DETAILED_TIMING)
 			Vita_Append_A22_Runtime_Breadcrumb("mesh-boundary-time",
 				"frame=%u meshes=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu max_name=%s draw_ends=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu",
@@ -4592,6 +4837,7 @@ void Apply_Platform_Texture_Stage(TextureClass &texture, unsigned stage)
 
 bool Apply_DX8_Render_State(uint32_t state, uint32_t value)
 {
+	Opaque_Sort_Barrier();
 	// These values feed CPU fixed-function color evaluation on both targets.
 	// Keep the host and native paths identical before native cache/GL handling.
 	if (state == D3DRS_AMBIENT) g_dx8_ambient_color = value;
@@ -4852,6 +5098,9 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 	if (vertices == NULL || triangles == NULL || vertex_count <= 0 || triangle_count <= 0) {
 		return;
 	}
+	// render-sort-v1: only a rigid base submission may still join the queue
+	// (Submit_Static_Mesh_Cache); skins and procedural passes draw after it.
+	if (material_pass != NULL || is_skin) Opaque_Sort_Barrier();
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 	const bool sample_mesh_boundary =
 		(g_mesh_boundary_timing_sequence++ % MESH_BOUNDARY_TIMING_SAMPLE_STRIDE) == 0U;
@@ -5042,7 +5291,7 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 	// mesh renderer did; everything else keeps the per-frame path below.
 	if (!procedural_pass && !is_skin && Submit_Static_Mesh_Cache(mesh, model, render_info, vertices,
 		normals, triangles, vertex_count, triangle_count, base_pass_count,
-		original_world_transform)) {
+		original_world_transform, transform_matrices)) {
 	} else
 #endif
 	for (int pass = 0; pass < draw_pass_count; ++pass) {
@@ -5960,6 +6209,8 @@ const BackendLifecycleStatistics &Get_Backend_Lifecycle_Statistics()
 
 void Invalidate_Static_Mesh_Cache()
 {
+	// Queued replays name cached textures and materials as well as buffers.
+	Opaque_Sort_Barrier();
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	g_static_mesh_cache.Clear();
 	++g_static_mesh_statistics.invalidations;
@@ -5968,6 +6219,7 @@ void Invalidate_Static_Mesh_Cache()
 
 void Forget_Static_Mesh_Model(const void *model)
 {
+	Opaque_Sort_Barrier();
 	// The same original model reset/destruction/geometry-unique hooks retire
 	// deformed-skin entries before that model's arrays change or are reused.
 	g_skin_deform_cache.Forget_Model(model);
@@ -5980,11 +6232,34 @@ void Forget_Static_Mesh_Model(const void *model)
 
 void Forget_Static_Mesh_User_Lighting(const void *model, const void *user_lighting)
 {
+	Opaque_Sort_Barrier();
 #if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
 	g_static_mesh_cache.Forget_User_Lighting(model, user_lighting);
 #else
 	(void)model;
 	(void)user_lighting;
+#endif
+}
+
+// render-sort-v1 window around PhysicsSceneClass's world-space-mesh loop
+// (wwphys-tut1-render-sort.patch). Only MeshClass::Render of identity-
+// transform static meshes runs inside it; every queued draw is replayed by
+// End_Opaque_Sort_Window at the latest.
+void Begin_Opaque_Sort_Window()
+{
+	Opaque_Sort_Barrier();
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	g_opaque_sort_window = g_opaque_sort_mode != static_cast<uint32_t>(OPAQUE_SORT_OFF) &&
+		g_static_mesh_cache_enabled && g_statistics.initialized;
+	if (g_opaque_sort_window) ++g_opaque_sort_statistics.windows;
+#endif
+}
+
+void End_Opaque_Sort_Window()
+{
+	Opaque_Sort_Barrier();
+#if defined(__vita__) && !RENEGADE_VITA_M00_DEMO
+	g_opaque_sort_window = false;
 #endif
 }
 

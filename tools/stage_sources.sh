@@ -1715,6 +1715,10 @@ test "$(sha256sum "$rv_stage/combat/action.cpp" | cut -d' ' -f1)" = \
 	"f90761922d80e0795ed3d99f9ce7545561f144d3dbfc52c735c1d1eb4f46edbb"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/combat-a37-face-action-stale-end-time-clamp.patch"
+# render-sort-v1 (RVSO1, default off): open the Vita renderer's pass-major
+# replay window around the world-space-mesh loop of Render_Objects only.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/wwphys" -p1 < "$rv_root/port/patches/wwphys-tut1-render-sort.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

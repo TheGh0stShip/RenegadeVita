@@ -53,6 +53,8 @@ struct StaticMeshBatch {
 	// First vertex addressed by this batch's (window-relative) indices.
 	uint32_t window_base;
 	bool detail_stage;
+	// Original material pass; batches are built in non-decreasing pass order.
+	uint8_t pass;
 };
 
 // Lets consecutive batches share one set of client-array pointers whenever

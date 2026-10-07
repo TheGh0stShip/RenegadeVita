@@ -1,6 +1,7 @@
 #include "renegade_find_files.h"
 
 #include <dirent.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
@@ -144,9 +145,19 @@ bool Renegade_Delete_User_Save(const char *logical_path)
 {
 	const RenegadeResolvedPath resolved = Renegade_Resolve_Path(Roots,
 		logical_path, RENEGADE_PATH_READ);
-	return resolved.success && resolved.writable_namespace &&
-		strncasecmp(resolved.normalized_logical, "save/", 5) == 0 &&
-		remove(resolved.physical) == 0;
+	if (!resolved.success || !resolved.writable_namespace ||
+		strncasecmp(resolved.normalized_logical, "save/", 5) != 0) return false;
+	if (remove(resolved.physical) != 0) return false;
+	/* Drop stray atomic-replace companions so a deleted slot cannot resurface. */
+	static const char *const suffixes[] = { ".pending", ".previous" };
+	for (unsigned i = 0U; i < sizeof(suffixes) / sizeof(suffixes[0]); ++i) {
+		char companion[sizeof(resolved.physical) + 16];
+		const int length = snprintf(companion, sizeof(companion), "%s%s",
+			resolved.physical, suffixes[i]);
+		if (length > 0 && static_cast<size_t>(length) < sizeof(companion))
+			remove(companion);
+	}
+	return true;
 }
 
 void Renegade_Set_Find_Roots(const RenegadePathRoots &roots)

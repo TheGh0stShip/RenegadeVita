@@ -1,5 +1,13 @@
 # Known gaps
 
+- Staging-patch guard policy is undocumented: of 231 patches touched in the
+  last 30 commits, 164 change original load/save/lifecycle behaviour without a
+  `RENEGADE_VITA_PORT`/`__vita__` guard (mostly a36 load admission and save
+  status propagation, shared with host tests). Review first: commando-a4 WOL /
+  online boundary patches, campaign source-binding/backdrop patches,
+  scripts-a35-host-m03-pointer-exchange, ww3d2-a315-dds-vita and
+  commando-a35-suspend-viewer-lifecycle. Decide and record a policy.
+
 - Retail M11 spawners 100581, 100582 and 100586 name scripts
   `M11_ObeliskWall_FodderGuy01_JDG`, `M11_ObeliskWall_FodderGuy02_JDG` and
   `M11_TempleRoof_FodderGuy02_JDG`, which are absent from the released Scripts

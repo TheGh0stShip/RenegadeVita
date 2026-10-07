@@ -1,6 +1,4 @@
 #include "renegade_ttfs.h"
-// Defined in renegade_file_factory.cpp; Vita sceIoRename refuses an existing destination.
-bool Renegade_Replace_File(const char *source, const char *destination);
 
 #include <curl/curl.h>
 #include <zlib.h>
@@ -10,6 +8,27 @@ bool Renegade_Replace_File(const char *source, const char *destination);
 #include <stdio.h>
 #include <time.h>
 #include <limits>
+
+namespace {
+// Vita sceIoRename refuses an existing destination. Same contract as
+// Renegade_Replace_File in renegade_file_factory.cpp, kept local so the TTFS
+// unit (and its link probe) does not depend on the file factory.
+bool Replace_Manifest(const char *source, const char *destination)
+{
+    if (rename(source, destination) == 0) return true;
+    char previous[1040];
+    const int length = snprintf(previous, sizeof(previous), "%s.previous", destination);
+    if (length <= 0 || length >= static_cast<int>(sizeof(previous))) return false;
+    remove(previous);
+    if (rename(destination, previous) != 0) return false;
+    if (rename(source, destination) != 0) {
+        (void)rename(previous, destination);
+        return false;
+    }
+    remove(previous);
+    return true;
+}
+}
 #include <errno.h>
 #include <new>
 
@@ -164,7 +183,7 @@ bool Download(const std::string &repository, uint32_t id,
     if (!output) { error = "manifest cache creation failed"; return finish(false); }
     bool ok = fwrite(bytes.data(), 1, bytes.size(), output) == bytes.size();
     if (fclose(output) != 0) ok = false;
-    if (!ok || !Renegade_Replace_File(pending.c_str(), (destination + "/manifest.tpi").c_str())) {
+    if (!ok || !Replace_Manifest(pending.c_str(), (destination + "/manifest.tpi").c_str())) {
         error = "manifest cache commit failed"; return finish(false);
     }
     return finish(true);

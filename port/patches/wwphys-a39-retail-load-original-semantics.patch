@@ -1,0 +1,28 @@
+--- a/pathsolve.cpp
++++ b/pathsolve.cpp
+@@ -1898,9 +1898,8 @@
+ 	}
+ 
+ 	loaded = loaded && loaded_variables && !cload.Has_Error ();
+-	if (loaded) {
+-		SaveLoadSystemClass::Register_Post_Load_Callback (this);
+-	}
++	// Register unconditionally (original): a rejected load discards all callbacks.
++	SaveLoadSystemClass::Register_Post_Load_Callback (this);
+ 	return loaded;
+ }
+ 
+--- a/physdynamicsavesystem.cpp
++++ b/physdynamicsavesystem.cpp
+@@ -117,9 +117,8 @@
+ 	}
+ 	
+ 	loaded = loaded && loaded_chunks == 7U;
+-	if (loaded) {
+-		SaveLoadSystemClass::Register_Post_Load_Callback(this);
+-	}
++	// Register unconditionally (original): a rejected load discards all callbacks.
++	SaveLoadSystemClass::Register_Post_Load_Callback(this);
+ 	return loaded;
+ }
+ 

@@ -1,0 +1,28 @@
+--- a/hud.cpp
++++ b/hud.cpp
+@@ -74,6 +74,7 @@
+ #include "a31_vita_hud_presentation.h"
+ #include "dx8wrapper.h"
+ #include "ww3d.h"
++#include "renegade_vita_frame_alloc.h"
+ #endif
+ 
+ 
+@@ -1763,7 +1764,17 @@
+ 			if ( obj->Get_Translated_Name_ID() != 0 || bot_named ) {
+ 				TDBObjClass *translate_obj = TranslateDBClass::Find_Object( obj->Get_Translated_Name_ID() );
+ 				if ( translate_obj || bot_named ) {
++#if defined(RENEGADE_VITA_PORT)
++					// This copy is made every frame the target box shows a named
++					// object. The original temporary-buffer hint (RVAL1 bit 1) keeps
++					// it off the heap; the string, comparisons and assignment below
++					// are unchanged, and a name too long for a temp buffer still
++					// takes a heap buffer exactly as before.
++					WideStringClass translate_string( bot_named ? tt_name->BotTag : translate_obj->Get_String(),
++						RenegadeVitaFrameAlloc::Enabled( RenegadeVitaFrameAlloc::HUD_TARGET_NAME_TEMP ) );
++#else
+ 					WideStringClass translate_string = bot_named ? tt_name->BotTag : translate_obj->Get_String();
++#endif
+ 
+ 					if ( building != NULL && HUDInfo::Get_Info_Object_Is_MCT() ) {
+ 						translate_string=TRANSLATE( IDS_Enc_Struct_Nod_MCT_Name );

@@ -265,11 +265,20 @@ class ScriptCostScopePatchTests(unittest.TestCase):
     def calls(body):
         return re.findall(r'\b(\w+(?:::|->)\w+)\s*\(', body)
 
+    def later_combat_patches(self):
+        stage = (ROOT / 'tools/stage_sources.sh').read_text()
+        line = '-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/%s"' % self.PATCH.name
+        rest = stage[stage.index(line) + len(line):]
+        return re.findall(r'-d "\$rv_stage/combat" -p1 < "\$rv_root/port/patches/([^"]+)"', rest)
+
     def test_patch_is_registered_once_after_every_other_combat_patch(self):
         stage = (ROOT / 'tools/stage_sources.sh').read_text()
         line = '-d "$rv_stage/combat" -p1 < "$rv_root/port/patches/%s"' % self.PATCH.name
         self.assertEqual(stage.count(line), 1)
-        self.assertNotIn('$rv_stage/combat" -p1', stage[stage.index(line) + len(line):])
+        # Only later tutorial-round patches may follow; every pre-round combat
+        # patch is applied first.
+        for later in self.later_combat_patches():
+            self.assertTrue(later.startswith('combat-tut1-'), later)
 
     def test_staged_file_is_the_patch_result_and_call_order_is_unchanged(self):
         import shutil
@@ -277,6 +286,14 @@ class ScriptCostScopePatchTests(unittest.TestCase):
         import tempfile
         with tempfile.TemporaryDirectory(prefix='tut1-script-cost-') as folder:
             shutil.copy(self.COMBAT, folder)
+            # Peel later tutorial-round combat.cpp patches off first, newest first.
+            for later in reversed(self.later_combat_patches()):
+                later_path = ROOT / 'port/patches' / later
+                if '+++ b/combat.cpp' not in later_path.read_text():
+                    continue
+                peeled = subprocess.run(['patch', '--batch', '-R', '-F0', '-p1', '-d', folder,
+                                         '-i', str(later_path)], text=True, capture_output=True)
+                self.assertEqual(peeled.returncode, 0, later + peeled.stdout + peeled.stderr)
             result = subprocess.run(['patch', '--batch', '-R', '-F0', '-p1', '-d', folder,
                                      '-i', str(self.PATCH)], text=True, capture_output=True)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

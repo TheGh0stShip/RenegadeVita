@@ -21,6 +21,10 @@
 class RenegadeAsyncLogRing {
 public:
 	enum { Capacity = 256U * 1024U };
+	// Per-session byte cap on lines accepted into the log. Past the soft cap
+	// only priority lines ([LIFECYCLE], FATAL, crash, Teardown, Overall:) are
+	// accepted, from a reserve. Existing log files are never pruned/rotated.
+	enum { Session_Soft_Cap = 4U * 1024U * 1024U, Session_Reserve = 256U * 1024U };
 
 	// Sink callbacks run only on the writer thread (or inside Flush when the
 	// writer never started). They return false on an unrecoverable failure.
@@ -29,7 +33,9 @@ public:
 
 	RenegadeAsyncLogRing() : write_(NULL), sync_(NULL), context_(NULL),
 		enqueued_(0U), written_(0U), synced_(0U), flush_target_(0U),
-		dropped_(0U), dropped_reported_(0U), stop_(false), running_(false), failed_(false) {
+		dropped_(0U), dropped_reported_(0U), session_bytes_(0U), soft_cap_(Session_Soft_Cap),
+		reserve_(Session_Reserve), suppressed_(0U), suppressed_reported_(0U),
+		truncated_(false), stop_(false), running_(false), failed_(false) {
 		pthread_mutex_init(&mutex_, NULL);
 		pthread_cond_init(&data_, NULL);
 		pthread_cond_init(&drained_, NULL);
@@ -39,6 +45,20 @@ public:
 		write_ = write;
 		sync_ = sync;
 		context_ = context;
+	}
+
+	// Test hook; production uses the defaults.
+	void Set_Session_Cap(uint64_t soft_cap, uint64_t reserve) {
+		pthread_mutex_lock(&mutex_);
+		soft_cap_ = soft_cap;
+		reserve_ = reserve;
+		pthread_mutex_unlock(&mutex_);
+	}
+	uint64_t Suppressed() {
+		pthread_mutex_lock(&mutex_);
+		const uint64_t suppressed = suppressed_;
+		pthread_mutex_unlock(&mutex_);
+		return suppressed;
 	}
 
 	// Called by the owner after starting the writer thread successfully.
@@ -69,25 +89,37 @@ public:
 			pthread_mutex_unlock(&mutex_);
 			return false;
 		}
-		const uint64_t used = enqueued_ - written_;
-		if (length > Capacity || used + length > Capacity) {
-			++dropped_;
-			pthread_mutex_unlock(&mutex_);
-			return false;
+		if (session_bytes_ + length > soft_cap_) {
+			const bool priority = Is_Priority(data, length);
+			if (!truncated_) {
+				truncated_ = true;
+				static const char marker[] =
+					"[runtime-log] TRUNCATED: session log cap reached; only priority lines follow\n";
+				Append_Locked(marker, sizeof(marker) - 1U);
+			}
+			if (!priority || session_bytes_ + length > soft_cap_ + reserve_) {
+				++suppressed_;
+				pthread_mutex_unlock(&mutex_);
+				// Suppression is a policy outcome, not a failure needing fallback.
+				return true;
+			}
 		}
-		const uint32_t start = static_cast<uint32_t>(enqueued_ % Capacity);
-		const uint32_t first = length < Capacity - start ? length : Capacity - start;
-		memcpy(ring_ + start, data, first);
-		if (first < length) memcpy(ring_, data + first, length - first);
-		enqueued_ += length;
-		pthread_cond_signal(&data_);
+		const bool ok = Append_Locked(data, length);
 		pthread_mutex_unlock(&mutex_);
-		return true;
+		return ok;
 	}
 
 	// Blocks until everything enqueued before this call is written and synced.
+	// Records the session's final suppressed-line count first.
 	void Flush() {
 		pthread_mutex_lock(&mutex_);
+		if (suppressed_ != suppressed_reported_) {
+			char note[96];
+			const int count = Format_Count_Note(note, sizeof(note),
+				"[runtime-log] suppressed lines past session cap: ", suppressed_);
+			if (count > 0 && Append_Locked(note, static_cast<unsigned>(count)))
+				suppressed_reported_ = suppressed_;
+		}
 		const uint64_t target = enqueued_;
 		if (!running_) {
 			pthread_mutex_unlock(&mutex_);
@@ -98,6 +130,37 @@ public:
 		while (running_ && synced_ < target) pthread_cond_wait(&drained_, &mutex_);
 		pthread_mutex_unlock(&mutex_);
 	}
+
+private:
+	static bool Contains(const char *data, unsigned length, const char *needle) {
+		const unsigned n = static_cast<unsigned>(strlen(needle));
+		for (unsigned i = 0U; i + n <= length; ++i)
+			if (memcmp(data + i, needle, n) == 0) return true;
+		return false;
+	}
+	static bool Is_Priority(const char *data, unsigned length) {
+		return Contains(data, length, "[LIFECYCLE]") || Contains(data, length, "FATAL") ||
+			Contains(data, length, "crash") || Contains(data, length, "Teardown") ||
+			Contains(data, length, "Overall:");
+	}
+	// Caller holds mutex_. Copies into the ring without blocking.
+	bool Append_Locked(const char *data, unsigned length) {
+		const uint64_t used = enqueued_ - written_;
+		if (length > Capacity || used + length > Capacity) {
+			++dropped_;
+			return false;
+		}
+		session_bytes_ += length;
+		const uint32_t start = static_cast<uint32_t>(enqueued_ % Capacity);
+		const uint32_t first = length < Capacity - start ? length : Capacity - start;
+		memcpy(ring_ + start, data, first);
+		if (first < length) memcpy(ring_, data + first, length - first);
+		enqueued_ += length;
+		pthread_cond_signal(&data_);
+		return true;
+	}
+
+public:
 
 	// Writer-thread body. Written lines are synced within sync_interval_ms,
 	// immediately when a Flush() is waiting.
@@ -186,7 +249,10 @@ public:
 
 private:
 	static int Format_Drop_Note(char *output, unsigned capacity, uint64_t dropped) {
-		static const char prefix[] = "[runtime-log] dropped lines while the writer was behind: ";
+		return Format_Count_Note(output, capacity,
+			"[runtime-log] dropped lines while the writer was behind: ", dropped);
+	}
+	static int Format_Count_Note(char *output, unsigned capacity, const char *prefix, uint64_t dropped) {
 		unsigned length = 0U;
 		for (const char *p = prefix; *p != '\0' && length + 1U < capacity; ++p)
 			output[length++] = *p;
@@ -232,6 +298,12 @@ private:
 	uint64_t flush_target_;
 	uint64_t dropped_;
 	uint64_t dropped_reported_;
+	uint64_t session_bytes_;
+	uint64_t soft_cap_;
+	uint64_t reserve_;
+	uint64_t suppressed_;
+	uint64_t suppressed_reported_;
+	bool truncated_;
 	bool stop_;
 	bool running_;
 	bool failed_;

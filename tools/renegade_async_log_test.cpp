@@ -167,6 +167,37 @@ void Test_Flush_Without_Writer_Returns()
 	ring.Flush();
 }
 
+void Test_Session_Cap_Truncates_In_Order()
+{
+	static RenegadeAsyncLogRing ring;
+	Sink sink;
+	ring.Set_Session_Cap(100U, 200U);
+	ring.Configure(Write, Sync, &sink);
+	Writer writer{&ring, 1000U, {}};
+	writer.Start();
+	for (unsigned i = 0U; i < 20U; ++i) assert(ring.Enqueue("filler-line\n", 12U));
+	assert(ring.Enqueue("[LIFECYCLE] exit\n", 17U));
+	assert(ring.Enqueue("noise\n", 6U));
+	assert(ring.Enqueue("Overall: PASS\n", 14U));
+	for (unsigned i = 0U; i < 40U; ++i) assert(ring.Enqueue("FATAL x\n", 8U));
+	ring.Flush();
+	writer.Stop();
+	const std::string &w = sink.written;
+	const size_t marker = w.find("TRUNCATED");
+	assert(marker != std::string::npos && w.find("TRUNCATED", marker + 1U) == std::string::npos);
+	assert(w.find("filler-line") < marker);
+	assert(w.rfind("filler-line") < marker);
+	assert(w.find("[LIFECYCLE] exit") > marker);
+	assert(w.find("Overall: PASS") > w.find("[LIFECYCLE] exit"));
+	assert(w.find("noise") == std::string::npos);
+	assert(ring.Suppressed() > 1U);
+	char expect[96];
+	snprintf(expect, sizeof(expect), "suppressed lines past session cap: %llu\n",
+		static_cast<unsigned long long>(ring.Suppressed()));
+	assert(w.size() >= strlen(expect) && w.compare(w.size() - strlen(expect), std::string::npos, expect) == 0);
+	assert(w.size() <= 100U + 200U + 200U);
+}
+
 } // namespace
 
 int main()
@@ -175,6 +206,7 @@ int main()
 	Test_Overflow_Never_Blocks_And_Is_Reported();
 	Test_Sync_Cadence_Is_Bounded();
 	Test_Flush_Without_Writer_Returns();
+	Test_Session_Cap_Truncates_In_Order();
 	std::puts("Async runtime log ring host contract PASS");
 	return 0;
 }

@@ -5770,7 +5770,10 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #if defined(RENEGADE_A4_ORIGINAL_FRONTEND)
 					// Hand the resumed player the original EVA pause menu.
 					GameModeClass *resumed_combat = GameModeManager::Find("Combat");
-					if (resumed_combat != NULL && resumed_combat->Is_Active())
+					// Match the original focus-loss auto-pause: not while a cinematic
+					// camera is active (combatgmode.cpp Is_In_Cinematic check).
+					if (resumed_combat != NULL && resumed_combat->Is_Active() &&
+						!(COMBAT_CAMERA != NULL && COMBAT_CAMERA->Is_In_Cinematic()))
 						g_gameplay_pause_requested = true;
 #endif
 				}

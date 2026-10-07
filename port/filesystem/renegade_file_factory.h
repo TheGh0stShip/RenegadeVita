@@ -47,6 +47,9 @@ void Renegade_File_Factory_Reset_Statistics(void);
 // Moves source over destination, also when the platform rename refuses an
 // existing destination; on failure the previous destination is kept.
 bool Renegade_Replace_File(const char *source, const char *destination);
+// A save interrupted between Renegade_Replace_File's two renames leaves only
+// "<destination>.previous". Moves it back; returns true when it restored it.
+bool Renegade_Recover_Interrupted_Replace(const char *destination);
 RenegadeFileFactoryStatistics Renegade_File_Factory_Get_Statistics(void);
 
 class RenegadeRootedFileClass : public BufferedFileClass

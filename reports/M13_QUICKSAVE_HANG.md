@@ -131,5 +131,6 @@ commit (pre-existing, unrelated).
 Finale path: `MX0_Area4_Controller_DLS` saves every member, including
 `basewall_id`; ion strike, 22 s fade and 25 s finale are original script timers
 already logged by `M13 finale:` breadcrumbs. No source defect found there.
-Remaining risk: a crash between moving the old slot aside and renaming the new
-one leaves only `<slot>.previous`; it is not yet recovered automatically.
+A crash between moving the old slot aside and renaming the new one leaves
+only `<slot>.previous`; the next resolution of that writable slot restores it
+(or removes a stale copy when the new file did land). Host-tested.

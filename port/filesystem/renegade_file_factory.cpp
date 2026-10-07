@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <atomic>
 #include <string.h>
+#include <sys/stat.h>
 
 namespace {
 
@@ -138,6 +139,21 @@ bool Renegade_Replace_File(const char *source, const char *destination)
 	}
 	remove(previous);
 	return true;
+}
+
+bool Renegade_Recover_Interrupted_Replace(const char *destination)
+{
+	char previous[1024 + 16];
+	const int length = snprintf(previous, sizeof(previous), "%s.previous", destination);
+	if (length <= 0 || length >= static_cast<int>(sizeof(previous))) return false;
+	struct stat status;
+	if (stat(previous, &status) != 0) return false;
+	if (stat(destination, &status) == 0) {
+		// The new file reached its slot; only the cleanup was interrupted.
+		remove(previous);
+		return false;
+	}
+	return Platform_Rename(previous, destination) == 0;
 }
 
 namespace {
@@ -280,6 +296,11 @@ bool RenegadeRootedFileClass::Resolve_And_Set_Physical_Name(int rights)
 			std::memory_order_relaxed);
 	}
 	LastResolution = Renegade_Resolve_Path(Roots, LogicalName, access);
+	if (LastResolution.success && LastResolution.writable_namespace &&
+		Renegade_Recover_Interrupted_Replace(LastResolution.physical)) {
+		// The slot reappeared; resolve again so case/miss state is current.
+		LastResolution = Renegade_Resolve_Path(Roots, LogicalName, access);
+	}
 	if (!LastResolution.success) {
 		g_file_factory_counters.resolution_failures.fetch_add(1U,
 			std::memory_order_relaxed);

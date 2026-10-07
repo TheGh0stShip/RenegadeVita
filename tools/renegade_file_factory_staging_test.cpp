@@ -192,6 +192,25 @@ int main()
 		CHECK(stat((user + "/save/slot.sav.previous").c_str(), &status) != 0);
 	}
 
+	// An interruption between the two renames leaves only "<slot>.previous";
+	// the next access to the slot restores it. A finished replace with a
+	// leftover aside copy only removes the copy.
+	{
+		CHECK(rename((user + "/save/slot.sav").c_str(),
+			(user + "/save/slot.sav.previous").c_str()) == 0);
+		RenegadeRootedFileClass reader(roots, "slot.sav");
+		CHECK(reader.Is_Available());
+		CHECK(Read_All(user + "/save/slot.sav") == "new");
+		struct stat status;
+		CHECK(stat((user + "/save/slot.sav.previous").c_str(), &status) != 0);
+		FILE *stale = std::fopen((user + "/save/slot.sav.previous").c_str(), "wb");
+		CHECK(stale != NULL && std::fputs("stale", stale) >= 0 && std::fclose(stale) == 0);
+		RenegadeRootedFileClass second_reader(roots, "slot.sav");
+		CHECK(second_reader.Is_Available());
+		CHECK(Read_All(user + "/save/slot.sav") == "new");
+		CHECK(stat((user + "/save/slot.sav.previous").c_str(), &status) != 0);
+	}
+
 	const RenegadeFileFactoryStatistics statistics = Renegade_File_Factory_Get_Statistics();
 	CHECK(statistics.staged_write_files == 600U + 40U + 3U + 2U);
 	CHECK(statistics.staged_write_fallbacks == 0U && statistics.staged_write_bytes != 0U);

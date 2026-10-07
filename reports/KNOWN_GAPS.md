@@ -2,8 +2,8 @@
 
 - Save writes are now staged, written to `<slot>.pending` and moved over the
   slot (with a `.previous` fallback because Vita `sceIoRename` cannot
-  replace). A crash between the two renames leaves only `<slot>.previous`,
-  which is not yet restored automatically. Physical repeat-quicksave and
+  replace). A crash between the two renames leaves only `<slot>.previous`;
+  the next access to that slot moves it back. Physical repeat-quicksave and
   reload remain unverified.
 
 - Application memory budget: the newlib heap was newlib's fixed 128 MiB

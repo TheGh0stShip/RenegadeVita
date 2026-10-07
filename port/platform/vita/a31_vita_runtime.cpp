@@ -4263,6 +4263,11 @@ A31VitaInteractiveResult A31_Vita_Run_Interactive_Runtime(
 #if defined(RENEGADE_VITA_FRAME_PROFILE)
 	Renegade_Frame_Profile_Configure();
 #endif
+	// Every session starts at normal game speed. The original Mendoza boss
+	// death sequence (mendozabossgameobj.cpp) slows TimeManager to 0.25/0.5
+	// and restores it only at the end; quitting or loading during it would
+	// otherwise carry slow motion into the next level of this process.
+	TimeManager::Set_Time_Scale(1.0F);
 	// Original Game_Init searches loose DATA_SUBDIRECTORY files before MIX
 	// fallback. Keep explicit Data/user/cache paths at the root factory, and
 	// add the missing loose Data read route without changing writable roots.

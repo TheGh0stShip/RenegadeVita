@@ -1,0 +1,44 @@
+--- a/Mission01.cpp
++++ b/Mission01.cpp
+@@ -267,6 +267,41 @@
+ 	{
+ 		Commands->Enable_Hibernation( obj, false );
+ 
++		// Vita port: these conversation, sound and object IDs are compared in
++		// Action_Complete/Custom before (or without) being assigned. Start them at
++		// 0, which no conversation (>= 1000) or sound (>= 1000000000) uses.
++		m01_church_interior_nun02_ID = 0;
++		m01_whack_a_mole_guy_ID = 0;
++		m01_hon_spawned_guy_01_ID = 0;
++		m01_hon_spawned_guy_02_ID = 0;
++		m01_hon_spawned_guy_03_ID = 0;
++		m01_medium_tank_ID = 0;
++		kane_ID = 0;
++		eva_comm_center_line_01 = 0;
++		eva_comm_center_line_02 = 0;
++		eva_comm_center_line_03 = 0;
++		eva_comm_center_line_04 = 0;
++		eva_comm_center_line_05 = 0;
++		billy_conv = 0;
++		babushka_conv = 0;
++		start_conv = 0;
++		start_conv2 = 0;
++		kane_and_no2_conv01 = 0;
++		kane_and_no2_conv02 = 0;
++		kane_and_havoc_conv = 0;
++		lockes_hon_mct_conv1 = 0;
++		lockes_hon_mct_conv2 = 0;
++		barnEvac_conv = 0;
++		barnfailed_conv = 0;
++		civ3_conv = 0;
++		missionIntro = 0;
++		endMission_conv = 0;
++		unlocked_gate_conv = 0;
++		turrets_conv = 0;
++		loveshack_conv = 0;
++		priest_conv = 0;
++		interior_nun_conv = 0;
++
+ 		hand_of_nod_state = IDLE;
+ 		comm_center_state = IDLE;
+ 		players_location = LANDING_BEACH;

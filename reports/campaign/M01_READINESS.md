@@ -177,3 +177,80 @@ Use the candidate built from this commit with the full-port (campaign) profile.
    before step 2, reload, and confirm no audio/AI anomaly.
 7. Confirm the score screen appears, then continuation to M02 loads. Collect
    `ux0:data/renegade/user/logs/*` and any psp2dmp.
+
+## Full audit (2026-10-07)
+
+Evidence class: static source, retail-metadata (Vita3K retail copy, read-only)
+and `arm-vita-eabi-g++ -fsyntax-only` of the patched `Mission01.cpp` (rc 0). No
+build, no Vita3K, no hardware. Receipts are in the ignored
+`build/m01-full-audit/`. Line numbers below are `staging/scripts/Mission01.cpp`
+after this change unless they say otherwise.
+
+| Check | Result |
+| --- | --- |
+| Level/preset script bindings (`audit_mission_content_bindings`) | 573/573 registered; 0 unknown; 0 bindings with fewer values than the descriptor (538 "excess" are a single `0`/empty value on a 0-parameter script) |
+| Literal `Attach_Script` calls in Mission01 | 95; 86 literal, all registered with equal counts; 9 use `flyovers[random]`, all indices in bounds (`Get_Random_Int(0,N)` is `[0,N)`) |
+| Cinematic `Attach_Script` (all M01-referenced `.txt`) | 33 distinct names, all registered; extra `FUSELAGE` value only on 0-parameter scripts |
+| `Start_Timer` ids | every id is handled by the owning script's `Timer_Expired` |
+| `Send_Custom_Event` receivers | 6 sends with no receiver anywhere (`M00_CUSTOM_SAM_SITE_IGNORE` to the HON SAM, `M01_GDI_BASE_POWS_OVER_JDG`, `M01_HON_CUE_WARROOM_LEVEL_ACTORS_JDG`, `M01_MODIFY_YOUR_ACTION_07/10_JDG`, `M01_YOUR_OPERATOR_IS_DEAD_JDG`); original no-ops, none on the primary chain |
+| Cinematic `Send_Custom` | one: `X1Z_Finale.txt` frame 618 -> 100376 type 0 param 0 -> `Mission_Complete(true)` (:440) |
+| Hard-coded `Find_Object` ids absent from level data | 18 ids (34 sites). Every site reaches only NULL-safe `Commands` (`SCRIPT_PTR_CHECK`), e.g. `Get_Position(NULL)` returns the origin (:8223, :8271 evac spots). Retail-identical |
+| Missing cinematic `.txt` | `X01_ConYardDrop.txt` (:18058, known); `XG_M01_Detention_EvacAnim.txt` and `XG_M01_HumveeDrop.txt` only in commented-out lines |
+| Literal presets/sounds/anims/models (151 presets, 89 anims, 4 models) plus string arrays | unresolved in every retail archive: `M01_Nod_HupHup` (:5503, `Create_3D_Sound_At_Bone` returns 0), `H_A_442A` (:3820) and `H_A_V11A` (:3916, :4095) looping `Action_Play_Animation` (NULL anim handled in `AnimChannelClass::Set_Animation`), `01-I048E` in the Comm Center ambient table (`Create_Sound` returns 0). All retail-identical, cosmetic |
+| Objective chain | unchanged from the chain above; both `Mission_Complete(true)` routes (:440, :1626) intact; `endMission_conv` route (:2525) is unreachable (never assigned) |
+| Port patches touching M01 | Duncan beacon handoff (adds a 3.5 s fallback that calls the same original beacon/conversation code once; `gaveIonBeacon` guards a double grant), save-variable IDs, cinematic original dispatch (budget yield removed; `Parse_Commands` matches upstream), command timing and the intro breadcrumbs (log only). No defect found |
+
+### Defects fixed
+
+1. **Save/load: unregistered constant tables (crash risk).** Both of these are
+   filled only in `Created()`. A loaded script never re-runs `Created()`, so
+   after any M01 load they hold indeterminate heap data:
+   - `M01_GDI_Base_Artillery_Controller_JDG::locs[35]` (102294): the next
+     `M01_PICK_A_NEW_LOCATION_JDG` places the bomb sound and then
+     `Create_Explosion("Ground Explosions Twiddler", ...)` at a garbage
+     position.
+   - `M01_PrisonPen_Civilian_JDG::wanderSpot[10]` (detention-pen prisoners
+     101929-101931, primary objective actors): `Timer_Expired` issues
+     `Action_Goto` to a garbage position.
+   Fix: `port/patches/scripts-a36-m01-load-position-tables.patch` moves each
+   table into an `Init_*` helper that `Created()` calls. The helper is also
+   called right before the table is indexed. The values are the same
+   constants, so first-load behavior is unchanged.
+2. **Indeterminate controller IDs.** `M01_Mission_Controller_JDG::Created`
+   left 31 conversation, sound and object IDs unset. Several are compared in
+   `Action_Complete`/`Custom` before they are assigned, and seven are never
+   assigned (`endMission_conv` gates a `Mission_Complete(true)` branch). A
+   stale value that equals a live conversation ID (IDs restart at 1000 each
+   level) would take the wrong branch. Fix:
+   `port/patches/scripts-a36-m01-controller-id-init.patch` sets them to 0,
+   which no conversation (>= 1000) or sound (>= 1000000000) uses. Saves still
+   restore them, because all of them are registered.
+
+Both patches are registered after the intro-breadcrumb patch in
+`tools/stage_sources.sh`, anchored to the previous final `Mission01.cpp`
+(`3e873be0...0dba1`). No earlier anchor moved. Staging was regenerated at
+fuzz 0: 527 ordered patches, inventory `982ace83...ab7b`. Only `Mission01.cpp`
+changed (new SHA-256 `21e55a66...faea`).
+
+### Deferred (not fixed)
+
+- `Has_Key` (`staging/combat/scriptcommands.cpp:2406`) dereferences `object`
+  without a NULL check. M01 calls `Has_Key(STAR, n)` at :1095-1097 (a card
+  carrier dies) and :5974 (`M01_Comm_Base_Commander_JDG::Killed` with
+  `killer == STAR`, which is also true when both are NULL). `STAR` is NULL
+  once a dead player's corpse is deleted (`soldier.cpp:2630-2637`). This is
+  a retail-identical latent crash. A one-line `SCRIPT_PTR_CHECK_RET(object,
+  false)`, matching `Grant_Key`, is the suggested fix. It was left out of this
+  M01-scoped change because it touches the shared combat command table.
+- `Create_3D_Sound_At_Bone`/`Create_3D_WAV_Sound_At_Bone` do not NULL-check
+  `obj` or `Peek_Model()`. Every M01 caller passes a live object (the
+  `Test_Cinematic` `Play_Audio` path checks the slot object first). The
+  attached sound holds a reference to the model (`REF_PTR_SET`), so the
+  X1C missile sound cannot outlive its model. No intro-freeze cause was
+  found on this path.
+- `M01_TurretBeach_Engineer_JDG::last_health` and
+  `M01_MediumTank_ReminderZone_JDG::reminderConv` are still unregistered
+  (cosmetic AI/reminder state).
+- Runtime evidence is still needed for everything listed under the residual
+  risks above. After a mid-mission load, run the save/load test-route step
+  near the GDI base artillery and the detention pen.

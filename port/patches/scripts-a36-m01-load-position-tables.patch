@@ -1,0 +1,94 @@
+--- a/Mission01.cpp
++++ b/Mission01.cpp
+@@ -7320,6 +7320,20 @@
+ 
+ 	void Created( GameObject * obj ) 
+ 	{
++		Init_Bomb_Locations();
++
++		last = 40;
++		delayTimerMin = 20;
++		delayTimerMax = 30;
++		command_clearance = true;
++
++		Commands->Send_Custom_Event( obj, obj, 0, M01_PICK_A_NEW_LOCATION_JDG, 2 );
++	}
++
++	// Vita port: locs[] is not a registered save variable and Created() is not
++	// re-run after a savegame load, so rebuild this constant table before use.
++	void Init_Bomb_Locations( void )
++	{
+ 		locs[0] = Vector3(96.983f, -75.433f, -7.894f);
+ 		locs[1] = Vector3(64.778f,-70.692f, -7.917f );
+ 		locs[2] = Vector3(39.923f, -55.085f, -6.986f);
+@@ -7355,13 +7369,6 @@
+ 		locs[32] = Vector3(9.023f, 39.898f, 4.112f);
+ 		locs[33] = Vector3(-5.525f, 41.241f, 12.043f);
+ 		locs[34] = Vector3(24.496f, 52.051f, 9.968f);
+-
+-		last = 40;
+-		delayTimerMin = 20;
+-		delayTimerMax = 30;
+-		command_clearance = true;
+-
+-		Commands->Send_Custom_Event( obj, obj, 0, M01_PICK_A_NEW_LOCATION_JDG, 2 );
+ 	}
+ 
+ 	void Custom( GameObject * obj, int type, int param, GameObject * sender ) 
+@@ -7380,6 +7387,7 @@
+ 
+ 						last = random;
+ 
++						Init_Bomb_Locations();
+ 						sound_location = locs[random];
+ 						sound_location.Z += 10;
+ 
+@@ -14343,16 +14351,7 @@
+ 		Commands->Innate_Soldier_Enable_Gunshot_Heard ( obj, false );
+ 		Commands->Innate_Soldier_Enable_Bullet_Heard ( obj, false );
+ 
+-		wanderSpot[0].Set (-313.881f, 589.854f, 27.457f);
+-		wanderSpot[1].Set (-303.287f, 587.881f, 27.457f);
+-		wanderSpot[2].Set (-296.290f, 595.483f, 27.458f);
+-		wanderSpot[3].Set (-295.055f, 589.244f, 27.458f);
+-		wanderSpot[4].Set (-309.122f, 578.526f, 27.741f);
+-		wanderSpot[5].Set (-299.833f, 578.027f, 27.735f);
+-		wanderSpot[6].Set (-297.657f, 571.844f, 27.458f);
+-		wanderSpot[7].Set (-289.746f, 578.258f, 27.781f);
+-		wanderSpot[8].Set (-280.325f, 579.701f, 27.458f);
+-		wanderSpot[9].Set (-286.094f, 585.007f, 27.720f);
++		Init_Wander_Spots();
+ 
+ 		loiterTimeMin = 5;
+ 		loiterTimeMax = 30;
+@@ -14382,6 +14381,22 @@
+ 		Commands->Start_Timer ( obj, this, 5, M01_PICK_A_NEW_LOCATION_JDG );
+ 	}
+ 
++	// Vita port: wanderSpot[] is not a registered save variable and Created() is
++	// not re-run after a savegame load, so rebuild this constant table before use.
++	void Init_Wander_Spots( void )
++	{
++		wanderSpot[0].Set (-313.881f, 589.854f, 27.457f);
++		wanderSpot[1].Set (-303.287f, 587.881f, 27.457f);
++		wanderSpot[2].Set (-296.290f, 595.483f, 27.458f);
++		wanderSpot[3].Set (-295.055f, 589.244f, 27.458f);
++		wanderSpot[4].Set (-309.122f, 578.526f, 27.741f);
++		wanderSpot[5].Set (-299.833f, 578.027f, 27.735f);
++		wanderSpot[6].Set (-297.657f, 571.844f, 27.458f);
++		wanderSpot[7].Set (-289.746f, 578.258f, 27.781f);
++		wanderSpot[8].Set (-280.325f, 579.701f, 27.458f);
++		wanderSpot[9].Set (-286.094f, 585.007f, 27.720f);
++	}
++
+ 	void Timer_Expired(GameObject * obj, int timer_id)
+ 	{
+ 		ActionParamsStruct params;
+@@ -14395,6 +14410,7 @@
+ 
+ 		if (random <= 9)
+ 		{
++			Init_Wander_Spots();
+ 			Vector3 shinGotoSpot = wanderSpot[random];
+ 
+ 			params.Set_Basic(this, 100, M01_WALKING_WAYPATH_01_JDG);

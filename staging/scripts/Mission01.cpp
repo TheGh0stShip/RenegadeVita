@@ -267,6 +267,41 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 	{
 		Commands->Enable_Hibernation( obj, false );
 
+		// Vita port: these conversation, sound and object IDs are compared in
+		// Action_Complete/Custom before (or without) being assigned. Start them at
+		// 0, which no conversation (>= 1000) or sound (>= 1000000000) uses.
+		m01_church_interior_nun02_ID = 0;
+		m01_whack_a_mole_guy_ID = 0;
+		m01_hon_spawned_guy_01_ID = 0;
+		m01_hon_spawned_guy_02_ID = 0;
+		m01_hon_spawned_guy_03_ID = 0;
+		m01_medium_tank_ID = 0;
+		kane_ID = 0;
+		eva_comm_center_line_01 = 0;
+		eva_comm_center_line_02 = 0;
+		eva_comm_center_line_03 = 0;
+		eva_comm_center_line_04 = 0;
+		eva_comm_center_line_05 = 0;
+		billy_conv = 0;
+		babushka_conv = 0;
+		start_conv = 0;
+		start_conv2 = 0;
+		kane_and_no2_conv01 = 0;
+		kane_and_no2_conv02 = 0;
+		kane_and_havoc_conv = 0;
+		lockes_hon_mct_conv1 = 0;
+		lockes_hon_mct_conv2 = 0;
+		barnEvac_conv = 0;
+		barnfailed_conv = 0;
+		civ3_conv = 0;
+		missionIntro = 0;
+		endMission_conv = 0;
+		unlocked_gate_conv = 0;
+		turrets_conv = 0;
+		loveshack_conv = 0;
+		priest_conv = 0;
+		interior_nun_conv = 0;
+
 		hand_of_nod_state = IDLE;
 		comm_center_state = IDLE;
 		players_location = LANDING_BEACH;
@@ -7320,6 +7355,20 @@ DECLARE_SCRIPT(M01_GDI_Base_Artillery_Controller_JDG, "")//M01_GDIBASE_ARTILLERY
 
 	void Created( GameObject * obj ) 
 	{
+		Init_Bomb_Locations();
+
+		last = 40;
+		delayTimerMin = 20;
+		delayTimerMax = 30;
+		command_clearance = true;
+
+		Commands->Send_Custom_Event( obj, obj, 0, M01_PICK_A_NEW_LOCATION_JDG, 2 );
+	}
+
+	// Vita port: locs[] is not a registered save variable and Created() is not
+	// re-run after a savegame load, so rebuild this constant table before use.
+	void Init_Bomb_Locations( void )
+	{
 		locs[0] = Vector3(96.983f, -75.433f, -7.894f);
 		locs[1] = Vector3(64.778f,-70.692f, -7.917f );
 		locs[2] = Vector3(39.923f, -55.085f, -6.986f);
@@ -7355,13 +7404,6 @@ DECLARE_SCRIPT(M01_GDI_Base_Artillery_Controller_JDG, "")//M01_GDIBASE_ARTILLERY
 		locs[32] = Vector3(9.023f, 39.898f, 4.112f);
 		locs[33] = Vector3(-5.525f, 41.241f, 12.043f);
 		locs[34] = Vector3(24.496f, 52.051f, 9.968f);
-
-		last = 40;
-		delayTimerMin = 20;
-		delayTimerMax = 30;
-		command_clearance = true;
-
-		Commands->Send_Custom_Event( obj, obj, 0, M01_PICK_A_NEW_LOCATION_JDG, 2 );
 	}
 
 	void Custom( GameObject * obj, int type, int param, GameObject * sender ) 
@@ -7380,6 +7422,7 @@ DECLARE_SCRIPT(M01_GDI_Base_Artillery_Controller_JDG, "")//M01_GDIBASE_ARTILLERY
 
 						last = random;
 
+						Init_Bomb_Locations();
 						sound_location = locs[random];
 						sound_location.Z += 10;
 
@@ -14343,16 +14386,7 @@ DECLARE_SCRIPT(M01_PrisonPen_Civilian_JDG, "")
 		Commands->Innate_Soldier_Enable_Gunshot_Heard ( obj, false );
 		Commands->Innate_Soldier_Enable_Bullet_Heard ( obj, false );
 
-		wanderSpot[0].Set (-313.881f, 589.854f, 27.457f);
-		wanderSpot[1].Set (-303.287f, 587.881f, 27.457f);
-		wanderSpot[2].Set (-296.290f, 595.483f, 27.458f);
-		wanderSpot[3].Set (-295.055f, 589.244f, 27.458f);
-		wanderSpot[4].Set (-309.122f, 578.526f, 27.741f);
-		wanderSpot[5].Set (-299.833f, 578.027f, 27.735f);
-		wanderSpot[6].Set (-297.657f, 571.844f, 27.458f);
-		wanderSpot[7].Set (-289.746f, 578.258f, 27.781f);
-		wanderSpot[8].Set (-280.325f, 579.701f, 27.458f);
-		wanderSpot[9].Set (-286.094f, 585.007f, 27.720f);
+		Init_Wander_Spots();
 
 		loiterTimeMin = 5;
 		loiterTimeMax = 30;
@@ -14382,6 +14416,22 @@ DECLARE_SCRIPT(M01_PrisonPen_Civilian_JDG, "")
 		Commands->Start_Timer ( obj, this, 5, M01_PICK_A_NEW_LOCATION_JDG );
 	}
 
+	// Vita port: wanderSpot[] is not a registered save variable and Created() is
+	// not re-run after a savegame load, so rebuild this constant table before use.
+	void Init_Wander_Spots( void )
+	{
+		wanderSpot[0].Set (-313.881f, 589.854f, 27.457f);
+		wanderSpot[1].Set (-303.287f, 587.881f, 27.457f);
+		wanderSpot[2].Set (-296.290f, 595.483f, 27.458f);
+		wanderSpot[3].Set (-295.055f, 589.244f, 27.458f);
+		wanderSpot[4].Set (-309.122f, 578.526f, 27.741f);
+		wanderSpot[5].Set (-299.833f, 578.027f, 27.735f);
+		wanderSpot[6].Set (-297.657f, 571.844f, 27.458f);
+		wanderSpot[7].Set (-289.746f, 578.258f, 27.781f);
+		wanderSpot[8].Set (-280.325f, 579.701f, 27.458f);
+		wanderSpot[9].Set (-286.094f, 585.007f, 27.720f);
+	}
+
 	void Timer_Expired(GameObject * obj, int timer_id)
 	{
 		ActionParamsStruct params;
@@ -14395,6 +14445,7 @@ DECLARE_SCRIPT(M01_PrisonPen_Civilian_JDG, "")
 
 		if (random <= 9)
 		{
+			Init_Wander_Spots();
 			Vector3 shinGotoSpot = wanderSpot[random];
 
 			params.Set_Basic(this, 100, M01_WALKING_WAYPATH_01_JDG);

@@ -1575,6 +1575,17 @@ test "$(sha256sum "$rv_stage/combat/scriptcommands.cpp" | cut -d' ' -f1)" = \
 # The scripted-lift last-frame guard lives in combat-a36-scriptcommands-null-guards.
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m09-evac-gunner-param-buffer.patch"
+# M01 save/load: the artillery controller's locs[] and the pen civilians'
+# wanderSpot[] are unregistered constant tables that Created() fills; a loaded
+# script never re-runs Created(), so rebuild them before indexing. Then start
+# the mission controller's late-assigned conversation/sound/object IDs at 0.
+# Anchored to the final Mission01.cpp so no earlier anchor moves.
+test "$(sha256sum "$rv_stage/scripts/Mission01.cpp" | cut -d' ' -f1)" = \
+	"3e873be055b6ccb438755563571a9315745fb59784e2a7cf2a9722781790dba1"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m01-load-position-tables.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m01-controller-id-init.patch"
 # PersistFactory.h is a required mixed-case include alias.  Refresh it after
 # all lowercase factory patches so case-sensitive Vita builds cannot select a
 # stale pre-admission template.

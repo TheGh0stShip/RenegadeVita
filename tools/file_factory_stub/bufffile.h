@@ -45,6 +45,20 @@ public:
 	virtual int Size(void) { return 0; }
 	virtual void Close(void) {}
 	virtual void Error(int, int = false, char const * = NULL) {}
+	// RawFileClass bias surface used by the RVIO1 archive-size reuse path.
+	virtual void Bias(int start, int length = -1)
+	{
+		if (start == 0) {
+			BiasStart = 0;
+			BiasLength = -1;
+			return;
+		}
+		BiasStart += start;
+		BiasLength = length;
+	}
+	virtual void *Get_File_Handle(void) { return NULL; }
+	int BiasStart = 0;
+	int BiasLength = -1;
 
 private:
 	char Name[1024] = {};

@@ -18,10 +18,32 @@ inputs() {
         "$rv_sdk/bin/arm-vita-eabi-gcc" "$rv_sdk/share/vita.toolchain.cmake" \
         "$rv_sdk/arm-vita-eabi/lib/libz.a" "$rv_sdk/arm-vita-eabi/lib/libpthread.a"
 }
+record_stamps() {
+    inputs > "$rv_prefix/.https-inputs.sha256"
+    sha256sum "$rv_prefix/lib/libcurl.a" "$rv_prefix/lib/libmbedtls.a" \
+        "$rv_prefix/lib/libmbedx509.a" "$rv_prefix/lib/libmbedcrypto.a" > "$rv_prefix/.https-libraries.sha256"
+}
 if [[ -f "$rv_prefix/.https-inputs.sha256" && -f "$rv_prefix/.https-libraries.sha256" ]] && \
     cmp -s "$rv_prefix/.https-inputs.sha256" <(inputs) && \
     sha256sum --check --status "$rv_prefix/.https-libraries.sha256"; then
     echo "Verified project-local HTTPS dependencies are unchanged: $rv_prefix"
+    exit 0
+fi
+# Opt-in content-addressed dependency cache; inert unless enabled. Same inputs
+# as inputs() but hashed by content only, so other worktrees can reuse them;
+# the script hash covers the pinned archive hashes and every build flag.
+source "$rv_root/tools/dependency_cache.sh"
+if rv_depcache_enabled && rv_depcache_compute_key ttfs-https-vita \
+    --script "$rv_root/tools/build_ttfs_https_vita.sh" \
+    --file "mbedtls_platform=$rv_root/port/platform/vita/renegade_mbedtls_platform.c" \
+    --value "sdk_root=$(realpath -e -- "$rv_sdk")" --file "gcc_driver=$rv_sdk/bin/arm-vita-eabi-gcc" \
+    --file "toolchain_cmake=$rv_sdk/share/vita.toolchain.cmake" \
+    --file "sdk_libz=$rv_sdk/arm-vita-eabi/lib/libz.a" \
+    --file "sdk_libpthread=$rv_sdk/arm-vita-eabi/lib/libpthread.a" \
+    --file "sdk_version_info=$rv_sdk/version_info.txt" &&
+    rv_depcache_restore ttfs-https-vita "$rv_prefix" --replace-dest bin include lib share; then
+    record_stamps
+    echo "Verified project-local HTTPS dependencies restored from the dependency cache: $rv_prefix"
     exit 0
 fi
 fetch() {
@@ -79,7 +101,7 @@ cmake --build "$rv_work/curl-build" --target install -j"$rv_jobs"
 mkdir -p "$rv_prefix/share/renegade-licenses"
 cp "$rv_mbed/LICENSE" "$rv_prefix/share/renegade-licenses/mbedtls-LICENSE"
 cp "$rv_work/curl-8.22.0/COPYING" "$rv_prefix/share/renegade-licenses/curl-COPYING"
-inputs > "$rv_prefix/.https-inputs.sha256"
-sha256sum "$rv_prefix/lib/libcurl.a" "$rv_prefix/lib/libmbedtls.a" \
-    "$rv_prefix/lib/libmbedx509.a" "$rv_prefix/lib/libmbedcrypto.a" > "$rv_prefix/.https-libraries.sha256"
+record_stamps
+rv_depcache_store ttfs-https-vita "$rv_prefix" --require-complete \
+    --ignore .https-inputs.sha256 --ignore .https-libraries.sha256 bin include lib share
 printf '%s\n' 'TTFS HTTPS dependency build complete; explicit CA bundle and device acceptance still required.'

@@ -44,6 +44,15 @@ TTFS HTTPS uses project-local pinned curl/Mbed TLS libraries built by
 Set `VITASDK` to the same root as `RENEGADE_VITASDK` for dependency scripts.
 The fast path needs those dependencies prepared first on a fresh checkout.
 
+Third-party dependency builds (vitaGL, FFmpeg/Bink, curl/Mbed TLS) can reuse
+a content-addressed cache. It is off by default. Set
+`RENEGADE_DEPENDENCY_CACHE=1` to use `build/dependency-cache` in this tree, or
+set `RENEGADE_DEPENDENCY_CACHE_DIR` to share one cache between worktrees. A
+dependency is restored only when its in-tree check fails and a cache entry
+verifies against the same inputs (pinned source, ordered patches, script,
+VitaSDK identity, flags). Any mismatch falls back to the normal build. See
+`tools/dependency_cache.py` and `reports/tutorial/TUT_R1_DEPENDENCY_CACHE.md`.
+
 ## Configuration
 
 | Variable | Purpose |

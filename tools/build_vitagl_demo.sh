@@ -18,11 +18,16 @@ work="$root/build/deps/vitagl-demo"
 mkdir -p "$work"
 exec 9>"$work/build.lock"
 flock 9
-if [[ ! -f "$work/source.tar.gz" ]]; then
+# Opt-in content-addressed dependency cache; inert unless enabled.
+source "$root/tools/dependency_cache.sh"
+if [[ ! -f "$work/source.tar.gz" ]] &&
+      ! { rv_depcache_compute_key vitagl-source-archive --value "revision=$revision" &&
+          rv_depcache_restore vitagl-source-archive "$work" source.tar.gz; }; then
     curl --fail --location --retry 2 --max-time 120 \
         "https://codeload.github.com/Rinnegatamante/vitaGL/tar.gz/$revision" \
         -o "$work/source.tar.gz.part"
     mv "$work/source.tar.gz.part" "$work/source.tar.gz"
+    rv_depcache_store vitagl-source-archive "$work" source.tar.gz
 fi
 if [[ ! -f "$work/source/Makefile" ]]; then
     mkdir -p "$work/source"
@@ -58,9 +63,29 @@ patch --batch --fuzz=0 --no-backup-if-mismatch -d "$work/source" -p1 < "$program
 ffp_cache_digest=$(cat "$work/source/source/ffp.c" "$work/source/source/shaders/ffp_v.h" \
     "$work/source/source/shaders/ffp_f.h" "$work/source/source/shaders/texture_combiners/"*.h |
     sha256sum | cut -c1-12)
-make -C "$work/source" -B -j"${RENEGADE_BUILD_JOBS:-8}" \
-    CFLAGS="$flags -DRENEGADE_VGL_FFP_CACHE_DIGEST=\\\"$ffp_cache_digest\\\""
-cp "$work/source/libvitaGL.a" "$work/libvitaGL.a"
+# The cache key hashes the exact compiled tree (pinned archive plus ordered
+# patches as applied above), the compiler identity and the flags, never paths.
+vitagl_cache_hit=
+if rv_depcache_enabled && rv_depcache_compute_key vitagl-demo \
+        --script "$root/tools/build_vitagl_demo.sh" --value "revision=$revision" \
+        --source "$work/source.tar.gz" \
+        --patch "$layout_patch" --patch "$indexed_patch" --patch "$upload_patch" --patch "$dds_patch" \
+        --patch "$projective_patch" --patch "$attribute_patch" --patch "$records_patch" \
+        --patch "$program_cache_patch" \
+        --tree-exclude '*.o' --tree-exclude '*.a' --tree "compiled_tree=$work/source" \
+        --value "sdk_root=$(realpath -e -- "$sdk")" --file "gcc_driver=$sdk/bin/arm-vita-eabi-gcc" \
+        --file "sdk_version_info=$sdk/version_info.txt" \
+        --value "gcc_version=$(arm-vita-eabi-gcc --version)" \
+        --flags="$flags" --value "ffp_cache_digest=$ffp_cache_digest" &&
+    rv_depcache_restore vitagl-demo "$work" libvitaGL.a; then
+    vitagl_cache_hit=$rv_depcache_key
+    printf 'Pinned demo vitaGL restored from the dependency cache: %s\n' "$work/libvitaGL.a"
+else
+    make -C "$work/source" -B -j"${RENEGADE_BUILD_JOBS:-8}" \
+        CFLAGS="$flags -DRENEGADE_VGL_FFP_CACHE_DIGEST=\\\"$ffp_cache_digest\\\""
+    cp "$work/source/libvitaGL.a" "$work/libvitaGL.a"
+    rv_depcache_store vitagl-demo "$work" libvitaGL.a
+fi
 {
     printf 'revision=%s\nflags=%s\n' "$revision" "$flags"
     printf 'splash=disabled\npersistent_shader_cache=enabled\nvita3k_support=enabled\n'
@@ -78,4 +103,7 @@ cp "$work/source/libvitaGL.a" "$work/libvitaGL.a"
     sha256sum "$work/source.tar.gz" "$work/libvitaGL.a" "$work/source/source/vitaGL.h"
     arm-vita-eabi-gcc --version
 } > "$work/provenance.txt"
+if [[ -n "$vitagl_cache_hit" ]]; then
+    printf 'dependency_cache=restored key=%s\n' "$vitagl_cache_hit" >> "$work/provenance.txt"
+fi
 printf '%s\n' "$identity" > "$work/build.identity"

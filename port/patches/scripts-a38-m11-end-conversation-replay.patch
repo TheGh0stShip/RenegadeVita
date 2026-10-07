@@ -1,0 +1,54 @@
+diff --git a/Mission11.cpp b/Mission11.cpp
+--- a/Mission11.cpp
++++ b/Mission11.cpp
+@@ -9779,6 +9779,16 @@
+ 				params.Set_Animation ("S_A_HUMAN.H_A_CON2", false);
+ 				Commands->Action_Play_Animation (obj, params);
+ 			}
++
++			else if (param == M01_MODIFY_YOUR_ACTION_06_JDG && missionEndConv == 0 && killedYet == false)
++			{
++				// Vita port: replay of a stopped end-mission conversation.
++				missionEndConv = Commands->Create_Conversation( "M11_End_Mission_Conversation", 100, 1000, false);
++				Commands->Join_Conversation( STAR, missionEndConv, false, false );
++				Commands->Join_Conversation( obj, missionEndConv, false, false, true );
++				Commands->Monitor_Conversation (obj, missionEndConv);
++				Commands->Start_Conversation( missionEndConv,  missionEndConv );
++			}
+ 		}
+ 	}
+ 
+@@ -9837,6 +9847,20 @@
+ 						params.Set_Basic( this, 100, M01_DOING_ANIMATION_02_JDG );
+ 						params.Set_Animation ("S_A_HUMAN.H_A_CON2", false);
+ 						Commands->Action_Play_Animation (obj, params);
++					}
++				}
++				break;
++
++			// Vita port: the pass chain only continues on ENDED. If the end
++			// conversation was stopped (key conversation playing at start),
++			// replay it once that has cleared instead of waiting forever.
++			case ACTION_COMPLETE_CONVERSATION_INTERRUPTED:
++			case ACTION_COMPLETE_CONVERSATION_UNABLE_TO_INIT:
++				{
++					if (missionEndConv != 0 && action_id == missionEndConv && killedYet == false)
++					{
++						missionEndConv = 0;
++						Commands->Send_Custom_Event( obj, obj, 0, M01_MODIFY_YOUR_ACTION_06_JDG, 2 );
+ 					}
+ 				}
+ 				break;
+@@ -10035,8 +10059,11 @@
+ 						missionEndConv = Commands->Create_Conversation( "M11_End_Mission_Conversation", 100, 1000, false);
+ 						Commands->Join_Conversation( STAR, missionEndConv, false, false );
+ 						Commands->Join_Conversation( obj, missionEndConv, false, false, true );
++						// Vita port: monitor before starting. The end conversation is not
++						// key, so Start_Conversation stops it at once when a key
++						// conversation is playing; only a registered monitor sees that.
++						Commands->Monitor_Conversation (obj, missionEndConv);
+ 						Commands->Start_Conversation( missionEndConv,  missionEndConv );
+-						Commands->Monitor_Conversation (obj, missionEndConv);
+ 					}
+ 
+ 					else if (action_id == M01_DOING_ANIMATION_02_JDG)//end mission--success

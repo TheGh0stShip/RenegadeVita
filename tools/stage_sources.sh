@@ -1178,6 +1178,12 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m11-conversation-id-init.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m11-end-conversation-replay.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m11-sydney-route-monotonic.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a38-m11-cryo-spawn-recursion-bound.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m07-evac-param-id-buffer.patch"
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/scripts" -p1 < "$rv_root/port/patches/scripts-a36-m07-vehicle-drop-zone-bounds.patch"

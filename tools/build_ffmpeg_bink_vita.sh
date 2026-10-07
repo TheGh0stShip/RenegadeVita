@@ -31,6 +31,21 @@ if [[ -f "$rv_stamp" ]] && [[ "$(cat "$rv_stamp")" == "$rv_config_id" ]] && \
 	exit 0
 fi
 
+# Opt-in content-addressed dependency cache; inert unless enabled. The script
+# hash covers the pinned archive hash and every configure flag.
+source "$rv_root/tools/dependency_cache.sh"
+if rv_depcache_enabled && rv_depcache_compute_key ffmpeg-bink-vita \
+	--script "$rv_root/tools/build_ffmpeg_bink_vita.sh" --source "$rv_source_cache/$rv_archive" \
+	--value "config_id=$rv_config_id" --value "sdk_root=$(realpath -e -- "$rv_vitasdk")" \
+	--file "gcc_driver=$rv_vitasdk/bin/arm-vita-eabi-gcc" \
+	--file "sdk_version_info=$rv_vitasdk/version_info.txt" \
+	--value "gcc_version=$("$rv_vitasdk/bin/arm-vita-eabi-gcc" --version)" &&
+	rv_depcache_restore ffmpeg-bink-vita "$rv_prefix" --replace-dest include lib share; then
+	printf '%s\n' "$rv_config_id" > "$rv_stamp"
+	echo "Bink-enabled Vita FFmpeg restored from the dependency cache: $rv_prefix"
+	exit 0
+fi
+
 if [[ ! -x "$rv_source/configure" ]]; then
 	rm -rf "$rv_source"
 	tar -xJf "$rv_source_cache/$rv_archive" -C "$rv_source_cache"
@@ -89,5 +104,7 @@ test -f "$rv_prefix/lib/libavutil.a"
 test -f "$rv_prefix/lib/libswscale.a"
 test -f "$rv_prefix/lib/libswresample.a"
 printf '%s\n' "$rv_config_id" > "$rv_stamp"
+rv_depcache_store ffmpeg-bink-vita "$rv_prefix" --require-complete --ignore .renegade-bink-build \
+	include lib share
 
 echo "Bink-enabled Vita FFmpeg installed at: $rv_prefix"

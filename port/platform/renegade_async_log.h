@@ -24,7 +24,7 @@ public:
 	// Per-session byte cap on lines accepted into the log. Past the soft cap
 	// only priority lines ([LIFECYCLE], FATAL, crash, Teardown, Overall:) are
 	// accepted, from a reserve. Existing log files are never pruned/rotated.
-	enum { Session_Soft_Cap = 4U * 1024U * 1024U, Session_Reserve = 256U * 1024U };
+	enum { Session_Soft_Cap = 32U * 1024U * 1024U, Session_Reserve = 256U * 1024U };
 
 	// Sink callbacks run only on the writer thread (or inside Flush when the
 	// writer never started). They return false on an unrecoverable failure.

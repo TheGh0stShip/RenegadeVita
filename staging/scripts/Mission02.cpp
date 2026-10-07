@@ -3135,6 +3135,15 @@ DECLARE_SCRIPT (M02_Respawn_Controller, "")
 
 	void Custom (GameObject *obj, int type, int param, GameObject *sender)
 	{
+		// Vita bounds: area-indexed customs must stay inside the M02_AREACOUNT
+		// arrays. Retail start-cinematic soldiers register area 99, which the
+		// original code wrote past the end of area_unit_count.
+		if ((((type >= 101) && (type <= 109)) || (type == 114)) &&
+			((param < 0) || (param >= M02_AREACOUNT)))
+		{
+			return;
+		}
+
 		if (type == 101)
 		{
 			// A unit has died, subtract him from his area (param).

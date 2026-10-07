@@ -1,0 +1,28 @@
+M02_Respawn_Controller::Custom indexes its M02_AREACOUNT (26) per-area arrays
+with the custom parameter. Retail M02.mix binds M02_Nod_Soldier "99,0,2" to the
+start-cinematic soldiers 401002 and 401003; their timer registers area 99 with
+custom 103 and their self-destruct reports custom 101. area_unit_count[99] is
+73 bytes past the end of the 26-byte array and lands in the high byte of
+area_officer[11], so the original code wrote outside the array while those
+soldiers lived. Ignore the area-indexed customs (101-109, 114) whose area is
+outside the arrays. Every in-range area keeps its original handling, and the
+non-indexed customs (111, 112, 113, 115, 116) are unchanged.
+
+--- a/Mission02.cpp
++++ b/Mission02.cpp
+@@ -3135,6 +3135,15 @@
+
+ 	void Custom (GameObject *obj, int type, int param, GameObject *sender)
+ 	{
++		// Vita bounds: area-indexed customs must stay inside the M02_AREACOUNT
++		// arrays. Retail start-cinematic soldiers register area 99, which the
++		// original code wrote past the end of area_unit_count.
++		if ((((type >= 101) && (type <= 109)) || (type == 114)) &&
++			((param < 0) || (param >= M02_AREACOUNT)))
++		{
++			return;
++		}
++
+ 		if (type == 101)
+ 		{
+ 			// A unit has died, subtract him from his area (param).

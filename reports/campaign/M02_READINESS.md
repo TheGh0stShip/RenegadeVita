@@ -159,3 +159,164 @@ The critical path has these single points of failure:
 4. Fight Mendoza until he runs and is evacuated by the rope cinematic.
 5. Enter end zone 400194. Expect Mission_Complete, then score/intermission,
    then the M03 handoff. Pull the runtime log and any `psp2core-*.psp2dmp`.
+
+## Full audit (2026-10-07)
+
+Host-only static audit of the M02 completion path. Nothing was built, linked,
+packaged or run in Vita3K or on hardware. Retail input was the read-only copy
+`local-builder/retail-host/Data/M02.mix` (sha256 `f098e919…64b3a1`) plus
+`always.dat`, `Always2.dat`, `always3.dat` and `always.dbs` (`objects.ddb`
+sha256 `98253406…ec94cb`). Detailed receipts stay in the ignored
+`build/m02audit/`.
+
+Tools reused: `audit_mission_content_bindings --map M02.mix`,
+`audit_mission_conversations --map M02.mix`,
+`renegade_cinematic_dependency_scan --mission-inventory` and the
+`audit_archive_literal_references` matcher. The checks that pair names with
+archive members, timers with receivers, and script commands with null guards
+were small one-off scans of the same data.
+
+### 1. Script bindings and parameters
+
+- `m02.ldd` has 685 bindings (684 persisted, plus `M02_Commando_Start`), and
+  `objects.ddb` adds 55 definition bindings. They use 30 script names, and
+  every name is declared in a Scripts.dsp source, so `unknown_shipped_scripts`
+  is empty.
+- Parameter counts match the descriptors. Scripts with no parameters carry the
+  usual single empty value. `M02_Nod_Soldier` 3/3, `M00_BuildingStateSoundSpeaker`
+  14/14, `M00_Play_Sound` 6/6, `M02_GDI_Soldier` 2/2, and every `Area_ID` or
+  `Objective_ID` script is 1/1.
+- All 30 `Get_*_Parameter("…")` reads in `Mission02.cpp` name a field of the
+  script that makes the read.
+- The 17 runtime `Attach_Script` calls pass the expected field counts.
+- Cinematic `attach_script` lines use 8 script names. `x2i_gdi_drop03_minigunner.txt`
+  passes `M02_GDI_Soldier "9"`, which is one of two fields. The missing value
+  falls back to `""`, which `atoi` turns into 0, matching the descriptor
+  default (`ScriptImpClass::Get_Parameter` bounds-checks the index).
+- `DLS_Where_Am_I` is not declared anywhere and was already noted as identical
+  to retail PC.
+
+### 2. Custom events, timers and Find_Object IDs
+
+- **Objective activations.** Every `(id, 0)` sent to the controller is in
+  202..221, which keeps `Objective_Radar_Locations[id-202]` (20 entries) in
+  bounds. `M02_Destroy_Objective` values in the level are 204, 212, 214–216,
+  218–220, 222 and 223, and that script only ever sends `(id, 1)`.
+- **Timers.** Every `Start_Timer` id has a matching `Timer_Expired` case, with
+  one exception: controller timer 11 (started in case 411) and the completion
+  timers with no conversation fall through. They still run the original
+  `Stop_All_Conversations`. This is the same as retail.
+- **Respawn-controller customs.** Customs 101–116 all have handlers. The
+  literal area parameters are all in 0..25.
+- **Area 99 defect (fixed below).** The level binds `M02_Nod_Soldier "99,0,2"`
+  to 401002 and 401003. These two soldiers send custom 103 when their timer
+  fires and custom 101 when they self-destruct, both with area 99.
+  `M02_Stationary_Vehicle 99` (400985) sends no area custom.
+- **Find_Object IDs.** 256 of the 281 literal `Find_Object` IDs are serialized
+  level objects. The 25 misses (400288, 400348, 400412, 400414, 400452,
+  400500, 400504, 400507–400509, 401025, 401048, 401055, 401059, 401061,
+  401128 and 401146) are all wake-up `Send_Custom_Event(obj, Find_Object(id), 0, 0)`
+  calls. `Send_Custom_Event` returns early on a NULL target
+  (`SCRIPT_PTR_CHECK(to)`), so these lookups are no-ops, the same as on retail
+  PC.
+- **Critical-path objects** are all present:
+  - 1111112 (both controllers), zones 301601, 400193 and 400194, and SAM
+    sites 1100085/94/120/130 (`M03_SAM_Site_Logic` and
+    `M02_Destroy_Objective`) each own their scripts;
+  - 1111116, 474463, 400510, 401028 and 401036 are serialized level objects.
+
+### 3. Content resolution
+
+These names resolve against the mounted archives:
+
+- all 21 `create_real_object` presets;
+- the 15 Mission02 source presets (`Invisible_Object`, `Nod_Jet`,
+  `Nod_FlameThrower_3Boss`, `GDI_Transport_Helicopter`, the vehicles and the
+  `POW_*` powerups);
+- all 43 cinematic `.txt` names in the source, with `X2I_GDI_Drop_HummVee.txt`
+  coming from `always.dat`;
+- the `POG_*.tga` objective icons, as `.dds`;
+- `H_A_J27C` and the other source animations;
+- the 15 `play_audio` names.
+
+Conversations: 64 source leads. `M02_HIDDEN_02_FINISH` (`Mission02.cpp:3244`,
+silo-pair bonus) is missing from the retail conversation DB. In that case
+`Create_Conversation` returns -1, and Join and Start look it up and find
+nothing, so nothing plays. Retail PC behaves the same way.
+
+These cinematic dependencies are missing from every mounted archive, and all
+of the misses are identical to retail PC:
+
+- `XG_HD_Transport.w3d` (animation `v_GDI_trnspt.XG_HD_Transport`) is used by
+  `x2i_gdi_drop_mediumtank.txt`, which `Mission02.cpp` reaches. The literal
+  appears only in `.txt` files, so the transport plays no animation for that
+  command.
+- The `x2c_mammothdlv.txt` set (`X2C_*` models and animations, plus the
+  `v_gdi_mammoth` preset/model), `xg_democam.txt` and
+  `x2i_gdi_drop_mammoth.txt` are not referenced by M02 scripts or level
+  bindings. Those cinematics are dead content.
+
+### 4. Crash-prone code on the M02 path
+
+- `Mission02.cpp` contains no raw `->` dereference, division, `sprintf` or
+  fixed character buffer. Every created object is null-checked before
+  `Attach_Script`.
+- Every `Commands->` function that `Mission02.cpp` calls guards its object
+  pointer with `SCRIPT_PTR_CHECK` or an explicit test, except
+  `Has_Key(STAR, 6)` (zone 301601, `:556`). `STAR` is NULL only when there is
+  no human soldier. Script zones default to `CheckStarsOnly`, so the enterer
+  is the star itself. This is a lead only and was not patched.
+- A missing `WaypathID` (Sakura 400397, the apaches and the jet 403389) is
+  safe because `PathClass::Initialize` handles a NULL waypath.
+- **Defect, fixed.** `M02_Respawn_Controller::Custom` (`Mission02.cpp:3136`)
+  indexed its 26-entry arrays with area 99. `area_unit_count[99]` lands in the
+  high byte of `area_officer[11]` inside the same script object, so this was
+  an out-of-bounds write that stayed inside the object. It does not crash. It
+  changes area 11's officer ID for a short time, which can skip area 11
+  respawn checks. Fix: `scripts-a36-m02-respawn-area-bounds.patch` ignores
+  area-indexed customs (101–109, 114) whose area is outside
+  `[0, M02_AREACOUNT)`.
+- **Original behaviour, kept.**
+  - `M02_Mendoza::Timer_Expired` creates one extra `MX2DSGN_DSGN0019` active
+    conversation every 7 s that is never started, so a small number of them
+    pile up until the boss leaves.
+  - Zone 400193 has no `was_entered` latch. Timer 9 destroys the zone 1 s
+    after entry, and star control is already disabled by then.
+
+### 5. Objective chain
+
+The chain is the same as in the section above. Zone 400193 starts the midtro
+and timer 9. Timer 9 completes 201, activates 205 and creates Mendoza. Zone
+400194 sends `205` accomplished and calls `Mission_Complete(true)` once.
+Neither new patch is on this path: the area guard returns only for
+out-of-range area customs, and the chain's 104/105 customs use area 21.
+
+### 6. Port patches touching M02
+
+- `scripts-a36-m02-objective-controller-speech-save.patch`: save id 4 is
+  unique within the controller. Correct.
+- `combat-a47-ccamera-cinematic-sniper-handoff.patch`: the early return for a
+  host-owned camera comes after the cinematic sniper-zoom step and the sniper
+  block. Dropping the host clears `CinematicSnipingEnabled` and restores the
+  saved zoom. This is correct when read against the staged
+  `CCameraClass::Handle_Input`.
+- `scripts-a35-cinematic-command-timing.patch`: the X2/XG filter is present,
+  as recorded above.
+- `kM02ScriptSpawnPresets` (`a31_vita_runtime.cpp:3388`): all 8 names are
+  retail definitions.
+
+### Validation and deferred items
+
+**Validation:**
+- `bash tools/stage_sources.sh` exits 0 with the new patch (526 ordered
+  patches, zero fuzz). Only `staging/scripts/Mission02.cpp` and
+  `PATCH_INVENTORY.json` changed.
+- `renegade_patch_inventory.py --check-staging` passes.
+- `arm-vita-eabi-g++ -fsyntax-only` on the staged `Mission02.cpp` (compdb flags
+  plus the frame-profile, LAN and MSAA defines) passes with no Mission02
+  diagnostics.
+
+**Deferred:**
+- Live waypath-ID presence. It is not a crash risk.
+- Whether zone 301601 has `CheckStarsOnly` set.
+- All physical gates in the test route above.

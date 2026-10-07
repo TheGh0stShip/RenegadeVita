@@ -378,7 +378,7 @@ python3 "$rv_root/tools/check_m13_script_coverage.py" --root "$rv_root" --symbol
 while IFS= read -r rv_symbol; do
 	require_linked_symbol "$rv_symbol"
 done <<'EOF'
-A31_Vita_Run_Interactive_Runtime(int, bool, bool, char const*, char const*, unsigned char const*, unsigned int, int)
+A31_Vita_Run_Interactive_Runtime(int, bool, bool, char const*, char const*, unsigned char const*, unsigned int, int, char const*, bool)
 EncyclopediaMgrClass::Initialize()
 EncyclopediaMgrClass::Shutdown()
 RenegadeVitaAudio::Open_Mpeg_Playback

@@ -2085,6 +2085,30 @@ void Log_Static_Mesh_Cache_Statistics()
 		static_cast<unsigned long long>(g_static_mesh_statistics.allocation_failures),
 		static_cast<unsigned long long>(g_static_mesh_statistics.cached_batches),
 		static_cast<unsigned long long>(g_static_mesh_statistics.cached_triangles));
+	// Thrash detail on its own line so neither exceeds the breadcrumb buffer.
+	// Counters are cumulative; max_frame_* cover the frames since the last line.
+	const uint64_t *reasons = g_static_mesh_statistics.rebuild_reasons;
+	Vita_Append_A22_Runtime_Breadcrumb("static-mesh-cache",
+		"thrash frame=%u rebuild_counts=%llu rebuild_alternate=%llu rebuild_material=%llu rebuild_ambient=%llu rebuild_lights=%llu rebuild_world=%llu collisions=%llu rapid=%llu volatile_resident=%u recovered=%llu oversize=%llu upload_bytes=%llu max_frame_builds=%u max_frame_upload_bytes=%u lit_families=%llu stale_instances=%llu",
+		g_statistics.frames,
+		static_cast<unsigned long long>(reasons[STATIC_MESH_REBUILD_COUNTS]),
+		static_cast<unsigned long long>(reasons[STATIC_MESH_REBUILD_ALTERNATE]),
+		static_cast<unsigned long long>(reasons[STATIC_MESH_REBUILD_MATERIAL]),
+		static_cast<unsigned long long>(reasons[STATIC_MESH_REBUILD_AMBIENT]),
+		static_cast<unsigned long long>(reasons[STATIC_MESH_REBUILD_LIGHTS]),
+		static_cast<unsigned long long>(reasons[STATIC_MESH_REBUILD_WORLD]),
+		static_cast<unsigned long long>(g_static_mesh_statistics.collisions),
+		static_cast<unsigned long long>(g_static_mesh_statistics.rapid_volatile),
+		g_static_mesh_cache.Volatile(),
+		static_cast<unsigned long long>(g_static_mesh_statistics.volatile_recoveries),
+		static_cast<unsigned long long>(g_static_mesh_statistics.oversize_rejects),
+		static_cast<unsigned long long>(g_static_mesh_statistics.upload_bytes),
+		g_static_mesh_statistics.max_frame_builds,
+		g_static_mesh_statistics.max_frame_upload_bytes,
+		static_cast<unsigned long long>(g_static_mesh_statistics.lit_families),
+		static_cast<unsigned long long>(g_static_mesh_statistics.stale_instances));
+	g_static_mesh_statistics.max_frame_builds = 0U;
+	g_static_mesh_statistics.max_frame_upload_bytes = 0U;
 }
 
 void Read_Skin_Deform_Cache_Mode()
@@ -2512,41 +2536,73 @@ bool Build_Static_Mesh_Streams(MeshClass &mesh, MeshModelClass *model,
 	return true;
 }
 
-bool Static_Mesh_Entry_Current(const StaticMeshEntry &entry, MeshModelClass *model,
-	int vertex_count, int triangle_count, int base_pass_count,
+// STATIC_MESH_REBUILD_NONE when the entry still matches this draw.
+// Per-polygon texture, shader and per-vertex material pointers are not
+// compared. They live in MeshModelClass's private MeshMatDescClass, and every
+// post-load writer goes through a MeshModelClass mutator that forgets the
+// model's entries first (ww3d2 lifetime patch: Set_*/Set_Single_*,
+// Get_*_Array(create), Make_*_Unique, Set_Pass_Count, alternate
+// descriptions, Reset/operator=). MeshClass/MeshModelClass Replace_Texture
+// and Replace_VertexMaterial are compiled out (#if 0) in the original source,
+// and building damage/power swaps use alternate descriptions. The texture
+// and material objects themselves are bound live at replay or compared
+// through the snapshots below.
+StaticMeshRebuildReason Static_Mesh_Entry_Current(const StaticMeshEntry &entry,
+	MeshModelClass *model, int vertex_count, int triangle_count, int base_pass_count,
 	const RenderInfoClass &render_info, const Matrix3D &world_transform)
 {
 	if (entry.vertex_count != static_cast<uint32_t>(vertex_count) ||
 		entry.triangle_count != static_cast<uint32_t>(triangle_count) ||
-		entry.pass_count != static_cast<uint32_t>(base_pass_count) ||
-		entry.alternate_materials != model->Is_Alternate_Material_Description_Enabled())
-		return false;
+		entry.pass_count != static_cast<uint32_t>(base_pass_count))
+		return STATIC_MESH_REBUILD_COUNTS;
+	if (entry.alternate_materials != model->Is_Alternate_Material_Description_Enabled())
+		return STATIC_MESH_REBUILD_ALTERNATE;
 	for (uint32_t index = 0U; index < entry.material_count; ++index) {
 		const StaticMeshMaterialSnapshot &cached = entry.materials[index];
 		if (!Static_Mesh_Snapshot_Equal(cached, Snapshot_Static_Mesh_Material(
-			static_cast<VertexMaterialClass *>(cached.material)))) return false;
+			static_cast<VertexMaterialClass *>(cached.material))))
+			return STATIC_MESH_REBUILD_MATERIAL;
 	}
-	return !entry.lighting.uses_lighting || Static_Mesh_Lighting_Equal(entry.lighting,
+	if (!entry.lighting.uses_lighting) return STATIC_MESH_REBUILD_NONE;
+	return Static_Mesh_Lighting_Difference(entry.lighting,
 		Capture_Static_Mesh_Lighting(render_info, world_transform));
 }
 
-bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
+// Records a VOLATILE entry's current inputs, the same ones
+// Static_Mesh_Entry_Current compares, so its next sample can tell whether
+// they are still changing. Never affects what is drawn.
+void Observe_Static_Mesh_Entry(StaticMeshEntry &entry, MeshModelClass *model,
+	int vertex_count, int triangle_count, int base_pass_count,
+	const RenderInfoClass &render_info, const Matrix3D &world_transform)
+{
+	entry.vertex_count = static_cast<uint32_t>(vertex_count);
+	entry.triangle_count = static_cast<uint32_t>(triangle_count);
+	entry.pass_count = static_cast<uint32_t>(base_pass_count);
+	entry.alternate_materials = model->Is_Alternate_Material_Description_Enabled();
+	for (uint32_t index = 0U; index < entry.material_count; ++index) {
+		entry.materials[index] = Snapshot_Static_Mesh_Material(
+			static_cast<VertexMaterialClass *>(entry.materials[index].material));
+	}
+	if (entry.lighting.uses_lighting)
+		entry.lighting = Capture_Static_Mesh_Lighting(render_info, world_transform);
+}
+
+StaticMeshUploadResult Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
 {
 	RENEGADE_FRAME_PROFILE("Vita Render Static Cache Upload");
 	const StaticMeshStreamBuilder &builder = g_static_mesh_builder;
 	const uint32_t vertex_bytes = builder.Vertices().Count() * STATIC_MESH_VERTEX_STRIDE;
 	const uint32_t index_bytes = builder.Indices().Count() * sizeof(uint16_t);
 	const uint32_t total_bytes = vertex_bytes + index_bytes;
-	if (vertex_bytes == 0U || index_bytes == 0U ||
-		total_bytes > STATIC_MESH_CACHE_BUDGET_BYTES / 4U) return false;
+	if (vertex_bytes == 0U || index_bytes == 0U) return STATIC_MESH_UPLOAD_FAILED;
+	if (total_bytes > STATIC_MESH_CACHE_BUDGET_BYTES / 4U) return STATIC_MESH_UPLOAD_OVERSIZE;
 	if (g_static_mesh_cache.Bytes() + total_bytes > STATIC_MESH_CACHE_BUDGET_BYTES) {
 		g_static_mesh_statistics.evictions += g_static_mesh_cache.Enforce_Budget(
 			STATIC_MESH_CACHE_BUDGET_BYTES - total_bytes, frame);
 	}
 	if (g_static_mesh_cache.Bytes() + total_bytes > STATIC_MESH_CACHE_BUDGET_BYTES ||
 		vglMemFree(VGL_MEM_ALL) < STATIC_MESH_CACHE_FREE_RESERVE_BYTES + total_bytes) {
-		++g_static_mesh_statistics.allocation_failures;
-		return false;
+		return STATIC_MESH_UPLOAD_FAILED;
 	}
 	const uint32_t batch_bytes = builder.Batches().Count() * sizeof(StaticMeshBatch);
 	const uint32_t material_bytes =
@@ -2557,8 +2613,7 @@ bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
 	if (batches == NULL || materials == NULL) {
 		free(batches);
 		free(materials);
-		++g_static_mesh_statistics.allocation_failures;
-		return false;
+		return STATIC_MESH_UPLOAD_FAILED;
 	}
 	memcpy(batches, builder.Batches().Data(), batch_bytes);
 	if (material_bytes != 0U) memcpy(materials, builder.Materials().Data(), material_bytes);
@@ -2604,8 +2659,7 @@ bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
 		Release_Static_Mesh_Buffers(buffers[0], buffers[1]);
 		free(batches);
 		free(materials);
-		++g_static_mesh_statistics.allocation_failures;
-		return false;
+		return STATIC_MESH_UPLOAD_FAILED;
 	}
 	entry.vertex_buffer = buffers[0];
 	entry.index_buffer = buffers[1];
@@ -2614,7 +2668,7 @@ bool Upload_Static_Mesh_Entry(StaticMeshEntry &entry, uint32_t frame)
 	entry.materials = materials;
 	entry.material_count = builder.Materials().Count();
 	g_static_mesh_cache.Account(entry, total_bytes);
-	return true;
+	return STATIC_MESH_UPLOAD_OK;
 }
 
 // Replays the recorded runs with the same state sequence as the immediate
@@ -2699,8 +2753,68 @@ void Replay_Static_Mesh_Entry(const StaticMeshEntry &entry)
 	++g_statistics.state_changes;
 }
 
+// The WW3D/GL side of Static_Mesh_Cache_Lookup for one rigid mesh draw.
+struct StaticMeshCacheOps {
+	MeshClass &mesh;
+	MeshModelClass *model;
+	const RenderInfoClass &render_info;
+	const Vector3 *vertices;
+	const Vector3 *normals;
+	const TriIndex *triangles;
+	int vertex_count;
+	int triangle_count;
+	int base_pass_count;
+	const Matrix3D &world_transform;
+	uint32_t frame;
+
+	StaticMeshRebuildReason Validate(const StaticMeshEntry &entry) const
+	{
+		return Static_Mesh_Entry_Current(entry, model, vertex_count, triangle_count,
+			base_pass_count, render_info, world_transform);
+	}
+	void Observe(StaticMeshEntry &entry) const
+	{
+		Observe_Static_Mesh_Entry(entry, model, vertex_count, triangle_count,
+			base_pass_count, render_info, world_transform);
+	}
+	void Describe(StaticMeshEntry &entry) const
+	{
+		entry.vertex_count = static_cast<uint32_t>(vertex_count);
+		entry.triangle_count = static_cast<uint32_t>(triangle_count);
+		entry.pass_count = static_cast<uint32_t>(base_pass_count);
+		entry.alternate_materials = model->Is_Alternate_Material_Description_Enabled();
+	}
+	StaticMeshBuildResult Build(bool &uses_lighting) const
+	{
+		if (Build_Static_Mesh_Streams(mesh, model, render_info, vertices, normals,
+			triangles, vertex_count, triangle_count, base_pass_count, world_transform,
+			uses_lighting)) return STATIC_MESH_BUILD_OK;
+		// A failed builder is a host allocation failure, not an eligibility verdict.
+		return g_static_mesh_builder.Failed() ? STATIC_MESH_BUILD_FAILED :
+			STATIC_MESH_BUILD_INELIGIBLE;
+	}
+	bool Retain_Materials(StaticMeshEntry &entry) const
+	{
+		return Static_Mesh_Retain_Materials(entry, g_static_mesh_builder.Materials().Data(),
+			g_static_mesh_builder.Materials().Count());
+	}
+	StaticMeshUploadResult Upload(StaticMeshEntry &entry) const
+	{
+		return Upload_Static_Mesh_Entry(entry, frame);
+	}
+	void Capture_Lighting(StaticMeshEntry &entry) const
+	{
+		entry.lighting = Capture_Static_Mesh_Lighting(render_info, world_transform);
+	}
+	uint32_t Built_Triangles() const
+	{
+		return g_static_mesh_builder.Indices().Count() / 3U;
+	}
+};
+
 // Draws every pass of a rigid mesh from its cached streams when it is
 // eligible. Returns false when the immediate path must draw it instead.
+// Instances share unlit entries; lit ones are keyed by this MeshClass too.
 bool Submit_Static_Mesh_Cache(MeshClass &mesh, MeshModelClass *model,
 	const RenderInfoClass &render_info, const Vector3 *vertices,
 	const Vector3 *normals, const TriIndex *triangles, int vertex_count,
@@ -2708,94 +2822,14 @@ bool Submit_Static_Mesh_Cache(MeshClass &mesh, MeshModelClass *model,
 {
 	if (!g_static_mesh_cache_enabled) return false;
 	const uint32_t frame = g_statistics.frames;
-	const void *user_lighting = mesh.Get_User_Lighting_Array(false);
-	StaticMeshEntry *entry = g_static_mesh_cache.Find(model, user_lighting);
-	if (entry != NULL) {
-		entry->last_used_frame = frame;
-		if (entry->state == STATIC_MESH_ENTRY_VOLATILE) return false;
-		const bool current = Static_Mesh_Entry_Current(*entry, model, vertex_count,
-			triangle_count, base_pass_count, render_info, world_transform);
-		if (entry->state == STATIC_MESH_ENTRY_READY && current) {
-			// Rebuilds are forgiven after a long stable period, so occasional
-			// lighting changes over a level do not exhaust the volatile limit.
-			if (entry->rebuilds != 0U &&
-				frame - entry->built_frame > STATIC_MESH_CACHE_STALE_FRAMES)
-				entry->rebuilds = 0U;
-			Replay_Static_Mesh_Entry(*entry);
-			++g_static_mesh_statistics.hits;
-			return true;
-		}
-		// Unchanged ineligible geometry stays on immediate mode. Only an
-		// allocation failure (nonzero retry frame) is attempted again later.
-		if (entry->state == STATIC_MESH_ENTRY_INELIGIBLE && current &&
-			(entry->retry_frame == 0U ||
-			 static_cast<int32_t>(frame - entry->retry_frame) < 0)) return false;
-		if (entry->state == STATIC_MESH_ENTRY_READY || !current) {
-			g_static_mesh_cache.Release_Storage(*entry);
-			if (++entry->rebuilds > StaticMeshCacheTable::MaxRebuilds) {
-				entry->state = STATIC_MESH_ENTRY_VOLATILE;
-				++g_static_mesh_statistics.volatile_entries;
-				return false;
-			}
-			++g_static_mesh_statistics.rebuilds;
-		}
-	} else {
-		entry = g_static_mesh_cache.Insert(model, user_lighting);
-		if (entry == NULL) {
-			g_static_mesh_statistics.evictions +=
-				g_static_mesh_cache.Evict_Stale(frame, STATIC_MESH_CACHE_STALE_FRAMES);
-			entry = g_static_mesh_cache.Insert(model, user_lighting);
-			if (entry == NULL) return false;
-		}
-		entry->last_used_frame = frame;
-	}
-
-	entry->vertex_count = static_cast<uint32_t>(vertex_count);
-	entry->triangle_count = static_cast<uint32_t>(triangle_count);
-	entry->pass_count = static_cast<uint32_t>(base_pass_count);
-	entry->alternate_materials = model->Is_Alternate_Material_Description_Enabled();
-	entry->state = STATIC_MESH_ENTRY_INELIGIBLE;
-	entry->retry_frame = 0U;
-	memset(&entry->lighting, 0, sizeof(entry->lighting));
-	bool uses_lighting = false;
-	const bool built = Build_Static_Mesh_Streams(mesh, model, render_info, vertices,
-		normals, triangles, vertex_count, triangle_count, base_pass_count,
-		world_transform, uses_lighting);
-	if (!built && g_static_mesh_builder.Failed()) {
-		// Host allocation failure, not an eligibility verdict.
-		++g_static_mesh_statistics.allocation_failures;
-		entry->retry_frame = frame + STATIC_MESH_CACHE_RETRY_FRAMES;
-		if (entry->retry_frame == 0U) entry->retry_frame = 1U;
-		return false;
-	}
-	if (!built) {
-		++g_static_mesh_statistics.ineligible;
-		// Retain the materials that produced the verdict so a changed material
-		// description or material state reconsiders this entry.
-		const uint32_t material_bytes = g_static_mesh_builder.Materials().Count() *
-			sizeof(StaticMeshMaterialSnapshot);
-		if (material_bytes != 0U) {
-			entry->materials = static_cast<StaticMeshMaterialSnapshot *>(malloc(material_bytes));
-			if (entry->materials != NULL) {
-				memcpy(entry->materials, g_static_mesh_builder.Materials().Data(), material_bytes);
-				entry->material_count = g_static_mesh_builder.Materials().Count();
-			}
-		}
-		if (entry->materials == NULL) entry->state = STATIC_MESH_ENTRY_VOLATILE;
-		return false;
-	}
-	if (!Upload_Static_Mesh_Entry(*entry, frame)) {
-		entry->retry_frame = frame + STATIC_MESH_CACHE_RETRY_FRAMES;
-		if (entry->retry_frame == 0U) entry->retry_frame = 1U;
-		return false;
-	}
-	if (uses_lighting) entry->lighting = Capture_Static_Mesh_Lighting(render_info, world_transform);
-	entry->state = STATIC_MESH_ENTRY_READY;
-	entry->built_frame = frame;
-	++g_static_mesh_statistics.builds;
-	g_static_mesh_statistics.cached_batches += entry->batch_count;
-	g_static_mesh_statistics.cached_triangles += g_static_mesh_builder.Indices().Count() / 3U;
-	if (!g_logged_first_static_mesh_build) {
+	StaticMeshCacheOps ops = { mesh, model, render_info, vertices, normals, triangles,
+		vertex_count, triangle_count, base_pass_count, world_transform, frame };
+	bool built = false;
+	const StaticMeshEntry *entry = Static_Mesh_Cache_Lookup(g_static_mesh_cache,
+		g_static_mesh_statistics, model, mesh.Get_User_Lighting_Array(false), &mesh,
+		frame, STATIC_MESH_CACHE_RETRY_FRAMES, STATIC_MESH_CACHE_STALE_FRAMES, ops, built);
+	if (entry == NULL) return false;
+	if (built && !g_logged_first_static_mesh_build) {
 		Vita_Append_A22_Runtime_Breadcrumb("static-mesh-cache",
 			"first cached mesh: mesh=%s vertices=%u indices=%u batches=%u materials=%u bytes=%u",
 			mesh.Get_Name(), g_static_mesh_builder.Vertices().Count(),

@@ -30,16 +30,18 @@ class StaticMeshEquivalenceTests(unittest.TestCase):
     def test_cached_streams_match_immediate_pass_loop(self):
         source = RENDERER.read_text()
         build = extract(source, 'bool Build_Static_Mesh_Streams(',
-                        'bool Static_Mesh_Entry_Current(')
+                        'StaticMeshRebuildReason Static_Mesh_Entry_Current(')
         # Extracted one by one so unrelated neighbours (the per-frame lighting
         # signature capture) stay out of this builder-only harness.
         helpers = '\n'.join(extract_function(source, signature) for signature in (
             'StaticMeshMaterialSnapshot Snapshot_Static_Mesh_Material(',
             'bool Static_Mesh_Passthrough_Stage('))
-        immediate = extract(source, '\tfor (int pass = 0; pass < base_pass_count;',
+        # The Vita immediate pass loop of Submit_Mesh_Internal (after the
+        # host-only loop and the transform setup).
+        immediate = extract(source, '\tfor (int pass = 0; pass < draw_pass_count;',
                             '\n\tDisable_Texture_Stage(1U);',
                             source.index('const Matrix4 world_transform',
-                                         source.index('void Submit_Mesh(')))
+                                         source.index('static void Submit_Mesh_Internal(')))
         self.assertNotIn('Capture_Static_Mesh_Lighting', helpers)
         self.assertIn('Evaluate_Original_Material_Vertex_Color(', build)
         self.assertIn('bool &uses_lighting', build)

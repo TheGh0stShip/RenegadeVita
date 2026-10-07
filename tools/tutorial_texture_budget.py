@@ -19,7 +19,6 @@ from collections import Counter, OrderedDict
 import hashlib
 import json
 from pathlib import Path
-import re
 import struct
 import sys
 import zlib

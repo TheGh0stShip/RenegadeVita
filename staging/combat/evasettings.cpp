@@ -302,9 +302,9 @@ EvaSettingsDefClass::Load (ChunkLoadClass &cload)
 	}
 
 	loaded = loaded && parent_seen && variables_seen && !cload.Has_Error();
-	if (!loaded) return false;
+	// Register unconditionally (original): a rejected load discards all callbacks.
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
-	return true;
+	return loaded;
 }
 
 void

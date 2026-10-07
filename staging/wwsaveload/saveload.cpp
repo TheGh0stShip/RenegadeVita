@@ -115,7 +115,11 @@ bool SaveLoadSystemClass::Load (ChunkLoadClass &cload,bool auto_post_load,
 					A30_Vita_Log("A3.9 saveload: subsystem load=false name=%s chunk=%08X chunk_error=%d reported=%d\n",
 						sys->Name(), (unsigned)sys->Chunk_ID(), cload.Has_Error() ? 1 : 0, ReportedLoadFailure ? 1 : 0);
 				}
-				ok &= rv_sys_ok;
+				// Retail level/definition data (not a player save): the original
+				// release ignored subsystem status. The A36 admission checks are
+				// player-save rules and reject valid shipped levels, so they are
+				// logged and advisory here; structural chunk errors still fail.
+				if (require_player_save_subsystems) ok &= rv_sys_ok;
 				WWLOG_INTERMEDIATE(sys->Name());
 			}
 		}
@@ -135,7 +139,7 @@ bool SaveLoadSystemClass::Load (ChunkLoadClass &cload,bool auto_post_load,
 			sys->PlayerSaveLoadSeen = false;
 		}
 	}
-	ok = !ReportedLoadFailure && ok;
+	if (require_player_save_subsystems) ok = !ReportedLoadFailure && ok;
 
 	// Process all of the pointer remap requests
 	ok = PointerRemapper.Process() && ok;

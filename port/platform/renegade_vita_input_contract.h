@@ -33,6 +33,61 @@ private:
 	enum State { Blocked, Ready, Pressed, Consumed } state;
 };
 
+// Handheld Vita crouch: the right thumb cannot hold Circle and aim with the
+// right stick at once, and there is no L3. Circle keeps the original
+// hold-to-crouch key; a short solo tap additionally latches that key until
+// the next Circle press, an Action press (vehicle entry, ladder, poke), or
+// loss of ordinary gameplay input. The original Input/Soldier code still owns
+// what crouch does; this only decides whether the logical key is held.
+class CrouchLatch
+{
+public:
+	enum { TAP_MICROSECONDS = 250000U };
+	CrouchLatch() : latched(false), pressed(false), consumed(false),
+		was_latched(false), press_us(0U) {}
+	void Reset()
+	{
+		latched = pressed = consumed = was_latched = false;
+		press_us = 0U;
+	}
+	bool Latched() const { return latched; }
+	// circle: Circle drives crouch this poll (chords already excluded).
+	// other: another face/system button is down (e.g. Cross for a momentary
+	// crouch-jump), so the press is not a solo tap. Triggers, D-pad and
+	// sticks do not count: crouching while firing or moving still latches.
+	// cancel: original Action key hit this poll.
+	// enabled: ordinary gameplay input is active.
+	bool Sample(bool circle, bool other, bool cancel, bool enabled,
+		uint32_t frame_us)
+	{
+		if (!enabled) { Reset(); return false; }
+		if (cancel) latched = false;
+		if (circle) {
+			if (!pressed) {
+				pressed = true;
+				consumed = false;
+				was_latched = latched;
+				press_us = 0U;
+			} else if (press_us < TAP_MICROSECONDS) {
+				press_us += frame_us;
+			}
+			if (other || cancel) consumed = true;
+			return true;
+		}
+		if (pressed) {
+			pressed = false;
+			latched = !was_latched && !consumed && press_us < TAP_MICROSECONDS;
+		}
+		return latched;
+	}
+private:
+	bool latched;
+	bool pressed;
+	bool consumed;
+	bool was_latched;
+	uint32_t press_us;
+};
+
 enum : int32_t {
 	DIRECTINPUT_AXIS_MIN = -1000,
 	DIRECTINPUT_AXIS_MAX = 1000,

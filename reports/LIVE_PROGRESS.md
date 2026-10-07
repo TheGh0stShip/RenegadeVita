@@ -1,5 +1,21 @@
 # Live engineering progress
 
+# Campaign control coverage audit — 2026-10-07
+
+Renegade Vita — v3.5 active
+
+Completed (source audit, ARM -fsyntax-only and host tests only; nothing linked, emulated or run on hardware):
+- Every campaign action (poke, vehicles, ladders, jump/crouch, C4 place/detonate, beacon deploy/cancel,
+  scope/zoom, weapon cycle, reload, EVA/pause, quicksave, death dialog, movie skip) mapped to a produced Vita
+  control; table in reports/VITA_CONTROLS.md, locked by tools/test_vita_campaign_control_coverage.py.
+- Fix: choosing the default profile on the Controls Save/Load page, or deleting the current custom profile,
+  reloaded the retail keyboard map and left stick/triggers/crouch/weapon cycle/zoom unbound;
+  commando-a37-default-input-profile-vita-mapping.patch reapplies the Vita mapping. Staging: 544 patches, PASS.
+- Handheld crouch: a quick solo Circle tap now latches the original crouch key (hold still works); Action,
+  another Circle press or any dialog releases it.
+
+Next: hardware check of the crouch tap window and the Save/Load default-profile route.
+
 # Campaign development push 3 (full mission audits) — 2026-10-07
 
 Renegade Vita — v3.5 active

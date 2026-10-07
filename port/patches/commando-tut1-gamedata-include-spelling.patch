@@ -1,0 +1,14 @@
+--- a/gamedata.h
++++ b/gamedata.h
+@@ -48,9 +48,9 @@
+ #include "wwstring.h"
+ #include "widestring.h"
+ #include "radar.h"
+-#include <WWLib\Notify.h>
++#include "notify.h"
+ typedef TypedEventPair<bool, int> MPChooseTeamSignal;
+-#include <WWLib\Signaler.h>
++#include "signaler.h"
+ 
+ const int		MAX_PASSWORD_SIZE			= 16;				//including NULL
+ const int		MAX_MAPNAME_SIZE			= 28;				//including NULL

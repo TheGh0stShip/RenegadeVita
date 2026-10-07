@@ -1712,6 +1712,12 @@ patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 # DEFAULT_INPUT.CFG; reapply the Vita controller bindings on every such load.
 patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
 	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-a37-default-input-profile-vita-mapping.patch"
+# gamedata.h reaches 63 Commando/runtime TUs; its MSVC <WWLib\Notify.h> and
+# <WWLib\Signaler.h> spellings resolve through literal-backslash shim headers
+# that only include "notify.h"/"signaler.h", and ccache cannot stat those
+# depfile paths, so every includer compiled uncached. Same headers, direct name.
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/commando" -p1 < "$rv_root/port/patches/commando-tut1-gamedata-include-spelling.patch"
 # FaceLocation actions store an absolute TimeManager::Get_Seconds() end stamp
 # (a per-process clock) in saves; bound a restored stamp to the authored
 # duration so a load in a fresh session cannot hold the action for the old

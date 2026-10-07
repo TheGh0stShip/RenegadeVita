@@ -67,6 +67,7 @@ void RenegadeVita_Release_DX8_Render_Target();
 #include "ww3d_vita_indexed_vertex_records.h"
 #include "ww3d_vita_static_mesh_cache.h"
 #include "ww3d_vita_ffp_program_warm.h"
+#include "ww3d_vita_vertex_array_batch.h"
 extern "C" void vglRenegadeEndIndexed(GLsizei count, const GLushort *indices);
 extern "C" GLboolean vglRenegadeImmediateVertices(const GLfloat *records, GLsizei count);
 extern "C" void vglRenegadeBeginProjective(GLenum mode);
@@ -357,6 +358,13 @@ unsigned g_render_work_cache_mode = 15U;
 VitaIndexedMeshBatch g_indexed_mesh_batch;
 uint64_t g_mesh_expanded_corners = 0, g_mesh_unique_vertices = 0;
 uint64_t g_mesh_indexed_batches = 0;
+// vertex-array-v1: eligible per-frame mesh batches are drawn from client
+// arrays (Draw_Vertex_Array_Batch). Enabled only by Read_Vertex_Array_Mode.
+VitaVertexArrayBatch g_vertex_array_batch;
+bool g_vertex_array_enabled = false;
+bool g_logged_first_vertex_array_batch = false;
+uint64_t g_vertex_array_batches = 0, g_vertex_array_corners = 0;
+uint64_t g_vertex_array_vertices = 0;
 #if !RENEGADE_VITA_M00_DEMO
 enum { MESH_BOUNDARY_TIMING_SAMPLE_STRIDE = 16U };
 struct MeshBoundaryTiming {
@@ -2614,6 +2622,42 @@ void Log_Skin_Deform_Cache_Statistics()
 		static_cast<unsigned long long>(counters.allocation_failures));
 }
 
+// Build default (1 = on); a user config file containing exactly "RVVA1 0\n"
+// keeps every per-frame mesh batch on the immediate path for A/B comparison,
+// and "RVVA1 1\n" is explicit on. Ineligible batches are immediate either way.
+#if !defined(RENEGADE_VITA_VERTEX_ARRAY_DEFAULT)
+#define RENEGADE_VITA_VERTEX_ARRAY_DEFAULT 1
+#endif
+void Read_Vertex_Array_Mode()
+{
+	g_vertex_array_enabled = RENEGADE_VITA_VERTEX_ARRAY_DEFAULT != 0;
+	FILE *file = fopen("ux0:data/renegade/user/config/vertex-array-v1.flag", "rb");
+	if (file != NULL) {
+		char value[9] = {};
+		const size_t size = fread(value, 1U, sizeof(value), file);
+		const bool read_ok = !ferror(file);
+		fclose(file);
+		if (read_ok && size == 8U && memcmp(value, "RVVA1 ", 6U) == 0 &&
+			value[7] == '\n' && (value[6] == '0' || value[6] == '1')) {
+			g_vertex_array_enabled = value[6] == '1';
+		}
+	}
+	Vita_Append_A22_Runtime_Breadcrumb("vertex-array",
+		"version=1 enabled=%d default=%d acceptance=unassessed",
+		g_vertex_array_enabled ? 1 : 0, RENEGADE_VITA_VERTEX_ARRAY_DEFAULT != 0 ? 1 : 0);
+}
+
+void Log_Vertex_Array_Statistics()
+{
+	Vita_Append_A22_Runtime_Breadcrumb("vertex-array",
+		"frame=%u enabled=%d batches=%llu corners=%llu vertices=%llu scratch_bytes=%u",
+		g_statistics.frames, g_vertex_array_enabled ? 1 : 0,
+		static_cast<unsigned long long>(g_vertex_array_batches),
+		static_cast<unsigned long long>(g_vertex_array_corners),
+		static_cast<unsigned long long>(g_vertex_array_vertices),
+		g_vertex_array_batch.Bytes());
+}
+
 // Build default from CMake; a user config file containing exactly
 // "RVMSAA1 0\n", "RVMSAA1 2\n" or "RVMSAA1 4\n" selects another framebuffer
 // sample count at launch.
@@ -3807,6 +3851,7 @@ bool Initialize()
 #if !RENEGADE_VITA_M00_DEMO
 	Read_Static_Mesh_Cache_Mode();
 	Read_Skin_Deform_Cache_Mode();
+	Read_Vertex_Array_Mode();
 #endif
 	Invalidate_Native_State_Cache();
 
@@ -3963,6 +4008,7 @@ void Shutdown()
 	g_lifecycle.logical_session_active = false;
 	Release_Deformed_Skin_Scratch();
 #if defined(__vita__)
+	g_vertex_array_batch.Release();
 	delete[] g_material_color_scratch;
 	g_material_color_scratch = NULL;
 	g_material_color_capacity = 0;
@@ -4104,6 +4150,7 @@ void End_Frame(bool present)
 #if !RENEGADE_VITA_M00_DEMO
 			Log_Static_Mesh_Cache_Statistics();
 			Log_Skin_Deform_Cache_Statistics();
+			Log_Vertex_Array_Statistics();
 #if defined(RENEGADE_VITA_DETAILED_TIMING)
 			Vita_Append_A22_Runtime_Breadcrumb("mesh-boundary-time",
 				"frame=%u meshes=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu max_name=%s draw_ends=%u estimated_total_us=%llu sampled_us=%llu samples=%u stride=%u sampled_max_us=%llu",
@@ -4697,6 +4744,91 @@ void Release_Texture(uint32_t native_texture)
 #endif
 }
 
+#if defined(__vita__)
+// A per-frame batch may use client arrays only when they hand vitaGL exactly
+// what the immediate path would: original pass-through UVs on every stage that
+// carries coordinates (no generated, transformed or projective ones), a UV
+// array behind each such stage, the GL texture units enabled for exactly those
+// stages (vitaGL derives the attribute layout from the enabled units), and no
+// pending first-occurrence coordinate breadcrumb from the per-vertex path.
+static bool Vertex_Array_Batch_Eligible(const OriginalTextureCoordinateState *states,
+	bool texture0, bool detail, const Vector2 *const *uvs)
+{
+	if (detail && !texture0) return false;
+	const bool active[MeshMatDescClass::MAX_TEX_STAGES] = { texture0, detail };
+	for (unsigned stage = 0U; stage < MeshMatDescClass::MAX_TEX_STAGES; ++stage) {
+		const NativeTextureStageCache &unit = g_texture_stage_cache[stage];
+		if (!unit.enabled_known || unit.enabled != active[stage]) return false;
+		const DWORD flags = states[stage].texture_transform_flags;
+		const DWORD count = flags & 0xffU;
+		if (active[stage] ? Texture_Coordinate_Mode(states[stage]) != D3DTSS_TCI_PASSTHRU ||
+				flags != D3DTTFF_DISABLE :
+			(flags & D3DTTFF_PROJECTED) != 0U && count >= D3DTTFF_COUNT2 &&
+				count <= D3DTTFF_COUNT4) return false;
+	}
+	if (texture0 && uvs[0] == NULL) return false;
+	if (detail && uvs[1] == NULL && uvs[0] == NULL) return false;
+	return !texture0 || g_logged_first_passthrough_texture_v_preserved;
+}
+
+// Draws the batch with one indexed draw, then leaves the final corner's colour
+// and coordinates current exactly as the immediate batch end does. Without a
+// bound buffer vitaGL copies [0, highest index] of each enabled array and the
+// indices into its frame pool, so the scratch is reusable on return.
+static void Draw_Vertex_Array_Batch(VitaVertexArrayBatch &batch, bool texture0,
+	bool detail, const char *mesh_name, bool is_skin)
+{
+	const uint32_t index_count = batch.Count();
+	if (index_count != 0U) {
+		// The FFP program may last have been patched for another layout.
+		vglRenegadeInvalidateVertexAttributes();
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_COLOR_ARRAY);
+		glVertexPointer(3, GL_FLOAT, 0, batch.Positions());
+		glColorPointer(4, GL_FLOAT, 0, batch.Colors());
+		glClientActiveTexture(GL_TEXTURE0);
+		if (texture0) {
+			glTexCoordPointer(2, GL_FLOAT, 0, batch.Uv0s());
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		} else glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE1);
+		if (detail) {
+			glTexCoordPointer(2, GL_FLOAT, 0, batch.Uv1s());
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		} else glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE0);
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(index_count),
+			GL_UNSIGNED_SHORT, batch.Indices());
+		glClientActiveTexture(GL_TEXTURE1);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glClientActiveTexture(GL_TEXTURE0);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+		// Later immediate draws must re-patch for their own layout.
+		vglRenegadeInvalidateVertexAttributes();
+		const uint32_t last = batch.Last_Slot();
+		const float *color = batch.Color(last);
+		glColor4f(color[0], color[1], color[2], color[3]);
+		if (texture0) glMultiTexCoord2f(GL_TEXTURE0, batch.Uv0(last)[0], batch.Uv0(last)[1]);
+		if (detail) glMultiTexCoord2f(GL_TEXTURE1, batch.Uv1(last)[0], batch.Uv1(last)[1]);
+		++g_vertex_array_batches;
+		g_vertex_array_corners += index_count;
+		g_vertex_array_vertices += batch.Vertices();
+		if (!g_logged_first_vertex_array_batch) {
+			Vita_Append_A22_Runtime_Breadcrumb("vertex-array",
+				"first client-array batch: mesh=%s skin=%d vertices=%u indices=%u texture0=%d detail=%d",
+				mesh_name, is_skin ? 1 : 0, batch.Vertices(), index_count,
+				texture0 ? 1 : 0, detail ? 1 : 0);
+			g_logged_first_vertex_array_batch = true;
+		}
+	}
+	batch.Reset();
+}
+#endif
+
 static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 	MaterialPassClass *material_pass)
 {
@@ -4951,6 +5083,13 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 				&original_world_transform);
 		}
 		const bool indexed_batch = (g_render_work_cache_mode & 8U) != 0U;
+		// vertex-array-v1: same traversal, state sequence and per-vertex values
+		// as emit_vertex; an eligible batch stores each referenced vertex once
+		// and draws once from client arrays (Draw_Vertex_Array_Batch).
+		const bool array_pass = g_vertex_array_enabled && !procedural_pass &&
+			g_vertex_array_batch.Reserve(static_cast<uint32_t>(vertex_count),
+				static_cast<uint32_t>(submitted_triangle_count) * 3U);
+		bool array_batch = false;
 		bool current_texturing = false;
 		// Per-batch hoists (SKIN_PATH_COST item 6): texture names, the skin
 		// pass-through predicate and the diagnostic-name predicates are constant
@@ -5014,6 +5153,42 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 			if (emit_position) glVertex3f(vertices[vertex_index].X, vertices[vertex_index].Y,
 				vertices[vertex_index].Z);
 		};
+		// emit_vertex's values for one new batch vertex, stored instead of
+		// submitted. Array batches open only after its first-occurrence
+		// breadcrumbs fired, so its pass-through argument reduces to the batch's.
+		auto array_append = [&](unsigned vertex_index) {
+			uint32_t slot = 0U;
+			if (!g_vertex_array_batch.Append(vertex_index, &slot)) return;
+			if (bound_textures[0] != NULL) {
+				float *uv = g_vertex_array_batch.Uv0(slot);
+				uv[0] = current_uvs[0][vertex_index].X;
+				uv[1] = current_uvs[0][vertex_index].Y;
+			}
+			if (current_detail_stage) {
+				const Vector2 *detail_uvs =
+					current_uvs[1] != NULL ? current_uvs[1] : current_uvs[0];
+				float *uv = g_vertex_array_batch.Uv1(slot);
+				uv[0] = detail_uvs[vertex_index].X;
+				uv[1] = detail_uvs[vertex_index].Y;
+			}
+			VertexMaterialClass *material =
+				material_for(static_cast<int>(vertex_index), pass);
+			const MaterialVertexColor vertex_color = Evaluate_Material_Vertex_Color(
+				cache_material_colors, material, color1, color2, vertex_index,
+				normals, original_world_transform, render_info, light_directions,
+				batch_skin_color_passthrough);
+			const Vector3 final_color = batch_skin_color_passthrough ?
+				Vector3(1.0f, 1.0f, 1.0f) : vertex_color.final_color;
+			float *color = g_vertex_array_batch.Color(slot);
+			color[0] = Clamp01(final_color.X);
+			color[1] = Clamp01(final_color.Y);
+			color[2] = Clamp01(final_color.Z);
+			color[3] = Clamp01(vertex_color.alpha);
+			float *position = g_vertex_array_batch.Position(slot);
+			position[0] = vertices[vertex_index].X;
+			position[1] = vertices[vertex_index].Y;
+			position[2] = vertices[vertex_index].Z;
+		};
 		auto end_batch = [&]() {
 #if !RENEGADE_VITA_M00_DEMO && defined(RENEGADE_VITA_DETAILED_TIMING)
 			const bool sample_draw_end =
@@ -5021,7 +5196,10 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 			const uint64_t draw_end_start_us = sample_draw_end ?
 				sceKernelGetProcessTimeWide() : 0U;
 #endif
-			if (indexed_batch && g_indexed_mesh_batch.Count() != 0U) {
+			if (array_batch) {
+				Draw_Vertex_Array_Batch(g_vertex_array_batch, bound_textures[0] != NULL,
+					current_detail_stage, mesh.Get_Name(), is_skin);
+			} else if (indexed_batch && g_indexed_mesh_batch.Count() != 0U) {
 				// Immediate GL attributes persist across draws. Restore the final
 				// original corner even when its vertex was reused from earlier.
 				emit_vertex(g_indexed_mesh_batch.Last(), false);
@@ -5140,8 +5318,12 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 						current_uvs[1] != NULL ? 1 : 0);
 					g_logged_first_stage1_mesh = true;
 				}
-				if (indexed_batch) g_indexed_mesh_batch.Reset();
-				Begin_Texture_Coordinate_Primitive(current_texture_coordinates);
+				array_batch = array_pass && g_logged_first_material_lighting &&
+					!batch_skin_names_recordable &&
+					Vertex_Array_Batch_Eligible(current_texture_coordinates,
+						bound_textures[0] != NULL, current_detail_stage, current_uvs);
+				if (indexed_batch && !array_batch) g_indexed_mesh_batch.Reset();
+				if (!array_batch) Begin_Texture_Coordinate_Primitive(current_texture_coordinates);
 				primitive_open = true;
 			}
 			const TriIndex &triangle = triangles[triangle_index];
@@ -5160,6 +5342,10 @@ static void Submit_Mesh_Internal(MeshClass &mesh, RenderInfoClass &render_info,
 			if (vertex_indices[0] >= static_cast<unsigned>(vertex_count) ||
 				vertex_indices[1] >= static_cast<unsigned>(vertex_count) ||
 				vertex_indices[2] >= static_cast<unsigned>(vertex_count)) {
+				continue;
+			}
+			if (array_batch) {
+				for (int corner = 0; corner < 3; ++corner) array_append(vertex_indices[corner]);
 				continue;
 			}
 			if (indexed_batch && g_indexed_mesh_batch.Full()) {

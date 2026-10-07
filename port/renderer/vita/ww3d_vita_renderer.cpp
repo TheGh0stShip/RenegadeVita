@@ -2555,6 +2555,10 @@ bool Bind_Offscreen_Render_Target(uint32_t framebuffer, uint32_t width,
 		return false;
 	}
 #endif
+#if defined(__vita__)
+	// Negated clip Y mirrors screen-space winding; keep D3D cull semantics.
+	glFrontFace(GL_CW);
+#endif
 	g_active_render_target_width = width;
 	g_active_render_target_height = height;
 	Invalidate_Native_State_Cache();
@@ -2569,6 +2573,7 @@ bool Restore_Default_Render_Target()
 		++g_statistics.backend_errors;
 		return false;
 	}
+	if (g_active_render_target_width != 0U) glFrontFace(GL_CCW);
 #endif
 	g_active_render_target_width = 0U;
 	g_active_render_target_height = 0U;
@@ -2618,6 +2623,14 @@ bool Build_Indexed_Transform_Matrices(const float *world_transform,
 		matrices.projection[row * 4U + 2U] =
 			2.0f * projection_transform[row * 4U + 2U] -
 			projection_transform[row * 4U + 3U];
+	}
+	if (g_active_render_target_width != 0U && g_active_render_target_height != 0U) {
+		// GL framebuffer objects store row 0 at the bottom while D3D render
+		// targets (and every original consumer's UVs) treat row 0 as the top.
+		// Negate clip Y (Dprojection * diag(1,-1,1,1)) so FBO storage matches
+		// D3D order; front-face winding is swapped at target bind time.
+		for (unsigned row = 0; row < 4U; ++row)
+			matrices.projection[row * 4U + 1U] = -matrices.projection[row * 4U + 1U];
 	}
 	return true;
 }
@@ -2753,7 +2766,8 @@ bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
 	if (g_active_render_target_width != 0U && g_active_render_target_height != 0U) {
 		// DX8 viewports are relative to the current render-target surface, not
 		// the back buffer. An offscreen target bypasses presentation scaling and
-		// maps in its own pixel space (GL origin bottom-left).
+		// maps in its own pixel space. Clip Y is negated while a target is
+		// bound, so D3D's top-down Y maps directly onto FBO rows.
 		const uint32_t rt_width = g_active_render_target_width;
 		const uint32_t rt_height = g_active_render_target_height;
 		if (width == 0U || height == 0U || d3d_x > rt_width ||
@@ -2763,7 +2777,7 @@ bool Apply_Viewport(uint32_t d3d_x, uint32_t d3d_y, uint32_t width,
 			return false;
 		}
 		viewport.x = d3d_x;
-		viewport.y = rt_height - (d3d_y + height);
+		viewport.y = d3d_y;
 		viewport.width = width;
 		viewport.height = height;
 		viewport.min_depth = min_depth;

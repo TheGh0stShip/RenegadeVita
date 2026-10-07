@@ -2468,7 +2468,9 @@ bool Readback_Render_Target_Surface(IDirect3DSurface8 *surface)
 	if (!read_ok) return false;
 	for (unsigned y = 0U; y < description.Height; ++y) {
 		const unsigned char *source_row = rgba.data() +
-			static_cast<size_t>(description.Height - 1U - y) * description.Width * 4U;
+			// The renderer flips clip-space Y while an offscreen target is
+			// bound, so FBO row 0 already holds the D3D top row.
+			static_cast<size_t>(y) * description.Width * 4U;
 		unsigned char *destination_row = surface->Get_Data() +
 			static_cast<size_t>(y) * surface->Get_Pitch();
 		for (unsigned x = 0U; x < description.Width; ++x) {

@@ -619,12 +619,14 @@ bool Open_Decoder(AVCodecContext **context, AVStream *stream)
 	AVCodecContext *decoder = avcodec_alloc_context3(codec);
 	if (decoder == NULL) return false;
 	int result = avcodec_parameters_to_context(decoder, stream->codecpar);
+	const char *stage = "avcodec_parameters_to_context";
 	if (result >= 0) {
 		decoder->thread_count = 1;
+		stage = "avcodec_open2";
 		result = avcodec_open2(decoder, codec, NULL);
 	}
 	if (result < 0) {
-		Log_FFmpeg_Error("avcodec_open2", result);
+		Log_FFmpeg_Error(stage, result);
 		avcodec_free_context(&decoder);
 		return false;
 	}
@@ -683,6 +685,10 @@ void Decode_Audio_Frames()
 		const int output_frames = static_cast<int>(av_rescale_rnd(
 			swr_get_delay(g_resampler, input_rate) + g_audio_frame->nb_samples,
 			kAudioRate, input_rate, AV_ROUND_UP));
+		if (output_frames <= 0) {
+			av_frame_unref(g_audio_frame);
+			continue;
+		}
 		g_audio_conversion.resize(static_cast<size_t>(output_frames) * kAudioChannels);
 		uint8_t *output[] = { reinterpret_cast<uint8_t *>(g_audio_conversion.data()) };
 		const int frames = swr_convert(g_resampler, output, output_frames,

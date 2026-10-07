@@ -772,11 +772,16 @@ class MemoryMpegPlayback final : public MpegPlayback {
 public:
 	bool Open(const uint8_t *data, size_t bytes)
 	{
+		std::unique_ptr<uint8_t[]> copy(new (std::nothrow) uint8_t[bytes]);
+		if (!copy) return false;
+		std::memcpy(copy.get(), data, bytes);
+		return Open(std::move(copy), bytes);
+	}
+	bool Open(std::unique_ptr<uint8_t[]> image, size_t bytes)
+	{
 		static const int initialized = mpg123_init();
-		if (initialized != MPG123_OK) return false;
-		encoded.reset(new (std::nothrow) uint8_t[bytes]);
-		if (!encoded) return false;
-		std::memcpy(encoded.get(), data, bytes);
+		if (initialized != MPG123_OK || !image) return false;
+		encoded = std::move(image);
 		encoded_bytes = bytes;
 		int status = 0;
 		decoder.reset(mpg123_new(nullptr, &status));
@@ -815,6 +820,14 @@ public:
 	uint32_t Sample_Rate() const override { return rate; }
 	uint16_t Channels() const override { return channels; }
 	size_t PCM_Storage_Bytes() const override { return sizeof(pcm) + sizeof(previous); }
+	const int16_t *Resident_Window(size_t *first, size_t *frames) const override
+	{
+		// Exactly the frames Sample() serves from pcm[] without a refill.
+		*first = cache_start;
+		*frames = cache_start < frame_count
+			? std::min(cache_frames, frame_count - cache_start) : 0U;
+		return *frames != 0U ? pcm : nullptr;
+	}
 	int16_t Sample(size_t frame, uint16_t channel) override
 	{
 		if (frame >= frame_count || channel >= channels) return 0;
@@ -854,6 +867,26 @@ std::unique_ptr<MpegPlayback> Open_Mpeg_Playback(const uint8_t *data,
 	{
 		std::unique_ptr<MemoryMpegPlayback> playback(new (std::nothrow) MemoryMpegPlayback);
 		if (playback && playback->Open(data, bytes)) {
+			if (error != nullptr) *error = nullptr;
+			return playback;
+		}
+	}
+#endif
+	Fail("MPEG playback initialization failed", error);
+	return nullptr;
+}
+
+std::unique_ptr<MpegPlayback> Open_Mpeg_Playback(std::unique_ptr<uint8_t[]> image,
+	size_t bytes, const char **error)
+{
+	if (!Is_Mpeg_Media(image.get(), bytes) || bytes > 32U * 1024U * 1024U) {
+		Fail("invalid or oversized MPEG image", error);
+		return nullptr;
+	}
+#if defined(__vita__) || defined(RENEGADE_AUDIO_MPG123)
+	{
+		std::unique_ptr<MemoryMpegPlayback> playback(new (std::nothrow) MemoryMpegPlayback);
+		if (playback && playback->Open(std::move(image), bytes)) {
 			if (error != nullptr) *error = nullptr;
 			return playback;
 		}

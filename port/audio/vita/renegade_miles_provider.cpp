@@ -55,6 +55,10 @@ struct RenegadeMilesSample {
 	U32 loops_remaining = 1;
 	AIL_USER_DATA user_data[8] = {};
 	F32 position[3] = {};
+	// Latest position published while another thread held the provider lock;
+	// guarded by g_position_mutex.
+	F32 pending_position[3] = {};
+	bool position_pending = false;
 	F32 maximum_distance = 100.0F;
 	F32 minimum_distance = 1.0F;
 	bool spatial = false;
@@ -102,6 +106,17 @@ constexpr size_t kPcmCacheMaximumSourceBytes = 1024U * 1024U;
 
 pthread_once_t g_mutex_once = PTHREAD_ONCE_INIT;
 pthread_mutex_t g_mutex;
+// AIL_set_3D_position runs for every 3D sound each frame. When the mixer holds
+// g_mutex the call publishes its position here instead of waiting for the mix;
+// the position is applied, in call order, before any later locked access to
+// provider state (AIL_lock and the start of the next mix). Lock order is
+// g_mutex before g_position_mutex; g_position_mutex is held only for copies.
+constexpr size_t kPendingPositionSlots = 256U;
+pthread_mutex_t g_position_mutex;
+RenegadeMilesSample *g_pending_positions[kPendingPositionSlots] = {};
+size_t g_pending_position_count = 0U;
+uint64_t g_published_positions = 0U;   // calls that did not wait; diagnostics
+std::atomic<bool> g_positions_pending{false};
 std::atomic<uint32_t> g_output_lock_starvation_buffers{0U};
 #if !defined(RENEGADE_MILES_MANUAL_MIX)
 pthread_t g_output_thread;
@@ -165,11 +180,81 @@ void Initialize_Mutex()
 	pthread_mutexattr_settype(&attributes, PTHREAD_MUTEX_RECURSIVE);
 	pthread_mutex_init(&g_mutex, &attributes);
 	pthread_mutexattr_destroy(&attributes);
+	pthread_mutex_init(&g_position_mutex, nullptr);
 }
 
 void Ensure_Mutex()
 {
 	pthread_once(&g_mutex_once, Initialize_Mutex);
+}
+
+void Apply_3D_Position_Locked(RenegadeMilesSample *sample, F32 x, F32 y, F32 z)
+{
+	sample->position[0] = x;
+	sample->position[1] = y;
+	sample->position[2] = z;
+	const F32 scale = std::max(1.0F, sample->maximum_distance);
+	const F32 normalized = std::max(-1.0F, std::min(1.0F, x / scale));
+	sample->pan = static_cast<S32>(std::lround((normalized + 1.0F) * 63.5F));
+}
+
+// Called with g_mutex held before provider state is read or changed. Every
+// position published since the last call is applied as AIL_set_3D_position
+// would have applied it: nothing that could change its result (maximum
+// distance, pan, reset) runs in between without first coming through here.
+void Apply_Pending_Positions_Locked()
+{
+	if (!g_positions_pending.load(std::memory_order_acquire)) return;
+	pthread_mutex_lock(&g_position_mutex);
+	for (size_t index = 0U; index < g_pending_position_count; ++index) {
+		RenegadeMilesSample *sample = g_pending_positions[index];
+		if (!sample->position_pending) continue;
+		sample->position_pending = false;
+		Apply_3D_Position_Locked(sample, sample->pending_position[0],
+			sample->pending_position[1], sample->pending_position[2]);
+	}
+	g_pending_position_count = 0U;
+	g_positions_pending.store(false, std::memory_order_relaxed);
+	pthread_mutex_unlock(&g_position_mutex);
+}
+
+// Publishes a position without waiting for g_mutex; false when the queue is
+// full and the caller has to take the lock.
+bool Publish_Pending_Position(RenegadeMilesSample *sample, F32 x, F32 y, F32 z)
+{
+	pthread_mutex_lock(&g_position_mutex);
+	bool published = true;
+	if (!sample->position_pending) {
+		if (g_pending_position_count == kPendingPositionSlots) {
+			published = false;
+		} else {
+			g_pending_positions[g_pending_position_count++] = sample;
+			sample->position_pending = true;
+		}
+	}
+	if (published) {
+		++g_published_positions;
+		sample->pending_position[0] = x;
+		sample->pending_position[1] = y;
+		sample->pending_position[2] = z;
+		g_positions_pending.store(true, std::memory_order_release);
+	}
+	pthread_mutex_unlock(&g_position_mutex);
+	return published;
+}
+
+// A released sample must not stay queued.
+void Forget_Pending_Position_Locked(RenegadeMilesSample *sample)
+{
+	pthread_mutex_lock(&g_position_mutex);
+	size_t kept = 0U;
+	for (size_t index = 0U; index < g_pending_position_count; ++index) {
+		if (g_pending_positions[index] != sample)
+			g_pending_positions[kept++] = g_pending_positions[index];
+	}
+	g_pending_position_count = kept;
+	sample->position_pending = false;
+	pthread_mutex_unlock(&g_position_mutex);
 }
 
 void Set_Error(const char *message)
@@ -327,6 +412,48 @@ DecodedWave Wave_Metadata(const DecodedWave &wave)
 	return metadata;
 }
 
+// An MPEG sample file opened before the provider lock is taken: the open
+// copies the image and scans every frame header for the exact length.
+struct RenegadeMilesPreparedMpeg {
+	std::unique_ptr<RenegadeVitaAudio::MpegPlayback> playback;
+	const char *error = nullptr;
+	bool attempted = false;
+};
+
+// Opens the image exactly when Decode_Into_Sample would take its MPEG branch.
+RenegadeMilesPreparedMpeg Prepare_Sample_Mpeg(const RenegadeMilesSample *sample,
+	const void *data, size_t bytes)
+{
+	RenegadeMilesPreparedMpeg prepared;
+	if (sample == nullptr || data == nullptr || bytes < 12U ||
+		bytes > kMaximumWaveBytes) return prepared;
+	const uint8_t *image = static_cast<const uint8_t *>(data);
+	if (!RenegadeVitaAudio::Is_Mpeg_Media(image, bytes)) return prepared;
+	prepared.attempted = true;
+	prepared.playback = RenegadeVitaAudio::Open_Mpeg_Playback(image, bytes,
+		&prepared.error);
+	return prepared;
+}
+
+bool Publish_Sample_Mpeg_Locked(RenegadeMilesSample *sample,
+	std::unique_ptr<RenegadeVitaAudio::MpegPlayback> playback, size_t bytes,
+	const char *error)
+{
+	if (!playback) { Set_Error(error); return false; }
+	Set_Sample_Pcm(sample, nullptr);
+	sample->wave = {};
+	sample->wave.channels = playback->Channels();
+	sample->wave.sample_rate = playback->Sample_Rate();
+	sample->wave.estimated_sample_frames = sample->wave.untrimmed_sample_frames =
+		static_cast<uint32_t>(playback->Frame_Count());
+	sample->mpeg = std::move(playback);
+	sample->encoded_data_bytes = static_cast<U32>(bytes);
+	sample->cursor = 0.0;
+	sample->playback_rate = static_cast<S32>(sample->wave.sample_rate);
+	sample->playing = sample->paused = false;
+	return true;
+}
+
 bool Decode_Into_Sample(RenegadeMilesSample *sample, const void *data,
 	size_t bytes)
 {
@@ -339,19 +466,7 @@ bool Decode_Into_Sample(RenegadeMilesSample *sample, const void *data,
 	const char *error = nullptr;
 	if (RenegadeVitaAudio::Is_Mpeg_Media(image, bytes)) {
 		auto playback = RenegadeVitaAudio::Open_Mpeg_Playback(image, bytes, &error);
-		if (!playback) { Set_Error(error); return false; }
-		Set_Sample_Pcm(sample, nullptr);
-		sample->wave = {};
-		sample->wave.channels = playback->Channels();
-		sample->wave.sample_rate = playback->Sample_Rate();
-		sample->wave.estimated_sample_frames = sample->wave.untrimmed_sample_frames =
-			static_cast<uint32_t>(playback->Frame_Count());
-		sample->mpeg = std::move(playback);
-		sample->encoded_data_bytes = static_cast<U32>(bytes);
-		sample->cursor = 0.0;
-		sample->playback_rate = static_cast<S32>(sample->wave.sample_rate);
-		sample->playing = sample->paused = false;
-		return true;
+		return Publish_Sample_Mpeg_Locked(sample, std::move(playback), bytes, error);
 	}
 	const bool cacheable = bytes <= kPcmCacheMaximumSourceBytes;
 	const uint64_t hash = cacheable ? Hash_Image(image, bytes) : 0U;
@@ -391,20 +506,22 @@ bool Decode_Into_Sample(RenegadeMilesSample *sample, const void *data,
 	return true;
 }
 
-bool Prepare_Stream_Source(const void *data, size_t bytes,
+// An MPEG source adopts `source` (the playback keeps the encoded image);
+// any other source is decoded from it and leaves it with the caller.
+bool Prepare_Stream_Source(std::unique_ptr<uint8_t[]> &source, size_t bytes,
 	RenegadeMilesPreparedSource *prepared)
 {
-	if (prepared == nullptr || data == nullptr || bytes < 12U ||
+	if (prepared == nullptr || !source || bytes < 12U ||
 		bytes > kMaximumWaveBytes) {
 		if (prepared != nullptr) prepared->error = "invalid or oversized WAVE image";
 		return false;
 	}
-	const uint8_t *image = static_cast<const uint8_t *>(data);
+	const uint8_t *image = source.get();
 	prepared->source_bytes = bytes;
 	prepared->is_mpeg = RenegadeVitaAudio::Is_Mpeg_Media(image, bytes);
 	if (prepared->is_mpeg) {
-		prepared->mpeg = RenegadeVitaAudio::Open_Mpeg_Playback(image, bytes,
-			&prepared->error);
+		prepared->mpeg = RenegadeVitaAudio::Open_Mpeg_Playback(std::move(source),
+			bytes, &prepared->error);
 		return prepared->mpeg != nullptr;
 	}
 	prepared->cacheable = bytes <= kPcmCacheMaximumSourceBytes;
@@ -691,18 +808,41 @@ void Mix_Mpeg_Voice(RenegadeMilesSample *sample, size_t source_frames,
 	const uint16_t channels = sample->wave.channels;
 	const uint16_t right_channel = channels == 1 ? 0U :
 		std::min<uint16_t>(1U, static_cast<uint16_t>(channels - 1U));
+	// Frames already decoded are read in place. Sample() is pure for them,
+	// so only frames outside the window go through it, in the original
+	// request order (first/second for the left, then the right channel):
+	// the playback's window refills depend on that order.
+	const size_t stride = mpeg.Channels();
+	const bool window_usable = right_channel < stride;
+	size_t window_first = 0;
+	size_t window_frames = 0;
+	const int16_t *window = window_usable
+		? mpeg.Resident_Window(&window_first, &window_frames) : nullptr;
 	double cursor = sample->cursor;
 	for (size_t output_frame = 0; output_frame < frames; ++output_frame) {
 		if (cursor >= end && !Wrap_Voice(sample, cursor, end)) return;
 		const size_t first = static_cast<size_t>(cursor);
 		const size_t second = std::min(first + 1U, last);
 		const float fraction = static_cast<float>(cursor - first);
-		// Same decode request order as the original mixer: the playback
-		// keeps a window cache whose refills depend on it.
+		int16_t values[4];
+		if (window != nullptr && first >= window_first &&
+			second - window_first < window_frames) {
+			const int16_t *a = window + (first - window_first) * stride;
+			const int16_t *b = window + (second - window_first) * stride;
+			values[0] = a[0];
+			values[1] = b[0];
+			values[2] = a[right_channel];
+			values[3] = b[right_channel];
+		} else {
+			values[0] = mpeg.Sample(first, 0U);
+			values[1] = mpeg.Sample(second, 0U);
+			values[2] = mpeg.Sample(first, right_channel);
+			values[3] = mpeg.Sample(second, right_channel);
+			if (window_usable) window = mpeg.Resident_Window(&window_first, &window_frames);
+		}
 		for (uint16_t channel = 0; channel < 2; ++channel) {
-			const uint16_t source_channel = channel == 0 ? 0U : right_channel;
-			const float start = mpeg.Sample(first, source_channel);
-			const float finish = mpeg.Sample(second, source_channel);
+			const float start = values[channel * 2U];
+			const float finish = values[channel * 2U + 1U];
 			const float interpolated = start + (finish - start) * fraction;
 			const int32_t contribution =
 				static_cast<int32_t>(interpolated * gains[channel]);
@@ -867,6 +1007,7 @@ void *Output_Thread(void *)
 			std::fill(output.begin(), output.end(), 0);
 			g_output_lock_starvation_buffers.fetch_add(1U, std::memory_order_relaxed);
 		} else {
+			Apply_Pending_Positions_Locked();
 			Mix_Locked(output.data(), kOutputFrames, &mix_summary);
 			pthread_mutex_unlock(&g_mutex);
 		}
@@ -965,6 +1106,7 @@ RenegadeMilesSample *Allocate_Sample()
 void Release_Sample(RenegadeMilesSample *sample)
 {
 	if (sample == nullptr) return;
+	Forget_Pending_Position_Locked(sample);
 	auto entry = std::find(g_samples.begin(), g_samples.end(), sample);
 	if (entry != g_samples.end()) g_samples.erase(entry);
 	delete sample;
@@ -1030,7 +1172,10 @@ void AIL_shutdown(void)
 {
 	AIL_lock();
 	Stop_Output();
-	for (RenegadeMilesSample *sample : g_samples) delete sample;
+	for (RenegadeMilesSample *sample : g_samples) {
+		Forget_Pending_Position_Locked(sample);
+		delete sample;
+	}
 	g_samples.clear();
 	Clear_Pcm_Cache();
 	AIL_unlock();
@@ -1040,6 +1185,7 @@ void AIL_lock(void)
 {
 	Ensure_Mutex();
 	pthread_mutex_lock(&g_mutex);
+	Apply_Pending_Positions_Locked();
 }
 
 void AIL_unlock(void)
@@ -1105,9 +1251,14 @@ void AIL_init_sample(HSAMPLE sample)
 S32 AIL_set_named_sample_file(HSAMPLE sample, char *, const void *data,
 	U32 bytes, S32)
 {
+	// An MPEG open scans the whole file; do it before taking the lock. The
+	// caller's image stays valid for the call.
+	RenegadeMilesPreparedMpeg mpeg = Prepare_Sample_Mpeg(sample, data, bytes);
 	AIL_lock();
 	++g_stats.sample_file_load_attempts;
-	const bool decoded = Decode_Into_Sample(sample, data, bytes);
+	const bool decoded = mpeg.attempted
+		? Publish_Sample_Mpeg_Locked(sample, std::move(mpeg.playback), bytes, mpeg.error)
+		: Decode_Into_Sample(sample, data, bytes);
 	if (decoded) ++g_stats.sample_file_load_successes;
 	else ++g_stats.sample_file_load_failures;
 	AIL_unlock();
@@ -1309,9 +1460,12 @@ U32 AIL_set_3D_sample_file(H3DSAMPLE sample, const void *data)
 
 U32 AIL_set_3D_sample_file_bounded(H3DSAMPLE sample, const void *data, size_t bytes)
 {
+	RenegadeMilesPreparedMpeg mpeg = Prepare_Sample_Mpeg(sample, data, bytes);
 	AIL_lock();
 	++g_stats.sample_3d_file_load_attempts;
-	const bool decoded = bytes != 0 && Decode_Into_Sample(sample, data, bytes);
+	const bool decoded = bytes != 0 && (mpeg.attempted
+		? Publish_Sample_Mpeg_Locked(sample, std::move(mpeg.playback), bytes, mpeg.error)
+		: Decode_Into_Sample(sample, data, bytes));
 	if (decoded) ++g_stats.sample_3d_file_load_successes;
 	else ++g_stats.sample_3d_file_load_failures;
 	AIL_unlock();
@@ -1364,16 +1518,17 @@ void AIL_set_3D_sample_playback_rate(H3DSAMPLE sample, S32 rate) { AIL_set_sampl
 
 void AIL_set_3D_position(H3DSAMPLE sample, F32 x, F32 y, F32 z)
 {
-	AIL_lock();
-	if (sample != nullptr) {
-		sample->position[0] = x;
-		sample->position[1] = y;
-		sample->position[2] = z;
-		const F32 scale = std::max(1.0F, sample->maximum_distance);
-		const F32 normalized = std::max(-1.0F, std::min(1.0F, x / scale));
-		sample->pan = static_cast<S32>(std::lround((normalized + 1.0F) * 63.5F));
+	if (sample == nullptr) return;
+	Ensure_Mutex();
+	// While the mixer (or another thread) holds the lock, publish instead of
+	// waiting; the position is applied before anything can observe it.
+	if (pthread_mutex_trylock(&g_mutex) != 0) {
+		if (Publish_Pending_Position(sample, x, y, z)) return;
+		pthread_mutex_lock(&g_mutex);
 	}
-	AIL_unlock();
+	Apply_Pending_Positions_Locked();
+	Apply_3D_Position_Locked(sample, x, y, z);
+	pthread_mutex_unlock(&g_mutex);
 }
 
 void AIL_set_3D_orientation(H3DSAMPLE, F32, F32, F32, F32, F32, F32) {}
@@ -1421,7 +1576,7 @@ HSTREAM AIL_open_stream_by_sample(HDIGDRIVER, HSAMPLE sample,
 		&read_error);
 	RenegadeMilesPreparedSource prepared;
 	const bool source_prepared = image_loaded && Prepare_Stream_Source(
-		image.get(), image_bytes, &prepared);
+		image, image_bytes, &prepared);
 
 	AIL_lock();
 	RenegadeMilesStream *stream = nullptr;

@@ -678,14 +678,14 @@ SakuraBossGameObj::Load (ChunkLoadClass &cload)
 				break;
 
 			case CHUNKID_PILOT:
-				if (!Pilot.Load(cload)) loaded = false;
+				Pilot.Load (cload);
 				break;
 
 			case CHUNKID_PATH:
 			{
 				delete Path;
 				Path = new PathClass;
-				if (Path == NULL || !Path->Load(cload)) loaded = false;
+				Path->Load (cload);
 			}
 			break;
 

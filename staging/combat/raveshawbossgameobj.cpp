@@ -772,39 +772,39 @@ RaveshawBossGameObjClass::Load (ChunkLoadClass &cload)
 				break;
 
 			case CHUNKID_OVERALL_STATE_MACHINE:
-				if (!OverallState.Load(cload)) loaded = false;
+				OverallState.Load (cload);
 				break;
 
 			case CHUNKID_RAVESHAW_STATE_MACHINE:
-				if (!RaveshawState.Load(cload)) loaded = false;
+				RaveshawState.Load (cload);
 				break;
 
 			case CHUNKID_ENGORGED_STATE_MACHINE:
-				if (!EngorgedState.Load(cload)) loaded = false;
+				EngorgedState.Load (cload);
 				break;
 
 			case CHUNKID_MOVE_STATE_MACHINE:
-				if (!MoveState.Load(cload)) loaded = false;
+				MoveState.Load (cload);
 				break;
 
 			case CHUNKID_STEALTH_SOLDIER_STATE_MACHINE:
-				if (!StealthSoldierState.Load(cload)) loaded = false;
+				StealthSoldierState.Load (cload);
 				break;
 
 			case CHUNKID_HAVOC_STATE_MACHINE:
-				if (!HavocState.Load(cload)) loaded = false;
+				HavocState.Load (cload);
 				break;
 
 			case CHUNKID_THROWN_OBJ_STATE_MACHINE:
-				if (!ThrownObjectState.Load(cload)) loaded = false;
+				ThrownObjectState.Load (cload);
 				break;
 
 			case CHUNKID_JUMP_STATE_MACHINE:
-				if (!JumpState.Load(cload)) loaded = false;
+				JumpState.Load (cload);		
 				break;
 
 			case CHUNKID_LIGHTNING_ROD_STATE_MACHINE:
-				if (!LightningRodState.Load(cload)) loaded = false;
+				LightningRodState.Load (cload);		
 				break;
 
 			case CHUNKID_VARIABLES:

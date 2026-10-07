@@ -49,7 +49,12 @@ class	ScriptRegistrant : public ScriptFactory
 
 		virtual ScriptImpClass* Create(void)
 			{
-			T* script = new T;
+			// Vita port: value-initialise. DECLARE_SCRIPT classes have no user-provided
+			// constructor, so new T() zero-fills members a script reads before
+			// assigning (ids, counters, conversation handles) instead of leaving
+			// whatever a previous mission's session left in the reused heap. Loaded
+			// scripts still restore their saved variables after Create().
+			T* script = new T();
 			assert(script != NULL);
 			script->SetFactory(this);
 			script->Register_Auto_Save_Variables();

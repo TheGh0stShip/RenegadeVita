@@ -83,7 +83,8 @@ persisted level script in `m10.ldd`.
   bag move to succeed, which is required for the `STATE_GRANTING` event.
 - Conversation `Action_Complete` delivery requires the killed building to stay
   a live monitor. Buildings persist after destruction, but this is unverified
-  on Vita.
+  on Vita. Source trace of delivery, zero-length
+  speech and save/load: [CONVERSATION_COMPLETION.md](CONVERSATION_COMPLETION.md).
 - Large-base performance, Obelisk/Apache/SAM behaviour, M08/M10 Apache callback
   reachability (KNOWN_GAPS 2026-10-04) and save/reload mid-mission are not
   covered here.

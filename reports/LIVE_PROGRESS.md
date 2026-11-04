@@ -1,5 +1,18 @@
 # Live engineering progress
 
+## Missing-content scope clarification — 2026-11-04
+
+Now: establish retail gameplay/content parity independently of the port graph.
+The user means absent real gameplay, not only missing files or symbols. The
+1,490-unit source inventory is supporting evidence, not content completeness.
+Completed: retail-parity contract added to charter and durable instructions;
+existing M13 retail-equivalence inferences explicitly reopened for verification.
+Next: derive the all-mission feature/sequence catalogue from retail references,
+authored data and original owners; reconcile every readiness report and stub
+against it, then enforce the same requirements in canonical/fast admission.
+Blocker: catalogue and content-impact classification remain OPEN. Play-test
+hold stays active; the user must not discover absent content by playing retail.
+
 ## Full-port closure and play-test hold — 2026-11-04
 
 Renegade Vita — v3.5 active

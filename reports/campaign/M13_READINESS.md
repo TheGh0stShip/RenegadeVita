@@ -1,5 +1,15 @@
 # M13 readiness (first campaign mission)
 
+## Retail-parity qualification — 2026-11-04
+
+The audit below is static evidence, not verified retail gameplay equivalence.
+Statements that absent IDs/references "behave the same on retail PC" or are
+not completion blockers must be revalidated against matching retail behavior
+or binary evidence; the released source alone cannot establish those claims.
+Unsent handoff slots and missing resource/definition references require explicit
+content-impact classification under RETAIL_CONTENT_PARITY_CONTRACT.md. They
+are not closed merely because a null-safe path avoids crashing.
+
 ## Full audit (2026-10-07)
 
 Evidence class: static source audit plus read-only retail metadata (the

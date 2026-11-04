@@ -48,7 +48,7 @@ reviews are noted where they exist.
   retail `campaign.ini` for duplicate backdrop entries, because
   `commando-a36-campaign-backdrop-selection` changes last-match to
   first-match.
-- **Retail M11 fodder-guy scripts absent (known, graceful; recorded cf7904c).**
+- **Retail M11 fodder-guy scripts absent (OPEN content parity; recorded cf7904c).**
   Spawners 100581, 100582 and 100586 name
   `M11_ObeliskWall_FodderGuy01_JDG`, `M11_ObeliskWall_FodderGuy02_JDG` and
   `M11_TempleRoof_FodderGuy02_JDG`, which are not in the released Scripts
@@ -58,8 +58,10 @@ reviews are noted where they exist.
   "native provider missing script", `SpawnerClass`
   (`staging/combat/spawn.cpp`) attaches only non-NULL scripts, and save/load
   skips unknown names. The soldiers spawn without per-unit scripted behavior;
-  retail PC would also lack it unless its Scripts.dll had them. Not physically
-  checked in M11.
+  absence from the released source does not establish retail PC behavior.
+  Verify matching retail script-library/reference evidence and determine the
+  omitted gameplay before classifying the discrepancy. Null-safe handling is
+  not a content-parity pass. Not physically checked in M11.
 - **Original Technical Options (open).** Reachable through
   `OptionsMenuClass::On_Command`, independent of its null dialog-factory slot
   (do not populate that slot unless the direct owner is removed). Technical

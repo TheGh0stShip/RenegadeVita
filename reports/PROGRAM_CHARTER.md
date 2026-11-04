@@ -152,6 +152,15 @@ The force-included `renegade_target_abi.h` enforces the native target contract;
 
 ## Non-negotiable implementation rules
 
+Retail-content parity is a separate mandatory gate from compile/link closure.
+The user must not be the discovery mechanism for absent gameplay. Inventory
+every retail mission sequence, interaction, mechanic and presentation path from
+an independently established retail baseline, then trace each through authored
+data, original owners, ported behavior and evidence. Unknown coverage remains
+incomplete. Source absence or a graceful no-op cannot establish retail parity.
+See RETAIL_CONTENT_PARITY_CONTRACT.md; its content catalogue and discrepancy
+audit must close before proposing a play-test candidate under the current hold.
+
 Campaign coverage must name complete original mission sequences and their
 dependencies, including rescue/repair/vehicle handoffs and cinematic effects.
 Require original script source selection, defined linked factories, actual

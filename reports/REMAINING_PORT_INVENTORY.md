@@ -10,6 +10,13 @@ This supersedes the earlier plan to proceed directly to candidate play tests.
 
 ## Inventory completion criteria
 
+Primary requirement: complete retail gameplay/content parity, as defined in
+RETAIL_CONTENT_PARITY_CONTRACT.md. The translation-unit inventory below is
+only a supporting technical track. Its completion cannot establish that battles,
+interactions, scripted handoffs, objectives, presentation or other retail game
+content survived the port. Establish the independent retail feature/sequence
+catalogue and audit all existing readiness claims before claiming completeness.
+
 This inventory is OPEN, not a claim of exhaustive closure. Reconcile every
 released project translation unit against selected sources and final linked
 symbols. Classify exclusions as obsolete/tool-only, replaced platform boundary,

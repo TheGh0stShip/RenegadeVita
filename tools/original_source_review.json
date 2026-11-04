@@ -5,7 +5,7 @@
       "classification": "platform replacement with missing presentation contract",
       "evidence": ["port/platform/a4_binkmovie_boundary.cpp", "port/compatibility/include/binkmovie.h"],
       "reason": "Native Play accepts but discards subtitle_name and FontCharsClass arguments. Decode dependency also has a confirmed transform-enum truncation defect with the installed compiler defaults.",
-      "remaining": "Restore original subtitle ownership at the movie boundary; fix FFmpeg enum layout consistently with its sole Bink consumer. Compile and link both before any future playback acceptance."
+      "remaining": "Link original subtitle.cpp, subtitleparser.cpp and subtitlemanager.cpp; stage their headers and translate legacy include paths. Preserve original manager Create/Process/Render/destruction ownership. Process takes 60-Hz ticks, not milliseconds: original BINKMovie uses FrameNum*(60/(FrameRate/FrameRateDiv)). Route subtitle.ini through the rooted read boundary (original manager uses RawFileClass). Both movie.cpp and dlgmovieoptions.cpp supply data\\subtitle.ini and a font. FFmpeg enum correction is in the worktree, pending dependency and consumer builds."
     },
     "Combat/statemachine.cpp": {
       "classification": "header-only implementation",

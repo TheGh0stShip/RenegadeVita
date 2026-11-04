@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import re
 from collections import Counter
 from pathlib import Path
 
@@ -12,6 +13,13 @@ def inventory(root):
     code = root / 'upstream/CnC_Renegade/Code'
     manifests = [root / 'CMakeLists.txt', *sorted((root / 'cmake').glob('*.cmake'))]
     texts = {str(p.relative_to(root)): p.read_text() for p in manifests}
+    projects = {}
+    for project in sorted(code.rglob('*')):
+        if not project.is_file() or project.suffix.lower() != '.dsp':
+            continue
+        for entry in re.findall(r'^SOURCE=(.*)$', project.read_text(errors='replace'), re.M):
+            path = (project.parent / entry.strip().strip('"').replace('\\', '/')).resolve()
+            projects.setdefault(str(path).casefold(), []).append(str(project.relative_to(code)))
     rows = []
     for source in sorted(code.rglob('*')):
         if not source.is_file() or source.suffix.lower() not in ('.c', '.cpp', '.cxx', '.cc'):
@@ -25,6 +33,7 @@ def inventory(root):
                      'original_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
                      'staged_exact_path_exists': staged.is_file(),
                      'manifest_literal_mentions': mentions,
+                     'released_project_membership': sorted(set(projects.get(str(source.resolve()).casefold(), []))),
                      'status': 'requires selected-target and owner classification',
                      'linked': None})
     return {'scope': 'All released C/C++ files, including tools and obsolete units. '

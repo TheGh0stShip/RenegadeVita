@@ -20,10 +20,10 @@
       "remaining": "Compare original interface and callers; retain required diagnostic behavior and classify omitted desktop facilities."
     },
     "wwui/IMEManager.cpp": {
-      "classification": "partial platform replacement requires review",
-      "evidence": ["port/platform/a4_frontend_lifecycle_boundary.cpp", "port/patches/wwui-a4-ime-vita-boundary.patch"],
-      "reason": "Desktop IME lifecycle methods are no-ops at the boundary; a Vita IME adapter exists separately. Neither fact proves complete text-entry coverage.",
-      "remaining": "Trace every original edit-control owner to the native IME adapter and classify unsupported composition behavior."
+      "classification": "native text-entry replacement with shared edit-control routing",
+      "evidence": ["port/platform/a4_frontend_lifecycle_boundary.cpp", "port/patches/wwui-a4-ime-vita-boundary.patch", "port/platform/vita/renegade_vita_text_entry.cpp", "staging/wwui/editctrl.cpp", "staging/wwui/dialogbase.cpp", "staging/commando/dlgmpingamechat.cpp"],
+      "reason": "Shared EditCtrl opens native entry on click or dialog activation, consumes UTF-16 results through Set_Text and original change notification, and cancels by owner on destruction. Chat explicitly opens the same control. Desktop composition observers are intentionally disabled; the native firmware dialog owns composition. Both adapter sources are listed in canonical CMake.",
+      "remaining": "Verify selected native target and link; audit original edit-control filtering semantics on whole-string native results. Physical text-entry acceptance remains open under the play-test hold."
     }
   }
 }

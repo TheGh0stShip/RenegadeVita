@@ -12,7 +12,7 @@ rv_source="$rv_source_cache/ffmpeg-$rv_version"
 rv_prefix="$rv_root/build/deps/ffmpeg-bink-vita"
 rv_build="$rv_root/build/deps/ffmpeg-bink-vita-build"
 rv_vitasdk="${VITASDK:-/usr/local/vitasdk}"
-rv_config_id="ffmpeg-$rv_version-vita-bink-video-audio-v3-speed"
+rv_config_id="ffmpeg-$rv_version-vita-bink-video-audio-v4-int-enums"
 rv_stamp="$rv_prefix/.renegade-bink-build"
 
 mkdir -p "$rv_source_cache" "$rv_root/build/deps"
@@ -92,7 +92,7 @@ cd "$rv_build"
 	--disable-sdl2 \
 	--disable-securetransport \
 	--disable-xlib \
-	--extra-cflags="-std=gnu11 -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -O2 -ffunction-sections -fdata-sections -fomit-frame-pointer -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types -D_BSD_SOURCE" \
+	--extra-cflags="-std=gnu11 -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -fno-short-enums -O2 -ffunction-sections -fdata-sections -fomit-frame-pointer -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types -D_BSD_SOURCE" \
 	--extra-ldflags="-L$rv_vitasdk/arm-vita-eabi/lib -Wl,--gc-sections"
 
 make -j"$(nproc)"

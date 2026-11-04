@@ -25,6 +25,12 @@
 // change visible so the audit and dependent struct layouts are re-reviewed.
 #if defined(__vita__) && defined(__cplusplus)
 namespace renegade_abi_detail { enum ShortEnumProbe { SHORT_ENUM_PROBE_A, SHORT_ENUM_PROBE_B }; }
+#if defined(RENEGADE_FFMPEG_INT_ENUM_ABI)
+// The isolated Bink provider shares FFmpeg structs, not original engine enums.
+static_assert(sizeof(renegade_abi_detail::ShortEnumProbe) == 4,
+              "FFmpeg boundary requires int-sized enums matching its dependency");
+#else
 static_assert(sizeof(renegade_abi_detail::ShortEnumProbe) == 1,
               "Vita short-enum ABI changed: re-audit enum serialization (reports/SHORT_ENUM_NETWORK_AUDIT.md)");
+#endif
 #endif

@@ -168,6 +168,15 @@ set(RENEGADE_BINK_FFMPEG_ROOT
   "${RENEGADE_ROOT}/build/deps/ffmpeg-bink-vita" CACHE PATH
   "Bink-enabled Vita FFmpeg installation produced by tools/build_ffmpeg_bink_vita.sh")
 if(RENEGADE_A4_ORIGINAL_FRONTEND)
+  set(rv_bink_abi_stamp "${RENEGADE_BINK_FFMPEG_ROOT}/.renegade-bink-build")
+  if(NOT EXISTS "${rv_bink_abi_stamp}")
+    message(FATAL_ERROR "Missing FFmpeg ABI stamp; run tools/build_ffmpeg_bink_vita.sh")
+  endif()
+  file(READ "${rv_bink_abi_stamp}" rv_bink_abi_identity)
+  string(STRIP "${rv_bink_abi_identity}" rv_bink_abi_identity)
+  if(NOT rv_bink_abi_identity STREQUAL "ffmpeg-9.0.1-vita-bink-video-audio-v4-int-enums")
+    message(FATAL_ERROR "Stale FFmpeg enum ABI; rebuild with tools/build_ffmpeg_bink_vita.sh")
+  endif()
   foreach(bink_dependency IN ITEMS
       include/libavformat/avformat.h
       lib/libavformat.a
@@ -329,6 +338,12 @@ if(RENEGADE_A4_ORIGINAL_FRONTEND)
     ${RENEGADE_ROOT}/port/platform/a4_frontend_lifecycle_boundary.cpp
     ${RENEGADE_ROOT}/port/platform/a4_binkmovie_boundary.cpp
   )
+  # FFmpeg uses INT32_MAX as an enum wildcard. Keep its sole consumer's
+  # public FFmpeg layouts consistent without changing original engine enums.
+  set_property(SOURCE port/platform/a4_binkmovie_boundary.cpp APPEND PROPERTY
+    COMPILE_OPTIONS -fno-short-enums)
+  set_property(SOURCE port/platform/a4_binkmovie_boundary.cpp APPEND PROPERTY
+    COMPILE_DEFINITIONS RENEGADE_FFMPEG_INT_ENUM_ABI=1)
 else()
   set(RENEGADE_A4_FRONTEND_ORIGINAL_SOURCES)
   set(RENEGADE_A4_FRONTEND_PORT_SOURCES)

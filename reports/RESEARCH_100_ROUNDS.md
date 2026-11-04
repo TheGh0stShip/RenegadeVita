@@ -310,4 +310,209 @@ Local evidence: cmake/RenegadeScriptSources.cmake, campaign subset checks in
 CMakeLists.txt. Source closure is distinct from runtime factory registration,
 retail attachment resolution and natural mission completion; those stay open.
 
-Completed rounds: 10/100. Remaining rounds retain the coverage plan above.
+## Round 11 — enum ABI and dependency boundaries (COMPLETE)
+
+Question: can the transform sentinel be fixed by changing only its caller?
+Searches: GCC `-fshort-enums binary compatible`; ARM abi-aa `Tag_ABI_enum_size`.
+Inspected GCC code-generation documentation and Arm's 32-bit build-attribute
+definitions, then compared actual ARM output from the corrected FFmpeg build.
+
+GCC documents binary incompatibility when enum modes differ. Arm attributes
+distinguish small enum containers from 32-bit intent independently of VFP call
+attributes. Our new bink.o reports ARMv7 Application, int-sized enums and VFP
+register arguments. The retained compile probe still rejects the default mode
+and accepts explicit int enums. This proves the new object settings, not all
+archives or the full caller boundary. The earlier attempt to inspect new tx.o
+found no object yet; do not substitute its previous-build attributes.
+
+Decision: keep matching dependency/caller flags, stale-stamp rejection and
+compile assertions; inspect every final archive and Bink object before closing
+the ABI gate. Do not globally change original engine enums or suppress linker
+ABI diagnostics to bypass this audit. Corrected dependency build remains live
+as session 42273; no second builder started.
+
+Primary references:
+- https://gcc.gnu.org/onlinedocs/gcc/Code-Gen-Options.html
+- https://github.com/ARM-software/abi-aa/blob/main/addenda32/addenda32.rst
+
+## Round 12 — wchar ABI versus libc string interfaces (COMPLETE)
+
+Question: does compiling engine text as UTF-16 make libc wide APIs compatible?
+Searches: GCC `-fshort-wchar binary compatible`; newlib `wchar_t wcslen sizeof`.
+Read GCC's warning and newlib's documented wide API, then inspected actual
+installed libc archive attributes: `Tag_ABI_PCS_wchar_t: 4`. Engine builds use
+short wchar. Existing compatibility helpers and exported string wrappers
+therefore remain necessary; do not forward engine UTF-16 pointers directly to
+the unadapted library. Current short-wchar source checks cover selected string
+calls, not all numeric conversion or locale APIs.
+
+New integration lead: original subtitleparser.cpp calls wcstoul for time fields.
+No wcstoul adapter was found in a31_miscutil_boundary.cpp or win32_compat.h.
+Restoring that parser must close its numeric conversion boundary as well as
+linking the missing units. Treat it as a source-integration dependency, not a
+currently executing Vita failure. No global wchar or disk-layout change adopted.
+
+Primary references:
+- https://gcc.gnu.org/onlinedocs/gcc/Code-Gen-Options.html
+- https://sourceware.org/newlib/libc.html
+
+## Round 13 — floating-point calls versus hardware support (COMPLETE)
+
+Question: does Cortex-A9/NEON alone establish dependency call compatibility?
+Searches: GCC ARM Options `mfloat-abi hard softfp link-compatible`; Arm AAPCS32
+`VFP registers parameter alignment`. Read GCC's ARM options and Arm's procedure
+call descriptions. Hardware instructions and argument-passing convention are
+separate contracts; variadic calls also require their own ABI treatment.
+
+Local compiler macros report ARM architecture 7, 4-byte pointers and
+`__ARM_PCS_VFP=1`. Built vitaGL vgl.o reports ARMv7 Application, VFP register
+arguments and 8-byte stack alignment requirements/preservation. The corrected
+FFmpeg bink.o has the same VFP calling attribute (round 11). These observations
+support those objects only, not a blanket claim about every archive member.
+Decision: retain hard-float consistency checks across dependencies and audit
+assembly/variadic seams separately; do not infer them from `-mfpu=neon`.
+
+The skill artifact inspector currently prints ELF headers but not attributes;
+ELF machine/class alone is insufficient. Candidate review must retain `readelf
+-A` output in addition to `-h`. No dependency settings changed in this round.
+
+Primary references:
+- https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
+- https://github.com/ARM-software/abi-aa/blob/main/aapcs32/aapcs32.rst
+
+## Round 14 — alignment and serialized layout (COMPLETE)
+
+Question: can ARM unaligned-access support replace explicit wire-layout checks?
+Searches: GCC ARM Options `munaligned-access packed structures`; Arm AAPCS32
+`composite alignment packed`. Read compiler and ABI descriptions, then inspected
+the native beacon decoder and original chunk read boundary. Compiler-generated
+unaligned accesses do not excuse arbitrary typed-pointer casts or establish
+portable struct layouts. Aggregate alignment and ABI passing remain separate.
+
+Local LanBeacon asserts its 76-byte size and four field offsets, receives into
+a byte buffer and copies into its record after an exact-length check. Chunk
+headers are read into owned header storage. These are specific examples of
+bounded layout handling, not proof of every packet/save record. Decision:
+preserve explicit widths, layout assertions and byte-safe admission; do not
+globally pack engine structs to match disk or wire data. Continue per-record
+review and ARM compilation in the complete inventory.
+
+Primary references:
+- https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
+- https://github.com/ARM-software/abi-aa/blob/main/aapcs32/aapcs32.rst
+Local evidence: renegade_network_provider.cpp and staged wwlib/chunkio.cpp.
+No new alignment defect was established in these inspected records.
+
+## Round 15 — allocation containment and ARM unwinding (COMPLETE)
+
+Question: is a catch block sufficient when surrounding frames lack unwind support?
+Searches: GCC `-fexceptions unwind`; Arm EHABI32 exception handling unwind tables.
+Read GCC exception guidance and EHABI descriptions, then inspected the native
+target's default exception flags, scoped audio overrides and decoder code.
+
+Native target defaults to no exceptions, with scoped exceptions enabled for
+the retained audio failure boundary. The wave decoder catches bad_alloc and
+length_error; other provider objects use nothrow. These choices must retain a
+valid same-thread unwind path. A handler alone cannot recover across arbitrary
+frames lacking required unwind support. No global exception-policy change is
+justified by this research.
+
+New lead: Bink boundary uses vector growth while remaining under the default
+exception policy. Audit bounded sizes, allocation-failure admission and cleanup
+for those decode/ring/prefetch paths rather than assuming audio containment
+covers movies. Verify matching ARM unwind sections and actual source options
+when the native candidate compiles. This is a coverage lead, not a reproduced
+Bink allocation crash.
+
+Primary references:
+- https://gcc.gnu.org/onlinedocs/gcc-7.2.0/libstdc++/manual/manual/using_exceptions.html
+- https://github.com/ARM-software/abi-aa/blob/main/ehabi32/ehabi32.rst
+
+## Round 16 — loader completion publication (COMPLETE)
+
+Question: does volatile or a zero handle alone safely publish loaded state?
+Searches: GCC `__atomic acquire release memory model`; POSIX `pthread_join
+memory synchronization`. Read GCC builtin documentation; the Open Group join
+page returned 403, so no claim is based on reading that page.
+
+Staged ThreadClass publishes `running=false` with release, clears ThreadID,
+then publishes handle zero with release as its last object access. Stop polls
+that handle with acquire. Running queries use acquire too. This preserves
+publication and object-lifetime ordering rather than relying on volatile.
+Decision: retain that existing correction; do not remove atomic operations as
+a host-only optimization. Audit cancellation/cooperative stop and retained
+worker resources separately; this source check does not prove bounded stop
+latency or full thread join semantics.
+
+Primary reference:
+https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html
+Local sources: staged wwlib/thread.cpp and thread.h, selected thread-completion
+patch and the focused publication contract. No new synchronization change.
+
+## Round 17 — clock units and original timer width (COMPLETE)
+
+Question: can the original millisecond timer be replaced with an arbitrary
+64-bit microsecond counter? Searches: Microsoft timeGetTime wraparound;
+VitaSDK sceKernelGetProcessTimeWide microseconds. Microsoft's API contract uses
+DWORD milliseconds and wraps at 2^32. Vita's process-time API exposes a distinct
+wide source. Original timer interfaces must preserve their units and widths;
+diagnostics may retain wider timestamps separately.
+
+Local QueryPerformanceCounter explicitly scales the Vita clock to nanoseconds,
+matching its declared frequency rather than leaking raw microseconds into that
+interface. Decision: review timers by API contract; do not globally widen engine
+time fields or reinterpret saved/network timestamps. Existing file-time checks
+are not evidence of tick-wrap handling. `unittest` found zero cases in the
+standalone file-time script; pytest is unavailable. Those attempts close no
+timer gate. Further wraparound counterexamples remain an implementation audit
+item, not a demonstrated new runtime defect.
+
+Primary references:
+- https://learn.microsoft.com/en-us/windows/win32/api/timeapi/nf-timeapi-timegettime
+- https://github.com/vitasdk/vita-headers/blob/master/include/psp2/kernel/processmgr.h
+
+## Round 18 — archive extraction versus section retention (COMPLETE)
+
+Question: can KEEP or a successful link compensate for unselected registrar units?
+Searches: binutils ld `gc-sections KEEP init_array archive extraction`; CMake
+`TARGET_OBJECTS object library static registration`. Read ld's KEEP and garbage
+collection documentation and compared direct executable source selection.
+Our original script list is supplied directly to the executable rather than
+hidden behind ordinary archive extraction. Retain that design. Section retention
+and archive-member selection are separate checks; neither proves the factories
+actually registered. Inspect final constructor references/map/symbol inventory
+when native linking resumes. No linker flag change adopted.
+
+Primary reference:
+https://sourceware.org/binutils/docs/ld/Input-Section-Keep.html
+and https://sourceware.org/binutils/docs/ld/Options.html
+
+Dependency follow-through: corrected FFmpeg build session 42273 completed.
+readelf over all five archives found only int enum and VFP-register-call values
+among emitted attributes. Some members omit enum attributes, so this is not
+a claim every member declares them. Caller integration found the target's
+small-enum assertion would reject the scoped Bink ABI. Added an explicit
+source-local macro and alternate int-enum assertion; ARM syntax probe and
+three existing target checks pass. Full Bink compilation remains pending.
+
+## Round 19 — source-specific build options (COMPLETE)
+
+Question: are the intended boundary options present in the actual compiler command?
+Searches: CMake `COMPILE_OPTIONS source file full path directory scope` and
+`COMPILE_DEFINITIONS source property`. Read official source-property documentation.
+Configured the existing dev246 native build directory with compile-command
+export, inspected Bink's generated command and compiled its exact Ninja object.
+Configure and ARM compilation both pass. The command includes the isolated
+FFmpeg enum definition and `-fno-short-enums`; compile-time assertions pass.
+
+Decision: use generated commands and object evidence rather than source-text
+checks alone for scoped ABI options. Corrected dependency archives and actual
+Bink caller now compile consistently. Full native linking/package gates and
+canonical host harness repair remain open. No gameplay launch or acceptance.
+
+Primary reference:
+https://cmake.org/cmake/help/latest/prop_sf/COMPILE_OPTIONS.html
+Native evidence: build/vita-a35-dev246-candidate-20261104-143651/compile_commands.json
+and its a4_binkmovie_boundary.cpp.obj, successful Ninja session 71004.
+
+Completed rounds: 19/100. Remaining rounds retain the coverage plan above.

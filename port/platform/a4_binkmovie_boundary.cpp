@@ -32,9 +32,14 @@ extern "C" {
 #include <libavutil/error.h>
 #include <libavutil/mathematics.h>
 #include <libavutil/pixfmt.h>
+#include <libavutil/tx.h>
 #include <libswresample/swresample.h>
 #include <libswscale/swscale.h>
 }
+
+static_assert(sizeof(AVTXType) == 4, "FFmpeg requires int-sized transform enums");
+static_assert(static_cast<AVTXType>(INT32_MAX) == INT32_MAX,
+    "FFmpeg transform wildcard must not truncate");
 
 namespace {
 

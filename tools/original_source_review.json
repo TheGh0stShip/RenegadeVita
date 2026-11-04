@@ -22,8 +22,8 @@
     "Combat/debug.cpp": {
       "classification": "partial compatibility implementation requires review",
       "evidence": ["port/platform/a31_gameplay_boundary.cpp", "upstream/CnC_Renegade/Code/Combat/debug.cpp"],
-      "reason": "Boundary supplies selected DebugManager fields and display methods; this is not evidence that the complete original debug implementation is restored.",
-      "remaining": "Compare original interface and callers; retain required diagnostic behavior and classify omitted desktop facilities."
+      "reason": "Boundary supplies selected DebugManager fields and display methods. Wide-string mission Display_Text was a no-op despite the runtime installing TextDebugDisplayHandlerClass; original callback forwarding is now restored in the worktree.",
+      "remaining": "Compile restored forwarding; compare remaining original interface and callers and classify omitted desktop facilities. Network prolific diagnostics remain a no-op."
     },
     "wwui/IMEManager.cpp": {
       "classification": "native text-entry replacement with shared edit-control routing",

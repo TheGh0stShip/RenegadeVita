@@ -453,9 +453,11 @@ void DebugManager::Display_Network_Prolific(char const *, ...)
 {
 }
 
-void DebugManager::Display_Text(const WideStringClass &, const Vector3 &)
+void DebugManager::Display_Text(const WideStringClass &text, const Vector3 &color)
 {
-	// The desktop debug display handler has no Vita presentation endpoint.
+	if (DisplayHandler != NULL) {
+		DisplayHandler->Display_Text(text, Vector4(color[0], color[1], color[2], 1.0f));
+	}
 }
 
 // SEH is a Win32-only failure-reporting mechanism.  ThreadClass' POSIX/Vita

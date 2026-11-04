@@ -946,6 +946,14 @@ local-builder/logs/ffmpeg-install-identity-probe.log and ffmpeg-reuse-tests.log.
 
 Completed rounds: 36/100.
 
+Round-36 follow-through: revised recipe build PASS; receipt covers 173 files.
+Unchanged second invocation verified reuse in 2.86 s without changing archive
+or receipt hashes/mtimes. All five archives reproduce the hashes used by the
+successful direct dev246 ARM link. Actual input identity document matches
+`fa616f92cc3191eb7cdf9c2e293b3d3b9d8f0b141229ac8ec51567cbe5f593cf`.
+Installed-header target probe retains INT32_MAX under explicit int enums and
+rejects default short enums. No runtime or complete ABI acceptance inferred.
+
 Round-26 implementation follow-through: exact production vertex/index admission
 blocks pass 13,122 generated window cases against independent 64-bit arithmetic
 under ASan/UBSan. Native DX8 boundary object compiled successfully in session

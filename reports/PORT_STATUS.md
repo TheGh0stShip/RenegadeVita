@@ -1,5 +1,15 @@
 # Renegade Vita port status
 
+## Current native closure — 2026-11-04
+
+Direct dev246 ARM compile/link passed all 681 steps. ELF32 ARMv7 hard-float/VFP
+identity and retained original-owner symbols are recorded in
+DEV246_NATIVE_LINK_CLOSURE.md. This is an unpackaged direct-build result;
+earlier canonical dev246 host-link failure remains preserved. Full functional
+inventory and physical acceptance remain open. All play tests remain held by
+the user until remaining port and missing/fix/relink inventory are completed.
+Historical source-only descriptions below state their evidence at that time.
+
 # Source-only hardening since 2026-10-05 — 2026-10-06
 
 The 54 commits since 2026-10-05 change only source, host tests and reports.

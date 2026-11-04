@@ -1,5 +1,15 @@
 # Known gaps
 
+## Current closure qualification — 2026-11-04
+
+The full direct dev246 ARM graph now compiles/links, but source completeness
+and functional coverage remain unproven. Track current missing/fix/relink work
+in REMAINING_PORT_INVENTORY.md, including original subtitles, audio effects,
+excluded owners and the scoped FFmpeg enum seam. See
+DEV246_NATIVE_LINK_CLOSURE.md for matching hashes and ABI qualifications.
+Research: 36/100 rounds. No play tests until remaining port/inventory closure;
+older runtime-test next steps below are superseded during this hold.
+
 ## 2026-10-05/06 consolidated (all source-only unless stated)
 
 - **Campaign cross-mission texture gap (source-mitigated, cosmetic).** `lv8_hbag.tga` (prop `DSP_H-BAG`,

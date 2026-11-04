@@ -39,8 +39,9 @@ through staging. One additional staged source, commando/loadingscreen.cpp, is
 explicitly traced to LoadingScreenClass extracted from Commando/combatgmode.cpp
 by the shared-loadingscreen patch. No staged input remains unmapped in this
 target. Other targets and manifest comments cannot establish selection.
-Final compilation, symbol retention and functional owner
-classification remain separate open steps. Generated local inventory:
+Full direct ARM compilation/linking now passes, with selected-owner symbol
+retention in DEV246_NATIVE_LINK_CLOSURE.md. Complete symbol/functional-owner
+classification remains open. Generated local inventory:
 reports/generated/remaining_original_sources.json.
 
 ### Triangle-fan submission correction
@@ -50,18 +51,20 @@ a strip. It now expands fans into lists, validates the source window separately
 from expanded output capacity, and preserves anchor/winding and rebasing.
 Production-block sanitizer checks cover translation, invalid ranges and every
 16-bit polygon count's capacity decision. The changed production boundary
-compiles for ARMv7 with VFP-register arguments; full ARM linking remains in
-progress. Existing callers use list/strip; no visual acceptance claim.
+compiles for ARMv7 with VFP-register arguments, and its sorting submission is
+retained in the successfully linked native ELF. Existing callers use list/strip;
+no visual acceptance claim.
 See research round 27 for the original source/caller evidence.
 
 ### Installed dependency identity
 
 The earlier FFmpeg shortcut could reuse archives after compiler/SDK changes.
-The pending fix computes mandatory recipe/toolchain/SDK identity before local
+The fix computes mandatory recipe/toolchain/SDK identity before local
 reuse, verifies installed content hashes, and extracts a fresh verified source
 archive for each rebuild. Shared cache use remains optional. Source tests pass;
-the revised dependency recipe must be built after the current ARM consumer
-finishes. Never certify the old installation with a new receipt. Research round
+the revised dependency rebuild and unchanged installed reuse now pass. Its five
+archive hashes match the successful native link. Receipt covers 173 files and
+actual input identity is retained. Research round
 20 records the original defect; independent review is retained separately.
 
 ### Canonical host harness closure
@@ -138,8 +141,9 @@ of `statemachine.h`; boss objects use the header's template implementation.
 Adding this empty translation unit would restore no missing out-of-line owner.
 Other unmentioned sources remain unclassified rather than presumed unnecessary.
 
-1. Preserve failed canonical dev246 (session 17626). Observe direct native build
-   session 54511 to terminal before rebuilding dependencies it is reading.
+1. Preserve failed canonical dev246 (session 17626) and successful direct native
+   session 54511 as separate evidence. Revised FFmpeg session 45286 and verified
+   unchanged reuse session 7212 are terminal PASS; retain their exact identities.
 2. Establish the full original-source and linked-owner inventory, including
    stubs and intentionally excluded subsystems.
 3. Resolve missing/replaced-owner findings in dependency order and retain

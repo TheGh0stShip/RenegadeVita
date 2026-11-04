@@ -33,8 +33,10 @@ Raw response: local-builder/logs/claude-ffmpeg-install-review.log.
 
 Focused verification: 27 tests PASS across receipt, production query block and
 dependency cache; bash syntax check PASS. A real installed-toolchain identity
-probe is retained separately. Revised FFmpeg build/reuse still pending until
-the current consumer reaches a terminal result.
+probe is retained separately. The consumer subsequently completed its native
+link successfully; revised FFmpeg rebuild and unchanged installed reuse both
+passed. All five archive hashes match that linked consumer. See
+DEV246_NATIVE_LINK_CLOSURE.md for exact evidence and retained identity documents.
 
 ## DeepSeek — full original-source inventory
 

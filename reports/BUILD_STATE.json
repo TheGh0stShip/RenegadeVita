@@ -1,4 +1,32 @@
 {
+  "direct_native_closure_dev246_20261104": {
+    "state": "DIRECT_ARM_COMPILE_LINK_PASS_NOT_PACKAGED",
+    "target": "RenegadeVitaA31",
+    "build_directory": "build/vita-a35-dev246-candidate-20261104-143651",
+    "canonical_dev246": "Earlier failed A22 host link remains preserved; retained A22 graph subsequently repaired and checked separately",
+    "source_entries": 681,
+    "direct_released_original_units": 632,
+    "released_original_inventory": 1490,
+    "staging_patches": 631,
+    "elf_sha256": "34fcbf38701f3f63266da1e3b80c81524e52af04c8b79803b5dd6ea55ff7d2b9",
+    "map_sha256": "8b0e0ce5bbab4125fe75636a82366695ab80187ac5a36b9eaea6312b44853ccd",
+    "compile_commands_sha256": "b534833b8f33ad9f339a3397628333d85a184487ae12309c623d9373e656d9ac",
+    "input_object_receipt_sha256": "062f51469398f698745aa116204b2299c363a0b3bd395a4e7110e787b96ccc7e",
+    "architecture": "ELF32 little-endian ARMv7 EABI5 hard-float, VFP-register arguments",
+    "enum_link_warnings": "140, all scoped FFmpeg/Bink int-enum objects; full boundary/layout audit remains open",
+    "ffmpeg_verified_install": {
+      "state": "REBUILD_AND_UNCHANGED_REUSE_PASS",
+      "input_identity": "fa616f92cc3191eb7cdf9c2e293b3d3b9d8f0b141229ac8ec51567cbe5f593cf",
+      "installed_files": 173,
+      "receipt_sha256": "8b913016ceba27a5665eb9a6fe3ef24bb3d114ccbbc2b9317a60ba847792eb43",
+      "archives": "All five hashes identical to the archives used by this native ELF",
+      "evidence": "local-builder/logs/ffmpeg-verified-reuse-proof.json"
+    },
+    "play_tests": "HELD until remaining port and missing/fix/relink inventory complete",
+    "research_completed": 36,
+    "research_requested": 100,
+    "report": "reports/DEV246_NATIVE_LINK_CLOSURE.md"
+  },
   "session_integration_dev241_20261007": {
     "candidate": "A3.5-dev241",
     "state": "HOST_ARM_PACKAGE_VITA3K_INSTALLED_PHYSICAL_PENDING",

@@ -26,10 +26,16 @@ rejected findings are retained in INDEPENDENT_REVIEW_2026-11-04.md. Inventory
 now records staged hashes, rejects ambiguous case mappings and traces the
 derived loading-screen TU to its original CombatGameMode owner. Zero unmapped
 staged inputs remain for this target; functional classification is still OPEN.
-The new dependency recipe will be rebuilt only after the native consumer ends.
-Next: finish direct ARM link inspection, classify exclusions and missing owners,
-and continue implementing remaining contracts. Canonical dev246 failed earlier
-at host linking; a separate ARM build is running and is not a packaged candidate.
+The revised dependency rebuilt successfully after the native consumer ended.
+Its 173-file receipt and unchanged second-invocation reuse pass; all five archive
+hashes match the native ELF's linked dependencies. Full input identity is retained.
+Direct ARM build has now completed all 681 steps with exit 0. Matching ELF/map,
+all selected input/object hashes and confirmed original-owner symbols are
+retained in DEV246_NATIVE_LINK_CLOSURE.md. Its 140 scoped FFmpeg/Bink enum-link
+warnings remain an ABI audit item; no complete ABI or runtime claim is made.
+Next: classify exclusions and missing
+owners, and restore subtitle owners through an engine-ABI adapter. Canonical
+dev246 failed earlier at host linking; this is a separate unpackaged ARM result.
 Blocker: no external blocker for source work. Play tests remain held until port
 and inventory completion; no new physical evidence gate closed here.
 

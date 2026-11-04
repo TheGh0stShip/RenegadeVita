@@ -6,7 +6,7 @@
       "classification": "extracted original engine owner",
       "evidence": ["port/patches/commando-a35-shared-loadingscreen-owner.patch"],
       "reason": "Staging extracts LoadingScreenClass from combatgmode.cpp into a shared translation unit and disables the old inline owner. Later patches adapt presentation and status; it is not an additional released source file.",
-      "remaining": "Verify final linked LoadingScreenClass ownership and retain presentation acceptance as an independent runtime gate."
+      "remaining": "Direct dev246 ELF retains LoadingScreenClass constructors, destructor and Render as strong symbols; presentation acceptance remains an independent runtime gate. See reports/DEV246_NATIVE_LINK_CLOSURE.md."
     }
   },
   "reviews": {
@@ -14,7 +14,7 @@
       "classification": "platform replacement with missing presentation contract",
       "evidence": ["port/platform/a4_binkmovie_boundary.cpp", "port/compatibility/include/binkmovie.h"],
       "reason": "Native Play accepts but discards subtitle_name and FontCharsClass arguments. The earlier FFmpeg transform-enum truncation defect is corrected with scoped int-sized dependency/caller enums; dependency rebuild and Bink ARM compilation passed.",
-      "remaining": "Link original subtitle.cpp, subtitleparser.cpp and subtitlemanager.cpp; stage their headers and translate legacy include paths. Preserve original manager Create/Process/Render/destruction ownership. Process takes 60-Hz ticks, not milliseconds: original BINKMovie uses FrameNum*(60/(FrameRate/FrameRateDiv)). Route subtitle.ini through the rooted read boundary (original manager uses RawFileClass). Both movie.cpp and dlgmovieoptions.cpp supply data\\subtitle.ini and a font. Revised installed-reuse identity recipe still needs its own rebuild/reuse evidence."
+      "remaining": "Link original subtitle.cpp, subtitleparser.cpp and subtitlemanager.cpp; stage their headers and translate legacy include paths. Preserve original manager Create/Process/Render/destruction ownership through an engine-ABI adapter, keeping engine layouts out of the int-enum FFmpeg TU. Process takes 60-Hz ticks, not milliseconds: original BINKMovie uses FrameNum*(60/(FrameRate/FrameRateDiv)). Route subtitle.ini through the rooted read boundary (original manager uses RawFileClass). Both movie.cpp and dlgmovieoptions.cpp supply data\\subtitle.ini and a font. Revised dependency rebuild, installed receipt and unchanged reuse now pass."
     },
     "Combat/statemachine.cpp": {
       "classification": "header-only implementation",

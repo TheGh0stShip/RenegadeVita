@@ -1,6 +1,42 @@
 # Full-port research: 100 rounds
 
-Current completed total: 38/100; earlier totals below are historical snapshots.
+Current completed total: 39/100; earlier totals below are historical snapshots.
+
+## Round 39 — always3.dat is a provider/version question (COMPLETE)
+
+Question: is the unmounted extra DAT ordinary original game content, a later
+provider extension, or a harmless duplicate? Searches covered always3.dat,
+Scripts2, Steam, TT and GitHub references. Read original startup and the TT
+developers' release announcements, rather than treating search snippets as proof:
+
+- https://renegadeforums.com/index.php?S=Google&goto=460703&t=msg
+  (message460613, 2011-12-07: TT4.0beta3 introduces the loader/archive, including
+  countdown audio and an airstrip model correction).
+- https://www.renegadeforums.com/index.php?rev=491877&start=0&t=msg&th=41087
+  (message491855, 2016-12-17: updated archive accompanies skeleton, building and
+  HUD-related changes in TT4.3RC2).
+
+Local archive identity: SHA-256
+`8c84590dfb33b25243fa3252777b59b0b4c3a09bbd2b4d5a59444b79a1e08156`.
+Its 38 entries contain WAV/W3D/DDS plus FXO/SHD formats. Read-only payload hashing
+against all other reference archive providers finds 12 otherwise absent CRC keys
+and 26 overlapping keys with different bytes; zero overlapping entries have only
+identical payloads. Private receipt: always3-provider-payload-comparison.json.
+
+Inference: this is consistent with a TT extension overlay, not an inert copy.
+The announcements do NOT fingerprint this installed archive or establish its
+loader priority, installed TT version or original retail gameplay equivalence.
+Decision: keep those differences OPEN and trace the baseline/provider contract
+before introducing an overlay that changes original models/audio. Do not silently
+drop it as unused, claim original-archive closure covers it, or copy TT code.
+No source archive implementation, retail payload or shader was imported.
+This round identifies a version-dependent content branch, not its completion.
+
+Round38 implementation follow-through: general native MIX mounting is now
+implemented, including all-or-nothing rollback. Actual-owner ASan/UBSan fixtures
+and a read-only reference resource lookup PASS. Final native runtime object
+compiles as ARMv7/VFP-register/two-byte-wchar/small-enum. The old M01/M04 M08
+supplement is removed. Full semantic inventory and runtime acceptance OPEN.
 
 ## Round 38 — original archive availability and precedence (COMPLETE)
 

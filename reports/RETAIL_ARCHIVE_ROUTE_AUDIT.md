@@ -1,6 +1,48 @@
 # Retail archive route audit — 2026-11-04
 
-Confirmed source search-contract discrepancy; correction OPEN. No play tests,
+## Implementation follow-through
+
+Full-port startup now enumerates all top-level Data MIX archives through the
+existing rooted boundary and mounts original MixFileFactoryClass instances in
+the original FileFactoryListClass. Tutorial is borrowed at its enumeration
+position; the remaining factories are session-owned and detached before list
+destruction. Failure rolls back the whole new set. Demo profile stays explicit.
+No proprietary data is converted or cached by this helper.
+
+ASan/UBSan fixture using the actual staged original classes passes four trees:
+valid, malformed MIX, missing tutorial and no regular MIX files. Checks cover
+cross-mission lookup, global fallback, M09 priority, network temp priority,
+duplicate selected-map indices, repeated failure rollback and teardown. A
+read-only run against the local reference mounts 27 MIX files and reads the
+M08-only lv8_hbag.dds header through the general factory route. No game loop ran.
+Five route-model fixtures pass; the all-retail model has zero excluded archive
+CRC keys across 13 initial SP routes. That is availability evidence only.
+
+DeepSeek's bounded advisory review prompted explicit rollback and failure/retry
+fixtures. Its claimed name-lifetime concern is refuted by the original
+DynamicVectorClass<StringClass> name copies; pointer removal removes one match,
+and each owned pointer is distinct. Its duplicate-priority concern was checked
+with actual duplicate indices and M09/temp lookup in the fixture. No requirement
+to tolerate a missing tutorial was adopted: current startup explicitly requires
+it. The review supplied no project/device observations.
+
+The M01/M04-specific M08 supplement is removed. Selected-map and Glacier
+indices remain redundant but retained during the network round-swap transition. Their
+cleanup, real duplicate-payload precedence and always3.dat provider role remain
+OPEN. Final runtime ARM object compilation PASS; ELF32 little-endian ARMv7,
+VFP-register arguments, two-byte wchar and small enums verified. Object SHA-256
+`3b813e48bdda2f920dc4eb2f6ecb38d4b2076446c32c73030c2ae6a1b3c7ae11`.
+Input/object/log hashes: local-builder/logs/retail-mix-mounts-validation-receipt.json.
+There is no new full link, SELF/VPK or installation from this focused build;
+this does not establish whole-game content coverage or physical acceptance.
+
+Evidence: local-builder/logs/retail-mix-mounts-tests.log,
+retail-archive-route-tests.log, retail-archive-route-all-retail-summary.json;
+private archive-routes-all-retail.json retains source/catalogue hashes.
+
+## Discovery before correction
+
+Historical discovery state: confirmed search-contract discrepancy, then OPEN. No play tests,
 builds, installation, deployment or retail mutation performed.
 
 Original Commando/init.cpp mounts loose data, Always2.dat, Always.dbs,

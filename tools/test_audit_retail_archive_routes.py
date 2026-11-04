@@ -18,10 +18,18 @@ class ArchiveRouteTests(unittest.TestCase):
         result = analyze(catalogue(archive('Always.dat', [('shared', 1)]),
                          archive('M01.mix', [('local', 2)]),
                          archive('M08.mix', [('bag', 3)]),
-                         archive('M02.mix', [('unknown_script.txt', 0xffffffff)])))
+                         archive('M02.mix', [('unknown_script.txt', 0xffffffff)])),
+                         'restricted-before-fix')
         route = result['scenarios'][1]
         self.assertEqual(route['unreachable_archive_crc_count'], 1)
         self.assertEqual(route['unreachable_archive_resources'][0]['crc32'], 0xffffffff)
+        self.assertFalse(result['play_test_ready'])
+
+    def test_general_mount_policy_exposes_other_mission_without_content_pass(self):
+        result = analyze(catalogue(archive('M01.mix', [('local', 2)]),
+                                   archive('M02.mix', [('cross', 3)])))
+        self.assertTrue(all(s['unreachable_archive_crc_count'] == 0 for s in result['scenarios']))
+        self.assertFalse(result['content_inventory_complete'])
         self.assertFalse(result['play_test_ready'])
 
     def test_duplicate_provider_is_not_a_missing_resource_or_equivalence_claim(self):

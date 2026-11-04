@@ -19,7 +19,9 @@ def top_level(name):
     return '/' not in name and '\\' not in name
 
 
-def analyze(catalogue):
+def analyze(catalogue, policy='all-retail'):
+    if policy not in ('all-retail', 'restricted-before-fix'):
+        raise ValueError('Unknown route policy')
     archives = {}
     for row in catalogue['archives']:
         key = row['name'].casefold()
@@ -48,9 +50,11 @@ def analyze(catalogue):
     for selected in ['m00_tutorial.mix', *levels]:
         if any(s['selected_archive'].casefold() == selected for s in scenarios):
             continue
-        # Current full-port initial SP route, before any dynamic round swap.
+        # Compare explicit policies; never infer a semantic pass from membership.
         route = [*GLOBALS, 'm00_tutorial.mix', selected]
-        if selected in ('m01.mix', 'm04.mix'):
+        if policy == 'all-retail':
+            route += mounted
+        elif selected in ('m01.mix', 'm04.mix'):
             route.append('m08.mix')
         route = list(dict.fromkeys(route))
         present = set(route) & set(mounted)
@@ -67,6 +71,7 @@ def analyze(catalogue):
                    'payload_equivalence': 'UNKNOWN'}
                   for crc, rows in sorted(providers.items()) if len(rows) > 1]
     return {'schema': 1, 'evidence_class': 'STATIC_ARCHIVE_MEMBERSHIP_MODEL',
+            'route_policy': policy,
             'archive_set_sha256': catalogue['archive_set_sha256'],
             'catalogue_issues': catalogue['discovery_issues'],
             'original_top_level_archive_count': len(mounted),
@@ -90,6 +95,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('catalogue', type=Path)
     parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--policy', choices=('all-retail', 'restricted-before-fix'),
+                        default='all-retail')
     args = parser.parse_args(argv)
     output = args.output.resolve()
     if not output.is_relative_to((ROOT / 'build').resolve()):
@@ -97,7 +104,7 @@ def main(argv=None):
     if output == args.catalogue.resolve():
         parser.error('Cannot overwrite the input catalogue')
     raw = args.catalogue.read_bytes()
-    result = analyze(json.loads(raw))
+    result = analyze(json.loads(raw), args.policy)
     result['catalogue_sha256'] = hashlib.sha256(raw).hexdigest()
     result['analyzer_sha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     result['source_sha256'] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()

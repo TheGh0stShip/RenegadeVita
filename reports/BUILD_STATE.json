@@ -1,4 +1,18 @@
 {
+  "retail_mix_mount_correction_20261104": {
+    "state": "FOCUSED_NONPLAY_AND_ARM_OBJECT_PASS_NOT_LINKED_OR_PACKAGED",
+    "arm_object_sha256": "3b813e48bdda2f920dc4eb2f6ecb38d4b2076446c32c73030c2ae6a1b3c7ae11",
+    "attributes": "ELF32 little-endian ARMv7, VFP-register arguments, wchar2, small enums",
+    "tests": "actual-owner ASan/UBSan fixtures across four synthetic trees plus read-only reference lookup; five route-model tests",
+    "reference_mix_mounts": 27,
+    "receipt": "local-builder/logs/retail-mix-mounts-validation-receipt.json",
+    "full_link_self_vpk_install": "NOT_PERFORMED",
+    "play_tests": "HELD; no game loop executed",
+    "research_completed": 39,
+    "research_requested": 100,
+    "content_inventory_complete": false,
+    "report": "reports/RETAIL_ARCHIVE_ROUTE_AUDIT.md"
+  },
   "direct_native_closure_dev246_20261104": {
     "state": "DIRECT_ARM_COMPILE_LINK_PASS_NOT_PACKAGED",
     "target": "RenegadeVitaA31",

@@ -2,10 +2,14 @@
 
 ## Current closure qualification — 2026-11-04
 
-Archive availability differs from original all-top-level-MIX mounting. General
-correction, duplicate-provider precedence and always3.dat version/provider
-reconciliation remain OPEN; see RETAIL_ARCHIVE_ROUTE_AUDIT.md. Unreachable-key
-counts are not gameplay omission counts. Research: 38/100; older totals below
+General all-top-level-MIX mounting is implemented with original owners and
+focused non-play lookup/sanitizer evidence. Duplicate-provider precedence,
+redundant supplemental indices and always3.dat version/provider reconciliation
+remain OPEN; see RETAIL_ARCHIVE_ROUTE_AUDIT.md. Historical unreachable-key
+counts are not gameplay omission counts. Final runtime ARM object compiles;
+full-link/package/runtime evidence is still absent for this change. always3.dat
+has 12 unique and 26 byte-different overlapping entries; its exact provider
+version/precedence is OPEN. Research: 39/100; older totals below
 are historical.
 
 Retail-first discovery is now retained in RETAIL_CONTENT_BASELINE.md. A local

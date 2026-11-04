@@ -1,5 +1,25 @@
 # Live engineering progress
 
+## General retail MIX mounting implemented — 2026-11-04
+
+Renegade Vita — v3.5 active
+`[██████░░░░] 6/10 current evidence gates complete`
+
+Now: reconcile duplicate/archive-provider semantics after native compilation.
+Completed: all top-level retail MIX files enter the original factory list;
+session lifetime, failure rollback and original priority owners are preserved.
+Evidence: actual original-owner ASan/UBSan fixture passes valid/invalid/missing/
+empty trees. Read-only reference lookup mounts 27 MIX files and reads the
+cross-mission DDS header. Five membership fixtures PASS. No game loop ran.
+Final runtime ARM object compilation PASS with ARMv7/VFP-register/small-enum/
+two-byte-wchar attributes and matching source/log receipt. No full link/package.
+The M01/M04-specific M08 supplement is removed. Selected/Glacier duplicate
+indices remain a cleanup item. Research: 39/100; round39 identifies always3.dat
+as a provider/version branch with 12 unique and 26 byte-different overlapping
+entries. Exact installed version/precedence is OPEN. Next: duplicate payload
+precedence, provider equivalence and remaining content semantics.
+Blocker: no external blocker. Full inventory OPEN; play tests remain held.
+
 ## Archive resource reachability — 2026-11-04
 
 Now: restore original general archive search contract; correction OPEN.

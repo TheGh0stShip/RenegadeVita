@@ -1,9 +1,10 @@
 # Remaining full-port inventory
 
-Archive-route audit: restore original all-top-level retail MIX availability,
-preserving temp/network priority, M09 search start and shutdown/round lifetimes.
-161 duplicate CRC provider groups and always3.dat provider/version semantics
-need review. See RETAIL_ARCHIVE_ROUTE_AUDIT.md. Correction remains OPEN.
+Archive-route correction: original all-top-level retail MIX availability is
+implemented; actual-owner non-play sanitizer fixtures cover temp/network/M09
+priority and teardown. Redundant selected/supplement indices, 161 duplicate CRC
+provider groups and always3.dat provider/version semantics still need review.
+See RETAIL_ARCHIVE_ROUTE_AUDIT.md. Full content/runtime acceptance stays OPEN.
 
 ## Active constraint — 2026-11-04
 

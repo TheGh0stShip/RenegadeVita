@@ -2,6 +2,12 @@
 
 ## Current closure qualification — 2026-11-04
 
+Archive availability differs from original all-top-level-MIX mounting. General
+correction, duplicate-provider precedence and always3.dat version/provider
+reconciliation remain OPEN; see RETAIL_ARCHIVE_ROUTE_AUDIT.md. Unreachable-key
+counts are not gameplay omission counts. Research: 38/100; older totals below
+are historical.
+
 Retail-first discovery is now retained in RETAIL_CONTENT_BASELINE.md. A local
 Steam-linked data root lacks required M09.mix; a reference has it and all 30
 common archives match. This is a dataset gap, not proof of an engine omission;

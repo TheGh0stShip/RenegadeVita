@@ -1,5 +1,30 @@
 # Full-port research: 100 rounds
 
+Current completed total: 38/100; earlier totals below are historical snapshots.
+
+## Round 38 — original archive availability and precedence (COMPLETE)
+
+Question: can unchanged retail content exist yet remain unavailable to the port?
+Discovery searches covered EA FileFactoryList/Set_Search_Start, Vita archive
+filesystem enumeration and VitaSDK directory APIs. Inspected pinned EA
+ffactorylist.cpp online and local init.cpp/savegame.cpp, comparing Vita startup,
+round swaps and rooted directory enumeration. Primary references:
+
+- https://raw.githubusercontent.com/electronicarts/CnC_Renegade/3e00c3a1b97381bb28be89a35b856375e0629a08/Code/Combat/ffactorylist.cpp
+- https://docs.vitasdk.org/group__Filesystem.html
+
+Original startup mounts every top-level MIX. Lookup uses temp, search-start,
+then remaining insertion order; M09 has special load priority. Current selected
+map/supplement mounts reduce archive availability. The independent analyzer
+finds 2,705–3,222 archive keys outside each initial SP route and 161 duplicate
+provider groups. These are leads, not missing-gameplay counts. always3.dat's
+provider/version role remains OPEN. Four non-play fixtures PASS.
+
+Decision: restore general availability using original factories and existing
+rooted enumeration, preserving shutdown/round lifetimes, M09 and temp/network
+priority. No external code copied. Correction/native verification OPEN.
+Evidence/provenance/limits: RETAIL_ARCHIVE_ROUTE_AUDIT.md.
+
 User request: 100 rounds of deep research across internet sources, GitHub,
 personal projects, other ports and Vita upstream projects. Play-test hold stays
 active. Research does not establish runtime acceptance.

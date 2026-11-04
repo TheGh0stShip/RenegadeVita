@@ -1,5 +1,17 @@
 # Live engineering progress
 
+## Archive resource reachability — 2026-11-04
+
+Now: restore original general archive search contract; correction OPEN.
+Completed: independent CRC/provider audit across 13 initial SP routes. Original
+all-top-level-MIX mounting exposes keys outside current selected-map routes;
+2,705–3,222 per route are leads, not missing-gameplay counts.
+Evidence: four isolated tests PASS; catalogue/source hashes and 161 duplicate
+provider groups retained. See RETAIL_ARCHIVE_ROUTE_AUDIT.md. Research: 38/100.
+Next: original-factory mount/lifetime correction, M09/temp-provider checks,
+focused non-play lookup checks and ARM compilation. No external blocker.
+No play tests/device mutations/new physical gates; existing hold remains.
+
 ## Missing-content scope clarification — 2026-11-04
 
 Current continuation: retail-first collector and campaign-derived asset

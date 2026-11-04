@@ -13,6 +13,8 @@ def inventory(root):
     code = root / 'upstream/CnC_Renegade/Code'
     manifests = [root / 'CMakeLists.txt', *sorted((root / 'cmake').glob('*.cmake'))]
     texts = {str(p.relative_to(root)): p.read_text() for p in manifests}
+    review_path = root / 'tools/original_source_review.json'
+    reviews = json.loads(review_path.read_text())['reviews'] if review_path.is_file() else {}
     # Resolve only known path prefixes, without pretending to evaluate CMake
     # conditions or list membership. Script lists use a separate root variable.
     normalized = {name: text.replace('${RENEGADE_SCRIPT_SOURCE}/', 'scripts/')
@@ -41,6 +43,8 @@ def inventory(root):
                      'released_project_membership': sorted(set(projects.get(str(source.resolve()).casefold(), []))),
                      'status': 'requires selected-target and owner classification',
                      'linked': None})
+        if relative in reviews:
+            rows[-1]['source_review'] = reviews[relative]
     return {'scope': 'All released C/C++ files, including tools and obsolete units. '
                      'Literal mentions do not prove selection; absence does not prove omission. '
                      'No compile, link or runtime acceptance is inferred.',

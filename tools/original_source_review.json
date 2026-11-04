@@ -1,0 +1,29 @@
+{
+  "scope": "Source review decisions only; no linked or runtime acceptance inferred.",
+  "reviews": {
+    "Combat/statemachine.cpp": {
+      "classification": "header-only implementation",
+      "evidence": ["upstream/CnC_Renegade/Code/Combat/statemachine.cpp", "staging/combat/statemachine.h"],
+      "reason": "Translation unit only includes statemachine.h; template implementation is consumed by boss headers.",
+      "remaining": "Verify boss owner selection in canonical target."
+    },
+    "Combat/directinput.cpp": {
+      "classification": "replaced platform boundary",
+      "evidence": ["port/platform/renegade_directinput.cpp"],
+      "reason": "Original DirectInput interface is implemented at the Vita controller boundary, including button arrays, cursor, acquisition and Read.",
+      "remaining": "Audit complete interface and native target selection; physical controls unaccepted."
+    },
+    "Combat/debug.cpp": {
+      "classification": "partial compatibility implementation requires review",
+      "evidence": ["port/platform/a31_gameplay_boundary.cpp", "upstream/CnC_Renegade/Code/Combat/debug.cpp"],
+      "reason": "Boundary supplies selected DebugManager fields and display methods; this is not evidence that the complete original debug implementation is restored.",
+      "remaining": "Compare original interface and callers; retain required diagnostic behavior and classify omitted desktop facilities."
+    },
+    "wwui/IMEManager.cpp": {
+      "classification": "partial platform replacement requires review",
+      "evidence": ["port/platform/a4_frontend_lifecycle_boundary.cpp", "port/patches/wwui-a4-ime-vita-boundary.patch"],
+      "reason": "Desktop IME lifecycle methods are no-ops at the boundary; a Vita IME adapter exists separately. Neither fact proves complete text-entry coverage.",
+      "remaining": "Trace every original edit-control owner to the native IME adapter and classify unsupported composition behavior."
+    }
+  }
+}

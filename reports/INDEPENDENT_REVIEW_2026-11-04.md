@@ -1,5 +1,31 @@
 # Independent review of active port-closure tools
 
+## Claude follow-up — retail discovery collector
+
+Tool-less review: local-builder/logs/claude-retail-baseline-review.log.
+Accepted: explicit structural residual accounting, unknown text-line hashes,
+raw campaign sections/tokens, archive-set fingerprints, decode-state labels
+and issue-kind summaries. All nodes are counted/hashed by full ancestor path,
+with bounded offset examples; they are not marked semantically consumed.
+Tests verify that changes beyond the offset sample still change the census.
+
+Conditional assertion checked locally: definitions(..., {}) does not filter
+definition classes; the empty argument controls extra reference-field schemas.
+A synthetic unknown factory and uint32-max definition survive the collector.
+CRC-mismatched records remain indexed and flagged but are not interpreted under
+an untrusted member identity. The existing archive reader rejects non-ASCII
+name tables before the per-entry CRC step. An unrelated-file sweep across all
+user backup/subdirectories was not adopted; root/provider and loose-file
+precedence review remain explicitly unfinished.
+
+Original CampaignManager inspection did not justify requiring numeric keys to
+be sorted: entry listing and sequence semantics are kept distinct. The summary
+now says campaign_level_listing and leaves semantic reconciliation OPEN.
+Provider-chain name observations remain leads, not factory/behavior proof.
+Current 50-test verification includes the discovery and retained binary readers,
+campaign manifest/delta checks, read-only output guards, the canonical host-play
+hold and a synthetic pre-copy repair rejection.
+
 Claude was consulted through the `claude` skill's isolated, tool-less `ask`
 mode. DeepSeek was consulted through `deepseek-orchestrator` review; it had
 only supplied source/facts, no repository or web access. Both received the

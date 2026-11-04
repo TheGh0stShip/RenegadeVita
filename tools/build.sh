@@ -2,6 +2,16 @@
 set -Eeuo pipefail
 
 rv_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+# BEGIN_RETAIL_CONTENT_PLAY_HOLD
+# Do not enter run_a30_host.sh's integrated gameplay loops during the current
+# user hold. Replace this guard with shared content admission when that gate
+# is implemented; do not bypass it by weakening the retained validation suite.
+if [[ -z "${RENEGADE_REUSE_HOST_VALIDATION_LOG:-}" ]]; then
+	echo "Fresh integrated host gameplay validation is held: full retail-content inventory/admission remains OPEN." >&2
+	echo "Use isolated non-play checks and direct/fast native compilation while completing the port." >&2
+	exit 12
+fi
+# END_RETAIL_CONTENT_PLAY_HOLD
 # Keep managed artifacts in WSL after the Windows builder migration.
 # RENEGADE_BUILDER_ROOT still permits an explicit output destination.
 rv_managed_builder_root=${RENEGADE_BUILDER_ROOT:-"$rv_root/local-builder"}
@@ -86,7 +96,7 @@ require_linked_symbol() {
 	}
 }
 
-echo "Renegade Vita $rv_candidate_label correctness, diagnostics, and interactive hardware candidate build"
+echo "Renegade Vita $rv_candidate_label correctness and diagnostic build; content admission OPEN"
 echo "Workspace: $rv_root"
 echo "Log: $rv_log"
 echo "Native working directory: $rv_build"
@@ -460,7 +470,7 @@ test -z "$(git -C "$rv_upstream" status --porcelain)"
 {
 	echo "Renegade Vita $rv_candidate_label BUILD REPORT"
 	echo "Result: SUCCESS"
-	echo "Hardware validation: A3.1.4 baseline ACCEPTED; $rv_candidate_label is a host-validated physical candidate, not an accepted milestone."
+	echo "Hardware validation: A3.1.4 baseline ACCEPTED; this build is diagnostic only. Retail-content admission OPEN; play testing HELD."
 	echo "Canonical source: https://github.com/electronicarts/CnC_Renegade"
 	echo "Upstream revision: $rv_revision_actual"
 	echo "Canonical workflow: Bash/CMake/Ninja/VitaSDK"
@@ -518,7 +528,7 @@ cp -- "$rv_host_output" "$rv_dist/$rv_candidate_label-HOST-VALIDATION.log"
 rv_vpk_sha256=$(sha256sum "$rv_vpk" | awk '{print $1}')
 {
 	echo "Renegade Vita $rv_candidate_label hardware checkpoint"
-	echo "Status: host-validated candidate; physical Vita validation required."
+	echo "Status: diagnostic package only; retail-content inventory/admission OPEN; play testing HELD."
 	echo "Source revision: $rv_revision_actual"
 	echo "VPK: RenegadeVita-$rv_candidate_label.vpk"
 	echo "SHA-256: $rv_vpk_sha256"
@@ -527,14 +537,14 @@ rv_vpk_sha256=$(sha256sum "$rv_vpk" | awk '{print $1}')
 	echo "Startup pre-cache receipt: $rv_startup_precache_receipt."
 	echo "Required device prerequisite: ur0:/data/libshacccg.suprx."
 	echo "Controls: frontend menu active: D-pad=WWUI focus navigation, Cross=confirm, Circle=back/cancel, Select=next focus, front touch=original mouse cursor/left click. M00 gameplay: left-stick movement; right-stick camera with normal up/down look; R=fire; L=alternate original joystick button; Cross=jump; Circle=crouch; Triangle=action/use; Square=reload; D-pad Left/Right=previous/next weapon only; D-pad Up/Down=sniper zoom in/out; front touch=original mouse cursor/left click for UI/terminals; rear touch=first/third-person camera toggle; Select tap=cycle objectives; Select+Square=quicksave; Start=original EVA pause menu; Circle=back/resume; Exit Demo=orderly teardown. SELECT screenshots require input-capture-select.flag."
-	echo "Test: in M00, verify visible startup pre-cache receipt, aspect-preserved loading presentation, HUD/scope placement, loading progress, normal texture orientation on characters/doors/powerups, Logan/Sydney/Gunner subtitles, Triangle action/use gates, Square reload animation, D-pad weapon cycling without camera drift, D-pad sniper zoom, and frame rate. Check Start opens EVA and Circle resumes; Exit Demo performs orderly teardown."
+	echo "Play tests are HELD until remaining implementation and the complete retail-gameplay content inventory close. A successful build does not satisfy that gate."
 	echo "Return: $rv_runtime_log, ux0:data/renegade/user/captures/, screenshots, and any psp2core-*.psp2dmp. Run tools/collect_a35_diagnostics.sh with this dist directory and returned files."
 } > "$rv_dist/$rv_candidate_label-HARDWARE-CANDIDATE.txt"
 {
 	echo "Runtime log: $rv_runtime_log"
 	echo "Startup pre-cache receipt: $rv_startup_precache_receipt"
 	echo "Expected $rv_candidate_label breadcrumbs: startup-precache begin/touch/visible-hold/receipt/complete before frontend, movies, menu, or gameplay input; input edge/axis contracts; original DDS activity; A3.5 perf/input summaries; original Combat mission-completion observation when achieved; 120-frame checkpoint or terminal transition; clean teardown."
-	echo "Physical test: retain this log, the startup-precache receipt, and any psp2core dump after exercising controls, visibility, muzzle flash, pause/resume, and Exit Demo teardown."
+	echo "Runtime collection remains held; these expected breadcrumbs are diagnostic metadata, not a request to launch or play-test this package."
 } > "$rv_dist/$rv_candidate_label-EXPECTED-RUNTIME-LOG.txt"
 bash "$rv_root/tools/collect_a35_diagnostics.sh" "$rv_dist" \
 	"$rv_dist/$rv_candidate_label-BUILD-DIAGNOSTICS-$rv_timestamp.zip" "$rv_candidate_label"

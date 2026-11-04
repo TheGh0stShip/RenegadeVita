@@ -946,6 +946,43 @@ local-builder/logs/ffmpeg-install-identity-probe.log and ffmpeg-reuse-tests.log.
 
 Completed rounds: 36/100.
 
+## Round 37 — independent publisher/manual and installed-content baseline (COMPLETE)
+
+Question: what player-visible requirements disappear if discovery starts from
+the selected port graph? Internet searches covered the original Renegade PC
+manual, objective lists and walkthroughs. Search surfaced manual mirrors and
+retail installation paths. The installed publisher manual was then located and
+read directly; no third-party walkthrough claim was promoted to verified fact.
+
+Primary local source: Manuals/CC_RENEGADE_MANUAL - ENGLISH.PDF, SHA-256
+`b48960cbb7d3449eb277da406410fff2f3436d578d9c25547f65d0ec1cc8bad4`.
+Printed pages 2–3, 8–13 and 16–23 identify controls, save/replay behavior,
+EVA/intelligence/data discs, optional rewards, HUD/targeting, capacity-limited
+pickups, weapon effects, vehicle seats, building production, repair/disarming
+and beacon interruption. Fifty initial requirements now cite those pages;
+all remain OPEN and the list is explicitly not exhaustive.
+
+Read-only archive discovery was independent of source selection. It found a
+required M09.mix missing from the Steam-linked dataset. A second local dataset
+contains it, with all 30 shared archives matching byte-for-byte. Its authored
+records expose all twelve campaign map names plus tutorial/Practice/C&C scenes.
+This is a content-discovery baseline, not proof any encounter executes correctly.
+The minimum-asset manifest's old default M00 profile would not catch the missing
+campaign map; it now derives campaign/movie requirements from retail campaign.ini.
+
+Version/provenance limit: installed scripts.dll lacks tested mission-label
+controls and mentions Scripts2.dll; the latter contains those controls. Static
+names do not prove registration or behavior. Do not infer missing retail content
+from source absence or from one DLL search. Exact retail/provider equivalence,
+all sequences and behavioral coverage remain unverified; no play tests occurred.
+
+Evidence: RETAIL_CONTENT_BASELINE.md; tools/retail_gameplay_features.json;
+private build/retail-content-baseline receipts. Primary original campaign
+loader comparison: upstream Code/Commando/campaign.cpp. No manual, retail
+payload or third-party implementation was copied into the repository.
+
+Completed rounds: 37/100.
+
 Round-36 follow-through: revised recipe build PASS; receipt covers 173 files.
 Unchanged second invocation verified reuse in 2.86 s without changing archive
 or receipt hashes/mtimes. All five archives reproduce the hashes used by the

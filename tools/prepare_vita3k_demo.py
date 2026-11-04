@@ -46,8 +46,8 @@ def main() -> None:
     if missing or not shader_module.is_file():
         raise SystemExit(f"Existing emulator prerequisites missing: retail={missing}; shader_module={shader_module.is_file()}")
     # Prerequisite checks alone never establish complete source coverage.
-    source_manifest = build_manifest(args.retail_source)
-    installed_manifest = build_manifest(retail)
+    source_manifest = build_manifest(args.retail_source, 'm00')
+    installed_manifest = build_manifest(retail, 'm00')
     source_files = {p["normalized_path"]: p for p in source_manifest["files"]}
     installed_files = {p["normalized_path"]: p for p in installed_manifest["files"]}
     unmatched = [name for name, entry in source_files.items() if name not in installed_files or
@@ -66,6 +66,8 @@ def main() -> None:
         "vfs": str(vfs), "status": "PREPARING", "files": [],
         "retail_files": [],
         "retail_source_coverage": {
+            "required_profile": "m00",
+            "campaign_content_validated": False,
             "source_root": str(args.retail_source.resolve()),
             "source_files": len(source_files), "installed_files": len(installed_files),
             "source_content_digest": source_manifest["content_digest"],

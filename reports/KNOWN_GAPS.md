@@ -2,6 +2,14 @@
 
 ## Current closure qualification — 2026-11-04
 
+Retail-first discovery is now retained in RETAIL_CONTENT_BASELINE.md. A local
+Steam-linked data root lacks required M09.mix; a reference has it and all 30
+common archives match. This is a dataset gap, not proof of an engine omission;
+no retail files were changed. General manifest/repair preflight now rejects it
+using campaign-derived requirements. Fifty manual feature seeds and every
+mission's sequence/semantic review remain OPEN. A minimum asset pass is not a
+gameplay/content pass. Root/provider version equivalence also remains OPEN.
+
 The full direct dev246 ARM graph now compiles/links, but source completeness
 and functional coverage remain unproven. Track current missing/fix/relink work
 in REMAINING_PORT_INVENTORY.md, including original subtitles, audio effects,

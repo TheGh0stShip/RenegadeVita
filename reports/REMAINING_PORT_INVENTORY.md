@@ -34,6 +34,21 @@ references without redistributing retail data.
 
 ## Existing evidence to reconcile
 
+### Retail-derived content discovery and asset admission
+
+See RETAIL_CONTENT_BASELINE.md. Raw retail campaign flow and every indexed
+entry are collected independently of port selection; unknown bindings, verbs,
+structural paths and unparsed formats remain visible. Fifty manual-derived
+feature seeds are tracked separately, all OPEN. The complete sequence/feature
+catalogue and shared semantic admission gate are still unfinished.
+
+A real required M09 archive is absent from the Steam-linked data root. A
+matching reference has it; all 30 common archive hashes match. General manifest
+and repair validation now default to campaign requirements derived from retail
+campaign.ini, and reject missing maps/movies before repair copies. The explicit
+demo helper retains its tutorial-only profile and disclaims campaign validation.
+This closes one concrete file-availability blind spot, not content parity.
+
 ### Configured native source selection
 
 The dev246 CMake compile database selects 632 original translation units for

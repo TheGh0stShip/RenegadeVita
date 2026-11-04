@@ -70,7 +70,7 @@ echo "Log: $rv_log"
 echo "Fast scope: $rv_fast_scope"
 echo "Fast tests: $rv_fast_tests"
 echo "Development checkpoint launch enabled: $rv_development_checkpoint (public packages require 0)"
-echo "Scope: hardware-testable iteration only; this does not replace tools/build.sh canonical acceptance."
+echo "Scope: diagnostic iteration only; retail-content inventory/admission remains OPEN. No play testing."
 
 for rv_command in cmake ninja python3 git unzip sha256sum grep find tee wc ccache curl tar make convert; do
 	require_command "$rv_command"
@@ -357,7 +357,7 @@ grep -Fq '"status": "PASS"' "$rv_identity_report"
 {
 	echo "Renegade Vita $rv_candidate_label FAST BUILD REPORT"
 	echo "Result: SUCCESS"
-	echo "Scope: fast hardware-candidate iteration only; canonical acceptance still requires bash ./tools/build.sh and physical Vita evidence."
+	echo "Scope: diagnostic iteration only; content completeness and play-test readiness are not established."
 	echo "Build dir: $rv_build"
 	echo "Upstream revision: $rv_revision_actual"
 	echo "Restage mode: ${RENEGADE_FAST_RESTAGE:-0}"
@@ -377,8 +377,8 @@ cp -- "$rv_identity_report" "$rv_dist/$rv_candidate_label-FAST-IDENTITY-VERIFICA
 cp -- "$rv_build_report" "$rv_dist/$rv_candidate_label-FAST-BUILD-REPORT.txt"
 cp -- "$rv_log" "$rv_dist/$rv_candidate_label-FAST-COMPILER_LOG.txt"
 {
-	echo "Renegade Vita $rv_candidate_label fast hardware checkpoint"
-	echo "Status: fast candidate; physical Vita validation required; not canonical acceptance."
+	echo "Renegade Vita $rv_candidate_label diagnostic checkpoint"
+	echo "Status: diagnostic package only; retail-content inventory/admission OPEN; play testing HELD."
 	echo "VPK: RenegadeVita-$rv_candidate_label.vpk"
 	echo "Runtime log: $rv_runtime_log"
 	echo "No physical Vita filesystem was accessed and no physical deployment was attempted."

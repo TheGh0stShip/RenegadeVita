@@ -2,6 +2,18 @@
 
 ## Missing-content scope clarification — 2026-11-04
 
+Current continuation: retail-first collector and campaign-derived asset
+preflight implemented; 50 focused fixture/reader/manifest/hold checks PASS. The
+Steam-linked dataset is missing M09; a reference root contains it and all
+30 common archives match. Default general manifest/repair validation now
+rejects that omission instead of accepting tutorial-only prerequisites.
+Reference discovery includes 54 level members, 7,446 script bindings and
+10,397 timed-command leads. They remain unreviewed, not feature-complete.
+Fifty publisher-manual feature seeds are OPEN. Full semantic admission is
+unfinished; generated package reports now retain diagnostic-only/play-held
+wording, and fresh canonical integrated gameplay validation is blocked during
+the hold. Research is 37/100. See RETAIL_CONTENT_BASELINE.md.
+
 Now: establish retail gameplay/content parity independently of the port graph.
 The user means absent real gameplay, not only missing files or symbols. The
 1,490-unit source inventory is supporting evidence, not content completeness.

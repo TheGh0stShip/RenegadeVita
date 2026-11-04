@@ -82,7 +82,10 @@ def main() -> None:
     save(evidence / "source.json", original)
     save(evidence / "before.json", before)
     if not original["valid"] or original["case_conflicts"] or before["case_conflicts"]:
-        raise SystemExit("Source prerequisites or case-identity audit failed")
+        raise SystemExit("Campaign source prerequisites or case-identity audit failed: " +
+                         str({'missing': original['required_missing'], 'profile_errors': original['profile_errors']}))
+    if any('loose campaign override' in error for error in before['profile_errors']):
+        raise SystemExit('Destination loose campaign override requires review before retail mutation')
     source_files = {p["normalized_path"]: p for p in original["files"]}
     target_files = {p["normalized_path"]: p for p in before["files"]}
     changes = []
@@ -180,14 +183,15 @@ def main() -> None:
                 unresolved.append(name)
         save(evidence / "logged-lookups.json", {"unique_loose_misses": len(requests), "available": resolved,
                                                "not_found_in_retail": unresolved, "runtime_consumption_proven": False})
-    receipt.update(status="SOURCE_COVERAGE_AND_ARCHIVE_INDEX_PASS" if not unmatched and not archive_errors else "AUDIT_FAILED",
+    receipt.update(status="CAMPAIGN_FILE_AVAILABILITY_AND_ARCHIVE_INDEX_PASS" if after['valid'] and not unmatched and not archive_errors else "AUDIT_FAILED",
+                   required_profile=original['required_profile'], gameplay_parity_verified=False,
                    source_files=len(source_files), installed_files=len(installed), unmatched_source_files=unmatched,
                    archive_count=len(archive_results), archive_errors=archive_errors,
                    unresolved_logged_retail_probes=unresolved, runtime_consumption_proven=False,
                    source_content_digest=original["content_digest"], installed_content_digest=after["content_digest"])
     save(evidence / "receipt.json", receipt)
     print(json.dumps(receipt, indent=2))
-    if unmatched or archive_errors:
+    if unmatched or archive_errors or not after['valid']:
         raise SystemExit(1)
 
 

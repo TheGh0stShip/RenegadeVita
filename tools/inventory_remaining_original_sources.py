@@ -13,6 +13,11 @@ def inventory(root):
     code = root / 'upstream/CnC_Renegade/Code'
     manifests = [root / 'CMakeLists.txt', *sorted((root / 'cmake').glob('*.cmake'))]
     texts = {str(p.relative_to(root)): p.read_text() for p in manifests}
+    # Resolve only known path prefixes, without pretending to evaluate CMake
+    # conditions or list membership. Script lists use a separate root variable.
+    normalized = {name: text.replace('${RENEGADE_SCRIPT_SOURCE}/', 'scripts/')
+                           .replace('${RENEGADE_STAGE}/', '').casefold()
+                  for name, text in texts.items()}
     projects = {}
     for project in sorted(code.rglob('*')):
         if not project.is_file() or project.suffix.lower() != '.dsp':
@@ -27,8 +32,8 @@ def inventory(root):
         relative = source.relative_to(code).as_posix()
         staged = root / 'staging' / relative
         # Preserve original spelling; case collisions need explicit review.
-        mentions = [name for name, text in texts.items()
-                    if relative.lower() in text.lower()]
+        mentions = [name for name, text in normalized.items()
+                    if relative.casefold() in text]
         rows.append({'original': relative,
                      'original_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
                      'staged_exact_path_exists': staged.is_file(),

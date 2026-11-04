@@ -773,6 +773,145 @@ ww3d_vita_ffp_program_keys/warm. No shader/batching optimization adopted.
 
 Completed rounds: 30/100. Next block: native Vita port comparisons (31–40).
 
+## Round 31 — vitaQuake input boundary (COMPLETE)
+
+Question: which controller patterns transfer without replacing Renegade input?
+Searches: vitaQuake sceCtrlPeekBufferPositive deadzone; vitaQuake in_psp2.
+GitHub API verified owner Rinnegatamante and head
+`fbe7c5e7fe77aa35c69421b721ddf5dbb58adc27`. Inspected source/in_psp2.c:
+polling feeds engine movement, look uses a scaled radial dead zone, and
+movement uses per-axis thresholds. Touch and motion are separate inputs.
+File notice is GPLv2-or-later while repository metadata reports GPL-3.0;
+review applicable file/project terms before copying. No code copied.
+
+Local comparison: DirectInput retains original input ownership, gates uncaptured
+or failed controller reads and blocks input around the native keyboard. Decision:
+retain release/neutral transitions and menu/gameplay ownership rather than copy
+Quake's view-angle update or its sensitivity constants. Quake's input curve is
+a comparison design, not evidence that our current controls are physically
+correct. Audit analog scaling and low-frame-rate look behavior through original
+Renegade input semantics; optional motion/rumble must not displace required paths.
+
+Primary source:
+https://github.com/Rinnegatamante/vitaQuake/blob/fbe7c5e7fe77aa35c69421b721ddf5dbb58adc27/source/in_psp2.c
+Local evidence: renegade_directinput.cpp capture, sampling and keyboard gates.
+
+Completed rounds: 31/100.
+
+## Round 32 — vitaRTCW renderer ownership and memory choices (COMPLETE)
+
+Question: does a working FPS port justify copying its renderer thread or heap?
+Searches: vitaRTCW `_newlib memory` and `vglInit`; indexed search was noisy,
+so used canonical API metadata/tree to locate platform sources. Owner verified
+as Rinnegatamante; revision `21fe39f2018ce55757cb3ac7cfd4b40a30adc0dd`.
+Inspected psp2_glimp.c and sys_main.c. Metadata says GPL-3.0; inspected files
+carry GPLv2-or-later notices. Additional project/file terms still require review.
+
+RTCW starts its renderer through a dedicated thread and semaphores, retains a
+single initialization generation, and restarts the executable for a resolution
+change. End-frame allocates scratch attribute storage after swap. Its main
+source selects a 260 MiB newlib heap. These are engine-specific choices.
+Decision: study producer/consumer lifetime and restart ordering; do not move
+Renegade GL calls to another thread or copy the heap constant without measured
+ownership/resource evidence. Our process-owned graphics generation and original
+logical session teardown must remain distinct. No source copied or thread change.
+
+Primary sources at the pinned revision:
+- https://github.com/Rinnegatamante/vitaRTCW/blob/21fe39f2018ce55757cb3ac7cfd4b40a30adc0dd/code/psp2/psp2_glimp.c
+- https://github.com/Rinnegatamante/vitaRTCW/blob/21fe39f2018ce55757cb3ac7cfd4b40a30adc0dd/code/psp2/sys_main.c
+Local comparison: renderer one-time initialization guard and logical shutdown,
+plus newlib heap setting from round 6. Threaded-render performance unproven here.
+
+Completed rounds: 32/100.
+
+## Round 33 — vitaXash3D module-provider comparison (COMPLETE)
+
+Question: does Renegade need a dynamic loader to retain original script ownership?
+Searches: vitaXash3D heap/module and sceKernelLoadStartModule. API verified owner
+fgsfdsfgs, revision `37ec148715d8aa9b9e116bc71175106853d02390`, GPL-3.0 metadata.
+Inspected pinned dll_vita.c; file notice is GPLv3-or-later. Its module boundary
+passes allocator/I/O imports, receives exports, validates handles and reference
+counts module loads/unloads. Post-start admission failure paths need their own
+resource audit; a familiar loader pattern is not automatically robust.
+
+The old port README explicitly redirects current Vita support to FWGS mainline.
+Mainline documentation uses a different loader/dependency stack; its build flags
+are engine-specific and not instructions to alter our SDK or device.
+Decision: retain Renegade's original ScriptRegistrar through the existing static
+provider. Dynamic-mod/plugin support would require a separate original-interface
+contract and lifetime audit; do not introduce it merely to resemble another
+port. No loaders, kernel plugins or foreign source imported.
+
+Primary sources:
+- https://github.com/fgsfdsfgs/vitaXash3D/blob/37ec148715d8aa9b9e116bc71175106853d02390/engine/platform/vita/dll_vita.c
+- https://github.com/fgsfdsfgs/vitaXash3D/blob/37ec148715d8aa9b9e116bc71175106853d02390/README.md
+- https://github.com/FWGS/xash3d-fwgs/blob/master/Documentation/psvita.md
+Local comparison: static script provider and direct DSP-derived source closure.
+
+Completed rounds: 33/100.
+
+## Round 34 — OpenLara native GXM resource retirement (COMPLETE)
+
+Question: which GPU teardown guarantees survive comparison with a direct-GXM
+port? Search: OpenLara Vita GXM platform memory. Verified API owner XProger,
+revision `3b268ca4bf986c380f44a26ffd9218bf6d376249`; inspected src/gapi/gxm.h
+and BSD-2-Clause LICENSE. Current tree has no Vita-named platform directory;
+the direct GXM backend is the relevant source, not a guessed platform path.
+
+Its backend deinit calls sceGxmFinish then sceGxmDisplayQueueFinish before
+releasing swapchain/context resources. Texture and mesh destruction enqueue
+memory-block IDs with a frame number. However checkPendings removes expired
+entries without an explicit freeGPU call at that site; that path requires a
+separate container/lifetime audit before reuse. Allocation also returns NULL
+after mapping failure without visible local rollback. Do not assume a popular
+port's resource helpers are complete or copy frame-count retirement as proof of
+GPU completion.
+
+Local comparison: Renegade Release_Texture uses glDeleteTextures; logical
+Shutdown preserves process-owned vitaGL state. Their lifetime guarantees must
+be established in the pinned vitaGL implementation, not by injecting direct
+GXM teardown beneath it. Decision: preserve one backend owner and audit texture,
+buffer and render-target retirement across session changes. No code imported;
+no claim that the observed upstream paths caused a measured leak here.
+
+Primary source:
+https://github.com/XProger/OpenLara/blob/3b268ca4bf986c380f44a26ffd9218bf6d376249/src/gapi/gxm.h
+License at the same revision: LICENSE. Local evidence:
+port/renderer/vita/ww3d_vita_renderer.cpp Shutdown and Release_Texture.
+
+Completed rounds: 34/100.
+
+## Round 35 — vitaQuakeIII hunk versus graphics memory (COMPLETE)
+
+Question: can another large Vita FPS provide a safe Renegade memory budget?
+Searches: vitaQuakeII hunk allocation and vitaQuakeIII low-memory cache.
+Verified Rinnegatamante/vitaQuakeIII API ownership and revision
+`7da5c6fbd8d80364ef46aeb936c5ad49ec8126ec`. Inspected sys_main.c,
+psp2_glimp.c and qcommon/common.c; metadata GPL-2.0 and common.c GPLv2-or-later.
+No external code executed or copied.
+
+The port selects a 256 MiB newlib heap, or 305 MiB for Urban Terror. That latter
+renderer disables extra memory and MSAA, and uses a different fourth argument
+to vglInitExtended. Original hunk allocation separately calloc's its configured
+budget plus alignment slack, checks failure, and aligns with intptr_t.
+These allocations compete; a heap declaration is not remaining graphics RAM,
+and a number passed to vitaGL must be interpreted against that version's API.
+Do not copy any of these constants or introduce a hunk allocator into Renegade.
+
+Local comparison: a30_main.cpp declares 192 MiB; renderer logs before/after
+initialization and actual vitaGL pool sizes, and treats the fourth argument as
+RAM reserve under its pinned implementation. Decision: retain original engine
+resource ownership and measure phase-specific high-water and failed allocation
+size/pool before adjusting splits. Source inspection does not establish that
+the current campaign fits, nor does a different engine's release establish it.
+
+Primary sources at the pinned revision:
+- https://github.com/Rinnegatamante/vitaQuakeIII/blob/7da5c6fbd8d80364ef46aeb936c5ad49ec8126ec/code/psp2/sys_main.c
+- https://github.com/Rinnegatamante/vitaQuakeIII/blob/7da5c6fbd8d80364ef46aeb936c5ad49ec8126ec/code/psp2/psp2_glimp.c
+- https://github.com/Rinnegatamante/vitaQuakeIII/blob/7da5c6fbd8d80364ef46aeb936c5ad49ec8126ec/code/qcommon/common.c
+
+Completed rounds: 35/100.
+
 Round-26 implementation follow-through: exact production vertex/index admission
 blocks pass 13,122 generated window cases against independent 64-bit arithmetic
 under ASan/UBSan. Native DX8 boundary object compiled successfully in session

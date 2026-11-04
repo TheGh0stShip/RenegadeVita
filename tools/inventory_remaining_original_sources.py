@@ -9,7 +9,35 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def inventory(root):
+def inventory(root, compile_commands=None, target=None):
+    selection = None
+    selected = {}
+    if compile_commands is not None:
+        if not target:
+            raise ValueError('compile_commands requires an explicit target')
+        commands = json.loads(compile_commands.read_text())
+        matched = 0
+        for command in commands:
+            # CMake emits output separately. Never execute compiler command text.
+            output = Path(command.get('output', ''))
+            if f'{target}.dir' not in output.parts:
+                continue
+            matched += 1
+            source = Path(command['file'])
+            if not source.is_absolute():
+                source = Path(command['directory']) / source
+            try:
+                relative = source.resolve().relative_to((root / 'staging').resolve())
+            except ValueError:
+                continue  # Port boundaries are not original translation units.
+            selected.setdefault(relative.as_posix().casefold(), []).append(str(output))
+        if not matched:
+            raise ValueError(f'No output entries for target {target!r}')
+        selection = {'compile_commands': str(compile_commands.resolve()),
+                     'sha256': hashlib.sha256(compile_commands.read_bytes()).hexdigest(),
+                     'target': target, 'entries': matched,
+                     'meaning': 'Configured build selection only; compilation and final '
+                                'linked retention are not established.'}
     code = root / 'upstream/CnC_Renegade/Code'
     manifests = [root / 'CMakeLists.txt', *sorted((root / 'cmake').glob('*.cmake'))]
     texts = {str(p.relative_to(root)): p.read_text() for p in manifests}
@@ -45,11 +73,14 @@ def inventory(root):
                      'linked': None})
         if relative in reviews:
             rows[-1]['source_review'] = reviews[relative]
+        if selection is not None:
+            rows[-1]['configured_target_outputs'] = selected.get(relative.casefold(), [])
     return {'scope': 'All released C/C++ files, including tools and obsolete units. '
                      'Literal mentions do not prove selection; absence does not prove omission. '
                      'No compile, link or runtime acceptance is inferred.',
             'manifest_sha256': {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
                                 for p in manifests},
+            'configured_selection': selection,
             'total': len(rows),
             'by_top_directory': dict(sorted(Counter(r['original'].split('/')[0]
                                                     for r in rows).items())),
@@ -59,8 +90,12 @@ def inventory(root):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--report', type=Path, required=True)
+    parser.add_argument('--compile-commands', type=Path)
+    parser.add_argument('--target', help='Exact CMake target for configured selection')
     args = parser.parse_args()
-    result = inventory(ROOT)
+    if bool(args.compile_commands) != bool(args.target):
+        parser.error('--compile-commands and --target must be supplied together')
+    result = inventory(ROOT, args.compile_commands, args.target)
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(result, indent=2) + '\n')
     print(f"Enumerated {result['total']} original units; classification remains open.")

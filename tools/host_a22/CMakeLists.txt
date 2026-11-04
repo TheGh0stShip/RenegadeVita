@@ -152,6 +152,13 @@ add_executable(a22_asset_selftest
   ${RV_STAGE}/ww3d2/dx8vertexbuffer.cpp
   ${RV_STAGE}/ww3d2/dx8indexbuffer.cpp
   ${RV_STAGE}/ww3d2/dx8fvf.cpp
+  # Current animation/WW3D/texture sources retain these original owners.
+  # Keep their behavior in the asset probe; isolate only the absent audio
+  # device and Vita-only offscreen target below the engine boundary.
+  ${RV_STAGE}/ww3d2/animatedsoundmgr.cpp
+  ${RV_STAGE}/ww3d2/pointgr.cpp
+  ${RV_STAGE}/ww3d2/statistics.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/asset_device_boundary.cpp
   ${RV_ROOT}/port/filesystem/renegade_paths.cpp
   ${RV_ROOT}/port/filesystem/renegade_file_factory.cpp
   ${RV_ROOT}/port/renderer/vita/ww3d_vita_renderer.cpp
@@ -176,6 +183,8 @@ target_include_directories(a22_asset_selftest PRIVATE
   ${RV_STAGE}/wwsaveload
   ${RV_STAGE}/combat
   ${RV_STAGE}/ww3d2
+  ${RV_STAGE}/wwaudio
+  ${RV_ROOT}/port/audio/miles
   ${RV_UPSTREAM}/Code/wwdebug
   ${RV_UPSTREAM}/Code/wwlib
   ${RV_UPSTREAM}/Code/wwutil

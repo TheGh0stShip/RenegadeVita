@@ -27,12 +27,26 @@ references without redistributing retail data.
 
 ## Existing evidence to reconcile
 
-### Dormant triangle-fan submission mismatch
+### Configured native source selection
 
-Native Draw_Sorting_IB_VB counts triangle-fan indices but forwards that topology
-as a strip. Current native callers use list/strip only. Track explicit fan
-translation as incomplete support; do not promote its switch case to functional
-coverage. See research round 27 for source/caller evidence.
+The dev246 CMake compile database selects 632 original translation units for
+RenegadeVitaA31 out of 1,490 released units. The inventory tool now accepts
+`--compile-commands` and exact `--target` arguments and records matching object
+outputs plus the database hash. Other targets and manifest comments cannot
+establish selection. Final compilation, symbol retention and functional owner
+classification remain separate open steps. Generated local inventory:
+reports/generated/remaining_original_sources.json.
+
+### Triangle-fan submission correction
+
+Native Draw_Sorting_IB_VB previously counted fan indices but submitted them as
+a strip. It now expands fans into lists, validates the source window separately
+from expanded output capacity, and preserves anchor/winding and rebasing.
+Production-block sanitizer checks cover translation, invalid ranges and every
+16-bit polygon count's capacity decision. The changed production boundary
+compiles for ARMv7 with VFP-register arguments; full ARM linking remains in
+progress. Existing callers use list/strip; no visual acceptance claim.
+See research round 27 for the original source/caller evidence.
 
 ### Installed dependency identity
 
@@ -45,9 +59,12 @@ recipe/toolchain identity on that path; research round 20 records the evidence.
 
 dev246 stopped at A22 host linking. Native manifests select PointGroup,
 AnimatedSoundMgr and statistics owners; the render-target cleanup owner is in
-a31_gameplay_boundary.cpp. Repair the retained smaller host graph without
-weakening native behavior. This failure is host-only evidence, not proof those
-engine units are absent from the Vita target. See research round 9.
+a31_gameplay_boundary.cpp. The retained A22 graph now links the three original
+owners, with an isolated host audio-device boundary that aborts playback and a
+host offscreen-target cleanup boundary. Host link and headless asset checks
+PASS; broader canonical host graph closure remains open. This failure was
+host-only evidence, not proof those engine units were absent from the Vita
+target. See research round 9.
 
 ### Audio effects coverage
 

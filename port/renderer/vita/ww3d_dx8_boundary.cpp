@@ -3348,7 +3348,11 @@ void DX8Wrapper::Draw_Sorting_IB_VB(unsigned primitive_type,
 				"unsupported sorting primitive", dynamic_fvf_type);
 			return;
 	}
-	if (index_count > 65535U) {
+	// The renderer submission boundary accepts lists and strips. Expand a fan
+	// into a list while preserving its anchor and winding; it is not a strip.
+	const unsigned output_index_count = primitive_type == D3DPT_TRIANGLEFAN ?
+		polygon_count * 3U : index_count;
+	if (output_index_count > 65535U) {
 		RenegadeVitaRenderer::Reject_Indexed_Submission(
 			"sorting index count exceeds 16-bit buffer capacity", dynamic_fvf_type);
 		return;
@@ -3361,7 +3365,7 @@ void DX8Wrapper::Draw_Sorting_IB_VB(unsigned primitive_type,
 			"sorting index window exceeds source buffer", dynamic_fvf_type);
 		return;
 	}
-	DynamicIBAccessClass dynamic_indices(BUFFER_TYPE_DYNAMIC_DX8, index_count);
+	DynamicIBAccessClass dynamic_indices(BUFFER_TYPE_DYNAMIC_DX8, output_index_count);
 	{
 		DynamicIBAccessClass::WriteLockClass lock(&dynamic_indices);
 		unsigned short *destination = lock.Get_Index_Array();
@@ -3376,7 +3380,16 @@ void DX8Wrapper::Draw_Sorting_IB_VB(unsigned primitive_type,
 					"sorting index outside declared vertex range", dynamic_fvf_type);
 				return;
 			}
-			destination[i] = static_cast<unsigned short>(source_index - min_vertex_index);
+			if (primitive_type != D3DPT_TRIANGLEFAN) {
+				destination[i] = static_cast<unsigned short>(source_index - min_vertex_index);
+			}
+		}
+		if (primitive_type == D3DPT_TRIANGLEFAN) {
+			for (unsigned triangle = 0U; triangle < polygon_count; ++triangle) {
+				destination[triangle * 3U] = static_cast<unsigned short>(source[0] - min_vertex_index);
+				destination[triangle * 3U + 1U] = static_cast<unsigned short>(source[triangle + 1U] - min_vertex_index);
+				destination[triangle * 3U + 2U] = static_cast<unsigned short>(source[triangle + 2U] - min_vertex_index);
+			}
 		}
 	}
 
@@ -3384,7 +3397,7 @@ void DX8Wrapper::Draw_Sorting_IB_VB(unsigned primitive_type,
 	Set_Index_Buffer(dynamic_indices, 0U);
 	Apply_Render_State_Changes();
 	Submit_Bound_Triangles(render_state, 0U, polygon_count, 0U, vertex_count,
-		primitive_type != D3DPT_TRIANGLELIST);
+		primitive_type == D3DPT_TRIANGLESTRIP);
 }
 
 void DX8Wrapper::Draw_Triangles(unsigned buffer_type,

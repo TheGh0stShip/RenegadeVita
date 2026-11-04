@@ -32,8 +32,14 @@ references without redistributing retail data.
 The dev246 CMake compile database selects 632 original translation units for
 RenegadeVitaA31 out of 1,490 released units. The inventory tool now accepts
 `--compile-commands` and exact `--target` arguments and records matching object
-outputs plus the database hash. Other targets and manifest comments cannot
-establish selection. Final compilation, symbol retention and functional owner
+outputs plus the database hash. It also retains hashes of the actual staged
+inputs and refuses ambiguous case-folded matches. The current tree has zero
+original case collisions; 336 selected units differ from their released bytes
+through staging. One additional staged source, commando/loadingscreen.cpp, is
+explicitly traced to LoadingScreenClass extracted from Commando/combatgmode.cpp
+by the shared-loadingscreen patch. No staged input remains unmapped in this
+target. Other targets and manifest comments cannot establish selection.
+Final compilation, symbol retention and functional owner
 classification remain separate open steps. Generated local inventory:
 reports/generated/remaining_original_sources.json.
 
@@ -50,10 +56,13 @@ See research round 27 for the original source/caller evidence.
 
 ### Installed dependency identity
 
-FFmpeg's installed-prefix shortcut checks configuration stamp and archive
-existence before computing the optional full cache key. Toolchain/SDK drift
-can therefore reuse old files under the same stamp. Retain and compare complete
-recipe/toolchain identity on that path; research round 20 records the evidence.
+The earlier FFmpeg shortcut could reuse archives after compiler/SDK changes.
+The pending fix computes mandatory recipe/toolchain/SDK identity before local
+reuse, verifies installed content hashes, and extracts a fresh verified source
+archive for each rebuild. Shared cache use remains optional. Source tests pass;
+the revised dependency recipe must be built after the current ARM consumer
+finishes. Never certify the old installation with a new receipt. Research round
+20 records the original defect; independent review is retained separately.
 
 ### Canonical host harness closure
 
@@ -89,10 +98,23 @@ dev246 dependency compiler output reports `libavutil/tx.c:323` converting
 436, 578 and 758 become constant. Pinned FFmpeg `libavutil/tx_priv.h` defines
 the wildcard outside the enum as INT32_MAX. This is a demonstrated arithmetic
 defect under the installed target compiler, not a gameplay observation.
-Open action: determine a consistent enum ABI for FFmpeg and every caller,
-check public structure layouts and archive ELF attributes, then rebuild the
-dependency with an invalidated configuration stamp. Do not change flags in
-the middle of the currently live build or infer physical audio correctness.
+Corrected: FFmpeg and its Bink caller use scoped int-sized enums; the dependency
+was rebuilt with the v4-int-enums stamp, transform sentinel checks pass, and
+the actual Bink consumer compiled for ARM. Engine enum ABI remains unchanged.
+Archive attributes and exact hashes are retained in research round 20. This
+does not establish physical A/V correctness or restore missing subtitles.
+
+### Subtitle owner restoration and enum seam
+
+The FFmpeg-facing Bink TU is compiled with int-sized enums. Its current engine
+calls use opaque pointers/plain scalar APIs. Do not include or construct the
+original SubTitleManagerClass/Render2DSentenceClass directly there: those engine
+classes must retain the engine's short-enum layout. Restore the three original
+subtitle owners through a separately compiled engine-ABI adapter exposing only
+opaque manager handles, FontCharsClass pointers and explicit 32-bit tick values.
+Keep Create/Process/Render/destruction ownership, original 60-Hz timing and rooted
+read paths. Parser EOF/malformed time handling also needs review before linkage;
+the released Get_Sub_Titles loop does not break when Get_Next_Line returns NULL.
 
 - `tools/check_excluded_original_sources.py`: excluded-source symbol comparison.
 - `tools/verify_source_inventory.py`: manifest/report identity checks.
@@ -107,16 +129,17 @@ the middle of the currently live build or infer physical audio correctness.
 Current audit findings: all 1,490 released C/C++ units are enumerated in
 `generated/remaining_original_sources.json` with original project membership.
 Known CMake script-root prefixes are normalized so selected mission files do
-not appear absent merely because their paths use a variable. This is lexical
-evidence only; selected-target evidence remains pending canonical configure.
+not appear absent merely because their paths use a variable. Configured-target
+evidence now comes from the dev246 compile database; linking/functional owner
+classification remains open.
 
 `Combat/statemachine.cpp` is a reviewed exclusion: its only code is the include
 of `statemachine.h`; boss objects use the header's template implementation.
 Adding this empty translation unit would restore no missing out-of-line owner.
 Other unmentioned sources remain unclassified rather than presumed unnecessary.
 
-1. Finish observing the live dev246 canonical build (session 17626); preserve
-   its actual outcome. Do not restart while it remains live.
+1. Preserve failed canonical dev246 (session 17626). Observe direct native build
+   session 54511 to terminal before rebuilding dependencies it is reading.
 2. Establish the full original-source and linked-owner inventory, including
    stubs and intentionally excluded subsystems.
 3. Resolve missing/replaced-owner findings in dependency order and retain

@@ -470,6 +470,8 @@ class DependencyScriptContractTests(unittest.TestCase):
             tokens = shlex.split(line[index:].split(';')[0])
             outputs, skip = [], False
             for token in tokens[3:]:
+                if token in ('&&', '||'):
+                    break
                 if skip:
                     skip = False
                 elif token == '--ignore':
@@ -490,7 +492,13 @@ class DependencyScriptContractTests(unittest.TestCase):
         self.assertEqual(restores, stores)
 
     def assert_identity_inputs(self, script, script_name):
-        self.assertIn(f'tools/{script_name}"', script[script.index('rv_depcache_compute_key'):])
+        if 'rv_identity_args=(' in script:
+            # FFmpeg's same ordered inputs identify mandatory local reuse and
+            # optional shared-cache lookup. Do not permit the latter to drift.
+            self.assertIn(f'tools/{script_name}"', script[:script.index('rv_installed_key=')])
+            self.assertIn('"${rv_identity_args[@]}"', script[script.index('rv_depcache_compute_key'):])
+        else:
+            self.assertIn(f'tools/{script_name}"', script[script.index('rv_depcache_compute_key'):])
         for token in ('sdk_root=', 'gcc_driver=', 'sdk_version_info='):
             self.assertIn(token, script)
 
@@ -514,9 +522,10 @@ class DependencyScriptContractTests(unittest.TestCase):
         self.assert_identity_inputs(script, 'build_vitagl_demo.sh')
         self.assert_restore_matches_store(script)
 
-    def test_ffmpeg_cache_follows_stamp_check_and_precedes_configure(self):
+    def test_ffmpeg_reuse_requires_identity_before_shared_cache_or_configure(self):
         script = self.read('build_ffmpeg_bink_vita.sh')
-        self.assert_order(script, 'sha256sum --check', 'already available at',
+        self.assert_order(script, 'sha256sum --check', 'rv_installed_key=',
+                          'ffmpeg_install_receipt.py" verify', 'already available at',
                           'source "$rv_root/tools/dependency_cache.sh"',
                           'rv_depcache_restore ffmpeg-bink-vita', '"$rv_source/configure"',
                           'make install', '> "$rv_stamp"\nrv_depcache_store ffmpeg-bink-vita')

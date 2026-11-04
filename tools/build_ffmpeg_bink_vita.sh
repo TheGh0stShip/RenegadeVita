@@ -8,9 +8,9 @@ rv_version="9.0.1"
 rv_archive="ffmpeg-$rv_version.tar.xz"
 rv_sha256="cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635"
 rv_url="https://ffmpeg.org/releases/$rv_archive"
-rv_source="$rv_source_cache/ffmpeg-$rv_version"
 rv_prefix="$rv_root/build/deps/ffmpeg-bink-vita"
 rv_build="$rv_root/build/deps/ffmpeg-bink-vita-build"
+rv_source="$rv_build/ffmpeg-$rv_version"
 rv_vitasdk="${VITASDK:-/usr/local/vitasdk}"
 rv_config_id="ffmpeg-$rv_version-vita-bink-video-audio-v4-int-enums"
 rv_stamp="$rv_prefix/.renegade-bink-build"
@@ -21,12 +21,43 @@ if [[ ! -f "$rv_source_cache/$rv_archive" ]]; then
 fi
 printf '%s  %s\n' "$rv_sha256" "$rv_source_cache/$rv_archive" | sha256sum --check
 
+# Always compute local reuse identity, even when the shared cache is disabled.
+# The driver alone does not identify cc1, binutils, intrinsics or SDK headers.
+rv_target_flags=(-mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard)
+rv_gcc_cc1=$("$rv_vitasdk/bin/arm-vita-eabi-gcc" "${rv_target_flags[@]}" -print-prog-name=cc1)
+rv_gcc_libgcc=$("$rv_vitasdk/bin/arm-vita-eabi-gcc" "${rv_target_flags[@]}" -print-libgcc-file-name)
+rv_gcc_headers=$("$rv_vitasdk/bin/arm-vita-eabi-gcc" "${rv_target_flags[@]}" -print-file-name=include)
+for rv_input_path in "$rv_gcc_cc1" "$rv_gcc_libgcc" "$rv_gcc_headers"; do
+	if [[ "$rv_input_path" != /* || ! -e "$rv_input_path" ]]; then
+		echo "Vita GCC did not resolve an absolute existing input: $rv_input_path" >&2
+		exit 1
+	fi
+done
+rv_identity_args=(
+	--script "$rv_root/tools/build_ffmpeg_bink_vita.sh"
+	--script "$rv_root/tools/ffmpeg_install_receipt.py"
+	--script "$rv_root/tools/dependency_cache.py"
+	--source "$rv_source_cache/$rv_archive"
+	--value "config_id=$rv_config_id"
+	--value "sdk_root=$(realpath -e -- "$rv_vitasdk")"
+	--file "sdk_version_info=$rv_vitasdk/version_info.txt"
+	--file "gcc_driver=$rv_vitasdk/bin/arm-vita-eabi-gcc"
+	--file "gcc_cc1=$rv_gcc_cc1"
+	--tree "gcc_libdir=$(dirname -- "$rv_gcc_libgcc")"
+	--tree "gcc_headers=$rv_gcc_headers"
+	--tree "sdk_headers=$rv_vitasdk/arm-vita-eabi/include"
+	--tree "sdk_libs=$rv_vitasdk/arm-vita-eabi/lib"
+	--value "gcc_version=$("$rv_vitasdk/bin/arm-vita-eabi-gcc" --version)"
+)
+for rv_tool in as ar ld nm ranlib strip; do
+	rv_identity_args+=(--file "$rv_tool=$rv_vitasdk/bin/arm-vita-eabi-$rv_tool")
+done
+rv_installed_key=$(python3 "$rv_root/tools/dependency_cache.py" key \
+	--name ffmpeg-bink-vita "${rv_identity_args[@]}")
+
 if [[ -f "$rv_stamp" ]] && [[ "$(cat "$rv_stamp")" == "$rv_config_id" ]] && \
-	[[ -f "$rv_prefix/lib/libavformat.a" ]] && \
-	[[ -f "$rv_prefix/lib/libavcodec.a" ]] && \
-	[[ -f "$rv_prefix/lib/libavutil.a" ]] && \
-	[[ -f "$rv_prefix/lib/libswscale.a" ]] && \
-	[[ -f "$rv_prefix/lib/libswresample.a" ]]; then
+	python3 "$rv_root/tools/ffmpeg_install_receipt.py" verify \
+		--prefix "$rv_prefix" --identity "$rv_installed_key"; then
 	echo "Bink-enabled Vita FFmpeg already available at: $rv_prefix"
 	exit 0
 fi
@@ -35,24 +66,20 @@ fi
 # hash covers the pinned archive hash and every configure flag.
 source "$rv_root/tools/dependency_cache.sh"
 if rv_depcache_enabled && rv_depcache_compute_key ffmpeg-bink-vita \
-	--script "$rv_root/tools/build_ffmpeg_bink_vita.sh" --source "$rv_source_cache/$rv_archive" \
-	--value "config_id=$rv_config_id" --value "sdk_root=$(realpath -e -- "$rv_vitasdk")" \
-	--file "gcc_driver=$rv_vitasdk/bin/arm-vita-eabi-gcc" \
-	--file "sdk_version_info=$rv_vitasdk/version_info.txt" \
-	--value "gcc_version=$("$rv_vitasdk/bin/arm-vita-eabi-gcc" --version)" &&
-	rv_depcache_restore ffmpeg-bink-vita "$rv_prefix" --replace-dest include lib share; then
+	"${rv_identity_args[@]}" &&
+	rv_depcache_restore ffmpeg-bink-vita "$rv_prefix" --replace-dest include lib share &&
+	python3 "$rv_root/tools/ffmpeg_install_receipt.py" record \
+		--prefix "$rv_prefix" --identity "$rv_installed_key"; then
 	printf '%s\n' "$rv_config_id" > "$rv_stamp"
 	echo "Bink-enabled Vita FFmpeg restored from the dependency cache: $rv_prefix"
 	exit 0
 fi
 
-if [[ ! -x "$rv_source/configure" ]]; then
-	rm -rf "$rv_source"
-	tar -xJf "$rv_source_cache/$rv_archive" -C "$rv_source_cache"
-fi
-
 rm -rf "$rv_build" "$rv_prefix"
 mkdir -p "$rv_build" "$rv_prefix"
+# Build from a fresh extraction of the verified archive. An old shared source
+# directory may have local edits that the pinned archive identity cannot cover.
+tar -xJf "$rv_source_cache/$rv_archive" -C "$rv_build"
 cd "$rv_build"
 
 "$rv_source/configure" \
@@ -92,7 +119,7 @@ cd "$rv_build"
 	--disable-sdl2 \
 	--disable-securetransport \
 	--disable-xlib \
-	--extra-cflags="-std=gnu11 -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -fno-short-enums -O2 -ffunction-sections -fdata-sections -fomit-frame-pointer -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types -D_BSD_SOURCE" \
+	--extra-cflags="-std=gnu11 ${rv_target_flags[*]} -fno-short-enums -O2 -ffunction-sections -fdata-sections -fomit-frame-pointer -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types -D_BSD_SOURCE" \
 	--extra-ldflags="-L$rv_vitasdk/arm-vita-eabi/lib -Wl,--gc-sections"
 
 make -j"$(nproc)"
@@ -103,8 +130,11 @@ test -f "$rv_prefix/lib/libavcodec.a"
 test -f "$rv_prefix/lib/libavutil.a"
 test -f "$rv_prefix/lib/libswscale.a"
 test -f "$rv_prefix/lib/libswresample.a"
+python3 "$rv_root/tools/ffmpeg_install_receipt.py" record \
+	--prefix "$rv_prefix" --identity "$rv_installed_key"
 printf '%s\n' "$rv_config_id" > "$rv_stamp"
 rv_depcache_store ffmpeg-bink-vita "$rv_prefix" --require-complete --ignore .renegade-bink-build \
+	--ignore .renegade-bink-identity.json \
 	include lib share
 
 echo "Bink-enabled Vita FFmpeg installed at: $rv_prefix"

@@ -912,6 +912,40 @@ Primary sources at the pinned revision:
 
 Completed rounds: 35/100.
 
+## Round 36 — compiler-selected inputs and FFmpeg dependency identity (COMPLETE)
+
+Question: does hashing the GCC driver identify the library configuration it
+actually builds? Searches targeted GCC print-file-name/print-libgcc-file-name
+documentation and FFmpeg cross-prefix nm/strip configuration. Read primary GCC
+Developer Options: library/program queries identify selected toolchain paths,
+and multilib selection depends on command-line switches. Local installed GCC
+queries with Cortex-A9/NEON/hard-float flags resolved absolute cc1, include and
+libgcc paths. Failure, relative and missing-path responses are now rejected by
+the production query block and its controlled-driver test.
+
+Read configure directly from the verified FFmpeg 9.0.1 release archive, SHA-256
+`cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635`.
+It prefixes nm/strip with cross_prefix and runs nm to determine external-symbol
+prefix. Thus compiler internals, startup/runtime libraries, headers and binutils
+are material inputs beyond a driver version string. Existing source-cache
+extraction also needed replacement with a fresh verified extraction per build.
+
+Decision implemented: mandatory installed identity and installed-byte receipt;
+optional shared cache uses the same ordered inputs. Hashes include GCC runtime
+tree, SDK headers/libraries and selected tools. Claude review corroborated gaps;
+its conditional cache-helper concerns were checked against actual helper code,
+not accepted as observations. 27 focused tests and real SDK identity probe PASS.
+New recipe rebuild/reuse remains pending until the live native consumer ends;
+no receipt is retroactively assigned to old output. No playback or physical claim.
+
+Primary sources:
+- https://gcc.gnu.org/onlinedocs/gcc/Developer-Options.html
+- https://ffmpeg.org/releases/ffmpeg-9.0.1.tar.xz (verified configure member)
+Local evidence: build_ffmpeg_bink_vita.sh, ffmpeg_install_receipt.py,
+local-builder/logs/ffmpeg-install-identity-probe.log and ffmpeg-reuse-tests.log.
+
+Completed rounds: 36/100.
+
 Round-26 implementation follow-through: exact production vertex/index admission
 blocks pass 13,122 generated window cases against independent 64-bit arithmetic
 under ASan/UBSan. Native DX8 boundary object compiled successfully in session

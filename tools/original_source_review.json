@@ -1,17 +1,26 @@
 {
   "scope": "Source review decisions only; no linked or runtime acceptance inferred.",
+  "derived_sources": {
+    "commando/loadingscreen.cpp": {
+      "original_owner": "Commando/combatgmode.cpp",
+      "classification": "extracted original engine owner",
+      "evidence": ["port/patches/commando-a35-shared-loadingscreen-owner.patch"],
+      "reason": "Staging extracts LoadingScreenClass from combatgmode.cpp into a shared translation unit and disables the old inline owner. Later patches adapt presentation and status; it is not an additional released source file.",
+      "remaining": "Verify final linked LoadingScreenClass ownership and retain presentation acceptance as an independent runtime gate."
+    }
+  },
   "reviews": {
     "BinkMovie/BINKMovie.cpp": {
       "classification": "platform replacement with missing presentation contract",
       "evidence": ["port/platform/a4_binkmovie_boundary.cpp", "port/compatibility/include/binkmovie.h"],
-      "reason": "Native Play accepts but discards subtitle_name and FontCharsClass arguments. Decode dependency also has a confirmed transform-enum truncation defect with the installed compiler defaults.",
-      "remaining": "Link original subtitle.cpp, subtitleparser.cpp and subtitlemanager.cpp; stage their headers and translate legacy include paths. Preserve original manager Create/Process/Render/destruction ownership. Process takes 60-Hz ticks, not milliseconds: original BINKMovie uses FrameNum*(60/(FrameRate/FrameRateDiv)). Route subtitle.ini through the rooted read boundary (original manager uses RawFileClass). Both movie.cpp and dlgmovieoptions.cpp supply data\\subtitle.ini and a font. FFmpeg enum correction is in the worktree, pending dependency and consumer builds."
+      "reason": "Native Play accepts but discards subtitle_name and FontCharsClass arguments. The earlier FFmpeg transform-enum truncation defect is corrected with scoped int-sized dependency/caller enums; dependency rebuild and Bink ARM compilation passed.",
+      "remaining": "Link original subtitle.cpp, subtitleparser.cpp and subtitlemanager.cpp; stage their headers and translate legacy include paths. Preserve original manager Create/Process/Render/destruction ownership. Process takes 60-Hz ticks, not milliseconds: original BINKMovie uses FrameNum*(60/(FrameRate/FrameRateDiv)). Route subtitle.ini through the rooted read boundary (original manager uses RawFileClass). Both movie.cpp and dlgmovieoptions.cpp supply data\\subtitle.ini and a font. Revised installed-reuse identity recipe still needs its own rebuild/reuse evidence."
     },
     "Combat/statemachine.cpp": {
       "classification": "header-only implementation",
       "evidence": ["upstream/CnC_Renegade/Code/Combat/statemachine.cpp", "staging/combat/statemachine.h"],
       "reason": "Translation unit only includes statemachine.h; template implementation is consumed by boss headers.",
-      "remaining": "Verify boss owner selection in canonical target."
+      "remaining": "Configured dev246 target selects mendozabossgameobj.cpp, raveshawbossgameobj.cpp and sakurabossgameobj.cpp; verify final linked owner retention and keep behavior acceptance separate."
     },
     "Combat/directinput.cpp": {
       "classification": "replaced platform boundary",
@@ -22,8 +31,8 @@
     "Combat/debug.cpp": {
       "classification": "partial compatibility implementation requires review",
       "evidence": ["port/platform/a31_gameplay_boundary.cpp", "upstream/CnC_Renegade/Code/Combat/debug.cpp"],
-      "reason": "Boundary supplies selected DebugManager fields and display methods. Wide-string mission Display_Text was a no-op despite the runtime installing TextDebugDisplayHandlerClass; original callback forwarding is now restored in the worktree.",
-      "remaining": "Compile restored forwarding; compare remaining original interface and callers and classify omitted desktop facilities. Network prolific diagnostics remain a no-op."
+      "reason": "Boundary supplies selected DebugManager fields and display methods. Wide-string mission Display_Text was a no-op despite the runtime installing TextDebugDisplayHandlerClass; original callback forwarding is restored, its focused sanitizer check passes and actual gameplay-boundary ARM compilation passed.",
+      "remaining": "Compare remaining original interface and callers and classify omitted desktop facilities. Network prolific diagnostics remain a no-op. Physical presentation remains unverified."
     },
     "wwui/IMEManager.cpp": {
       "classification": "native text-entry replacement with shared edit-control routing",

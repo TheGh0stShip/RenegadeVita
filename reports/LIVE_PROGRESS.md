@@ -11,13 +11,22 @@ Completed: restored original AnimatedSoundMgr, PointGroup and statistics owners
 to the retained A2.2 host graph, with a host-only audio-device boundary that
 aborts unexpected playback. Added configured-target selection to the complete
 1,490-unit original-source inventory. Corrected sorting triangle-fan translation
-to preserve anchor/winding through list expansion. Research: 35/100 documented rounds.
+to preserve anchor/winding through list expansion. Research: 36/100 documented rounds.
 Evidence: A2.2 host link and headless asset checks PASS (19 bitpack, 10 filesystem,
 14 chunk checks; 8 meshes, 324 triangles, checksum 5704AB7D); two inventory tests
 PASS. Sorting translation/window sanitizer checks PASS, including all 65,535
 polygon counts for three topologies; changed boundary ARM object compiled with
 ARMv7/VFP-register ELF attributes. Configured native target selects 632 original translation units; this is
 selection evidence, not final linked retention or functional completeness.
+Current continuation: mandatory FFmpeg installed identity/content receipts,
+fresh source extraction, and target-flagged compiler queries implemented;
+29 focused inventory/dependency tests PASS and actual SDK identity probe PASS.
+Claude and DeepSeek independent reviews were checked locally; accepted and
+rejected findings are retained in INDEPENDENT_REVIEW_2026-11-04.md. Inventory
+now records staged hashes, rejects ambiguous case mappings and traces the
+derived loading-screen TU to its original CombatGameMode owner. Zero unmapped
+staged inputs remain for this target; functional classification is still OPEN.
+The new dependency recipe will be rebuilt only after the native consumer ends.
 Next: finish direct ARM link inspection, classify exclusions and missing owners,
 and continue implementing remaining contracts. Canonical dev246 failed earlier
 at host linking; a separate ARM build is running and is not a packaged candidate.

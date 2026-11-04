@@ -19,7 +19,7 @@ class RequiredLevelLoadTests(unittest.TestCase):
             # A3.6 save admission) also edit savegame.*; reverse their
             # savegame hunks in reverse staging order first.
             order = []
-            for name in re.findall(r'combat-a3[56][-a-z0-9]*\.patch',
+            for name in re.findall(r'combat-a[0-9]+[-a-z0-9]*\.patch',
                                    (ROOT / 'tools/stage_sources.sh').read_text()):
                 if name not in order:
                     order.append(name)

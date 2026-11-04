@@ -27,6 +27,13 @@ references without redistributing retail data.
 
 ## Existing evidence to reconcile
 
+### Dormant triangle-fan submission mismatch
+
+Native Draw_Sorting_IB_VB counts triangle-fan indices but forwards that topology
+as a strip. Current native callers use list/strip only. Track explicit fan
+translation as incomplete support; do not promote its switch case to functional
+coverage. See research round 27 for source/caller evidence.
+
 ### Installed dependency identity
 
 FFmpeg's installed-prefix shortcut checks configuration stamp and archive

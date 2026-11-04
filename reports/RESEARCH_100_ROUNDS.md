@@ -677,6 +677,102 @@ dx8wrapper.cpp, not inferred from D3D9 alone).
 
 Completed rounds: 26/100. Remaining rounds retain the coverage plan above.
 
+## Round 27 — topology admission versus actual submission (COMPLETE)
+
+Question: do equal index counts make triangle strips and fans interchangeable?
+Searches: Microsoft D3DPT_TRIANGLEFAN/TRIANGLESTRIP primitive types; vitaGL
+GL_TRIANGLE_FAN/GL_TRIANGLE_STRIP. Read Microsoft primitive definitions and
+compared native sorting dispatch and indexed submission.
+
+Confirmed latent mismatch: Draw_Sorting_IB_VB accepts a fan count but forwards
+all non-list modes as a boolean strip. A fan shares its anchor; a strip does
+not, so the count alone cannot preserve topology. Current native call sites
+pass list or strip only. Record fan support as incomplete/dormant rather than
+claim a current retail fan defect or silently enable a new call route. Future
+fan integration must convert anchor triangles or pass an explicit topology
+through the established renderer, with winding/degenerate cases checked.
+Original engine owns submission intent; do not reinterpret topology for speed.
+
+Primary references:
+- https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dprimitivetype
+- https://learn.microsoft.com/en-us/windows/win32/direct3d9/triangle-fans
+Local evidence: ww3d_dx8_boundary.cpp sorting dispatch and Submit_Bound_Triangles.
+
+Completed rounds: 27/100. Remaining rounds retain the coverage plan above.
+
+## Round 28 — homogeneous coordinates and projected texture divisors (COMPLETE)
+
+Question: can native submission divide clip/texture coordinates on the CPU
+without changing interpolation? Searches: Khronos perspective interpolation
+clip w; Microsoft transformed vertices RHW perspective. Read transformation,
+clipping and texture-coordinate API descriptions and inspected native matrix
+conversion, indexed submission and projected texture-coordinate generation.
+
+Current renderer preserves homogeneous clip W through the GPU path and remaps
+D3D clip depth to the GL interval. Generated projected texture coordinates
+retain q separately instead of interpolating already-divided ratios. Decision:
+retain these correctness paths; do not reintroduce affine interpolation as an
+optimization. Source evidence is distinct from FOV, near-plane, projector and
+hardware visual acceptance. Fixed-camera unequal-depth/near-plane checks remain
+required after the play-test hold; CPU tests cannot prove actual shader output.
+
+Primary references:
+- https://learn.microsoft.com/en-us/windows/win32/dxtecharts/the-direct3d-transformation-pipeline
+- https://learn.microsoft.com/en-us/windows/win32/direct3d9/viewports-and-clipping
+- https://learn.microsoft.com/en-us/windows/win32/direct3d9/texture-coordinate-transformations
+Local evidence: Build_Indexed_Transform_Matrices, native indexed submission and
+original texture-coordinate adapter in ww3d_vita_renderer.cpp. No renderer change.
+
+Completed rounds: 28/100. Remaining rounds retain the coverage plan above.
+
+## Round 29 — normal transforms and skin-cache identity (COMPLETE)
+
+Question: can a cached deformation or simplified normal transform preserve
+original animation/material behavior? Searches: Microsoft inverse-transpose
+NORMALIZENORMALS; OpenLara skinning joints normals. Read Microsoft normal
+transform requirements and inspected native prepared-normal use and skin-cache
+key/lifetime contract. OpenLara is a design lead only; no different skeleton or
+runtime format is adopted into the original HTree/MeshModel path.
+
+Normal transformation must account for inverse transpose and original normalize
+state, including nonuniform transforms. Cache reuse requires matching actual
+deformation inputs, not only mesh identity. The selected cache checks per-frame
+identity and retained deformation inputs and has bounded capacity/release.
+Decision: keep original deformation ownership and correctness fingerprints;
+do not trade animation updates or normal semantics for benchmark results.
+Review stale comments against configured defaults separately: declaration says
+off until configuration while the reader enables it by default before overrides.
+
+Primary reference:
+https://learn.microsoft.com/en-us/windows/win32/direct3d9/camera-space-transformations
+Local evidence: ww3d_vita_renderer.cpp and ww3d_vita_skin_deform_cache.h.
+No performance/visual acceptance follows from isolated cache checks.
+
+Completed rounds: 29/100. Remaining rounds retain the coverage plan above.
+
+## Round 30 — fixed-function shader cache provenance (COMPLETE)
+
+Question: does upstream shader caching cover our generated fixed-function states?
+Searches: vitaGL `HAVE_SHADER_CACHE FFP`; vitaGL shader cache version hash.
+Read pinned ffp.c and compared the selected local FFP cache patch, builder digest
+and program-key/prewarm owners. Upstream's application-shader cache option does
+not by itself establish the local generated-FFP cache contract.
+
+Local builder derives cache identity from selected FFP implementation/shader
+inputs; key records carry a version/tag and bounded entries. Decision: retain
+that provenance and rejection/fallback path. Do not trust an old GXP merely
+because its key name exists, or conflate program-key prewarm with GPU-validated
+visual output. Further audit should include malformed binary payloads, shader
+compiler identity and actual state-mask completeness. Personal-port cache
+reports discovered in search are leads only, not evidence to replace our owner.
+
+Primary reference:
+https://github.com/Rinnegatamante/vitaGL/blob/6e7fe40292e8f1d10f9a94ff2cd2f4fb1ba452a5/source/ffp.c
+Local evidence: build_vitagl_demo.sh, vitagl-ffp-program-cache.patch and
+ww3d_vita_ffp_program_keys/warm. No shader/batching optimization adopted.
+
+Completed rounds: 30/100. Next block: native Vita port comparisons (31–40).
+
 Round-26 implementation follow-through: exact production vertex/index admission
 blocks pass 13,122 generated window cases against independent 64-bit arithmetic
 under ASan/UBSan. Native DX8 boundary object compiled successfully in session

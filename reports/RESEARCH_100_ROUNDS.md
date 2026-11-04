@@ -634,4 +634,50 @@ Primary reference:
 https://registry.khronos.org/OpenGL/specs/es/3.1/es_spec_3.1.withchanges.pdf
 Local pinned implementation: vitaGL get_info.c, glGetError.
 
-Completed rounds: 24/100. Remaining rounds retain the coverage plan above.
+## Round 25 — transparent sorting ownership (COMPLETE)
+
+Question: can backend batching replace original transparent depth ordering?
+Searches: EA `SortingRendererClass Flush`; vitaGL `glBlendFunc depth sorting`.
+Inspected pinned original sortingrenderer.cpp and native Draw_Sorting_IB_VB.
+Original sorting and flush remain engine-owned; the boundary copies sorting
+vertices and rebases indices into original dynamic DX8-shaped buffers. It
+rejects unsupported primitive types, excessive 16-bit counts and indices outside
+the declared vertex window. Blend support alone is not correct depth ordering.
+
+Decision: retain original transparent ordering and keep opaque reordering out
+of this path. New audit lead: vertex memcpy and source-index traversal use
+combined offsets without an explicit source-buffer-capacity check in this
+function. Inspect original buffer counts and offset domains before deciding
+whether to add admission checks. No out-of-bounds runtime failure claimed.
+Depth-sort checks are focused CPU evidence, not visual transparency acceptance.
+
+Primary source:
+https://github.com/electronicarts/CnC_Renegade/blob/3e00c3a1b97381bb28be89a35b856375e0629a08/Code/ww3d2/sortingrenderer.cpp
+Local evidence: ww3d_dx8_boundary.cpp, Draw_Sorting_IB_VB.
+
+## Round 26 — sorting source-window admission (COMPLETE)
+
+Question: can the native sorting converter read past its retained source buffers?
+Searches: EA `Draw_Sorting_IB_VB`; Microsoft indexed draw vertex-window bounds.
+Compared original DX8 converter offsets with native code and original buffer
+capacity accessors. Combined offsets are sums of 16-bit fields and remain
+representable in unsigned 32 bits; both buffers expose actual element counts.
+
+Confirmed omission: native converter validated rebased index values but did not
+admit source vertex/index windows against capacities before reading them.
+Added subtraction-based window checks before vertex memcpy and source-index
+traversal. Valid ordering/rebasing remains unchanged. Focused malformed-window
+counterexamples remain to be retained; ARM object compilation is live as session
+19884. No claim of a reproduced retail crash or visual transparency correction.
+
+Primary reference:
+https://learn.microsoft.com/en-us/windows/win32/api/d3d9/nf-d3d9-idirect3ddevice9-drawindexedprimitive
+(supporting window semantics; exact legacy offsets verified from pinned EA
+dx8wrapper.cpp, not inferred from D3D9 alone).
+
+Completed rounds: 26/100. Remaining rounds retain the coverage plan above.
+
+Round-26 implementation follow-through: exact production vertex/index admission
+blocks pass 13,122 generated window cases against independent 64-bit arithmetic
+under ASan/UBSan. Native DX8 boundary object compiled successfully in session
+19884. This verifies admission arithmetic, not the full GPU sorting pipeline.

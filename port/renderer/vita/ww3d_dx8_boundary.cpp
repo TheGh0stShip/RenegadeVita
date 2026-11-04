@@ -3315,6 +3315,15 @@ void DX8Wrapper::Draw_Sorting_IB_VB(unsigned primitive_type,
 		render_state.index_buffer_type == BUFFER_TYPE_DYNAMIC_SORTING);
 	if (render_state.vertex_buffer == NULL || render_state.index_buffer == NULL ||
 		vertex_count == 0U || polygon_count == 0U) return;
+	const unsigned source_vertex_offset = static_cast<unsigned>(render_state.vba_offset) +
+		render_state.index_base_offset + min_vertex_index;
+	const unsigned source_vertex_capacity = render_state.vertex_buffer->Get_Vertex_Count();
+	if (source_vertex_offset > source_vertex_capacity ||
+		vertex_count > source_vertex_capacity - source_vertex_offset) {
+		RenegadeVitaRenderer::Reject_Indexed_Submission(
+			"sorting vertex window exceeds source buffer", dynamic_fvf_type);
+		return;
+	}
 
 	DynamicVBAccessClass dynamic_vertices(BUFFER_TYPE_DYNAMIC_DX8,
 		dynamic_fvf_type, vertex_count);
@@ -3342,6 +3351,14 @@ void DX8Wrapper::Draw_Sorting_IB_VB(unsigned primitive_type,
 	if (index_count > 65535U) {
 		RenegadeVitaRenderer::Reject_Indexed_Submission(
 			"sorting index count exceeds 16-bit buffer capacity", dynamic_fvf_type);
+		return;
+	}
+	const unsigned source_index_offset = static_cast<unsigned>(render_state.iba_offset) + start_index;
+	const unsigned source_index_capacity = render_state.index_buffer->Get_Index_Count();
+	if (source_index_offset > source_index_capacity ||
+		index_count > source_index_capacity - source_index_offset) {
+		RenegadeVitaRenderer::Reject_Indexed_Submission(
+			"sorting index window exceeds source buffer", dynamic_fvf_type);
 		return;
 	}
 	DynamicIBAccessClass dynamic_indices(BUFFER_TYPE_DYNAMIC_DX8, index_count);

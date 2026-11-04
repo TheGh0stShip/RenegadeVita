@@ -515,4 +515,123 @@ https://cmake.org/cmake/help/latest/prop_sf/COMPILE_OPTIONS.html
 Native evidence: build/vita-a35-dev246-candidate-20261104-143651/compile_commands.json
 and its a4_binkmovie_boundary.cpp.obj, successful Ninja session 71004.
 
-Completed rounds: 19/100. Remaining rounds retain the coverage plan above.
+## Round 20 — dependency cache identity (COMPLETE)
+
+Question: does an ABI version stamp also prove the dependency matches the compiler?
+Searches: ccache `compiler_check content header hashing`; CMake `imported library
+full path dependency rebuild`. Read official ccache identity documentation and
+compared the FFmpeg script's early return, optional cache key and configure gate.
+
+The version bump and CMake gate reject the old enum build. Optional dependency
+cache keys include script, archive, compiler-driver identity and SDK information.
+However, the earlier installed-prefix shortcut checks only configuration ID and
+archive existence. A compiler/SDK change with an unchanged ID can bypass that
+richer key. Decision: record this as an open provenance-hardening item; do not
+claim the version stamp verifies every input. Future correction should compare
+a retained complete recipe/toolchain identity even on installed-prefix reuse.
+No global cache disabling or unmeasured rebuild-policy change adopted.
+
+Current rebuilt library hashes retained here:
+- avcodec: a51045a1666d3d72d419eafffb43e7a4ee9a036a404d6f381b913f3db3c79cfc
+- avformat: 8e714cedbfd23eda2cfed74f7dadcf0cda23a69bedb105484259cb0aeb3f637d
+- avutil: 90ceb1588aa3f56542d76da2d1e5812b6731c11d0502e8a0f113242201d8fc39
+- swresample: f7fa536e48c93fb6b14386ac5bec43e7ba99c9461c8269473505bd248e28560e
+- swscale: 1b4753b26b9af73882951edd2b4cd3590a666b3da3549001af5f2b31338b6a1b
+
+Primary reference: https://ccache.dev/manual/latest.html
+Local evidence: tools/build_ffmpeg_bink_vita.sh and dependency_cache.sh.
+
+## Round 21 — texture replacement and cached binding ownership (COMPLETE)
+
+Question: is in-place texture updating automatically safe or cheaper on Vita?
+Searches: vitaGL `glTexSubImage2D sceGxmFinish texture`; vitaGL `glBindTexture
+texture state`. Inspected pinned textures.c and local DX8 upload boundary.
+For recently used textures, the normal subimage path allocates replacement
+storage, copies old contents, updates the requested region and defers old
+texture-data release; a separate
+speedhack conditional changes this behavior. Do not treat the API name alone
+as proof of an in-place update or free bandwidth.
+
+Our direct upload sites invalidate the renderer texture-state cache around GL
+binding mutation. Decision: preserve that invalidation contract and deferred
+GPU ownership. Do not enable noncompliant texture speedhacks or replace storage
+with direct writes without measured evidence and synchronization correctness.
+Local dependency already omits the old-pixel copy for a narrowly checked full
+aligned RGBA replacement while retaining replacement allocation and retirement;
+account for that selected patch before claiming a new copy-removal opportunity.
+Follow-up: compare dynamic font/movie usage with this allocation cost; distinguish
+texture contents from sampler/binding state in the renderer inventory.
+Search leads about other ports' direct writes remain unverified examples.
+
+Primary source:
+https://github.com/Rinnegatamante/vitaGL/blob/6e7fe40292e8f1d10f9a94ff2cd2f4fb1ba452a5/source/textures.c
+Local sources: ww3d_dx8_boundary.cpp, pinned textures.c, build_vitagl_demo.sh.
+No code copied or renderer optimization adopted.
+
+## Round 22 — projector framebuffer ownership (COMPLETE)
+
+Question: does FBO support alone restore original dynamic projectors?
+Searches: vitaGL `glFramebufferTexture2D glDeleteTextures framebuffer`; EA
+`Set_Render_Target TexProjectClass`. Inspected pinned vitaGL framebuffers.c,
+original staged texproject.cpp and native DX8 target construction/binding/free.
+
+Original TexProject retains its target and renders through DX8Wrapper, then
+returns to the default target. Native boundary validates level-zero render
+surfaces, retains surface/texture owners, and provides shutdown restoration.
+Texture objects own FBO/depth cleanup; allocation checks framebuffer completeness.
+Decision: preserve original projector orchestration and target ownership rather
+than draw projectors in an independent renderer. Source wiring is present;
+this does not establish correct projection, depth, orientation or shadows.
+
+Open failure-path lead: default-target restoration is fallible, but the caller
+continues releasing retained target references and clearing IsRenderToTexture.
+Inspect Restore_Default_Render_Target's actual failure conditions before deciding
+whether that path needs state-preserving recovery. Do not claim a reproduced
+GPU lifetime error from source suspicion alone.
+
+Primary reference:
+https://github.com/Rinnegatamante/vitaGL/blob/6e7fe40292e8f1d10f9a94ff2cd2f4fb1ba452a5/source/framebuffers.c
+Local evidence: texproject.cpp, a31_gameplay_boundary.cpp and ww3d_dx8_boundary.cpp.
+No external code copied or render ordering changed.
+
+## Round 23 — default-target restore failure transaction (COMPLETE)
+
+Question: does the round-22 failure lead have a concrete state inconsistency?
+Searches: Khronos `glDeleteFramebuffers currently bound framebuffer zero` and
+`glBindFramebuffer errors framebuffer zero`. Compared ES specification behavior,
+pinned vitaGL framebuffer deletion and native restore/caller implementation.
+
+Confirmed: restore returns before resetting dimensions/winding/cache on GL error,
+but its caller previously released target refs and cleared IsRenderToTexture
+anyway. Restore also read the GL error flag without separating earlier errors.
+Worktree correction records a prior error before binding and makes the caller
+retain target ownership/state when restoration fails. This is a narrow boundary
+transaction fix; full ARM compilation and focused failure injection are pending.
+No visual/GPU acceptance inferred. Do not rely on deletion implicitly restoring
+all engine-side state even though GL defines default-binding behavior.
+
+Primary reference:
+https://registry.khronos.org/OpenGL/specs/es/2.0/es_full_spec_2.0.pdf
+and pinned vitaGL framebuffers.c from round 22. No external code copied.
+
+## Round 24 — GL error attribution and failure injection (COMPLETE)
+
+Question: does one pre-bind read clear the selected backend's prior error?
+Searches: Khronos `glGetError error flags reset multiple errors`; vitaGL
+`glGetError GL_NO_ERROR`. Compared specification error-state behavior with
+pinned local get_info.c: vitaGL returns one vgl_error value and resets it to
+GL_NO_ERROR. The round-23 prior-error read therefore clears that backend's
+stored error; do not generalize it to arbitrary multi-flag GL implementations.
+
+Added isolated execution of the actual production restore body with injected
+prior error and bind failure. It verifies error counting, successful winding/
+dimension/cache reset and failure preservation. This is CPU boundary evidence,
+not hardware FBO proof. Targeted ARM compilation of both changed owners is
+being observed separately; caller-reference release still needs dedicated
+failure-path coverage. No additional GL abstraction or renderer rewrite.
+
+Primary reference:
+https://registry.khronos.org/OpenGL/specs/es/3.1/es_spec_3.1.withchanges.pdf
+Local pinned implementation: vitaGL get_info.c, glGetError.
+
+Completed rounds: 24/100. Remaining rounds retain the coverage plan above.

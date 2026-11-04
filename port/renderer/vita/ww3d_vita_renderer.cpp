@@ -3807,6 +3807,8 @@ bool Restore_Default_Render_Target()
 {
 	Opaque_Sort_Barrier();
 #if defined(__vita__)
+	// A previous draw's error must not masquerade as a failed target bind.
+	if (glGetError() != GL_NO_ERROR) ++g_statistics.backend_errors;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0U);
 	if (glGetError() != GL_NO_ERROR) {
 		++g_statistics.backend_errors;

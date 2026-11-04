@@ -1742,7 +1742,12 @@ void DX8Wrapper::Set_Render_Target(TextureClass *texture)
 void DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *surface, bool)
 {
 	if (surface == NULL) {
-		if (RenegadeVitaRenderer::Restore_Default_Render_Target()) {
+		if (!RenegadeVitaRenderer::Restore_Default_Render_Target()) {
+			RenegadeVitaRenderer::Reject_Indexed_Submission(
+				"default render-target restore failed", 0U);
+			return;
+		}
+		{
 			int width = 0;
 			int height = 0;
 			int bits = 0;

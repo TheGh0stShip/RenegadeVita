@@ -27,6 +27,13 @@ references without redistributing retail data.
 
 ## Existing evidence to reconcile
 
+### Installed dependency identity
+
+FFmpeg's installed-prefix shortcut checks configuration stamp and archive
+existence before computing the optional full cache key. Toolchain/SDK drift
+can therefore reuse old files under the same stamp. Retain and compare complete
+recipe/toolchain identity on that path; research round 20 records the evidence.
+
 ### Canonical host harness closure
 
 dev246 stopped at A22 host linking. Native manifests select PointGroup,

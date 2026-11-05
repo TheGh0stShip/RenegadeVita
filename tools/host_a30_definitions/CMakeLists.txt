@@ -33,6 +33,11 @@ set_property(SOURCE ${RV_STAGE}/wwlib/random.cpp APPEND PROPERTY COMPILE_OPTIONS
 set(RV_UPSTREAM "${RV_ROOT}/upstream/CnC_Renegade")
 set(RV_COMPAT "${RV_ROOT}/port/compatibility/include")
 set(RV_SCRIPT_SOURCE "${RV_STAGE}/scripts")
+set(RV_MOVIE_SUBTITLE_SOURCES
+  ${RV_STAGE}/binkmovie/subtitle.cpp
+  ${RV_STAGE}/binkmovie/subtitleparser.cpp
+  ${RV_STAGE}/binkmovie/subtitlemanager.cpp
+  ${RV_ROOT}/port/platform/renegade_movie_subtitles.cpp)
 include("${RV_ROOT}/cmake/RenegadeScriptSources.cmake")
 renegade_collect_script_dsp_sources(
   "${RV_UPSTREAM}/Code/Scripts"
@@ -764,6 +769,7 @@ set(RV_A4_FRONTEND_RUNTIME_LINK_SOURCES
   ${RV_ROOT}/port/platform/renegade_dialog_resource_provider.cpp
   ${RV_ROOT}/port/platform/a4_frontend_lifecycle_boundary.cpp
   ${RV_ROOT}/port/platform/a4_binkmovie_boundary.cpp
+  ${RV_MOVIE_SUBTITLE_SOURCES}
 )
 
 # A3.1 first-interactive runtime: unlike the retained seed target, this enters
@@ -937,6 +943,7 @@ if(RENEGADE_HOST_ORIGINAL_AUDIO)
     RENEGADE_A35_ORIGINAL_WWAUDIO=1 RENEGADE_MILES_MANUAL_MIX=1)
 endif()
 target_include_directories(a31_interactive_runtime PRIVATE
+  ${RV_STAGE}/binkmovie
   ${RV_COMPAT}
   ${RV_ROOT}/port/developer
   ${RV_A4_DIALOG_GENERATED_DIR}
@@ -994,7 +1001,7 @@ target_compile_definitions(a31_interactive_runtime PRIVATE
   RENEGADE_A4_ORIGINAL_GAMEMODE=1
   RENEGADE_A4_ORIGINAL_MOVIE_OWNER=1
   RENEGADE_VITA_FRONTEND_SINGLEPLAYER=1
-  RENEGADE_VITA_A4_FRONTEND_PORT_SOURCES=6
+  RENEGADE_VITA_A4_FRONTEND_PORT_SOURCES=7
   RENEGADE_SHORT_WCHAR_ABI=1
   RENEGADE_A30_FULL_WWPHYS=1
 )
@@ -1205,8 +1212,10 @@ add_library(a4_wwui_frontend_probe OBJECT
   ${RV_ROOT}/port/filesystem/renegade_find_files.cpp
   ${RV_ROOT}/port/platform/renegade_ui_pointer_tokens.cpp
   ${RV_ROOT}/port/platform/a4_binkmovie_boundary.cpp
+  ${RV_MOVIE_SUBTITLE_SOURCES}
 )
 target_include_directories(a4_wwui_frontend_probe PRIVATE
+  ${RV_STAGE}/binkmovie
   ${RV_COMPAT}
   ${RV_ROOT}/port/renderer/vita
   ${RV_ROOT}/port/audio/miles

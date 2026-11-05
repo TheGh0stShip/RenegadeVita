@@ -23,7 +23,7 @@ python3 "$rv_root/tools/staging_fingerprint.py" --root "$rv_root" begin || \
 
 rv_managed_stage_dirs=(
 	wwbitpack wwutil wwdebug wwlib wwmath wwsaveload ww3d2 wwphys combat
-	commando wwaudio wwnet wwtranslatedb wwui scripts
+	commando wwaudio wwnet wwtranslatedb wwui scripts binkmovie
 )
 
 if [[ "$rv_incremental_stage" == "1" ]]; then
@@ -87,6 +87,15 @@ find "$rv_upstream/Code/Combat" -maxdepth 1 -type f \
 find "$rv_upstream/Code/Commando" -maxdepth 1 -type f \
 	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp -t "$rv_stage/commando/" -- {} +
 cp "$rv_upstream/Code/WWOnline/WOLLangCodes.h" "$rv_stage/commando/wollangcodes.h"
+# Keep the three released subtitle owners; the proprietary BINK SDK caller
+# remains replaced by the FFmpeg platform boundary, not staged or linked.
+for rv_file in subtitle.cpp subtitle.h subtitleparser.cpp subtitleparser.h subtitlemanager.cpp subtitlemanager.h; do
+	cp "$rv_upstream/Code/BinkMovie/$rv_file" "$rv_stage/binkmovie/$rv_file"
+done
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/binkmovie" -p1 < "$rv_root/port/patches/binkmovie-a4-subtitle-parser-portability.patch"
+patch --batch --forward --fuzz=0 --no-backup-if-mismatch \
+	-d "$rv_stage/binkmovie" -p1 < "$rv_root/port/patches/binkmovie-a4-subtitle-manager-boundary.patch"
 find "$rv_upstream/Code/WWAudio" -maxdepth 1 -type f \
 	\( -iname '*.cpp' -o -iname '*.h' \) -exec cp -t "$rv_stage/wwaudio/" -- {} +
 find "$rv_upstream/Code/wwnet" -maxdepth 1 -type f \

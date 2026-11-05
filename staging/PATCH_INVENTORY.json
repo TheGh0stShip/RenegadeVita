@@ -1,9 +1,19 @@
 {
   "schema": 1,
   "registry": "tools/stage_sources.sh",
-  "stage_script_sha256": "710f0b3b27ed8f446943c73a32bb850d80a149573e33d794e607737070cd521a",
-  "patch_count": 631,
+  "stage_script_sha256": "1049f2aa593d2922fa19d427766a85bc3bf858611213304b4fa88d4f616b87f4",
+  "patch_count": 633,
   "patches": [
+    {
+      "path": "port/patches/binkmovie-a4-subtitle-parser-portability.patch",
+      "stage_directory": "binkmovie",
+      "sha256": "c22cc5d098c8555e8f212c47a66d250862a6b531b1f29ac5ec047a00e0c84fc5"
+    },
+    {
+      "path": "port/patches/binkmovie-a4-subtitle-manager-boundary.patch",
+      "stage_directory": "binkmovie",
+      "sha256": "9a311eb35d0108c0ca34d9c3e7eac23fb4745caceb1d835511c7b279f3762352"
+    },
     {
       "path": "port/patches/wwbitpack-gcc15.patch",
       "stage_directory": "wwbitpack",
@@ -3160,5 +3170,5 @@
       "sha256": "d129c75128ac6eb5808c861b6c1a8890e7dcb6c582f4d9a083fe06b8a1f0e9b9"
     }
   ],
-  "registry_sha256": "9b69ef9f6a4f7fb42fc41c6f719a46a16554d4e46124fa210a03e0b20971fe1c"
+  "registry_sha256": "8dc140a16551dd8640594895b2867e38970f4606a94241cdb2e45634900550bc"
 }

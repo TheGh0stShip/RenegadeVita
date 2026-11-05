@@ -1,5 +1,20 @@
 # Renegade Vita port status
 
+## Original movie subtitle restoration — 2026-11-05 UTC
+
+The native movie boundary now preserves subtitle arguments and routes them to
+the three original subtitle owners through a separately compiled engine-ABI
+adapter. This restores source selection, rooted subtitle reads, original font
+retention, 60-Hz caption scheduling and movie teardown ownership. Hardened
+UTF-16 parsing rejects malformed values and terminates on missing EndMovie.
+The focused host suite passes 77 tests, including mixed-enum owner and Bink
+lifecycle fixtures; these simulate decoder/GPU calls and are not play tests.
+All five changed native translation units compile to ARMv7 objects with the
+int-enum/short-enum split verified in ELF attributes. See
+MOVIE_SUBTITLE_RESTORATION.md for dependency identity and evidence limits.
+No new release or campaign-completeness claim is made. The user's gameplay
+hold and the remaining-port inventory stay open.
+
 ## Current native closure — 2026-11-04
 
 Direct dev246 ARM compile/link passed all 681 steps. ELF32 ARMv7 hard-float/VFP

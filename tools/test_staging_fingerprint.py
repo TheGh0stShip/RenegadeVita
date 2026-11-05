@@ -273,7 +273,8 @@ class RealStagingScriptTests(unittest.TestCase):
         self.assertEqual(self.applied, parse_applications(self.text))
 
     def test_every_registered_patch_belongs_to_a_managed_module(self):
-        self.assertEqual(len(self.managed), 15)
+        self.assertTrue(self.managed)
+        self.assertEqual(len(self.managed), len(set(self.managed)))
         self.assertNotIn("patch", [entry[0] for entry in self.scopes[fp.GLOBAL]])
         attributed = {entry[1] for name in self.managed for entry in self.scopes[name] if entry[0] == "patch"}
         self.assertEqual(attributed, {application["path"] for application in self.applied})

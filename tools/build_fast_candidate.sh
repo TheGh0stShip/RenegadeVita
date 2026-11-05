@@ -181,6 +181,7 @@ if [[ "$rv_fast_tests" == "focused" ]]; then
 		tools.test_vitagl_full_upload \
 		tools.test_vitagl_dds_chain \
 		tools.test_vita_bink_scheduler \
+		tools.test_subtitle_parser tools.test_movie_subtitle_abi \
 		tools.diagnostics.test_renegade_vita_performance_ledger \
 		tools.test_compare_capture_bundles \
 		tools.test_vita_loading_screen_contract \
@@ -281,6 +282,16 @@ vglRenegadeEndIndexed
 vglRenegadeUploadDXTChain
 MovieGameModeClass::Start_Movie(char const*)
 BINKMovie::Play(char const*, char const*, FontCharsClass*)
+SubTitleManagerClass::Create(char const*, char const*, FontCharsClass*)
+SubTitleManagerClass::Process(unsigned long)
+SubTitleManagerClass::Render()
+SubTitleManagerClass::~SubTitleManagerClass()
+SubTitleParserClass::Get_Sub_Titles(char const*)
+SubTitleClass::Set_Caption(wchar_t*)
+Renegade_Movie_Subtitles_Create
+Renegade_Movie_Subtitles_Process
+Renegade_Movie_Subtitles_Render
+Renegade_Movie_Subtitles_Destroy
 A4_Frontend_Latch_Start_Game(char const*, int, unsigned long)
 A4_Frontend_Pump_WWUI_Key_Transitions()
 WW3D::Render(SceneClass*

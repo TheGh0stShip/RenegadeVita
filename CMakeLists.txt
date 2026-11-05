@@ -322,6 +322,9 @@ if(RENEGADE_A4_ORIGINAL_FRONTEND)
     ${RENEGADE_STAGE}/commando/gamemode.cpp
     ${RENEGADE_STAGE}/commando/gamemenu.cpp
     ${RENEGADE_STAGE}/commando/movie.cpp
+    ${RENEGADE_STAGE}/binkmovie/subtitle.cpp
+    ${RENEGADE_STAGE}/binkmovie/subtitleparser.cpp
+    ${RENEGADE_STAGE}/binkmovie/subtitlemanager.cpp
     ${RENEGADE_STAGE}/commando/devoptions.cpp
     ${RENEGADE_STAGE}/commando/level.cpp
     ${RENEGADE_STAGE}/commando/bioevent.cpp
@@ -337,6 +340,7 @@ if(RENEGADE_A4_ORIGINAL_FRONTEND)
     ${RENEGADE_ROOT}/port/platform/renegade_dialog_resource_provider.cpp
     ${RENEGADE_ROOT}/port/platform/a4_frontend_lifecycle_boundary.cpp
     ${RENEGADE_ROOT}/port/platform/a4_binkmovie_boundary.cpp
+    ${RENEGADE_ROOT}/port/platform/renegade_movie_subtitles.cpp
   )
   # FFmpeg uses INT32_MAX as an enum wildcard. Keep its sole consumer's
   # public FFmpeg layouts consistent without changing original engine enums.
@@ -564,6 +568,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${RENEGADE_STAGE}/wwsaveload
   ${RENEGADE_STAGE}/combat
   ${RENEGADE_STAGE}/commando
+  ${RENEGADE_STAGE}/binkmovie
   ${RENEGADE_STAGE}/wwui
   ${RENEGADE_STAGE}/wwaudio
   ${RENEGADE_STAGE}/wwnet
@@ -650,7 +655,7 @@ if(RENEGADE_A4_ORIGINAL_FRONTEND)
     RENEGADE_A4_ORIGINAL_MOVIE_OWNER=1
     RENEGADE_A4_BINK_FFMPEG=1
     RENEGADE_VITA_FRONTEND_SINGLEPLAYER=1
-    RENEGADE_VITA_A4_FRONTEND_PORT_SOURCES=6
+    RENEGADE_VITA_A4_FRONTEND_PORT_SOURCES=7
   )
 endif()
 target_compile_options(${PROJECT_NAME} PRIVATE

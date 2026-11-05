@@ -1,5 +1,6 @@
 #include "binkmovie.h"
 #include "a4_frontend_lifecycle_boundary.h"
+#include "renegade_movie_subtitles.h"
 
 #if defined(__vita__) && defined(RENEGADE_A4_BINK_FFMPEG)
 
@@ -78,6 +79,7 @@ std::atomic<bool> g_demux_eof(false);
 std::atomic<bool> g_audio_decode_eof(false);
 bool g_decoders_flushed = false;
 char g_movie_name[160] = {};
+RenegadeMovieSubtitles *g_subtitles = NULL;
 
 AVFormatContext *g_format = NULL;
 AVCodecContext *g_video_decoder = NULL;
@@ -105,6 +107,7 @@ uint64_t g_decoded_video_frames = 0U;
 uint64_t g_uploaded_video_frames = 0U;
 uint64_t g_dropped_video_frames = 0U;
 int64_t g_last_video_upload_elapsed_us = 0;
+int64_t g_uploaded_video_pts_us = 0;
 
 GLuint g_video_texture = 0U;
 bool g_texture_allocated = false;
@@ -567,6 +570,10 @@ bool Start_Audio_Output()
 void Release_Decoder_State()
 {
 	Stop_Audio_Output();
+	// Original sentence/font/texture ownership ends with this movie on the
+	// main thread, including replacement, skip and decoder failure paths.
+	Renegade_Movie_Subtitles_Destroy(g_subtitles);
+	g_subtitles = NULL;
 	for (AVPacket *packet : g_prefetched_video_packets) av_packet_free(&packet);
 	// Release capacity, not just contents: the campaign plays one movie per
 	// level transition and then runs the next mission in the same process.
@@ -611,6 +618,7 @@ void Release_Decoder_State()
 	g_decoded_video_frames = 0U;
 	g_uploaded_video_frames = 0U;
 	g_dropped_video_frames = 0U;
+	g_uploaded_video_pts_us = 0;
 	g_last_skip_buttons = 0U;
 	g_presentation_start_us.store(0, std::memory_order_release);
 	g_update_budget_logged = false;
@@ -863,6 +871,7 @@ bool Upload_Pending_Video()
 	}
 	av_frame_unref(g_video_frame);
 	++g_uploaded_video_frames;
+	g_uploaded_video_pts_us = g_pending_video_pts_us;
 	g_last_video_upload_elapsed_us = Current_Movie_Elapsed_Us();
 	g_pending_video = false;
 	return true;
@@ -1114,7 +1123,7 @@ void BINKMovie::Shutdown()
 	A4_Frontend_Record_Bink_Init(false);
 }
 
-void BINKMovie::Play(const char *filename, const char *, FontCharsClass *)
+void BINKMovie::Play(const char *filename, const char *subtitle_name, FontCharsClass *font)
 {
 	Stop();
 	Copy_Movie_Name(filename);
@@ -1187,6 +1196,14 @@ void BINKMovie::Play(const char *filename, const char *, FontCharsClass *)
 	if (!audio_ready) {
 		g_audio_enabled = false;
 		g_audio_drained.store(true, std::memory_order_release);
+	}
+	// Create before returning to the original caller, which releases its
+	// font reference after Play. The original sentence owner retains its own.
+	g_subtitles = Renegade_Movie_Subtitles_Create(filename, subtitle_name, font);
+	if (subtitle_name != NULL) {
+		A30_Vita_Log("A4 Bink: original subtitles %s movie=%s source=%s font=%d\n",
+			g_subtitles != NULL ? "loaded" : "unavailable", g_movie_name,
+			subtitle_name, font != NULL ? 1 : 0);
 	}
 	Prime_Skip_Button_Latch();
 	g_active = true;
@@ -1394,6 +1411,12 @@ void BINKMovie::Render()
 	if (blend_enabled) glEnable(GL_BLEND);
 	glViewport(previous_viewport[0], previous_viewport[1],
 		previous_viewport[2], previous_viewport[3]);
+	// The original owner draws after the movie and after restoring GL state.
+	// Use the last uploaded frame's PTS: prefetched or dropped frames must not
+	// advance captions ahead of the image actually shown.
+	Renegade_Movie_Subtitles_Process(g_subtitles, Renegade_Movie_Subtitle_Ticks(
+		g_uploaded_video_pts_us > 0 ? static_cast<uint64_t>(g_uploaded_video_pts_us) : 0U));
+	Renegade_Movie_Subtitles_Render(g_subtitles);
 }
 
 bool BINKMovie::Is_Complete()

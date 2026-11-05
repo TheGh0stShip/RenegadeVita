@@ -15,7 +15,7 @@ else:
 MODULES = [
     "WWMath", "wwbitpack", "wwdebug", "wwlib", "wwsaveload",
     "wwtranslatedb", "wwutil", "wwphys", "ww3d2", "Combat",
-    "Commando", "Scripts", "WWAudio", "WWOnline", "wolapi",
+    "Commando", "Scripts", "WWAudio", "WWOnline", "wolapi", "BinkMovie",
 ]
 
 STAGED_ORIGINAL_OWNER_SOURCES = {
@@ -27,6 +27,7 @@ STAGED_TO_UPSTREAM_MODULE = {
     "commando": "Commando",
     "wwaudio": "WWAudio",
     "wwmath": "WWMath",
+    "binkmovie": "BinkMovie",
 }
 
 def read_native_source_sets(root: pathlib.Path) -> dict[str, list[str]]:
@@ -266,6 +267,7 @@ def main() -> None:
             "owner": "original Commando MovieGameMode/MenuGameMode/RenegadeDialogMgr/WWUI",
             "menu_to_tutorial": "A4 menu selection latches original GameInitMgrClass::Start_Game and re-enters the existing direct M00 route until full menu-to-combat equivalence is proven",
             "movie_provider": "BINKMovie uses a pinned Vita FFmpeg software provider for unchanged retail Bink video/audio; no proprietary RAD code or packaged movies",
+            "movie_subtitles": "Original caption/parser/manager owners through an opaque engine-ABI adapter; rooted subtitle reads, retained font ownership and displayed-frame PTS converted to 60-Hz ticks",
             "custom_game_loop": False,
             "custom_frontend_renderer": False,
         },

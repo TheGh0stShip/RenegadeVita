@@ -119,10 +119,14 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "${RENEGADE_STAGE}/commando/gamemode.cpp",
             "${RENEGADE_STAGE}/commando/gamemenu.cpp",
             "${RENEGADE_STAGE}/commando/movie.cpp",
+            "${RENEGADE_STAGE}/binkmovie/subtitle.cpp",
+            "${RENEGADE_STAGE}/binkmovie/subtitleparser.cpp",
+            "${RENEGADE_STAGE}/binkmovie/subtitlemanager.cpp",
             "${RENEGADE_STAGE}/combat/savegame.cpp",
             "port/platform/renegade_dialog_resource_provider.cpp",
             "port/platform/a4_frontend_lifecycle_boundary.cpp",
             "port/platform/a4_binkmovie_boundary.cpp",
+            "port/platform/renegade_movie_subtitles.cpp",
         ):
             self.assertIn(token, cmake)
 
@@ -131,13 +135,16 @@ class A4OriginalFrontendContractTests(unittest.TestCase):
             "RENEGADE_A4_ORIGINAL_GAMEMODE=1",
             "RENEGADE_A4_ORIGINAL_MOVIE_OWNER=1",
             "RENEGADE_VITA_FRONTEND_SINGLEPLAYER=1",
-            "RENEGADE_VITA_A4_FRONTEND_PORT_SOURCES=6",
+            "RENEGADE_VITA_A4_FRONTEND_PORT_SOURCES=7",
         ):
             self.assertIn(token, cmake)
             self.assertIn(token, host_cmake)
 
         self.assertIn("${RV_STAGE}/commando/movie.cpp", host_cmake)
         self.assertIn("${RV_ROOT}/port/platform/a4_binkmovie_boundary.cpp", host_cmake)
+        self.assertIn("${RV_ROOT}/port/platform/renegade_movie_subtitles.cpp", host_cmake)
+        for owner in ("subtitle.cpp", "subtitleparser.cpp", "subtitlemanager.cpp"):
+            self.assertIn("${RV_STAGE}/binkmovie/" + owner, host_cmake)
 
     def test_frontend_staging_patches_are_deterministic_and_original_owner_scoped(self):
         stage_sources = (ROOT / "tools" / "stage_sources.sh").read_text()

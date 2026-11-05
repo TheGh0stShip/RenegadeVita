@@ -11,10 +11,28 @@
   },
   "reviews": {
     "BinkMovie/BINKMovie.cpp": {
-      "classification": "platform replacement with missing presentation contract",
-      "evidence": ["port/platform/a4_binkmovie_boundary.cpp", "port/compatibility/include/binkmovie.h"],
-      "reason": "Native Play accepts but discards subtitle_name and FontCharsClass arguments. The earlier FFmpeg transform-enum truncation defect is corrected with scoped int-sized dependency/caller enums; dependency rebuild and Bink ARM compilation passed.",
-      "remaining": "Link original subtitle.cpp, subtitleparser.cpp and subtitlemanager.cpp; stage their headers and translate legacy include paths. Preserve original manager Create/Process/Render/destruction ownership through an engine-ABI adapter, keeping engine layouts out of the int-enum FFmpeg TU. Process takes 60-Hz ticks, not milliseconds: original BINKMovie uses FrameNum*(60/(FrameRate/FrameRateDiv)). Route subtitle.ini through the rooted read boundary (original manager uses RawFileClass). Both movie.cpp and dlgmovieoptions.cpp supply data\\subtitle.ini and a font. Revised dependency rebuild, installed receipt and unchanged reuse now pass."
+      "classification": "platform replacement with restored original subtitle route",
+      "evidence": ["port/platform/a4_binkmovie_boundary.cpp", "port/platform/renegade_movie_subtitles.cpp", "port/platform/renegade_movie_subtitles.h", "reports/MOVIE_SUBTITLE_RESTORATION.md"],
+      "reason": "The FFmpeg consumer keeps int-sized enums and now preserves subtitle arguments through a separately compiled engine-ABI adapter. The original subtitle owners are selected; opaque handles, font pointers and uint32_t ticks preserve the enum seam. Captions follow uploaded-frame PTS, and original font/render ownership ends through movie cleanup. Actual-owner mixed-enum sanitizer fixtures exercise production Bink lifecycle bodies with simulated decoder/GPU APIs.",
+      "remaining": "Native validation is qualified in MOVIE_SUBTITLE_RESTORATION.md. Complete native link/package identity and retail visual, glyph, subtitle-coverage and A/V timing acceptance remain separate gates under the play-test hold. PTS-based 60-Hz timing intentionally differs from the released SDK's one-based frame-count and integer frame-rate arithmetic."
+    },
+    "BinkMovie/subtitle.cpp": {
+      "classification": "restored original engine owner",
+      "evidence": ["port/patches/binkmovie-a4-subtitle-parser-portability.patch", "CMakeLists.txt", "tools/test_subtitle_parser.py"],
+      "reason": "The original caption owner is staged and selected with engine enum/wchar ABI. Explicit UTF-16 copy/length operations replace incompatible libc wchar calls while retaining authored defaults and caption ownership.",
+      "remaining": "Full-link retention and retail glyph/presentation acceptance remain independent gates; see reports/MOVIE_SUBTITLE_RESTORATION.md."
+    },
+    "BinkMovie/subtitleparser.cpp": {
+      "classification": "restored original engine owner with portability hardening",
+      "evidence": ["port/patches/binkmovie-a4-subtitle-parser-portability.patch", "tools/test_subtitle_parser.py", "tools/test_movie_subtitle_abi.py"],
+      "reason": "The original parser is staged and selected. UTF-16LE admission, bounded movie names/numerics, safe EOF/missing-EndMovie handling and required Text prevent malformed input from hanging or reaching the renderer with a null caption. Fifty-four original-parser checks and the mixed-enum owner fixtures pass under ASan/UBSan.",
+      "remaining": "Audit complete retail subtitle format/coverage and native presentation; synthetic non-play fixtures do not establish content parity."
+    },
+    "BinkMovie/subtitlemanager.cpp": {
+      "classification": "restored original engine owner with rooted file boundary",
+      "evidence": ["port/patches/binkmovie-a4-subtitle-manager-boundary.patch", "port/platform/renegade_movie_subtitles.cpp", "tools/test_movie_subtitle_abi.py"],
+      "reason": "Original Create/Process/Render/destruction and Render2DSentence font retention are retained behind the opaque adapter. Rooted original file factories replace RawFileClass; bounded basename extraction and elapsed-duration comparison avoid buffer/timestamp overflow. Tests execute original owners and font reference methods across short-enum/int-enum translation units.",
+      "remaining": "Native symbol retention, retail caption placement and timing remain independent evidence gates; see reports/MOVIE_SUBTITLE_RESTORATION.md."
     },
     "Combat/statemachine.cpp": {
       "classification": "header-only implementation",

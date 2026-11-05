@@ -1,0 +1,88 @@
+--- a/subtitlemanager.h
++++ b/subtitlemanager.h
+@@ -42,7 +42,7 @@
+ #define _SUBTITLEMANAGER_H_
+ 
+ #include "always.h"
+-#include <wwlib\vector.h>
++#include "vector.h"
+ #include "wwstring.h"
+ #include <windows.h>
+ #include "render2dsentence.h"
+--- a/subtitlemanager.cpp
++++ b/subtitlemanager.cpp
+@@ -40,6 +40,7 @@
+ #include "subtitle.h"
+ #include "xstraw.h"
+ #include "rawfile.h"
++#include "ffactory.h"
+ #include "assetmgr.h"
+ #include "ww3d.h"
+ #include <stdlib.h>
+@@ -78,9 +79,21 @@
+ 	if (instance != NULL) {
+ 		instance->Set_Font(font);
+ 
+-		// Retrieve moviename
++		// Preserve the original filename-without-extension lookup while bounding
++		// the destination. Desktop _splitpath has no destination-size argument.
++		const char* basename = filename;
++		for (const char* cursor = filename; *cursor != '\0'; ++cursor) {
++			if (*cursor == '/' || *cursor == '\\' || *cursor == ':') basename = cursor + 1;
++		}
++		const char* extension = strrchr(basename, '.');
++		const size_t length = extension != NULL ? static_cast<size_t>(extension - basename) : strlen(basename);
+ 		char fname[_MAX_FNAME];
+-		_splitpath(filename, NULL, NULL, fname, NULL);
++		if (length == 0 || length >= sizeof(fname)) {
++			delete instance;
++			return NULL;
++		}
++		memcpy(fname, basename, length);
++		fname[length] = '\0';
+ 		bool loaded = instance->Load_Sub_Titles(fname, subtitlefilename);
+ 
+ 		if (loaded == false) {
+@@ -177,13 +190,16 @@
+ 		return false;
+ 	}
+ 
+-	RawFileClass file(subtitlefilename);
+-
+-	if (!file.Is_Available()) {
++	// Use the same rooted read/MIX factory as the original game, so the
++	// caller's data\subtitle.ini is case-resolved within the retail root.
++	// The FileStraw dies before file_auto_ptr returns the file to its owner.
++	if (_TheFileFactory == NULL) return false;
++	file_auto_ptr file(_TheFileFactory, subtitlefilename);
++	if (file.get() == NULL || !file->Is_Available()) {
+ 		return false;
+ 	}
+ 
+- 	FileStraw input(file);
++ 	FileStraw input(*file);
+  	SubTitleParserClass parser(input);
+  	
+  	mSubTitles = parser.Get_Sub_Titles(moviename);
+@@ -256,9 +272,9 @@
+ 	// If the active subtitles duration has expired then remove it as being active.
+ 	if (mActiveSubTitle != NULL) {
+ 		SubTitleClass* subtitle = mActiveSubTitle;
+-		unsigned long expireTime = subtitle->Get_Display_Time() + subtitle->Get_Display_Duration();
+-
+-		if (movieTime >= expireTime) {
++		// The active entry has already reached its display time. Compare the
++		// elapsed duration without overflowing the target's 32-bit timestamp.
++		if (movieTime - subtitle->Get_Display_Time() >= subtitle->Get_Display_Duration()) {
+ 			mActiveSubTitle = NULL;
+ 
+ 			// Erase subtitle
+@@ -314,7 +330,7 @@
+ 
+ 	Renderer.Reset();
+ 
+-	unsigned short* string = (unsigned short*)subtitle->Get_Caption();
++	const WCHAR* string = reinterpret_cast<const WCHAR*>(subtitle->Get_Caption());
+ 
+ 	int w,h,bits;
+ 	bool windowed;

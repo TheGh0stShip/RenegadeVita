@@ -133,19 +133,28 @@ Corrected: FFmpeg and its Bink caller use scoped int-sized enums; the dependency
 was rebuilt with the v4-int-enums stamp, transform sentinel checks pass, and
 the actual Bink consumer compiled for ARM. Engine enum ABI remains unchanged.
 Archive attributes and exact hashes are retained in research round 20. This
-does not establish physical A/V correctness or restore missing subtitles.
+does not establish physical A/V correctness. Subtitle restoration is tracked
+separately below.
 
 ### Subtitle owner restoration and enum seam
 
-The FFmpeg-facing Bink TU is compiled with int-sized enums. Its current engine
-calls use opaque pointers/plain scalar APIs. Do not include or construct the
-original SubTitleManagerClass/Render2DSentenceClass directly there: those engine
-classes must retain the engine's short-enum layout. Restore the three original
-subtitle owners through a separately compiled engine-ABI adapter exposing only
-opaque manager handles, FontCharsClass pointers and explicit 32-bit tick values.
-Keep Create/Process/Render/destruction ownership, original 60-Hz timing and rooted
-read paths. Parser EOF/malformed time handling also needs review before linkage;
-the released Get_Sub_Titles loop does not break when Get_Next_Line returns NULL.
+The three original subtitle owners and their headers are now staged and
+selected by the full frontend. The FFmpeg-facing TU keeps int-sized enums;
+the adapter and original manager/renderer keep the engine's short-enum layout.
+Only opaque manager/font pointers and explicit 32-bit ticks cross this seam.
+Create/Process/Render/destruction routes, rooted file-factory reads and original
+font retention are restored. Scheduling uses the uploaded frame's PTS converted
+to 60-Hz ticks. UTF-16 operations, numeric bounds, missing EndMovie and missing
+Text handling are hardened without replacing the original subtitle renderer.
+
+The mixed-enum host fixture executes the actual original owners, rooted read
+path, font reference methods and production Bink lifecycle bodies. It passes
+all seven cases with ASan/UBSan; the original parser fixture passes 54 checks.
+Decoder and GPU APIs are simulated. Native evidence and explicit remaining
+gates are recorded in MOVIE_SUBTITLE_RESTORATION.md. Retail caption coverage,
+visual placement, glyphs and A/V timing remain unaccepted under the play-test
+hold. This closes a concrete omitted-owner source route, not full presentation
+or content parity.
 
 - `tools/check_excluded_original_sources.py`: excluded-source symbol comparison.
 - `tools/verify_source_inventory.py`: manifest/report identity checks.

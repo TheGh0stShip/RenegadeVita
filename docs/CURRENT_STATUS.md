@@ -1,6 +1,23 @@
 # Current status
 
-Updated: 2026-09-27
+Updated: 2026-11-05 UTC
+
+## Original movie subtitles restored
+
+The full campaign frontend now selects the original subtitle caption, parser
+and manager owners. A separate engine-ABI adapter connects them to the FFmpeg
+movie provider without exposing short-enum engine layouts to its int-enum
+translation unit. Captions use the displayed frame's presentation timestamp,
+the rooted retail file factory and the original font/render ownership.
+Malformed or truncated subtitle files terminate safely.
+
+Source staging, the focused non-play host suite and native ARM compilation of
+all five changed translation units pass. Exact evidence and limits are in the
+[subtitle restoration report](../reports/MOVIE_SUBTITLE_RESTORATION.md).
+This is an unreleased checkpoint, not a new packaged or play-tested release.
+The [remaining full-port inventory](../reports/REMAINING_PORT_INVENTORY.md)
+remains open, and all gameplay tests remain held until that work is complete.
+The older checkpoints below retain their original evidence and limitations.
 
 Source audit update, 2026-10-03: authored Tutorial/M13/M01 WAV bounds now
 retain archive and database provenance. Eleven M01 candidates declare lengths

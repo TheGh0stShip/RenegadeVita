@@ -10,11 +10,14 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 NAMES = ('dazzle.cpp', 'decalmsh.cpp', 'mesh.cpp', 'ww3d.cpp')
 ANCHORS = {
+    # Match the canonical stage_sources.sh preimages after the complete
+    # format-table / font / scene / sorting boundary patch chain. Replaying
+    # from pristine owners still verifies every earlier hunk with zero fuzz.
     'ww3d-a35-original-dazzle-lifecycle.patch': {
         'dazzle.cpp': '2bbcba91d75327b7fa35b4c1f50718ab05d3b252a687a78d0b3c62a90dfefd58',
-        'ww3d.cpp': '32fdca663f7bfffede2b64b1fbafcc1bd0af81b15f46e4dc24aef84e59bd55c6'},
+        'ww3d.cpp': 'e213b455754c3580ab82412c682044e2bfb9c210c6f8f1143ecc3eac8e3a95c3'},
     'ww3d-a35-original-decal-submission.patch': {
-        'ww3d.cpp': 'a6880363b1bcf43e65d69ace09b3f29248da5483c9d80258ddbad630066ebeb3',
+        'ww3d.cpp': '3ce7b24a1e3075414c22b9b2a6ae7d8ef8de23c35534ba366f3e81bccbe09322',
         'decalmsh.cpp': 'a235a5a53c279f59d92099b1efb7ccaa039ba83cec176b9162ede5c7e1d64d4b',
         'mesh.cpp': '628232c017e9ffe25ec68d4732e133b31f13094c2653322c95a5e06319d137ca'}}
 

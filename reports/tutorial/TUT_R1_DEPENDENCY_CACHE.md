@@ -55,8 +55,8 @@ Its first build on 2026-10-07 went like this:
 
 1. **Two VitaSDKs are in use, and the existing checks cannot tell them apart.**
    - Main's FFmpeg was configured with
-     `--cross-prefix=/home/steve/.local/vitasdk/bin/…`. Main's `libvitaGL.a`
-     has DWARF include paths under `/home/steve/.local/vitasdk`. That SDK was
+     `--cross-prefix=<user-home>/.local/vitasdk/bin/…`. Main's `libvitaGL.a`
+     has DWARF include paths under `<user-home>/.local/vitasdk`. That SDK was
      built 2026-08-25 with different newlib, vita-headers and toolchain
      commits.
    - The fps-r4 worktree built against `/usr/local/vitasdk` (built
@@ -171,9 +171,9 @@ pass through the environment.
    variables. The log must contain no `Dependency cache:` lines, and the
    ELF/VPK hashes must match a build of the same tree without this branch.
 3. **Prime the cache:** in a fresh integration worktree, set
-   `RENEGADE_DEPENDENCY_CACHE_DIR=/home/steve/projects/RenegadeVitaBuilder/dependency-cache`
+   `RENEGADE_DEPENDENCY_CACHE_DIR=<user-home>/projects/RenegadeVitaBuilder/dependency-cache`
    (and preferably
-   `RENEGADE_SOURCE_CACHE=/home/steve/projects/RenegadeVitaBuilder/source-cache`),
+   `RENEGADE_SOURCE_CACHE=<user-home>/projects/RenegadeVitaBuilder/source-cache`),
    then build without copying `build/deps`. All three dependencies build and
    log `Dependency cache: stored …`.
 4. **Hit:** in a second fresh worktree, use the same variables. Expect

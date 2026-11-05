@@ -1,6 +1,5 @@
 """Source-only action miss checks; no C++ compilation or execution."""
 from pathlib import Path
-import subprocess
 import tempfile
 import unittest
 from tools.original_owner_source_replay import replay_to_patch
@@ -21,6 +20,15 @@ class ActionObserverMissTests(unittest.TestCase):
         self.assertLess(body.index('observer_found = true;'), body.index('->Action_Complete('))
         self.assertIn('if (!observer_found)', body)
         self.assertIn('if ( observer_id != 0 )', body)
+        # The telemetry patch follows the logical-time stall correction. Its
+        # hook must not revert that owner or change its cinematic-freeze rule.
+        animation = 'class\tPlayAnimationActionCodeClass'
+        before_animation = original.split(animation, 1)[1].split('\n};', 1)[0]
+        after_animation = patched.split(animation, 1)[1].split('\n};', 1)[0]
+        self.assertIn('StalledSeconds >= 5.0f', before_animation)
+        self.assertIn('GameObjManager::Is_Cinematic_Freeze_Active()', before_animation)
+        self.assertNotIn('StalledFrames', before_animation)
+        self.assertEqual(before_animation, after_animation)
         self.assertEqual(original.split('bool\tActionClass::Request_Action', 1)[1],
                          patched.split('bool\tActionClass::Request_Action', 1)[1])
 

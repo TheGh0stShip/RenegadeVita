@@ -189,7 +189,7 @@ the base.
 Usage for integration worktrees:
 
 ```
-export RENEGADE_CCACHE_DIR=/home/steve/projects/RenegadeVitaBuilder/ccache-shared
+export RENEGADE_CCACHE_DIR=<user-home>/projects/RenegadeVitaBuilder/ccache-shared
 export RENEGADE_CCACHE_RELOCATABLE_DEBUG=1
 ccache -d "$RENEGADE_CCACHE_DIR" -M 20G        # one-time size limit
 RENEGADE_FAST_TESTS=none bash tools/build_fast_candidate.sh

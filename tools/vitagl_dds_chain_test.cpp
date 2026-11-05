@@ -66,6 +66,16 @@ namespace RenegadeVitaRenderer {
  void Record_Texture_Upload(uint64_t bytes){++uploaded_count;uploaded_bytes=bytes;}
 }
 uint32_t Mix_Texture_Checksum(uint32_t state,uint32_t value){return (state^value)*16777619U;}
+// Observe the production upload wrapper's telemetry boundary; the texture
+// upload itself still executes the patched, pinned vitaGL implementation.
+static unsigned probe_begin_count=0,probe_end_count=0,probe_width=0,probe_height=0;
+bool Texture_Pool_Probe_Begin(unsigned width,unsigned height){
+ ++probe_begin_count;probe_width=width;probe_height=height;return true;
+}
+void Texture_Pool_Probe_End(bool active,unsigned width,unsigned height){
+ assert(active&&width==probe_width&&height==probe_height);++probe_end_count;
+}
+#include "dds-upload-probe-production.inc"
 #include "dds-surface-production.inc"
 void test_surface_owner_transaction(){
  IDirect3DSurface8 a{16,16,64,D3DFMT_A8R8G8B8,std::vector<unsigned char>(16*16*4)};
@@ -84,11 +94,14 @@ void test_surface_owner_transaction(){
   IDirect3DTexture8 t={16,16,3,1,0x12345678U,168,surfaces,true,true};const auto before=t;
   texture_slots[1]=fresh();texture_slots[1].status=TEX_VALID;texture_slots[1].data=(void*)old_storage.data();
   generated=released_count=uploaded_count=0;released_bytes=uploaded_bytes=0;deleted.clear();
+  probe_begin_count=probe_end_count=0;
   fail=kind==2;fail_gen=kind==3;error=kind==4?1:0;
   if(kind==5)b.pitch=36;
   if(kind==6)surfaces[1]=nullptr;
   const bool ok=Upload_Retained_DDS_Chain(&t,true,kind==1?1:0);
   assert(ok==(kind<2));
+  assert(probe_begin_count==probe_end_count);
+  assert(probe_begin_count==((kind==3||kind>=5)?0U:1U));
   assert(a.data==old_a&&b.data==old_b&&c.data==old_c);
   if(ok){
    assert(t.NativeTexture==2&&!t.NativeCompressed&&t.Uploaded&&t.SurfaceLevels==surfaces);

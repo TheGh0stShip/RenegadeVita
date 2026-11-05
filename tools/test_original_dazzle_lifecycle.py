@@ -27,6 +27,11 @@ class OriginalDazzleLifecycle(unittest.TestCase):
             replay(directory)
             dazzle = Path(directory, 'dazzle.cpp').read_text()
             ww3d = Path(directory, 'ww3d.cpp').read_text()
+            # The historical lifecycle proof must replay to the owner bytes
+            # actually selected now, including later load/queue corrections.
+            for name in ('dazzle.cpp', 'decalmsh.cpp', 'mesh.cpp', 'ww3d.cpp'):
+                self.assertEqual(Path(directory, name).read_bytes(),
+                                 (ROOT / 'staging/ww3d2' / name).read_bytes(), name)
         body = dazzle.split('void DazzleRenderObjClass::Render(RenderInfoClass & rinfo)', 1)[1].split(
             'void DazzleRenderObjClass::Render_Dazzle', 1)[0]
         original = (ROOT / 'upstream/CnC_Renegade/Code/ww3d2/dazzle.cpp').read_text()

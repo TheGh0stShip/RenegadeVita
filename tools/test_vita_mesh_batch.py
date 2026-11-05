@@ -11,9 +11,13 @@ ROOT = Path(__file__).resolve().parents[1]
 class MeshBatchTests(unittest.TestCase):
     def test_production_batch_order_and_state(self):
         source = (ROOT / 'port/renderer/vita/ww3d_vita_renderer.cpp').read_text()
-        start = source.index('\tfor (int pass = 0; pass < base_pass_count;',
-                             source.index('const Matrix4 world_transform', source.index('void Submit_Mesh(')))
-        end = source.index('\n\tDisable_Texture_Stage(1U);', start)
+        # Select the same native per-frame loop as the vertex-array fixture;
+        # Submit_Mesh_Internal also contains an earlier host-only pass loop.
+        submit = source.index('static void Submit_Mesh_Internal(')
+        anchor = source.index('Submit_Static_Mesh_Cache(mesh, model, render_info', submit)
+        start = source.index('\tfor (int pass = 0; pass < draw_pass_count; ++pass) {', anchor)
+        end = source.index('\n\tDisable_Texture_Stage(1U);\n\tApply_Original_Texture_Coordinate_State(NULL);',
+                           start)
         with tempfile.TemporaryDirectory(prefix='renegade-mesh-batch-') as folder:
             p = Path(folder)
             (p / 'production.inc').write_text(source[start:end])

@@ -6,9 +6,14 @@
 #include <cstdio>
 #include <vector>
 #include "ww3d_vita_indexed_mesh_batch.h"
+#include "ww3d_vita_vertex_array_batch.h"
 #include "category_fvf_layout.h"
 #include "ww3d_vita_indexed_vertex_records.h"
 #define __vita__ 1
+#define RENEGADE_FRAME_PROFILE(name) ((void)0)
+#define RENEGADE_VITA_M00_DEMO 0
+// Retain the fixture's native draw-end timing hooks in the production slice.
+#define RENEGADE_VITA_DETAILED_TIMING 1
 using RenegadeVitaRenderer::IndexedVertexRecord;
 using RenegadeVitaRenderer::INDEXED_VERTEX_RECORD_CHUNK;
 using RenegadeVitaRenderer::Decode_Indexed_Record_Color;
@@ -82,6 +87,19 @@ struct MeshClass {
 };
 static unsigned g_render_work_cache_mode=0;
 static VitaIndexedMeshBatch g_indexed_mesh_batch;
+// This fixture compares immediate and indexed-immediate submission. Client
+// arrays have their own production-loop equivalence test; entering that route
+// here must fail instead of silently replacing either reference path.
+static VitaVertexArrayBatch g_vertex_array_batch;
+static bool g_vertex_array_enabled=false;
+bool Vertex_Array_Batch_Eligible(const OriginalTextureCoordinateState *,bool,bool,
+    const Vector2 *const *) {
+    assert(false && "vertex-array batches are disabled in this fixture");
+    return false;
+}
+void Draw_Vertex_Array_Batch(VitaVertexArrayBatch &,bool,bool,const char *,bool) {
+    assert(false && "vertex-array batches are disabled in this fixture");
+}
 static uint64_t g_mesh_expanded_corners=0,g_mesh_unique_vertices=0,g_mesh_indexed_batches=0;
 struct MeshBoundaryTiming {
     uint64_t mesh_total_us=0,mesh_sampled_us=0,mesh_max_us=0;
@@ -102,6 +120,9 @@ bool Begin_Material_Color_Pass(int) { return false; }
 void Prepare_Material_Light_Directions(RenderInfoClass&,MaterialLightDirections&,const Matrix3D* = nullptr) {}
 void Apply_Original_Shader_State(ShaderClass s) { assert(!open);state[2]=s.bits; }
 void Apply_Original_Texture_Stage_State(ShaderClass,bool,bool) { assert(!open); }
+void Apply_Platform_Texture_Stage(TextureClass &texture,unsigned stage) {
+    texture.Apply_For_Platform_Boundary(stage);
+}
 void Bind_Texture(unsigned,bool) { assert(!open);state[0]=0; }
 void Disable_Texture_Stage(unsigned stage) { assert(!open);state[stage]=0; }
 void Apply_Original_Texture_Coordinate_State(VertexMaterialClass *m) { assert(!open);state[3]=m?m->id:0; }
@@ -201,6 +222,20 @@ static void run(MeshModelClass *model,MeshClass &mesh,RenderInfoClass &render_in
     const int vertex_count=points.size(),triangle_count=ts.size();
     const Matrix3D original_world_transform={.25f},original_view_transform={-.5f};
 #ifndef GENERIC_INDEXED_ONLY
+    // Submit_Mesh_Internal's ordinary-mesh selection: all model passes and
+    // triangles in authored order, with their original per-model owners.
+    const bool procedural_pass=false;
+    const int draw_pass_count=base_pass_count,submitted_triangle_count=triangle_count;
+    const auto triangle_at=[](int draw_index) { return draw_index; };
+    const auto texture_for=[model](int triangle,int pass,int stage) {
+        return model->Peek_Texture(triangle,pass,stage);
+    };
+    const auto shader_for=[model](int triangle,int pass) {
+        return model->Get_Shader(triangle,pass);
+    };
+    const auto material_for=[model](int vertex,int pass) {
+        return model->Peek_Material(vertex,pass);
+    };
     #include "production.inc"
 #else
     (void)model;(void)mesh;(void)render_info;(void)vertices;(void)normals;(void)triangles;

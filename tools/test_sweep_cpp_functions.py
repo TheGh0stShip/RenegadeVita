@@ -1,4 +1,6 @@
+import hashlib
 import importlib.util
+from pathlib import Path
 import unittest
 
 from sweep_cpp_functions import conditional_macro_view, function_inventory, function_inventory_for_boolean_profiles, normalize_parser_source
@@ -77,6 +79,55 @@ class CppFunctionInventoryTest(unittest.TestCase):
         result = function_inventory(text)
         self.assertFalse(result['root_has_error'])
         self.assertEqual(len(result['functions']), 1)
+
+    def test_short_anonymous_enum_preserves_source_identity_and_lines(self):
+        for declaration in ('enum : int', 'enum:T', 'enum : u8',
+                            'enum\n:\nuint32_t', 'enum\r\n :\r\n N::T'):
+            with self.subTest(declaration=declaration):
+                # This contains the shortest possible underlying type and the
+                # production clock's `enum : int`, which was shorter than the
+                # old synthetic name. Unicode before/after checks byte offsets.
+                definition = ('int clock_slot() { ' + declaration +
+                              ' { Tick = 1 }; return Tick; }')
+                text = '// clock \u03bb\n' + definition + '\n// end \u03bb\n'
+                normalized = normalize_parser_source(text)
+                self.assertEqual(len(normalized.encode()), len(text.encode()))
+                for newline in (b'\r', b'\n'):
+                    self.assertEqual(
+                        [i for i, byte in enumerate(normalized.encode())
+                         if byte == newline[0]],
+                        [i for i, byte in enumerate(text.encode())
+                         if byte == newline[0]])
+                result = function_inventory(text)
+                self.assertFalse(result['root_has_error'])
+                self.assertEqual(result['parse_errors'], [])
+                self.assertEqual(len(result['functions']), 1)
+                row = result['functions'][0]
+                self.assertEqual(row['line'], 2)
+                self.assertEqual(row['end_line'], 2 + declaration.count('\n'))
+                self.assertEqual(text.encode()[row['start_byte']:row['end_byte']],
+                                 definition.encode())
+                self.assertEqual(row['definition_sha256'],
+                                 hashlib.sha256(definition.encode()).hexdigest())
+
+    def test_actual_vita_clock_header_has_no_parse_errors(self):
+        path = Path(__file__).resolve().parents[1] / 'port/platform/vita/renegade_vita_clocks.h'
+        text = path.read_text()
+        self.assertIn('enum : int', text)
+        result = function_inventory(text)
+        self.assertFalse(result['root_has_error'])
+        self.assertEqual(result['parse_errors'], [])
+        self.assertTrue(any('Watchdog_Should_Check' in row['declarator']
+                            for row in result['functions']))
+        self.assertTrue(any('Power_Thread_Wake' in row['declarator']
+                            for row in result['functions']))
+
+    def test_enum_normalization_does_not_hide_unrelated_parse_errors(self):
+        text = 'enum : int { A = 1 };\nint broken( { return A; }'
+        result = function_inventory(text)
+        self.assertTrue(result['root_has_error'])
+        self.assertTrue(result['parse_errors'])
+        self.assertTrue(any(row['line'] >= 2 for row in result['parse_errors']))
 
     def test_boolean_profile_union_retains_both_branch_definitions(self):
         text = ('#if FEATURE\nint enabled() { return 1; }\n#else\n'

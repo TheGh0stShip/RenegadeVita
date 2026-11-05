@@ -28,8 +28,11 @@ def normalize_parser_source(text):
 
     # The grammar expects a name for fixed-underlying-type enums even though
     # C++ permits anonymous declarations such as `enum : uint32_t { ... }`.
-    text = re.sub(r'\benum\s*:\s*[A-Za-z_][A-Za-z_0-9:]*',
-                  lambda match: padded(match, 'enum RVAnon'), text)
+    # A single-character name fits even `enum:T`. Keep the original whitespace
+    # around ':' so multiline declarations retain every newline's byte offset.
+    text = re.sub(r'\benum(\s*):(\s*)([A-Za-z_][A-Za-z_0-9:]*)',
+                  lambda match: 'enum' + match.group(1) + ' ' + match.group(2) +
+                  'E' + (' ' * (len(match.group(3)) - 1)), text)
     # va_arg is parsed as a compiler builtin with a restricted type grammar.
     # Replace its type operand with an expression and treat it as an ordinary
     # same-width call. Port uses contain only non-parenthesized type operands.
